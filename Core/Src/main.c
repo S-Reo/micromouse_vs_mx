@@ -82,8 +82,8 @@
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
-#define SEARCH_SPEED 135
-#define CURVE_SPEED 135
+#define SEARCH_SPEED 180
+#define CURVE_SPEED 180
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 #define TIRE_DEAMETER 20.70945//20.70945 //20.5591111111111//
@@ -170,7 +170,7 @@ double Body_angle=0, imu_angle = 0;
 double imu_data=0,check=0, drift_fix = DRIFT_FIX;
 double self_timer=0;
 double timer=0;
-float identify[6050];
+float identify[5010];
 int All_Pulse_cut=0, All_Pulse_anytime=0;
 
 
@@ -187,7 +187,7 @@ uint8_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 double goal_time[5];
 
 //左右のモータのカウント値のログ
-float Mlog[2][10000];
+float Mlog[2][6000];
 int16_t test_R,test_L;
 int16_t sl_ad1_10, fr_ad1_14=1, fl_ad2_11=0, sr_ad2_15; //
 int16_t fl_path=0, fr_path=0, sl_path, sr_path; // センサの前回値
@@ -210,7 +210,8 @@ extern int16_t R_rotate, L_rotate;
 extern int16_t R_env_control, L_env_control;
 extern int16_t R_angular_velocity, L_angular_velocity;
 
-
+float msignal[94]={-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,-1,1,1,1,-1,-1,-1,1,-1,1,1,1,1,-1,-1,1,-1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1};
+		float msig_input=0;
 
 extern uint8_t error_reset;
 
@@ -222,7 +223,7 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		1.8,//0.3, //0.8, ///oKP
+		1.0,//0.3, //0.8, ///oKP
 		0,//30,//0.5,//0.25, //oKI //調整の余地あり
 		0//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
@@ -232,7 +233,7 @@ PID_Control Wall = {
 }, imu = {
 		12.2859,//53.4571,////240,//66,//66 ///KP
 		36.7868,//341.0224,////600,//85,//24500 //KI
-		0.89427//2.0949//
+		0//0.89427//2.0949//
 }, en_velo = {
 		10,
 		0,
@@ -361,6 +362,7 @@ static uint8_t work_ram[BACKUP_FLASH_SECTOR_SIZE] __attribute__ ((aligned(4)));
 // 配置と定義はリンカスクリプトで行う
 extern char _backup_flash_start;
 
+
 void Volt_Set(float R_Volt, int16_t * R_counter, float  L_Volt, int16_t * L_counter){
 
 	*R_counter = round(567 * R_Volt);
@@ -369,8 +371,8 @@ void Volt_Set(float R_Volt, int16_t * R_counter, float  L_Volt, int16_t * L_coun
 }
 
 void Motor_Count_Clear(){
-	 L_v_control =  L_wall = L_leftwall = L_rightwall = L_rotate = L_angular_velocity = L_env_control = L_velo_control = 0;
-	 R_v_control = R_wall = R_leftwall = R_rightwall = R_rotate = R_angular_velocity = R_env_control = R_velo_control = 0;
+	 L_motor = L_v_control =  L_wall = L_leftwall = L_rightwall = L_rotate = L_angular_velocity = L_env_control = L_velo_control = 0;
+	 R_motor = R_v_control = R_wall = R_leftwall = R_rightwall = R_rotate = R_angular_velocity = R_env_control = R_velo_control = 0;
 }
 
 void Tim_Count(){
@@ -2594,7 +2596,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 {
 	//static double angular_velo=CURVE_SPEED*2/90;
 	//static int k=0;
-	static int i=0;
+	static int i=0,j=0,k=0;
   if(htim == &htim1){
 	  switch(mode.interrupt){
 	  case 0:
@@ -2727,11 +2729,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    Velocity_Control(Target_velocity, Body_velocity, T1,velocity.KP ,velocity.KI, velocity.KD);
 		L_motor = L_v_control + L_wall + L_leftwall + L_rightwall + L_rotate + L_angular_velocity + L_env_control + L_velo_control;
 		R_motor = R_v_control + R_wall + R_leftwall + R_rightwall + R_rotate + R_angular_velocity + R_env_control + R_velo_control;
-		if(i < 10000){
-		i++;
-		}
-		Mlog[0][i] = L_motor;
-		Mlog[1][i] = R_motor;
+//		if(i < 6000){
+//		i++;
+//		if(i % 10 == 0){
+//			Mlog[0][i] = L_motor;
+//			Mlog[1][i] = R_motor;
+//		}
+//		}
+
+
 		Motor_Switch(L_motor,R_motor);
 		break;
 
@@ -2755,15 +2761,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 			//角速度取得　rad/s
 			imu_data = IMU_Get_Data();
 			//3000回で6000個のデータを入れる
-			if(timer <= 1000){
+			if(timer <= 22800){
 #if 1
-			identify[(int)timer] = L_velocity;
-			identify[(int)timer+1000] = R_velocity;
+				if((int)timer % 240 == 0){
+					k++;//普通に取る or 倍速で取る
+			     identify[k] = L_velocity + R_velocity;
+
+				}
 #else
 			identify[(int)timer] = imu_data;//角速度 rad/s
 #endif
 			}
-
+			i++;
+			if(i % 240 == 0){
+				j++;
+				msig_input = 0.075 * msignal[j];
+			}
 			//モータ出力更新
 			Motor_Switch(L_motor,R_motor);
 			break;
@@ -2898,25 +2911,30 @@ switch(mode.execution){
           case 3:
 
 
-//        	  //位置補正
+        	  //位置補正
 //        	  start_calib();
-//        	  Start_Accel();
-//        	  straight();
-//        	  Decelerate();
-//        	  Motor_PWM_Stop();
-//        	  HAL_Delay(15000);
-//        	  while(1){
-//
-//        		  if(i < 10000){
-//
-//        	  printf("%d \t %f \t %f\r\n",i,Mlog[0][i],Mlog[1][i]);
-//        	  i++;
-//        		  }
-//        	  }
+        	  Start_Accel();
+        	  straight();
+        	  Decelerate();
+        	  rotate180();
+        	  Accelerate();
+        	  Decelerate();
+        	  rotate180();
+        	  Accelerate();
+        	  Decelerate();
+        	  Motor_PWM_Stop();
+        	  HAL_Delay(15000);
+        	  while(1){
 
-        	  HAL_Delay(1500);
-//
-        	  Shortest_Run();
+        		  if(i < 6000){
+
+        	  printf("%d \t %f \t %f\r\n",i,Mlog[0][i],Mlog[1][i]);
+        	  i++;
+        		  }
+        	  }
+
+//        	  HAL_Delay(1500);
+//        	  Shortest_Run();
  //
 //        	  rotate180();
 //        	 Motor_PWM_Stop();
@@ -2937,23 +2955,37 @@ switch(mode.execution){
 	  /*------------------------------------------*/
 
           case 4:
-        	  HAL_Delay(1500);
+        	  //HAL_Delay(1500);
         	  mode.interrupt = 1;
         	  timer = 0;
         	  self_timer = 0;
         	  while(1){
-        	  //duty比%
-        		  Volt_Set(0.555, &R_motor, 0.555, &L_motor);
-
-        		  //startから3秒立ったら止まる。
-        		  if(timer >= 1000){
+        	  //duty比0.05
+        		  //Volt_Set(0.37, &R_motor, 0.37, &L_motor);
+        		  R_motor = msig_input * 4200;
+        		  L_motor = msig_input * 4200;
+        		  //startから1秒立ったら止まる。
+#if 1
+        		  if(timer >= 22800){
         		  Motor_PWM_Stop();
         		  HAL_Delay(15000);
-        		  for(int k=1;k <= 1000; k++)
+        		  for(int k=1;k <= 94; k++)
         			  printf("%f\r\n",identify[k]);
+        			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
+        			 // printf("%f\r\n",identify[k]);
 
-        			  //printf("%f\t %f\r\n",identify[k],identify[k+2000]);
+        			  //
         		  }
+#else
+           		  if(timer >= 2000){
+            		  Motor_PWM_Stop();
+            		  HAL_Delay(15000);
+            		  for(int k=1;k <= 2000; k++)
+            			  printf("%f\r\n",identify[k]);
+            			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
+            			 // printf("%f\r\n",identify[k]);
+           		  }
+#endif
 
         	  }
 //        	             HAL_Delay(1500);
