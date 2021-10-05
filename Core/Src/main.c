@@ -88,7 +88,7 @@
 #define ACCE_DECE_DISTANCE 45
 #define TIRE_DEAMETER 20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 37
+#define TREAD_WIDTH 36.8
 
 
  // タイヤ直 mm
@@ -210,8 +210,8 @@ extern int16_t R_rotate, L_rotate;
 extern int16_t R_env_control, L_env_control;
 extern int16_t R_angular_velocity, L_angular_velocity;
 
-float msignal[94]={-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,-1,1,1,1,-1,-1,-1,1,-1,1,1,1,1,-1,-1,1,-1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1};
-		float msig_input=0;
+float msignal[800]={-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1};
+float msig_input=0;
 
 extern uint8_t error_reset;
 
@@ -223,13 +223,13 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		1.0,//0.3, //0.8, ///oKP
-		0,//30,//0.5,//0.25, //oKI //調整の余地あり
+		1.8,//1.0,//0.3, //0.8, ///oKP
+		30,//30,//0.5,//0.25, //oKI //調整の余地あり
 		0//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
-		4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
-		91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
-	   0//0.15432//0.17626//0.19124//1.2955
+		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
+		33.5232,//248.4198,//10.1707,//91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
+	   0.0059922//0.03301//0.15432//0.17626//0.19124//1.2955
 }, imu = {
 		12.2859,//53.4571,////240,//66,//66 ///KP
 		36.7868,//341.0224,////600,//85,//24500 //KI
@@ -2655,7 +2655,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    	   break;
 	       case 4:
 	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, imu.KD );
+	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, imu.KD );
 	    	   break;
 	       case 5:
 	    	   mode.imu = 0;
@@ -2736,7 +2736,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 //			Mlog[1][i] = R_motor;
 //		}
 //		}
-
+		if(timer <= 2000){
+#if 1
+			if((int)timer % 5== 0){
+				//普通に取る or 倍速で取る
+		     identify[k] = (L_velocity + R_velocity)/2;
+		     k++;
+			}
+#else
+		identify[(int)timer] = imu_data;//角速度 rad/s
+#endif
+		}
+		i++;
+		if(i % 50 == 0){
+			msig_input = 0.075 * msignal[j];
+			j++;
+		}
 
 		Motor_Switch(L_motor,R_motor);
 		break;
@@ -2761,11 +2776,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 			//角速度取得　rad/s
 			imu_data = IMU_Get_Data();
 			//3000回で6000個のデータを入れる
-			if(timer <= 22800){
+			if(timer <= 2000){
 #if 1
-				if((int)timer % 240 == 0){
-					k++;//普通に取る or 倍速で取る
-			     identify[k] = L_velocity + R_velocity;
+				if((int)timer % 5== 0){
+
+					//普通に取る or 倍速で取る
+			     //identify[k] = (L_velocity + R_velocity)/2;
+			     identify[k] =  imu_data;//角速度
+			     k++;
 
 				}
 #else
@@ -2773,9 +2791,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 #endif
 			}
 			i++;
-			if(i % 240 == 0){
-				j++;
+			if(i % 5 == 0){
 				msig_input = 0.075 * msignal[j];
+				j++;
 			}
 			//モータ出力更新
 			Motor_Switch(L_motor,R_motor);
@@ -2874,8 +2892,11 @@ int main(void)
 //      printf("EN_Body.integrate : %d \r\n", EN_Body.integrate);
 switch(mode.execution){
           case 0:
-        	  HAL_Delay(1000);
-        	  left_search();
+//        	  HAL_Delay(1000);
+//        	  left_search();
+        	  HAL_Delay(1500);
+        	  turn_right();
+        	 Motor_PWM_Stop();
         	  break;
 
 
@@ -2913,31 +2934,32 @@ switch(mode.execution){
 
         	  //位置補正
 //        	  start_calib();
-        	  Start_Accel();
-        	  straight();
-        	  Decelerate();
-        	  rotate180();
-        	  Accelerate();
-        	  Decelerate();
-        	  rotate180();
-        	  Accelerate();
-        	  Decelerate();
-        	  Motor_PWM_Stop();
-        	  HAL_Delay(15000);
-        	  while(1){
-
-        		  if(i < 6000){
-
-        	  printf("%d \t %f \t %f\r\n",i,Mlog[0][i],Mlog[1][i]);
-        	  i++;
-        		  }
-        	  }
+//        	  Start_Accel();
+//        	  straight();
+//        	  Decelerate();
+//        	  rotate180();
+//        	  Accelerate();
+//        	  Decelerate();
+//        	  rotate180();
+//        	  Accelerate();
+//        	  Decelerate();
+//        	  Motor_PWM_Stop();
+//        	  HAL_Delay(15000);
+//        	  while(1){
+//
+//        		  if(i < 6000){
+//
+//        	  printf("%d \t %f \t %f\r\n",i,Mlog[0][i],Mlog[1][i]);
+//        	  i++;
+//        		  }
+//        	  }
 
 //        	  HAL_Delay(1500);
 //        	  Shortest_Run();
- //
-//        	  rotate180();
-//        	 Motor_PWM_Stop();
+
+        	  HAL_Delay(1500);
+        	  rotate180();
+        	 Motor_PWM_Stop();
 //        	  mode.imu = 0;
 //        	  IMU_init();
 //        	  Target_velocity = 180;
@@ -2961,16 +2983,20 @@ switch(mode.execution){
         	  self_timer = 0;
         	  while(1){
         	  //duty比0.05
-        		  //Volt_Set(0.37, &R_motor, 0.37, &L_motor);
-        		  R_motor = msig_input * 4200;
-        		  L_motor = msig_input * 4200;
-        		  //startから1秒立ったら止まる。
 #if 1
-        		  if(timer >= 22800){
+        		  Volt_Set(0.444, &R_motor, -0.444, &L_motor);
+#else
+        		  R_motor = msig_input * 4200;
+        		  L_motor = -msig_input * 4200;
+#endif
+        		  //startから1秒立ったら止まる。
+#if 0
+        		  if(timer >= 80000){
         		  Motor_PWM_Stop();
-        		  HAL_Delay(15000);
-        		  for(int k=1;k <= 94; k++)
+        		  HAL_Delay(17000);
+        		  for(int k=0;k < 800; k++)
         			  printf("%f\r\n",identify[k]);
+
         			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
         			 // printf("%f\r\n",identify[k]);
 
@@ -2980,7 +3006,7 @@ switch(mode.execution){
            		  if(timer >= 2000){
             		  Motor_PWM_Stop();
             		  HAL_Delay(15000);
-            		  for(int k=1;k <= 2000; k++)
+            		  for(int k=0;k < 400; k++)
             			  printf("%f\r\n",identify[k]);
             			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
             			 // printf("%f\r\n",identify[k]);
@@ -2994,9 +3020,9 @@ switch(mode.execution){
 //        	  mode.control = 4; //4 en imu
 //        	  Target_velocity = test_velo_4;
  //       	  mode.enc = 1;
-        	  printf("左 : %d \r\n",EN3_L.integrate);
-        	  printf("右 : %d \r\n",EN4_R.integrate);
-        	  printf("\r\n");
+//        	  printf("左 : %d \r\n",EN3_L.integrate);
+//        	  printf("右 : %d \r\n",EN4_R.integrate);
+//        	  printf("\r\n");
 
         	  break;
 
@@ -3009,7 +3035,24 @@ switch(mode.execution){
 
 
           case 5:
-        	  Target_velocity = 0;
+        	  mode.control = 4;
+        	  Target_velocity = 90;
+        	  timer = 0;
+        	  self_timer = 0;
+        	  while(1){
+    		  if(timer >= 2000){
+    		  Motor_PWM_Stop();
+    		  HAL_Delay(17000);
+    		  for(int k=0;k < 400; k++)
+    			  printf("%f\r\n",identify[k]);
+
+    			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
+    			 // printf("%f\r\n",identify[k]);
+
+    			  //
+    		  }
+        	  }
+
 #if 0
         	  while(1){
         		  //printf("%f\r\n",fl_average);//左
@@ -3035,7 +3078,7 @@ switch(mode.execution){
 
 
           case 6:
-#if 1
+#if 0
 //    			HAL_TIM_Base_Stop_IT(&htim1);
 //    			HAL_TIM_Base_Stop_IT(&htim8);
 
@@ -3049,7 +3092,7 @@ switch(mode.execution){
         		  //printf("%f\r\n",fr_average);//右
         	  }
 #else
-        	  mode.control = 1; //0 side_wall
+        	  //mode.control = 1; //0 side_wall
         	                    //1 left_wall
         	                    //2 right
         	                    //3 imu
@@ -3057,7 +3100,7 @@ switch(mode.execution){
         	                    //5 nothing
         	                    //6 curve
 
-        	  Target_velocity = test_velo_6;
+        	  Target_velocity = 0;//test_velo_6;
         	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
 
 #if 0
