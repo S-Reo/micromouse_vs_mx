@@ -2340,7 +2340,7 @@ void Adachi_search(){
 		Adachi_judge();
 	}
 
-	//test
+	//after-gall#2
 	      Decelerate();
 	      wall_set();
 	      Motor_PWM_Stop();
