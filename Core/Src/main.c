@@ -231,9 +231,9 @@ PID_Control Wall = {
 		33.5232,//248.4198,//10.1707,//91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
 	   0.0059922//0.03301//0.15432//0.17626//0.19124//1.2955
 }, imu = {
-		12.2859,//53.4571,////240,//66,//66 ///KP
-		36.7868,//341.0224,////600,//85,//24500 //KI
-		0//0.89427//2.0949//
+		17.4394,//19.8142,//380.1873,//19.8142,//5.8646,//12.2859,//53.4571,////240,//66,//66 ///KP
+		321.233,//329.5622,//4106.1009,//329.5622,//201.6374,//36.7868,//341.0224,////600,//85,//24500 //KI
+		0.12492//0.11897//8.8005//0.11897//0.89427//2.0949//17.4394,//
 }, en_velo = {
 		10,
 		0,
@@ -1227,6 +1227,8 @@ void IMU_turn(int8_t target_angle, double target_angle_velo){
 
 void turn_right(){
 
+	//左右の車輪速度制御
+	//or 角速度制御で旋回
 	  uint8_t counter=0;
 
 	   while(counter < 1){
@@ -2750,7 +2752,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 		}
 		i++;
 		if(i % 50 == 0){
-			msig_input = 0.075 * msignal[j];
+			msig_input = 0.06 * msignal[j];
 			j++;
 		}
 
@@ -2777,9 +2779,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 			//角速度取得　rad/s
 			imu_data = IMU_Get_Data();
 			//3000回で6000個のデータを入れる
-			if(timer <= 2000){
+			if(timer <= 48000){
 #if 1
-				if((int)timer % 5== 0){
+				if((int)timer % 60 == 0){
 
 					//普通に取る or 倍速で取る
 			     //identify[k] = (L_velocity + R_velocity)/2;
@@ -2790,11 +2792,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 #else
 			identify[(int)timer] = imu_data;//角速度 rad/s
 #endif
-			}
+
 			i++;
-			if(i % 5 == 0){
-				msig_input = 0.075 * msignal[j];
+			if(i % 60 == 0){
+				msig_input = 0.06 * msignal[j];
 				j++;
+			}
+
 			}
 			//モータ出力更新
 			Motor_Switch(L_motor,R_motor);
@@ -2931,7 +2935,7 @@ switch(mode.execution){
 
 
           case 3:
-
+        	  printf("helloあいうえお\r\n");
 
         	  //位置補正
 //        	  start_calib();
@@ -2984,7 +2988,7 @@ switch(mode.execution){
         	  self_timer = 0;
         	  while(1){
         	  //duty比0.05
-#if 1
+#if 0
         		  Volt_Set(0.444, &R_motor, -0.444, &L_motor);
 #else
         		  R_motor = msig_input * 4200;
@@ -3004,10 +3008,10 @@ switch(mode.execution){
         			  //
         		  }
 #else
-           		  if(timer >= 2000){
+           		  if(timer >= 48000){
             		  Motor_PWM_Stop();
-            		  HAL_Delay(15000);
-            		  for(int k=0;k < 400; k++)
+            		  HAL_Delay(20000);
+            		  for(int k=0;k < 800; k++)
             			  printf("%f\r\n",identify[k]);
             			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
             			 // printf("%f\r\n",identify[k]);
@@ -3102,6 +3106,7 @@ switch(mode.execution){
         	                    //6 curve
 
         	  Target_velocity = 0;//test_velo_6;
+        	  mode.control = 3;
         	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
 
 #if 0
