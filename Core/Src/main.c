@@ -223,9 +223,9 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		1.8,//1.0,//0.3, //0.8, ///oKP
-		30,//30,//0.5,//0.25, //oKI //調整の余地あり
-		0//.00003//0.0000006//0.001//0.0005 //oKD
+		0,//1.8,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
+		0,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
+		0//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
 		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
 		33.5232,//248.4198,//10.1707,//91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
@@ -734,7 +734,7 @@ void IMU_Control(double target, double now, double T, double KP, double KI, doub
 
 	static double e=0, ei=0, ed=0, e0=0;
 
-	if(mode.imu == 0){
+	if(mode.imu == 0 || (Target_velocity == 0 && Target_Rad_velo == 0)){
 		e=0;
 		ei = 0;
 		ed=0;
@@ -942,13 +942,15 @@ void Face_Front(){
 void Start_Accel(){
 	error_reset = 0;
 	Motor_Count_Clear();
-	mode.control = 4;
+	IMU_init();
+
     EN3_L.integrate = 0;
     EN4_R.integrate = 0;
 	EN_Body.integrate = 0;
     mode.enc = 1;
 
-	while( 0 <= EN3_L.integrate + EN4_R.integrate && EN3_L.integrate + EN4_R.integrate < START_ACCEL_PULSE * 2){
+	while( 0 <= (EN3_L.integrate + EN4_R.integrate) && (EN3_L.integrate + EN4_R.integrate) < START_ACCEL_PULSE * 2){
+		mode.control = 4;
 		mode.accel= 1;
 	}
 	mode.accel = 0;
@@ -963,17 +965,18 @@ void Accelerate(){
 
 	error_reset = 0;
 	Motor_Count_Clear();
-	//IMU_init();
+	IMU_init();
 
-	mode.control = 4;
+	mode.control = 3;
     EN3_L.integrate = 0;
     EN4_R.integrate = 0;
 	EN_Body.integrate = 0;
 	mode.enc = 1;
 
-	while( 0 <= EN3_L.integrate + EN4_R.integrate && EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2){
+	while( 0 <= (EN3_L.integrate + EN4_R.integrate) && (EN3_L.integrate + EN4_R.integrate) < ACCE_DECE_PULSE * 2){
 
 		mode.accel = 2;
+#if 0
 		if(WALL_JUDGE_PULSE * 2 < EN3_L.integrate + EN4_R.integrate){
 			if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
 				  mode.control = 0;
@@ -992,6 +995,10 @@ void Accelerate(){
 		}
 		else mode.control = 4;
 	}
+#else
+	mode.control = 3;
+}
+#endif
 	mode.accel = 0;
 	Target_velocity = SEARCH_SPEED;
     EN3_L.integrate = 0;
@@ -1005,10 +1012,11 @@ void Decelerate(){
 	//IMU_init();
 	//mode.control = 4;
 
-	mode.control = 4;
+	mode.control = 3;
 	//printf("%d\r\n",EN3_L.integrate + EN4_R.integrate);
 	while(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 && (sl_average + sr_average )/2 < 2150){
 		mode.accel = 3;
+#if 0
 		if(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 - (WALL_JUDGE_PULSE * 0.33 * 2 *3/5) ){
 		  if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
 			  mode.control = 0;
@@ -1028,6 +1036,10 @@ void Decelerate(){
 		else mode.control = 4;
 
 	}
+#else
+	mode.control = 3;
+}
+#endif
 	mode.accel = 0;
 	mode.control = 5;
 	Target_velocity = 0;
@@ -1061,6 +1073,7 @@ void straight(){ //uint8_t block_num
 //    mode.enc = 1;
 
   while(EN3_L.integrate + EN4_R.integrate < Target_pulse * 2 ){
+#if 0
 	  if(EN3_L.integrate + EN4_R.integrate < Target_pulse * 2 *0.45 || Target_pulse * 2 - (WALL_JUDGE_PULSE * 12/5) < EN3_L.integrate + EN4_R.integrate){
 
 			if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
@@ -1079,8 +1092,11 @@ void straight(){ //uint8_t block_num
 			else mode.control = 4;
 	  }
 	  else
-		  mode.control = 4;
+#else
+		  //mode.control = 4;
+		  mode.control = 3;
   }
+#endif
       EN3_L.integrate = 0;
       EN4_R.integrate = 0;
       EN_Body.integrate = 0;
@@ -1189,11 +1205,11 @@ float Rotate(float Now_velo, float Max_velo, float Target_pul, float Now_integra
 	static float Velocity=0;
 
 
-			if( Now_integrate < Target_pul/5 )
+			if( Now_integrate <= Target_pul/2 )
 				Velocity = Now_velo + Max_velo/23000;
-			else if( Target_pul/5 <= Now_integrate  &&  Now_integrate <= Target_pul*4/5 )
-				Velocity = Now_velo;
-			else if( Target_pul*4/5 < Now_integrate && Now_integrate < Target_pul)
+			//else if( Target_pul/5 <= Now_integrate  &&  Now_integrate <= Target_pul*4/5 )
+				//Velocity = Now_velo;
+			else if( Target_pul/2 < Now_integrate && Now_integrate < Target_pul)
 				Velocity = Now_velo - Max_velo/23000;
 
 
@@ -1243,18 +1259,18 @@ void turn_right(){
 		  mode.enc = 1;
 		///while(EN3_L.integrate >= -Target_pul_quarter && EN4_R.integrate <= Target_pul_quarter){
 	  while(EN3_L.integrate + (-1)*EN4_R.integrate <= Target_pul_quarter*2){
-		  Target_rotate = Rotate(Target_rotate, -600, Target_pul_quarter, EN3_L.integrate);
-		  Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
+		  mode.control = 3;
+		  Target_Rad_velo = -3;//Rotate(Target_Rad_velo, -5, Target_pul_quarter, EN3_L.integrate);
+		  //Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
 //		  mode.control = 3;
 //		  Target_Rad_velo = -10;
 	    	}
 	      mode.enc = 0;
-	      R_rotate = 0;
-	      L_rotate = 0;
+	      Target_Rad_velo = 0;
 //	      mode.control = 4;
 //	      Target_Rad_velo = 0;
 	      Target_velocity = 0;
-	      Target_rotate =0;
+	      //Target_rotate =0;
 	      EN3_L.integrate = 0;
 	      EN4_R.integrate = 0;
 	      EN_Body.integrate = 0;
@@ -1282,21 +1298,20 @@ void turn_left(){
 		  EN_Body.integrate = 0;
 		  mode.enc = 1;
 	while((-1)*EN3_L.integrate + EN4_R.integrate <= Target_pul_quarter * 2){
-		  Target_rotate = Rotate(Target_rotate, 600, Target_pul_quarter, EN4_R.integrate);
-		  Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
 
+		  mode.control = 3;
+		  Target_Rad_velo = 3;//Rotate(Target_Rad_velo, 5, Target_pul_quarter, EN4_R.integrate);
 //	      check = EN3_L.integrate;
 //	      check2 = EN4_R.integrate;
 //		mode.control = 3;
 //		Target_Rad_velo = 10;
 	}
     mode.enc = 0;
-    R_rotate = 0;
-    L_rotate = 0;
+    Target_Rad_velo = 0;
 //	mode.control = 4;
 //	Target_Rad_velo = 0;
     Target_velocity = 0;
-    Target_rotate =0;
+    //Target_rotate =0;
     EN3_L.integrate = 0;
     EN4_R.integrate = 0;
     EN_Body.integrate = 0;
@@ -1464,17 +1479,16 @@ void rotate180(){
 	  mode.enc = 1;
 	///while(EN3_L.integrate >= -Target_pul_quarter && EN4_R.integrate <= Target_pul_quarter){
   while(EN3_L.integrate <= Target_pul_quarter*2 || EN4_R.integrate >= -Target_pul_quarter*2){
-	  Target_rotate = Rotate(Target_rotate, -600, Target_pul_quarter*2, EN3_L.integrate);
-	  Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
+	  mode.control = 3;
+	  Target_Rad_velo = -3;//Rotate(Target_Rad_velo, -5, Target_pul_quarter*2, EN3_L.integrate);
+	  //Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
 
 //    	check = EN3_L.integrate;
 //    	check2 = EN4_R.integrate;
     	}
       mode.enc = 0;
-      R_rotate = 0;
-      L_rotate = 0;
       Target_velocity = 0;
-      Target_rotate =0;
+      Target_Rad_velo =0;
       EN3_L.integrate = 0;
       EN4_R.integrate = 0;
   	  EN_Body.integrate = 0;
@@ -2658,7 +2672,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    	   break;
 	       case 4:
 	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, imu.KD );
+	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, imu.KD );
 	    	   break;
 	       case 5:
 	    	   mode.imu = 0;
@@ -2728,7 +2742,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    		    				//Left_Wall_Control();
 	    	}
 	    }
-	    if(Target_Rad_velo == 0)
+	    //回転角速度のインクリメント
+//	    else if( mode.accel == 8 ){//右に旋回減�??
+//	      if(Target_Rad_velo < TURN_SPEED){
+//	  	    Target_Rad_velo += 0.01;
+//	    	}
+//	    }
+//	    Target_Rad_velo = Rotate(Target_Rad_velo, 5, Target_pul_quarter, EN4_R.integrate);
+	    //if(Target_Rad_velo == 0)
 	    Velocity_Control(Target_velocity, Body_velocity, T1,velocity.KP ,velocity.KI, velocity.KD);
 		L_motor = L_v_control + L_wall + L_leftwall + L_rightwall + L_rotate + L_angular_velocity + L_env_control + L_velo_control;
 		R_motor = R_v_control + R_wall + R_leftwall + R_rightwall + R_rotate + R_angular_velocity + R_env_control + R_velo_control;
@@ -3105,8 +3126,9 @@ switch(mode.execution){
         	                    //5 nothing
         	                    //6 curve
 
-        	  Target_velocity = 0;//test_velo_6;
+        	  Target_velocity = 135;//test_velo_6;
         	  mode.control = 3;
+        	  Target_Rad_velo= 0;
         	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
 
 #if 0
