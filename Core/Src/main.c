@@ -1227,6 +1227,8 @@ void IMU_turn(int8_t target_angle, double target_angle_velo){
 
 void turn_right(){
 
+	//左右の車輪速度制御
+	//or 角速度制御で旋回
 	  uint8_t counter=0;
 
 	   while(counter < 1){
