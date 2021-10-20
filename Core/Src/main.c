@@ -942,7 +942,7 @@ void Face_Front(){
 void Start_Accel(){
 	error_reset = 0;
 	Motor_Count_Clear();
-	IMU_init();
+	//IMU_init();
 
     EN3_L.integrate = 0;
     EN4_R.integrate = 0;
@@ -965,7 +965,7 @@ void Accelerate(){
 
 	error_reset = 0;
 	Motor_Count_Clear();
-	IMU_init();
+	//IMU_init();
 
 	mode.control = 3;
     EN3_L.integrate = 0;
@@ -2651,19 +2651,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    switch(mode.control){
 	       case 0:
 	    	   Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
-	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
+	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
 	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
 	    	   mode.imu = 0;
 	    	   break;
 	       case 1:
 	    	   Left_Wall_Control(distance_wall_left, fl_average,T8, Wall.KP, Wall.KI, Wall.KD);
-	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
+	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
 	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
 	    	   mode.imu = 0;
 	    	   break;
 	       case 2:
 	    	   Right_Wall_Control(distance_wall_right, fr_average,T8, Wall.KP, Wall.KI, Wall.KD);
-	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
+	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
 	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
 	    	   mode.imu = 0;
 	    	   break;
