@@ -82,7 +82,7 @@
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
-#define SEARCH_SPEED 180
+#define SEARCH_SPEED 220
 #define CURVE_SPEED 180
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
@@ -168,6 +168,7 @@ float a= T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * ACCE_DECE_DISTANCE);
 float a_curve = T1 * SEARCH_SPEED * SEARCH_SPEED * 124.6*124.6 /(2 * 2 * CURVE_DISTANCE*90*90);
 double Body_angle=0, imu_angle = 0;
 double imu_data=0,check=0, drift_fix = DRIFT_FIX;
+double offset=0;
 double self_timer=0;
 double timer=0;
 float identify[5010];
@@ -223,7 +224,7 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		0,//1.8,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
+		1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
 		0,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
 		0//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
@@ -719,7 +720,7 @@ double IMU_Get_Data(){// IMUの値を取
     read_accel_data();
 
     //atan2(za,xa);
-	imu_accel =  ( ( (double)zg + 2.0 )/16.4) * PI /180;
+	imu_accel =  ( ( (double)zg - offset/*2.0*/ )/16.4) * PI /180;
 	imu_angle += (imu_pre_accel + imu_accel) * T1 / 2;
 	imu_angle -= drift_fix * PI /180;
 	imu_pre_accel = imu_accel;
@@ -752,7 +753,21 @@ void IMU_Control(double target, double now, double T, double KP, double KI, doub
 
 	//b 車体度0は前回の速度制御
 }
+void IMU_Calib(){
 
+	HAL_Delay(1000);
+
+	int16_t num = 2000;
+	double zg_vals[num];
+	double sum;
+	for(uint16_t i = 0; i < num; i++){
+		zg_vals[i] = (double)zg;
+		sum += zg_vals[i];
+		HAL_Delay(2);
+	}
+
+	offset = sum / num;
+}
 
 void LED_Change(){
 	//Switch
@@ -976,7 +991,7 @@ void Accelerate(){
 	while( 0 <= (EN3_L.integrate + EN4_R.integrate) && (EN3_L.integrate + EN4_R.integrate) < ACCE_DECE_PULSE * 2){
 
 		mode.accel = 2;
-#if 0
+#if 1
 		if(WALL_JUDGE_PULSE * 2 < EN3_L.integrate + EN4_R.integrate){
 			if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
 				  mode.control = 0;
@@ -1016,8 +1031,8 @@ void Decelerate(){
 	//printf("%d\r\n",EN3_L.integrate + EN4_R.integrate);
 	while(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 && (sl_average + sr_average )/2 < 2150){
 		mode.accel = 3;
-#if 0
-		if(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 - (WALL_JUDGE_PULSE * 0.33 * 2 *3/5) ){
+#if 1
+		if(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 - (WALL_JUDGE_PULSE  * 2 *3/5) ){//ここの閾値の意味:減速する距離は半区画 -
 		  if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
 			  mode.control = 0;
 
@@ -1040,6 +1055,7 @@ void Decelerate(){
 	mode.control = 3;
 }
 #endif
+
 	mode.accel = 0;
 	mode.control = 5;
 	Target_velocity = 0;
@@ -1073,7 +1089,7 @@ void straight(){ //uint8_t block_num
 //    mode.enc = 1;
 
   while(EN3_L.integrate + EN4_R.integrate < Target_pulse * 2 ){
-#if 0
+#if 1
 	  if(EN3_L.integrate + EN4_R.integrate < Target_pulse * 2 *0.45 || Target_pulse * 2 - (WALL_JUDGE_PULSE * 12/5) < EN3_L.integrate + EN4_R.integrate){
 
 			if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
@@ -1092,8 +1108,10 @@ void straight(){ //uint8_t block_num
 			else mode.control = 4;
 	  }
 	  else
+		  mode.control = 4;
+  }
 #else
-		  //mode.control = 4;
+
 		  mode.control = 3;
   }
 #endif
@@ -1718,7 +1736,6 @@ void Gain_Change(){
 }
 
 
-
 void Walk_Map_Update(){
 	//初期化大事すぎた。hosu
 	int i = 0, j=0, flag=0, hosu=0;
@@ -1834,7 +1851,6 @@ void Walk_Count_Map(){
 //
 //	}
 }
-
 
 
 void Tire_Maintenance(){
@@ -2841,8 +2857,225 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 
 /*---- DEFINING FUNCTION ----*/
 
+//実行時に切り替えるモード
+void Exe_num0(){
 
 
+	mode.control = 3;
+	Target_velocity=90;
+
+	Target_Rad_velo=0;
+
+}
+void Exe_num1(){
+	  Flash_load();
+  	  HAL_Delay(2000);
+
+  	  mapprint();
+  	  while(1);
+}
+void Exe_num2(){
+//        	  if(timer == 10)
+//        		  printf("小数のほう : %lf \r\n",timer);
+//        	  if(self_timer == 10000)
+//        		  printf("整数のほう : %lf \r\n",self_timer/1000);
+
+        	  //start_calib();
+     	      Tire_Maintenance();
+}
+void Exe_num3(){
+	  //printf("helloあいうえお\r\n");
+
+	  //位置補正
+//        	  start_calib();
+//        	  Start_Accel();
+//        	  straight();
+//        	  Decelerate();
+//        	  rotate180();
+//        	  Accelerate();
+//        	  Decelerate();
+//        	  rotate180();
+//        	  Accelerate();
+//        	  Decelerate();
+//        	  Motor_PWM_Stop();
+//        	  HAL_Delay(15000);
+//        	  while(1){
+//
+//        		  if(i < 6000){
+//
+//        	  printf("%d \t %f \t %f\r\n",i,Mlog[0][i],Mlog[1][i]);
+//        	  i++;
+//        		  }
+//        	  }
+
+//        	  HAL_Delay(1500);
+//        	  Shortest_Run();
+
+	  HAL_Delay(1500);
+	  mode.control=0;
+	  Target_velocity=90;
+	  while(1);
+//
+//        	  mode.imu = 0;
+//        	  IMU_init();
+//        	  Target_velocity = 180;
+//        	  while(1){
+//
+//        		  mode.control = 3;
+//        		  Target_Rad_velo=5;
+			  //printf("%d\r\n",zg);
+//        		  printf("%f\r\n",Body_angle);
+//        		  HAL_Delay(1);
+
+}
+void Exe_num4(){
+	  //HAL_Delay(1500);
+	  mode.interrupt = 1;
+	  timer = 0;
+	  self_timer = 0;
+	  while(1){
+	  //duty比0.05
+#if 0
+		  Volt_Set(0.444, &R_motor, -0.444, &L_motor);
+#else
+		  R_motor = msig_input * 4200;
+		  L_motor = -msig_input * 4200;
+#endif
+		  //startから1秒立ったら止まる。
+#if 0
+		  if(timer >= 80000){
+		  Motor_PWM_Stop();
+		  HAL_Delay(17000);
+		  for(int k=0;k < 800; k++)
+			  printf("%f\r\n",identify[k]);
+
+			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
+			 // printf("%f\r\n",identify[k]);
+
+			  //
+		  }
+#else
+ 		  if(timer >= 48000){
+  		  Motor_PWM_Stop();
+  		  HAL_Delay(20000);
+  		  for(int k=0;k < 800; k++)
+  			  printf("%f\r\n",identify[k]);
+  			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
+  			 // printf("%f\r\n",identify[k]);
+ 		  }
+#endif
+
+	  }
+//        	             HAL_Delay(1500);
+//        	          	 rotate180();
+//        	          	 Motor_PWM_Stop();
+//        	  mode.control = 4; //4 en imu
+//        	  Target_velocity = test_velo_4;
+//       	  mode.enc = 1;
+//        	  printf("左 : %d \r\n",EN3_L.integrate);
+//        	  printf("右 : %d \r\n",EN4_R.integrate);
+//        	  printf("\r\n");
+
+}
+void Exe_num5(){
+	  Exe_num5();
+	  mode.control = 4;
+	  Target_velocity = 90;
+	  timer = 0;
+	  self_timer = 0;
+	  while(1){
+	  if(timer >= 2000){
+	  Motor_PWM_Stop();
+	  HAL_Delay(17000);
+	  for(int k=0;k < 400; k++)
+		  printf("%f\r\n",identify[k]);
+
+		 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
+		 // printf("%f\r\n",identify[k]);
+
+		  //
+	  }
+	  }
+
+#if 0
+	  while(1){
+		  //printf("%f\r\n",fl_average);//左
+		  printf("%f\r\n",fl_average - fr_average);
+	  }
+#else
+	  //mode.control = 0; //0 side_wall
+	  //Target_velocity = test_velo_5;
+#if 0
+    printf("左 : %f\r\n",fl_average);
+    printf("右 : %f\r\n",fr_average);
+    printf("前左 : %f\r\n",sl_average);
+    printf("前右 : %f\r\n",sr_average);
+    printf("\r\n");
+#endif
+
+#endif
+}
+void Exe_num6(){
+#if 0
+//    			HAL_TIM_Base_Stop_IT(&htim1);
+//    			HAL_TIM_Base_Stop_IT(&htim8);
+
+
+        	  while(1){
+        			adjust_position();
+        			for(int i=0;i < WAIT*4;i++);
+        			back_calib();
+//        		  EN4_R.count = TIM4 -> CNT;
+//        		  printf("%d\r\n",EN4_R.count);
+        		  //printf("%f\r\n",fr_average);//右
+        	  }
+#else
+        	  //mode.control = 1; //0 side_wall
+        	                    //1 left_wall
+        	                    //2 right
+        	                    //3 imu
+        	                    //4 enc
+        	                    //5 nothing
+        	                    //6 curve
+
+        	  Target_velocity = 135;//test_velo_6;
+        	  mode.control = 3;
+        	  Target_Rad_velo= 0;
+        	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
+
+#if 0
+	      printf("左 : %f\r\n",fl_average);
+	      printf("右 : %f\r\n",fr_average);
+	      printf("前左 : %f\r\n",sl_average);
+	      printf("前右 : %f\r\n",sr_average);
+#endif
+
+#endif
+
+
+//		Velocity_Control(Target_velocity, Body_velocity, T1,velocity.KP ,velocity.KI*, velocity.KD);
+}
+void Exe_num7(){
+	  //mode.control = 5;
+	 // mode.control = 3; //1 Left_wall
+
+#if 1
+	  Adachi_search();
+//        	  map_init();
+//        	  Walk_Map_Update();
+//        	  mapcopy();
+//        	  Flash_store();
+//        	  mapprint();
+//        	  while(1)
+#else
+//        		  while(1){
+//        		      printf("左 : %f\r\n",fl_average);
+//        		      printf("右 : %f\r\n",fr_average);
+//        		  }
+		  mode.control = 2;
+		  Target_velocity = test_velo_7;
+#endif
+}
 /*---- DEFINING FUNCTION ----*/
 /*---- DEFINING FUNCTION END----*/
 
@@ -2904,6 +3137,7 @@ int main(void)
   while (1)
   {
 	  Execution_Select();
+
       //Execution_Switch();
 
 //		HAL_TIM_Base_Stop_IT(&htim1);
@@ -2916,263 +3150,49 @@ int main(void)
 //      printf("EN3_L.integrate : %d \r\n", EN3_L.integrate);
 //      printf("EN4_R.integrate : %d \r\n", EN4_R.integrate);
 //      printf("EN_Body.integrate : %d \r\n", EN_Body.integrate);
+	  //誤差補正のオフセット値決定
+	  IMU_Calib();
+
+	  while(1){
+
+
 switch(mode.execution){
           case 0:
-//        	  HAL_Delay(1000);
-//        	  left_search();
-        	  HAL_Delay(1500);
-        	  turn_right();
-        	 Motor_PWM_Stop();
+        	  Exe_num0();
         	  break;
-
-
-
 	  /*------------------------------------------*/
-
-
           case 1:
-          	  Flash_load();
-            	  HAL_Delay(2000);
-
-            	  mapprint();
-            	  while(1)
+        	  Exe_num1();
               break;
-
-
-
 	  /*------------------------------------------*/
-
           case 2:
-//        	  if(timer == 10)
-//        		  printf("小数のほう : %lf \r\n",timer);
-//        	  if(self_timer == 10000)
-//        		  printf("整数のほう : %lf \r\n",self_timer/1000);
-
-        	  //start_calib();
-     	      Tire_Maintenance();
-
+        	  Exe_num2();
 	          break;
 	  /*------------------------------------------*/
-
-
           case 3:
-        	  printf("helloあいうえお\r\n");
-
-        	  //位置補正
-//        	  start_calib();
-//        	  Start_Accel();
-//        	  straight();
-//        	  Decelerate();
-//        	  rotate180();
-//        	  Accelerate();
-//        	  Decelerate();
-//        	  rotate180();
-//        	  Accelerate();
-//        	  Decelerate();
-//        	  Motor_PWM_Stop();
-//        	  HAL_Delay(15000);
-//        	  while(1){
-//
-//        		  if(i < 6000){
-//
-//        	  printf("%d \t %f \t %f\r\n",i,Mlog[0][i],Mlog[1][i]);
-//        	  i++;
-//        		  }
-//        	  }
-
-//        	  HAL_Delay(1500);
-//        	  Shortest_Run();
-
-        	  HAL_Delay(1500);
-        	  rotate180();
-        	 Motor_PWM_Stop();
-//        	  mode.imu = 0;
-//        	  IMU_init();
-//        	  Target_velocity = 180;
-//        	  while(1){
-//
-//        		  mode.control = 3;
-//        		  Target_Rad_velo=5;
-        			  //printf("%d\r\n",zg);
-//        		  printf("%f\r\n",Body_angle);
-//        		  HAL_Delay(1);
-
-
+        	  Exe_num3();
               break;
-
 	  /*------------------------------------------*/
-
           case 4:
-        	  //HAL_Delay(1500);
-        	  mode.interrupt = 1;
-        	  timer = 0;
-        	  self_timer = 0;
-        	  while(1){
-        	  //duty比0.05
-#if 0
-        		  Volt_Set(0.444, &R_motor, -0.444, &L_motor);
-#else
-        		  R_motor = msig_input * 4200;
-        		  L_motor = -msig_input * 4200;
-#endif
-        		  //startから1秒立ったら止まる。
-#if 0
-        		  if(timer >= 80000){
-        		  Motor_PWM_Stop();
-        		  HAL_Delay(17000);
-        		  for(int k=0;k < 800; k++)
-        			  printf("%f\r\n",identify[k]);
-
-        			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
-        			 // printf("%f\r\n",identify[k]);
-
-        			  //
-        		  }
-#else
-           		  if(timer >= 48000){
-            		  Motor_PWM_Stop();
-            		  HAL_Delay(20000);
-            		  for(int k=0;k < 800; k++)
-            			  printf("%f\r\n",identify[k]);
-            			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
-            			 // printf("%f\r\n",identify[k]);
-           		  }
-#endif
-
-        	  }
-//        	             HAL_Delay(1500);
-//        	          	 rotate180();
-//        	          	 Motor_PWM_Stop();
-//        	  mode.control = 4; //4 en imu
-//        	  Target_velocity = test_velo_4;
- //       	  mode.enc = 1;
-//        	  printf("左 : %d \r\n",EN3_L.integrate);
-//        	  printf("右 : %d \r\n",EN4_R.integrate);
-//        	  printf("\r\n");
-
+        	  Exe_num4();
         	  break;
-
-
-
-
 	  /*------------------------------------------*/
-
-
-
-
           case 5:
-        	  mode.control = 4;
-        	  Target_velocity = 90;
-        	  timer = 0;
-        	  self_timer = 0;
-        	  while(1){
-    		  if(timer >= 2000){
-    		  Motor_PWM_Stop();
-    		  HAL_Delay(17000);
-    		  for(int k=0;k < 400; k++)
-    			  printf("%f\r\n",identify[k]);
-
-    			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
-    			 // printf("%f\r\n",identify[k]);
-
-    			  //
-    		  }
-        	  }
-
-#if 0
-        	  while(1){
-        		  //printf("%f\r\n",fl_average);//左
-        		  printf("%f\r\n",fl_average - fr_average);
-        	  }
-#else
-        	  //mode.control = 0; //0 side_wall
-        	  //Target_velocity = test_velo_5;
-#if 0
-	          printf("左 : %f\r\n",fl_average);
-	          printf("右 : %f\r\n",fr_average);
-	          printf("前左 : %f\r\n",sl_average);
-	          printf("前右 : %f\r\n",sr_average);
-	          printf("\r\n");
-#endif
-
-#endif
+        	  Exe_num5();
 	          break;
-
-
 	  /*------------------------------------------*/
-
-
-
           case 6:
-#if 0
-//    			HAL_TIM_Base_Stop_IT(&htim1);
-//    			HAL_TIM_Base_Stop_IT(&htim8);
-
-
-        	  while(1){
-        			adjust_position();
-        			for(int i=0;i < WAIT*4;i++);
-        			back_calib();
-//        		  EN4_R.count = TIM4 -> CNT;
-//        		  printf("%d\r\n",EN4_R.count);
-        		  //printf("%f\r\n",fr_average);//右
-        	  }
-#else
-        	  //mode.control = 1; //0 side_wall
-        	                    //1 left_wall
-        	                    //2 right
-        	                    //3 imu
-        	                    //4 enc
-        	                    //5 nothing
-        	                    //6 curve
-
-        	  Target_velocity = 135;//test_velo_6;
-        	  mode.control = 3;
-        	  Target_Rad_velo= 0;
-        	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
-
-#if 0
-	      printf("左 : %f\r\n",fl_average);
-	      printf("右 : %f\r\n",fr_average);
-	      printf("前左 : %f\r\n",sl_average);
-	      printf("前右 : %f\r\n",sr_average);
-#endif
-
-#endif
-
-
-//		Velocity_Control(Target_velocity, Body_velocity, T1,velocity.KP ,velocity.KI*, velocity.KD);
+        	  Exe_num6();
 		    break;
 	  /*------------------------------------------*/
-
-
-
           case 7:
-        	  //mode.control = 5;
-        	 // mode.control = 3; //1 Left_wall
-
-#if 1
-        	  Adachi_search();
-//        	  map_init();
-//        	  Walk_Map_Update();
-//        	  mapcopy();
-//        	  Flash_store();
-//        	  mapprint();
-//        	  while(1)
-#else
-//        		  while(1){
-//        		      printf("左 : %f\r\n",fl_average);
-//        		      printf("右 : %f\r\n",fr_average);
-//        		  }
-        		  mode.control = 2;
-        		  Target_velocity = test_velo_7;
-#endif
-
+        	  Exe_num7();
 	  	      break;
           default:
         	  break;
 }
 
+	  }
 
 
 	  /*------------------------------------------*/
