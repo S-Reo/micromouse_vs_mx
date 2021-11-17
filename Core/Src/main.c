@@ -61,7 +61,7 @@
 #define T5 0.0238095238095238000 //ms
 #define T8 0.00005 //s
 
-#define WAIT 100000
+#define WAIT 30000
 
 #define FRONT_WALL 30
 #define RIGHT_WALL 100//90 //380
@@ -82,7 +82,7 @@
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
-#define SEARCH_SPEED 220
+#define SEARCH_SPEED 180
 #define CURVE_SPEED 180
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
@@ -1062,6 +1062,7 @@ void Decelerate(){
 	mode.enc = 0;
 	error_reset = 0;
 	Motor_Count_Clear();
+
 	//printf("減�?????��?��??��?��???��?��??��?��した???��?��??��?��?\r\n");
 }
 float straight_trapezoid(float Now_velo){ //o引数は、グローバル変数45660
@@ -1498,7 +1499,7 @@ void rotate180(){
 	///while(EN3_L.integrate >= -Target_pul_quarter && EN4_R.integrate <= Target_pul_quarter){
   while(EN3_L.integrate <= Target_pul_quarter*2 || EN4_R.integrate >= -Target_pul_quarter*2){
 	  mode.control = 3;
-	  Target_Rad_velo = -3;//Rotate(Target_Rad_velo, -5, Target_pul_quarter*2, EN3_L.integrate);
+	  Target_Rad_velo = -6;//Rotate(Target_Rad_velo, -5, Target_pul_quarter*2, EN3_L.integrate);
 	  //Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
 
 //    	check = EN3_L.integrate;
@@ -2159,6 +2160,276 @@ void left_search(){
     	}
 #endif
 }
+
+
+void goal_area_search(){
+
+	char orbit;
+
+	//壁更新
+	wall_set();
+
+	//マップ更新
+	Walk_Map_Update();
+
+	switch(my_direction){
+	case north:
+
+		//現在の座標 == ゴールの下2マス
+		//xが小さいほうなら、右回り
+		//直進
+		Accelerate();
+		Decelerate();
+		y++;
+		//壁更新
+		wall_set();
+
+		if(x == X_GOAL_LESSER){
+			orbit = 'R';
+		}
+		//xが大きい方なら、左回り
+		else if(x == X_GOAL_LARGER){
+			orbit = 'L';
+		}
+
+		if(orbit == 'R'){
+			//右回り
+			turn_right();
+			my_direction = east;
+			//直進
+			Accelerate();
+			Decelerate();
+			x++;
+			//壁更新
+			wall_set();
+
+			//右回り
+			turn_right();
+			my_direction = south;
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			//壁更新
+			wall_set();
+		}
+
+		if(orbit == 'L'){
+			//左回り
+			turn_left();
+			my_direction = west;
+			//直進
+			Accelerate();
+			Decelerate();
+			x--;
+			//壁更新
+			wall_set();
+
+			turn_left();
+			my_direction = south;
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			//壁更新
+			wall_set();
+		}
+
+		break;
+	case east:
+		//直進
+		Accelerate();
+		Decelerate();
+		x++;
+		//壁更新
+		wall_set();
+
+		//現在の座標 == ゴールの左2マス
+		if(y == Y_GOAL_LESSER){
+			orbit = 'L';
+		}
+		//yが大きい方なら、左回り
+		else if(y == Y_GOAL_LARGER){
+			orbit = 'R';
+		}
+		if(orbit == 'R'){
+			//右回り
+			turn_right();
+			my_direction = south;
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			//壁更新
+			wall_set();
+
+			//右回り
+			turn_right();
+			my_direction = west;
+			//直進
+			Accelerate();
+			Decelerate();
+			x--;
+			//壁更新
+			wall_set();
+		}
+
+		if(orbit == 'L'){
+			//左回り
+			turn_left();
+			my_direction = north;
+			//直進
+			Accelerate();
+			Decelerate();
+			y++;
+			//壁更新
+			wall_set();
+
+			turn_left();
+			my_direction = west;
+			//直進
+			Accelerate();
+			Decelerate();
+			x--;
+			//壁更新
+			wall_set();
+		}
+		break;
+	case south:
+		//直進
+		Accelerate();
+		Decelerate();
+		y--;
+		//壁更新
+		wall_set();
+
+		//現在の座標 == ゴールの上2マス
+		if(x == X_GOAL_LESSER){
+			orbit = 'L';
+		}
+		//xが大きい方なら、左回り
+		else if(x == X_GOAL_LARGER){
+			orbit = 'R';
+		}
+		if(orbit == 'R'){
+			//右回り
+			turn_right();
+			my_direction = west;
+			//直進
+			Accelerate();
+			Decelerate();
+			x--;
+			//壁更新
+			wall_set();
+
+			//右回り
+			turn_right();
+			my_direction = north;
+			//直進
+			Accelerate();
+			Decelerate();
+			y++;
+			//壁更新
+			wall_set();
+		}
+
+		if(orbit == 'L'){
+			//左回り
+			turn_left();
+			my_direction = east;
+			//直進
+			Accelerate();
+			Decelerate();
+			x++;
+			//壁更新
+			wall_set();
+
+			turn_left();
+			my_direction = north;
+			//直進
+			Accelerate();
+			Decelerate();
+			y++;
+			//壁更新
+			wall_set();
+		}
+		break;
+	case west:
+		//直進
+		Accelerate();
+		Decelerate();
+		x--;
+		//壁更新
+		wall_set();
+
+		//現在の座標 == ゴールの右2マス
+		if(y == Y_GOAL_LESSER){
+			orbit = 'R';
+		}
+		//xが大きい方なら、左回り
+		else if(y == Y_GOAL_LARGER){
+			orbit = 'L';
+		}
+		if(orbit == 'R'){
+			//右回り
+			turn_right();
+			my_direction = north;
+			//直進
+			Accelerate();
+			Decelerate();
+			y++;
+			//壁更新
+			wall_set();
+
+			//右回り
+			turn_right();
+			my_direction = east;
+			//直進
+			Accelerate();
+			Decelerate();
+			x++;
+			//壁更新
+			wall_set();
+		}
+
+		if(orbit == 'L'){
+			//左回り
+			turn_left();
+			my_direction = south;
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			//壁更新
+			wall_set();
+
+			turn_left();
+			my_direction = east;
+			//直進
+			Accelerate();
+			Decelerate();
+			x++;
+			//壁更新
+			wall_set();
+		}
+		break;
+	default :
+		break;
+	}
+
+	//マップ更新
+	Walk_Map_Update();
+
+	//出口まで移動
+	//向きを決める
+
+
+
+	//向きが反転して、xもしくはyが変わる
+
+}
+
+//足立法探索
 void Adachi_judge(){
 
 	/*------旋回モード選択-----*/
@@ -2196,7 +2467,7 @@ void Adachi_judge(){
 		  else {
 			  //後南
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);;
+	          for(int i=0;i < WAIT;i++);
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
@@ -2374,8 +2645,6 @@ void Adachi_search(){
 
 	//after-gall#2
 	      Decelerate();
-	      wall_set();
-	      Motor_PWM_Stop();
 	      mode.LED = 7;
 	      LED_Change();
 	      HAL_Delay(1000);
@@ -2383,6 +2652,18 @@ void Adachi_search(){
 	      Flash_store();
 	      mode.LED = 0;
 	      LED_Change();
+
+	      //ゴールエリア巡回 2×2を想定
+	      goal_area_search();
+
+	      //マップデータから、未探索の壁を持つ座標を探す
+	      //スタートから一番遠い未探索あり座標に向かう
+	      //右ルート左ルートで分けてみる
+	      //未探索あり座標を目的地としてひとつずつまわり、最終的にスタート地点を目標にして帰ってくる
+	      //最短経路を解く、を、しっかりやらないといけなさそう
+
+	      Motor_PWM_Stop();
+
 
 
 
@@ -2668,20 +2949,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	       case 0:
 	    	   Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
 	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
-	    	   mode.imu = 0;
+	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
+	    	   //mode.imu = 0;
 	    	   break;
 	       case 1:
 	    	   Left_Wall_Control(distance_wall_left, fl_average,T8, Wall.KP, Wall.KI, Wall.KD);
 	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
-	    	   mode.imu = 0;
+	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
+	    	   //mode.imu = 0;
 	    	   break;
 	       case 2:
 	    	   Right_Wall_Control(distance_wall_right, fr_average,T8, Wall.KP, Wall.KI, Wall.KD);
 	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
-	    	   mode.imu = 0;
+	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
+	    	   //mode.imu = 0;
 	    	   break;
 	       case 3:
 	    	   IMU_Control(Target_Rad_velo, imu_data, T1, imu.KP,imu.KI, imu.KD );
@@ -2720,7 +3001,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	      }
 	    }
 	    else if( mode.accel == 3 ){
-		  if(Target_velocity > 0){
+		  if(Target_velocity > a){
 
 			Target_velocity -= a;
 			//Left_Wall_Control();
@@ -2855,14 +3136,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
   }
 }
 
+
 /*---- DEFINING FUNCTION ----*/
 
 //実行時に切り替えるモード
 void Exe_num0(){
 
-
-	mode.control = 3;
-	Target_velocity=90;
+//printf("%lf\r\n",(double)zg);
+	mode.control = 0;
+	Target_velocity=SEARCH_SPEED;
 
 	Target_Rad_velo=0;
 
