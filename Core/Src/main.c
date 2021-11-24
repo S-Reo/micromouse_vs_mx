@@ -171,8 +171,10 @@ double imu_data=0,check=0, drift_fix = DRIFT_FIX;
 double offset=0;
 double self_timer=0;
 double timer=0;
-float identify[5010];
+//float identify[5010];
 int All_Pulse_cut=0, All_Pulse_anytime=0;
+
+float data_log[10000]={0};
 
 
 float distance_wall_right=380;
@@ -211,7 +213,7 @@ extern int16_t R_rotate, L_rotate;
 extern int16_t R_env_control, L_env_control;
 extern int16_t R_angular_velocity, L_angular_velocity;
 
-float msignal[800]={-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1};
+//float msignal[800]={-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,1,-1,1,1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1};
 float msig_input=0;
 
 extern uint8_t error_reset;
@@ -2225,6 +2227,20 @@ void goal_area_search(){
 			wall_set();
 			//待つ
 			for(int i=0;i < WAIT*0.5;i++);
+
+			//右回転
+			turn_right();
+			my_direction = west;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			for(int i=0;i < WAIT*0.5;i++);
+			//左回転
+			turn_left();
+			my_direction = south;
+			for(int i=0;i < WAIT*0.5;i++);
 		}
 
 		if(orbit == 'L'){
@@ -2253,6 +2269,20 @@ void goal_area_search(){
 			//壁更新
 			wall_set();
 			//待つ
+			for(int i=0;i < WAIT*0.5;i++);
+
+			//左回転
+			turn_left();
+			my_direction = east;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			x++;
+			for(int i=0;i < WAIT*0.5;i++);
+			//右回転
+			turn_right();
+			my_direction = north;
 			for(int i=0;i < WAIT*0.5;i++);
 		}
 
@@ -2303,6 +2333,20 @@ void goal_area_search(){
 			wall_set();
 			//待つ
 			for(int i=0;i < WAIT*0.5;i++);
+
+			//右回転
+			turn_right();
+			my_direction = north;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			y++;
+			for(int i=0;i < WAIT*0.5;i++);
+			//左回転
+			turn_left();
+			my_direction = west;
+			for(int i=0;i < WAIT*0.5;i++);
 		}
 
 		if(orbit == 'L'){
@@ -2332,6 +2376,22 @@ void goal_area_search(){
 			wall_set();
 			//待つ
 			for(int i=0;i < WAIT*0.5;i++);
+
+			//左回転
+			turn_left();
+			my_direction = south;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			for(int i=0;i < WAIT*0.5;i++);
+			//右回転
+			turn_right();
+			my_direction = west;
+			for(int i=0;i < WAIT*0.5;i++);
+
+
 		}
 		break;
 	case south:
@@ -2380,6 +2440,20 @@ void goal_area_search(){
 			wall_set();
 			//待つ
 			for(int i=0;i < WAIT*0.5;i++);
+
+			//右回転
+			turn_right();
+			my_direction = east;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			x++;
+			for(int i=0;i < WAIT*0.5;i++);
+			//左回転
+			turn_left();
+			my_direction = north;
+			for(int i=0;i < WAIT*0.5;i++);
 		}
 
 		if(orbit == 'L'){
@@ -2408,6 +2482,20 @@ void goal_area_search(){
 			//壁更新
 			wall_set();
 			//待つ
+			for(int i=0;i < WAIT*0.5;i++);
+
+			//左回転
+			turn_left();
+			my_direction = west;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			x--;
+			for(int i=0;i < WAIT*0.5;i++);
+			//右回転
+			turn_right();
+			my_direction = north;
 			for(int i=0;i < WAIT*0.5;i++);
 		}
 		break;
@@ -2457,6 +2545,20 @@ void goal_area_search(){
 			wall_set();
 			//待つ
 			for(int i=0;i < WAIT*0.5;i++);
+
+			//右回転
+			turn_right();
+			my_direction = south;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			y--;
+			for(int i=0;i < WAIT*0.5;i++);
+			//左回転
+			turn_left();
+			my_direction = east;
+			for(int i=0;i < WAIT*0.5;i++);
 		}
 
 		if(orbit == 'L'){
@@ -2485,6 +2587,20 @@ void goal_area_search(){
 			//壁更新
 			wall_set();
 			//待つ
+			for(int i=0;i < WAIT*0.5;i++);
+
+			//左回転
+			turn_left();
+			my_direction = north;
+			for(int i=0;i < WAIT*0.5;i++);
+			//直進
+			Accelerate();
+			Decelerate();
+			y++;
+			for(int i=0;i < WAIT*0.5;i++);
+			//右回転
+			turn_right();
+			my_direction = east;
 			for(int i=0;i < WAIT*0.5;i++);
 		}
 		break;
@@ -2678,6 +2794,179 @@ void Adachi_judge(){
 		  break;
 	  }//swtich end
 }
+void Adachi_go_back(){
+
+	/*------旋回モード選択-----*/
+	mode.turn = 0;
+	//------------------------------//
+	// 0 : 超信地旋回で1区画ずつ //
+	// 1 : 緩旋回                     //
+	// 2 : 片輪旋回                  //
+	// 3 : IMUで超信地旋回       //
+	/*----------------------------*/
+
+
+	//今�?�評価値よりも前の評価値が小さければ...
+	//前左右
+	  switch(my_direction){
+	  case north:
+		  if(wall[x][y].north == NOWALL &&walk_map[x][y+1] > walk_map[x][y] && y < NUMBER_OF_SQUARES-1){
+			  //前北
+			  straight();
+			  my_direction = north;
+			  y++;
+		  }
+		  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] > walk_map[x][y] && x > 0){
+			  //左西
+			  L_turn_select();
+			  my_direction = west;
+		      x--;
+		  }
+		  else if(wall[x][y].east == NOWALL &&walk_map[x+1][y] > walk_map[x][y] && x <  NUMBER_OF_SQUARES-1){
+			  //右東
+			  R_turn_select();
+	          my_direction = east;
+	          x++;
+		  }
+		  else {
+			  //後南
+	          Decelerate();
+	          for(int i=0;i < WAIT;i++);
+
+	          if(mode.execution == 1)
+	        	  Motor_PWM_Stop();
+
+	  	      rotate180();
+	  	      for(int i=0;i < WAIT;i++);;
+	  	      back_calib();
+	  	      for(int i=0;i < WAIT;i++);
+	       	  Start_Accel();
+	       	  my_direction = south;
+	       	  y--;
+		  }
+		  break;
+
+	  case east:
+
+		  if(wall[x][y].east == NOWALL && walk_map[x+1][y] > walk_map[x][y] && x < NUMBER_OF_SQUARES-1){
+			  //前東
+			  straight();
+	       	  my_direction = east;
+	       	  x++;
+		  }
+		  else if(wall[x][y].north == NOWALL && walk_map[x][y+1] > walk_map[x][y] && y < NUMBER_OF_SQUARES-1){
+			  //左�?
+			  L_turn_select();
+	       	  my_direction = north;
+	       	  y++;
+		  }
+		  else if(wall[x][y].south == NOWALL && walk_map[x][y-1] > walk_map[x][y] && y > 0){
+			  //右�?
+			  R_turn_select();
+	       	  my_direction = south;
+	       	  y--;
+		  }
+		  else {
+			  //後西
+	          Decelerate();
+	          for(int i=0;i < WAIT;i++);
+
+	          if(mode.execution == 1)
+	        	  Motor_PWM_Stop();
+
+	  	      rotate180();
+	  	      for(int i=0;i < WAIT;i++);
+	  	      back_calib();
+	  	      for(int i=0;i < WAIT;i++);
+	       	  Start_Accel();
+
+	       	  my_direction = west;
+	       	  x--;
+		  }
+		  break;
+
+	  case south:
+
+		  if(wall[x][y].south == NOWALL &&walk_map[x][y-1] > walk_map[x][y] && y > 0){
+			  //前南
+			  straight();
+	       	  my_direction = south;
+	       	  y--;
+		  }
+		  else if(wall[x][y].east == NOWALL &&walk_map[x+1][y] > walk_map[x][y] && x < NUMBER_OF_SQUARES-1){
+			  //左東
+			  L_turn_select();
+	       	  my_direction = east;
+	       	  x++;
+		  }
+		  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] > walk_map[x][y] && x > 0){
+			  //右西
+			  R_turn_select();
+	       	  my_direction = west;
+	       	  x--;
+		  }
+		  else {
+			  //後北
+	          Decelerate();
+	          for(int i=0;i < WAIT;i++);;
+
+	          if(mode.execution == 1)
+	        	  Motor_PWM_Stop();
+
+	  	      rotate180();
+	  	      for(int i=0;i < WAIT;i++);;
+	  	      back_calib();
+	  	      for(int i=0;i < WAIT;i++);
+	       	  Start_Accel();
+
+	       	  my_direction = north;
+	       	  y++;
+		  }
+		  break;
+
+	  case west:
+
+		  if(wall[x][y].west == NOWALL &&walk_map[x-1][y] > walk_map[x][y] && x > 0){
+			  //前西
+			  straight();
+	       	  my_direction = west;
+	       	  x--;
+		  }
+		  else if(wall[x][y].south == NOWALL &&walk_map[x][y-1] > walk_map[x][y] && y > 0){
+			  //左�?
+			  L_turn_select();
+	       	  my_direction = south;
+	       	  y--;
+		  }
+		  else if(wall[x][y].north == NOWALL &&walk_map[x][y+1] > walk_map[x][y] && y < NUMBER_OF_SQUARES-1){
+			  //右�?
+			  R_turn_select();
+	       	  my_direction = north;
+	       	  y++;
+		  }
+		  else {
+			  //後東
+	          Decelerate();
+	          for(int i=0;i < WAIT;i++);;
+
+	          if(mode.execution == 1)
+	        	  Motor_PWM_Stop();
+
+	  	      rotate180();
+	  	      for(int i=0;i < WAIT;i++);;
+	  	      back_calib();
+	  	      for(int i=0;i < WAIT;i++);
+	       	  Start_Accel();
+
+	       	  my_direction = east;
+	       	  x++;
+		  }
+		  break;
+
+	  default:
+		  break;
+	  }//swtich end
+}
 void Adachi_search(){
 	//back_calib();
 	/*ここは書籍から引用*/
@@ -2731,15 +3020,41 @@ void Adachi_search(){
 	      //ゴールエリア巡回 2×2を想定
 	      goal_area_search();
 
+//	      Motor_PWM_Stop();
+//	      HAL_Delay(10000);
+//
+//    	  for(int i=0; i < 10000; i+=5)
+//    	  printf("%f, %f, %f, %f, %f\r\n",data_log[i],data_log[i+1],data_log[i+2],data_log[i+3],data_log[i+4]);
+//    	  HAL_Delay(100000);
+	      Accelerate();
+	  	  y = y + 1;
 	      //マップデータから、未探索の壁を持つ座標を探す
 	      //スタートから一番遠い未探索あり座標に向かう
 	      //右ルート左ルートで分けてみる
 	      //未探索あり座標を目的地としてひとつずつまわり、最終的にスタート地点を目標にして帰ってくる
 	      //最短経路を解く、を、しっかりやらないといけなさそう
 
-	      Motor_PWM_Stop();
+	  	while( !(x == 0 && y == 0)){
+	  		//壁更新
+	  		wall_set();
+
+	  		//マップ更新
+	  		Walk_Map_Update();
+
+	  		//次の動きを判定し動く
+	  		Adachi_go_back();
+	  	}
+
+	  	  Decelerate();
+	      rotate180();
+	      for(int i=0;i < WAIT;i++);
+	      back_calib();
+	      for(int i=0;i < WAIT;i++);
 	      mapcopy();
 	      Flash_store();
+	      //mode.execution = 3;
+	      Motor_PWM_Stop();
+
 
 
 
@@ -2986,7 +3301,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 {
 	//static double angular_velo=CURVE_SPEED*2/90;
 	//static int k=0;
-	static int i=0,j=0,k=0;
+	static int i=0,k=0,z=0;
   if(htim == &htim1){
 	  switch(mode.interrupt){
 	  case 0:
@@ -3133,24 +3448,37 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 //			Mlog[1][i] = R_motor;
 //		}
 //		}
+
 		if(timer <= 2000){
 #if 1
 			if((int)timer % 5== 0){
 				//普通に取る or 倍速で取る
-		     identify[k] = (L_velocity + R_velocity)/2;
+		    // identify[k] = (L_velocity + R_velocity)/2;
 		     k++;
 			}
 #else
 		identify[(int)timer] = imu_data;//角速度 rad/s
 #endif
 		}
-		i++;
-		if(i % 50 == 0){
-			msig_input = 0.06 * msignal[j];
-			j++;
-		}
+
+
+//		if(i % 50 == 0){
+//			msig_input = 0.06 * msignal[j];
+//			j++;
+//		}
 
 		Motor_Switch(L_motor,R_motor);
+		if(i%100==0 && i < 100000){
+			data_log[z] = L_velocity;
+			data_log[z+1] = R_velocity;
+			data_log[z+2] = (float)imu_data;
+			data_log[z+3] = Body_velocity;
+			data_log[z+4] = Target_velocity;
+
+			z+=5;
+
+		}
+		i++;
 		break;
 
 		case 1://ログ取り用
@@ -3179,7 +3507,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 
 					//普通に取る or 倍速で取る
 			     //identify[k] = (L_velocity + R_velocity)/2;
-			     identify[k] =  imu_data;//角速度
+			     //identify[k] =  imu_data;//角速度
 			     k++;
 
 				}
@@ -3188,10 +3516,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 #endif
 
 			i++;
-			if(i % 60 == 0){
-				msig_input = 0.06 * msignal[j];
-				j++;
-			}
+//			if(i % 60 == 0){
+//				msig_input = 0.06 * msignal[j];
+//				j++;
+//			}
 
 			}
 			//モータ出力更新
@@ -3295,8 +3623,8 @@ void Exe_num4(){
  		  if(timer >= 48000){
   		  Motor_PWM_Stop();
   		  HAL_Delay(20000);
-  		  for(int k=0;k < 800; k++)
-  			  printf("%f\r\n",identify[k]);
+  		  for(int k=0;k < 800; k++){}
+  			  //printf("%f\r\n",identify[k]);
   			 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
   			 // printf("%f\r\n",identify[k]);
  		  }
@@ -3315,7 +3643,7 @@ void Exe_num4(){
 
 }
 void Exe_num5(){
-	  Exe_num5();
+	  //Exe_num5();
 	  mode.control = 4;
 	  Target_velocity = 90;
 	  timer = 0;
@@ -3324,8 +3652,8 @@ void Exe_num5(){
 	  if(timer >= 2000){
 	  Motor_PWM_Stop();
 	  HAL_Delay(17000);
-	  for(int k=0;k < 400; k++)
-		  printf("%f\r\n",identify[k]);
+	  for(int k=0;k < 400; k++){}
+		  //printf("%f\r\n",identify[k]);
 
 		 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
 		 // printf("%f\r\n",identify[k]);
@@ -3375,9 +3703,10 @@ void Exe_num6(){
         	                    //5 nothing
         	                    //6 curve
 
-        	  Target_velocity = 135;//test_velo_6;
-        	  mode.control = 3;
-        	  Target_Rad_velo= 0;
+//        	  Target_velocity = 135;//test_velo_6;
+//        	  mode.control = 3;
+//        	  Target_Rad_velo= 0;
+
         	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
 
 #if 0
@@ -3425,7 +3754,7 @@ void Exe_num7(){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	static int i=0;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
