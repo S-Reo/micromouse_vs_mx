@@ -9,6 +9,7 @@
 #include<math.h>
 //制御関数の定義
 #include "Control.h"
+
 uint8_t error_reset=0;
 
 int16_t R_wall, L_wall;
