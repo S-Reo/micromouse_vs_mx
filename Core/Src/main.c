@@ -1009,6 +1009,7 @@ void Accelerate(){
     EN4_R.integrate = 0;
 	EN_Body.integrate = 0;
 	mode.enc = 1;
+	//Target_velocity =10;
 
 	while( 0 <= (EN3_L.integrate + EN4_R.integrate) && (EN3_L.integrate + EN4_R.integrate) < ACCE_DECE_PULSE * 2){
 
@@ -2744,7 +2745,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	      }
 	    }
 	    else if( mode.accel == 3 ){
-		  if(Target_velocity > 0){
+		  if(Target_velocity > 2){
 
 			Target_velocity -= a;
 			//Left_Wall_Control();
@@ -2892,11 +2893,11 @@ void Exe_num0(){
 
 	mode.control = 3;
 	Target_Rad_velo=0;
-	Target_velocity=90;
+	Target_velocity=10;
 	double stating_point_of_time = elapsed_time;
 	while(stating_point_of_time + 1 > elapsed_time);
 	wait(0.3);
-	Target_velocity=90;
+	Target_velocity=10;
 
 	stating_point_of_time = elapsed_time;
 	while(stating_point_of_time + 1 > elapsed_time);
