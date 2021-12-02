@@ -171,6 +171,7 @@ double imu_data=0,check=0, drift_fix = DRIFT_FIX;
 double offset=0;
 double self_timer=0;
 double timer=0;
+double elapsed_time=0; //経過時間
 //float identify[5010];
 int All_Pulse_cut=0, All_Pulse_anytime=0;
 
@@ -954,6 +955,23 @@ void Face_Front(){
 //o グローバル変数の処
 //o 走行用の関数
 //Motion.cとMotion.hにまとめる
+//時間待ち関数
+
+void wait(double wait_second)
+{
+	//グローバル変数のtimerを使う
+	//いらない制御を切って待つ。か、つけっぱなし。
+	//つけっぱなしのパターン
+	//待った先の時間 - 現在の時間
+	//待ちたい時間
+	double starting_point_of_time = elapsed_time;
+	while(starting_point_of_time + wait_second > elapsed_time)
+	{
+
+	}
+
+	//いらない制御を切るパターン
+}
 
 
 void Start_Accel(){
@@ -1031,7 +1049,7 @@ void Decelerate(){
 
 	mode.control = 3;
 	//printf("%d\r\n",EN3_L.integrate + EN4_R.integrate);
-	while(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 && (sl_average + sr_average )/2 < 2150){
+	while(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 && (sl_average + sr_average )/2 < 1950){
 		mode.accel = 3;
 #if 1
 		if(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 - (WALL_JUDGE_PULSE  * 2 *3/5) ){//ここの閾値の意味:減速する距離は半区画 -
@@ -1562,7 +1580,7 @@ void back_calib(){
     mode.enc = 1;
     //50mmバック
 
-    while(EN3_L.integrate + EN4_R.integrate > -2 * (61.75-44) / MM_PER_PULSE){
+    while(EN3_L.integrate + EN4_R.integrate > -2 * (61.75-40) / MM_PER_PULSE){
     	Target_velocity = -90;
     	mode.control = 4;
     }
@@ -1624,9 +1642,9 @@ void R_turn_select(){
   switch(mode.turn){
   case 0:
 	  Decelerate();
-	  for(int i=0;i < WAIT;i++);
+	  wait(0.3);
 	  turn_right();
-	  for(int i=0;i < WAIT;i++);
+	  wait(0.3);
       Accelerate();
       break;
   case 1:
@@ -1648,9 +1666,9 @@ void L_turn_select(){
   case 0:
 	  //加減速超信地旋回
 	  Decelerate();
-	  for(int i=0;i < WAIT;i++);
+	  wait(0.3);
 	  turn_left();
-	  for(int i=0;i < WAIT;i++);
+	  wait(0.3);
       Accelerate();
       break;
   case 1:
@@ -1922,14 +1940,14 @@ void judge(){
 
     		  else {
     	          Decelerate();
-    	          for(int i=0;i < WAIT;i++);
+    	          wait(0.3);
 
     	          if(mode.execution == 1)
     	        	  Motor_PWM_Stop();
 
     	  	      rotate180();
 
-    	  	      for(int i=0;i < WAIT;i++);
+    	  	      wait(0.3);
     	  	      back_calib();
     	       	  Start_Accel();
     	       	  my_direction = south;
@@ -1961,13 +1979,13 @@ void judge(){
 
     		  else {
     	          Decelerate();
-    	          for(int i=0;i < WAIT;i++);
+    	          wait(0.3);
 
     	          if(mode.execution == 1)
     	        	  Motor_PWM_Stop();
 
     	  	      rotate180();
-    	  	      for(int i=0;i < WAIT;i++);
+    	  	      wait(0.3);
     	  	      back_calib();
   	       	  Start_Accel();
       			  my_direction = west;
@@ -1997,13 +2015,13 @@ void judge(){
 
     		  else {
     	          Decelerate();
-    	          for(int i=0;i < WAIT;i++);
+    	          wait(0.3);
 
     	          if(mode.execution == 1)
     	        	  Motor_PWM_Stop();
 
     	  	      rotate180();
-    	  	      for(int i=0;i < WAIT;i++);
+    	  	      wait(0.3);
     	  	      back_calib();
   	       	  Start_Accel();
       			  my_direction = north;
@@ -2034,13 +2052,13 @@ void judge(){
 
     		  else {
     	          Decelerate();
-    	          for(int i=0;i < WAIT;i++);;
+    	          wait(0.3);;
 
     	          if(mode.execution == 1)
     	        	  Motor_PWM_Stop();
 
     	  	      rotate180();
-    	  	      for(int i=0;i < WAIT;i++);;
+    	  	      wait(0.3);;
     	  	      back_calib();
     	       	  Start_Accel();
     	          my_direction = east;
@@ -2111,7 +2129,7 @@ void left_search(){
 //        	IMU_turn(90, 2.0);
 //        	IMU_init();
         	turn_left();//o1/4回転
-        	for(int i=0;i < WAIT;i++);;
+        	wait(0.3);;
 
             Accelerate();
 	        //printf("左に壁ない\r\n");
@@ -2138,7 +2156,7 @@ void left_search(){
 //    	    IMU_turn(-90, -2.0);
 //    	    IMU_init();
     	    turn_right();
-    	    for(int i=0;i < WAIT;i++);;
+    	    wait(0.3);;
 
             Accelerate();
         	//printf("右に壁ない\r\n");
@@ -2151,7 +2169,7 @@ void left_search(){
 //  	    IMU_turn(180, 4.0);
 //  	    IMU_init();
   	      rotate180();
-  	      for(int i=0;i < WAIT;i++);;
+  	      wait(0.3);;
 
        	  Accelerate();
        	mode.action = 4;
@@ -2658,15 +2676,15 @@ void Adachi_judge(){
 		  else {
 			  //後南
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);
+	          wait(0.3);
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);;
+	  	      wait(0.3);;
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 	       	  my_direction = south;
 	       	  y--;
@@ -2696,15 +2714,15 @@ void Adachi_judge(){
 		  else {
 			  //後西
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);
+	          wait(0.3);
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 
 	       	  my_direction = west;
@@ -2735,15 +2753,15 @@ void Adachi_judge(){
 		  else {
 			  //後北
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);;
+	          wait(0.3);;
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);;
+	  	      wait(0.3);;
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 
 	       	  my_direction = north;
@@ -2774,15 +2792,15 @@ void Adachi_judge(){
 		  else {
 			  //後東
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);;
+	          wait(0.3);;
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);;
+	  	      wait(0.3);;
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 
 	       	  my_direction = east;
@@ -2831,15 +2849,15 @@ void Adachi_go_back(){
 		  else {
 			  //後南
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);
+	          wait(0.3);
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);;
+	  	      wait(0.3);;
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 	       	  my_direction = south;
 	       	  y--;
@@ -2869,15 +2887,15 @@ void Adachi_go_back(){
 		  else {
 			  //後西
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);
+	          wait(0.3);
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 
 	       	  my_direction = west;
@@ -2908,15 +2926,15 @@ void Adachi_go_back(){
 		  else {
 			  //後北
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);;
+	          wait(0.3);;
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);;
+	  	      wait(0.3);;
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 
 	       	  my_direction = north;
@@ -2947,15 +2965,15 @@ void Adachi_go_back(){
 		  else {
 			  //後東
 	          Decelerate();
-	          for(int i=0;i < WAIT;i++);;
+	          wait(0.3);;
 
 	          if(mode.execution == 1)
 	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
-	  	      for(int i=0;i < WAIT;i++);;
+	  	      wait(0.3);;
 	  	      back_calib();
-	  	      for(int i=0;i < WAIT;i++);
+	  	      wait(0.3);
 	       	  Start_Accel();
 
 	       	  my_direction = east;
@@ -3047,9 +3065,9 @@ void Adachi_search(){
 
 	  	  Decelerate();
 	      rotate180();
-	      for(int i=0;i < WAIT;i++);
+	      wait(0.3);
 	      back_calib();
-	      for(int i=0;i < WAIT;i++);
+	      wait(0.3);
 	      mapcopy();
 	      Flash_store();
 	      //mode.execution = 3;
@@ -3128,13 +3146,13 @@ void Shortest_Run_Judge(){
 	  			  else {
 	  				  //後南
 	  		          Decelerate();
-	  		          for(int i=0;i < WAIT;i++);;
+	  		          wait(0.3);;
 
 	  		          if(mode.execution == 1)
 	  		        	  Motor_PWM_Stop();
 
 	  		  	      rotate180();
-	  		  	      for(int i=0;i < WAIT;i++);;
+	  		  	      wait(0.3);;
 	  		       	  Accelerate();
 	  		       	  my_direction = south;
 	  		       	  y--;
@@ -3164,13 +3182,13 @@ void Shortest_Run_Judge(){
 	  			  else {
 	  				  //後西
 	  		          Decelerate();
-	  		          for(int i=0;i < WAIT;i++);;
+	  		          wait(0.3);;
 
 	  		          if(mode.execution == 1)
 	  		        	  Motor_PWM_Stop();
 
 	  		  	      rotate180();
-	  		  	      for(int i=0;i < WAIT;i++);;
+	  		  	      wait(0.3);;
 	  		       	  Accelerate();
 
 	  		       	  my_direction = west;
@@ -3201,13 +3219,13 @@ void Shortest_Run_Judge(){
 	  			  else {
 	  				  //後北
 	  		          Decelerate();
-	  		          for(int i=0;i < WAIT;i++);;
+	  		          wait(0.3);;
 
 	  		          if(mode.execution == 1)
 	  		        	  Motor_PWM_Stop();
 
 	  		  	      rotate180();
-	  		  	      for(int i=0;i < WAIT;i++);;
+	  		  	      wait(0.3);;
 	  		       	  Accelerate();
 
 	  		       	  my_direction = north;
@@ -3238,13 +3256,13 @@ void Shortest_Run_Judge(){
 	  			  else {
 	  				  //後東
 	  		          Decelerate();
-	  		          for(int i=0;i < WAIT;i++);;
+	  		          wait(0.3);;
 
 	  		          if(mode.execution == 1)
 	  		        	  Motor_PWM_Stop();
 
 	  		  	      rotate180();
-	  		  	      for(int i=0;i < WAIT;i++);;
+	  		  	      wait(0.3);;
 	  		       	  Accelerate();
 
 	  		       	  my_direction = east;
@@ -3303,6 +3321,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	//static int k=0;
 	static int i=0,k=0,z=0;
   if(htim == &htim1){
+	  elapsed_time += T1;
 	  switch(mode.interrupt){
 	  case 0:
 	  Tim_Count();
@@ -3392,7 +3411,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	      }
 	    }
 	    else if( mode.accel == 3 ){
-		  if(Target_velocity > 5*a){
+		  if(Target_velocity > 5){
 
 			Target_velocity -= a;
 			//Left_Wall_Control();
