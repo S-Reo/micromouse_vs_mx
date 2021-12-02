@@ -714,17 +714,22 @@ void Interrupt_Check(){ // 割り込みができて-LED
 
 
 /*---- DEFINING FUNCTION ----*/
+double lowpass_filter(float x, float x0, float r)
+{
+	return ((r)*(x) + (1.0 - (r))* (x0));
+}
 double IMU_Get_Data(){// IMUの値を取
 	//int i = 0;
 	static double  /*imu_pre_angle=0,*/ imu_accel=0, imu_pre_accel=0;
-
+	static double LPF=0, lastLPF=0;
     read_gyro_data();
     read_accel_data();
 
     //atan2(za,xa);
-	imu_accel =  ( ( (double)zg - offset/*2.0*/ )/16.4) * PI /180;
-	imu_angle += (imu_pre_accel + imu_accel) * T1 / 2;
-	imu_angle -= drift_fix * PI /180;
+    imu_accel =  ( ( (double)zg - offset )/16.4) * PI /180;//rad/s or rad/0.001s
+    LPF = lowpass_filter(imu_accel, lastLPF,0.01);
+    imu_angle += T1*LPF;
+    lastLPF = LPF;
 	imu_pre_accel = imu_accel;
 	//imu_pre_angle = imu_angle;
 
@@ -757,7 +762,7 @@ void IMU_Control(double target, double now, double T, double KP, double KI, doub
 }
 void IMU_Calib(){
 
-	HAL_Delay(1000);
+	HAL_Delay(250);
 
 	int16_t num = 2000;
 	double zg_vals[num];
@@ -1562,7 +1567,7 @@ void back_calib(){
     mode.enc = 1;
     //50mmバック
 
-    while(EN3_L.integrate + EN4_R.integrate > -2 * (61.75-44) / MM_PER_PULSE){
+    while(EN3_L.integrate + EN4_R.integrate > -2 * (61.75-40) / MM_PER_PULSE){
     	Target_velocity = -90;
     	mode.control = 4;
     }
@@ -1723,8 +1728,8 @@ void Execution_Select(){
 	  	  mode.execution = mode.LED;
 	  	  HAL_Delay(500);
 	  }else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1){
-		  printf("\r\n");
-		      HAL_Delay(500);
+		  //printf("\r\n");
+		      HAL_Delay(250);
 	  		  Init(); // mycodeInit(); // mycode
 	  		  TIM3 -> CNT = 30000 - 1;
 	  		  TIM4 -> CNT = 30000 - 1;
