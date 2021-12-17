@@ -73,22 +73,22 @@
 
 #define DRIFT_FIX 0.00006375
 
-#define NUMBER_OF_SQUARES 4 //16
-#define X_GOAL_LESSER 2//3//6
-#define Y_GOAL_LESSER 2//3//9
-#define X_GOAL_LARGER 3//7
-#define Y_GOAL_LARGER 3//10
+#define NUMBER_OF_SQUARES 16//4 //16
+#define X_GOAL_LESSER 6//2//3//6
+#define Y_GOAL_LESSER 9//2//3//9
+#define X_GOAL_LARGER 7//3//7
+#define Y_GOAL_LARGER 10//3//10
 
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
-#define SEARCH_SPEED 270
+#define SEARCH_SPEED 300//270
 #define CURVE_SPEED 180
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 #define TIRE_DEAMETER 20.6//20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 34 //36.8
+#define TREAD_WIDTH 34.4 //36.8
 
 
  // タイヤ直 mm
@@ -225,9 +225,9 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
-		0.3,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
-		0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
+		1,//0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
+		0.2,//0.3,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
+		0.00006//0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
 		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
 		33.5232,//248.4198,//10.1707,//91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
@@ -3347,10 +3347,13 @@ void Adachi_search2(){
 //	      Flash_store();
 	      mode.LED = 0;
 	      LED_Change();
+	      mapcopy();
+	      Flash_store();
 
 	      //ゴールエリア巡回 2×2を想定
 	      goal_area_search();
 
+#if 0
 //	      Motor_PWM_Stop();
 //	      HAL_Delay(10000);
 //
@@ -3380,6 +3383,7 @@ void Adachi_search2(){
 	      rotate180();
 	      wait(0.3);
 	      back_calib();
+#endif
 	      wait(0.3);
 	      mapcopy();
 	      Flash_store();
@@ -4025,6 +4029,8 @@ void Exe_num6(){
 void Exe_num7(){
 	  //mode.control = 5;
 	 // mode.control = 3; //1 Left_wall
+	Target_velocity = 0;
+	mode.control = 0;
 
 #if 1
 
