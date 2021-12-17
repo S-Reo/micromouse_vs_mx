@@ -173,7 +173,7 @@ double elapsed_time=0; //経過時間
 //float identify[5010];
 int All_Pulse_cut=0, All_Pulse_anytime=0;
 
-float data_log[10000]={0};
+
 
 
 float distance_wall_right=380;
@@ -189,7 +189,7 @@ uint8_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 double goal_time[5];
 
 //左右のモータのカウント値のログ
-float Mlog[2][6000];
+
 int16_t test_R,test_L;
 int16_t sl_ad1_10, fr_ad1_14=1, fl_ad2_11=0, sr_ad2_15; //
 int16_t fl_path=0, fr_path=0, sl_path, sr_path; // センサの前回値
@@ -3055,12 +3055,7 @@ void Adachi_search(){
 	      //ゴールエリア巡回 2×2を想定
 	      goal_area_search();
 #if 0
-//	      Motor_PWM_Stop();
-//	      HAL_Delay(10000);
-//
-//    	  for(int i=0; i < 10000; i+=5)
-//    	  printf("%f, %f, %f, %f, %f\r\n",data_log[i],data_log[i+1],data_log[i+2],data_log[i+3],data_log[i+4]);
-//    	  HAL_Delay(100000);
+
 	      Accelerate();
 	  	  y = y + 1;
 	      //マップデータから、未探索の壁を持つ座標を探す
@@ -3354,12 +3349,7 @@ void Adachi_search2(){
 	      goal_area_search();
 
 #if 0
-//	      Motor_PWM_Stop();
-//	      HAL_Delay(10000);
-//
-//    	  for(int i=0; i < 10000; i+=5)
-//    	  printf("%f, %f, %f, %f, %f\r\n",data_log[i],data_log[i+1],data_log[i+2],data_log[i+3],data_log[i+4]);
-//    	  HAL_Delay(100000);
+
 	      Accelerate();
 	  	  y = y + 1;
 	      //マップデータから、未探索の壁を持つ座標を探す
@@ -3600,7 +3590,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 {
 	//static double angular_velo=CURVE_SPEED*2/90;
 	//static int k=0;
-	static int i=0,k=0,z=0;
+	static int k=0;
   if(htim == &htim1){
 	  elapsed_time += T1;
 	  switch(mode.interrupt){
@@ -3741,13 +3731,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    Velocity_Control(Target_velocity, Body_velocity, T1,velocity.KP ,velocity.KI, velocity.KD);
 		L_motor = L_v_control + L_wall + L_leftwall + L_rightwall + L_rotate + L_angular_velocity + L_env_control + L_velo_control;
 		R_motor = R_v_control + R_wall + R_leftwall + R_rightwall + R_rotate + R_angular_velocity + R_env_control + R_velo_control;
-//		if(i < 6000){
-//		i++;
-//		if(i % 10 == 0){
-//			Mlog[0][i] = L_motor;
-//			Mlog[1][i] = R_motor;
-//		}
-//		}
+
 
 		if(timer <= 2000){
 #if 1
@@ -3768,17 +3752,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 //		}
 
 		Motor_Switch(L_motor,R_motor);
-		if(i%100==0 && i < 100000){
-			data_log[z] = L_velocity;
-			data_log[z+1] = R_velocity;
-			data_log[z+2] = (float)imu_data;
-			data_log[z+3] = Body_velocity;
-			data_log[z+4] = Target_velocity;
 
-			z+=5;
 
-		}
-		i++;
 		break;
 
 		case 1://ログ取り用
@@ -3815,7 +3790,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 			identify[(int)timer] = imu_data;//角速度 rad/s
 #endif
 
-			i++;
+
 //			if(i % 60 == 0){
 //				msig_input = 0.06 * msignal[j];
 //				j++;
