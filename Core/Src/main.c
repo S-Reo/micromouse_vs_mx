@@ -226,7 +226,7 @@ typedef struct {
 
 PID_Control Wall = {
 		0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
-		1,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
+		0.3,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
 		0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
 		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
@@ -734,12 +734,11 @@ double IMU_Get_Data(){// IMUの値を取
 }
 void IMU_Control(double target, double now, double T, double KP, double KI, double KD){
 
-	static double e=0, ei=0, ed=0, e0=0;
-
+	static double  ei=0, e0=0;
+	double e=0,ed=0;
 	if(mode.imu == 0 || (Target_velocity == 0 && Target_Rad_velo == 0)){
-		e=0;
+
 		ei = 0;
-		ed=0;
 		e0=0;
 	}
 	mode.imu = 1;
@@ -1047,8 +1046,9 @@ void Decelerate(){
 
 	mode.control = 3;
 	//printf("%d\r\n",EN3_L.integrate + EN4_R.integrate);
-	while(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 && (sl_average + sr_average )/2 < 1950){
+	while( (EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2) &&  ( (sl_average + sr_average )/2 < 1900)){
 		mode.accel = 3;
+		printf("%d , %d\r\n",EN3_L.integrate , EN4_R.integrate);
 #if 1
 		if(EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2 - (WALL_JUDGE_PULSE  * 2 *3/5) ){//ここの閾値の意味:減速する距離は半区画 -
 		  if(fr_average > RIGHT_WALL && fl_average > LEFT_WALL){
@@ -1080,6 +1080,7 @@ void Decelerate(){
 	mode.enc = 0;
 	error_reset = 0;
 	Motor_Count_Clear();
+
 
 	//printf("減�?????��?��??��?��???��?��??��?��した???��?��??��?��?\r\n");
 }
@@ -1283,7 +1284,7 @@ void turn_right(){
 	//左右の車輪速度制御
 	//or 角速度制御で旋回
 	  uint8_t counter=0;
-
+	  //printf("turnはじめ\r\n");
 	   while(counter < 1){
 
 			Target_velocity = 0;
@@ -1294,19 +1295,32 @@ void turn_right(){
 	    EN4_R.integrate = 0;
 		  EN_Body.integrate = 0;
 		  mode.enc = 1;
+		  //int pulse_check ;
 		///while(EN3_L.integrate >= -Target_pul_quarter && EN4_R.integrate <= Target_pul_quarter){
 	  while(EN3_L.integrate + (-1)*EN4_R.integrate <= Target_pul_quarter*2){
+
 		  mode.control = 3;
 		  Target_Rad_velo = -5;//Rotate(Target_Rad_velo, -5, Target_pul_quarter, EN3_L.integrate);
 		  //Rotate_Control(Target_rotate,T1, velocity.KP, velocity.KI, velocity.KD);
 //		  mode.control = 3;
+
 //		  Target_Rad_velo = -10;
+		  //pulse_check = EN3_L.integrate + (-1)*EN4_R.integrate;
+		  //printf("turn中 %d\r\n",pulse_check);
 	    	}
+
 	      mode.enc = 0;
 	      Target_Rad_velo = 0;
 //	      mode.control = 4;
 //	      Target_Rad_velo = 0;
 	      Target_velocity = 0;
+//		  printf("turn中 %d, <= 目標パルス %f\r\n",EN3_L.integrate + (-1)*EN4_R.integrate,Target_pul_quarter*2);
+//		  pulse_check = EN3_L.integrate + (-1)*EN4_R.integrate;
+//		  while(1){
+//			  printf("turn中 %d, <= 目標パルス %f\r\n",pulse_check ,Target_pul_quarter*2);
+//
+//
+//		  }
 	      //Target_rotate =0;
 	      EN3_L.integrate = 0;
 	      EN4_R.integrate = 0;
@@ -1315,6 +1329,7 @@ void turn_right(){
 	     }
 		error_reset = 0;
 		Motor_Count_Clear();
+
 
 
 
@@ -3028,14 +3043,18 @@ void Adachi_search(){
 	      mode.LED = 7;
 	      LED_Change();
 	      HAL_Delay(1000);
+
 //	      mapcopy();
 //	      Flash_store();
 	      mode.LED = 0;
 	      LED_Change();
+	      mapcopy();
+	      Flash_store();
+
 
 	      //ゴールエリア巡回 2×2を想定
 	      goal_area_search();
-
+#if 0
 //	      Motor_PWM_Stop();
 //	      HAL_Delay(10000);
 //
@@ -3065,11 +3084,16 @@ void Adachi_search(){
 	      rotate180();
 	      wait(0.3);
 	      back_calib();
+#endif
 	      wait(0.3);
 	      mapcopy();
 	      Flash_store();
 	      //mode.execution = 3;
-	      Motor_PWM_Stop();
+	      while(1)
+	      {
+
+	    	  Motor_PWM_Stop();
+	      }
 }
 void Map_Load(){
 	//ROMの迷路�?ータをRAMに入れる
@@ -3577,7 +3601,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	  elapsed_time += T1;
 	  switch(mode.interrupt){
 	  case 0:
-	  Tim_Count();
+	 // Tim_Count();
 #if 0
 	    timer += 0.001;
       	if(timer == 3){

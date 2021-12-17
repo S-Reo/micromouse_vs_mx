@@ -28,14 +28,14 @@ float Target_R_velo, Target_L_velo;
 //壁制御
 void Side_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
 
-	static float e=0, ei=0, ed=0, e0=0;
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
+
 	e =  40 + target - now;//r - l
 	ei += e * T;
 	ed = (e- e0) / T;
@@ -48,11 +48,10 @@ void Side_Wall_Control(float target, float now,float T, float KP, float KI, floa
 
 void Left_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
 
-	static float e=0, ei=0, ed=0, e0=0;
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
@@ -66,11 +65,10 @@ void Left_Wall_Control(float target, float now,float T, float KP, float KI, floa
 
 void Right_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
 
-	static float e=0, ei=0, ed=0, e0=0;
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
@@ -85,12 +83,10 @@ void Right_Wall_Control(float target, float now,float T, float KP, float KI, flo
 //速度制御
 void Velocity_Control(float target, float now, float T, float KP, float KI, float KD){ //TIM3,4
 
-	static float e=0, ei=0, ed=0, e0=0;
-
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
@@ -108,12 +104,10 @@ void Velocity_Control(float target, float now, float T, float KP, float KI, floa
 
 void Right_Velo_Control(float target, float now, float T, float KP, float KI, float KD){
 
-	static float e, ei, ed, e0;
-
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
@@ -127,12 +121,10 @@ void Right_Velo_Control(float target, float now, float T, float KP, float KI, fl
 
 void Left_Velo_Control(float target, float now, float T, float KP, float KI, float KD){
 
-	static float e, ei, ed, e0;
-
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
@@ -181,12 +173,10 @@ void Rotate_Control(float target, float T, float KP, float KI, float KD){
 
 void Enc_Velo_Control(float T, float KP, float KI, float KD){
 
-	static float e, ei, ed, e0;
-
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
@@ -203,11 +193,10 @@ void Enc_Velo_Control(float T, float KP, float KI, float KD){
 void Rad_Velo_Control(double target, double data, double T, float KP, float KI, float KD){
 	//割り込み関数中で角速度 rad/sを取得
 	//Target_Rad_velo
-	static double e=0, ei=0, ed=0, e0=0;
+	static float ei=0, e0=0;
+	 float e=0, ed=0;
 	if(error_reset == 0){
-		e=0;
 		ei =0;
-		ed = 0;
 		e0 = 0;
 	}
 	error_reset = 1;
