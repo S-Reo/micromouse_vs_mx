@@ -74,21 +74,21 @@
 #define DRIFT_FIX 0.00006375
 
 #define NUMBER_OF_SQUARES 16//4 //16
-#define X_GOAL_LESSER 6//2//3//6
-#define Y_GOAL_LESSER 9//2//3//9
-#define X_GOAL_LARGER 7//3//7
-#define Y_GOAL_LARGER 10//3//10
+#define X_GOAL_LESSER 6
+#define Y_GOAL_LESSER 9
+#define X_GOAL_LARGER 7
+#define Y_GOAL_LARGER 10
 
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
-#define SEARCH_SPEED 300//270
+#define SEARCH_SPEED 235
 #define CURVE_SPEED 180
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 #define TIRE_DEAMETER 20.6//20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 34.4 //36.8
+#define TREAD_WIDTH 36.4//34.4 //36.8
 
 
  // タイヤ直 mm
@@ -225,9 +225,9 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		1,//0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
+		0.5,//0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
 		0.2,//0.3,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
-		0.00006//0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
+		0.00004//0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
 		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
 		33.5232,//248.4198,//10.1707,//91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
@@ -1046,7 +1046,7 @@ void Decelerate(){
 
 	mode.control = 3;
 	//printf("%d\r\n",EN3_L.integrate + EN4_R.integrate);
-	while( (EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2) &&  ( (sl_average + sr_average )/2 < 1900)){
+	while( (EN3_L.integrate + EN4_R.integrate < ACCE_DECE_PULSE * 2) &&  ( (sl_average + sr_average )/2 < 1850)){
 		mode.accel = 3;
 		printf("%d , %d\r\n",EN3_L.integrate , EN4_R.integrate);
 #if 1
@@ -3682,7 +3682,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	      }
 	    }
 	    else if( mode.accel == 3 ){
-		  if(Target_velocity > 5){
+		  if(Target_velocity > 2){
 
 			Target_velocity -= a;
 			//Left_Wall_Control();
@@ -3938,7 +3938,8 @@ void Exe_num5(){
 		 // printf("%f\t %f\r\n",identify[k],identify[k+5000]);
 		 // printf("%f\r\n",identify[k]);
 
-		  //
+		  turn_right();
+		  while(1);
 
 
 
@@ -3989,7 +3990,7 @@ void Exe_num6(){
 
         	  //Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
 
-#if 0
+#if 1
 	      printf("左 : %f\r\n",fl_average);
 	      printf("右 : %f\r\n",fr_average);
 	      printf("前左 : %f\r\n",sl_average);
@@ -4100,6 +4101,8 @@ int main(void)
 //      printf("EN_Body.integrate : %d \r\n", EN_Body.integrate);
 	  //誤差補正のオフセット値決定
 	  IMU_Calib();
+	  distance_wall_right=fr_average;
+	  distance_wall_left=fl_average;
 
 	  while(1){
 
