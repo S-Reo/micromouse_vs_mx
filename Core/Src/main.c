@@ -73,11 +73,11 @@
 
 #define DRIFT_FIX 0.00006375
 
-#define NUMBER_OF_SQUARES 16//4 //16
-#define X_GOAL_LESSER 6
-#define Y_GOAL_LESSER 9
-#define X_GOAL_LARGER 7
-#define Y_GOAL_LARGER 10
+#define NUMBER_OF_SQUARES 9//16//4 //16
+#define X_GOAL_LESSER 7//6
+#define Y_GOAL_LESSER 7//9
+#define X_GOAL_LARGER 7//7
+#define Y_GOAL_LARGER 7//10
 
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
@@ -157,13 +157,14 @@ float Target_pulse = 90/MM_PER_PULSE;//46680.0; //45660;
 float Target_pul_quarter = QUARTER_ROTATE_PULSE;
 float Target_rotate = 0;
 extern float Target_R_velo, Target_L_velo;
+extern float wall_target_error;
 
 //目標角速度 rad/s
 float Target_Rad_velo=0;
 
 float a_start = T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * START_ACCEL_DISTANCE);
 float a= T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * ACCE_DECE_DISTANCE);
-float a_curve = T1 * SEARCH_SPEED * SEARCH_SPEED * 124.6*124.6 /(2 * 2 * CURVE_DISTANCE*90*90);
+float a_curve = T1 * SEARCH_SPEED * SEARCH_SPEED * (90+TREAD_WIDTH)*(90+TREAD_WIDTH) /(2 * 2 * CURVE_DISTANCE*90*90);
 double Body_angle=0, imu_angle = 0;
 double imu_data=0,check=0, drift_fix = DRIFT_FIX;
 double offset=0;
@@ -225,8 +226,8 @@ typedef struct {
 }PID_Control;
 
 PID_Control Wall = {
-		0.5,//0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
-		0.2,//0.3,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
+		0.8,//0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
+		0.1,//0.2//0.3,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
 		0.00004//0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
 }, velocity = {
 		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
@@ -713,7 +714,12 @@ void Interrupt_Check(){ // 割り込みができて-LED
 
 
 /*---- DEFINING FUNCTION ----*/
+double lowpass_filter(float x, float x0, float r)
+{
+	return ((r)*(x) + (1.0 - (r))* (x0));
+}
 double IMU_Get_Data(){// IMUの値を取
+#if 1
 	//int i = 0;
 	static double  /*imu_pre_angle=0,*/ imu_accel=0, imu_pre_accel=0;
 
@@ -731,6 +737,25 @@ double IMU_Get_Data(){// IMUの値を取
 	Body_angle = imu_angle * 180 / PI;
 
 	  return imu_accel;
+#else
+		double  LPF=0,/*imu_pre_angle=0,*/ imu_accel=0; //imu_pre_accel=0;
+		static double lastLPF=0;
+	    read_gyro_data();
+	    read_accel_data();
+
+	    //atan2(za,xa);
+	    imu_accel =  ( ( (double)zg - offset )/16.4) * PI /180;//rad/s or rad/0.001s
+	    LPF = lowpass_filter((float)imu_accel, (float)lastLPF,0.01);
+	    imu_angle += T1*LPF;
+	    lastLPF = LPF;
+		//imu_pre_accel = imu_accel;
+		//imu_pre_angle = imu_angle;
+
+		//0.95 * imu_pre_angle + 0.05 * (imu_pre_accel + imu_accel) * T1 / 2;
+		Body_angle = imu_angle * 180 / PI;
+
+		  return LPF;
+#endif
 }
 void IMU_Control(double target, double now, double T, double KP, double KI, double KD){
 
@@ -3040,6 +3065,8 @@ void Adachi_search(){
 
 	//after-gall#2
 	      Decelerate();
+	      wall_set();
+	      Walk_Map_Update();
 	      mode.LED = 7;
 	      LED_Change();
 	      HAL_Delay(1000);
@@ -3053,7 +3080,8 @@ void Adachi_search(){
 
 
 	      //ゴールエリア巡回 2×2を想定
-	      goal_area_search();
+
+	      //goal_area_search();
 #if 0
 
 	      Accelerate();
@@ -3080,9 +3108,9 @@ void Adachi_search(){
 	      wait(0.3);
 	      back_calib();
 #endif
-	      wait(0.3);
-	      mapcopy();
-	      Flash_store();
+//	      wait(0.3);
+//	      mapcopy();
+//	      Flash_store();
 	      //mode.execution = 3;
 	      while(1)
 	      {
@@ -3159,8 +3187,8 @@ void Adachi_judge2(){
 	          Decelerate();
 	          wait(0.3);
 
-	          if(mode.execution == 1)
-	        	  Motor_PWM_Stop();
+//	          if(mode.execution == 1)
+//	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
 	  	      wait(0.3);;
@@ -3197,8 +3225,8 @@ void Adachi_judge2(){
 	          Decelerate();
 	          wait(0.3);
 
-	          if(mode.execution == 1)
-	        	  Motor_PWM_Stop();
+//	          if(mode.execution == 1)
+//	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
 	  	      wait(0.3);
@@ -3236,8 +3264,8 @@ void Adachi_judge2(){
 	          Decelerate();
 	          wait(0.3);;
 
-	          if(mode.execution == 1)
-	        	  Motor_PWM_Stop();
+//	          if(mode.execution == 1)
+//	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
 	  	      wait(0.3);;
@@ -3275,8 +3303,8 @@ void Adachi_judge2(){
 	          Decelerate();
 	          wait(0.3);;
 
-	          if(mode.execution == 1)
-	        	  Motor_PWM_Stop();
+//	          if(mode.execution == 1)
+//	        	  Motor_PWM_Stop();
 
 	  	      rotate180();
 	  	      wait(0.3);;
@@ -3330,7 +3358,7 @@ void Adachi_search2(){
 		Walk_Map_Update();
 
 		//次の動きを判定し動く
-		Adachi_judge();
+		Adachi_judge2();
 	}
 
 	//after-gall#2
@@ -3384,7 +3412,7 @@ void Adachi_search2(){
 
 void Shortest_Run_Judge(){
 	/*------旋回モード選択-----*/
-	mode.turn = 1;
+	mode.turn = 0;
 	//------------------------------//
 	// 0 : 超信地旋回で1区画ずつ //
 	// 1 : 緩旋回                     //
@@ -3629,21 +3657,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	    switch(mode.control){
 	       case 0:
 	    	   Side_Wall_Control(fr_average,fl_average,T8,Wall.KP, Wall.KI,Wall.KD);
-	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
-	    	   //mode.imu = 0;
+	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
+	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
+	    	   mode.imu = 0;
 	    	   break;
 	       case 1:
 	    	   Left_Wall_Control(distance_wall_left, fl_average,T8, Wall.KP, Wall.KI, Wall.KD);
-	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
-	    	   //mode.imu = 0;
+	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
+	    	  // IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
+	    	   mode.imu = 0;
 	    	   break;
 	       case 2:
 	    	   Right_Wall_Control(distance_wall_right, fr_average,T8, Wall.KP, Wall.KI, Wall.KD);
-	    	   //Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
-	    	   IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
-	    	   //mode.imu = 0;
+	    	   Enc_Velo_Control(T1, velocity.KP, velocity.KI, velocity.KD);
+	    	   //IMU_Control(0, imu_data, T1, imu.KP,imu.KI, 0 );
+	    	   mode.imu = 0;
 	    	   break;
 	       case 3:
 	    	   IMU_Control(Target_Rad_velo, imu_data, T1, imu.KP,imu.KI, imu.KD );
@@ -3689,7 +3717,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 	      }
 	    }
 	    else if( mode.accel == 4 ){ //左に旋回�?�?
-	      if(Target_R_velo < SEARCH_SPEED * 124.6/90){
+	      if(Target_R_velo < SEARCH_SPEED * (90+TREAD_WIDTH)/90){
 
 	    	Target_R_velo += a_curve;
 	    	Target_L_velo -= a_curve;
@@ -3705,7 +3733,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 割り込み0.05
 		      }
 		    }
 	    else if( mode.accel == 6 ){//右に旋回�?�?
-	      if(Target_L_velo < SEARCH_SPEED * 124.6/90){
+	      if(Target_L_velo < SEARCH_SPEED * (90+TREAD_WIDTH)/90){
 
 	    	Target_R_velo -= a_curve;
 	    	Target_L_velo += a_curve;
@@ -4103,6 +4131,7 @@ int main(void)
 	  IMU_Calib();
 	  distance_wall_right=fr_average;
 	  distance_wall_left=fl_average;
+	  wall_target_error = distance_wall_left - distance_wall_right;
 
 	  while(1){
 

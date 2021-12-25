@@ -24,6 +24,7 @@ int16_t R_angular_velocity, L_angular_velocity;
 
 float R_velocity, L_velocity;
 float Target_R_velo, Target_L_velo;
+float wall_target_error;
 
 //壁制御
 void Side_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
@@ -36,7 +37,7 @@ void Side_Wall_Control(float target, float now,float T, float KP, float KI, floa
 	}
 	error_reset = 1;
 
-	e =  40 + target - now;//r - l
+	e = wall_target_error + target - now;//r - l
 	ei += e * T;
 	ed = (e- e0) / T;
 	e0 = e;
