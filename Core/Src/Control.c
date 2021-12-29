@@ -7,6 +7,7 @@
  */
 #include <main.h>
 #include<math.h>
+#include<stdlib.h>
 //制御関数の定義
 #include "Control.h"
 
@@ -27,26 +28,32 @@ float Target_R_velo, Target_L_velo;
 float wall_target_error;
 
 //壁制御
-void Side_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
+void Wall_Ctrl(int16_t * L, int16_t * R )
+{
+	static float ei = 0, last_e = 0;
 
-	static float ei=0, e0=0;
-	 float e=0, ed=0;
-	if(error_reset == 0){
-		ei =0;
-		e0 = 0;
+	float e=0, ed=0;
+
+	//コントロールフラグはenumとか使えるといい。
+	if( wall_ctrl_flag == 0 )
+	{
+		ei = 0;
+		last_e = 0;
 	}
-	error_reset = 1;
+	else if( wall_ctrl_flag == 1)
+	{
+		e = wall_target_error + fr_average - fl_average;
+		ei += e * T1;
+		ed = ( e - last_e ) / T1;
+		last_e = e;
+	}
 
-	e = wall_target_error + target - now;//r - l
-	ei += e * T;
-	ed = (e- e0) / T;
-	e0 = e;
-
-	R_wall =  (int16_t)round(KP*e + KI*ei + KD*ed);
-	L_wall = -(int16_t)round(KP*e + KI*ei + KD*ed);
+	//Flag 0 : 戻り値は0になる
+	//       1 : 出力中の値
+	* L = -(int16_t)round(wall.KP*e + wall.KI*ei + wall.KD*ed);
+	* R =  (int16_t)round(wall.KP*e + wall.KI*ei + wall.KD*ed);
 
 }
-
 void Left_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
 
 	static float ei=0, e0=0;
