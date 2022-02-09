@@ -196,7 +196,7 @@ int16_t test_R,test_L;
 int16_t sl_ad1_10, fr_ad1_14=1, fl_ad2_11=0, sr_ad2_15; //
 int16_t fl_path=0, fr_path=0, sl_path, sr_path; // センサの前回値
 int16_t fr_error=0, fl_error=0,sr_error, sl_error; // センサの偏差
-float sl_average, fr_average, fl_average, sr_average;
+extern float sl_average, fr_average, fl_average, sr_average;
 int16_t sl_integrate, fr_integrate, fl_integrate, sr_integrate;
 
 float Body_velocity;
@@ -219,12 +219,7 @@ float msig_input=0;
 
 extern uint8_t error_reset;
 
-typedef struct {
 
-	float KP;
-	float KI;
-	float KD;
-}PID_Control;
 
 PID_Control Wall = {
 		0.8,//0.5,//1.0,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP

@@ -27,6 +27,9 @@ float R_velocity, L_velocity;
 float Target_R_velo, Target_L_velo;
 float wall_target_error;
 
+int16_t wall_ctrl_flag=0;
+float sl_average, fr_average, fl_average, sr_average;
+
 //壁制御
 void Wall_Ctrl(int16_t * L, int16_t * R )
 {
@@ -50,8 +53,8 @@ void Wall_Ctrl(int16_t * L, int16_t * R )
 
 	//Flag 0 : 戻り値は0になる
 	//       1 : 出力中の値
-	* L = -(int16_t)round(wall.KP*e + wall.KI*ei + wall.KD*ed);
-	* R =  (int16_t)round(wall.KP*e + wall.KI*ei + wall.KD*ed);
+	* L = -(int16_t)round(Wall.KP*e + Wall.KI*ei + Wall.KD*ed);
+	* R =  (int16_t)round(Wall.KP*e + Wall.KI*ei + Wall.KD*ed);
 
 }
 void Left_Wall_Control(float target, float now,float T, float KP, float KI, float KD){
