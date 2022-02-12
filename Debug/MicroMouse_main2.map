@@ -3523,8 +3523,9 @@ Name             Origin             Length             Attributes
 CCMRAM           0x0000000010000000 0x0000000000010000 xrw
 RAM              0x0000000020000000 0x0000000000020000 xrw
 FLASH_SECTOR0    0x0000000008000000 0x0000000000004000 xr
-FLASH_SECTOR1    0x0000000008004000 0x0000000000004000 xr
-FLASH            0x0000000008008000 0x00000000000f8000 xr
+MAP_MEMORY       0x0000000008004000 0x0000000000004000 xr
+FLASH            0x0000000008008000 0x000000000003a000 xr
+RUN_LOG          0x0000000008040000 0x00000000000bf000 xr
 *default*        0x0000000000000000 0xffffffffffffffff
 
 Linker script and memory map
@@ -3595,8 +3596,14 @@ LOAD c:/st2/stm32cubeide_1.5.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
 
 .backup_flash   0x0000000008004000     0x4000
                 0x0000000008004000                _backup_flash_start = .
-                0x0000000008008000                . = (. + LENGTH (FLASH_SECTOR1))
+                0x0000000008008000                . = (. + LENGTH (MAP_MEMORY))
  *fill*         0x0000000008004000     0x4000 
+
+.backup_flash_run
+                0x0000000008040000    0xbf000
+                0x0000000008040000                _backup_flash_start_run = .
+                0x00000000080ff000                . = (. + LENGTH (RUN_LOG))
+ *fill*         0x0000000008040000    0xbf000 
 
 .text           0x0000000008008000     0x732c
                 0x0000000008008000                . = ALIGN (0x4)

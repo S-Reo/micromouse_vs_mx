@@ -7,45 +7,47 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .backup_flash 00004000  08004000  08004000  00014000  2**0
                   ALLOC
-  2 .text         0000732c  08008000  08008000  00018000  2**3
+  2 .backup_flash_run 000bf000  08040000  08040000  00030000  2**0
+                  ALLOC
+  3 .text         0000732c  08008000  08008000  00018000  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  3 .rodata       00000248  0800f330  0800f330  0001f330  2**3
+  4 .rodata       00000248  0800f330  0800f330  0001f330  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  4 .ARM.extab    00000000  0800f578  0800f578  000201dc  2**0
+  5 .ARM.extab    00000000  0800f578  0800f578  000201dc  2**0
                   CONTENTS
-  5 .ARM          00000008  0800f578  0800f578  0001f578  2**2
+  6 .ARM          00000008  0800f578  0800f578  0001f578  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  6 .preinit_array 00000000  0800f580  0800f580  000201dc  2**0
+  7 .preinit_array 00000000  0800f580  0800f580  000201dc  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .init_array   00000004  0800f580  0800f580  0001f580  2**2
+  8 .init_array   00000004  0800f580  0800f580  0001f580  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .fini_array   00000004  0800f584  0800f584  0001f584  2**2
+  9 .fini_array   00000004  0800f584  0800f584  0001f584  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .data         000001dc  20000000  0800f588  00020000  2**2
+ 10 .data         000001dc  20000000  0800f588  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
- 10 .bss          00000b8c  200001dc  0800f764  000201dc  2**2
+ 11 .bss          00000b8c  200001dc  0800f764  000201dc  2**2
                   ALLOC
- 11 ._user_heap_stack 00000600  20000d68  0800f764  00020d68  2**0
+ 12 ._user_heap_stack 00000600  20000d68  0800f764  00020d68  2**0
                   ALLOC
- 12 .ARM.attributes 00000030  00000000  00000000  000201dc  2**0
+ 13 .ARM.attributes 00000030  00000000  00000000  000201dc  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000107a5  00000000  00000000  0002020c  2**0
+ 14 .debug_info   000107a5  00000000  00000000  0002020c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_abbrev 0000255f  00000000  00000000  000309b1  2**0
+ 15 .debug_abbrev 0000255f  00000000  00000000  000309b1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_aranges 00001100  00000000  00000000  00032f10  2**3
+ 16 .debug_aranges 00001100  00000000  00000000  00032f10  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_ranges 00000fd8  00000000  00000000  00034010  2**3
+ 17 .debug_ranges 00000fd8  00000000  00000000  00034010  2**3
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_macro  00003513  00000000  00000000  00034fe8  2**0
+ 18 .debug_macro  00003513  00000000  00000000  00034fe8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_line   0000c7f5  00000000  00000000  000384fb  2**0
+ 19 .debug_line   0000c7f5  00000000  00000000  000384fb  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .debug_str    000c7051  00000000  00000000  00044cf0  2**0
+ 20 .debug_str    000c7051  00000000  00000000  00044cf0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 20 .comment      0000007b  00000000  00000000  0010bd41  2**0
+ 21 .comment      0000007b  00000000  00000000  0010bd41  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00004f90  00000000  00000000  0010bdbc  2**2
+ 22 .debug_frame  00004f90  00000000  00000000  0010bdbc  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
