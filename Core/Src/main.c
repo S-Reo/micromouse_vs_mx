@@ -228,16 +228,6 @@ int main(void)
 	  /*------------------------------------------*/
 
 
-#if 0 //motor + - change
-	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, L_motor); //tim2ch4が左
-	  __HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, R_motor); //tim5ch2が右
-#endif
-
-#if 0
-		HAL_Delay(1000);
-	    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
-	    HAL_Delay(1000);
-#endif
         //ADC_Value_printf(); // 0.05ms
 	    //Encoder_Get();
 	    //Encoder_Value_printf();
