@@ -172,6 +172,13 @@ PUTCHAR_PROTOTYPE {
 /*---- DEFINING FUNCTION ----*/
 /*---- DEFINING FUNCTION END----*/
 
+void Odmetry()
+{
+	//x(t),y(t),θ(t)を取得
+	//時刻tにおいてxyθがどうなるかを目標状態として制御する。
+
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -220,24 +227,19 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  //ADCをスタート
+
+  //バッテリ電圧表示
+
+  //モード選択
 
   while (1)
   {
+	  //モータチェック
 
 
-	  /*------------------------------------------*/
+	  //探索アルゴリズムの変更で記述が変わるところは、壁情報を取得したあとの、方向を決定するところだけ。
 
-
-        //ADC_Value_printf(); // 0.05ms
-	    //Encoder_Get();
-	    //Encoder_Value_printf();
-
-          /*  HAL_ADC_Start(&hadc1);
-	  	  	ad = HAL_ADC_GetValue(&hadc1);
-	  	  	  v = 3.3 * ad / 4095;
-	  	  	  printf("value: %f\r\n", v);
-	  	  	  HAL_ADC_Stop(&hadc1);
-	  	  	  HAL_Delay(1000);*/
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
