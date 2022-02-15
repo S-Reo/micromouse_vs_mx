@@ -8,51 +8,29 @@
 //このファイルを別のマウスで使うときにどこを変えることになるのかという視点でまとめる
 #include "UI.h"
 //ハードウェアを操作する処理からユーザインタフェースを組み立てる
+#include "Convert.h"
 
 
-#include "Battery_ADC.h"		//ADCで読み取るバッテリ値計算用の処理
+#include "IEH2_4096.h"		//エンコーダ
+#include "ADC.h"
+#include "LED_Driver.h"
+#include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
+#include "Motor_Driver.h"//モータの設定ヘッダ
+//
 
 //中間モジュール。
 
-//整数の累乗
-int IntegerPower(int integer, int exponential)
-{
-	int pattern_num = 1;
-	for(int i=0; i < exponential ; i++)
-	{
-		pattern_num *= integer;
-	}
-	return pattern_num;
-}
-//adc値を電圧へ
+//エンコーダはモード選択時には直で取得しちゃってよいので引数にしない。while中で取得。
 
 
-//残量レベルを返す
-int GetBatteryLevel(float current_voltage, float battery_min, float battery_max, int level_num)	//だいぶ汎用的
-{
-	float current_percentage = current_voltage / battery_max;
-	float lowest_percentage =  battery_min / battery_max;
-
-	float percentage_per_pattern = (1 - lowest_percentage) / (float) level_num;
-
-	int pattern = 0;
-	for(int i=0; i < level_num; i++)
-	{
-		if( ( lowest_percentage + (percentage_per_pattern* i) )  <= current_percentage )
-		{
-			pattern = i;
-		}
-	}
-	return pattern;
-}
 //led_driver
 void Signal(int mode)
 {
 	for(int i=0; i < 5; i++)
 	{
-		LED_Change(mode);
+		ChangeLED(mode);
 		HAL_Delay(100);
-		LED_Change(0);
+		ChangeLED(0);
 		HAL_Delay(100);
 	}
 }
@@ -63,33 +41,43 @@ void BatteryCheck(int adc_data)
 
 	//このあたりのハードウェア情報を一括で書いてしまう。
 	float battery_voltage;//adc1[2] グローバルな値はどこか一か所で呼び出す
-	battery_voltage =  adc_data * V_SPLIT_NUM * PIN_V_MAX / ADC_RESOLUTION ;
+	battery_voltage = ADCToBatteryVoltage( adc_data, V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
 
-	int led_pattern_num = IntegerPower(2, LED_NUM); //led、
+	int led_pattern_num = IntegerPower(2, LED_NUM); //led
 
 	int battery_level = GetBatteryLevel( battery_voltage, BATTERY_MIN, BATTERY_MAX, led_pattern_num);
 
 	Signal( battery_level );
 }
 
+//ここ書いたら大事な処理を書き始められる
 //enc, emitter,receiver
+//壁センサのデータをどうやってもってくるか。構造体にしておいてアローでアクセスするか、別の処理を考えるか。スイッチを使うか。中でフラグ作るか、それならそのままセンサの値を突っ込んだ方がいい。
+
+
 void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 {
+	//メインフローで呼び出す
 	//0-7番で設定
 	//起動時に呼ぶ
 	EmitterON();
 	ADCStart();
 	HAL_TIM_Base_Start_IT(&htim8);
-
+	//壁センサの値を持ってくる。
 	//エンコーダ開始。初期値セット込み
 	EncoderStart();
+
 	int ENC3_LEFT = 30000 -1;
 
 	//while中で選択
 	*pMode=min;
-	while(wall_sensor[FR].current < 250/**/) //前向きの
+	//壁センサデータをどうもってくるか。adcの生値を入れ、均して使う。関数呼び出し時の値
+
+
+	while(sensor_data/*構造体アロー*/ < 250/**/) //前向きの
 	{
-		  ENC3_LEFT = TIM3 -> CNT;
+		//センサデータを一個取得して戻り値で返す関数を使う。
+		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、センサデータもグローバルでいい。
 
 		  if(30000 -1 + (ENCODER_PULSE * REDUCATION_RATIO) /4 <= ENC3_LEFT )
 		  {
@@ -98,7 +86,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  	  {
 		  		  *pMode = min;
 		  	  }
-		  	  LED_Change(*pMode);
+		  	  ChangeLED(*pMode);
 		  	  InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE_L);
 		  	  HAL_Delay(500);
 
@@ -110,7 +98,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  	  {
 		  	  		  *pMode = max;
 		  	  }
-		  	  LED_Change(*pMode);
+		  	  ChangeLED(*pMode);
 		  	  InitPulse( (int *)&(TIM3->CNT), INITIAL_PULSE_L);
 		  	  HAL_Delay(500);
 		  }

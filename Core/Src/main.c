@@ -37,6 +37,13 @@
 
 #include "ICM_20648.h"
 
+#include "IEH2_4096.h"		//エンコーダ
+#include "ADC.h"
+#include "LED_Driver.h"
+#include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
+#include "Motor_Driver.h"//モータの設定ヘッダ
+
+#include "UI.h"
 
 /* USER CODE END Includes */
 
@@ -228,15 +235,42 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   //ADCをスタート
+  ADCStart();
 
   //バッテリ電圧表示
+  BatteryCheck( adc1[2] );
+
 
   //モード選択
+  int8_t mode=0;
+  ModeSelect( 0, 7, &mode);
 
   while (1)
   {
+	  Signal( mode );
 	  //モータチェック
+	  switch( mode )
+	  {
+	  case 0:
 
+		  break;
+	  case 1:
+		  break;
+	  case 2:
+		  break;
+	  case 3:
+		  break;
+	  case 4:
+		  break;
+	  case 5:
+		  break;
+	  case 6:
+		  break;
+	  case 7:
+		  break;
+	  default :
+		  break;
+	  }
 
 	  //探索アルゴリズムの変更で記述が変わるところは、壁情報を取得したあとの、方向を決定するところだけ。
 
