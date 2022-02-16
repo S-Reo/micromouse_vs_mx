@@ -5,7 +5,7 @@
  *      Author: leopi
  */
 
-#include "MicroMouse.h"
+#include <MicroMouse.h>
 
 
 float photo[4];

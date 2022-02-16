@@ -22,6 +22,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -45,7 +46,7 @@
 
 #include "UI.h"
 #include "Interrupt.h"
-#include "MouseMode.h"
+#include "Mode.h"
 
 /* USER CODE END Includes */
 

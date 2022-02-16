@@ -5,8 +5,8 @@
  *      Author: leopi
  */
 
-#ifndef INC_MOUSEMODE_H_
-#define INC_MOUSEMODE_H_
+#ifndef INC_MODE_H_
+#define INC_MODE_H_
 
 #include <main.h>
 
@@ -14,4 +14,4 @@ void Explore();
 void WritingFree();
 
 
-#endif /* INC_MOUSEMODE_H_ */
+#endif /* INC_MODE_H_ */

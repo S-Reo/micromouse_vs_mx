@@ -6,6 +6,7 @@
  */
 
 //このファイルを別のマウスで使うときにどこを変えることになるのかという視点でまとめる
+#include <MicroMouse.h>
 #include "UI.h"
 //ハードウェアを操作する処理からユーザインタフェースを組み立てる
 #include "Convert.h"
@@ -16,8 +17,6 @@
 #include "LED_Driver.h"
 #include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
 #include "Motor_Driver.h"//モータの設定ヘッダ
-
-#include "MicroMouse.h"
 
 #include <stdio.h>
 //中間モジュール。
