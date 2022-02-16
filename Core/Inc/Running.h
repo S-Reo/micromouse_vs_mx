@@ -15,8 +15,6 @@
 void Explore()
 {
 
-
-
 }
 
 void Fastest()

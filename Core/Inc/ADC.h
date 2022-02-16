@@ -24,27 +24,7 @@ extern uint32_t adc1[ADC1_CH_NUM];
 extern uint32_t adc2[ADC2_CH_NUM];
 
 
-void ADCStart(){  //AD値のDMA
-	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) adc1, 3) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	if (HAL_ADC_Start_DMA(&hadc2, (uint32_t *) adc2, 2) != HAL_OK)
-	{
-		Error_Handler();
-	}
+void ADCStart();  //AD値のDMA
 
-}
-void ADCStop()
-{
-	if (HAL_ADC_Stop_DMA(&hadc1) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	if (HAL_ADC_Stop_DMA(&hadc2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-}
-
+void ADCStop();
 #endif /* INC_ADC_H_ */

@@ -28,6 +28,6 @@ void Motor_PWM_Start();
 void Motor_PWM_Stop();
 
 //出力反転処理してそのまま出力
-void Motor_Switch(int16_t left, int16_t right);
+void Motor_Switch(int left, int right);
 
 #endif /* INC_MOTOR_DRIVER_H_ */

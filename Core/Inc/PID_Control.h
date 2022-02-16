@@ -27,10 +27,10 @@ typedef struct {
 	float target;
 
 	int out;
-	int flag:1;
+	int flag;
 
 }motor_control;
-extern motor_control pid[ PID_TARGET_NUM ] = {0};
+extern motor_control pid[ PID_TARGET_NUM ];
 
 void PIDSetGain(int n, float kp, float ki, float kd);
 
@@ -42,7 +42,7 @@ void PIDCalculate(int n, float T);
 void PIDOutput(int n, int *output);
 void PIDInput(int n, float target, float current);
 
-int PIDControl(int n, int T, float target, float current, int *output);
+int PIDControl(int n, float T, float target, float current);
 
 
 

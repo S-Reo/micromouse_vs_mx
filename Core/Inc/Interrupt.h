@@ -10,8 +10,6 @@
 
 #include <main.h>
 //使用するタイマの定義
-#define T1 0.001
-#define T8 0.0005
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim8;

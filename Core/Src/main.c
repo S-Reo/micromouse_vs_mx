@@ -35,15 +35,17 @@
 
 #include "stm32f4xx_hal_tim.h"
 
-#include "ICM_20648.h"
-
-#include "IEH2_4096.h"		//エンコーダ
+//#include "ICM_20648.h"
+//
+//#include "IEH2_4096.h"		//エンコー?��?
 #include "ADC.h"
-#include "LED_Driver.h"
-#include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
-#include "Motor_Driver.h"//モータの設定ヘッダ
+//#include "LED_Driver.h"
+//#include "IR_Emitter.h"	//発光�??��の処?��?。タイマスタートだけかなー?��?
+//#include "Motor_Driver.h"//モータの設定�??���?��?
 
 #include "UI.h"
+#include "Interrupt.h"
+#include "MouseMode.h"
 
 /* USER CODE END Includes */
 
@@ -89,29 +91,8 @@
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
-#define SEARCH_SPEED 300
-#define CURVE_SPEED 180
-#define START_ACCEL_DISTANCE 61.75
-#define ACCE_DECE_DISTANCE 45
-//進みすぎのときは径を大きくする
-#define TIRE_DEAMETER 20.8//20.70945//20.70945 //20.5591111111111//
-#define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648//ここ変えれば曲がれたはず。
-#define TREAD_WIDTH 36.4//34.4 //36.8
 
 
- // タイヤ直 mm
-#define ENCODER_PULSE 4096*4//8192  //  モータ//とりあえず4逓倍を使うことに決めた。ノイズに弱いらしいけど、そんなに気にならない。
-#define REDUCATION_RATIO 4  //
-
-#define MM_PER_PULSE  /*mm/pulse*/  ( (PI *TIRE_DEAMETER) /(ENCODER_PULSE*REDUCATION_RATIO) )
-#define START_ACCEL_PULSE  /*開始時の?��?速パルス*/  START_ACCEL_DISTANCE/MM_PER_PULSE
-#define ACCE_DECE_PULSE /*?��?速パルス*/ ACCE_DECE_DISTANCE/MM_PER_PULSE
-#define SLOW_ROTATE_PULSE (90*PI/4) /  MM_PER_PULSE
-#define QUARTER_ROTATE_PULSE (TREAD_WIDTH * PI/4) / MM_PER_PULSE
-#define DECE_CURVE_PULSE (45 -(TREAD_WIDTH/2)) / MM_PER_PULSE
-#define SHINCHI_ROTATE_PULSE (TREAD_WIDTH * 2 * PI/4)/MM_PER_PULSE
-#define CURVE_KLOTHOIDE_PULSE CURVE_DISTANCE/MM_PER_PULSE
-#define WALL_JUDGE_PULSE 25/MM_PER_PULSE
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -161,7 +142,6 @@ static void MX_TIM1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-char usr_buf_L[1000], usr_buf_R[1000];
 
 float battery_V;
 #ifdef __GNUC__
@@ -173,18 +153,14 @@ PUTCHAR_PROTOTYPE {
 	HAL_UART_Transmit(&huart1, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
-// Flashから読みした?ータを避するRAM上�????��?��??��?��??��?��?
+// Flashから読みした?ータを避するRAM上�??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
 // 4byteごとにアクセスをするで、アドレスに配置する
 
 /*---- DEFINING FUNCTION ----*/
+
+
 /*---- DEFINING FUNCTION END----*/
 
-void Odmetry()
-{
-	//x(t),y(t),θ(t)を取得
-	//時刻tにおいてxyθがどうなるかを目標状態として制御する。
-
-}
 
 /* USER CODE END 0 */
 
@@ -234,25 +210,23 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  //ADCをスタート
   ADCStart();
+  HAL_Delay(500);
 
-  //バッテリ電圧表示
-  BatteryCheck( adc1[2] );
+  BatteryCheck( (int)adc1[2] );
 
-
-  //モード選択
   int8_t mode=0;
+  	  printf("mode : %d\r\n", mode);
   ModeSelect( 0, 7, &mode);
+  Signal( mode );
+  	  printf("ドン\r\n");
 
   while (1)
   {
-	  Signal( mode );
-	  //モータチェック
+
 	  switch( mode )
 	  {
 	  case 0:
-
 		  break;
 	  case 1:
 		  break;
@@ -265,14 +239,16 @@ int main(void)
 	  case 5:
 		  break;
 	  case 6:
+		  Explore();
 		  break;
 	  case 7:
+		  WritingFree();
 		  break;
 	  default :
 		  break;
 	  }
 
-	  //探索アルゴリズムの変更で記述が変わるところは、壁情報を取得したあとの、方向を決定するところだけ。
+	  //探索アルゴリズ?��?の変更で記述が変わるところは、壁情報を取得したあとの、方向を決定するところ?��?け�??
 
     /* USER CODE END WHILE */
 
@@ -840,7 +816,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
+  huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;

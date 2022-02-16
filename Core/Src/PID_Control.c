@@ -8,7 +8,8 @@
 #include "PID_Control.h"
 #include "math.h"
 //motor_control pid;//[ PID_TARGET_NUM ] = {0};
-motor_control *p;
+motor_control pid[ PID_TARGET_NUM ] = {0};
+//motor_control *p;
 //control angular_velocity[1] = {0};
 //control distance_wall[ WALL_SENSOR_NUM] = {0};
 
@@ -46,7 +47,7 @@ void PIDCalculate(int n, float T)//, float target, float current, int flag
 	pid[n].ei += pid[n].e * T;
 	pid[n].ed = ( pid[n].e - pid[n].elast ) / T;
 	pid[n].elast = pid[n].e;
-	pid[n].out = round(pid[n].KP*pid[n].e + pid[n].KI*pid[n].ei + pid[n].KP*pid[n].ed);
+	pid[n].out = round(pid[n].KP*pid[n].e + pid[n].KI*pid[n].ei + pid[n].KD*pid[n].ed);
 }
 void PIDOutput(int n, int *output)
 {
@@ -59,7 +60,7 @@ void PIDInput(int n, float target, float current)
 	pid[n].target = target;
 	pid[n].current = current;
 }
-int PIDControl(int n, int T, float target, float current, int *output)
+int PIDControl(int n, float T, float target, float current)
 {
 	PIDInput( n, target, current);
 	PIDCalculate( n, T );
@@ -68,8 +69,9 @@ int PIDControl(int n, int T, float target, float current, int *output)
 	{
 		PIDReset(n);
 	}
-	PIDOutput( n, output );
-	return PIDGetFlag( n );
+	//*output = pid[n].out;
+	//PIDOutput( n, output );
+	return pid[n].out;
 }
 
 

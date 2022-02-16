@@ -16,12 +16,14 @@
 #include "LED_Driver.h"
 #include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
 #include "Motor_Driver.h"//モータの設定ヘッダ
-//
 
+#include "MicroMouse.h"
+
+#include <stdio.h>
 //中間モジュール。
 
 //エンコーダはモード選択時には直で取得しちゃってよいので引数にしない。while中で取得。
-
+float photo[4];
 
 //led_driver
 void Signal(int mode)
@@ -47,6 +49,7 @@ void BatteryCheck(int adc_data)
 
 	int battery_level = GetBatteryLevel( battery_voltage, BATTERY_MIN, BATTERY_MAX, led_pattern_num);
 
+	printf("%d\r\n", battery_level);
 	Signal( battery_level );
 }
 
@@ -67,15 +70,17 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 	//エンコーダ開始。初期値セット込み
 	EncoderStart();
 
-	int ENC3_LEFT = 30000 -1;
-
 	//while中で選択
 	*pMode=min;
+
 	//壁センサデータをどうもってくるか。adcの生値を入れ、均して使う。関数呼び出し時の値
 
+	InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE_L);
 
-	while(sensor_data/*構造体アロー*/ < 250/**/) //前向きの
+	int ENC3_LEFT;
+	while(photo[SR]/*構造体アロー*/ < 250/**/) //前向きの
 	{
+		printf("photo[SR] : %f\r\n", photo[SR]);
 		//センサデータを一個取得して戻り値で返す関数を使う。
 		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、センサデータもグローバルでいい。
 
