@@ -17,7 +17,8 @@
 #include "LED_Driver.h"
 #include "IR_Emitter.h"
 #include "Motor_Driver.h"
-
+#include "UI.h"
+#include "Action.h"
 
 
 void WritingFree()
@@ -47,17 +48,24 @@ void WritingFree()
 	HAL_TIM_Base_Start_IT(&htim8);
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
-	target_velocity[BODY] = 180;
+	target_velocity[BODY] = 0;
 	target_angular_v = 0;
 	acceleration = 0;
 	angular_acceleration = 0;
+	total_pulse[LEFT] = 0;
+	total_pulse[RIGHT] = 0;
+	total_pulse[BODY] = 0;
+	PIDReset(L_VELO);
+	PIDReset(R_VELO);
 
+	GoStraight( TRUE, 90);
 	while(1)
 	{
+
 		//printf("L_motor, R_motor : %d, %d\r\n",L_motor, R_motor);
 		//printf("target_velocity[LEFT], target_velocity[RIGHT], current_velocity[LEFT], current_velocity[RIGHT] : %f, %f, %f, %f\r\n",target_velocity[LEFT], target_velocity[RIGHT],  current_velocity[LEFT], current_velocity[RIGHT]);
 		//printf("e, ei, ed, elast, out, KP : %f, %f, %f, %f, %d, %f\r\n",pid[LEFT].e, pid[LEFT].ei, pid[LEFT].ed, pid[LEFT].elast, pid[LEFT].out, pid[LEFT].KP);
-		printf("velocity_left_out, target_velocity[LEFT], current_velocity[LEFT] : %d, %f, %f\r\n", velocity_left_out, target_velocity[LEFT], current_velocity[LEFT]);
+		//printf("velocity_left_out, target_velocity[LEFT], current_velocity[LEFT] : %d, %f, %f\r\n", velocity_left_out, target_velocity[LEFT], current_velocity[LEFT]);
 	}
 	//探索の場合は迷路とステータスの準備
 
@@ -89,21 +97,40 @@ void Explore()
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
 
+
 	//迷路とステータスの準備
 	//方角と座標の初期化。
+	direction my_direction = north;
+	uint8_t x=0,y=0;
 	//時間用の処理の初期化。
+	int timer = 0;
 	//エンコーダ移動量の初期化。
+	total_pulse[0] = 0;
+	total_pulse[1] = 0;
+	total_pulse[2] = 0;
 	//スタート時のアクションに設定
-
+	char action_type = 'S';
+	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
 	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
-	//アクション関数
-	//壁判定
-	//マップ更新
-	//進行方向決定 (最短経路導出から決定するか、評価値比較か、単純な左手か)
-
+	while(1)
+	{
+#if 0
+		//アクション関数 (どのアクションを行うことになったかと、現在の方角が見たい)
+		Action( my_direction , action_type );	//内部で、移動しきるまでwhile処理。//もしくは割り込み内で目標移動量と現在移動量の比較をして、終わっていなければフラグ1、終わっていればフラグ0という処理。
+		//壁判定			(現在の座標、方角、
+		wall_set();
+		//マップ更新		(現在の座標とその周りの座標の評価値と壁情報)
+		UpdateMap();
+		//進行方向決定 (最短経路導出から決定するか、評価値比較か、単純な左手か)
+		my_direction = DetermineDirection();
+#endif
+	}
 	//flashに保存
 
 	Signal(7);
+
+	//一旦全ての処理をできるだけ細かく書いてみる。そのあとモジュール化してみる。構造化分析的な。
+
 
 }
 

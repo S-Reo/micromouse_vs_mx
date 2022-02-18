@@ -40,9 +40,9 @@ MEMORY
   CCMRAM    (xrw)    : ORIGIN = 0x10000000,   LENGTH = 64K
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
   FLASH_SECTOR0 (rx) : ORIGIN = 0x08000000, LENGTH = 16K
-  MAP_MEMORY    (rx) : ORIGIN = 0x08004000, LENGTH = 16K
-  FLASH (rx)         : ORIGIN = 0x08008000, LENGTH = 232K
-  RUN_LOG (rx)       : ORIGIN = 0x08040000,  LENGTH = 764K
+  MAP_MEMORY    (rx) : ORIGIN = 0x08004000, LENGTH = 16K	/* 1 */
+  FLASH (rx)         : ORIGIN = 0x08008000, LENGTH = 224K	/* 2~5 */
+  RUN_LOG (rx)       : ORIGIN = 0x08040000,  LENGTH = 768K	/* 6~11 */
 }
 
 /* Sections */

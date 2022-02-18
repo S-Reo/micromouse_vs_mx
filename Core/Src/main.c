@@ -62,35 +62,8 @@
 
 /*  ---ms---  制御周     */
 //#define _GNU_SOURCE
-#define PI 3.14159265358979323846
+//#define PI 3.14159265358979323846
 
-#define T1 0.001
-#define T2 0.0238095238095238000 //ms
-#define T3 0.7142857142857140000 //ms
-#define T4 0.7142857142857140000 //ms
-#define T5 0.0238095238095238000 //ms
-#define T8 0.00005 //s
-
-#define WAIT 30000
-
-#define FRONT_WALL 30
-#define RIGHT_WALL 100//90 //380
-#define LEFT_WALL 140//90 //420
-
-#define UNKNOWN 2
-#define NOWALL 0
-#define WALL 1
-
-#define DRIFT_FIX 0.00006375
-
-#define NUMBER_OF_SQUARES 9//16//4 //16
-#define X_GOAL_LESSER 3//7//6
-#define Y_GOAL_LESSER 3//7//9
-#define X_GOAL_LARGER 3//7//7
-#define Y_GOAL_LARGER 3//7//10
-
-#define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
-#define BACKUP_FLASH_SECTOR_SIZE    1024*16
 /*--調整パラメータ--*/
 
 

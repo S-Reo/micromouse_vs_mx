@@ -37,7 +37,7 @@ void UpdatePhisicalDataFromEnc()
 	//移動量 mm/msを積算
 	total_pulse[LEFT] += pulse_displacement[LEFT];
 	total_pulse[RIGHT] += pulse_displacement[RIGHT];
-
+	total_pulse[BODY] = total_pulse[LEFT]+total_pulse[RIGHT];
 	//角速度 rad/s
 	angular_v = ( current_velocity[LEFT] - current_velocity[RIGHT] ) / TREAD_WIDTH;
 

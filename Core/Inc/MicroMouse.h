@@ -69,6 +69,31 @@ extern int velocity_left_out, velocity_right_out;
 extern int wall_right_out, wall_left_out;
 extern int L_motor, R_motor;
 
+
+
+#define T1 0.001
+#define T2 0.0238095238095238000 //ms
+#define T3 0.7142857142857140000 //ms
+#define T4 0.7142857142857140000 //ms
+#define T5 0.0238095238095238000 //ms
+#define T8 0.00005 //s
+
+
+#define TRUE		1
+#define FAULSE		0
+
+#define WAIT 30000
+
+#define FRONT_WALL 30
+#define RIGHT_WALL 100//90 //380
+#define LEFT_WALL 140//90 //420
+
+#define DRIFT_FIX 0.00006375
+
+#define NUMBER_OF_SQUARES 9//16//4 //16
+
+#define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
+#define BACKUP_FLASH_SECTOR_SIZE    1024*16
 //実データは最後?それとも構造体を作って、構造体を操作する関数を構築した方がいい？
 //マップデータ
 //一辺の区画数
@@ -91,9 +116,6 @@ extern int L_motor, R_motor;
 #define RIGHT_WALL 100//90 //380
 #define LEFT_WALL 140//90 //420
 
-#define T1 0.001
-
-#define T8 0.00005 //s
 
 /*--調整パラメータ--*/
 #define SEARCH_SPEED 235
