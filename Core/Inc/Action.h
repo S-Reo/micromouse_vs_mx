@@ -31,6 +31,7 @@ void straight_time(double time_s);
 void Slalom_turn();
 
 void Accel(float add_distance, float explore_speed);
+void Decel(float dec_distance, float end_speed);
 void GoStraight(int accel, float explore_speed);
 
 #endif /* INC_ACTION_H_ */

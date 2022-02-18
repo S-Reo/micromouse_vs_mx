@@ -267,13 +267,45 @@ void Accel(float add_distance, float explore_speed)
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
 	acceleration = T1*additional_speed*additional_speed / (2*add_distance);
+
+	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
+	int keep_pulse = total_pulse[BODY]+target_pulse;
+
+	while( ( keep_pulse ) >= ( total_pulse[BODY] ) )
+	{
+		//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
+		if( ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( total_pulse[BODY]) )	//移動量に応じて処理を変える。
+		{
+			acceleration = 0;
+		}
+	}
 	//今の速度を取得。
 	//到達速度と今の速度、到達に要する距離から加速度を計算する。
 //	float a_start = T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * START_ACCEL_DISTANCE);
 //	float a= T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * ACCE_DECE_DISTANCE);
 //	float a_curve = T1 * SEARCH_SPEED * SEARCH_SPEED * (90+TREAD_WIDTH)*(90+TREAD_WIDTH) /(2 * 2 * CURVE_DISTANCE*90*90);
 }
+void Decel(float dec_distance, float end_speed)
+{
+	float down_speed=0;
+	down_speed = target_velocity[BODY] - end_speed;
+	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
+	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
+	acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
 
+	//ここより下を分けて書くべきかはあとで考える
+	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
+	int keep_pulse = total_pulse[BODY]+target_pulse;
+
+	while( ( keep_pulse ) >= ( total_pulse[BODY]) )
+	{
+		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
+		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( total_pulse[BODY]) )	//移動量に応じて処理を変える。
+		{
+			acceleration = 0;
+		}
+	}
+}
 //色々な処理を合わせて先に関数を作ってしまう方がいいかも。
 //加速だけ、減速だけ、定速で、などを組み合わせて台形加減速で一区画走る、とか数区画走れる、途中で壁を見る、とか。
 void GoStraight(int accel, float explore_speed)
@@ -328,12 +360,21 @@ void TurnLeft()
 void GoBack()
 {
 	//減速して
+	Decel(40, 10);
+	while(1)	//距離指定
+	{
+
+	}
 	//補正して
 	//回転して
 	//補正して
 	//回転して
 	//加速する
+	Accel(40, 300);
+	while(1)
+	{
 
+	}
 	//ここまでで目標走行距離を完了する
 
 }

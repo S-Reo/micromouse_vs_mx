@@ -58,7 +58,11 @@ void WritingFree()
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
 
-	GoStraight( TRUE, 90);
+
+	//GoStraight( TRUE, 300);
+	Accel(45, 300);
+	GoStraight( TRUE, 300);
+	Decel(45, 0);
 	while(1)
 	{
 
