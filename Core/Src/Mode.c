@@ -60,8 +60,8 @@ void WritingFree()
 
 
 	//GoStraight( TRUE, 300);
-	Accel(45, 300);
-	GoStraight( TRUE, 300);
+	Accel(45, 45);
+	//GoStraight( TRUE, 90);
 	Decel(45, 0);
 	while(1)
 	{
