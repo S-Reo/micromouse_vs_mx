@@ -77,9 +77,9 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 	InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE_L);
 
 	int ENC3_LEFT;
-	while(photo[SR]/*構造体アロー*/ < 250/**/) //前向きの
+	while(photo[FR]/*構造体アロー*/ < 250/**/) //前向きの
 	{
-		printf("photo[SR] : %f\r\n", photo[SR]);
+		printf("photo[FR] : %f\r\n", photo[FR]);
 		//センサデータを一個取得して戻り値で返す関数を使う。
 		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、センサデータもグローバルでいい。
 

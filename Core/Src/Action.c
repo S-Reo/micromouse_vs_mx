@@ -133,9 +133,63 @@ float alpha_turn = 0.01;  //スラローム時の角加速度
 //
 //
 //}
+
+void Rotate(float deg, float ang_accel)
+{
+	//Rotate(90, 0.05);
+	//回転方向で変わるのは目標移動量だけ
+
+	//左右独立で移動量を取らないとうまくいかなさそう
+
+	//左右の移動量を取得。それぞれが移動しきったか判定
+
+	//まだならアクションモードはROTATE
+
+	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	int target_pulse[2] = {0};
+	//回転方向と角度
+	//角速度が正→右回転、角度?
+	//				負→左回転、	   ?
+
+	if( deg > 0 )
+	{
+		target_pulse[LEFT] = total_pulse[LEFT] + move_pulse;
+		target_pulse[RIGHT] = total_pulse[RIGHT] - move_pulse;
+		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
+		while(  (angle <= deg) || ( (target_pulse[LEFT] >= total_pulse[LEFT] ) &&  (  target_pulse[RIGHT] <= total_pulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
+		{
+			target_angular_v = ang_accel;
+			printf("deg:正, angle, angular_v : %f, %f\r\n",angle, angular_v );
+		}
+
+		//target_pulse[RIGHT] *= 1;//-1 *(int)( (deg/360) * ROTATE_PULSE);
+	}
+	else if( deg < 0)
+	{
+		target_pulse[LEFT] = total_pulse[LEFT] - move_pulse;
+		target_pulse[RIGHT] = total_pulse[RIGHT] + move_pulse;
+		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
+		while( (angle >= deg) || ( (target_pulse[LEFT] <= total_pulse[LEFT] ) &&  (  target_pulse[RIGHT] >= total_pulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
+		{
+			target_angular_v = ang_accel;
+			printf("deg:負, angle, angular_v : %f, %f\r\n",angle, angular_v );
+		}
+
+	}
+	target_angular_v = 0;
+	printf("回転終了\r\n");
+}
 //背中あて補正
 void back_calib()
 {
+
+}
+
+void Calib()
+{
+	//壁使ってセンサ補正か、背中あて補正。状況に応じて補正パターンを変える
+
+	//フラグと変数の状態に応じてフラグを変更し、動作を変える
 
 }
 //int JudgeTargetMileage(float total_mileage_L, float target_mileage_L, float total_mileage_R, float target_mileage_R )
@@ -346,8 +400,32 @@ void GoStraight(int accel, float explore_speed)
 	//各変数の状況毎に割り込み的に動作を追加していくほうが賢いのでは。
 
 }
-void TurnRight();
-void TurnLeft()
+void TurnRight(/*char mode*/)
+{
+	//関数呼び出しと判定処理が多いと遅いかなー。
+	char mode='T';
+	switch( mode )
+	{
+	case 'T' :
+		//超信地旋回
+		Decel(45, 0);
+		//補正
+		//旋回
+		Rotate(90, 0.05);
+		//補正
+		//加速
+		Accel(45,300);
+		break;
+	case 'S':
+		//スラローム
+		break;
+	default :
+		break;
+	}
+
+
+}
+void TurnLeft(/*char mode*/)
 {
 	//スラロームなら
 	//一つ
@@ -357,41 +435,47 @@ void TurnLeft()
 	//補正して
 	//回転して
 	//加速する
+	//関数呼び出しと判定処理が多いと遅いかなー。
+	char mode = 'T';
+	switch( mode )
+	{
+	case 'T' :
+		//超信地旋回
+		Decel(45, 0);
+		//補正
+		//旋回
+		Rotate(90, 0.05);
+		//補正
+		//加速
+		Accel(45,300);
+		break;
+	case 'S':
+		//スラローム
+		break;
+	default :
+		break;
+	}
 
 }
 void GoBack()
 {
 	//減速して
-	Decel(40, 10);
-	while(1)	//距離指定
-	{
-
-	}
+	Decel(45, 0);
 	//補正して
+	Calib();
 	//回転して
+	Rotate(90, 0.05);//もしくは二回とも左
 	//補正して
+	Calib();
 	//回転して
+	Rotate(90, 0.05);
 	//加速する
 	Accel(40, 300);
-	while(1)
-	{
 
-	}
 	//ここまでで目標走行距離を完了する
 
 }
-void Rotate(char direction_of_rotation)
-{
-	//回転方向で変わるのは目標移動量だけ
 
-	//左右独立で移動量を取らないとうまくいかなさそう
-
-	//左右の移動量を取得。それぞれが移動しきったか判定
-
-	//まだならアクションモードはROTATE
-
-
-}
 
 
 

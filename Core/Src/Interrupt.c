@@ -25,8 +25,10 @@ void TimeMonitor()
 
 }
 
+
 void UpdatePhisicalDataFromEnc()
 {
+
 	pulse_displacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	pulse_displacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 

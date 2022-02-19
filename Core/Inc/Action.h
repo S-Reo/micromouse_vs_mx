@@ -29,7 +29,7 @@ void spin_turn(double angle_deg);
 void wait(double time_s);
 void straight_time(double time_s);
 void Slalom_turn();
-
+void Rotate(float deg, float ang_accel);
 void Accel(float add_distance, float explore_speed);
 void Decel(float dec_distance, float end_speed);
 void GoStraight(int accel, float explore_speed);
