@@ -45,6 +45,7 @@ extern TIM_HandleTypeDef htim1;
 
 extern float photo[4];
 extern int pulse_displacement[2];
+extern int keep_counter[2];
 //速度 mm/s
 extern float current_velocity[3];
 

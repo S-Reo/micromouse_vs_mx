@@ -19,6 +19,10 @@
 float photo[4]={0};
 
 int pulse_displacement[2]={0};
+int keep_counter[2]={
+		INITIAL_PULSE,
+		INITIAL_PULSE
+};
 float current_velocity[3]={0};	//速度 mm/s
 int total_pulse[3]={0};	//移動量 mm/msを積算
 float angular_v=0;			//角速度 rad/s

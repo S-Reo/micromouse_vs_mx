@@ -64,11 +64,11 @@ void WritingFree()
 
 	//加速開始時にがちっと音がするのを今の内に直しておく。
 
-#if 0
-	printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);	//ここで変な値が入っている→原因はモード選択用にエンコーダを回したパルスの初期化をしていなかったこと
+#if 1
+	//printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);	//ここで変な値が入っている→原因はモード選択用にエンコーダを回したパルスの初期化をしていなかったこと
 	//GoStraight( TRUE, 300);
-	Accel(45, 300);
-	printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);
+	Accel(45, 180);
+	//printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);
 	//GoStraight( TRUE, 90);
 	Decel(45, 0);
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
@@ -77,10 +77,10 @@ void WritingFree()
 	printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);	//微妙に出力値が残る。
 #else
 
-	Rotate( -2*M_PI*0.25 , -3*M_PI);
+	Rotate( 90 , -3*M_PI);
 	HAL_Delay(1000);
 
-	Rotate( 2*M_PI*0.25 , 3*M_PI);
+	Rotate( 90 , 3*M_PI);
 #endif
 	while(1)
 	{

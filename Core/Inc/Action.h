@@ -24,6 +24,7 @@ extern PID_Control wall, Velocity, imu ;
 extern uint8_t alpha_flag;
 extern float alpha_turn;  //スラローム時の角加速度
 
+void ResetCounter();
 
 void spin_turn(double angle_deg);
 void wait(double time_s);
