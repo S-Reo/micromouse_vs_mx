@@ -18,7 +18,9 @@ uint8_t read_byte( uint8_t reg ) {
 	HAL_SPI_Transmit(&hspi3,&ret,1,100);
 	HAL_SPI_Receive(&hspi3,&val,1,100);
 	CS_SET;
-
+	//1回の取得は0.2msだった
+	//値の更新は4回分で0.8ms = 1.25kHz . 656250Bit/s 1回で131.25bit, 4回で525Bit=65.625byte
+	//値の取得は1msが妥当。2台目のエンコーダではどれくらいがいいか。as5047Pは4.5MHz
 	return val;
 }
 

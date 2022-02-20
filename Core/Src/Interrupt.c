@@ -17,6 +17,7 @@
 #include "IR_Emitter.h"
 #include "Motor_Driver.h"
 
+int timer=0, t=0;
 //以下割り込みで呼ぶ関数
 //このあたりの関数は、構造体変数を扱うファイルにまとめたほうがいいかもしれない。(メインのアルゴリズム、アクション)
 void TimeMonitor()
@@ -113,6 +114,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	if( htim == &htim8)
 	{
+		timer += t;
 		//壁センサデータの更新だけ
 		UpdatePhotoData();
 

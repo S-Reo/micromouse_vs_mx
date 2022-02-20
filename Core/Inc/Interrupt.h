@@ -14,6 +14,7 @@
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim8;
 
+extern int timer, t;
 ////エンコーダ値から生成する変数。割り込みで更新。
 //extern float velocity[ ENC_NUM ];
 //extern float total_mileage[ ENC_NUM ];
