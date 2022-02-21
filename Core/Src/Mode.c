@@ -86,6 +86,15 @@ void WritingFree()
 	printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);	//微妙に出力値が残る。
 
 	Rotate( 90 , -3*M_PI);
+	//
+//	RotateAccel(15, 2);
+//
+//	RotateDecel(15, 2);
+	while(1)
+	{
+		target_angular_v = 0;
+	}
+	Rotate( 90 , -3*M_PI);
 	HAL_Delay(1000);
 
 	Rotate( 90 , 3*M_PI);

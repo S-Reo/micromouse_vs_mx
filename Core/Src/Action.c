@@ -138,6 +138,112 @@ void ResetCounter()
 	keep_counter[LEFT] = INITIAL_PULSE;
 	keep_counter[RIGHT] = INITIAL_PULSE;
 }
+
+void RotateAccel(float deg, float rotate_ang_v)
+{
+	float additional_ang_v=0;
+	additional_ang_v = rotate_ang_v - angular_v;
+	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
+	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
+	int add_distance = (int)( (deg/360) * ROTATE_PULSE) * MM_PER_PULSE;
+	angular_acceleration = T1*additional_ang_v*additional_ang_v / (2*add_distance);	//周期、角速度、距離
+
+	int move_pulse = (int)(2*add_distance/MM_PER_PULSE);
+	int keep_pulse[2] = {
+			total_pulse[LEFT],
+			total_pulse[RIGHT]
+	};
+	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
+	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
+	//90mmでうまくやるには0から60000カウントまで
+	if (angular_acceleration > 0)
+	{
+		while( ( ( keep_pulse[LEFT]+move_pulse ) >= ( total_pulse[LEFT] ) ) || ( ( keep_pulse[RIGHT]-move_pulse ) <= ( total_pulse[RIGHT] ) ) )
+		{
+
+		}
+
+	}
+	else if (angular_acceleration < 0)
+	{
+		while( ( ( keep_pulse[LEFT]-move_pulse ) <= ( total_pulse[LEFT] ) ) || ( ( keep_pulse[RIGHT]+move_pulse ) >= ( total_pulse[RIGHT] ) ) )
+		{
+
+		}
+
+	}
+	angular_acceleration = 0;
+	//target_angular_v = 0;
+}
+void RotateConst(float deg, float rotate_ang_v)
+{
+	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
+	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
+	int add_distance = (int)( (deg/360) * ROTATE_PULSE) * MM_PER_PULSE;
+
+	int move_pulse = (int)(2*add_distance/MM_PER_PULSE);
+	int keep_pulse[2] = {
+			total_pulse[LEFT],
+			total_pulse[RIGHT]
+	};
+	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
+	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
+	//90mmでうまくやるには0から60000カウントまで
+	if (angular_acceleration > 0)
+	{
+		while( ( ( keep_pulse[LEFT]+move_pulse ) >= ( total_pulse[LEFT] ) ) || ( ( keep_pulse[RIGHT]-move_pulse ) <= ( total_pulse[RIGHT] ) ) )
+		{
+			angular_acceleration = rotate_ang_v;
+		}
+
+	}
+	else if (angular_acceleration < 0)
+	{
+		while( ( ( keep_pulse[LEFT]-move_pulse ) <= ( total_pulse[LEFT] ) ) || ( ( keep_pulse[RIGHT]+move_pulse ) >= ( total_pulse[RIGHT] ) ) )
+		{
+			angular_acceleration = rotate_ang_v;
+		}
+
+	}
+	angular_acceleration = 0;
+	//target_angular_v = 0;
+}
+void RotateDecel(float deg, float rotate_ang_v)
+{
+	float additional_ang_v=0;
+	additional_ang_v = rotate_ang_v - angular_v;
+	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
+	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
+	int add_distance = (int)( (deg/360) * ROTATE_PULSE) * MM_PER_PULSE;
+	angular_acceleration = -1*(T1*additional_ang_v*additional_ang_v / (2*add_distance));	//周期、角速度、距離
+
+	int move_pulse = (int)(2*add_distance/MM_PER_PULSE);
+	int keep_pulse[2] = {
+			total_pulse[LEFT],
+			total_pulse[RIGHT]
+	};
+	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
+	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
+	//90mmでうまくやるには0から60000カウントまで
+	if (angular_acceleration > 0)
+	{
+		while( ( ( keep_pulse[LEFT]+move_pulse ) >= ( total_pulse[LEFT] ) ) || ( ( keep_pulse[RIGHT]-move_pulse ) <= ( total_pulse[RIGHT] ) ) )
+		{
+
+		}
+
+	}
+	else if (angular_acceleration < 0)
+	{
+		while( ( ( keep_pulse[LEFT]-move_pulse ) <= ( total_pulse[LEFT] ) ) || ( ( keep_pulse[RIGHT]+move_pulse ) >= ( total_pulse[RIGHT] ) ) )
+		{
+
+		}
+
+	}
+	angular_acceleration = 0;
+	target_angular_v = 0;
+}
 void Rotate(float deg, float ang_accel)
 {
 	//Rotate(90, 0.05);
@@ -155,9 +261,10 @@ void Rotate(float deg, float ang_accel)
 
 	//絶対値で取ったら符号意識しなくてよくなるな
 
-	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	//符号アリなので、角度でマイナス入れると今は動作がおかしくなる。2/21
+//	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
 
-	int target_pulse[2] ={0};
+	//int target_pulse[2] ={0};
 //	int keep_pulse[2] = {
 //			total_pulse[LEFT],
 //			total_pulse[RIGHT]
@@ -179,32 +286,51 @@ void Rotate(float deg, float ang_accel)
 //	InitPulse((int*)(&(TIM4->CNT)), INITIAL_PULSE);
 //	ResetCounter();
 
-	if( ang_accel > 0 )	//時計回り
-	{
-		target_pulse[LEFT] = total_pulse[LEFT] + move_pulse;
-		target_pulse[RIGHT] = total_pulse[RIGHT] - move_pulse;
-		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
-		printf("%d, %d, %d, %d\r\n",target_pulse[LEFT],total_pulse[LEFT], target_pulse[RIGHT], total_pulse[RIGHT]);
-		while(  /*(angle <= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] >= total_pulse[LEFT] ) &&  (  target_pulse[RIGHT] <= total_pulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
-		{
-			target_angular_v = ang_accel;
-			printf("deg:正, angle, angular_v : %f, %f\r\n",angle, angular_v );
-		}
+	RotateAccel(deg*15/90, ang_accel);
+	RotateConst(deg*75/90, ang_accel);
+	RotateDecel(deg*15/90, ang_accel);
 
-		//target_pulse[RIGHT] *= 1;//-1 *(int)( (deg/360) * ROTATE_PULSE);
-	}
-	else if( ang_accel < 0)
-	{
-		target_pulse[LEFT] = total_pulse[LEFT] - move_pulse;
-		target_pulse[RIGHT] = total_pulse[RIGHT] + move_pulse;
-		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
-		while( /*(angle >= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] <= total_pulse[LEFT] ) &&  (  target_pulse[RIGHT] >= total_pulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
-		{
-			target_angular_v = ang_accel;
-			printf("deg:負, angle, angular_v : %f, %f\r\n",angle, angular_v );
-		}
-
-	}
+//	if( ang_accel > 0 )	//時計回り
+//	{
+//		target_pulse[LEFT] = total_pulse[LEFT] + move_pulse;
+//		target_pulse[RIGHT] = total_pulse[RIGHT] - move_pulse;
+//		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
+//		//角加速度計算
+//		//どのくらい回転したかに応じて台形加減速
+//		printf("%d, %d, %d, %d\r\n",target_pulse[LEFT],total_pulse[LEFT], target_pulse[RIGHT], total_pulse[RIGHT]);
+//		while(  /*(angle <= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] >= total_pulse[LEFT] ) &&  (  target_pulse[RIGHT] <= total_pulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
+//		{
+//			if(  (abs(target_pulse[LEFT]-total_pulse[LEFT]) > (75/90)*move_pulse )  ||  (  abs(target_pulse[RIGHT]-total_pulse[RIGHT]) > (75/90)*move_pulse ) /*0度から15度未満*/)
+//			{
+//				angular_acceleration = 0;
+//			}
+//
+////			if(  /*15度から75度未満*/)
+////			{
+////				angular_acceleration = 0;
+////				target_angular_v = ang_accel;
+////			}
+////			if(/*75度から90度以下*/)
+////			{
+////
+////			}
+//			printf("deg:正, angle, angular_v : %f, %f\r\n",angle, angular_v );
+//		}
+//
+//		//target_pulse[RIGHT] *= 1;//-1 *(int)( (deg/360) * ROTATE_PULSE);
+//	}
+//	else if( ang_accel < 0)
+//	{
+//		target_pulse[LEFT] = total_pulse[LEFT] - move_pulse;
+//		target_pulse[RIGHT] = total_pulse[RIGHT] + move_pulse;
+//		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
+//		while( /*(angle >= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] <= total_pulse[LEFT] ) &&  (  target_pulse[RIGHT] >= total_pulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
+//		{
+//			target_angular_v = ang_accel;
+//			printf("deg:負, angle, angular_v : %f, %f\r\n",angle, angular_v );
+//		}
+//
+//	}
 	target_angular_v = 0;
 	printf("回転終了\r\n");
 }
