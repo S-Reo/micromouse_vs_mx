@@ -22,6 +22,7 @@ uint8_t read_byte( uint8_t );
 void write_byte( uint8_t, uint8_t);
 uint8_t IMU_init(void);
 void read_gyro_data(void);
+
 void read_accel_data(void);
 
 /*

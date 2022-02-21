@@ -32,8 +32,8 @@ void UpdatePhisicalDataFromEnc()
 
 	//エンコーダパルスをどう扱うか。今のままだと1msでの変位が大きいと目標パルス量を大きく通り越してしまう。→速度の取得時にはリセットをしないで、前回のパルスからの差を取ればいいかも。
 	//TIM3->CNT - INITIAL_PULSE <= target_pulse の間は直進。みたいなプログラムにして、breakした瞬間にパルスリセット。
-	pulse_displacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  &keep_counter[LEFT]);
-	pulse_displacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  &keep_counter[RIGHT]/*INITIAL_PULSE*/);
+	pulse_displacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&keep_counter[LEFT]*/);
+	pulse_displacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&keep_counter[RIGHT]*/);
 
 	//速度 mm/s
 	current_velocity[LEFT] = ( (float)pulse_displacement[LEFT] * MM_PER_PULSE ) / T1;
@@ -59,6 +59,8 @@ void ControlMotor()
 	//ここからは目標値と現在値を用いた制御。
 
 	//タイヤ目標値計算
+	//減速させすぎると、目標パルスに達する前にマイナスに振れてしまう
+
 	target_velocity[BODY] += acceleration;
 	target_angular_v += angular_acceleration;
 

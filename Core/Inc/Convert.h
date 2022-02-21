@@ -35,7 +35,8 @@ void InitPulse(int *timer_counter, int initial_pulse);
 //引数 : カウンタのアドレス、パルス初期値
 //戻り値 : パルスの変位
 //-------------------------//
-int GetPulseDisplacement(int *timer_counter,  int *keep_counter);
+int GetPulseDisplacement(int *timer_counter,  int initial_pulse);
+//int GetPulseDisplacement(int *timer_counter,  int *keep_counter);
 
 
 

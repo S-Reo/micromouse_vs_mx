@@ -185,37 +185,37 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  IMU_init();
-  int16_t data[1000]={0};
-  int i=0, elaps=0;
-	HAL_TIM_Base_Start_IT(&htim8);
-
-  while(1)
-  {
-	  t = 1;
-	  read_gyro_data();
-	  data[i] = zg;
-	  i++;
-	  zg = 0;
-	  if(i == 1000)
-	  {
-		  elaps = timer;
-		  break;
-	  }
-
-  }
-
-  for(i=0; i < 1000; i++)
-  {
-	  printf("データ : %d\r\n", data[i]);
-
-  }
-  printf("経過時間 : %d\r\n", elaps);
-
-  while(1)
-  {
-
-  }
+//  IMU_init();
+//  int16_t data[1000]={0};
+//  int i=0, elaps=0;
+//	HAL_TIM_Base_Start_IT(&htim8);
+//
+//  while(1)
+//  {
+//	  t = 1;
+//	  read_gyro_data();
+//	  data[i] = zg;
+//	  i++;
+//	  zg = 0;
+//	  if(i == 1000)
+//	  {
+//		  elaps = timer;
+//		  break;
+//	  }
+//
+//  }
+//
+//  for(i=0; i < 1000; i++)
+//  {
+//	  printf("データ : %d\r\n", data[i]);
+//
+//  }
+//  printf("経過時間 : %d\r\n", elaps);
+//
+//  while(1)
+//  {
+//
+//  }
   ADCStart();
   HAL_Delay(500);
 

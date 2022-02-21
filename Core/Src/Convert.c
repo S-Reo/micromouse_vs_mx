@@ -46,21 +46,33 @@ void InitPulse(int *timer_counter, int initial_pulse)
 //引数 : カウンタのアドレス、パルス初期値
 //戻り値 : パルスの変位
 //-------------------------//
-int GetPulseDisplacement(int *timer_counter,  int *keep_counter)
+int GetPulseDisplacement(int *timer_counter,  int initial_pulse)
 {
 	//割り込みで呼び出す想定
 	//カウンタをリセットするのは別のところ
 	int current_pulse = *timer_counter;
-	int pulse_displacement = -1* (current_pulse - *keep_counter);
+	int pulse_displacement = -1* (current_pulse - initial_pulse);
 	//前回値として保存
 
-	*keep_counter = current_pulse;
 //	//次回の呼び出しのためにすぐ初期化。
-//	InitPulse( timer_counter, initial_pulse);
+	InitPulse( timer_counter, initial_pulse);
 
 	return pulse_displacement;
 }
-
+//int GetPulseDisplacement(int *timer_counter,  int *keep_counter)
+//{
+//	//割り込みで呼び出す想定
+//	//カウンタをリセットするのは別のところ
+//	int current_pulse = *timer_counter;
+//	int pulse_displacement = -1* (current_pulse - *keep_counter);
+//	//前回値として保存
+//
+//	*keep_counter = current_pulse;
+////	//次回の呼び出しのためにすぐ初期化。
+////	InitPulse( timer_counter, initial_pulse);
+//
+//	return pulse_displacement;
+//}
 
 
 /*-------------------------------------------フォトトラ-------------------------------------------*/

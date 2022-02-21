@@ -33,6 +33,6 @@ void Slalom_turn();
 void Rotate(float deg, float ang_accel);
 void Accel(float add_distance, float explore_speed);
 void Decel(float dec_distance, float end_speed);
-void GoStraight(int accel, float explore_speed);
+void GoStraight(float move_distance,  float explore_speed, float accel);
 
 #endif /* INC_ACTION_H_ */
