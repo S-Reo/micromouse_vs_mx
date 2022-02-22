@@ -73,9 +73,9 @@ void ControlMotor()
 	velocity_left_out = PIDControl( L_VELO, T1, target_velocity[LEFT], current_velocity[LEFT]);
 	velocity_right_out = PIDControl( R_VELO, T1, target_velocity[RIGHT], current_velocity[RIGHT]);
 	//PIDControl( B_VELO, T1, target, current, &left);
-	//PIDControl( D_WALL, T1, photo[SL], photo[SR], &wall_right_out);
+	wall_left_out = PIDControl( D_WALL, T1, photo[SL], photo[SR]+photo_diff);
 
-	wall_left_out = -wall_right_out;
+	wall_right_out = -wall_left_out;
 
 	L_motor = wall_left_out + velocity_left_out;
 	R_motor = wall_right_out + velocity_right_out;
@@ -89,10 +89,10 @@ void ControlMotor()
 
 void UpdatePhotoData()
 {
-	photo[FL] = GetWallDataAverage(10, adc1[0], FL);
-	photo[SR] = GetWallDataAverage(10, adc1[1], SR);
-	photo[SL] = GetWallDataAverage(10, adc2[0], SL);
-	photo[FR] = GetWallDataAverage(10, adc2[1], FR);
+	photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
+	photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
+	photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+	photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
 }
 
 

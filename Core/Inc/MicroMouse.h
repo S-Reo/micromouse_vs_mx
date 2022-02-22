@@ -44,6 +44,8 @@ extern TIM_HandleTypeDef htim1;
 #define INITIAL_PULSE	(30000 - 1)
 
 extern float photo[4];
+extern float target_photo[4];
+extern float photo_diff;
 extern int pulse_displacement[2];
 extern int keep_counter[2];
 //速度 mm/s
@@ -62,6 +64,8 @@ extern float angle;
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
 extern float target_velocity[3];
+extern float explore_velocity;
+extern float add_velocity;
 extern float acceleration;
 extern float target_angular_v;
 extern float angular_acceleration;
@@ -153,7 +157,7 @@ extern int L_motor, R_motor;
 ////歩数マップデータ
 //uint8_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 //uint8_t x=0, y=0;//座標
-extern uint8_t x, y;
+
 typedef struct{
     uint8_t north:2;
     uint8_t east:2;
@@ -171,6 +175,7 @@ typedef enum{
 	south = 2,
 	west = 3
 }direction;
+extern direction my_direction;
 //バッテリ電圧系
 //時間系
 //探索の状態遷移用の関数ポインタテーブル

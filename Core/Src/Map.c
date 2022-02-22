@@ -27,9 +27,6 @@
 //マップデータの管理
 
 
-direction my_direction=north;
-uint8_t x=0, y=0;
-
 //ファイルを独立させたい。そのためには、グローバルを使わない。
 //座標
 
@@ -123,10 +120,10 @@ void wall_store_running(uint8_t x, uint8_t y)
 void wall_set(uint8_t x, uint8_t y, float side_left, float side_right, float front_left, float front_right){
 	uint8_t wall_dir[4];
 	//壁センサ値を読んで、各方角の壁の有無を判定
-	  wall_dir[my_direction] = (side_left + side_right)/2 > FRONT_WALL  ?   WALL : NOWALL;
-	  wall_dir[(my_direction + 1)%4] = front_right > RIGHT_WALL  ?  WALL :  NOWALL;
+	  wall_dir[my_direction] = (front_left + front_right)/2 > FRONT_WALL  ?   WALL : NOWALL;
+	  wall_dir[(my_direction + 1)%4] = side_right > RIGHT_WALL  ?  WALL :  NOWALL;
 	  wall_dir[(my_direction + 2)%4] = NOWALL;
-	  wall_dir[(my_direction + 3)%4] = front_left > LEFT_WALL ?  WALL :  NOWALL;
+	  wall_dir[(my_direction + 3)%4] = side_left > LEFT_WALL ?  WALL :  NOWALL;
 
 	  //各方角の壁に壁の有無を代入
 	  Wall[x][y].north = wall_dir[0];
@@ -313,7 +310,138 @@ void UpdateWalkMap(){
 
 }
 //ノード
+//左手法での方向決定
+void LeftHandJudge(uint8_t *x, uint8_t *y, direction *dir, char *action_type){
+	/*--旋回モード選?��?--*/
 
+	/*-=1-=1*/
+    	  switch(*dir){
+    	  case north:
+
+    		  if(Wall[*x][*y].west == NOWALL){
+    			  SelectAction( 'L');
+    			  *dir = west;
+    		      *x-=1;
+    		  }
+
+    		  else if(Wall[*x][*y].north == NOWALL){
+    			  SelectAction('S');
+    			  *dir = north;
+    			  *y+=1;
+    		  }
+
+
+    		  else if(Wall[*x][*y].east == NOWALL){
+    			  SelectAction('R');
+    	          *dir = east;
+    	          *x+=1;
+    		  }
+
+    		  else {
+    			  SelectAction('B');
+    	       	  *dir = south;
+    	       	  *y-=1;
+    		  }
+
+
+
+    		  break;
+    	  case east:
+    		  if(Wall[*x][*y].north== NOWALL){
+    			  SelectAction('L');
+    			  *dir = north;
+    			  *y+=1;
+    		  }
+
+    		  else if(Wall[*x][*y].east == NOWALL){
+    			  SelectAction('S');
+    	          *dir = east;
+    	          *x+=1;
+    		  }
+
+
+    		  else if(Wall[*x][*y].south == NOWALL){
+    			  SelectAction('R');
+    	       	  *dir = south;
+    	       	  *y-=1;
+    		  }
+
+    		  else {
+    			  SelectAction('B');
+      			  *dir = west;
+      		      *x-=1;
+    		  }
+
+    		  break;
+    	  case south:
+    		  if(Wall[*x][*y].east == NOWALL){
+    			  SelectAction('L');
+    	          *dir = east;
+    	          *x+=1;
+    		  }
+
+    		  else if(Wall[*x][*y].south == NOWALL){
+    			  SelectAction('S');
+    	       	  *dir = south;
+    	       	  *y-=1;
+    		  }
+
+
+    		  else if(Wall[*x][*y].west == NOWALL){
+    			  SelectAction('R');
+      			  *dir = west;
+      		      *x-=1;
+    		  }
+
+    		  else {
+    			  SelectAction('B');
+      			  *dir = north;
+      			  *y+=1;
+    		  }
+
+    		  break;
+    	  case west:
+    		  if(Wall[*x][*y].south == NOWALL){
+    			  SelectAction('L');
+    	       	  *dir = south;
+    	       	  *y -= 1;
+    		  }
+
+    		  else if(Wall[*x][*y].west == NOWALL){
+    			  SelectAction('S');
+
+    			  *dir = west;
+    		      *x-=1;
+    		  }
+
+
+    		  else if(Wall[*x][*y].north == NOWALL){
+    			  SelectAction('R');
+      			  *dir = north;
+      			  *y+=1;
+    		  }
+
+    		  else {
+    			  SelectAction('B');
+    	          *dir = east;
+    	          *x+=1;
+    		  }
+
+    		  break;
+    	  default:
+    		  break;
+    	  }//swtich end
+}
+//求心法での方向決定
+void DetermineDirection(uint8_t x, uint8_t y, int dir, char action_type)
+{
+	UpdateWalkMap();
+
+	//評価値比較して小さいほうを進行方向とする。
+
+	//*action_type = 'S';
+
+}
 //最短経路導出
 //今いる位置からの最短経路を求めるのが足立法
 //2点間の最短経路導出の関数を用意する。目標座標とスタート座標は引数でとる
@@ -332,24 +460,24 @@ void UpdateCoordinates(int current_direction)
 	//2区画直進した場合、移動量が満たされたかどうかの判定はどうするか。壁の判定との相性。
 	//→移動量判定を、アクションの中で呼べばよさそう。1区画ごとの移動量を満たしたときに壁判定を入れる。そこは関数ごとに記述する
 	//2区画直進の関数内で、壁の判定を途中で挟むだけ
-	switch(current_direction)
-	{
-	case north:
-		y++;
-		break;
-	case east:
-		x++;
-		break;
-	case south:
-		y--;
-		break;
-	case west:
-		x--;
-		break;
-	default:
-		//斜め方向の時にどうするか
-		break;
-	}
+//	switch(current_direction)
+//	{
+//	case north:
+//		y++;
+//		break;
+//	case east:
+//		x++;
+//		break;
+//	case south:
+//		y--;
+//		break;
+//	case west:
+//		x--;
+//		break;
+//	default:
+//		//斜め方向の時にどうするか
+//		break;
+//	}
 }
 //区画の終了時　＝　一つの区画を移動し終えるときの向きで、どの座標を増やすかが決まる
 //袋小路、直進、右、左、のいずれかを返す。

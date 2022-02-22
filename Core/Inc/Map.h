@@ -8,6 +8,8 @@
 #ifndef INC_MAP_H_
 #define INC_MAP_H_
 
+#include <main.h>
+#include <MicroMouse.h>
 /*
  * map.h
  *
@@ -21,7 +23,7 @@
 ////歩数マップデータ
 //uint8_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 //uint8_t x=0, y=0;//座標
-extern uint8_t x, y;
+//extern uint8_t x, y;
 
 /*構造体宣言*/
 //壁データ
@@ -47,7 +49,8 @@ void wall_store_running(uint8_t x, uint8_t y);
 void wall_set(uint8_t x, uint8_t y, float side_left, float side_right, float front_left, float front_right);
 void wall_ram_print();
 void wall_flash_print();
-
+void UpdateWalkMap();
+void LeftHandJudge(uint8_t *x, uint8_t *y, direction *dir, char *action_type);
 
 
 

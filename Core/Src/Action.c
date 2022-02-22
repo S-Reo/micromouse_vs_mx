@@ -165,7 +165,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 	//90mmでうまくやるには0から60000カウントまで
 	if( rotate_ang_v > 0)
 	{
-		while( ( ( keep_pulse[LEFT]+move_pulse ) >= ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) <= ( total_pulse[RIGHT] ) ) )
+		while( ( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) )
 		{
 			angular_acceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
 		}
@@ -174,7 +174,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 	else if( rotate_ang_v < 0)
 	{
 		//printf("加速 負\r\n");
-		while( ( ( keep_pulse[LEFT]-move_pulse ) <= ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) >= ( total_pulse[RIGHT] ) ) )
+		while( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) )
 		{
 			angular_acceleration = -1*64*T1*additional_ang_v*additional_ang_v / (2*deg);
 		}
@@ -199,7 +199,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	//90mmでうまくやるには0から60000カウントまで
 	if (rotate_ang_v > 0)
 	{
-		while( ( ( keep_pulse[LEFT]+move_pulse ) >= ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) <= ( total_pulse[RIGHT] ) ) )
+		while( ( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) )
 		{
 			//target_angular_v = rotate_ang_v;
 			angular_acceleration = 0;
@@ -209,7 +209,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	else if (rotate_ang_v < 0)
 	{
 		//printf("定速 負\r\n");
-		while( ( ( keep_pulse[LEFT]-move_pulse ) <= ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) >= ( total_pulse[RIGHT] ) ) )
+		while( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) )
 		{
 			//target_angular_v = rotate_ang_v;
 			angular_acceleration = 0;
@@ -239,7 +239,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	if( rotate_ang_v > 0)
 	{
 
-		while( ( ( keep_pulse[LEFT]+move_pulse ) >= ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) <= ( total_pulse[RIGHT] ) ) )
+		while( ( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) )
 		{
 			angular_acceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if( angular_v <= 0)
@@ -250,7 +250,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	else if( rotate_ang_v < 0)
 	{
 		//printf("減速 負\r\n");
-		while( ( ( keep_pulse[LEFT]-move_pulse ) <= ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) >= ( total_pulse[RIGHT] ) ) )
+		while( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) )
 		{
 			angular_acceleration = 64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if( angular_v >= 0)
@@ -382,111 +382,210 @@ void Calib()
 
 //引数にデータを格納するタイミングは割り込みだけとか、1か所に集約する
 //2点間の座標から、移動量を算出
-//void Slalom_turn( float total_mileage_L, float total_mileage_R,float current_angle, float *target_velo_B, float *target_ang_velo)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
-//{
-//	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
-//	//最初の一回で現在移動量をkeepする。目標移動量を足す
-//
-//
-//	//現在移動量と比較して移動しきっていれば終了
-//	float target_mileage_L = 90*1.5;
-//	float target_mileage_R = 90*0.7;
-//
-//	flag = JudgeTargetMileage( total_mileage_L,
-//	//移動しないときはフラグが0
-//	//移動中はフラグが1
-//
-//	static float target_mileage_L += total_mileage_L;
-//
-//
-//
-//	//事前に決めておくものはここで定義
-//	//引数は現在の状況を教えるもの
-//	//スラロームは前距離と後距離と後距離があるから、連続スラロームとか加速して旋回とかに響く。
-//
-//	//移動しきったかどうか
-//	//移動しきっていなければ、現在の状態と目標値の状態を引数として目標値を更新する
-//
-//	//→ 前距離後距離を加速時の目標距離に反映すればいい
-//
-//	float pre = 4;         //スラローム前距離
-//	float fol = 6;         //スラローム後距離
-//	float v_turn = Target_velocity;       //スラローム時の重心速度
-//	//float alpha_turn = 0.001;  //スラローム時の角加速度
-//
-//	//angle = 0;         //アングルの初期化
-//	float ang1 = 30;         //角速度が上がるのは0からang1まで
-//	float ang2 = 60;         //角速度が一定なのはang1からang2まで
-//	float ang3 = 90;         //角速度が下がるのはang2からang3まで
-//	//このあたりのパラメータをどう調整、設計するかが鍵
-//
-//	int now_pulse;
-//	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
-//	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
-//	now_pulse = EN3_L.integrate + EN4_R.integrate;	//汎用的に書いておく
-//	while( now_pulse + (2*pre/MM_PER_PULSE) > (EN3_L.integrate + EN4_R.integrate) ) //移動量を条件に直進
-//	{
-//			velocity_ctrl_flag = 1;
-//			Target_rad_velo = 0;
-//			Target_velocity = v_turn;
-//
-//			////printf("直進1\r\n");
-//	}
-//
-//
-//	float start_angle = (float)body_angle;
-//	while(start_angle + ang1 > (float)body_angle)
-//	{
-//
-//			velocity_ctrl_flag = 1;
-//			//割り込みの中で角速度を上げていく
-//			alpha_flag = 1;
-//			Target_velocity = v_turn;
-//
-//			//printf("クロソイド1\r\n");
-//	}
-//	alpha_flag = 0;
-//
-//	while(start_angle + ang2 > (float)body_angle)
-//	{
-//			velocity_ctrl_flag = 1;
-//			Target_rad_velo = Target_rad_velo;
-//			Target_velocity = v_turn;
-//			////printf("円弧\r\n");
-//	}
-//
-//	while( start_angle + ang3 > (float)body_angle)
-//	{
-//
-//			velocity_ctrl_flag = 1;
-//			alpha_flag = 2;
-//			Target_velocity = v_turn;
-//			//printf("クロソイド2\r\n");
-//	}
-//	alpha_flag = 0;
-//
-//	now_pulse = EN3_L.integrate + EN4_R.integrate;
-//	while( now_pulse + (2*fol/MM_PER_PULSE) > (EN3_L.integrate + EN4_R.integrate) )
-//	{
-//			velocity_ctrl_flag = 1;
-//			Target_rad_velo = 0;
-//			Target_velocity = v_turn;
-//			//printf("直進2\r\n");
-//	}
-//
-//	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
-//	//モータ出力に限らず、変数は集約している方が良い。
-//
-////	距離preを速度v_turnで進む;
-////
-////	重心速度v = v_turnで
-////	角加速度alpha = alpha_turnでangleがang1になるまで進む;
-////	角加速度alpha = 0でangleがang2になるまで進む;
-////	角加速度alpha = -alpha_turnでangleがang3になるまで進む;
-////
-////	距離folを速度v_turnで進む;
-//}
+void SlalomRight()	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
+{
+	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
+	//最初の一回で現在移動量をkeepする。目標移動量を足す
 
+
+	//現在移動量と比較して移動しきっていれば終了
+	//事前に決めておくものはここで定義
+	//引数は現在の状況を教えるもの
+	//スラロームは前距離と後距離と後距離があるから、連続スラロームとか加速して旋回とかに響く。
+
+	//移動しきったかどうか
+	//移動しきっていなければ、現在の状態と目標値の状態を引数として目標値を更新する
+
+	//→ 前距離後距離を加速時の目標距離に反映すればいい
+
+	float pre = 5;         //スラローム前距離
+	float fol = 5;         //スラローム後距離
+	float v_turn = explore_velocity;       //スラローム時の重心速度
+	float alpha_turn = 0.01;//0.015*13;  //スラローム時の角加速度
+
+	//angle = 0;         //アングルの初期化
+	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
+	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
+	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
+	//このあたりのパラメータをどう調整、設計するかが鍵
+
+	int now_pulse;
+	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
+	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
+	now_pulse = total_pulse[LEFT] + total_pulse[RIGHT];	//汎用的に書いておく
+	while( now_pulse + (2*pre/MM_PER_PULSE) > (total_pulse[LEFT] + total_pulse[RIGHT]) ) //移動量を条件に直進
+	{
+			//velocity_ctrl_flag = 1;
+			target_angular_v = 0;
+			angular_acceleration = 0;
+			target_velocity[BODY] = v_turn;
+
+			////printf("直進1\r\n");
+	}
+
+
+	float start_angle = angle;
+	while(start_angle + ang1 > angle)
+	{
+
+			//velocity_ctrl_flag = 1;
+			//割り込みの中で角速度を上げていく
+			//alpha_flag = 1;
+			angular_acceleration = alpha_turn;
+			target_velocity[BODY] = v_turn;
+
+			//printf("クロソイド1\r\n");
+	}
+	angular_acceleration = 0;
+	//alpha_flag = 0;
+
+	while(start_angle + ang2 > angle)
+	{
+			//velocity_ctrl_flag = 1;
+			target_angular_v = target_angular_v;
+			target_velocity[BODY] = v_turn;
+			////printf("円弧\r\n");
+	}
+
+	while( start_angle + ang3 > angle)
+	{
+
+			//velocity_ctrl_flag = 1;
+			//alpha_flag = 2;
+			angular_acceleration = -alpha_turn;
+			if(target_angular_v < 0)
+			{
+				target_angular_v = 0;
+				break;
+			}
+			target_velocity[BODY] = v_turn;
+			//printf("クロソイド2\r\n");
+	}
+	//alpha_flag = 0;
+	angular_acceleration = 0;
+	now_pulse = total_pulse[LEFT] + total_pulse[RIGHT];
+	while( now_pulse + (2*fol/MM_PER_PULSE) > (total_pulse[LEFT] + total_pulse[RIGHT]) )
+	{
+			//velocity_ctrl_flag = 1;
+			target_angular_v = 0;
+			target_velocity[BODY] = v_turn;
+			//printf("直進2\r\n");
+	}
+
+	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
+	//モータ出力に限らず、変数は集約している方が良い。
+
+//	距離preを速度v_turnで進む;
+//
+//	重心速度v = v_turnで
+//	角加速度alpha = alpha_turnでangleがang1になるまで進む;
+//	角加速度alpha = 0でangleがang2になるまで進む;
+//	角加速度alpha = -alpha_turnでangleがang3になるまで進む;
+//
+//	距離folを速度v_turnで進む;
+}
+void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
+{
+	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
+	//最初の一回で現在移動量をkeepする。目標移動量を足す
+
+
+	//現在移動量と比較して移動しきっていれば終了
+	//事前に決めておくものはここで定義
+	//引数は現在の状況を教えるもの
+	//スラロームは前距離と後距離と後距離があるから、連続スラロームとか加速して旋回とかに響く。
+
+	//移動しきったかどうか
+	//移動しきっていなければ、現在の状態と目標値の状態を引数として目標値を更新する
+
+	//→ 前距離後距離を加速時の目標距離に反映すればいい
+
+	float pre = 5;         //スラローム前距離
+	float fol = 5;         //スラローム後距離
+	float v_turn = explore_velocity;       //スラローム時の重心速度
+	float alpha_turn = -0.01;//-0.015*13;  //スラローム時の角加速度
+
+	//angle = 0;         //アングルの初期化
+	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
+	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
+	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
+	//このあたりのパラメータをどう調整、設計するかが鍵
+
+	int now_pulse;
+	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
+	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
+	now_pulse = total_pulse[LEFT] + total_pulse[RIGHT];	//汎用的に書いておく
+	while( now_pulse + (2*pre/MM_PER_PULSE) > (total_pulse[LEFT] + total_pulse[RIGHT]) ) //移動量を条件に直進
+	{
+			//velocity_ctrl_flag = 1;
+			target_angular_v = 0;
+			angular_acceleration = 0;
+			target_velocity[BODY] = v_turn;
+
+			////printf("直進1\r\n");
+	}
+
+
+	float start_angle = angle;
+	while(start_angle - ang1 < angle)
+	{
+
+			//velocity_ctrl_flag = 1;
+			//割り込みの中で角速度を上げていく
+			//alpha_flag = 1;
+			angular_acceleration = alpha_turn;
+			target_velocity[BODY] = v_turn;
+
+			//printf("クロソイド1\r\n");
+	}
+	angular_acceleration = 0;
+	//alpha_flag = 0;
+
+	while(start_angle - ang2 < angle)
+	{
+			//velocity_ctrl_flag = 1;
+			target_angular_v = target_angular_v;
+			target_velocity[BODY] = v_turn;
+			////printf("円弧\r\n");
+	}
+
+	while( start_angle - ang3 < angle)
+	{
+
+			//velocity_ctrl_flag = 1;
+			//alpha_flag = 2;
+			angular_acceleration = -alpha_turn;
+			if(target_angular_v > 0)
+			{
+				target_angular_v = 0;
+				break;
+			}
+			target_velocity[BODY] = v_turn;
+			//printf("クロソイド2\r\n");
+	}
+	//alpha_flag = 0;
+	angular_acceleration = 0;
+	now_pulse = total_pulse[LEFT] + total_pulse[RIGHT];
+	while( now_pulse + (2*fol/MM_PER_PULSE) > (total_pulse[LEFT] + total_pulse[RIGHT]) )
+	{
+			//velocity_ctrl_flag = 1;
+			target_angular_v = 0;
+			target_velocity[BODY] = v_turn;
+			//printf("直進2\r\n");
+	}
+
+	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
+	//モータ出力に限らず、変数は集約している方が良い。
+
+//	距離preを速度v_turnで進む;
+//
+//	重心速度v = v_turnで
+//	角加速度alpha = alpha_turnでangleがang1になるまで進む;
+//	角加速度alpha = 0でangleがang2になるまで進む;
+//	角加速度alpha = -alpha_turnでangleがang3になるまで進む;
+//
+//	距離folを速度v_turnで進む;
+}
 //
 void Accel(float add_distance, float explore_speed)
 {
@@ -501,7 +600,7 @@ void Accel(float add_distance, float explore_speed)
 	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-	while( ( keep_pulse ) >= ( total_pulse[BODY] ) )
+	while( ( keep_pulse ) > ( total_pulse[BODY] ) )
 	{
 #if 1
 		//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
@@ -553,7 +652,7 @@ void Decel(float dec_distance, float end_speed)
 	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
 	int keep_pulse = total_pulse[BODY]+target_pulse;
 
-	while( ( keep_pulse ) >= ( total_pulse[BODY]) )
+	while( ( keep_pulse ) > ( total_pulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
 //		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( total_pulse[BODY]) )	//移動量に応じて処理を変える。
@@ -579,6 +678,7 @@ void Decel(float dec_distance, float end_speed)
 }
 //色々な処理を合わせて先に関数を作ってしまう方がいいかも。
 //加速だけ、減速だけ、定速で、などを組み合わせて台形加減速で一区画走る、とか数区画走れる、途中で壁を見る、とか。
+
 void GoStraight(float move_distance,  float explore_speed, float accel)
 {
 	//直進は加速度を調節して距離を見る。 (移動量)
@@ -586,19 +686,21 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	//並進と旋回を同時に行うときは何を見るか。角度と移動量の二つ。加速度は0で角加速度を角度によって変化させる。その場での旋回と一緒で、直進成分が入っているだけ。
 
 	//エンコーダの移動量チェックって、もっと細かい間隔でやったほうがいいのでは。
-
+	//v = v0 + at
+	//x = v0t + 0.5*at^2
 		//target_velocity[BODY] = explore_speed;
 	//加速なら
 //	if(accel == TRUE)	//目標移動量と到達速度から加速度を計算する。
-		explore_speed += accel;
+	explore_speed += accel;
 
+	//壁の有無をすべて知っている区間は更新する必要がないので一気に加速させて座標を二つ更新
 	//移動量は90だけど、加速に要する距離はその半分とか好きに変えられるように。
 	Accel( 90/2 , explore_speed);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
 	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
 	int target_pulse = (int)(2*(move_distance-45)/MM_PER_PULSE);
 	int keep_pulse = total_pulse[BODY];
 
-	while( ( keep_pulse +target_pulse) >= ( total_pulse[BODY]) )
+	while( ( keep_pulse +target_pulse) > ( total_pulse[BODY]) )
 	{
 		//最初の45mmで加速をストップ
 
@@ -617,24 +719,27 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	//各変数の状況毎に割り込み的に動作を追加していくほうが賢いのでは。
 
 }
-void TurnRight(/*char mode*/)
+void TurnRight(char mode)
 {
 	//関数呼び出しと判定処理が多いと遅いかなー。
-	char mode='T';
+
 	switch( mode )
 	{
 	case 'T' :
 		//超信地旋回
-		Decel(45, 0);
+		Decel(40, 0);
+		HAL_Delay(500);
 		//補正
-		//旋回
-		Rotate(90, 0.05);
+		//Calib();
+		Rotate( 90 , M_PI);
+		HAL_Delay(500);
 		//補正
-		//加速
-		Accel(45,300);
+		//Calib();
+		Accel(40, explore_velocity);
 		break;
 	case 'S':
 		//スラローム
+		SlalomRight();
 		break;
 	default :
 		break;
@@ -642,7 +747,7 @@ void TurnRight(/*char mode*/)
 
 
 }
-void TurnLeft(/*char mode*/)
+void TurnLeft(char mode)
 {
 	//スラロームなら
 	//一つ
@@ -653,21 +758,24 @@ void TurnLeft(/*char mode*/)
 	//回転して
 	//加速する
 	//関数呼び出しと判定処理が多いと遅いかなー。
-	char mode = 'T';
+
 	switch( mode )
 	{
 	case 'T' :
 		//超信地旋回
-		Decel(45, 0);
+		Decel(40, 0);
+		HAL_Delay(500);
 		//補正
-		//旋回
-		Rotate(90, 0.05);
+		//Calib();
+		Rotate( 90 , -M_PI);
+		HAL_Delay(500);
 		//補正
-		//加速
-		Accel(45,300);
+		//Calib();
+		Accel(40, explore_velocity);
 		break;
 	case 'S':
 		//スラローム
+		SlalomLeft();
 		break;
 	default :
 		break;
@@ -678,17 +786,19 @@ void GoBack()
 {
 	//減速して
 	Decel(45, 0);
+	HAL_Delay(500);
 	//補正して
 	Calib();
 	//回転して
-	Rotate(90, 0.05);//もしくは二回とも左
+	Rotate(90, M_PI);//もしくは二回とも左
+	HAL_Delay(500);
 	//補正して
 	Calib();
 	//回転して
-	Rotate(90, 0.05);
+	Rotate(90, M_PI);
+	HAL_Delay(500);
 	//加速する
-	Accel(40, 300);
-
+	Accel(45, explore_velocity);
 	//ここまでで目標走行距離を完了する
 
 }
@@ -699,29 +809,29 @@ void GoBack()
 
 
 //進行方向決定の処理をどうするかで書き方が変わる。フラグを使うとか。
-void SelectAction(char direction, float total_mileage)	//前後左右であらわす
+void SelectAction(char direction)	//前後左右であらわす
 {
 	//現在の座標から次の座標に行くまでの処理を一つのアクションとする
 	switch(direction)
 	{
 	//直進
 	case 'S':
-		//GoStraight();
+		GoStraight(90, explore_velocity, add_velocity);
 		break;
 	//右方向
 	case 'R':	//左右の違いは目標値がそれぞれ入れ替わるだけだから、上手く書けば一つの関数でできる
 		//スラロームターンと減速プラスターンetc
-		TurnRight();
+		TurnRight('S');
 		break;
 	//左方向
 	case 'L':
-		TurnLeft();
+		TurnLeft('S');
 		break;
-	case 'U':
-		GoBack();
+	case 'B':
+		GoBack();	//Uターン
 		break;
-	//Uターン
-		break;
+
+
 	default :
 		break;
 

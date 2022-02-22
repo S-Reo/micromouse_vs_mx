@@ -17,7 +17,8 @@
 #include "Convert.h"
 
 float photo[4]={0};
-
+float target_photo[4]={0};
+float photo_diff = 0;
 int pulse_displacement[2]={0};
 int keep_counter[2]={
 		INITIAL_PULSE,
@@ -32,6 +33,8 @@ float angle=0;				//角度 rad/msを積算
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
 float target_velocity[3]={0};
+float explore_velocity=300;
+float add_velocity=0;
 float acceleration=0;
 float target_angular_v=0;
 float angular_acceleration=0;
@@ -41,8 +44,7 @@ int wall_right_out=0, wall_left_out=0;
 int L_motor=0, R_motor=0;
 
 
-uint8_t x, y;
-
+direction my_direction = north;
 
 t_wall Wall [NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 
