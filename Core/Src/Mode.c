@@ -269,7 +269,7 @@ void Explore()
 //		break;
 //	}
 //}
-	explore_velocity=90;//300;
+	explore_velocity=300;
 	Accel(61.5, explore_velocity);
 	y++;
 	uint8_t xlog[10]={0},ylog[10]={0};
@@ -277,8 +277,8 @@ void Explore()
 	while( (x != 3) || (y != 3))
 	{
 
-		xlog[i]=x;
-		ylog[i]=y;
+		//xlog[i]=x;
+		//ylog[i]=y;
 		//0,0から0,1に北向きのまま移動したい→直進、移動しきった。座標と向きを更新
 		//0,1から1,1に行きたい。今の向きは北。→ 右に旋回、移動しきった。座標と向きを更新。
 		//ChangeNowStatus(&x,&y,&my_direction,&action_type);
@@ -294,7 +294,7 @@ void Explore()
 		//方向決定と、座標方角の更新。
 		LeftHandJudge(&x, &y, &my_direction, &action_type);
 
-		i++;
+		//i++;
 		//マップデータに基づき、次の目標座標を決定する。目標座標から進行方向を決める。
 		//DetermineDirection(&x,&y,&my_direction,&action_type);		//マップデータと現在座標、方角から次の方角、前後左右を返す。現在の状態から次の状態を求める。その状態になるためのアクションを返す。状態は先に更新しておく。
 #if 0
@@ -316,7 +316,7 @@ void Explore()
 	{
 		for(i=0;i < 10; i++)
 		{
-			printf("%d: %d,%d\r\n",i,xlog[i],ylog[i]);
+			//printf("%d: %d,%d\r\n",i,xlog[i],ylog[i]);
 		}
 	}
 	//一旦全ての処理をできるだけ細かく書いてみる。そのあとモジュール化してみる。構造化分析的な。
