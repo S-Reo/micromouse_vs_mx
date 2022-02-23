@@ -398,12 +398,10 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
-	float pre = 5;         //スラローム前距離
-	float fol = 12;         //スラローム後距離
 	float v_turn = explore_velocity;       //スラローム時の重心速度
-	float alpha_turn = 0.13;//0.015*13;  //スラローム時の角加速度
-
-	//angle = 0;         //アングルの初期化
+	float pre = 6;         //スラローム前距離
+	float fol = 6;         //スラローム後距離
+	float alpha_turn = 0.013;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -463,6 +461,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	}
 	//alpha_flag = 0;
 	angular_acceleration = 0;
+	target_angular_v = 0;
 	now_pulse = total_pulse[LEFT] + total_pulse[RIGHT];
 	while( now_pulse + (2*fol/MM_PER_PULSE) > (total_pulse[LEFT] + total_pulse[RIGHT]) )
 	{
@@ -500,12 +499,10 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
-	float pre = 5;         //スラローム前距離
-	float fol = 12;         //スラローム後距離
 	float v_turn = explore_velocity;       //スラローム時の重心速度
-	float alpha_turn = -0.13;//-0.015*13;  //スラローム時の角加速度
-
-	//angle = 0;         //アングルの初期化
+	float pre = 6;         //スラローム前距離
+	float fol = 3;         //スラローム後距離
+	float alpha_turn = -0.013;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -565,6 +562,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	}
 	//alpha_flag = 0;
 	angular_acceleration = 0;
+	target_angular_v = 0;
 	now_pulse = total_pulse[LEFT] + total_pulse[RIGHT];
 	while( now_pulse + (2*fol/MM_PER_PULSE) > (total_pulse[LEFT] + total_pulse[RIGHT]) )
 	{
