@@ -14,7 +14,7 @@ extern SPI_HandleTypeDef hspi3;
 // IMUから取得したデータ
 extern volatile int16_t 	xa, ya, za; // 加速度(16bitデータ)
 extern volatile int16_t 	xg, yg, zg;	// 角加速度(16bitデータ)
-
+extern double zg_offset;
 #define CS_RESET HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET)
 #define CS_SET   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET)
 
@@ -24,7 +24,8 @@ uint8_t IMU_init(void);
 void read_gyro_data(void);
 
 void read_accel_data(void);
-
+void IMU_Calib();
+double lowpass_filter(double x, double x0, double r);
 /*
 Gyro		レンジ(dps)	スケールファクター(LSB/dps)　dps = 生/スケールファクター
 					±250				131

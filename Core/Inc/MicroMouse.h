@@ -36,6 +36,7 @@ extern TIM_HandleTypeDef htim1;
 #define R_VELO	1
 #define B_VELO	2
 #define D_WALL	3
+#define ANG_V		4
 
 #define LEFT			0
 #define RIGHT		1
@@ -59,6 +60,8 @@ extern float angular_v;
 
 //角度 rad/msを積算
 extern float angle;
+
+extern double imu_ang_v,imu_angle;
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。

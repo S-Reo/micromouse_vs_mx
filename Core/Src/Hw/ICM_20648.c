@@ -6,10 +6,10 @@
  */
 //ICM_20648.c Ver.1.0
 #include "ICM_20648.h"
-
+#include <stdio.h>
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t xg, yg, zg;	// 角加速度(16bitデータ)
-
+double zg_offset=0;
 uint8_t read_byte( uint8_t reg ) {
 	uint8_t ret,val;
 
@@ -69,5 +69,27 @@ void read_accel_data() {
 	za = ((uint16_t)read_byte(0x31) << 8) | ((uint16_t)read_byte(0x32));
 }
 
+void IMU_Calib(){
 
+	HAL_Delay(500);
+
+	int num = 2000;
+	double zg_vals[2000]={0};
+	double sum=0;
+	for(int i = 0; i < num; i++){
+		zg_vals[i] = (double)zg;
+		sum += zg_vals[i];
+		HAL_Delay(2);
+	}
+//	for(int i=0; i < num; i++)
+//	{
+//		printf("zg_vals[%d]: %lf\r\n",i,zg_vals[i]);
+//	}
+//	printf("sum:%lf",sum);
+	zg_offset = sum / (double)num;
+}
+double lowpass_filter(double x, double x0, double r)
+{
+	return ((r)*(x) + (1.0 - (r))* (x0));
+}
 

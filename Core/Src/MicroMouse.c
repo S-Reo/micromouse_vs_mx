@@ -38,7 +38,7 @@ float add_velocity=0;
 float acceleration=0;
 float target_angular_v=0;
 float angular_acceleration=0;
-
+double imu_ang_v,imu_angle;
 int velocity_left_out=0, velocity_right_out=0;
 int wall_right_out=0, wall_left_out=0;
 int L_motor=0, R_motor=0;

@@ -156,16 +156,19 @@ void RotateAccel(float deg, float rotate_ang_v)
 
 
 	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	float move_angle = deg * M_PI/ 180;
 	int keep_pulse[2] = {
 			total_pulse[LEFT],
 			total_pulse[RIGHT]
 	};
+
 	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-	if( rotate_ang_v > 0)
+	if( rotate_ang_v > 0)	//右回転
 	{
-		while( ( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) )
+		move_angle = move_angle + angle;
+		while( (move_angle > angle) && (( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) ))
 		{
 			angular_acceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
 		}
@@ -173,8 +176,9 @@ void RotateAccel(float deg, float rotate_ang_v)
 	}
 	else if( rotate_ang_v < 0)
 	{
+		move_angle = -move_angle + angle;
 		//printf("加速 負\r\n");
-		while( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) )
+		while( (move_angle < angle) && ( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) ) )
 		{
 			angular_acceleration = -1*64*T1*additional_ang_v*additional_ang_v / (2*deg);
 		}
@@ -190,6 +194,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	//int add_distance = (int)( (deg/360) * ROTATE_PULSE) * MM_PER_PULSE;
 
 	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	float move_angle = deg * M_PI/ 180;
 	int keep_pulse[2] = {
 			total_pulse[LEFT],
 			total_pulse[RIGHT]
@@ -199,7 +204,8 @@ void RotateConst(float deg, float rotate_ang_v)
 	//90mmでうまくやるには0から60000カウントまで
 	if (rotate_ang_v > 0)
 	{
-		while( ( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) )
+		move_angle += angle;
+		while( (move_angle > angle) &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) )) )
 		{
 			//target_angular_v = rotate_ang_v;
 			angular_acceleration = 0;
@@ -208,8 +214,9 @@ void RotateConst(float deg, float rotate_ang_v)
 	}
 	else if (rotate_ang_v < 0)
 	{
+		move_angle = -move_angle + angle;
 		//printf("定速 負\r\n");
-		while( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) )
+		while( (move_angle < angle) &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) )) )
 		{
 			//target_angular_v = rotate_ang_v;
 			angular_acceleration = 0;
@@ -229,6 +236,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 		//周期、角速度、距離
 
 	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	float move_angle = deg * M_PI / 180;
 	int keep_pulse[2] = {
 			total_pulse[LEFT],
 			total_pulse[RIGHT]
@@ -238,8 +246,9 @@ void RotateDecel(float deg, float rotate_ang_v)
 	//90mmでうまくやるには0から60000カウントまで
 	if( rotate_ang_v > 0)
 	{
+		move_angle += angle;
 
-		while( ( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) ) )
+		while( (move_angle > angle) &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( total_pulse[RIGHT] ) )) )
 		{
 			angular_acceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if( angular_v <= 0)
@@ -249,8 +258,9 @@ void RotateDecel(float deg, float rotate_ang_v)
 	}
 	else if( rotate_ang_v < 0)
 	{
+		move_angle = -move_angle + angle;
 		//printf("減速 負\r\n");
-		while( ( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) ) )
+		while( (move_angle < angle) &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( total_pulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( total_pulse[RIGHT] ) )) )
 		{
 			angular_acceleration = 64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if( angular_v >= 0)
@@ -351,7 +361,7 @@ void Rotate(float deg, float ang_accel)
 //
 //	}
 	target_angular_v = 0;
-	printf("回転終了\r\n");
+	//printf("回転終了\r\n");
 }
 //背中あて補正
 void back_calib()
@@ -401,7 +411,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	float v_turn = explore_velocity;       //スラローム時の重心速度
 	float pre = 6;         //スラローム前距離
 	float fol = 6;         //スラローム後距離
-	float alpha_turn = 0.013;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = 0.010;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -501,8 +511,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 
 	float v_turn = explore_velocity;       //スラローム時の重心速度
 	float pre = 6;         //スラローム前距離
-	float fol = 3;         //スラローム後距離
-	float alpha_turn = -0.013;//0.015*13;  //スラローム時の角加速度
+	float fol = 6;         //スラローム後距離
+	float alpha_turn = -0.010;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -650,7 +660,7 @@ void Decel(float dec_distance, float end_speed)
 	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
 	int keep_pulse = total_pulse[BODY]+target_pulse;
 
-	while( ( keep_pulse ) > ( total_pulse[BODY]) )
+	while( (	(photo[FR]+photo[FL]) < 2600) && ( keep_pulse ) > ( total_pulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
 //		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( total_pulse[BODY]) )	//移動量に応じて処理を変える。
@@ -802,10 +812,6 @@ void GoBack()
 }
 
 
-
-
-
-
 //進行方向決定の処理をどうするかで書き方が変わる。フラグを使うとか。
 void SelectAction(char direction)	//前後左右であらわす
 {
@@ -819,11 +825,11 @@ void SelectAction(char direction)	//前後左右であらわす
 	//右方向
 	case 'R':	//左右の違いは目標値がそれぞれ入れ替わるだけだから、上手く書けば一つの関数でできる
 		//スラロームターンと減速プラスターンetc
-		TurnRight('S');
+		TurnRight('T');
 		break;
 	//左方向
 	case 'L':
-		TurnLeft('S');
+		TurnLeft('T');
 		break;
 	case 'B':
 		GoBack();	//Uターン

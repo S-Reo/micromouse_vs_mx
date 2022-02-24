@@ -17,9 +17,19 @@
 #include "LED_Driver.h"
 #include "IR_Emitter.h"
 #include "Motor_Driver.h"
+#include "ICM_20648.h"
 #include "UI.h"
 #include "Action.h"
 #include "Map.h"
+
+void Debug()
+{
+
+}
+void ParameterSetting()
+{
+
+}
 
 void WritingFree()
 {
@@ -32,6 +42,7 @@ void WritingFree()
 	EncoderStart();
 	EmitterON();
 	ADCStart();
+	IMU_init();
 
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
@@ -61,15 +72,41 @@ void WritingFree()
 	total_pulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+	IMU_Calib();
 	target_photo[SL] = photo[SL];
 	target_photo[SR] = photo[SR];
 	photo_diff = target_photo[SL] - target_photo[SR];
-	//加速開始時にがちっと音がするのを今の内に直しておく。
+
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
 	PIDReset(D_WALL);
 
 	HAL_Delay(500);
+
+//	for(int i=0;i < 3; i++)
+//	{
+//		Accel(45, explore_velocity);
+//		Decel(45, 0);
+//		HAL_Delay(500);
+//	}
+	Accel(61.5, explore_velocity);
+	Decel(45, 0);
+//	Accel(61.5, explore_velocity);
+//	Accel(61.5, explore_velocity);
+
+	//ここまででハードの準備はできた。
+	//ここからはソフト的な準備
+	float wall_log_L[10]={0},wall_log_R[10]={0},out_log_L[10]={0},out_log_R[10]={0};
+while(1)
+{
+	//printf("zg : %d, %lf, %f\r\n",zg,(double)zg,(float)zg);	//zgは右回転が負。どの型でもおかしい値は出なかった。
+	//printf("angular_v : %f, angle : %f\r\n",angular_v, angle);	//モータに出力する際は角速度を負に指定すると左回転。
+	printf("%f, %f, %f\r\n", photo[FL],photo[FR],photo[FL]+photo[FR]);
+}
+while(1)
+{
+	printf("オフセット:%lf, double角速度:%lf, double角度:%lf, float角速度:%f, float角度:%f, 壁センサ値:%f, %f, %f, %f\r\n",zg_offset,imu_ang_v, imu_angle, angular_v, angle,photo[SL], photo[SR], photo[FL], photo[FR]);
+}
 //	while(1){
 //		printf("%f,%f,%f,%f\r\n",photo[SL],photo[SR],photo[FL],photo[FR]);	//SRとFRが等しくなろうとしている
 //	}
@@ -82,7 +119,7 @@ void WritingFree()
 	//角度がθのとき、壁左右値がいくつであるか、という関数を同定し、外部入力から左右値を取得し角度を得る。
 	//壁補正は入れるタイミングを決めるのが面倒なので最初はあてにしない。
 	//IMUで角速度を入れて、そっちで角度算出するほうを頑張るほうが望みがある。
-	float wall_log_L[10]={0},wall_log_R[10]={0},out_log_L[10]={0},out_log_R[10]={0};
+
 	Accel(61.5, explore_velocity);
 
 	SelectAction('S');
@@ -189,6 +226,7 @@ void Explore()
 	EncoderStart();
 	EmitterON();
 	ADCStart();
+	IMU_init();
 
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
@@ -197,10 +235,11 @@ void Explore()
 	PIDChangeFlag(L_VELO, 1);
 	PIDChangeFlag(R_VELO, 1);
 	PIDChangeFlag(D_WALL, 0);
-	//PIDChangeFlag(D_WALL, 1);
+	PIDChangeFlag(ANG_V, 0);
 	PIDSetGain(L_VELO, 1.1941, 33.5232, 0.0059922);
 	PIDSetGain(R_VELO, 1.1941, 33.5232, 0.0059922);
 	PIDSetGain(D_WALL, 2, 0.1, 0.00004);
+	PIDSetGain(ANG_V, 17.4394, 321.233, 0.12492);
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
@@ -218,6 +257,7 @@ void Explore()
 	total_pulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+	IMU_Calib();
 	target_photo[SL] = photo[SL];
 	target_photo[SR] = photo[SR];
 	photo_diff = target_photo[SL] - target_photo[SR];
@@ -225,12 +265,17 @@ void Explore()
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
 	PIDReset(D_WALL);
+	PIDReset(ANG_V);
 
 	HAL_Delay(500);
 
+
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
-
+//while(1)
+//{
+//	printf("オフセット:%f, double角速度:%f, double角度:%f, float角速度:%f, float角度:%f",zg_offset,imu_ang_v, imu_angle, angular_v, angle);
+//}
 
 	//迷路とステータスの準備
 	//方角と座標の初期化。
@@ -238,7 +283,7 @@ void Explore()
 	my_direction = north;
 	x=0,y=0;
 	//時間用の処理の初期化。
-	int timer = 0;
+	//int timer = 0;
 	//エンコーダ移動量の初期化。
 	total_pulse[0] = 0;
 	total_pulse[1] = 0;
@@ -269,10 +314,10 @@ void Explore()
 //		break;
 //	}
 //}
-	explore_velocity=90;
+	explore_velocity=300;
 	Accel(61.5, explore_velocity);
 	y++;
-	uint8_t xlog[10]={0},ylog[10]={0};
+	//uint8_t xlog[10]={0},ylog[10]={0};
 	int i=0;
 	while( (x != 3) || (y != 3))
 	{

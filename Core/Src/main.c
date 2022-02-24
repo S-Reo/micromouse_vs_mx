@@ -185,7 +185,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-//  IMU_init();
+  //IMU_init();
 //  int16_t data[1000]={0};
 //  int i=0, elaps=0;
 //	HAL_TIM_Base_Start_IT(&htim8);

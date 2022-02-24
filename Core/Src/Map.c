@@ -17,7 +17,7 @@
 #include "Flash.h"
 #include "stdio.h"
 #include <stdlib.h>
-
+#include "Action.h"
 #include "MicroMouse.h"
 
 //壁センサデータを利用した処理

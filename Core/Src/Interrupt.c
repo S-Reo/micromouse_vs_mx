@@ -6,7 +6,7 @@
  */
 #include <MicroMouse.h>
 #include "Interrupt.h"
-
+#include <math.h>
 #include "Convert.h"
 #include "PID_Control.h"
 
@@ -15,9 +15,10 @@
 #include "ADC.h"
 //#include "LED_Driver.h"
 #include "IR_Emitter.h"
-#include "Motor_Driver.h"
-
+#include "Motor_Driver.h";
+#include "ICM_20648.h"
 int timer=0, t=0;
+
 //以下割り込みで呼ぶ関数
 //このあたりの関数は、構造体変数を扱うファイルにまとめたほうがいいかもしれない。(メインのアルゴリズム、アクション)
 void TimeMonitor()
@@ -26,7 +27,41 @@ void TimeMonitor()
 
 }
 
+double GetDataIMU(){// IMUの値を取
+#if 0
+	static double  /*imu_pre_angle=0,*/ imu_accel=0, imu_pre_accel=0;
 
+    read_gyro_data();	//1.1kHz更新(デバイス側)
+    read_accel_data();
+
+    //atan2(za,xa);
+	imu_accel =  ( ( (double)zg - offset/*2.0*/ )/16.4) * PI /180;	//rad/s
+	imu_angle += (imu_pre_accel + imu_accel) * T1 / 2;	//+=rad/ms
+	imu_angle -= drift_fix * PI /180;	//ms単位での角度ズレを反映させないといけない。保留
+	imu_pre_accel = imu_accel;
+	//imu_pre_angle = imu_angle;
+
+	//0.95 * imu_pre_angle + 0.05 * (imu_pre_accel + imu_accel) * T1 / 2;
+	//angle = imu_angle * 180 / PI;
+
+	  return imu_accel;
+#else
+		double  LPF=0,/*imu_pre_angle=0,*/ imu_accel=0; //imu_pre_accel=0;
+		static double last=0;
+	    read_gyro_data();
+	    read_accel_data();
+	    //atan2(za,xa);
+	    imu_accel =  ( ( (double)zg - zg_offset )/16.4) * M_PI /180;//rad/s or rad/0.001s
+	    LPF = lowpass_filter(imu_accel, last,0.01);
+	    //imu_angle += T1*LPF;
+	    last = imu_accel;
+		//imu_pre_accel = imu_accel;
+		//imu_pre_angle = imu_angle;
+		//0.95 * imu_pre_angle + 0.05 * (imu_pre_accel + imu_accel) * T1 / 2;
+		//Body_angle = imu_angle * 180 / PI;
+		  return -LPF;
+#endif
+}
 void UpdatePhisicalDataFromEnc()
 {
 
@@ -44,10 +79,12 @@ void UpdatePhisicalDataFromEnc()
 	total_pulse[RIGHT] += pulse_displacement[RIGHT];
 	total_pulse[BODY] = total_pulse[LEFT]+total_pulse[RIGHT];
 	//角速度 rad/s
-	angular_v = ( current_velocity[LEFT] - current_velocity[RIGHT] ) / TREAD_WIDTH;
-
+	//angular_v = ( current_velocity[LEFT] - current_velocity[RIGHT] ) / TREAD_WIDTH;
+	imu_ang_v = GetDataIMU();
+	angular_v = (float)imu_ang_v;
 	//角度 rad/msを積算
 	angle += angular_v * T1;
+	imu_angle += imu_ang_v*T1;
 	//ここまでがエンコーダからのUpdate
 }
 void ControlMotor()
@@ -64,21 +101,35 @@ void ControlMotor()
 	target_velocity[BODY] += acceleration;
 	target_angular_v += angular_acceleration;
 
+	if(target_angular_v == 0)
+	{
+		PIDChangeFlag(ANG_V, 1);
+	}
+	else
+	{
+		PIDChangeFlag(ANG_V, 0);
+	}
 
+	//壁制御を入れる条件
+	//型壁制御は端の区画にいるとき。必ず。
 	target_velocity[RIGHT] = ( target_velocity[BODY]*2 - target_angular_v * TREAD_WIDTH )/2;
 	target_velocity[LEFT] = ( target_angular_v *TREAD_WIDTH ) + target_velocity[RIGHT];
 
+	//目標角速度が0のときは角速度制御も入れる。
 	//制御出力値生成
 	//PIDControl(int n, int T, float target, float current, int *output);
 	velocity_left_out = PIDControl( L_VELO, T1, target_velocity[LEFT], current_velocity[LEFT]);
 	velocity_right_out = PIDControl( R_VELO, T1, target_velocity[RIGHT], current_velocity[RIGHT]);
+	int straight_out=0;
+	//straight_out = PIDControl( ANG_V, T1, 0, angular_v);
+
 	//PIDControl( B_VELO, T1, target, current, &left);
 	wall_left_out = PIDControl( D_WALL, T1, photo[SL], photo[SR]+photo_diff);
 
 	wall_right_out = -wall_left_out;
 
-	L_motor = wall_left_out + velocity_left_out;
-	R_motor = wall_right_out + velocity_right_out;
+	L_motor = straight_out + wall_left_out + velocity_left_out;
+	R_motor = -1*straight_out + wall_right_out + velocity_right_out;
 
 	//モータに出力
 	Motor_Switch( L_motor, R_motor );
