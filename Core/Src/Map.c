@@ -445,8 +445,53 @@ void DetermineDirection(uint8_t x, uint8_t y, int dir, char action_type)
 //最短経路導出
 //今いる位置からの最短経路を求めるのが足立法
 //2点間の最短経路導出の関数を用意する。目標座標とスタート座標は引数でとる
-
-//2点間のコスト 取得
+//void AddCost(int x, int y)
+//{
+//	unsigned short int cost[9][9]={0};
+//	cost[x][y] += 1;
+//
+//	if(Wall[x][y+1].south == NOWALL)
+//	{
+//		//その座標までのコストを求める
+//		//その座標からの予測コストを求める
+//		//和を返す
+//		//
+//	}
+//
+//
+//	//4区画の予測コストを求め、比較
+//	if(Wall[x+1][y].west == NOWALL)
+//	{
+//	}
+//	if(Wall[x][y-1].north == NOWALL)
+//	{
+//	}
+//	if(Wall[x-1][y].east == NOWALL)
+//	{
+//	}
+//
+//}
+//int Astar(unsigned short int x, unsigned short int y)
+//{
+//	//
+//	unsigned short int cost[9][9]={0};
+//	//座標0 0 から現在座標まで毎回計算しなおす。
+//	if( (GOAL_X_LESSER <= x && x <= GOAL_X_LARGER) && (GOAL_Y_LESSER <= y && y <= GOAL_Y_LARGER) )
+//	{
+//		//ゴール
+//		return cost[x][y];
+//
+//	}
+//
+//	else
+//	{
+//		//ゴール以外
+//		//一つの座標から周辺区画のコストを計算」する
+//
+//	}
+//
+//}
+////2点間のコスト 取得
 int GetWalkCost(int start_x, int start_y, int target_x, int target_y)
 {
 	int walk_cost=0;

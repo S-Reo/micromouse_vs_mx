@@ -314,7 +314,7 @@ void Explore()
 //		break;
 //	}
 //}
-	explore_velocity=300;
+	explore_velocity=90;
 	Accel(61.5, explore_velocity);
 	y++;
 	//uint8_t xlog[10]={0},ylog[10]={0};
