@@ -72,7 +72,7 @@ extern float add_velocity;
 extern float acceleration;
 extern float target_angular_v;
 extern float angular_acceleration;
-
+extern float target_angle;
 extern int velocity_left_out, velocity_right_out;
 extern int wall_right_out, wall_left_out;
 extern int L_motor, R_motor;

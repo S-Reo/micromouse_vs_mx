@@ -15,7 +15,7 @@
 #include "ADC.h"
 //#include "LED_Driver.h"
 #include "IR_Emitter.h"
-#include "Motor_Driver.h";
+#include "Motor_Driver.h"
 #include "ICM_20648.h"
 int timer=0, t=0;
 
@@ -73,7 +73,7 @@ void UpdatePhisicalDataFromEnc()
 	//速度 mm/s
 	current_velocity[LEFT] = ( (float)pulse_displacement[LEFT] * MM_PER_PULSE ) / T1;
 	current_velocity[RIGHT] = ( (float)pulse_displacement[RIGHT] * MM_PER_PULSE ) / T1;
-
+	current_velocity[BODY] = (current_velocity[LEFT] + current_velocity[RIGHT] )/2;
 	//移動量 mm/msを積算
 	total_pulse[LEFT] += pulse_displacement[LEFT];
 	total_pulse[RIGHT] += pulse_displacement[RIGHT];
@@ -101,14 +101,30 @@ void ControlMotor()
 	target_velocity[BODY] += acceleration;
 	target_angular_v += angular_acceleration;
 
-	if(target_angular_v == 0)
-	{
-		PIDChangeFlag(ANG_V, 1);
-	}
-	else
-	{
-		PIDChangeFlag(ANG_V, 0);
-	}
+	//直進の時はここで角速度の目標値をいじる。
+	//壁センサ値か、角度値、実際の角速度。
+	//PID出力を角加速度としてインクリメント
+	int wall_d=0;
+	int ang_out=0;
+	//直進なら	//直進かどうかの判定をどうするか。アクションは一応4種類しかないので、それに合わせてflagを作っておく。
+		//壁ありなら
+	wall_d = PIDControl( D_WALL, T1, photo[SL], photo[SR]+photo_diff);
+	target_angular_v = (float)wall_d*0.002;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		//壁なしなら
+			//IMUの角度or角速度フィードバック
+
+		ang_out = PIDControl( ANG_V, T1, target_angle, angle);
+		target_angular_v = (float)ang_out*0.02;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+	//旋回なら
+
+//	if(target_angular_v == 0)
+//	{
+//		PIDChangeFlag(ANG_V, 1);
+//	}
+//	else
+//	{
+//		PIDChangeFlag(ANG_V, 0);
+//	}
 
 	//壁制御を入れる条件
 	//型壁制御は端の区画にいるとき。必ず。
@@ -118,18 +134,22 @@ void ControlMotor()
 	//目標角速度が0のときは角速度制御も入れる。
 	//制御出力値生成
 	//PIDControl(int n, int T, float target, float current, int *output);
+	//もう一回車体速度制御+角速度制御でやってみる。ダメだった。ブレブレ。
 	velocity_left_out = PIDControl( L_VELO, T1, target_velocity[LEFT], current_velocity[LEFT]);
 	velocity_right_out = PIDControl( R_VELO, T1, target_velocity[RIGHT], current_velocity[RIGHT]);
+//	velocity_left_out = PIDControl( B_VELO, T1, target_velocity[BODY], current_velocity[BODY]);
+//	velocity_right_out = velocity_left_out;
+
 	int straight_out=0;
-	//straight_out = PIDControl( ANG_V, T1, 0, angular_v);
+	//straight_out = PIDControl( ANG_V, T1, target_angular_v, angular_v);
 
 	//PIDControl( B_VELO, T1, target, current, &left);
-	wall_left_out = PIDControl( D_WALL, T1, photo[SL], photo[SR]+photo_diff);
+	//wall_left_out = PIDControl( D_WALL, T1, photo[SL], photo[SR]+photo_diff);
 
-	wall_right_out = -wall_left_out;
+	//wall_right_out = -wall_left_out;
 
-	L_motor = straight_out + wall_left_out + velocity_left_out;
-	R_motor = -1*straight_out + wall_right_out + velocity_right_out;
+	L_motor = straight_out  + velocity_left_out; //wall_left_out
+	R_motor = -1*straight_out + velocity_right_out; //+ wall_right_out
 
 	//モータに出力
 	Motor_Switch( L_motor, R_motor );

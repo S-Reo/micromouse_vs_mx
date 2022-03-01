@@ -46,14 +46,21 @@ void WritingFree()
 
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
+	PIDReset(B_VELO);
+	PIDReset(D_WALL);
+	PIDReset(ANG_V);
 
 	//PID制御を有効化
 	PIDChangeFlag(L_VELO, 1);
 	PIDChangeFlag(R_VELO, 1);
 	PIDChangeFlag(D_WALL, 0);
-	//PIDChangeFlag(D_WALL, 1);
+	PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(ANG_V, 1);
+
 	PIDSetGain(L_VELO, 1.1941, 33.5232, 0.0059922);
 	PIDSetGain(R_VELO, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(ANG_V, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
 	PIDSetGain(D_WALL, 2, 0.1, 0.00004);
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
@@ -79,7 +86,9 @@ void WritingFree()
 
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
+	PIDReset(B_VELO);
 	PIDReset(D_WALL);
+	PIDReset(ANG_V);
 
 	HAL_Delay(500);
 
@@ -89,19 +98,35 @@ void WritingFree()
 //		Decel(45, 0);
 //		HAL_Delay(500);
 //	}
+	float wall_log_L[10]={0},wall_log_R[10]={0},out_log_L[10]={0},out_log_R[10]={0};
+	//printf("%f\r\n",log[0]);
+//	int n=0;
+//	out_log_L[n] = velocity_left_out;
+//	out_log_R[n] = velocity_right_out;
+	//PIDChangeFlag(ANG_V, 0);
+	explore_velocity=300;
 	Accel(61.5, explore_velocity);
+	SelectAction('S');
+	SelectAction('S');
 	Decel(45, 0);
+	//スタート時の出力値を見たい。matlabで可視化しよう。
 //	Accel(61.5, explore_velocity);
 //	Accel(61.5, explore_velocity);
 
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
-	float wall_log_L[10]={0},wall_log_R[10]={0},out_log_L[10]={0},out_log_R[10]={0};
+
+//	for(n=0; n < 10; n++)
+//	{
+//
+//		printf("%f, %f\r\n",out_log_L[n],out_log_R[n]);
+//	}
 while(1)
 {
 	//printf("zg : %d, %lf, %f\r\n",zg,(double)zg,(float)zg);	//zgは右回転が負。どの型でもおかしい値は出なかった。
 	//printf("angular_v : %f, angle : %f\r\n",angular_v, angle);	//モータに出力する際は角速度を負に指定すると左回転。
-	printf("%f, %f, %f\r\n", photo[FL],photo[FR],photo[FL]+photo[FR]);
+	//printf("%f, %f, %f\r\n", photo[FL],photo[FR],photo[FL]+photo[FR]);
+
 }
 while(1)
 {
@@ -230,16 +255,23 @@ void Explore()
 
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
+	PIDReset(B_VELO);
+	PIDReset(D_WALL);
+	PIDReset(ANG_V);
 
 	//PID制御を有効化
 	PIDChangeFlag(L_VELO, 1);
 	PIDChangeFlag(R_VELO, 1);
 	PIDChangeFlag(D_WALL, 0);
-	PIDChangeFlag(ANG_V, 0);
+	PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(ANG_V, 1);
+
 	PIDSetGain(L_VELO, 1.1941, 33.5232, 0.0059922);
 	PIDSetGain(R_VELO, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(ANG_V, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+
 	PIDSetGain(D_WALL, 2, 0.1, 0.00004);
-	PIDSetGain(ANG_V, 17.4394, 321.233, 0.12492);
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
@@ -264,8 +296,10 @@ void Explore()
 
 	PIDReset(L_VELO);
 	PIDReset(R_VELO);
+	PIDReset(B_VELO);
 	PIDReset(D_WALL);
 	PIDReset(ANG_V);
+
 
 	HAL_Delay(500);
 
@@ -314,7 +348,7 @@ void Explore()
 //		break;
 //	}
 //}
-	explore_velocity=90;
+	explore_velocity=300;
 	Accel(61.5, explore_velocity);
 	y++;
 	//uint8_t xlog[10]={0},ylog[10]={0};

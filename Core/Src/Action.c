@@ -14,6 +14,7 @@
 #include "Action.h"
 #include "Convert.h"
 #include "MicroMouse.h"
+
 //現在の速度と総走行距離と左右それぞれ
 //現在の角度と角速度
 
@@ -602,7 +603,7 @@ void Accel(float add_distance, float explore_speed)
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
 	acceleration = T1*additional_speed*additional_speed / (2*add_distance);
-
+	//printf("%d, %d\r\n",velocity_left_out,velocity_right_out);
 	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
 	int keep_pulse = total_pulse[BODY]+target_pulse;
 	//printf("%f, %f, %f\r\n",current_velocity[LEFT],current_velocity[RIGHT], acceleration);
@@ -611,6 +612,7 @@ void Accel(float add_distance, float explore_speed)
 	while( ( keep_pulse ) > ( total_pulse[BODY] ) )
 	{
 #if 1
+		//printf("%d, %d\r\n",velocity_left_out,velocity_right_out);
 		//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
 //		if( ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( total_pulse[BODY]) )	//移動量に応じて処理を変える。
 //		{
@@ -630,6 +632,7 @@ void Accel(float add_distance, float explore_speed)
 #endif
 	}
 	acceleration = 0;
+	//printf("%d, %d\r\n",velocity_left_out,velocity_right_out);
 //
 //	int target_pulse[2] = {
 //			(int)( (deg/360) * ROTATE_PULSE),
@@ -825,7 +828,7 @@ void SelectAction(char direction)	//前後左右であらわす
 	//右方向
 	case 'R':	//左右の違いは目標値がそれぞれ入れ替わるだけだから、上手く書けば一つの関数でできる
 		//スラロームターンと減速プラスターンetc
-		TurnRight('T');
+		TurnRight('S');
 		break;
 	//左方向
 	case 'L':
