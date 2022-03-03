@@ -46,7 +46,7 @@
 #include "UI.h"
 #include "Interrupt.h"
 #include "Mode.h"
-
+#include "Map.h"
 #include "ICM_20648.h"
 
 /* USER CODE END Includes */
@@ -233,6 +233,7 @@ int main(void)
 	  switch( mode )
 	  {
 	  case 0:
+		  wall_flash_print();
 		  break;
 	  case 1:
 		  break;

@@ -32,11 +32,7 @@ extern TIM_HandleTypeDef htim1;
 #define SL	2
 #define FR	3
 
-#define L_VELO		0
-#define R_VELO	1
-#define B_VELO	2
-#define D_WALL	3
-#define ANG_V		4
+
 
 #define LEFT			0
 #define RIGHT		1
@@ -44,37 +40,37 @@ extern TIM_HandleTypeDef htim1;
 
 #define INITIAL_PULSE	(30000 - 1)
 
-extern float photo[4];
-extern float target_photo[4];
-extern float photo_diff;
-extern int pulse_displacement[2];
-extern int keep_counter[2];
+extern float Photo[4];
+extern float TargetPhoto[4];
+extern float PhotoDiff;
+extern int PulseDisplacement[2];
+extern int KeepCounter[2];
 //速度 mm/s
-extern float current_velocity[3];
+extern float CurrentVelocity[3];
 
 //移動量 mm/msを積算
-extern int total_pulse[3];
+extern int TotalPulse[3];
 
 //角速度 rad/s
-extern float angular_v;
+extern float AngularV;
 
 //角度 rad/msを積算
-extern float angle;
+extern float Angle;
 
-extern double imu_ang_v,imu_angle;
+extern double ImuAngV,ImuAngle;
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
-extern float target_velocity[3];
-extern float explore_velocity;
-extern float add_velocity;
-extern float acceleration;
-extern float target_angular_v;
-extern float angular_acceleration;
-extern float target_angle;
-extern int velocity_left_out, velocity_right_out;
-extern int wall_right_out, wall_left_out;
+extern float TargetVelocity[3];
+extern float ExploreVelocity;
+extern float AddVelocity;
+extern float Acceleration;
+extern float TargetAngularV;
+extern float AngularAcceleration;
+extern float TargetAngle;
+extern int VelocityLeftOut, VelocityRightOut;
+extern int WallRightOut, WallLeftOut;
 extern int L_motor, R_motor;
 
 
@@ -92,10 +88,6 @@ extern int L_motor, R_motor;
 
 #define WAIT 30000
 
-#define FRONT_WALL 30
-#define RIGHT_WALL 100//90 //380
-#define LEFT_WALL 140//90 //420
-
 #define DRIFT_FIX 0.00006375
 
 #define NUMBER_OF_SQUARES 9//16//4 //16
@@ -108,19 +100,20 @@ extern int L_motor, R_motor;
 #define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標
-#define X_GOAL_LESSER 7
-#define Y_GOAL_LESSER 7
+#define X_GOAL_LESSER 3
+#define Y_GOAL_LESSER 3
 
-#define X_GOAL_LARGER 7
-#define Y_GOAL_LARGER 7
+#define X_GOAL_LARGER 3
+#define Y_GOAL_LARGER 3
 
 //壁の有無
-#define UNKNOWN 3
+
 #define NOWALL 0
 #define WALL 1
-#define VIRTUAL
+#define VIRTUAL	2
+#define UNKNOWN 3
 //壁の閾値(走行中に変更できるようにしたい)
-#define FRONT_WALL 30
+#define FRONT_WALL 70
 #define RIGHT_WALL 100//90 //380
 #define LEFT_WALL 140//90 //420
 
@@ -177,11 +170,83 @@ typedef enum{
 	east = 1,
 	south = 2,
 	west = 3
+						//斜めで4種類追加
+}cardinal;
+extern cardinal my_car;
+
+typedef enum Direction	//区画の境界に来た時の状態表現だから
+{
+	front	= 0,
+	right		= 1,
+	left		= 2,
+	back		= 3
+						//斜めで4種類追加
 }direction;
-extern direction my_direction;
+extern direction my_dir;
+typedef enum Acttion	//区画の境界に来た時の状態表現だから
+{
+	accel	= 0,
+	decel		= 1,
+	slalom		= 2,
+	rotate		= 3,
+	Wait		= 4,
+	straight = 5,
+	compensate = 6
+						//斜めで4種類追加
+}action;
+
+typedef enum WallStatus{
+	nowall 		= 0,
+	wall 			= 1,
+	virtual		= 2,
+	unknown 	= 3
+
+}wall_status;
+typedef enum WallSafety
+{
+	wall_safe,
+	wall_warn
+}wall_safety;
+typedef enum PIDNumber
+{
+	D_WALL_PID,
+	L_WALL_PID,
+	R_WALL_PID,
+	N_WALL_PID,
+	L_VELO_PID,
+	R_VELO_PID,
+	A_VELO_PID,
+	B_VELO_PID
+}pid_number;
+
+//typedef enum Action
+//{
+//	wait = 0,
+//	calib = 1,
+//	straight = 2,
+//	 a = 3,
+//
+//
+//}action;
 //バッテリ電圧系
 //時間系
-//探索の状態遷移用の関数ポインタテーブル
+//探索の状態遷移用の関数ポインタテーブル→やっぱり状態毎に処理を変えるようにしないと、汚くなっていく。
+//どの座標にどの向きで入っているか。どんなアクションをしているのか→新しい座標へ移動する、今向いている向きはどこか、壁センサはどうか、次の動きは何か。
+typedef struct Position
+{
+	uint8_t X;
+	uint8_t Y;
+	direction Dir;	//前後左右
+	cardinal Car;	//東西南北
+	action Act;
+	wall_safety WallSaf;
+	float sl;
+	float sr;
+	float fl;
+	float fr;
+
+}position;
+extern position Pos;	//現在と、目標
 void WritingFree();
 
 

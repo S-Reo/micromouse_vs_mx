@@ -12,12 +12,12 @@
  *  Created on: 2021/12/16
  *      Author: leopi
  */
+#include <action.h>
 #include <main.h>
 #include "map.h"
 #include "Flash.h"
 #include "stdio.h"
 #include <stdlib.h>
-#include "Action.h"
 #include "MicroMouse.h"
 
 //壁センサデータを利用した処理
@@ -94,10 +94,11 @@ void wall_init(){
 	//flashに書き込む
 	//消す
 
-	Flash_clear_sector1();
+	//一旦flashお休み。
+//	Flash_clear_sector1();
 
 	//書く
-	flash_store_init();
+	//flash_store_init();
 
 }
 //壁データの書き込み(走行中)。修復用も作る。座標指定と書き込みデータ
@@ -117,13 +118,13 @@ void wall_store_running(uint8_t x, uint8_t y)
 
 }
 //壁の更新xyグローバル
-void wall_set(uint8_t x, uint8_t y, float side_left, float side_right, float front_left, float front_right){
+void wall_set(uint8_t x, uint8_t y, cardinal car, float side_left, float side_right, float front_left, float front_right){
 	uint8_t wall_dir[4];
 	//壁センサ値を読んで、各方角の壁の有無を判定
-	  wall_dir[my_direction] = (front_left + front_right)/2 > FRONT_WALL  ?   WALL : NOWALL;
-	  wall_dir[(my_direction + 1)%4] = side_right > RIGHT_WALL  ?  WALL :  NOWALL;
-	  wall_dir[(my_direction + 2)%4] = NOWALL;
-	  wall_dir[(my_direction + 3)%4] = side_left > LEFT_WALL ?  WALL :  NOWALL;
+	  wall_dir[car] = ((front_left + front_right)/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+	  wall_dir[(car + 1)%4] = side_right > RIGHT_WALL  ?  WALL :  NOWALL;
+	  wall_dir[(car + 2)%4] = NOWALL;
+	  wall_dir[(car + 3)%4] = side_left > LEFT_WALL ?  WALL :  NOWALL;
 
 	  //各方角の壁に壁の有無を代入
 	  Wall[x][y].north = wall_dir[0];
@@ -136,30 +137,31 @@ void wall_set(uint8_t x, uint8_t y, float side_left, float side_right, float fro
 	  if(y < (NUMBER_OF_SQUARES-1) )
 	  {
 		  Wall[x][y+1].south = wall_dir[0];//北端でなければ
-		  address = start_adress_sector1 + ( x*16) + ( (y+1)*16*(NUMBER_OF_SQUARES) );
-		  FLASH_Write_Word(address+8, Wall[x][y+1].south);
+		  //address = start_adress_sector1 + ( x*16) + ( (y+1)*16*(NUMBER_OF_SQUARES) );
+		  //FLASH_Write_Word(address+8, Wall[x][y+1].south);
 	  }
 	  if(x < (NUMBER_OF_SQUARES-1) )
 	  {
 		  Wall[x+1][y].west = wall_dir[1];//東端でなければ
-		  address = start_adress_sector1 + ( (x+1)*16) + ( (y)*16*(NUMBER_OF_SQUARES) );
-		  FLASH_Write_Word(address+12, Wall[x+1][y].west);
+//		  address = start_adress_sector1 + ( (x+1)*16) + ( (y)*16*(NUMBER_OF_SQUARES) );
+//		  FLASH_Write_Word(address+12, Wall[x+1][y].west);
 	  }
 	  if(y > 0 )
 	  {
 		  Wall[x][y-1].north = wall_dir[2];//南端でなければ
-		  address = start_adress_sector1 + ( x*16) + ( (y-1)*16*(NUMBER_OF_SQUARES) );
-		  FLASH_Write_Word(address+0, Wall[x][y-1].north);
+//		  address = start_adress_sector1 + ( x*16) + ( (y-1)*16*(NUMBER_OF_SQUARES) );
+//		  FLASH_Write_Word(address+0, Wall[x][y-1].north);
 	  }
 	  if(x > 0 )
 	  {
 		  Wall[x-1][y].east = wall_dir[3];//西端でなければ
-		  address = start_adress_sector1 + ( (x-1)*16) + ( y*16*(NUMBER_OF_SQUARES) );
-		  FLASH_Write_Word(address+4, Wall[x-1][y].east);
+//		  address = start_adress_sector1 + ( (x-1)*16) + ( y*16*(NUMBER_OF_SQUARES) );
+//		  FLASH_Write_Word(address+4, Wall[x-1][y].east);
 	  }
 
+	  //一旦flashお休み。
 	  //flashに書き込む
-	  wall_store_running(x,y);
+//	  wall_store_running(x,y);
 }
 //壁データの復元
 void wall_recover()
@@ -311,120 +313,123 @@ void UpdateWalkMap(){
 }
 //ノード
 //左手法での方向決定
-void LeftHandJudge(uint8_t *x, uint8_t *y, direction *dir, char *action_type){
+void LeftHandJudge(){
 	/*--旋回モード選?��?--*/
 
 	/*-=1-=1*/
-    	  switch(*dir){
+    	  switch(Pos.Car){
     	  case north:
 
-    		  if(Wall[*x][*y].west == NOWALL){
-    			  SelectAction( 'L');
-    			  *dir = west;
-    		      *x-=1;
+    		  if(Wall[Pos.X][Pos.Y].west == NOWALL){
+    			  Pos.Dir = left;
+    			  SelectAction();
+    			  Pos.Car = west;
+    		      Pos.X-=1;
     		  }
 
-    		  else if(Wall[*x][*y].north == NOWALL){
-    			  SelectAction('S');
-    			  *dir = north;
-    			  *y+=1;
+    		  else if(Wall[Pos.X][Pos.Y].north == NOWALL){
+    			  Pos.Dir = front;
+    			  SelectAction();
+    			  Pos.Car = north;
+    			  Pos.Y+=1;
     		  }
 
 
-    		  else if(Wall[*x][*y].east == NOWALL){
-    			  SelectAction('R');
-    	          *dir = east;
-    	          *x+=1;
+    		  else if(Wall[Pos.X][Pos.Y].east == NOWALL){
+    			  Pos.Dir = right;SelectAction();
+    	          Pos.Car = east;
+    	          Pos.X+=1;
     		  }
 
     		  else {
-    			  SelectAction('B');
-    	       	  *dir = south;
-    	       	  *y-=1;
+    			  Pos.Dir = back;SelectAction();
+    	       	  Pos.Car = south;
+    	       	  Pos.Y-=1;
     		  }
 
 
 
     		  break;
     	  case east:
-    		  if(Wall[*x][*y].north== NOWALL){
-    			  SelectAction('L');
-    			  *dir = north;
-    			  *y+=1;
+    		  if(Wall[Pos.X][Pos.Y].north== NOWALL){
+    			  Pos.Dir = left;SelectAction();
+    			  Pos.Car = north;
+    			  Pos.Y+=1;
     		  }
 
-    		  else if(Wall[*x][*y].east == NOWALL){
-    			  SelectAction('S');
-    	          *dir = east;
-    	          *x+=1;
+    		  else if(Wall[Pos.X][Pos.Y].east == NOWALL){
+    			  Pos.Dir = front;SelectAction();
+    	          Pos.Car = east;
+    	          Pos.X+=1;
     		  }
 
 
-    		  else if(Wall[*x][*y].south == NOWALL){
-    			  SelectAction('R');
-    	       	  *dir = south;
-    	       	  *y-=1;
+    		  else if(Wall[Pos.X][Pos.Y].south == NOWALL){
+    			  Pos.Dir = right;SelectAction();
+    	       	  Pos.Car = south;
+    	       	  Pos.Y-=1;
     		  }
 
     		  else {
-    			  SelectAction('B');
-      			  *dir = west;
-      		      *x-=1;
+    			  Pos.Dir = back;SelectAction();
+      			  Pos.Car = west;
+      		      Pos.X-=1;
     		  }
 
     		  break;
     	  case south:
-    		  if(Wall[*x][*y].east == NOWALL){
-    			  SelectAction('L');
-    	          *dir = east;
-    	          *x+=1;
+    		  if(Wall[Pos.X][Pos.Y].east == NOWALL){
+    			  Pos.Dir = left;SelectAction();
+    	          Pos.Car = east;
+    	          Pos.X+=1;
     		  }
 
-    		  else if(Wall[*x][*y].south == NOWALL){
-    			  SelectAction('S');
-    	       	  *dir = south;
-    	       	  *y-=1;
+    		  else if(Wall[Pos.X][Pos.Y].south == NOWALL){
+    			  Pos.Dir = front;SelectAction();
+    	       	  Pos.Car = south;
+    	       	  Pos.Y-=1;
     		  }
 
 
-    		  else if(Wall[*x][*y].west == NOWALL){
-    			  SelectAction('R');
-      			  *dir = west;
-      		      *x-=1;
+    		  else if(Wall[Pos.X][Pos.Y].west == NOWALL){
+    			  Pos.Dir = right;SelectAction();
+      			  Pos.Car = west;
+      		      Pos.X-=1;
     		  }
 
     		  else {
-    			  SelectAction('B');
-      			  *dir = north;
-      			  *y+=1;
+    			  Pos.Dir = back;SelectAction();
+      			  Pos.Car = north;
+      			  Pos.Y+=1;
     		  }
 
     		  break;
     	  case west:
-    		  if(Wall[*x][*y].south == NOWALL){
-    			  SelectAction('L');
-    	       	  *dir = south;
-    	       	  *y -= 1;
+    		  if(Wall[Pos.X][Pos.Y].south == NOWALL){
+    			  Pos.Dir = left;SelectAction();
+    	       	  Pos.Car = south;
+    	       	  Pos.Y -= 1;
     		  }
 
-    		  else if(Wall[*x][*y].west == NOWALL){
-    			  SelectAction('S');
+    		  else if(Wall[Pos.X][Pos.Y].west == NOWALL){
+    			  Pos.Dir = front;SelectAction();
 
-    			  *dir = west;
-    		      *x-=1;
+    			  Pos.Car = west;
+    		      Pos.X-=1;
     		  }
 
 
-    		  else if(Wall[*x][*y].north == NOWALL){
-    			  SelectAction('R');
-      			  *dir = north;
-      			  *y+=1;
+    		  else if(Wall[Pos.X][Pos.Y].north == NOWALL){
+    			  Pos.Dir = right;
+    			  SelectAction();
+      			  Pos.Car = north;
+      			  Pos.Y+=1;
     		  }
 
     		  else {
-    			  SelectAction('B');
-    	          *dir = east;
-    	          *x+=1;
+    			  Pos.Dir = back;SelectAction();
+    	          Pos.Car = east;
+    	          Pos.X+=1;
     		  }
 
     		  break;

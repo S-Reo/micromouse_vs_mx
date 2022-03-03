@@ -46,11 +46,11 @@
 /*関数プロトタイプ*/
 void wall_init();
 void wall_store_running(uint8_t x, uint8_t y);
-void wall_set(uint8_t x, uint8_t y, float side_left, float side_right, float front_left, float front_right);
+void wall_set(uint8_t x, uint8_t y, cardinal car,float side_left, float side_right, float front_left, float front_right);
 void wall_ram_print();
 void wall_flash_print();
 void UpdateWalkMap();
-void LeftHandJudge(uint8_t *x, uint8_t *y, direction *dir, char *action_type);
+void LeftHandJudge();
 
 
 

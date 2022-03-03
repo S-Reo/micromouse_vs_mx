@@ -16,32 +16,32 @@
 #include "PID_Control.h"
 #include "Convert.h"
 
-float photo[4]={0};
-float target_photo[4]={0};
-float photo_diff = 0;
-int pulse_displacement[2]={0};
-int keep_counter[2]={
+float Photo[4]={0};
+float TargetPhoto[4]={0};
+float PhotoDiff = 0;
+int PulseDisplacement[2]={0};
+int KeepCounter[2]={
 		INITIAL_PULSE,
 		INITIAL_PULSE
 };
-float current_velocity[3]={0};	//速度 mm/s
-int total_pulse[3]={0};	//移動量 mm/msを積算
-float angular_v=0;			//角速度 rad/s
-float angle=0;				//角度 rad/msを積算
+float CurrentVelocity[3]={0};	//速度 mm/s
+int TotalPulse[3]={0};	//移動量 mm/msを積算
+float AngularV=0;			//角速度 rad/s
+float Angle=0;				//角度 rad/msを積算
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
-float target_velocity[3]={0};
-float explore_velocity=300;
-float add_velocity=0;
-float acceleration=0;
-float target_angular_v=0;
-float angular_acceleration=0;
-float target_angle=0;
-double imu_ang_v,imu_angle;
-int velocity_left_out=0, velocity_right_out=0;
-int wall_right_out=0, wall_left_out=0;
+float TargetVelocity[3]={0};
+float ExploreVelocity=300;
+float AddVelocity=0;
+float Acceleration=0;
+float TargetAngularV=0;
+float AngularAcceleration=0;
+float TargetAngle=0;
+double ImuAngV,ImuAngle;
+int VelocityLeftOut=0, VelocityRightOut=0;
+int WallRightOut=0, WallLeftOut=0;
 int L_motor=0, R_motor=0;
 
 
@@ -49,6 +49,15 @@ direction my_direction = north;
 
 t_wall Wall [NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 
+position Pos =
+{
+		0,		//X
+		0,		//Y
+		front,	//dir
+		north,	//car
+		Wait,	//act
+		wall_safe//移動量安全フラグ
+};
 
 
 

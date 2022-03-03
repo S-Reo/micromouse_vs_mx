@@ -22,7 +22,7 @@
 //中間モジュール。
 
 //エンコーダはモード選択時には直で取得しちゃってよいので引数にしない。while中で取得。
-float photo[4];
+//float Photo[4];
 
 //led_driver
 void Signal(int mode)
@@ -77,9 +77,9 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 	InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE_L);
 
 	int ENC3_LEFT;
-	while(photo[FR]/*構造体アロー*/ < 250/**/) //前向きの
+	while(Photo[FR]/*構造体アロー*/ < 250/**/) //前向きの
 	{
-		printf("photo[FR] : %f\r\n", photo[FR]);
+		printf("Photo[FR] : %f\r\n", Photo[FR]);
 		//センサデータを一個取得して戻り値で返す関数を使う。
 		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、センサデータもグローバルでいい。
 

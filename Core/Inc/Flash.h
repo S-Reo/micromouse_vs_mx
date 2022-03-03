@@ -65,7 +65,7 @@ void FLASH_EraseSector(uint16_t);
 void FLASH_Write_HalfWord(uint32_t, uint16_t);
 void FLASH_Write_Word(uint32_t, uint32_t);
 void FLASH_Read_Word(uint32_t address, uint32_t * data);
-void FLASH_Write_Word_F(uint32_t, float);
+void FLASH_Write_Word_F(uint32_t address, float data);
 void FLASH_Read_Word_F(uint32_t address, float * data);
 void FLASH_Write_Word_S(uint32_t, int32_t);
 void FLASH_Write_DoubleWord(uint32_t, int64_t);

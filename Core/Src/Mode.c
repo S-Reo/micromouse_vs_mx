@@ -4,6 +4,7 @@
  *  Created on: Feb 17, 2022
  *      Author: leopi
  */
+#include <action.h>
 #include "MicroMouse.h"
 #include "Mode.h"
 
@@ -19,7 +20,6 @@
 #include "Motor_Driver.h"
 #include "ICM_20648.h"
 #include "UI.h"
-#include "Action.h"
 #include "Map.h"
 
 void Debug()
@@ -44,24 +44,24 @@ void WritingFree()
 	ADCStart();
 	IMU_init();
 
-	PIDReset(L_VELO);
-	PIDReset(R_VELO);
-	PIDReset(B_VELO);
-	PIDReset(D_WALL);
-	PIDReset(ANG_V);
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+	//PIDReset(B_VELO);
+	PIDReset(D_WALL_PID);
+	PIDReset(A_VELO_PID);
 
 	//PID制御を有効化
-	PIDChangeFlag(L_VELO, 1);
-	PIDChangeFlag(R_VELO, 1);
-	PIDChangeFlag(D_WALL, 0);
-	PIDChangeFlag(B_VELO, 0);
-	PIDChangeFlag(ANG_V, 1);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	PIDChangeFlag(D_WALL_PID, 0);
+	//PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
 
-	PIDSetGain(L_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(R_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(ANG_V, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
-	PIDSetGain(D_WALL, 2, 0.1, 0.00004);
+	PIDSetGain(L_VELO_PID, 1.9613, 50.3786, 0.011499);//1.5011, 38.632, 0.0106);//2.4471, 58.7382, 0.015592);//3.4933, 82.6932, 0.017737);//13.5666, 524.3235, 0.064722);//50.4479, 2811.5036, 0.2263);//1.1941, 33.5232, 0.0059922);
+	PIDSetGain(R_VELO_PID, 1.9613, 50.3786, 0.011499);// 1.5011, 38.632, 0.0106);//2.4471, 58.7382, 0.015592);//3.4933, 82.6932, 0.017737);//13.5666, 524.3235, 0.064722);//50.4479, 2811.5036, 0.2263);//1.1941, 33.5232, 0.0059922);
+	//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(A_VELO_PID, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+	PIDSetGain(D_WALL_PID, 2, 0.1, 0.00004);
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
@@ -70,48 +70,54 @@ void WritingFree()
 	HAL_TIM_Base_Start_IT(&htim8);
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
-	target_velocity[BODY] = 0;
-	target_angular_v = 0;
-	acceleration = 0;
-	angular_acceleration = 0;
-	total_pulse[LEFT] = 0;
-	total_pulse[RIGHT] = 0;
-	total_pulse[BODY] = 0;
+	TargetVelocity[BODY] = 0;
+	TargetAngularV = 0;
+	Acceleration = 0;
+	AngularAcceleration = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
 	IMU_Calib();
-	target_photo[SL] = photo[SL];
-	target_photo[SR] = photo[SR];
-	photo_diff = target_photo[SL] - target_photo[SR];
+	TargetPhoto[SL] = Photo[SL];
+	TargetPhoto[SR] = Photo[SR];
+	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
 
-	PIDReset(L_VELO);
-	PIDReset(R_VELO);
-	PIDReset(B_VELO);
-	PIDReset(D_WALL);
-	PIDReset(ANG_V);
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+	//PIDReset(B_VELO);
+	PIDReset(D_WALL_PID);
+	PIDReset(A_VELO_PID);
 
 	HAL_Delay(500);
 
+
+	while(1)
+	{
+		printf("壁センサ値:%f, %f, %f, %f. FL+FR = %f\r\n",Photo[SL], Photo[SR], Photo[FL], Photo[FR],Photo[FL] + Photo[FR]);
+
+	}
 //	for(int i=0;i < 3; i++)
 //	{
-//		Accel(45, explore_velocity);
+//		Accel(45, ExploreVelocity);
 //		Decel(45, 0);
 //		HAL_Delay(500);
 //	}
 	float wall_log_L[10]={0},wall_log_R[10]={0},out_log_L[10]={0},out_log_R[10]={0};
 	//printf("%f\r\n",log[0]);
 //	int n=0;
-//	out_log_L[n] = velocity_left_out;
-//	out_log_R[n] = velocity_right_out;
-	//PIDChangeFlag(ANG_V, 0);
-	explore_velocity=300;
-	Accel(61.5, explore_velocity);
+//	out_log_L[n] = VelocityLeftOut;
+//	out_log_R[n] = VelocityRightOut;
+	//PIDChangeFlag(A_VELO_PID, 0);
+	ExploreVelocity=300;
+	Accel(61.5, ExploreVelocity);
 	SelectAction('S');
 	SelectAction('S');
-	Decel(45, 0);
+	Decel(35, 0);
 	//スタート時の出力値を見たい。matlabで可視化しよう。
-//	Accel(61.5, explore_velocity);
-//	Accel(61.5, explore_velocity);
+//	Accel(61.5, ExploreVelocity);
+//	Accel(61.5, ExploreVelocity);
 
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
@@ -124,19 +130,19 @@ void WritingFree()
 while(1)
 {
 	//printf("zg : %d, %lf, %f\r\n",zg,(double)zg,(float)zg);	//zgは右回転が負。どの型でもおかしい値は出なかった。
-	//printf("angular_v : %f, angle : %f\r\n",angular_v, angle);	//モータに出力する際は角速度を負に指定すると左回転。
-	//printf("%f, %f, %f\r\n", photo[FL],photo[FR],photo[FL]+photo[FR]);
+	//printf("AngularV : %f, Angle : %f\r\n",AngularV, Angle);	//モータに出力する際は角速度を負に指定すると左回転。
+	//printf("%f, %f, %f\r\n", Photo[FL],Photo[FR],Photo[FL]+Photo[FR]);
 
 }
 while(1)
 {
-	printf("オフセット:%lf, double角速度:%lf, double角度:%lf, float角速度:%f, float角度:%f, 壁センサ値:%f, %f, %f, %f\r\n",zg_offset,imu_ang_v, imu_angle, angular_v, angle,photo[SL], photo[SR], photo[FL], photo[FR]);
+	printf("オフセット:%lf, double角速度:%lf, double角度:%lf, float角速度:%f, float角度:%f, 壁センサ値:%f, %f, %f, %f\r\n",zg_offset,ImuAngV, ImuAngle, AngularV, Angle,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
 }
 //	while(1){
-//		printf("%f,%f,%f,%f\r\n",photo[SL],photo[SR],photo[FL],photo[FR]);	//SRとFRが等しくなろうとしている
+//		printf("%f,%f,%f,%f\r\n",Photo[SL],Photo[SR],Photo[FL],Photo[FR]);	//SRとFRが等しくなろうとしている
 //	}
 
-	//printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);	//ここで変な値が入っている→原因はモード選択用にエンコーダを回したパルスの初期化をしていなかったこと
+	//printf("VelocityLeftOut, VelocityRightOut : %d,%d\r\n", VelocityLeftOut, VelocityRightOut);	//ここで変な値が入っている→原因はモード選択用にエンコーダを回したパルスの初期化をしていなかったこと
 	//GoStraight( TRUE, 300);
 #if 1
 	//壁制御と速度制御の相性が悪い
@@ -145,48 +151,48 @@ while(1)
 	//壁補正は入れるタイミングを決めるのが面倒なので最初はあてにしない。
 	//IMUで角速度を入れて、そっちで角度算出するほうを頑張るほうが望みがある。
 
-	Accel(61.5, explore_velocity);
+	Accel(61.5, ExploreVelocity);
 
 	SelectAction('S');
-	wall_log_L[0] = photo[SL];
-	wall_log_R[0] = photo[SR];
-	out_log_L[0] = wall_left_out;;
-	out_log_R[0] = wall_right_out;
+	wall_log_L[0] = Photo[SL];
+	wall_log_R[0] = Photo[SR];
+	out_log_L[0] = WallLeftOut;;
+	out_log_R[0] = WallRightOut;
 	SelectAction('S');
-	PIDChangeFlag(D_WALL, 0);
-	wall_log_L[1] = photo[SL];
-	wall_log_R[1] = photo[SR];
-	out_log_L[1] = wall_left_out;
-	out_log_R[1] = wall_right_out;
+	PIDChangeFlag(D_WALL_PID, 0);
+	wall_log_L[1] = Photo[SL];
+	wall_log_R[1] = Photo[SR];
+	out_log_L[1] = WallLeftOut;
+	out_log_R[1] = WallRightOut;
 	SelectAction('B');
-	wall_log_L[2] = photo[SL];
-	wall_log_R[2] = photo[SR];
-	out_log_L[2] = wall_left_out;
-	out_log_R[2] = wall_right_out;
-	add_velocity = 100;
-	PIDChangeFlag(D_WALL, 1);
+	wall_log_L[2] = Photo[SL];
+	wall_log_R[2] = Photo[SR];
+	out_log_L[2] = WallLeftOut;
+	out_log_R[2] = WallRightOut;
+	AddVelocity = 100;
+	PIDChangeFlag(D_WALL_PID, 1);
 	SelectAction('S');
-	wall_log_L[3] = photo[SL];
-	wall_log_R[3] = photo[SR];
-	out_log_L[3] = wall_left_out;
-	out_log_R[3] = wall_right_out;
+	wall_log_L[3] = Photo[SL];
+	wall_log_R[3] = Photo[SR];
+	out_log_L[3] = WallLeftOut;
+	out_log_R[3] = WallRightOut;
 	SelectAction('S');
-	wall_log_L[4] = photo[SL];
-	wall_log_R[4] = photo[SR];
-	out_log_L[4] = wall_left_out;
-	out_log_R[4] = wall_right_out;
-	//GoStraight( 90,explore_velocity, 0);
+	wall_log_L[4] = Photo[SL];
+	wall_log_R[4] = Photo[SR];
+	out_log_L[4] = WallLeftOut;
+	out_log_R[4] = WallRightOut;
+	//GoStraight( 90,ExploreVelocity, 0);
 	Decel(45, 0);
-	wall_log_L[5] = photo[SL];
-	wall_log_R[5] = photo[SR];
-	out_log_L[5] = wall_left_out;
-	out_log_R[5] = wall_right_out;
+	wall_log_L[5] = Photo[SL];
+	wall_log_R[5] = Photo[SR];
+	out_log_L[5] = WallLeftOut;
+	out_log_R[5] = WallRightOut;
 
 	while(1)
 	{
 	for(int i=0; i < 6; i++)
 	{
-		printf("起動時の壁左右値 : %f,%f, %d : 壁左, 壁右, 出力左, 出力右 :　%f, %f, %f, %f\r\n", target_photo[SL], target_photo[SR],i,wall_log_L[i],wall_log_R[i]+photo_diff, out_log_L[i],out_log_R[i]);
+		printf("起動時の壁左右値 : %f,%f, %d : 壁左, 壁右, 出力左, 出力右 :　%f, %f, %f, %f\r\n", TargetPhoto[SL], TargetPhoto[SR],i,wall_log_L[i],wall_log_R[i]+PhotoDiff, out_log_L[i],out_log_R[i]);
 	}
 	}
 //	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
@@ -195,7 +201,7 @@ while(1)
 //	Rotate( 90 , -M_PI);
 //	HAL_Delay(500);
 //	Accel(45, velocity);
-//	//printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);
+//	//printf("VelocityLeftOut, VelocityRightOut : %d,%d\r\n", VelocityLeftOut, VelocityRightOut);
 //	GoStraight( 90,velocity, 0);
 //	Decel(45, 0);
 //	HAL_Delay(500);
@@ -206,7 +212,7 @@ while(1)
 //	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
 
-	printf("velocity_left_out, velocity_right_out : %d,%d\r\n", velocity_left_out, velocity_right_out);	//微妙に出力値が残る。
+	printf("VelocityLeftOut, VelocityRightOut : %d,%d\r\n", VelocityLeftOut, VelocityRightOut);	//微妙に出力値が残る。
 #else
 
 	Rotate( 180 , -5);
@@ -222,7 +228,7 @@ while(1)
 //	RotateDecel(15, 2);
 	while(1)
 	{
-		target_angular_v = 0;
+		TargetAngularV = 0;
 	}
 
 
@@ -230,9 +236,9 @@ while(1)
 	{
 
 		//printf("L_motor, R_motor : %d, %d\r\n",L_motor, R_motor);
-		//printf("target_velocity[LEFT], target_velocity[RIGHT], current_velocity[LEFT], current_velocity[RIGHT] : %f, %f, %f, %f\r\n",target_velocity[LEFT], target_velocity[RIGHT],  current_velocity[LEFT], current_velocity[RIGHT]);
+		//printf("TargetVelocity[LEFT], TargetVelocity[RIGHT], CurrentVelocity[LEFT], CurrentVelocity[RIGHT] : %f, %f, %f, %f\r\n",TargetVelocity[LEFT], TargetVelocity[RIGHT],  CurrentVelocity[LEFT], CurrentVelocity[RIGHT]);
 		//printf("e, ei, ed, elast, out, KP : %f, %f, %f, %f, %d, %f\r\n",pid[LEFT].e, pid[LEFT].ei, pid[LEFT].ed, pid[LEFT].elast, pid[LEFT].out, pid[LEFT].KP);
-		//printf("velocity_left_out, target_velocity[LEFT], current_velocity[LEFT] : %d, %f, %f\r\n", velocity_left_out, target_velocity[LEFT], current_velocity[LEFT]);
+		//printf("VelocityLeftOut, TargetVelocity[LEFT], CurrentVelocity[LEFT] : %d, %f, %f\r\n", VelocityLeftOut, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
 	}
 	//探索の場合は迷路とステータスの準備
 
@@ -253,25 +259,24 @@ void Explore()
 	ADCStart();
 	IMU_init();
 
-	PIDReset(L_VELO);
-	PIDReset(R_VELO);
-	PIDReset(B_VELO);
-	PIDReset(D_WALL);
-	PIDReset(ANG_V);
-
 	//PID制御を有効化
-	PIDChangeFlag(L_VELO, 1);
-	PIDChangeFlag(R_VELO, 1);
-	PIDChangeFlag(D_WALL, 0);
-	PIDChangeFlag(B_VELO, 0);
-	PIDChangeFlag(ANG_V, 1);
+	PIDChangeFlag(L_VELO_PID, 0);
+	PIDChangeFlag(R_VELO_PID, 0);
 
-	PIDSetGain(L_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(R_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(ANG_V, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 0);
+	//PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
 
-	PIDSetGain(D_WALL, 2, 0.1, 0.00004);
+	PIDSetGain(L_VELO_PID, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(R_VELO_PID, 1.1941, 33.5232, 0.0059922);
+	//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+	PIDSetGain(A_VELO_PID, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+
+	PIDSetGain(D_WALL_PID, 2, 0.1, 0.00004);
+	PIDSetGain(L_WALL_PID, 2, 0.1, 0.00004);
+	PIDSetGain(R_WALL_PID, 2, 0.1, 0.00004);
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
@@ -280,50 +285,60 @@ void Explore()
 	HAL_TIM_Base_Start_IT(&htim8);
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
-	target_velocity[BODY] = 0;
-	target_angular_v = 0;
-	acceleration = 0;
-	angular_acceleration = 0;
-	total_pulse[LEFT] = 0;
-	total_pulse[RIGHT] = 0;
-	total_pulse[BODY] = 0;
+
+	//
+	printf("1\r\n");
+	TargetVelocity[BODY] = 0;
+	TargetAngularV = 0;
+	Acceleration = 0;
+	AngularAcceleration = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
 	IMU_Calib();
-	target_photo[SL] = photo[SL];
-	target_photo[SR] = photo[SR];
-	photo_diff = target_photo[SL] - target_photo[SR];
+	printf("2\r\n");
+	TargetPhoto[SL] = Photo[SL];
+	TargetPhoto[SR] = Photo[SR];
+	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
 
-	PIDReset(L_VELO);
-	PIDReset(R_VELO);
-	PIDReset(B_VELO);
-	PIDReset(D_WALL);
-	PIDReset(ANG_V);
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+
+	PIDReset(A_VELO_PID);
+	PIDReset(L_WALL_PID);
+	PIDReset(R_WALL_PID);
+	PIDReset(D_WALL_PID);
+
 
 
 	HAL_Delay(500);
-
+	printf("3\r\n");
 
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
 //while(1)
 //{
-//	printf("オフセット:%f, double角速度:%f, double角度:%f, float角速度:%f, float角度:%f",zg_offset,imu_ang_v, imu_angle, angular_v, angle);
+//	printf("オフセット:%f, double角速度:%f, double角度:%f, float角速度:%f, float角度:%f",zg_offset,ImuAngV, ImuAngle, AngularV, Angle);
 //}
 
 	//迷路とステータスの準備
 	//方角と座標の初期化。
-	uint8_t x, y;
-	my_direction = north;
-	x=0,y=0;
+	InitPosition();
+//	uint8_t x, y;
+//	Pos.Car = north;
+//	x=0,y=0;
+	wall_init();
+	printf("4\r\n");
 	//時間用の処理の初期化。
 	//int timer = 0;
 	//エンコーダ移動量の初期化。
-	total_pulse[0] = 0;
-	total_pulse[1] = 0;
-	total_pulse[2] = 0;
+	TotalPulse[0] = 0;
+	TotalPulse[1] = 0;
+	TotalPulse[2] = 0;
 	//スタート時のアクションに設定
-	char action_type = 'S';
+	//direction action_type = front;
 	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
 	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
 	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
@@ -348,12 +363,18 @@ void Explore()
 //		break;
 //	}
 //}
-	explore_velocity=300;
-	Accel(61.5, explore_velocity);
-	y++;
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+
+	ExploreVelocity=300;
+	ChangeLED(2);
+	Accel(61.5, ExploreVelocity);
+	//y++;
+	Pos.Y++;
 	//uint8_t xlog[10]={0},ylog[10]={0};
 	int i=0;
-	while( (x != 3) || (y != 3))
+	while( (Pos.X != 3) || (Pos.Y != 3))
 	{
 
 		//xlog[i]=x;
@@ -366,12 +387,16 @@ void Explore()
 		//現在の方角と座標を更新
 
 		//移動後の座標と方角で新たに壁情報を取得
-		wall_set(x,y,photo[SL], photo[SR], photo[FL], photo[FR]);
+		ChangeLED(0);
+		wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
 
-		UpdateWalkMap();
+		//評価値マップ、歩数マップをどうするか。最短経路計算同様、走行中に計算させる。
+		//UpdateWalkMap();
 
+		ChangeLED(7);
 		//方向決定と、座標方角の更新。
-		LeftHandJudge(&x, &y, &my_direction, &action_type);
+		//方向決定を変える。
+		LeftHandJudge();
 
 		//i++;
 		//マップデータに基づき、次の目標座標を決定する。目標座標から進行方向を決める。
@@ -387,7 +412,7 @@ void Explore()
 		my_direction = DetermineDirection();
 #endif
 	}
-	Decel(45, 0);
+	Decel(35, 0);
 	//flashに保存
 
 	Signal(7);
