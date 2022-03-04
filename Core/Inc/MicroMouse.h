@@ -50,6 +50,7 @@ extern float CurrentVelocity[3];
 
 //移動量 mm/msを積算
 extern int TotalPulse[3];
+extern int KeepPulse[3];
 
 //角速度 rad/s
 extern float AngularV;
@@ -114,8 +115,8 @@ extern int L_motor, R_motor;
 #define UNKNOWN 3
 //壁の閾値(走行中に変更できるようにしたい)
 #define FRONT_WALL 70
-#define RIGHT_WALL 100//90 //380
-#define LEFT_WALL 140//90 //420
+#define RIGHT_WALL 90//90 //380
+#define LEFT_WALL 100//90 //420
 
 
 /*--調整パラメータ--*/

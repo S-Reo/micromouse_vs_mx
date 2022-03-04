@@ -48,7 +48,7 @@
 #include "Mode.h"
 #include "Map.h"
 #include "ICM_20648.h"
-
+#include "PID_Control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,15 +118,33 @@ static void MX_TIM1_Init(void);
 /* USER CODE BEGIN 0 */
 
 
-float battery_V;
 #ifdef __GNUC__
 	#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+	#define GETCHAR_PROTOTYPE int __io_getchar(void)
 #else
 	#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+	#define GETCHAR_PROTOTYPE int f getc(FILE* f)
 #endif /*__GNUC__*/
 PUTCHAR_PROTOTYPE {
 	HAL_UART_Transmit(&huart1, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
+}
+int __io_getchar(void) {
+HAL_StatusTypeDef Status = HAL_BUSY;
+uint8_t Data;
+
+while(Status != HAL_OK)
+{
+Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
+//if(Status == HAL_ERROR)
+//{
+//	return 0;
+//	break;
+//}
+
+}
+
+return(Data);
 }
 // Flashから読みした?ータを避するRAM上�???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
 // 4byteごとにアクセスをするで、アドレスに配置する
@@ -222,22 +240,36 @@ int main(void)
   BatteryCheck( (int)adc1[2] );
 
   int8_t mode=0;
-  	  printf("mode : %d\r\n", mode);
+  printf("mode : %d\r\n", mode);
   ModeSelect( 0, 7, &mode);
   Signal( mode );
-  	  printf("ドン\r\n");
+  printf("スイッチ\r\n");
 
+  //pidパラメータの初期化をもっと書き換えやすいところでやる
+  PIDSetGain(L_VELO_PID, 1.1941, 33.5232, 0.0059922);
+  PIDSetGain(R_VELO_PID, 1.1941, 33.5232, 0.0059922);
+  //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+  PIDSetGain(A_VELO_PID, 15,5,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+  //Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはやくなるがオーバーシュートが起きる。
+  //Dは微分= 振動を抑えられるぶん収束が遅くなる。
+  PIDSetGain(D_WALL_PID, 10, 0, 0);
+  PIDSetGain(L_WALL_PID, 10, 0, 0);
+  PIDSetGain(R_WALL_PID, 10, 0, 0);
   while (1)
   {
 
 	  switch( mode )
 	  {
 	  case 0:
-		  wall_flash_print();
+
+		  ParameterSetting();
+		//wall_flash_print();
 		  break;
 	  case 1:
+		  Debug();
 		  break;
 	  case 2:
+
 		  break;
 	  case 3:
 		  break;

@@ -10,7 +10,7 @@
 
 #include <main.h>
 
-
-
+void Change_Gain();
+void Load_Gain();
 
 #endif /* INC_DEBUG_H_ */

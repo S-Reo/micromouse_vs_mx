@@ -9,9 +9,11 @@
 #define INC_MODE_H_
 
 #include <main.h>
-
+void Debug();
+void ParameterSetting();
 void Explore();
 void WritingFree();
 
 
 #endif /* INC_MODE_H_ */
+//右130、左140

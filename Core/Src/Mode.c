@@ -21,22 +21,12 @@
 #include "ICM_20648.h"
 #include "UI.h"
 #include "Map.h"
+#include "Flash.h"
 
-void Debug()
+#include "Debug.h"
+void InitExplore()
 {
-
-}
-void ParameterSetting()
-{
-
-}
-
-void WritingFree()
-{
-
-	//好きなようにいじるモード。テスト場。
-
-
+#if 0
 	//ペリフェラルの動作開始
 	Motor_PWM_Start();
 	EncoderStart();
@@ -91,7 +81,160 @@ void WritingFree()
 	PIDReset(A_VELO_PID);
 
 	HAL_Delay(500);
+#else
+	//ペリフェラルの動作開始
+	Motor_PWM_Start();
+	EncoderStart();
+	EmitterON();
+	ADCStart();
+	IMU_init();
 
+	//PID制御を有効化
+	PIDChangeFlag(L_VELO_PID, 0);
+	PIDChangeFlag(R_VELO_PID, 0);
+
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 0);
+	//PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
+
+	Load_Gain();
+	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+
+	//割り込みを有効化
+	HAL_TIM_Base_Start_IT(&htim1);
+	HAL_TIM_Base_Start_IT(&htim8);
+	//ここまででハードの準備はできた。
+	//ここからはソフト的な準備
+
+	//
+	printf("1\r\n");
+	TargetVelocity[BODY] = 0;
+	TargetAngularV = 0;
+	Acceleration = 0;
+	AngularAcceleration = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[BODY] = 0;
+
+	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+	IMU_Calib();
+	printf("2\r\n");
+	TargetPhoto[SL] = Photo[SL];
+	TargetPhoto[SR] = Photo[SR];
+	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
+
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+
+	PIDReset(A_VELO_PID);
+	PIDReset(L_WALL_PID);
+	PIDReset(R_WALL_PID);
+	PIDReset(D_WALL_PID);
+
+
+
+	HAL_Delay(500);
+#endif
+}
+void Debug()
+{
+	//テストする
+	if (Flash_clear_sector9() )
+		{
+			printf("OK9\r\n");
+		}
+	if (Flash_clear_sector1() )
+		{
+			printf("OK1\r\n");
+		}
+	if (Flash_clear_sector8())
+	{
+		printf("OK8\r\n");
+	}
+	while(1)
+	{
+
+	}
+#if 0
+	InitExplore();
+	InitPosition();
+	wall_init();
+
+	TotalPulse[0] = 0;
+	TotalPulse[1] = 0;
+	TotalPulse[2] = 0;
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+
+	//アクションを与えるとその条件で動き出す。物理量を変化させる。
+	//途中
+	//一つのwhile中で移動量を変化させて走る
+	int move_pulse[3]={0};//増減分を入れる。
+	int total_pulse[3]={0};
+	total_pulse[BODY] = TotalPulse[BODY];
+#define ST	while(){}
+	while ( 1 ) //ぶん回しで道中でパルスを追加していく。どこで判断するか。
+	{
+		//正にも負にも回転するからパルスの条件式は一概にかけない。
+		//途中で追加する
+		//TotalPulse[BODY]
+		//Move(action, cardinal, direction, &move_pulse[LEFT], &move_pulse[RIGHT]);
+		//目標移動量が正か負かで条件分岐。左右でも分ける。
+		//正なら
+		if( (move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] > 0) ) //直進かスラローム、減速加速。
+		{
+			//while条件式が変わる
+		}
+		else if((move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] > 0))	//回転
+		{
+
+		}
+		else if((move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] < 0)) //回転
+		{
+
+		}
+		else if( (move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] < 0) )//バック
+		{
+
+		}
+		else if( (move_pulse[LEFT] == 0) && ( move_pulse[RIGHT] == 0) )	//停止。
+		{
+
+		}
+		else //片方だけが0のパターンはパグに近い。
+		{
+
+		}
+
+
+
+	}
+#else
+
+	EmitterON();
+	ADCStart();
+	HAL_TIM_Base_Start_IT(&htim8);
+	while(1)
+	{
+		printf("SL:%f, SR:%f, FL:%f, FR:%f\r\n",Photo[SL],Photo[SR],Photo[FL],Photo[FR]);
+	}
+#endif
+}
+void ParameterSetting()
+{
+	Load_Gain();
+	Change_Gain();
+
+}
+
+void WritingFree()
+{
+
+	//好きなようにいじるモード。テスト場。
+	InitExplore();
 
 	while(1)
 	{
@@ -251,69 +394,8 @@ void Explore()
 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マップを初期化する。
 	//一回目で失敗していたら、flash消してram初期化
 	//一回目で成功したら、flashをramに移す
+	InitExplore();
 
-	//ペリフェラルの動作開始
-	Motor_PWM_Start();
-	EncoderStart();
-	EmitterON();
-	ADCStart();
-	IMU_init();
-
-	//PID制御を有効化
-	PIDChangeFlag(L_VELO_PID, 0);
-	PIDChangeFlag(R_VELO_PID, 0);
-
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(D_WALL_PID, 0);
-	//PIDChangeFlag(B_VELO, 0);
-	PIDChangeFlag(A_VELO_PID, 0);
-
-	PIDSetGain(L_VELO_PID, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(R_VELO_PID, 1.1941, 33.5232, 0.0059922);
-	//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-	PIDSetGain(A_VELO_PID, 28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
-
-	PIDSetGain(D_WALL_PID, 2, 0.1, 0.00004);
-	PIDSetGain(L_WALL_PID, 2, 0.1, 0.00004);
-	PIDSetGain(R_WALL_PID, 2, 0.1, 0.00004);
-	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
-
-	//割り込みを有効化
-	HAL_TIM_Base_Start_IT(&htim1);
-	HAL_TIM_Base_Start_IT(&htim8);
-	//ここまででハードの準備はできた。
-	//ここからはソフト的な準備
-
-	//
-	printf("1\r\n");
-	TargetVelocity[BODY] = 0;
-	TargetAngularV = 0;
-	Acceleration = 0;
-	AngularAcceleration = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[BODY] = 0;
-
-	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-	IMU_Calib();
-	printf("2\r\n");
-	TargetPhoto[SL] = Photo[SL];
-	TargetPhoto[SR] = Photo[SR];
-	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
-
-	PIDReset(L_VELO_PID);
-	PIDReset(R_VELO_PID);
-
-	PIDReset(A_VELO_PID);
-	PIDReset(L_WALL_PID);
-	PIDReset(R_WALL_PID);
-	PIDReset(D_WALL_PID);
-
-
-
-	HAL_Delay(500);
 	printf("3\r\n");
 
 	//ここまででハードの準備はできた。
@@ -343,37 +425,26 @@ void Explore()
 	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
 	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
 //void ChangeNowStatus()
-//{
-//	//移動後の方角で座標更新
-//	switch(dir)
-//	{
-//	case north:
-//		y++;
-//		break;
-//	case east:
-//		x++;
-//		break;
-//	case south:
-//		y--;
-//		break;
-//	case west:
-//		x--;
-//		break;
-//	default:
-//		break;
-//	}
-//}
+
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
-
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=300;
 	ChangeLED(2);
+//	while(1)
+//	{
+//
+//	}
+	int i=0;
 	Accel(61.5, ExploreVelocity);
 	//y++;
 	Pos.Y++;
 	//uint8_t xlog[10]={0},ylog[10]={0};
-	int i=0;
+
 	while( (Pos.X != 3) || (Pos.Y != 3))
 	{
 
@@ -387,13 +458,13 @@ void Explore()
 		//現在の方角と座標を更新
 
 		//移動後の座標と方角で新たに壁情報を取得
-		ChangeLED(0);
+		ChangeLED(7);
 		wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
-
+		//ControlWall();
 		//評価値マップ、歩数マップをどうするか。最短経路計算同様、走行中に計算させる。
 		//UpdateWalkMap();
 
-		ChangeLED(7);
+		ChangeLED(0);
 		//方向決定と、座標方角の更新。
 		//方向決定を変える。
 		LeftHandJudge();

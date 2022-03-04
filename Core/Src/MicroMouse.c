@@ -26,6 +26,7 @@ int KeepCounter[2]={
 };
 float CurrentVelocity[3]={0};	//速度 mm/s
 int TotalPulse[3]={0};	//移動量 mm/msを積算
+int KeepPulse[3]={0};
 float AngularV=0;			//角速度 rad/s
 float Angle=0;				//角度 rad/msを積算
 //ここまでがエンコーダからのUpdate

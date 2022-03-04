@@ -427,7 +427,7 @@ bool Flash_clear_sector8()// Flashのsectoe1を消去
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
     EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_8;
     EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-    EraseInitStruct.NbSectors = 8;
+    EraseInitStruct.NbSectors = 1;
 
    // printf("\r\nはか12?\r\n");
     // Eraseに失敗したsector番号がerror_sectorに入
@@ -533,7 +533,28 @@ bool Flash_store_sector8()// Flashのsector1を消去
 //
 //    return result_3 == HAL_OK;
 //}
+bool Flash_clear_sector9()// Flashのsectoe1を消去
+{
+    HAL_FLASH_Unlock();
 
+    //printf("\r\nはか1?\r\n");
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_9;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 1;
+
+    //printf("\r\nはか12?\r\n");
+    // Eraseに失敗したsector番号がerror_sectorに入
+    // 正常にEraseができたと??��?��?
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    //printf("\r\nはか3?\r\n");
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
 //11を使うようにして34はmainprogunにする
 //bool Flash_clear_sector11()// Flashのsectoe1を消去
 //{

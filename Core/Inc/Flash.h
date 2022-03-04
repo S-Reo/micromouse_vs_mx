@@ -78,11 +78,13 @@ void FLASH_ReadData(uint32_t, uint32_t*, uint32_t);
 
 #define BACKUP_FLASH_SECTOR_NUM_1         FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_NUM_8         FLASH_SECTOR_8
+#define BACKUP_FLASH_SECTOR_NUM_9         FLASH_SECTOR_9
 //#define BACKUP_FLASH_SECTOR_NUM_3         FLASH_SECTOR_3
 //#define BACKUP_FLASH_SECTOR_NUM_11        FLASH_SECTOR_11
 
 #define BACKUP_FLASH_SECTOR_SIZE_1           1024*6//6kbyte
 #define BACKUP_FLASH_SECTOR_SIZE_8           1024*32//1024//1kbyte
+//#define BACKUP_FLASH_SECTOR_SIZE_9           1024*32
 //#define BACKUP_FLASH_SECTOR_SIZE_3           1024//4kbyte
 //#define BACKUP_FLASH_SECTOR_SIZE_11           1024*5//13 //52kbyte 4*1024*13
 
@@ -117,6 +119,7 @@ bool Flash_store_sector8();
 //float* Flash_load_sector3();
 //bool Flash_store_sector3();
 
+bool Flash_clear_sector9();
 
 //bool Flash_clear_sector11();
 ////uint8_t

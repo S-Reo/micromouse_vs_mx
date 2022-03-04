@@ -107,36 +107,37 @@ void ControlMotor()
 
 //	ControlWall();
 //	int wall_d =0,wall_l =0,wall_r =0;
-//	int ang_out=0;
-//
-//	//直進なら	//直進かどうかの判定をどうするか。アクションは一応4種類しかないので、それに合わせてflagを作っておく。
-//		//壁ありなら
-//	wall_d = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
-//	wall_r = PIDControl( R_WALL_PID, T1, Photo[SR],TargetPhoto[SR]);			//右に寄ってたら-
-//	wall_l = PIDControl( L_WALL_PID, T1, TargetPhoto[SL], Photo[SL]);			//左に寄ってたら
-//	ang_out = PIDControl( A_VELO_PID, T1, TargetAngle, Angle);
-//
-//	//直進はどれか
-//	if( PIDGetFlag( D_WALL_PID ) )
-//	{
-//		TargetAngularV = (float)wall_d*0.002;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-//	}
-//	else if( PIDGetFlag( L_WALL_PID ) )
-//	{
-//		TargetAngularV = (float)wall_l*0.002;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-//	}
-//	else if( PIDGetFlag( R_WALL_PID ) )
-//	{
-//		TargetAngularV = (float)wall_r*0.002;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-//	}
-//	//左のみ右のみでも同じようにする。
-//		//壁なしなら
-//			//IMUの角度or角速度フィードバック
-//		//PIDのflagが有効なら代入
-//	else if( PIDGetFlag( A_VELO_PID ) )
-//	{
-//		TargetAngularV = (float)ang_out*0.02;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
-//	}
+	int wall_d =0,wall_l =0,wall_r =0;
+	int ang_out=0;
+
+	//直進なら	//直進かどうかの判定をどうするか。アクションは一応4種類しかないので、それに合わせてflagを作っておく。
+		//壁ありなら
+	wall_d = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+	wall_r = PIDControl( R_WALL_PID, T1, TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+	wall_l = PIDControl( L_WALL_PID, T1,  Photo[SL], TargetPhoto[SL]);			//左に寄ってたら
+	ang_out = PIDControl( A_VELO_PID, T1, TargetAngle, Angle);
+
+	//直進はどれか
+	if( PIDGetFlag( D_WALL_PID ) )
+	{
+		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+	}
+	else if( PIDGetFlag( L_WALL_PID ) )
+	{
+		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+	}
+	else if( PIDGetFlag( R_WALL_PID ) )
+	{
+		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+	}
+	//左のみ右のみでも同じようにする。
+		//壁なしなら
+			//IMUの角度or角速度フィードバック
+		//PIDのflagが有効なら代入
+	else if( PIDGetFlag( A_VELO_PID ) )
+	{
+			TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+	}
 //	//ここからは目標値と現在値を用いた制御。
 //	else
 //	{
