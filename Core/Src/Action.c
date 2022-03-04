@@ -170,7 +170,7 @@ int GetWallCtrlDirection()
 		break;
 
 	case east:
-		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].west == south)
+		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//south)
 		{
 			return D_WALL_PID;
 		}
@@ -207,7 +207,7 @@ int GetWallCtrlDirection()
 		break;
 	case west:
 
-		if ( Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].west == south )
+		if ( Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//.westになってた。あと == south )で意味わからない処理に。
 		{
 			return D_WALL_PID;
 		}
@@ -316,15 +316,16 @@ void ControlWall()
 	}
 	else if(Pos.Dir == left)	//左に行くとき
 	{
-//		if(Pos.Act == slalom)
-//		{
+		if(Pos.Act == slalom)
+		{
 //			PIDChangeFlag(L_WALL_PID, 0);
 //			PIDChangeFlag(R_WALL_PID, 0);
 //			PIDChangeFlag(D_WALL_PID, 0);
 //			PIDChangeFlag( A_VELO_PID, 0);
-//
-//		}
-		if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
+			TargetAngularV = 0;
+			AngularAcceleration = 0;
+		}
+		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
 		{
 			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
 			{
@@ -357,7 +358,16 @@ void ControlWall()
 	}
 	else if(Pos.Dir == right)
 	{
-		if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
+		if(Pos.Act == slalom)
+		{
+//			PIDChangeFlag(L_WALL_PID, 0);
+//			PIDChangeFlag(R_WALL_PID, 0);
+//			PIDChangeFlag(D_WALL_PID, 0);
+//			PIDChangeFlag( A_VELO_PID, 0);
+			TargetAngularV = 0;
+			AngularAcceleration = 0;
+		}
+		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
 		{
 			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
 			{
@@ -762,7 +772,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
 	Pos.Act = slalom;
-
+	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
 	//事前に決めておくものはここで定義
 	//引数は現在の状況を教えるもの
@@ -774,9 +784,9 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = 6;         //スラローム前距離
+	float pre = 3;         //スラローム前距離
 	float fol = 6;         //スラローム後距離
-	float alpha_turn = 0.010;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = 0.04;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -845,7 +855,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			TargetVelocity[BODY] = v_turn;
 			//printf("直進2\r\n");
 	}
-
+	TargetAngle += 90*M_PI/180;
 	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
 	//モータ出力に限らず、変数は集約している方が良い。
 
@@ -863,7 +873,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
 	Pos.Act = slalom;
-
+	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
 	//事前に決めておくものはここで定義
 	//引数は現在の状況を教えるもの
@@ -875,9 +885,9 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = 6;         //スラローム前距離
+	float pre = 3;         //スラローム前距離
 	float fol = 6;         //スラローム後距離
-	float alpha_turn = -0.010;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = -0.04;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -946,7 +956,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 			TargetVelocity[BODY] = v_turn;
 			//printf("直進2\r\n");
 	}
-
+	TargetAngle += -90*M_PI/180;
 	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
 	//モータ出力に限らず、変数は集約している方が良い。
 
@@ -1364,11 +1374,11 @@ void SelectAction()	//前後左右であらわす
 	//右方向
 	case right:	//左右の違いは目標値がそれぞれ入れ替わるだけだから、上手く書けば一つの関数でできる
 		//スラロームターンと減速プラスターンetc
-		TurnRight('T');
+		TurnRight('S');
 		break;
 	//左方向
 	case left:
-		TurnLeft('T');
+		TurnLeft('S');
 		break;
 	case back:
 		GoBack();	//Uターン

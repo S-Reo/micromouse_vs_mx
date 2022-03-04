@@ -433,7 +433,7 @@ void Explore()
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-	ExploreVelocity=300;
+	ExploreVelocity=180;
 	ChangeLED(2);
 //	while(1)
 //	{
