@@ -46,7 +46,7 @@ int WallRightOut=0, WallLeftOut=0;
 int L_motor=0, R_motor=0;
 
 
-direction my_direction = north;
+//direction my_direction = north;
 
 t_wall Wall [NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 

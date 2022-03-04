@@ -142,22 +142,22 @@ void InitExplore()
 void Debug()
 {
 	//テストする
-	if (Flash_clear_sector9() )
-		{
-			printf("OK9\r\n");
-		}
-	if (Flash_clear_sector1() )
-		{
-			printf("OK1\r\n");
-		}
-	if (Flash_clear_sector8())
-	{
-		printf("OK8\r\n");
-	}
-	while(1)
-	{
-
-	}
+//	if (Flash_clear_sector9() )
+//		{
+//			printf("OK9\r\n");
+//		}
+//	if (Flash_clear_sector1() )
+//		{
+//			printf("OK1\r\n");
+//		}
+//	if (Flash_clear_sector8())
+//	{
+//		printf("OK8\r\n");
+//	}
+//	while(1)
+//	{
+//
+//	}
 #if 0
 	InitExplore();
 	InitPosition();
@@ -458,13 +458,18 @@ void Explore()
 		//現在の方角と座標を更新
 
 		//移動後の座標と方角で新たに壁情報を取得
-		ChangeLED(7);
+		i++;
+		if(i%2)
+			ChangeLED(7);
+		else
+			ChangeLED(0);
+
 		wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
 		//ControlWall();
 		//評価値マップ、歩数マップをどうするか。最短経路計算同様、走行中に計算させる。
 		//UpdateWalkMap();
 
-		ChangeLED(0);
+		//ChangeLED(0);
 		//方向決定と、座標方角の更新。
 		//方向決定を変える。
 		LeftHandJudge();

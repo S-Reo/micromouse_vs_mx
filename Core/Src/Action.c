@@ -470,6 +470,7 @@ void WaitStopAndReset()
 	do
 	{
 		Pos.Act = Wait;
+		//壁制御の更新
 		TargetVelocity[BODY] = 0;
 		Acceleration = 0;
 		//PIDChangeFlag( D_, 0);
@@ -965,7 +966,7 @@ void Accel(float add_distance, float explore_speed)
 	ControlWall();
 	TargetAngularV = 0;
 	float additional_speed=0;
-	additional_speed = explore_speed - TargetVelocity[BODY];
+	additional_speed = explore_speed - CurrentVelocity[BODY];
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
 	 //TotalPulse[BODY];
@@ -1070,6 +1071,7 @@ void Decel(float dec_distance, float end_speed)
 			TargetVelocity[BODY] = 0;
 			Acceleration = 0;
 			TargetAngularV = 0;
+			AngularAcceleration = 0;
 			break;
 		}
 		if(KeepPulse[BODY] + (target_pulse/2) < TotalPulse[BODY] )
@@ -1098,26 +1100,28 @@ void Calib(int distance)
 {
 	//Pos.を考え中
 	int target_pulse = (int)(2*distance/MM_PER_PULSE);
-	int keep_pulse = TotalPulse[BODY]+target_pulse;
+	//int keep_pulse = TotalPulse[BODY]+target_pulse;
 	if(target_pulse > 0)
 	{
-		while( keep_pulse > TotalPulse[BODY] )
+		while( KeepPulse[BODY] + target_pulse > TotalPulse[BODY] )
 		{
 			Acceleration = 0;
 			TargetVelocity[BODY] = 70;
 		}
+		KeepPulse[BODY] += target_pulse;
 
 	}
 	if(target_pulse < 0 )
 	{
-		while( keep_pulse < TotalPulse[BODY] )
+		while( KeepPulse[BODY] + target_pulse < TotalPulse[BODY] )
 		{
 			Acceleration = 0;
 			TargetVelocity[BODY] = -70;
-
 		}
+		KeepPulse[BODY] -= target_pulse;
 	}
 	TargetVelocity[BODY] = 0;
+	Acceleration = 0;
 }
 void Compensate()
 {
@@ -1238,6 +1242,8 @@ void TurnRight(char mode)
 		TargetAngle += 90*M_PI/180;
 		//補正
 		//Calib();
+
+		//ここも微妙。リセットするか,delayも
 		PIDReset(L_VELO_PID);
 		PIDReset(R_VELO_PID);
 		PIDReset(A_VELO_PID);
@@ -1309,6 +1315,7 @@ void GoBack()
 	Rotate(90, 2.5);//もしくは二回とも左
 	//HAL_Delay(500);
 	TargetAngle += 90*M_PI/180;
+	//リセット消してみる
 	PIDReset(L_VELO_PID);
 	PIDReset(R_VELO_PID);
 	PIDReset(A_VELO_PID);
@@ -1336,10 +1343,10 @@ void GoBack()
 }
 
 //戻り値でdirectionを返す関数を作る→探索方法によってどう返すか変わる。
-direction SelectDirection()
-{
-
-}
+//direction SelectDirection()
+//{
+//
+//}
 //進行方向決定の処理をどうするかで書き方が変わる。フラグを使うとか。
 void SelectAction()	//前後左右であらわす
 {

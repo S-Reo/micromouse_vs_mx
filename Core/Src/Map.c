@@ -133,7 +133,7 @@ void wall_set(uint8_t x, uint8_t y, cardinal car, float side_left, float side_ri
 	  Wall[x][y].west = wall_dir[3];
 
 	  //端の座標でなければ反対の壁も記入
-	  uint32_t address;
+	  //uint32_t address;
 	  if(y < (NUMBER_OF_SQUARES-1) )
 	  {
 		  Wall[x][y+1].south = wall_dir[0];//北端でなければ

@@ -234,6 +234,16 @@ int main(void)
 //  {
 //
 //  }
+  cardinal car=south;
+  int a[4] = {0};
+  a[car] = WALL;
+  a[( car + 1)%4] = WALL;
+  a[( car + 2)%4] = NOWALL;
+  a[( car + 3)%4] = NOWALL;
+  for(int i=0; i < 4; i++)
+	  {
+	  	  printf("%d : %d, %d, %d\r\n",i ,car+i, (car+i)%4, a[i]);
+	  }
   ADCStart();
   HAL_Delay(500);
 

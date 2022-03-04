@@ -27,18 +27,7 @@ extern TIM_HandleTypeDef htim1;
 //壁センサデータ
 	//平均をとった後の実際に使用する値
 	//
-#define FL	0
-#define SR	1
-#define SL	2
-#define FR	3
 
-
-
-#define LEFT			0
-#define RIGHT		1
-#define BODY		2
-
-#define INITIAL_PULSE	(30000 - 1)
 
 extern float Photo[4];
 extern float TargetPhoto[4];
@@ -76,6 +65,7 @@ extern int L_motor, R_motor;
 
 
 
+
 #define T1 0.001
 #define T2 0.0238095238095238000 //ms
 #define T3 0.7142857142857140000 //ms
@@ -98,7 +88,7 @@ extern int L_motor, R_motor;
 //実データは最後?それとも構造体を作って、構造体を操作する関数を構築した方がいい？
 //マップデータ
 //一辺の区画数
-#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
+//#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標
 #define X_GOAL_LESSER 3
@@ -107,6 +97,16 @@ extern int L_motor, R_motor;
 #define X_GOAL_LARGER 3
 #define Y_GOAL_LARGER 3
 
+#define FL	0
+#define SR	1
+#define SL	2
+#define FR	3
+
+#define LEFT			0
+#define RIGHT		1
+#define BODY		2
+
+#define INITIAL_PULSE	(30000 - 1)
 //壁の有無
 
 #define NOWALL 0
@@ -114,7 +114,7 @@ extern int L_motor, R_motor;
 #define VIRTUAL	2
 #define UNKNOWN 3
 //壁の閾値(走行中に変更できるようにしたい)
-#define FRONT_WALL 70
+#define FRONT_WALL 70  //２つの和/2
 #define RIGHT_WALL 90//90 //380
 #define LEFT_WALL 100//90 //420
 
@@ -173,7 +173,7 @@ typedef enum{
 	west = 3
 						//斜めで4種類追加
 }cardinal;
-extern cardinal my_car;
+//extern cardinal my_car;
 
 typedef enum Direction	//区画の境界に来た時の状態表現だから
 {
@@ -183,8 +183,8 @@ typedef enum Direction	//区画の境界に来た時の状態表現だから
 	back		= 3
 						//斜めで4種類追加
 }direction;
-extern direction my_dir;
-typedef enum Acttion	//区画の境界に来た時の状態表現だから
+//extern direction my_dir;
+typedef enum Action	//区画の境界に来た時の状態表現だから
 {
 	accel	= 0,
 	decel		= 1,
@@ -248,10 +248,10 @@ typedef struct Position
 
 }position;
 extern position Pos;	//現在と、目標
-void WritingFree();
+//void WritingFree();
 
 
-void ControlMotor();
-void UpdatePhotoData();
+//void ControlMotor();
+//void UpdatePhotoData();
 
 #endif /* INC_MICROMOUSE_H_ */
