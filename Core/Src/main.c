@@ -234,16 +234,8 @@ int main(void)
 //  {
 //
 //  }
-  cardinal car=south;
-  int a[4] = {0};
-  a[car] = WALL;
-  a[( car + 1)%4] = WALL;
-  a[( car + 2)%4] = NOWALL;
-  a[( car + 3)%4] = NOWALL;
-  for(int i=0; i < 4; i++)
-	  {
-	  	  printf("%d : %d, %d, %d\r\n",i ,car+i, (car+i)%4, a[i]);
-	  }
+
+
   ADCStart();
   HAL_Delay(500);
 
@@ -256,8 +248,8 @@ int main(void)
   printf("スイッチ\r\n");
 
   //pidパラメータの初期化をもっと書き換えやすいところでやる
-  PIDSetGain(L_VELO_PID, 1.1941, 33.5232, 0.0059922);
-  PIDSetGain(R_VELO_PID, 1.1941, 33.5232, 0.0059922);
+  PIDSetGain(L_VELO_PID, 12, 150, 0.0036);
+  PIDSetGain(R_VELO_PID, 12, 150, 0.0036);
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
   PIDSetGain(A_VELO_PID, 15,5,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはやくなるがオーバーシュートが起きる。

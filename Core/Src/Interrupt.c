@@ -26,24 +26,55 @@ void TimeMonitor()
 
 }
 
-double GetDataIMU(){// IMUの値を取
+double GetDataIMUdouble(){// IMUの値を取
 #if 0
-	static double  /*imu_pre_angle=0,*/ imu_accel=0, imu_pre_accel=0;
-
-    read_gyro_data();	//1.1kHz更新(デバイス側)
+	float  LPF=0,/*imu_pre_angle=0,*/ imu_accel=0; //imu_pre_accel=0;
+	static float last=0;
+    read_gyro_data();
     read_accel_data();
-
     //atan2(za,xa);
-	imu_accel =  ( ( (double)zg - offset/*2.0*/ )/16.4) * PI /180;	//rad/s
-	ImuAngle += (imu_pre_accel + imu_accel) * T1 / 2;	//+=rad/ms
-	ImuAngle -= drift_fix * PI /180;	//ms単位での角度ズレを反映させないといけない。保留
-	imu_pre_accel = imu_accel;
+    imu_accel =  ( ( (float)zg - zg_offset )/16.4) * M_PI /180;//rad/s or rad/0.001s
+    LPF = lowpass_filter(imu_accel, last,0.01);
+    //ImuAngle += T1*LPF;
+    last = imu_accel;
+	//imu_pre_accel = imu_accel;
 	//imu_pre_angle = ImuAngle;
-
 	//0.95 * imu_pre_angle + 0.05 * (imu_pre_accel + imu_accel) * T1 / 2;
-	//Angle = ImuAngle * 180 / PI;
-
-	  return imu_accel;
+	//Body_angle = ImuAngle * 180 / PI;
+	  return -LPF;
+#else
+		double  LPF=0,/*imu_pre_angle=0,*/ imu_accel=0; //imu_pre_accel=0;
+		static double last=0;
+	    read_gyro_data();
+	    read_accel_data();
+	    //atan2(za,xa);
+	    imu_accel =  ( ( (double)zg - zg_offset )/16.4) * M_PI /180;//rad/s or rad/0.001s
+	    LPF = lowpass_filter_double(imu_accel, last,0.01);
+	    //ImuAngle += T1*LPF;
+	    last = imu_accel;
+		//imu_pre_accel = imu_accel;
+		//imu_pre_angle = ImuAngle;
+		//0.95 * imu_pre_angle + 0.05 * (imu_pre_accel + imu_accel) * T1 / 2;
+		//Body_angle = ImuAngle * 180 / PI;
+		  return -LPF;
+#endif
+}
+float GetDataIMUfloat(){// IMUの値を取
+#if 1
+	float  LPF=0,/*imu_pre_angle=0,*/ imu_accel=0; //imu_pre_accel=0;
+	static float last=0;
+    read_gyro_data();
+    read_accel_data();
+    //atan2(za,xa);
+    imu_accel =  ( ( (float)zg - zg_offset )/16.4) * M_PI /180;//rad/s or rad/0.001s
+    LPF = lowpass_filter_float(imu_accel, last,0.01);
+    //ImuAngle += T1*LPF;
+    last = imu_accel;
+	//imu_pre_accel = imu_accel;
+	//imu_pre_angle = ImuAngle;
+	//0.95 * imu_pre_angle + 0.05 * (imu_pre_accel + imu_accel) * T1 / 2;
+	//Body_angle = ImuAngle * 180 / PI;
+	  return -LPF;
 #else
 		double  LPF=0,/*imu_pre_angle=0,*/ imu_accel=0; //imu_pre_accel=0;
 		static double last=0;
@@ -79,8 +110,8 @@ void UpdatePhisicalDataFromEnc()
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 	//角速度 rad/s
 	//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) / TREAD_WIDTH;
-	ImuAngV = GetDataIMU();
-	AngularV = (float)ImuAngV;
+	//ImuAngV = GetDataIMUdouble();
+	AngularV = GetDataIMUfloat();//(float)ImuAngV;
 	//角度 rad/msを積算
 	Angle += AngularV * T1;
 	ImuAngle += ImuAngV*T1;
@@ -103,8 +134,25 @@ void ControlMotor()
 {
 	//ここで更新する変数をグローバルに、もしくは構造体で書ければ、あとはメインのアルゴリズムを記述するだけ？
 
-	UpdatePhisicalDataFromEnc();
+	//UpdatePhisicalDataFromEnc();
+	PulseDisplacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
+	PulseDisplacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&KeepCounter[RIGHT]*/);
 
+	//速度 mm/s
+	CurrentVelocity[LEFT] = ( (float)PulseDisplacement[LEFT] * MM_PER_PULSE ) / T1;
+	CurrentVelocity[RIGHT] = ( (float)PulseDisplacement[RIGHT] * MM_PER_PULSE ) / T1;
+	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )/2;
+	//移動量 mm/msを積算
+	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+	//角速度 rad/s
+	//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) / TREAD_WIDTH;
+	//ImuAngV = GetDataIMUdouble();
+	AngularV = GetDataIMUfloat();//(float)ImuAngV;
+	//角度 rad/msを積算
+	Angle += AngularV * T1;
+	//ImuAngle += ImuAngV*T1;
 //	ControlWall();
 //	int wall_d =0,wall_l =0,wall_r =0;
 	int wall_d =0,wall_l =0,wall_r =0;
@@ -112,32 +160,38 @@ void ControlMotor()
 
 	//直進なら	//直進かどうかの判定をどうするか。アクションは一応4種類しかないので、それに合わせてflagを作っておく。
 		//壁ありなら
-	wall_d = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
-	wall_r = PIDControl( R_WALL_PID, T1, TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
-	wall_l = PIDControl( L_WALL_PID, T1,  Photo[SL], TargetPhoto[SL]);			//左に寄ってたら
-	ang_out = PIDControl( A_VELO_PID, T1, TargetAngle, Angle);
 
-	//直進はどれか
-	if( PIDGetFlag( D_WALL_PID ) )
+
+	//処理を減らすには、
+	if( Pos.Dir == front)
 	{
-		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-	}
-	else if( PIDGetFlag( L_WALL_PID ) )
-	{
-		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-	}
-	else if( PIDGetFlag( R_WALL_PID ) )
-	{
-		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		if( PIDGetFlag( A_VELO_PID ) )
+		{
+			ang_out = PIDControl( A_VELO_PID, T1, TargetAngle, Angle);
+			TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+		}
+		else if( PIDGetFlag( D_WALL_PID ) )
+		{
+			wall_d = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+			TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		}
+		else if( PIDGetFlag( L_WALL_PID ) )
+		{
+			wall_l = PIDControl( L_WALL_PID, T1,  Photo[SL], TargetPhoto[SL]);
+			TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+
+		}
+		else if( PIDGetFlag( R_WALL_PID ) )
+		{
+			wall_r = PIDControl( R_WALL_PID, T1, TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+			TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		}
 	}
 	//左のみ右のみでも同じようにする。
 		//壁なしなら
 			//IMUの角度or角速度フィードバック
 		//PIDのflagが有効なら代入
-	else if( PIDGetFlag( A_VELO_PID ) )
-	{
-			TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
-	}
+
 //	//ここからは目標値と現在値を用いた制御。
 //	else
 //	{
@@ -191,6 +245,7 @@ void ControlMotor()
 
 	//モータに出力
 	Motor_Switch( L_motor, R_motor );
+
 //	int left = 300, right = 300;
 //	Motor_Switch( left, right );
 

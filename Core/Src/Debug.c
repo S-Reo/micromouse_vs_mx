@@ -150,6 +150,7 @@ void Load_Gain()
 			PIDSetGain(L_VELO_PID, data[0], data[1], data[2]);
 			//PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
 			//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+			PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
 			PIDSetGain(A_VELO_PID, data[3], data[4], data[5]);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
 			//Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはやくなるがオーバーシュートが起きる。
 			//Dは微分= 振動を抑えられるぶん収束が遅くなる。

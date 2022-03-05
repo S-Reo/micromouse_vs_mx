@@ -25,7 +25,9 @@ void read_gyro_data(void);
 
 void read_accel_data(void);
 void IMU_Calib();
-double lowpass_filter(double x, double x0, double r);
+double lowpass_filter_double(double x, double x0, double r);
+
+float lowpass_filter_float(float x, float x0, float r);
 /*
 Gyro		レンジ(dps)	スケールファクター(LSB/dps)　dps = 生/スケールファクター
 					±250				131

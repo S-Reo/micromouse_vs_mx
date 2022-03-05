@@ -88,8 +88,11 @@ void IMU_Calib(){
 //	printf("sum:%lf",sum);
 	zg_offset = sum / (double)num;
 }
-double lowpass_filter(double x, double x0, double r)
+double lowpass_filter_double(double x, double x0, double r)
 {
 	return ((r)*(x) + (1.0 - (r))* (x0));
 }
-
+float lowpass_filter_float(float x, float x0, float r)
+{
+	return ((r)*(x) + (1.0 - (r))* (x0));
+}

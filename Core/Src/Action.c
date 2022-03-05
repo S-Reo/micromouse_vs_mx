@@ -15,6 +15,7 @@
 #include "Convert.h"
 #include "PID_Control.h"
 #include "MicroMouse.h"
+#include "ICM_20648.h"
 
 //現在の速度と総走行距離と左右それぞれ
 //現在の角度と角速度
@@ -477,9 +478,11 @@ void ResetCounter()
 
 void WaitStopAndReset()
 {
+	Pos.Act = Wait;
+	ControlWall();//ベイブレード対策
 	do
 	{
-		Pos.Act = Wait;
+
 		//壁制御の更新
 		TargetVelocity[BODY] = 0;
 		Acceleration = 0;
@@ -487,9 +490,11 @@ void WaitStopAndReset()
 		TargetAngularV = 0;
 		AngularAcceleration = 0;
 		//AngularV = 0;
+		if(CurrentVelocity[LEFT] > 500)
+			printf("回転停止中\r\n");
 
 	}while(CurrentVelocity[BODY] != 0);
-	HAL_Delay(300);
+	HAL_Delay(200);
 }
 void RotateAccel(float deg, float rotate_ang_v)
 {
@@ -518,12 +523,8 @@ void RotateAccel(float deg, float rotate_ang_v)
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-	float debug[4] = {
-			Angle,
-			0,
-			0,
-			0
-	};
+	float debug[2] = {0};
+	debug[0] = Angle;
 	if( rotate_ang_v > 0)	//右回転
 	{
 		move_angle = move_angle + Angle;//Angleが負にずれ過ぎて、
@@ -534,8 +535,8 @@ void RotateAccel(float deg, float rotate_ang_v)
 			AngularAcceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
 			//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
 
-			if(AngularV > 4)
-				printf("回転加速中: %f, %f, %f, %f, %f\r\n", debug[0], debug[1], move_angle, Angle, AngularV);
+			if(CurrentVelocity[LEFT] > 500)
+				printf("回転加速中: %f, %f, %f, %f, %f, %d\r\n", debug[0], debug[1], move_angle, Angle, AngularV, zg);
 		}
 
 	}
@@ -547,6 +548,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 		{
 
 			AngularAcceleration = -1*64*T1*additional_ang_v*additional_ang_v / (2*deg);
+
 		}
 
 	}
@@ -576,6 +578,8 @@ void RotateConst(float deg, float rotate_ang_v)
 		{
 			//TargetAngularV = rotate_ang_v;
 			AngularAcceleration = 0;
+			if(CurrentVelocity[LEFT] > 500)
+				printf("回転定速中: %f\r\n", move_angle);
 
 		}
 
@@ -620,6 +624,8 @@ void RotateDecel(float deg, float rotate_ang_v)
 		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
 		{
 			AngularAcceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
+			if(CurrentVelocity[LEFT] > 500)
+				printf("回転減速中: %f\r\n", move_angle);
 
 			if( AngularV <= 0)
 				break;
@@ -673,7 +679,7 @@ void Rotate(float deg, float ang_accel)
 //	ResetCounter();
 
 	WallWarn();
-	ControlWall();
+	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
 	RotateAccel(deg*15/90, ang_accel);
 	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
 	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
@@ -784,8 +790,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = 3;         //スラローム前距離
-	float fol = 6;         //スラローム後距離
+	float pre = 2;         //スラローム前距離
+	float fol = 3;         //スラローム後距離
 	float alpha_turn = 0.04;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
@@ -885,8 +891,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = 3;         //スラローム前距離
-	float fol = 6;         //スラローム後距離
+	float pre = 2;         //スラローム前距離
+	float fol = 3;         //スラローム後距離
 	float alpha_turn = -0.04;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
@@ -1056,7 +1062,7 @@ void Decel(float dec_distance, float end_speed)
 		//適切なタイミングでwhileを抜けたのに出力の反映が遅れたパターンと、
 		//これより前の直進が長くても壁センサのおかげで止まれるはずなので出力が残っちゃったパターン。
 		//かもしくは条件が成立しちゃっているセンサ値が問題のパターン。
-	while( (	(Photo[FR]+Photo[FL]) < 1400) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+	while( (	(Photo[FR]+Photo[FL]) < 1800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
 //		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
@@ -1315,14 +1321,15 @@ void TurnLeft(char mode)
 void GoBack()
 {
 	//減速して
-	Decel(35, 0);
+	Decel(45, 0);
 //	PIDChangeFlag( A_VELO_PID, 0);
 //	HAL_Delay(500);
 	//補正して
 	//Compensate();
 	//Calib();
 	//回転して
-	Rotate(90, 2.5);//もしくは二回とも左
+	Rotate(90, 2.5);//もしくは二回とも左。ここの加速でバグ。
+
 	//HAL_Delay(500);
 	TargetAngle += 90*M_PI/180;
 	//リセット消してみる
@@ -1347,7 +1354,7 @@ void GoBack()
 	PIDReset(A_VELO_PID);
 	HAL_Delay(500);
 	PIDChangeFlag( A_VELO_PID, 1);
-	Accel(35, ExploreVelocity);
+	Accel(45, ExploreVelocity);
 	//ここまでで目標走行距離を完了する
 
 }

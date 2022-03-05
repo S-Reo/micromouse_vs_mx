@@ -158,7 +158,7 @@ void Debug()
 //	{
 //
 //	}
-#if 0
+#if 1
 	InitExplore();
 	InitPosition();
 	wall_init();
@@ -166,52 +166,110 @@ void Debug()
 	TotalPulse[0] = 0;
 	TotalPulse[1] = 0;
 	TotalPulse[2] = 0;
+
+	//スタート時のアクションに設定
+	//direction action_type = front;
+	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
+	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
+	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
+//void ChangeNowStatus()
+
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
+	ExploreVelocity=0;
+	ChangeLED(2);
+	HAL_Delay(500);
 
-	//アクションを与えるとその条件で動き出す。物理量を変化させる。
-	//途中
-	//一つのwhile中で移動量を変化させて走る
-	int move_pulse[3]={0};//増減分を入れる。
-	int total_pulse[3]={0};
-	total_pulse[BODY] = TotalPulse[BODY];
-#define ST	while(){}
-	while ( 1 ) //ぶん回しで道中でパルスを追加していく。どこで判断するか。
+
+	//旋回テスト
+
+	//10回分の角度を取得。
+	float theta_log[30];//, angv_log[2000];
+//	HAL_Delay(500);
+//	while(1)
+//	{
+//		printf("zg:%f, double:%lf\r\n",(float)zg, AngularV);//, double:%lf\r\n");
+//	}
+	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
 	{
-		//正にも負にも回転するからパルスの条件式は一概にかけない。
-		//途中で追加する
-		//TotalPulse[BODY]
-		//Move(action, cardinal, direction, &move_pulse[LEFT], &move_pulse[RIGHT]);
-		//目標移動量が正か負かで条件分岐。左右でも分ける。
-		//正なら
-		if( (move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] > 0) ) //直進かスラローム、減速加速。
-		{
-			//while条件式が変わる
-		}
-		else if((move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] > 0))	//回転
-		{
+		ChangeLED(7);
+		Pos.Car = north;
+		Pos.Dir = back;
+		theta_log[i] = Angle;
 
-		}
-		else if((move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] < 0)) //回転
-		{
+		Rotate(90,2.5);
+		theta_log[i+1] = Angle;
 
-		}
-		else if( (move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] < 0) )//バック
-		{
-
-		}
-		else if( (move_pulse[LEFT] == 0) && ( move_pulse[RIGHT] == 0) )	//停止。
-		{
-
-		}
-		else //片方だけが0のパターンはパグに近い。
-		{
-
-		}
-
-
-
+		HAL_Delay(100);
+		theta_log[i+2] = Angle;
+		ChangeLED(0);
+		Pos.Car = north;
+		Pos.Dir = back;
+		Rotate(90,-2.5);
+		HAL_Delay(100);
+		//theta_log[i] = Angle;
 	}
+
+	while(1)
+	{
+		for(int i=0; i < 30; i++)
+		{
+			printf("%d : %f\r\n",i,theta_log[i]);
+		}
+	}
+//	uint32_t address_theta = start_adress_sector8;
+//	uint32_t address_angv = start_adress_sector8+0x04;
+//	//4byteの1000個で1s分。5秒で5000個、2変数で10000個
+//	float theta_log[2000], angv_log[2000];
+//	for(int i=0; i < 2000; i++)
+//	{
+//		FLASH_Read_Word_F(address_theta, &theta_log[i]);
+//		FLASH_Read_Word_F(address_angv, &angv_log[i]);
+//		printf("%d : %f, %f\r\n",angv_log[i],theta_log[i]);
+//	}
+
+
+//	while ( 1 ) //ぶん回しで道中でパルスを追加していく。どこで判断するか。
+//	{
+//		//正にも負にも回転するからパルスの条件式は一概にかけない。
+//		//途中で追加する
+//		//TotalPulse[BODY]
+//		//Move(action, cardinal, direction, &move_pulse[LEFT], &move_pulse[RIGHT]);
+//		//目標移動量が正か負かで条件分岐。左右でも分ける。
+//		//正なら
+//		if( (move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] > 0) ) //直進かスラローム、減速加速。
+//		{
+//			//while条件式が変わる
+//		}
+//		else if((move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] > 0))	//回転
+//		{
+//
+//		}
+//		else if((move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] < 0)) //回転
+//		{
+//
+//		}
+//		else if( (move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] < 0) )//バック
+//		{
+//
+//		}
+//		else if( (move_pulse[LEFT] == 0) && ( move_pulse[RIGHT] == 0) )	//停止。
+//		{
+//
+//		}
+//		else //片方だけが0のパターンはパグに近い。
+//		{
+//
+//		}
+
+
+
+//}
 #else
 
 	EmitterON();
@@ -233,27 +291,51 @@ void ParameterSetting()
 void WritingFree()
 {
 
-	//好きなようにいじるモード。テスト場。
 	InitExplore();
 
+	printf("3\r\n");
+
+	//ここまででハードの準備はできた。
+	//ここからはソフト的な準備
+//while(1)
+//{
+//	printf("オフセット:%f, double角速度:%f, double角度:%f, float角速度:%f, float角度:%f",zg_offset,ImuAngV, ImuAngle, AngularV, Angle);
+//}
+
+	//迷路とステータスの準備
+	//方角と座標の初期化。
+	InitPosition();
+//	uint8_t x, y;
+//	Pos.Car = north;
+//	x=0,y=0;
+	wall_init();
+	printf("4\r\n");
+	//時間用の処理の初期化。
+	//int timer = 0;
+	//エンコーダ移動量の初期化。
+	TotalPulse[0] = 0;
+	TotalPulse[1] = 0;
+	TotalPulse[2] = 0;
+	//スタート時のアクションに設定
+	//direction action_type = front;
+	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
+	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
+	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
+//void ChangeNowStatus()
+
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	//PIDSetGain(D_WALL_PID, 10, 0, 0);
+	ExploreVelocity=0;
+	ChangeLED(2);
 	while(1)
 	{
-		printf("壁センサ値:%f, %f, %f, %f. FL+FR = %f\r\n",Photo[SL], Photo[SR], Photo[FL], Photo[FR],Photo[FL] + Photo[FR]);
 
 	}
-//	for(int i=0;i < 3; i++)
-//	{
-//		Accel(45, ExploreVelocity);
-//		Decel(45, 0);
-//		HAL_Delay(500);
-//	}
-	float wall_log_L[10]={0},wall_log_R[10]={0},out_log_L[10]={0},out_log_R[10]={0};
-	//printf("%f\r\n",log[0]);
-//	int n=0;
-//	out_log_L[n] = VelocityLeftOut;
-//	out_log_R[n] = VelocityRightOut;
-	//PIDChangeFlag(A_VELO_PID, 0);
-	ExploreVelocity=300;
 	Accel(61.5, ExploreVelocity);
 	SelectAction('S');
 	SelectAction('S');
@@ -296,48 +378,9 @@ while(1)
 
 	Accel(61.5, ExploreVelocity);
 
-	SelectAction('S');
-	wall_log_L[0] = Photo[SL];
-	wall_log_R[0] = Photo[SR];
-	out_log_L[0] = WallLeftOut;;
-	out_log_R[0] = WallRightOut;
-	SelectAction('S');
-	PIDChangeFlag(D_WALL_PID, 0);
-	wall_log_L[1] = Photo[SL];
-	wall_log_R[1] = Photo[SR];
-	out_log_L[1] = WallLeftOut;
-	out_log_R[1] = WallRightOut;
-	SelectAction('B');
-	wall_log_L[2] = Photo[SL];
-	wall_log_R[2] = Photo[SR];
-	out_log_L[2] = WallLeftOut;
-	out_log_R[2] = WallRightOut;
-	AddVelocity = 100;
-	PIDChangeFlag(D_WALL_PID, 1);
-	SelectAction('S');
-	wall_log_L[3] = Photo[SL];
-	wall_log_R[3] = Photo[SR];
-	out_log_L[3] = WallLeftOut;
-	out_log_R[3] = WallRightOut;
-	SelectAction('S');
-	wall_log_L[4] = Photo[SL];
-	wall_log_R[4] = Photo[SR];
-	out_log_L[4] = WallLeftOut;
-	out_log_R[4] = WallRightOut;
-	//GoStraight( 90,ExploreVelocity, 0);
-	Decel(45, 0);
-	wall_log_L[5] = Photo[SL];
-	wall_log_R[5] = Photo[SR];
-	out_log_L[5] = WallLeftOut;
-	out_log_R[5] = WallRightOut;
 
-	while(1)
-	{
-	for(int i=0; i < 6; i++)
-	{
-		printf("起動時の壁左右値 : %f,%f, %d : 壁左, 壁右, 出力左, 出力右 :　%f, %f, %f, %f\r\n", TargetPhoto[SL], TargetPhoto[SR],i,wall_log_L[i],wall_log_R[i]+PhotoDiff, out_log_L[i],out_log_R[i]);
-	}
-	}
+
+
 //	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 //	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 //	HAL_Delay(500);
