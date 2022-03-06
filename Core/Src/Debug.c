@@ -72,7 +72,7 @@ void Copy_Gain()
 	//printf("\r\nどしたん\r\n");
 
 	uint32_t address = start_adress_sector9;
-	float data[10]={0};
+	float data[16]={0};
 	data[0] = Pid[L_VELO_PID].KP;
 	data[1] = Pid[L_VELO_PID].KI;
 	data[2] = Pid[L_VELO_PID].KD;
@@ -84,7 +84,15 @@ void Copy_Gain()
 	data[6] = Pid[L_WALL_PID].KP;
 	data[7] = Pid[L_WALL_PID].KI;
 	data[8] = Pid[L_WALL_PID].KD;
-	for(int i=0; i < 9; i++)
+
+	data[9] = Pid[R_WALL_PID].KP;
+	data[10] = Pid[R_WALL_PID].KI;
+	data[11] = Pid[R_WALL_PID].KD;
+
+	data[12] = Pid[D_WALL_PID].KP;
+	data[13] = Pid[D_WALL_PID].KI;
+	data[14] = Pid[D_WALL_PID].KD;
+	for(int i=0; i < 15; i++)
 	{
 
 		FLASH_Write_Word_F( address, data[i]);
@@ -107,12 +115,12 @@ void Load_Gain()
 
 	//読み出し
 	uint32_t address = start_adress_sector9;//こっちか
-	float data[10]={0};
+	float data[16]={0};//1個多く要素を作る。
 
 	//チェック
 	int judge;
 	uint8_t j=0;
-	for(int i=0; i < 9; i++)
+	for(int i=0; i < 15; i++)
 	{
 		FLASH_Read_Word_F( address, &data[i]);//かこれ
 		address += 0x04;
@@ -130,8 +138,9 @@ void Load_Gain()
 	//起動時、flashに0がたくさん。そのときは何もしない
 	//数字が入っていれば、それを入れる
 	printf("%d\r\n",j);
-		if(j == 9)//全てnan0であれば
+		if(j == 15)//全てnan0であれば
 		{
+			//たまに、書き換えたのにflashの中身が消えてこっちの処理になる？
 		}
 		//そうでなければ、ゲインに代入
 		else
@@ -148,14 +157,17 @@ void Load_Gain()
 //			Pid[L_WALL_PID].KI = data[7];
 //			Pid[L_WALL_PID].KD = data[8];
 			PIDSetGain(L_VELO_PID, data[0], data[1], data[2]);
+			PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
 			//PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
 			//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-			PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+			//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
 			PIDSetGain(A_VELO_PID, data[3], data[4], data[5]);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
 			//Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはやくなるがオーバーシュートが起きる。
 			//Dは微分= 振動を抑えられるぶん収束が遅くなる。
 			//PIDSetGain(D_WALL_PID, data[0], data[1], data[2]);
 			PIDSetGain(L_WALL_PID, data[6], data[7], data[8]);
+			PIDSetGain(R_WALL_PID, data[9], data[10], data[11]);
+			PIDSetGain(D_WALL_PID, data[12], data[13], data[14]);
 			//PIDSetGain(R_WALL_PID, data[0], data[1], data[2]);
 		}
 
@@ -183,9 +195,11 @@ void Change_Gain()
 	{
 		//float a = Pid[2].KP;
 		printf("現在のPIDゲイン\r\n");
-		printf("[1] 並進 : %f, %f, %f\r\n",Pid[L_VELO_PID].KP, Pid[L_VELO_PID].KI, Pid[L_VELO_PID].KD);
-		printf("[2] 回転 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD);
-		printf("[3] 壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD);
+		printf("[1] 車輪左右 : %f, %f, %f\r\n",Pid[L_VELO_PID].KP, Pid[L_VELO_PID].KI, Pid[L_VELO_PID].KD);
+		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD);	//角度の偏差から角速度を出力し、車輪左右の制御に渡す
+		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD);
+		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD);
+		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD);
 
 		Buffering();
 		printf("モード(0で終了) :"); scanf("%c",&change_mode);
@@ -249,6 +263,34 @@ void Change_Gain()
 				else if(pid == 'd')
 				{
 					scanf("%f",&Pid[L_WALL_PID].KD);
+				}
+				break;
+			case '4'://壁制御ゲイン
+				if(pid == 'p')
+				{
+					scanf("%f",&Pid[R_WALL_PID].KP);
+				}
+				else if(pid == 'i')
+				{
+					scanf("%f",&Pid[R_WALL_PID].KI);
+				}
+				else if(pid == 'd')
+				{
+					scanf("%f",&Pid[R_WALL_PID].KD);
+				}
+				break;
+			case '5'://壁制御ゲイン
+				if(pid == 'p')
+				{
+					scanf("%f",&Pid[D_WALL_PID].KP);
+				}
+				else if(pid == 'i')
+				{
+					scanf("%f",&Pid[D_WALL_PID].KI);
+				}
+				else if(pid == 'd')
+				{
+					scanf("%f",&Pid[D_WALL_PID].KD);
 				}
 				break;
 			default :

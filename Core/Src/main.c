@@ -248,10 +248,10 @@ int main(void)
   printf("スイッチ\r\n");
 
   //pidパラメータの初期化をもっと書き換えやすいところでやる
-  PIDSetGain(L_VELO_PID, 12, 150, 0.0036);
-  PIDSetGain(R_VELO_PID, 12, 150, 0.0036);
+  PIDSetGain(L_VELO_PID, 11.1, 2430, 0.002);//D0.0036 //I2430くらいにして、Dを0.002を加えると、収束が遅くなりすぎて、角度ずれが起きる。角度制御ゲイン。角速度目標値の変動もよくない。PIDできびきびさせて、それに応じて左右出力も動く。
+  PIDSetGain(R_VELO_PID, 11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-  PIDSetGain(A_VELO_PID, 15,5,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+  PIDSetGain(A_VELO_PID, 15,30,0.001);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはやくなるがオーバーシュートが起きる。
   //Dは微分= 振動を抑えられるぶん収束が遅くなる。
   PIDSetGain(D_WALL_PID, 10, 0, 0);
@@ -268,16 +268,19 @@ int main(void)
 		//wall_flash_print();
 		  break;
 	  case 1:
-		  Debug();
+		  GainTestRWall();
 		  break;
 	  case 2:
-
+		  GainTestDWall();
 		  break;
 	  case 3:
+		  Debug();
 		  break;
 	  case 4:
+		  GainTestLWall();
 		  break;
 	  case 5:
+		  GainTestAVelo();
 		  break;
 	  case 6:
 		  Explore();

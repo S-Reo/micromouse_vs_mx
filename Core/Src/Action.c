@@ -792,7 +792,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
 	float pre = 2;         //スラローム前距離
 	float fol = 3;         //スラローム後距離
-	float alpha_turn = 0.04;//16;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = 0.125;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -893,7 +893,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
 	float pre = 2;         //スラローム前距離
 	float fol = 3;         //スラローム後距離
-	float alpha_turn = -0.04;//16;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = -0.125;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
