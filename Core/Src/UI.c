@@ -74,16 +74,16 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 
 	//壁センサデータをどうもってくるか。adcの生値を入れ、均して使う。関数呼び出し時の値
 
-	InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE_L);
+	InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE);
 
 	int ENC3_LEFT;
 	while(Photo[FR]/*構造体アロー*/ < 250/**/) //前向きの
 	{
-		printf("Photo[FR] : %f\r\n", Photo[FR]);
+		printf("Photo[FR] : %f, ENC3 : %d\r\n", Photo[FR], ENC3_LEFT);
 		//センサデータを一個取得して戻り値で返す関数を使う。
 		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、センサデータもグローバルでいい。
 
-		  if(30000 -1 + (ENCODER_PULSE * REDUCATION_RATIO) /4 <= ENC3_LEFT )
+		  if(INITIAL_PULSE + (ENCODER_PULSE * REDUCATION_RATIO) /4 <= ENC3_LEFT )
 		  {
 		  	  *pMode += 1;
 		  	  if(*pMode > max)
@@ -91,11 +91,11 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  		  *pMode = min;
 		  	  }
 		  	  ChangeLED(*pMode);
-		  	  InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE_L);
+		  	  InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE);
 		  	  HAL_Delay(500);
 
 		  }
-		  if(30000 -1 - (ENCODER_PULSE * REDUCATION_RATIO) /4 >= ENC3_LEFT)
+		  if(INITIAL_PULSE - (ENCODER_PULSE * REDUCATION_RATIO) /4 >= ENC3_LEFT)
 		  {
 		  	  *pMode -= 1;
 		  	  if(*pMode < min)
@@ -103,7 +103,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  	  		  *pMode = max;
 		  	  }
 		  	  ChangeLED(*pMode);
-		  	  InitPulse( (int *)&(TIM3->CNT), INITIAL_PULSE_L);
+		  	  InitPulse( (int *)&(TIM3->CNT), INITIAL_PULSE);
 		  	  HAL_Delay(500);
 		  }
 	}
@@ -118,4 +118,8 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 	//モード選択後どうするか
 }
 
-
+void EmergencyStop()
+{
+	//モータ出力の停止
+	//
+}

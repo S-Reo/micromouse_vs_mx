@@ -9,8 +9,30 @@
 #include <stdio.h>
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t xg, yg, zg;	// 角加速度(16bitデータ)
-double zg_offset=0;
-uint8_t read_byte( uint8_t reg ) {
+float zg_offset;
+uint8_t val[2]={0};
+int16_t spi_dma_data;
+float  z_gyro;
+
+void IMU_DMA_Start()
+{
+	//zg = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
+	uint8_t ret[2];
+	ret[0] = 0x37 | 0x80;
+	ret[1] = 0x38 | 0x80;
+	printf("%d, %d, %d, %d,%d\r\n\r\n", ret[0], ret[1], val[0], val[1],spi_dma_data);
+	//int a = HAL_SPI_TransmitReceive_DMA(&hspi3, (uint8_t *)ret, (uint8_t *)val, 2);
+	//printf("%d\r\n",a);
+	if ( HAL_SPI_TransmitReceive_DMA(&hspi3, (uint8_t *)ret, (uint8_t *)val, 2) != HAL_OK )
+	{
+		printf("エラー1\r\n");
+		Error_Handler();
+		printf("エラー2\r\n");
+	}
+	printf("ok\r\n");
+}
+inline uint8_t read_byte( uint8_t reg ) {
+
 	uint8_t ret,val;
 
 	ret = reg | 0x80;
@@ -62,14 +84,20 @@ void read_gyro_data() {
 	yg = ((uint16_t)read_byte(0x35) << 8) | ((uint16_t)read_byte(0x36));
 	zg = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
 }
+void read_zg_data()
+{
+	zg = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
+}
 
 void read_accel_data() {
+
 	xa = ((uint16_t)read_byte(0x2D) << 8) | ((uint16_t)read_byte(0x2E));
 	ya = ((uint16_t)read_byte(0x2F) << 8) | ((uint16_t)read_byte(0x30));
 	za = ((uint16_t)read_byte(0x31) << 8) | ((uint16_t)read_byte(0x32));
 }
 
 void IMU_Calib(){
+
 
 	HAL_Delay(500);
 

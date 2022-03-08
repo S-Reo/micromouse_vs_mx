@@ -313,7 +313,7 @@ void UpdateWalkMap(){
 }
 //ノード
 //左手法での方向決定
-void LeftHandJudge(){
+void LeftHandJudge(char turn_mode){
 	/*--旋回モード選?��?--*/
 
 	/*-=1-=1*/
@@ -322,27 +322,29 @@ void LeftHandJudge(){
 
     		  if(Wall[Pos.X][Pos.Y].west == NOWALL){
     			  Pos.Dir = left;
-    			  SelectAction();
+    			  SelectAction(turn_mode);
     			  Pos.Car = west;
     		      Pos.X-=1;
     		  }
 
     		  else if(Wall[Pos.X][Pos.Y].north == NOWALL){
     			  Pos.Dir = front;
-    			  SelectAction();
+    			  SelectAction(turn_mode);
     			  Pos.Car = north;
     			  Pos.Y+=1;
     		  }
 
 
     		  else if(Wall[Pos.X][Pos.Y].east == NOWALL){
-    			  Pos.Dir = right;SelectAction();
+    			  Pos.Dir = right;
+    			  SelectAction(turn_mode);
     	          Pos.Car = east;
     	          Pos.X+=1;
     		  }
 
     		  else {
-    			  Pos.Dir = back;SelectAction();
+    			  Pos.Dir = back;
+    			  SelectAction(turn_mode);
     	       	  Pos.Car = south;
     	       	  Pos.Y-=1;
     		  }
@@ -352,26 +354,30 @@ void LeftHandJudge(){
     		  break;
     	  case east:
     		  if(Wall[Pos.X][Pos.Y].north== NOWALL){
-    			  Pos.Dir = left;SelectAction();
+    			  Pos.Dir = left;
+    			  SelectAction(turn_mode);
     			  Pos.Car = north;
     			  Pos.Y+=1;
     		  }
 
     		  else if(Wall[Pos.X][Pos.Y].east == NOWALL){
-    			  Pos.Dir = front;SelectAction();
+    			  Pos.Dir = front;
+    			  SelectAction(turn_mode);
     	          Pos.Car = east;
     	          Pos.X+=1;
     		  }
 
 
     		  else if(Wall[Pos.X][Pos.Y].south == NOWALL){
-    			  Pos.Dir = right;SelectAction();
+    			  Pos.Dir = right;
+    			  SelectAction(turn_mode);
     	       	  Pos.Car = south;
     	       	  Pos.Y-=1;
     		  }
 
     		  else {
-    			  Pos.Dir = back;SelectAction();
+    			  Pos.Dir = back;
+    			  SelectAction(turn_mode);
       			  Pos.Car = west;
       		      Pos.X-=1;
     		  }
@@ -379,26 +385,30 @@ void LeftHandJudge(){
     		  break;
     	  case south:
     		  if(Wall[Pos.X][Pos.Y].east == NOWALL){
-    			  Pos.Dir = left;SelectAction();
+    			  Pos.Dir = left;
+    			  SelectAction(turn_mode);
     	          Pos.Car = east;
     	          Pos.X+=1;
     		  }
 
     		  else if(Wall[Pos.X][Pos.Y].south == NOWALL){
-    			  Pos.Dir = front;SelectAction();
+    			  Pos.Dir = front;
+    			  SelectAction(turn_mode);
     	       	  Pos.Car = south;
     	       	  Pos.Y-=1;
     		  }
 
 
     		  else if(Wall[Pos.X][Pos.Y].west == NOWALL){
-    			  Pos.Dir = right;SelectAction();
+    			  Pos.Dir = right;
+    			  SelectAction(turn_mode);
       			  Pos.Car = west;
       		      Pos.X-=1;
     		  }
 
     		  else {
-    			  Pos.Dir = back;SelectAction();
+    			  Pos.Dir = back;
+    			  SelectAction(turn_mode);
       			  Pos.Car = north;
       			  Pos.Y+=1;
     		  }
@@ -406,13 +416,15 @@ void LeftHandJudge(){
     		  break;
     	  case west:
     		  if(Wall[Pos.X][Pos.Y].south == NOWALL){
-    			  Pos.Dir = left;SelectAction();
+    			  Pos.Dir = left;
+    			  SelectAction(turn_mode);
     	       	  Pos.Car = south;
     	       	  Pos.Y -= 1;
     		  }
 
     		  else if(Wall[Pos.X][Pos.Y].west == NOWALL){
-    			  Pos.Dir = front;SelectAction();
+    			  Pos.Dir = front;
+    			  SelectAction(turn_mode);
 
     			  Pos.Car = west;
     		      Pos.X-=1;
@@ -421,13 +433,14 @@ void LeftHandJudge(){
 
     		  else if(Wall[Pos.X][Pos.Y].north == NOWALL){
     			  Pos.Dir = right;
-    			  SelectAction();
+    			  SelectAction(turn_mode);
       			  Pos.Car = north;
       			  Pos.Y+=1;
     		  }
 
     		  else {
-    			  Pos.Dir = back;SelectAction();
+    			  Pos.Dir = back;
+    			  SelectAction(turn_mode);
     	          Pos.Car = east;
     	          Pos.X+=1;
     		  }

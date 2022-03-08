@@ -16,34 +16,43 @@
 #include "PID_Control.h"
 #include "Convert.h"
 
-float Photo[4]={0};
-float TargetPhoto[4]={0};
-float PhotoDiff = 0;
-int PulseDisplacement[2]={0};
-int KeepCounter[2]={
+float Photo[4];
+float TargetPhoto[4];
+float PhotoDiff;
+//int PulseDisplacement;//[2]={0};
+int KeepCounter;//
+/*[2]={
 		INITIAL_PULSE,
 		INITIAL_PULSE
-};
-float CurrentVelocity[3]={0};	//速度 mm/s
-int TotalPulse[3]={0};	//移動量 mm/msを積算
-int KeepPulse[3]={0};
+};*/
+float CurrentVelocity[3];	//速度 mm/s
+float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
+float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
+float TotalPulseBody;	//移動量 mm/msを積算
+float TotalPulseLeft;
+float TotalPulseRight;
+int KeepPulse[3];
 float AngularV=0;			//角速度 rad/s
+float EncAngV=0;
 float Angle=0;				//角度 rad/msを積算
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
-float TargetVelocity[3]={0};
-float ExploreVelocity=300;
-float AddVelocity=0;
-float Acceleration=0;
-float TargetAngularV=0;
-float AngularAcceleration=0;
-float TargetAngle=0;
+//float TargetVelocity[3]={0};
+float TargetVelocityBody;
+float TargetVelocityLeft;
+float TargetVelocityRight;
+float ExploreVelocity;
+float AddVelocity;
+float Acceleration;
+float TargetAngularV;
+float AngularAcceleration;
+float TargetAngle;
 double ImuAngV,ImuAngle;
-int VelocityLeftOut=0, VelocityRightOut=0;
-int WallRightOut=0, WallLeftOut=0;
-int L_motor=0, R_motor=0;
+int VelocityLeftOut, VelocityRightOut;
+int WallRightOut, WallLeftOut;
+int L_motor, R_motor;
 
 
 //direction my_direction = north;

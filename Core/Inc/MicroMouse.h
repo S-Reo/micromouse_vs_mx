@@ -32,18 +32,21 @@ extern TIM_HandleTypeDef htim1;
 extern float Photo[4];
 extern float TargetPhoto[4];
 extern float PhotoDiff;
-extern int PulseDisplacement[2];
-extern int KeepCounter[2];
+//extern int PulseDisplacement[2];
+extern int KeepCounter;
 //速度 mm/s
 extern float CurrentVelocity[3];
-
+extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
+extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
 //移動量 mm/msを積算
-extern int TotalPulse[3];
+extern float TotalPulseBody;
+extern float TotalPulseLeft;
+extern float TotalPulseRight;
 extern int KeepPulse[3];
 
 //角速度 rad/s
 extern float AngularV;
-
+extern float EncAngV;
 //角度 rad/msを積算
 extern float Angle;
 
@@ -52,7 +55,10 @@ extern double ImuAngV,ImuAngle;
 
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
-extern float TargetVelocity[3];
+extern float TargetVelocityBody;
+extern float TargetVelocityLeft;
+extern float TargetVelocityRight;
+
 extern float ExploreVelocity;
 extern float AddVelocity;
 extern float Acceleration;
@@ -81,7 +87,7 @@ extern int L_motor, R_motor;
 
 #define DRIFT_FIX 0.00006375
 
-#define NUMBER_OF_SQUARES 9//16//4 //16
+#define NUMBER_OF_SQUARES 16//4 //16
 
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
@@ -91,11 +97,11 @@ extern int L_motor, R_motor;
 //#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標
-#define X_GOAL_LESSER 3
-#define Y_GOAL_LESSER 3
+#define X_GOAL_LESSER 6
+#define Y_GOAL_LESSER 9
 
-#define X_GOAL_LARGER 3
-#define Y_GOAL_LARGER 3
+#define X_GOAL_LARGER 7
+#define Y_GOAL_LARGER 10
 
 #define FL	0
 #define SR	1
@@ -132,7 +138,7 @@ extern int L_motor, R_motor;
 
 //別のとこ
 //この設定はここじゃない方が使いやすいかも。
-#define ENCODER_PULSE 			4096*4//8192  //  モータ
+#define ENCODER_PULSE 			4096//*4//8192  //  モータ//エンコーダ値をプリスケーラで1/4倍中
 #define REDUCATION_RATIO 		4  //
 //エンコーダパルスの基準値
 #define INITIAL_PULSE_L (30000 - 1)
@@ -210,13 +216,13 @@ typedef enum WallSafety
 }wall_safety;
 typedef enum PIDNumber
 {
+	A_VELO_PID,
 	D_WALL_PID,
 	L_WALL_PID,
 	R_WALL_PID,
-	N_WALL_PID,
 	L_VELO_PID,
 	R_VELO_PID,
-	A_VELO_PID,
+	N_WALL_PID,
 	B_VELO_PID
 }pid_number;
 

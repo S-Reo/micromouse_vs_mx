@@ -14,7 +14,7 @@
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim8;
 
-extern int timer, t;
+extern int timer1,timer8, t;
 ////エンコーダ値から生成する変数。割り込みで更新。
 //extern float velocity[ ENC_NUM ];
 //extern float total_mileage[ ENC_NUM ];
@@ -31,7 +31,7 @@ extern int timer, t;
 //
 //extern Flag flag;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-
+void UpdatePhotoData();
 
 
 

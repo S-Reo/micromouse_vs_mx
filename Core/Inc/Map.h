@@ -50,7 +50,7 @@ void wall_set(uint8_t x, uint8_t y, cardinal car,float side_left, float side_rig
 void wall_ram_print();
 void wall_flash_print();
 void UpdateWalkMap();
-void LeftHandJudge();
+void LeftHandJudge(char turn_mode);
 
 
 

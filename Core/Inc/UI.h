@@ -28,6 +28,6 @@
 void Signal(int mode);
 void BatteryCheck(int adc_data);
 void ModeSelect(int8_t min, int8_t max, int8_t *pMode);
-
+void EmergencyStop();
 
 #endif /* INC_UI_H_ */
