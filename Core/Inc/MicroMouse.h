@@ -77,7 +77,7 @@ extern int L_motor, R_motor;
 
 
 
-#define T1 0.001
+#define T1 0.001f
 #define T2 0.0238095238095238000 //ms
 #define T3 0.7142857142857140000 //ms
 #define T4 0.7142857142857140000 //ms
@@ -136,15 +136,15 @@ extern int L_motor, R_motor;
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 
-#define TIRE_DEAMETER 20.6//20.70945//20.70945 //20.5591111111111//
+#define TIRE_DEAMETER 20.6f//20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 37.8 //36.8//34.4 //36.8 34.2//.8
+#define TREAD_WIDTH 37.8f //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
 //別のとこ
 //この設定はここじゃない方が使いやすいかも。
-#define ENCODER_PULSE 			4096*4//8192  //  モータ//エンコーダ値をプリスケーラで1/4倍中
-#define REDUCATION_RATIO 		4  //
+#define ENCODER_PULSE 			4096.0f*4.0f//8192  //  モータ//エンコーダ値をプリスケーラで1/4倍中
+#define REDUCATION_RATIO 		4.0f  //
 //エンコーダパルスの基準値
 #define INITIAL_PULSE_L (30000 - 1)
 #define INITIAL_PULSE_R (30000 - 1)

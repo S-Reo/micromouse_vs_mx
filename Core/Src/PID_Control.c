@@ -21,8 +21,8 @@ motor_control Pid[ 8 ] = {0};
 //float elast[PID_TARGET_NUM];
 //int PidFlag;//[PID_TARGET_NUM];
 
-const float pid_T = 0.001;
-const float pid_DT = 1/0.001;
+const float pid_T = 0.001f;
+const float pid_DT = 1.0f/0.001f;
 //void PIDSetGain(int n, float kp, float ki, float kd)
 //{
 //	KP[n] = kp;
@@ -105,10 +105,10 @@ inline int PIDControl(int n, float target, float current)
 	//出力の前に全部0にする処理をフラグで
 	if(Pid[n].flag == 0)
 	{
-		Pid[n].e = 0;
-		Pid[n].ei = 0;
-		Pid[n].ed = 0;
-		Pid[n].elast = 0;
+		Pid[n].e = 0.0f;
+		Pid[n].ei = 0.0f;
+		Pid[n].ed = 0.0f;
+		Pid[n].elast = 0.0f;
 		Pid[n].out = 0;
 		return 0;
 		//PIDReset(n);

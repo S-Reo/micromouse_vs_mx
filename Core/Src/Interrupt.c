@@ -162,7 +162,7 @@ void ControlMotor()
 	//TargetAngularV = (float)out*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 	if( Pos.Dir == front)
 	{
-		TargetAngularV = (float)out*0.001;
+		TargetAngularV = out*0.001;
 	}
 	else
 	{
@@ -173,6 +173,9 @@ void ControlMotor()
 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5 );
 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
 
+//	float motor_L, motor_R;
+//	motor_L =
+//	motor_R =
 	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
 	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
 
@@ -321,12 +324,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//速度 mm/s
 		CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 		CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
-		CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5;
+		CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
 		//移動量 mm/msを積算
 		TotalPulse[LEFT] += PulseDisplacement[LEFT];
 		TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 		TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 		//角速度 rad/s
+//		float zgy;
+//		static float angle=0;
+//		uint8_t zgb,zgf;
+//
+//		zgy = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
+//		angle += zgy;
 		AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angv;
 		Angle += AngularV * T1;
 		int out=0;
@@ -337,7 +346,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//TargetAngularV = (float)out*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		if( Pos.Dir == front)
 		{
-			TargetAngularV = (float)out*0.001;
+			TargetAngularV = (float)out*0.001f;
 		}
 		else
 		{
@@ -345,7 +354,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 		TargetVelocity[BODY] += Acceleration;
 		//TargetAngularV += AngularAcceleration;
-		TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5 );
+		TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
 		TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
 
 		VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
