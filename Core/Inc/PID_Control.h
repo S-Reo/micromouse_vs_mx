@@ -32,19 +32,19 @@ typedef struct {
 }motor_control;
 extern motor_control Pid[ 8 ];
 
-extern float KP[PID_TARGET_NUM],
-					KI[PID_TARGET_NUM],
-					KD[PID_TARGET_NUM];
-extern float e[PID_TARGET_NUM];
-extern float ei[PID_TARGET_NUM];
-extern float ed;//[PID_TARGET_NUM];
-extern float elast[PID_TARGET_NUM];
-
-extern int PidFlag;//[PID_TARGET_NUM];
+//extern float KP[PID_TARGET_NUM],
+//					KI[PID_TARGET_NUM],
+//					KD[PID_TARGET_NUM];
+//extern float e[PID_TARGET_NUM];
+//extern float ei[PID_TARGET_NUM];
+//extern float ed;//[PID_TARGET_NUM];
+//extern float elast[PID_TARGET_NUM];
+//
+//extern int PidFlag;//[PID_TARGET_NUM];
 void PIDSetGain(int n, float kp, float ki, float kd);
-void PIDInit();
+//void PIDInit();
 void PIDChangeFlag(int n, int on_or_off);
-void PIDChangeFlagStraight(int n);
+//void PIDChangeFlagStraight(int n);
 int PIDGetFlag(int n);
 
 void PIDReset(int n);

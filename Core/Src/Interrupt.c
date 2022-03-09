@@ -233,8 +233,8 @@ void ControlMotor()
 	//制御出力値生成
 	//PIDControl(int n, int T, float target, float current, int *output);
 	//もう一回車体速度制御+角速度制御でやってみる。ダメだった。ブレブレ。
-	VelocityLeftOut = PIDControl( L_WALL_PID, T1, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
-	VelocityRightOut = PIDControl( R_WALL_PID, T1, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+	VelocityLeftOut = PIDControl( L_VELO_PID, T1, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+	VelocityRightOut = PIDControl( R_VELO_PID, T1, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
 //	VelocityLeftOut = PIDControl( B_VELO, T1, TargetVelocity[BODY], CurrentVelocity[BODY]);
 //	VelocityRightOut = VelocityLeftOut;
 
@@ -291,11 +291,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		//目標値 - 現在値(変換済み)で制御出力値の計算
 
-		timer1 += t;
-		if(timer1 == 30000)
-		{
-			t = 0;
-		}
+//		timer1 += t;
+//		if(timer1 == 30000)
+//		{
+//			t = 0;
+//		}
 		ControlMotor();
 
 //		float cpdl, cpdr;
@@ -559,7 +559,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if( htim == &htim8)
 	{
 		//timer += t;
-		timer8 += t;
+		//timer8 += t;
 
 		//壁センサデータの更新だけ
 		//UpdatePhotoData();

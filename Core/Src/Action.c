@@ -264,6 +264,7 @@ void ControlWall()
 	//割り込み中に呼ぶかアクション中に呼ぶか。アクション中の方が座標と壁の状態が確実。いや、判定が遅れると嫌だからやっぱり割り込み。移動量はflagで。
 
 	//PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
+	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag( A_VELO_PID, 0);
@@ -486,7 +487,7 @@ void WaitStopAndReset()
 	{
 
 		//壁制御の更新
-		TargetVelocityBody = 0;
+		TargetVelocity[BODY] = 0;
 		Acceleration = 0;
 		//PIDChangeFlag( D_, 0);
 		TargetAngularV = 0;
@@ -518,8 +519,8 @@ void RotateAccel(float deg, float rotate_ang_v)
 //	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
 //
 //	int keep_pulse[2] = {
-//			TotalPulseLeft,
-//			TotalPulseRight
+//			TotalPulse[LEFT],
+//			TotalPulse[RIGHT]
 //	};
 	float move_angle = deg * M_PI/ 180;
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
@@ -532,11 +533,11 @@ void RotateAccel(float deg, float rotate_ang_v)
 		move_angle = move_angle + Angle;//Angleが負にずれ過ぎて、
 		debug[1] = move_angle;
 		//ここのwhileが抜けないことがある
-		while( (move_angle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulseLeft ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulseRight ) ) )*/)
+		while( (move_angle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
 			AngularAcceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
 			//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
-
+#if 0
 			if( AngularV == -0)	//ベイブレードになりそうだったら止まる。
 			{
 				//緊急停止。センサの値を見る。
@@ -548,6 +549,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 				}
 
 			}
+#endif
 		}
 
 	}
@@ -555,7 +557,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 	{
 		move_angle = -move_angle + Angle;
 		//printf("加速 負\r\n");
-		while( (move_angle < Angle)/* && ( ( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulseLeft ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulseRight ) ) ) */)
+		while( (move_angle < Angle)/* && ( ( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) ) ) */)
 		{
 
 			AngularAcceleration = -1*64*T1*additional_ang_v*additional_ang_v / (2*deg);
@@ -575,8 +577,8 @@ void RotateConst(float deg, float rotate_ang_v)
 //	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
 //
 //	int keep_pulse[2] = {
-//			TotalPulseLeft,
-//			TotalPulseRight
+//			TotalPulse[LEFT],
+//			TotalPulse[RIGHT]
 //	};
 	float move_angle = deg * M_PI/ 180;
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
@@ -585,7 +587,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	if (rotate_ang_v > 0)
 	{
 		move_angle += Angle;
-		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulseLeft ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulseRight ) )) )
+		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
 		{
 			//TargetAngularV = rotate_ang_v;
 			AngularAcceleration = 0;
@@ -599,7 +601,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	{
 		move_angle = -move_angle + Angle;
 		//printf("定速 負\r\n");
-		while( (move_angle < Angle))// &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulseLeft ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulseRight ) )) )
+		while( (move_angle < Angle))// &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
 		{
 			//TargetAngularV = rotate_ang_v;
 
@@ -621,8 +623,8 @@ void RotateDecel(float deg, float rotate_ang_v)
 
 //	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
 //	int keep_pulse[2] = {
-//			TotalPulseLeft,
-//			TotalPulseRight
+//			TotalPulse[LEFT],
+//			TotalPulse[RIGHT]
 //	};
 	float move_angle = deg * M_PI / 180;
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
@@ -632,7 +634,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	{
 		move_angle += Angle;
 
-		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulseLeft ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulseRight ) )) )
+		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
 		{
 			AngularAcceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if(CurrentVelocity[LEFT] > 500)
@@ -647,7 +649,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	{
 		move_angle = -move_angle + Angle;
 		//printf("減速 負\r\n");
-		while( (move_angle < Angle) )//&&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulseLeft ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulseRight ) )) )
+		while( (move_angle < Angle) )//&&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
 		{
 			AngularAcceleration = 64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 
@@ -669,19 +671,19 @@ void Rotate(float deg, float ang_accel)
 
 	//int target_pulse[2] ={0};
 //	int keep_pulse[2] = {
-//			TotalPulseLeft,
-//			TotalPulseRight
+//			TotalPulse[LEFT],
+//			TotalPulse[RIGHT]
 //	};
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-//	while( ( keep_pulse ) >= ( TotalPulseBody ) )
+//	while( ( keep_pulse ) >= ( TotalPulse[BODY] ) )
 //	{
 //	//カウントを直で状態確認してみた。回転時はカウンタが足りるが直進のときは一区画もたない。あと、判定が速いタイミングでできても、出力値の変更が1ms更新だからそこまで変わらなそう。カウントをどう読むかが課題。なるべくピッタリで、もしくはここにこだわらない。
 //	//ずれが大きいのは速度が速くてカウンタ値の1msあたりの変位が大きい時。それで問題があるのは減速停止のとき。
 //	//じゃあ終了値の余分な値だけ補正するように動くか、前に壁があるときはそちらで補正。スラロームの場合は曲がるタイミングが遅れるかもしれないので余ったカウント分を前距離として移動したことにしてしまうのはどうだろうか。
 //	//↑の案がいいかもしれない。今はカウントの余りを気にしないでおく。2/20
-//	while( ( (abs(keep_pulse[LEFT]+target_pulse)) <= TotalPulseLeft /*左が順*/) && ( (abs(keep_pulse[RIGHT]+target_pulse)) <= TotalPulseRight /*右が逆*/) )	//左回転
+//	while( ( (abs(keep_pulse[LEFT]+target_pulse)) <= TotalPulse[LEFT] /*左が順*/) && ( (abs(keep_pulse[RIGHT]+target_pulse)) <= TotalPulse[RIGHT] /*右が逆*/) )	//左回転
 //	{
 //		TargetAngularV = ang_accel;
 //	}
@@ -699,15 +701,15 @@ void Rotate(float deg, float ang_accel)
 
 //	if( ang_accel > 0 )	//時計回り
 //	{
-//		target_pulse[LEFT] = TotalPulseLeft + move_pulse;
-//		target_pulse[RIGHT] = TotalPulseRight - move_pulse;
+//		target_pulse[LEFT] = TotalPulse[LEFT] + move_pulse;
+//		target_pulse[RIGHT] = TotalPulse[RIGHT] - move_pulse;
 //		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
 //		//角加速度計算
 //		//どのくらい回転したかに応じて台形加減速
-//		printf("%d, %d, %d, %d\r\n",target_pulse[LEFT],TotalPulseLeft, target_pulse[RIGHT], TotalPulseRight);
-//		while(  /*(Angle <= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] >= TotalPulseLeft ) &&  (  target_pulse[RIGHT] <= TotalPulseRight ) ) )//1/*左右のパルス移動量条件*/)
+//		printf("%d, %d, %d, %d\r\n",target_pulse[LEFT],TotalPulse[LEFT], target_pulse[RIGHT], TotalPulse[RIGHT]);
+//		while(  /*(Angle <= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] >= TotalPulse[LEFT] ) &&  (  target_pulse[RIGHT] <= TotalPulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
 //		{
-//			if(  (abs(target_pulse[LEFT]-TotalPulseLeft) > (75/90)*move_pulse )  ||  (  abs(target_pulse[RIGHT]-TotalPulseRight) > (75/90)*move_pulse ) /*0度から15度未満*/)
+//			if(  (abs(target_pulse[LEFT]-TotalPulse[LEFT]) > (75/90)*move_pulse )  ||  (  abs(target_pulse[RIGHT]-TotalPulse[RIGHT]) > (75/90)*move_pulse ) /*0度から15度未満*/)
 //			{
 //				AngularAcceleration = 0;
 //			}
@@ -728,10 +730,10 @@ void Rotate(float deg, float ang_accel)
 //	}
 //	else if( ang_accel < 0)
 //	{
-//		target_pulse[LEFT] = TotalPulseLeft - move_pulse;
-//		target_pulse[RIGHT] = TotalPulseRight + move_pulse;
+//		target_pulse[LEFT] = TotalPulse[LEFT] - move_pulse;
+//		target_pulse[RIGHT] = TotalPulse[RIGHT] + move_pulse;
 //		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
-//		while( /*(Angle >= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] <= TotalPulseLeft ) &&  (  target_pulse[RIGHT] >= TotalPulseRight ) ) )//1/*左右のパルス移動量条件*/)
+//		while( /*(Angle >= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] <= TotalPulse[LEFT] ) &&  (  target_pulse[RIGHT] >= TotalPulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
 //		{
 //			TargetAngularV = ang_accel;
 //			printf("deg:負, Angle, AngularV : %f, %f\r\n",Angle, AngularV );
@@ -812,13 +814,13 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	int now_pulse;
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
-	now_pulse = TotalPulseLeft + TotalPulseRight;	//汎用的に書いておく
-	while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulseLeft + TotalPulseRight) ) //移動量を条件に直進
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
+	while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
 			AngularAcceleration = 0;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 
 			////printf("直進1\r\n");
 	}
@@ -833,9 +835,10 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			//割り込みの中で角速度を上げていく
 			//alpha_flag = 1;
 			AngularAcceleration = alpha_turn;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 
-			if( AngularV == 0)	//ベイブレードになりそうだったら止まる。
+#if 0
+			if( AngularV == 0)	//ベイブレードになりそうだったら止まる。AngularV == 0はIMUのとき。エンコーダのときは
 			{
 				t = 0;
 				//緊急停止。センサの値を見る。
@@ -849,6 +852,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 				}
 
 			}
+#endif
 
 			//printf("クロソイド1\r\n");
 	}
@@ -860,8 +864,9 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = TargetAngularV;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 			////printf("円弧\r\n");
+#if 0
 			if(AngularV == 0)	//ベイブレードになりそうだったら止まる。
 			{
 				//緊急停止。センサの値を見る。
@@ -873,6 +878,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 				}
 
 			}
+#endif
 	}
 
 	now_angv = AngularV;
@@ -887,22 +893,22 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 				TargetAngularV = 0;
 				break;
 			}
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 			//printf("クロソイド2\r\n");
 	}
 	//alpha_flag = 0;
 	AngularAcceleration = 0;
 	TargetAngularV = 0;
-	now_pulse = TotalPulseLeft + TotalPulseRight;
-	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulseLeft + TotalPulseRight) )
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
+	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 			//printf("直進2\r\n");
 	}
 	TargetAngle += 90*M_PI/180;
-	KeepPulse[BODY] += TotalPulseBody - KeepPulse[BODY];
+	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
 	//モータ出力に限らず、変数は集約している方が良い。
 
@@ -943,13 +949,13 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	int now_pulse;
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
-	now_pulse = TotalPulseLeft + TotalPulseRight;	//汎用的に書いておく
-	while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulseLeft + TotalPulseRight) ) //移動量を条件に直進
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
+	while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
 			AngularAcceleration = 0;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 
 			////printf("直進1\r\n");
 	}
@@ -963,7 +969,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 			//割り込みの中で角速度を上げていく
 			//alpha_flag = 1;
 			AngularAcceleration = alpha_turn;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 
 			//printf("クロソイド1\r\n");
 	}
@@ -974,7 +980,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = TargetAngularV;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 			////printf("円弧\r\n");
 	}
 
@@ -989,22 +995,22 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 				TargetAngularV = 0;
 				break;
 			}
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 			//printf("クロソイド2\r\n");
 	}
 	//alpha_flag = 0;
 	AngularAcceleration = 0;
 	TargetAngularV = 0;
-	now_pulse = TotalPulseLeft + TotalPulseRight;
-	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulseLeft + TotalPulseRight) )
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
+	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
-			TargetVelocityBody = v_turn;
+			TargetVelocity[BODY] = v_turn;
 			//printf("直進2\r\n");
 	}
 	TargetAngle += -90*M_PI/180;
-	KeepPulse[BODY] += TotalPulseBody - KeepPulse[BODY];
+	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
 	//モータ出力に限らず、変数は集約している方が良い。
 
@@ -1027,7 +1033,7 @@ void Accel(float add_distance, float explore_speed)
 	additional_speed = explore_speed - CurrentVelocity[BODY];
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
-	 //TotalPulseBody;
+	 //TotalPulse[BODY];
 	Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
 	WallWarn();
 	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
@@ -1036,13 +1042,13 @@ void Accel(float add_distance, float explore_speed)
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulseBody ) )
+	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
 		//ControlWall();
 #if 1
 		//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
 		//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-//		if( ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulseBody) )	//移動量に応じて処理を変える。
+//		if( ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 //		{
 //			Acceleration = 0;
 //		}
@@ -1087,7 +1093,7 @@ void Accel(float add_distance, float explore_speed)
 void Decel(float dec_distance, float end_speed)
 {
 	Pos.Act = decel;
-	//int keep_pulse = TotalPulseBody;
+	//int keep_pulse = TotalPulse[BODY];
 	float down_speed=0;
 	down_speed = CurrentVelocity[BODY] - end_speed;
 	//速度減分 = 到達したい探索速度 - 現在の速度
@@ -1105,10 +1111,10 @@ void Decel(float dec_distance, float end_speed)
 		//これより前の直進が長くても壁センサのおかげで止まれるはずなので出力が残っちゃったパターン。
 		//かもしくは条件が成立しちゃっているセンサ値が問題のパターン。
 	//スラロームのあとはKeepPulse[BODY]が変わっていないので、そのせいで減速距離が取れていない可能性がある。壁センサも一応見る
-	while( (	(Photo[FR]+Photo[FL]) < 3600) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulseBody) )
+	while( (	(Photo[FR]+Photo[FL]) < 3600) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
-//		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulseBody) )	//移動量に応じて処理を変える。
+//		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 //		{
 //			Acceleration = 0;
 //		}
@@ -1125,15 +1131,15 @@ void Decel(float dec_distance, float end_speed)
 //		}
 		//式の順番はあとで前後するかも
 		//ControlWall();
-		if(TargetVelocityBody <= 0)
+		if(TargetVelocity[BODY] <= 0)
 		{
-			TargetVelocityBody = 0;
+			TargetVelocity[BODY] = 0;
 			Acceleration = 0;
 			TargetAngularV = 0;
 			AngularAcceleration = 0;
 			break;
 		}
-		if(KeepPulse[BODY] + (target_pulse/2) < TotalPulseBody )
+		if(KeepPulse[BODY] + (target_pulse/2) < TotalPulse[BODY] )
 		{
 			WallWarn();
 			//ControlWall();
@@ -1159,27 +1165,27 @@ void Calib(int distance)
 {
 	//Pos.を考え中
 	int target_pulse = (int)(2*distance/MM_PER_PULSE);
-	//int keep_pulse = TotalPulseBody+target_pulse;
+	//int keep_pulse = TotalPulse[BODY]+target_pulse;
 	if(target_pulse > 0)
 	{
-		while( KeepPulse[BODY] + target_pulse > TotalPulseBody )
+		while( KeepPulse[BODY] + target_pulse > TotalPulse[BODY] )
 		{
 			Acceleration = 0;
-			TargetVelocityBody = 70;
+			TargetVelocity[BODY] = 70;
 		}
 		KeepPulse[BODY] += target_pulse;
 
 	}
 	if(target_pulse < 0 )
 	{
-		while( KeepPulse[BODY] + target_pulse < TotalPulseBody )
+		while( KeepPulse[BODY] + target_pulse < TotalPulse[BODY] )
 		{
 			Acceleration = 0;
-			TargetVelocityBody = -70;
+			TargetVelocity[BODY] = -70;
 		}
 		KeepPulse[BODY] += target_pulse;
 	}
-	TargetVelocityBody = 0;
+	TargetVelocity[BODY] = 0;
 	Acceleration = 0;
 }
 void Compensate()
@@ -1212,7 +1218,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	//エンコーダの移動量チェックって、もっと細かい間隔でやったほうがいいのでは。
 	//v = v0 + at
 	//x = v0t + 0.5*at^2
-		//TargetVelocityBody = explore_speed;
+		//TargetVelocity[BODY] = explore_speed;
 	//加速なら
 //	if(accel == TRUE)	//目標移動量と到達速度から加速度を計算する。
 
@@ -1221,7 +1227,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 
 	//壁の有無をすべて知っている区間は更新する必要がないので一気に加速させて座標を二つ更新
 	//移動量は90だけど、加速に要する距離はその半分とか好きに変えられるように。
-	//int keep_pulse = TotalPulseBody;
+	//int keep_pulse = TotalPulse[BODY];
 	int target_pulse = (int)(2*move_distance/MM_PER_PULSE);
 
 	if(accel != 0) //加速するとき
@@ -1229,12 +1235,12 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 		WallWarn();
 		ControlWall();
 		Accel( move_distance/2 , explore_speed+accel);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
-		while( ( KeepPulse[BODY] + (target_pulse/2)) > ( TotalPulseBody) )
+		while( ( KeepPulse[BODY] + (target_pulse/2)) > ( TotalPulse[BODY]) )
 		{
 			//最初の45mmで加速をストップ
 			//ControlWall();
 			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulseBody) )	//移動量に応じて処理を変える。
+	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;
 	//		}
@@ -1245,12 +1251,12 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 		Pos.Act = straight;
 		WallSafe();
 		ControlWall();
-		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulseBody) )
+		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
 			//最初の45mmで加速をストップ
 			//ControlWall();
 			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulseBody )
+			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] )
 			{
 				WallWarn();
 				PIDChangeFlag(L_WALL_PID, 0);
@@ -1258,7 +1264,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				PIDChangeFlag(D_WALL_PID, 0);
 				PIDChangeFlag( A_VELO_PID , 1);
 			}
-	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulseBody) )	//移動量に応じて処理を変える。
+	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;
 	//		}
@@ -1268,14 +1274,14 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	//余分に加速した場合、あとの減速で速度を落としきれないことになっていたので、減速時にその時の速度を使うようにした。
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 //	int target_pulse = (int)(2*(move_distance/2)/MM_PER_PULSE);
-//	int keep_pulse = TotalPulseBody;
+//	int keep_pulse = TotalPulse[BODY];
 	//WallWarn();
 	Acceleration = 0;
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
 
-	//keep_pulse = TotalPulseBody;
+	//keep_pulse = TotalPulse[BODY];
 
 	//計算は区切りのいいところで一回するだけ。移動しきるまでそのままか、条件に応じて変える。
 

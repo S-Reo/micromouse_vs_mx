@@ -38,12 +38,12 @@ extern int KeepCounter;
 extern float CurrentVelocity[3];
 extern float TargetVelocity[3];
 
-extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
-extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
+//extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
+//extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
 //移動量 mm/msを積算
-extern float TotalPulseBody;
-extern float TotalPulseLeft;
-extern float TotalPulseRight;
+//extern float TotalPulseBody;
+//extern float TotalPulseLeft;
+//extern float TotalPulseRight;
 
 extern int KeepPulse[3];
 extern int PulseDisplacement[3];
@@ -60,9 +60,9 @@ extern double ImuAngV,ImuAngle;
 
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
-extern float TargetVelocityBody;
-extern float TargetVelocityLeft;
-extern float TargetVelocityRight;
+//extern float TargetVelocityBody;
+//extern float TargetVelocityLeft;
+//extern float TargetVelocityRight;
 
 extern float ExploreVelocity;
 extern float AddVelocity;
@@ -138,7 +138,7 @@ extern int L_motor, R_motor;
 
 #define TIRE_DEAMETER 20.6//20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 36.5//34.4 //36.8 34.2//.8
+#define TREAD_WIDTH 37.8 //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
 //別のとこ

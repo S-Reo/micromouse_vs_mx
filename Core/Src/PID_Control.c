@@ -12,14 +12,14 @@ motor_control Pid[ 8 ] = {0};
 //motor_control *p;
 //control angular_velocity[1] = {0};
 //control distance_wall[ WALL_SENSOR_NUM] = {0};
-float KP[PID_TARGET_NUM],
-				 KI[PID_TARGET_NUM],
-				 KD[PID_TARGET_NUM];
-float e[PID_TARGET_NUM];
-float ed;//[PID_TARGET_NUM];
-float ei[PID_TARGET_NUM];
-float elast[PID_TARGET_NUM];
-int PidFlag;//[PID_TARGET_NUM];
+//float KP[PID_TARGET_NUM],
+//				 KI[PID_TARGET_NUM],
+//				 KD[PID_TARGET_NUM];
+//float e[PID_TARGET_NUM];
+//float ed;//[PID_TARGET_NUM];
+//float ei[PID_TARGET_NUM];
+//float elast[PID_TARGET_NUM];
+//int PidFlag;//[PID_TARGET_NUM];
 
 //void PIDSetGain(int n, float kp, float ki, float kd)
 //{
@@ -42,9 +42,7 @@ void PIDSetGain(int n, float kp, float ki, float kd)	//同じデータ構造体�
 	Pid[n].KP = kp;
 	Pid[n].KI = ki;
 	Pid[n].KD = kd;
-//
-//	p = *Pid[n];
-//	p->KP;
+
 }
 //
 //void PIDChangeFlagStraight(int n)
@@ -60,6 +58,7 @@ void PIDSetGain(int n, float kp, float ki, float kd)	//同じデータ構造体�
 //	ei[n] = 0;
 //	elast[n] = 0;
 //}
+
 void PIDChangeFlag(int n, int on_or_off)
 {
 	Pid[n].flag = on_or_off;

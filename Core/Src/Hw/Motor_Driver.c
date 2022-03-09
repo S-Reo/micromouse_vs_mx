@@ -34,7 +34,7 @@ void Motor_PWM_Stop(){ // モータPWMの開始とCCR値の設
   }
 #endif
 }
-inline void Motor_Switch(int left, int right){
+void Motor_Switch(int left, int right){
 	if (left > 0 ){
 		//to -
 		HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2が左SET:1で正転

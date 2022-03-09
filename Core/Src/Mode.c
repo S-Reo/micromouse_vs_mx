@@ -197,35 +197,40 @@ void Debug()
 //	}
 
 	//直進テスト
-	ExploreVelocity=90;
+	ExploreVelocity=180;
 	t = 0;
 	timer1=0;
 	timer8=0;
 
-	TargetVelocity[BODY] = ExploreVelocity;
-	TIM1 ->CNT = 0;
-	TIM8 ->CNT = 0;//これ大事かも
-	t = 1;
-	while(1)
-	{
-		if(t == 0)
-		{
-			printf("1: %d, 8 :%d, spi : %d\r\n",timer1, timer8, spi_dma_data);
-		}
-
-	}
-	for(int i=0; i < 2; i++)
+	//TargetVelocity[BODY] = ExploreVelocity;
+//	TIM1 ->CNT = 0;
+//	TIM8 ->CNT = 0;//これ大事かも
+//	t = 1;
+//	while(1)
+//	{
+//		if(t == 0)
+//		{
+//			printf("1: %d, 8 :%d\r\n",timer1, timer8);
+//		}
+//
+//	}
+#if 0
+	//直進テスト
+	Pos.Dir = front;
+	Accel(61.75,ExploreVelocity);
+	for(int i=0; i < 6; i++)
 	{
 		Pos.Dir = front;
-		Accel(45,ExploreVelocity);
-		Pos.Dir = right;
-		SlalomRight();
-		Pos.Dir = front;
-		Decel(45,0);
-		HAL_Delay(500);
+		GoStraight(90, ExploreVelocity, AddVelocity);
+		//Pos.Dir = right;
+		//SlalomRight();
+
 
 	}
-
+	Pos.Dir = front;
+	Decel(45,0);
+	HAL_Delay(30000);
+#endif
 	//旋回テスト
 	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
 	{
@@ -234,7 +239,7 @@ void Debug()
 		Pos.Dir = back;
 		theta_log[i] = Angle;
 
-		Rotate(90,2.5);
+		Rotate(90,M_PI);
 		theta_log[i+1] = Angle;
 
 		HAL_Delay(100);
@@ -242,7 +247,7 @@ void Debug()
 		ChangeLED(0);
 		Pos.Car = north;
 		Pos.Dir = back;
-		Rotate(90,-2.5);
+		Rotate(90,-M_PI);
 		HAL_Delay(100);
 		//theta_log[i] = Angle;
 	}

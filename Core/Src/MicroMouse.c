@@ -28,11 +28,11 @@ int KeepCounter;//
 float CurrentVelocity[3];	//速度 mm/s
 float TargetVelocity[3];
 
-float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
-float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
-float TotalPulseBody;	//移動量 mm/msを積算
-float TotalPulseLeft;
-float TotalPulseRight;
+//float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
+//float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
+//float TotalPulseBody;	//移動量 mm/msを積算
+//float TotalPulseLeft;
+//float TotalPulseRight;
 int KeepPulse[3];
 int PulseDisplacement[3];
 int TotalPulse[3];
@@ -44,9 +44,9 @@ float Angle=0;				//角度 rad/msを積算
 //ここからは目標値と現在値を用いた制御。
 //タイヤ目標値計算
 //float TargetVelocity[3]={0};
-float TargetVelocityBody;
-float TargetVelocityLeft;
-float TargetVelocityRight;
+//float TargetVelocityBody;
+//float TargetVelocityLeft;
+//float TargetVelocityRight;
 float ExploreVelocity;
 float AddVelocity;
 float Acceleration;
