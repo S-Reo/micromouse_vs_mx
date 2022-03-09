@@ -147,6 +147,108 @@ Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
 return(Data);
 }
 // Flashから読みした?ータを避するRAM上
+// 4byteごとにアクセスをするで、アドレスに配置する
+
+/*---- DEFINING FUNCTION ----*/
+
+
+/*---- DEFINING FUNCTION END----*/
+
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
+  MX_TIM3_Init();
+  MX_TIM2_Init();
+  MX_SPI3_Init();
+  MX_USART1_UART_Init();
+  MX_TIM5_Init();
+  MX_TIM4_Init();
+  MX_TIM8_Init();
+  MX_TIM1_Init();
+  /* USER CODE BEGIN 2 */
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
+  //IMU_init();
+//  int16_t data[1000]={0};
+//  int i=0, elaps=0;
+//	HAL_TIM_Base_Start_IT(&htim8);
+//
+//  while(1)
+//  {
+//	  t = 1;
+//	  read_gyro_data();
+//	  data[i] = zg;
+//	  i++;
+//	  zg = 0;
+//	  if(i == 1000)
+//	  {
+//		  elaps = timer;
+//		  break;
+//	  }
+//
+//  }
+//
+//  for(i=0; i < 1000; i++)
+//  {
+//	  printf("データ : %d\r\n", data[i]);
+//
+//  }
+//  printf("経過時間 : %d\r\n", elaps);
+//
+//  while(1)
+//  {
+//
+//  }
+
+
+  ADCStart();
+  HAL_Delay(500);
+
+  BatteryCheck( (int)adc1[2] );
+
+  int8_t mode=0;
+  printf("mode : %d\r\n", mode);
+  ModeSelect( 0, 7, &mode);
+  Signal( mode );
+  printf("スイッチ\r\n");
+
+  //pidパラメータの初期化をもっと書き換えやすいところでやる
+// Flashから読みした?ータを避するRAM上
   PIDSetGain(L_VELO_PID, 11.1, 2430, 0.002);//D0.0036 //I2430くら
   PIDSetGain(R_VELO_PID, 11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
