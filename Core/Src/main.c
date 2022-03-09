@@ -40,7 +40,7 @@
 //#include "IEH2_4096.h"		//エンコー
 #include "ADC.h"
 //#include "LED_Driver.h"
-#include "IR_Emitter.h"	//発光
+#include "IR_Emitter.h"	//発?��?
 #include "Convert.h"
 
 #include "UI.h"
@@ -146,7 +146,7 @@ Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
 
 return(Data);
 }
-// Flashから読みした?ータを避するRAM上
+// Flashから読みしたータを避するRAM
 // 4byteごとにアクセスをするで、アドレスに配置する
 
 /*---- DEFINING FUNCTION ----*/
@@ -225,7 +225,7 @@ int main(void)
 //
 //  for(i=0; i < 1000; i++)
 //  {
-//	  printf("データ : %d\r\n", data[i]);
+//	  printf("?��?ータ : %d\r\n", data[i]);
 //
 //  }
 //  printf("経過時間 : %d\r\n", elaps);
@@ -245,10 +245,10 @@ int main(void)
   printf("mode : %d\r\n", mode);
   ModeSelect( 0, 7, &mode);
   Signal( mode );
-  printf("スイッチ\r\n");
+  printf("スイ?��?チ\r\n");
 
-  //pidパラメータの初期化をもっと書き換えやすいところでやる
-// Flashから読みした?ータを避するRAM上
+  //pidパラメータの初期化をもっと書き換えやすいところで?��??��?
+// Flashから読みした?ータを避するRAM?��?
   PIDSetGain(L_VELO_PID, 11.1, 2430, 0.002);//D0.0036 //I2430くら
   PIDSetGain(R_VELO_PID, 11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
@@ -256,7 +256,7 @@ int main(void)
   PIDSetGain(A_VELO_PID, 7,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iは積�?=偏差を消す。ゲインが大きいと偏差が縮まるが、収束が
   //Dは微
-  PIDSetGain(D_WALL_PID, 5.4, 0, 0);//速度制御がある// 3.200000, 50.000000, 0.00025i55000
+  PIDSetGain(D_WALL_PID, 5.4, 0, 0);//速度制御があ?��?// 3.200000, 50.000000, 0.00025i55000
   PIDSetGain(L_WALL_PID, 10.8, 0, 0);
   PIDSetGain(R_WALL_PID, 10.8, 0, 0);
   //PidFlag = A_VELO_PID;
@@ -493,7 +493,7 @@ static void MX_SPI3_Init(void)
   hspi3.Init.CLKPolarity = SPI_POLARITY_HIGH;
   hspi3.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi3.Init.NSS = SPI_NSS_SOFT;
-  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
   hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

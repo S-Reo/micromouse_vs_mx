@@ -55,7 +55,7 @@ extern float EncAngV;
 //角度 rad/msを積算
 extern float Angle;
 
-extern double ImuAngV,ImuAngle;
+extern float ImuAngV,ImuAngle;
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。

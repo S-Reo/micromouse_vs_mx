@@ -122,7 +122,7 @@ void InitExplore()
 	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-	//IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
+	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
 
 	TargetPhoto[SL] = Photo[SL];
 	TargetPhoto[SR] = Photo[SR];
@@ -211,7 +211,7 @@ void Debug()
 	{
 		if(t == 0)
 		{
-			printf("1: %d, 8 :%d\r\n",timer1, timer8);
+			printf("1: %d, 8 :%d, ImuAngV:%f, ImuAngle:%f, ZGyro:%f\r\n",timer1, timer8, ImuAngV, ImuAngle, ZGyro);
 		}
 
 	}

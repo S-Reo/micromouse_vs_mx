@@ -53,7 +53,7 @@ float Acceleration;
 float TargetAngularV;
 float AngularAcceleration;
 float TargetAngle;
-double ImuAngV,ImuAngle;
+float ImuAngV,ImuAngle;
 int VelocityLeftOut, VelocityRightOut;
 int WallRightOut, WallLeftOut;
 int L_motor, R_motor;

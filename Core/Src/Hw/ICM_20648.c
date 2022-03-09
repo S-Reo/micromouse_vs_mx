@@ -10,27 +10,32 @@
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t xg, yg, zg;	// 角加速度(16bitデータ)
 float zg_offset;
-uint8_t val[2]={0};
+//uint8_t val[2]={0};
 int16_t spi_dma_data;
-float  z_gyro;
+float  ZGyro;
+//const uint8_t ret[2] = {
+//		0x37 | 0x80,
+//		0x38 | 0x80
+//};
+//const uint8_t ret2 =
 
-void IMU_DMA_Start()
-{
-	//zg = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
-	uint8_t ret[2];
-	ret[0] = 0x37 | 0x80;
-	ret[1] = 0x38 | 0x80;
-	printf("%d, %d, %d, %d,%d\r\n\r\n", ret[0], ret[1], val[0], val[1],spi_dma_data);
-	//int a = HAL_SPI_TransmitReceive_DMA(&hspi3, (uint8_t *)ret, (uint8_t *)val, 2);
-	//printf("%d\r\n",a);
-	if ( HAL_SPI_TransmitReceive_DMA(&hspi3, (uint8_t *)ret, (uint8_t *)val, 2) != HAL_OK )
-	{
-		printf("エラー1\r\n");
-		Error_Handler();
-		printf("エラー2\r\n");
-	}
-	printf("ok\r\n");
-}
+//void IMU_DMA_Start()
+//{
+//	//zg = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
+//	uint8_t ret[2];
+//	ret[0] = 0x37 | 0x80;
+//	ret[1] = 0x38 | 0x80;
+//	printf("%d, %d, %d, %d,%d\r\n\r\n", ret[0], ret[1], val[0], val[1],spi_dma_data);
+//	//int a = HAL_SPI_TransmitReceive_DMA(&hspi3, (uint8_t *)ret, (uint8_t *)val, 2);
+//	//printf("%d\r\n",a);
+//	if ( HAL_SPI_TransmitReceive_DMA(&hspi3, (uint8_t *)ret, (uint8_t *)val, 2) != HAL_OK )
+//	{
+//		printf("エラー1\r\n");
+//		Error_Handler();
+//		printf("エラー2\r\n");
+//	}
+//	printf("ok\r\n");
+//}
 inline uint8_t read_byte( uint8_t reg ) {
 
 	uint8_t ret,val;
@@ -45,7 +50,38 @@ inline uint8_t read_byte( uint8_t reg ) {
 	//値の取得は1msが妥当。2台目のエンコーダではどれくらいがいいか。as5047Pは4.5MHz
 	return val;
 }
+inline float ReadByte() {
 
+	uint8_t ret1, ret2,val1,val2;
+	uint8_t ret[2] = {
+			0x37,
+			0x38,
+	};
+	int16_t z_gyro;
+	float res;
+	ret1 = ret[0] | 0x80;
+	ret2 = ret[1] | 0x80;
+//	reg[0] = 0x37;
+//	reg[1] = 0x38;
+//
+//	ret = reg[0] | 0x80;
+	CS_RESET;
+	HAL_SPI_Transmit(&hspi3,&ret1,1,100);
+	HAL_SPI_Receive(&hspi3,&val1,1,100);
+	CS_SET;
+
+//	ret = reg[1] | 0x80;
+	CS_RESET;
+	HAL_SPI_Transmit(&hspi3,&ret2,1,100);
+	HAL_SPI_Receive(&hspi3,&val2,1,100);
+	CS_SET;
+	z_gyro = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );
+	res = (float)z_gyro;
+	//1回の取得は0.2msだった
+	//値の更新は4回分で0.8ms = 1.25kHz . 656250Bit/s 1回で131.25bit, 4回で525Bit=65.625byte
+	//値の取得は1msが妥当。2台目のエンコーダではどれくらいがいいか。as5047Pは4.5MHz
+	return res;
+}
 void write_byte( uint8_t reg, uint8_t val )  {
 	uint8_t ret;
 
@@ -102,10 +138,10 @@ void IMU_Calib(){
 	HAL_Delay(500);
 
 	int num = 2000;
-	double zg_vals[2000]={0};
-	double sum=0;
+	float zg_vals[2000]={0.0f};
+	float sum=0;
 	for(int i = 0; i < num; i++){
-		zg_vals[i] = (double)zg;
+		zg_vals[i] = ZGyro;
 		sum += zg_vals[i];
 		HAL_Delay(1);
 	}
@@ -114,7 +150,7 @@ void IMU_Calib(){
 //		printf("zg_vals[%d]: %lf\r\n",i,zg_vals[i]);
 //	}
 //	printf("sum:%lf",sum);
-	zg_offset = sum / (double)num;
+	zg_offset = sum / 2000.0f;
 }
 double lowpass_filter_double(double x, double x0, double r)
 {

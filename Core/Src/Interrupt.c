@@ -21,8 +21,8 @@
 int timer1,timer8, t;
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
-const float convert_to_angv = 1/TREAD_WIDTH;
-
+const float convert_to_angularv = 1/TREAD_WIDTH;
+const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
 //static int StraightWay;
 //以下割り込みで呼ぶ関数
 //このあたりの関数は、構造体変数を扱うファイルにまとめたほうがいいかもしれない。(メインのアルゴリズム、アクション)
@@ -152,7 +152,7 @@ void ControlMotor()
 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 	//角速度 rad/s
-	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angv;
+	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 	Angle += AngularV * T1;
 	int out=0;
 	out += PIDControl( A_VELO_PID,TargetAngle, Angle);
@@ -330,13 +330,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 		TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 		//角速度 rad/s
-//		float zgy;
-//		static float angle=0;
-//		uint8_t zgb,zgf;
-//
-//		zgy = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));
-//		angle += zgy;
-		AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angv;
+
+		//static float angle=0;
+		static float last=0;
+		float imu_accel=0;
+		//uint8_t zgb,zgf;
+
+		ZGyro = ReadByte();
+//		angle += z_gyro;
+		//z_gyro = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));//read_zg_data();
+
+	    imu_accel =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
+	    ImuAngV = -((0.01*imu_accel) + (0.99)* (last));
+	    last = imu_accel;
+	    ImuAngle += ImuAngV * T1;//角度 rad/msを積算
+
+		AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 		Angle += AngularV * T1;
 		int out=0;
 		out += PIDControl( A_VELO_PID, TargetAngle, Angle);
