@@ -12,6 +12,7 @@
 
 #define PID_TARGET_NUM	8
 
+
 typedef struct {
 
 	float KP;
@@ -48,11 +49,11 @@ void PIDChangeFlag(int n, int on_or_off);
 int PIDGetFlag(int n);
 
 void PIDReset(int n);
-void PIDCalculate(int n, float T);
-void PIDOutput(int n, int *output);
-void PIDInput(int n, float target, float current);
+//void PIDCalculate(int n, float T);
+//void PIDOutput(int n, int *output);
+//void PIDInput(int n, float target, float current);
 
-int PIDControl(int n, float T, float target, float current);
+int PIDControl(int n, float target, float current);
 
 
 

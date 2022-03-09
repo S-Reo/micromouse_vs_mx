@@ -256,9 +256,9 @@ int main(void)
   PIDSetGain(A_VELO_PID, 7,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iは積�?=偏差を消す。ゲインが大きいと偏差が縮まるが、収束が
   //Dは微
-  PIDSetGain(D_WALL_PID, 3.2, 0, 0);//速度制御がある
-  PIDSetGain(L_WALL_PID, 6.4, 0, 0);
-  PIDSetGain(R_WALL_PID, 6.4, 0, 0);
+  PIDSetGain(D_WALL_PID, 5.4, 0, 0);//速度制御がある// 3.200000, 50.000000, 0.00025i55000
+  PIDSetGain(L_WALL_PID, 10.8, 0, 0);
+  PIDSetGain(R_WALL_PID, 10.8, 0, 0);
   //PidFlag = A_VELO_PID;
   while (1)
   {

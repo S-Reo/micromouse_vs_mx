@@ -196,24 +196,27 @@ void Debug()
 //		printf("zg:%f, double:%lf\r\n",(float)zg, AngularV);//, double:%lf\r\n");
 //	}
 
-	//直進テスト
-	ExploreVelocity=180;
+	//割り込み処理テスト
+#if 1
+	ExploreVelocity=240;
 	t = 0;
 	timer1=0;
 	timer8=0;
 
-	//TargetVelocity[BODY] = ExploreVelocity;
-//	TIM1 ->CNT = 0;
-//	TIM8 ->CNT = 0;//これ大事かも
-//	t = 1;
-//	while(1)
-//	{
-//		if(t == 0)
-//		{
-//			printf("1: %d, 8 :%d\r\n",timer1, timer8);
-//		}
-//
-//	}
+	TargetVelocity[BODY] = ExploreVelocity;
+	TIM1 ->CNT = 0;
+	TIM8 ->CNT = 0;//これ大事かも
+	t = 1;
+	while(1)
+	{
+		if(t == 0)
+		{
+			printf("1: %d, 8 :%d\r\n",timer1, timer8);
+		}
+
+	}
+#endif
+
 #if 0
 	//直進テスト
 	Pos.Dir = front;
@@ -231,7 +234,10 @@ void Debug()
 	Decel(45,0);
 	HAL_Delay(30000);
 #endif
+
+#if 0
 	//旋回テスト
+	ExploreVelocity=0;
 	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
 	{
 		ChangeLED(7);
@@ -251,7 +257,7 @@ void Debug()
 		HAL_Delay(100);
 		//theta_log[i] = Angle;
 	}
-
+#endif
 	while(1)
 	{
 		for(int i=0; i < 30; i++)
@@ -618,7 +624,7 @@ void Explore()
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-	ExploreVelocity=90;
+	ExploreVelocity=240;
 	ChangeLED(2);
 //	while(1)
 //	{
