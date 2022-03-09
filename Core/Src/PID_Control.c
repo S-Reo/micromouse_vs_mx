@@ -21,107 +21,108 @@ float ei[PID_TARGET_NUM];
 float elast[PID_TARGET_NUM];
 int PidFlag;//[PID_TARGET_NUM];
 
-void PIDSetGain(int n, float kp, float ki, float kd)
-{
-	KP[n] = kp;
-	KI[n] = ki;
-	KD[n] = kd;
-}
-void PIDInit()
-{
-	for(int i=0; i < PID_TARGET_NUM; i++)
-	{
-		ei[i] = 0;
-		elast[i] = 0;
-		//PidFlag[i] = 0;
-	}
-}
-//void PIDSetGain(int n, float kp, float ki, float kd)	//同じデータ構造体をシステム同定で使いそう。パラメータ調整とか
+//void PIDSetGain(int n, float kp, float ki, float kd)
 //{
-//	Pid[n].KP = kp;
-//	Pid[n].KI = ki;
-//	Pid[n].KD = kd;
-////
-////	p = *Pid[n];
-////	p->KP;
+//	KP[n] = kp;
+//	KI[n] = ki;
+//	KD[n] = kd;
 //}
+//void PIDInit()
 //
-void PIDChangeFlagStraight(int n)
-{
-	PidFlag = n;
-}
-int PIDGetFlagStraight( )
-{
-	return PidFlag;
-}
-void PIDReset(int n)
-{
-	ei[n] = 0;
-	elast[n] = 0;
-}
-//void PIDChangeFlag(int n, int on_or_off)
 //{
-//	Pid[n].flag = on_or_off;
+//	for(int i=0; i < PID_TARGET_NUM; i++)
+//	{
+//		ei[i] = 0;
+//		elast[i] = 0;
+//		//PidFlag[i] = 0;
+//	}
 //}
-//int PIDGetFlag(int n)
+void PIDSetGain(int n, float kp, float ki, float kd)	//同じデータ構造体をシステム同定で使いそう。パラメータ調整とか
+{
+	Pid[n].KP = kp;
+	Pid[n].KI = ki;
+	Pid[n].KD = kd;
+//
+//	p = *Pid[n];
+//	p->KP;
+}
+//
+//void PIDChangeFlagStraight(int n)
 //{
-//	return Pid[n].flag;
+//	PidFlag = n;
+//}
+//int PIDGetFlagStraight( )
+//{
+//	return PidFlag;
 //}
 //void PIDReset(int n)
 //{
-//	//速度に限らずやればよいのでは
-//	Pid[n].e = 0;
-//	Pid[n].ei = 0;
-//	Pid[n].ed = 0;
-//	Pid[n].elast = 0;
-//	Pid[n].out = 0;
+//	ei[n] = 0;
+//	elast[n] = 0;
 //}
-//
-//void PIDCalculate(int n, float T)//, float target, float current, int flag
-//{
-//	Pid[n].e = Pid[n].target - Pid[n].current;
-//	Pid[n].ei += Pid[n].e * T;
-//	Pid[n].ed = ( Pid[n].e - Pid[n].elast ) / T;
-//	Pid[n].elast = Pid[n].e;
-//	Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
-//}
-//void PIDOutput(int n, int *output)
-//{
-//	*output = Pid[n].out;
-//}
-////Pid制御は現在値と目標値から、出力するべき値を計算するもの。前回の値の保存と積算用の変数が必要なので、独立させるかポインタかフラグで初期化
-//
-//void PIDInput(int n, float target, float current)
-//{
-//	Pid[n].target = target;
-//	Pid[n].current = current;
-//}
-//int PIDControl(int n, float T, float target, float current)
-//{
-//	//PIDInput( n, target, current);
-//	Pid[n].target = target;
-//	Pid[n].current = current;
-//
-//	Pid[n].e = Pid[n].target - Pid[n].current;
-//	Pid[n].ei += Pid[n].e * T;
-//	Pid[n].ed = ( Pid[n].e - Pid[n].elast ) / T;
-//	Pid[n].elast = Pid[n].e;
-//	Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
-//	//PIDCalculate( n, T );
-//	//出力の前に全部0にする処理をフラグで
-//	if(Pid[n].flag == 0)
-//	{
-//		Pid[n].e = 0;
-//		Pid[n].ei = 0;
-//		Pid[n].ed = 0;
-//		Pid[n].elast = 0;
-//		Pid[n].out = 0;
-//		//PIDReset(n);
-//	}
-//	//*output = Pid[n].out;
-//	//PIDOutput( n, output );
-//	return Pid[n].out;
-//}
+void PIDChangeFlag(int n, int on_or_off)
+{
+	Pid[n].flag = on_or_off;
+}
+int PIDGetFlag(int n)
+{
+	return Pid[n].flag;
+}
+void PIDReset(int n)
+{
+	//速度に限らずやればよいのでは
+	Pid[n].e = 0;
+	Pid[n].ei = 0;
+	Pid[n].ed = 0;
+	Pid[n].elast = 0;
+	Pid[n].out = 0;
+}
+
+void PIDCalculate(int n, float T)//, float target, float current, int flag
+{
+	Pid[n].e = Pid[n].target - Pid[n].current;
+	Pid[n].ei += Pid[n].e * T;
+	Pid[n].ed = ( Pid[n].e - Pid[n].elast ) / T;
+	Pid[n].elast = Pid[n].e;
+	Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
+}
+void PIDOutput(int n, int *output)
+{
+	*output = Pid[n].out;
+}
+//Pid制御は現在値と目標値から、出力するべき値を計算するもの。前回の値の保存と積算用の変数が必要なので、独立させるかポインタかフラグで初期化
+
+void PIDInput(int n, float target, float current)
+{
+	Pid[n].target = target;
+	Pid[n].current = current;
+}
+int PIDControl(int n, float T, float target, float current)
+{
+	//PIDInput( n, target, current);
+	Pid[n].target = target;
+	Pid[n].current = current;
+
+	Pid[n].e = Pid[n].target - Pid[n].current;
+	Pid[n].ei += Pid[n].e * T;
+	Pid[n].ed = ( Pid[n].e - Pid[n].elast ) / T;
+	Pid[n].elast = Pid[n].e;
+	Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
+	//PIDCalculate( n, T );
+	//出力の前に全部0にする処理をフラグで
+	if(Pid[n].flag == 0)
+	{
+		Pid[n].e = 0;
+		Pid[n].ei = 0;
+		Pid[n].ed = 0;
+		Pid[n].elast = 0;
+		Pid[n].out = 0;
+		//PIDReset(n);
+	}
+	//*output = Pid[n].out;
+	//PIDOutput( n, output );
+	return Pid[n].out;
+}
 //int PIDControl(int n, float T, float target, float current)
 //{
 //	float e;

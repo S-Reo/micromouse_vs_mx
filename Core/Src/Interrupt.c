@@ -98,24 +98,24 @@ void UpdatePhisicalDataFromEnc()
 
 	//エンコーダパルスをどう扱うか。今のままだと1msでの変位が大きいと目標パルス量を大きく通り越してしまう。→速度の取得時にはリセットをしないで、前回のパルスからの差を取ればいいかも。
 	//TIM3->CNT - INITIAL_PULSE <= target_pulse の間は直進。みたいなプログラムにして、breakした瞬間にパルスリセット。
-//	PulseDisplacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
-//	PulseDisplacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&KeepCounter[RIGHT]*/);
-//
-//	//速度 mm/s
-//	CurrentVelocity[LEFT] = ( (float)PulseDisplacement[LEFT] * MM_PER_PULSE ) / T1;
-//	CurrentVelocity[RIGHT] = ( (float)PulseDisplacement[RIGHT] * MM_PER_PULSE ) / T1;
-//	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )/2;
-//	//移動量 mm/msを積算
-//	TotalPulse[LEFT] += PulseDisplacement[LEFT];
-//	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
-//	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
-//	//角速度 rad/s
-//	//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) / TREAD_WIDTH;
-//	//ImuAngV = GetDataIMUdouble();
-//	AngularV = GetDataIMUfloat();//(float)ImuAngV;
-//	//角度 rad/msを積算
-//	Angle += AngularV * T1;
-//	ImuAngle += ImuAngV*T1;
+	PulseDisplacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
+	PulseDisplacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&KeepCounter[RIGHT]*/);
+
+	//速度 mm/s
+	CurrentVelocity[LEFT] = ( (float)PulseDisplacement[LEFT] * MM_PER_PULSE ) / T1;
+	CurrentVelocity[RIGHT] = ( (float)PulseDisplacement[RIGHT] * MM_PER_PULSE ) / T1;
+	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )/2;
+	//移動量 mm/msを積算
+	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+	//角速度 rad/s
+	//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) / TREAD_WIDTH;
+	//ImuAngV = GetDataIMUdouble();
+	AngularV = GetDataIMUfloat();//(float)ImuAngV;
+	//角度 rad/msを積算
+	Angle += AngularV * T1;
+	ImuAngle += ImuAngV*T1;
 	//ここまでがエンコーダからのUpdate
 }
 //マップデータ更新のタイミング
@@ -133,122 +133,124 @@ void UpdatePhisicalDataFromEnc()
 
 void ControlMotor()
 {
-//	//ここで更新する変数をグローバルに、もしくは構造体で書ければ、あとはメインのアルゴリズムを記述するだけ？
-//
-//	//UpdatePhisicalDataFromEnc();
-//	PulseDisplacement[LEFT] = TIM3->CNT - INITIAL_PULSE;//GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
+	//ここで更新する変数をグローバルに、もしくは構造体で書ければ、あとはメインのアルゴリズムを記述するだけ？
+
+	//UpdatePhisicalDataFromEnc();
+//	PulseDisplacement[LEFT] = TIM3->CNT - INITIAL_PULSE;
 //	TIM3->CNT = INITIAL_PULSE;
-//	PulseDisplacement[RIGHT] = TIM4->CNT - INITIAL_PULSE;//GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&KeepCounter[RIGHT]*/);
+//	PulseDisplacement[RIGHT] = TIM4->CNT - INITIAL_PULSE;
 //	TIM4->CNT = INITIAL_PULSE;
-//	//速度 mm/s
-//	CurrentVelocity[LEFT] = ( (float)PulseDisplacement[LEFT] * MM_PER_PULSE ) / T1;
-//	CurrentVelocity[RIGHT] = ( (float)PulseDisplacement[RIGHT] * MM_PER_PULSE ) / T1;
-//	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )/2;
-//	//移動量 mm/msを積算
-//	TotalPulse[LEFT] += PulseDisplacement[LEFT];
-//	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
-//	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
-//	//角速度 rad/s
-//	EncAngV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) / TREAD_WIDTH;
-//	//ImuAngV = GetDataIMUdouble();
+	PulseDisplacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
+	PulseDisplacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&KeepCounter[RIGHT]*/);
+	//速度 mm/s
+	CurrentVelocity[LEFT] = ( (float)PulseDisplacement[LEFT] * MM_PER_PULSE ) / T1;
+	CurrentVelocity[RIGHT] = ( (float)PulseDisplacement[RIGHT] * MM_PER_PULSE ) / T1;
+	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )/2;
+	//移動量 mm/msを積算
+	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+	//角速度 rad/s
+	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) / TREAD_WIDTH;
+	//ImuAngV = GetDataIMUdouble();
 //    read_gyro_data();
 //    read_accel_data();
 //	AngularV = GetDataIMUfloat();//(float)ImuAngV;
-//	//角度 rad/msを積算
-//	Angle += AngularV * T1;
-//	//ImuAngle += ImuAngV*T1;
-////	ControlWall();
-////	int wall_d =0,wall_l =0,wall_r =0;
+	//角度 rad/msを積算
+	Angle += AngularV * T1;
+	//ImuAngle += ImuAngV*T1;
+//	ControlWall();
 //	int wall_d =0,wall_l =0,wall_r =0;
-//	int ang_out=0;
-//
-//	//直進なら	//直進かどうかの判定をどうするか。アクションは一応4種類しかないので、それに合わせてflagを作っておく。
-//		//壁ありなら
-//
-//
-//	//処理を減らすには、
-//	if( Pos.Dir == front)
+	int wall_d =0,wall_l =0,wall_r =0;
+	int ang_out=0;
+
+	//直進なら	//直進かどうかの判定をどうするか。アクションは一応4種類しかないので、それに合わせてflagを作っておく。
+		//壁ありなら
+
+
+	//処理を減らすには、
+	if( Pos.Dir == front)
+	{
+		if( Pid[A_VELO_PID].flag == 1 )
+		{
+			ang_out = PIDControl( A_VELO_PID, T1, TargetAngle, Angle);
+			TargetAngularV = (float)ang_out*0.001;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+		}
+		else if( Pid[D_WALL_PID].flag == 1 )
+		{
+			wall_d = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+			TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		}
+		else if( Pid[L_WALL_PID].flag == 1 )
+		{
+			wall_l = PIDControl( L_WALL_PID, T1,  Photo[SL], TargetPhoto[SL]);
+			TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+
+		}
+		else if( Pid[R_WALL_PID].flag == 1 )
+		{
+			wall_r = PIDControl( R_WALL_PID, T1, TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+			TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		}
+	}
+	//左のみ右のみでも同じようにする。
+		//壁なしなら
+			//IMUの角度or角速度フィードバック
+		//PIDのflagが有効なら代入
+
+//	//ここからは目標値と現在値を用いた制御。
+//	else
 //	{
-//		if( Pid[A_VELO_PID].flag == 1 )
-//		{
-//			ang_out = PIDControl( A_VELO_PID, T1, TargetAngle, Angle);
-//			TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
-//		}
-//		else if( Pid[D_WALL_PID].flag == 1 )
-//		{
-//			wall_d = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
-//			TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-//		}
-//		else if( Pid[L_WALL_PID].flag == 1 )
-//		{
-//			wall_l = PIDControl( L_WALL_PID, T1,  Photo[SL], TargetPhoto[SL]);
-//			TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-//
-//		}
-//		else if( Pid[R_WALL_PID].flag == 1 )
-//		{
-//			wall_r = PIDControl( R_WALL_PID, T1, TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
-//			TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-//		}
+//		TargetAngularV += AngularAcceleration;
 //	}
-//	//左のみ右のみでも同じようにする。
-//		//壁なしなら
-//			//IMUの角度or角速度フィードバック
-//		//PIDのflagが有効なら代入
-//
-////	//ここからは目標値と現在値を用いた制御。
-////	else
-////	{
-////		TargetAngularV += AngularAcceleration;
-////	}
-//	//タイヤ目標値計算
-//	//減速させすぎると、目標パルスに達する前にマイナスに振れてしまう
-//
-//	TargetVelocity[BODY] += Acceleration;
-//	TargetAngularV += AngularAcceleration;
-//
-//	//直進の時はここで角速度の目標値をいじる。
-//	//壁センサ値か、角度値、実際の角速度。
-//	//PID出力を角加速度としてインクリメント
-//
-//	//旋回なら
-//
-////	if(TargetAngularV == 0)
-////	{
-////		PIDChangeFlag(A_VELO_PID, 1);
-////	}
-////	else
-////	{
-////		PIDChangeFlag(A_VELO_PID, 0);
-////	}
-//
-//	//壁制御を入れる条件
-//	//型壁制御は端の区画にいるとき。必ず。
-//	TargetVelocity[RIGHT] = ( TargetVelocity[BODY]*2 - TargetAngularV * TREAD_WIDTH )/2;
-//	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
-//
-//	//目標角速度が0のときは角速度制御も入れる。
-//	//制御出力値生成
-//	//PIDControl(int n, int T, float target, float current, int *output);
-//	//もう一回車体速度制御+角速度制御でやってみる。ダメだった。ブレブレ。
-//	VelocityLeftOut = PIDControl( 4, T1, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
-//	VelocityRightOut = PIDControl( 5, T1, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
-////	VelocityLeftOut = PIDControl( B_VELO, T1, TargetVelocity[BODY], CurrentVelocity[BODY]);
-////	VelocityRightOut = VelocityLeftOut;
-//
-//	//int straight_out=0;
-//	//straight_out = PIDControl( A_VELO_PID, T1, TargetAngularV, AngularV);
-//
-//	//PIDControl( B_VELO, T1, target, current, &left);
-//	//WallLeftOut = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);
-//
-//	//WallRightOut = -WallLeftOut;
-//
-//	//L_motor = VelocityLeftOut; //WallLeftOut
-//	//R_motor = VelocityRightOut; //+ WallRightOut
-//
-//	//モータに出力
-//	Motor_Switch( VelocityLeftOut, VelocityRightOut );
+	//タイヤ目標値計算
+	//減速させすぎると、目標パルスに達する前にマイナスに振れてしまう
+
+	TargetVelocity[BODY] += Acceleration;
+	TargetAngularV += AngularAcceleration;
+
+	//直進の時はここで角速度の目標値をいじる。
+	//壁センサ値か、角度値、実際の角速度。
+	//PID出力を角加速度としてインクリメント
+
+	//旋回なら
+
+//	if(TargetAngularV == 0)
+//	{
+//		PIDChangeFlag(A_VELO_PID, 1);
+//	}
+//	else
+//	{
+//		PIDChangeFlag(A_VELO_PID, 0);
+//	}
+
+	//壁制御を入れる条件
+	//型壁制御は端の区画にいるとき。必ず。
+	TargetVelocity[RIGHT] = ( TargetVelocity[BODY]*2 - TargetAngularV * TREAD_WIDTH )/2;
+	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
+
+	//目標角速度が0のときは角速度制御も入れる。
+	//制御出力値生成
+	//PIDControl(int n, int T, float target, float current, int *output);
+	//もう一回車体速度制御+角速度制御でやってみる。ダメだった。ブレブレ。
+	VelocityLeftOut = PIDControl( L_WALL_PID, T1, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+	VelocityRightOut = PIDControl( R_WALL_PID, T1, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+//	VelocityLeftOut = PIDControl( B_VELO, T1, TargetVelocity[BODY], CurrentVelocity[BODY]);
+//	VelocityRightOut = VelocityLeftOut;
+
+	//int straight_out=0;
+	//straight_out = PIDControl( A_VELO_PID, T1, TargetAngularV, AngularV);
+
+	//PIDControl( B_VELO, T1, target, current, &left);
+	//WallLeftOut = PIDControl( D_WALL_PID, T1, Photo[SL], Photo[SR]+PhotoDiff);
+
+	//WallRightOut = -WallLeftOut;
+
+	//L_motor = VelocityLeftOut; //WallLeftOut
+	//R_motor = VelocityRightOut; //+ WallRightOut
+
+	//モータに出力
+	Motor_Switch( VelocityLeftOut, VelocityRightOut );
 
 //	int left = 300, right = 300;
 //	Motor_Switch( left, right );
@@ -294,6 +296,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			t = 0;
 		}
+		ControlMotor();
 
 //		float cpdl, cpdr;
 //		cpdl = TIM3 -> CNT;
@@ -354,6 +357,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //
 //		Motor_Switch( vlo, vro );
 
+#if 0
 		//出力値をモータ出力用関数に渡す
 		CurrentPulseDisplacementLeft = TIM3->CNT;//GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
 		TIM3->CNT = INITIAL_PULSE;
@@ -415,7 +419,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		Motor_Switch( VelocityLeftOut, VelocityRightOut );
 
-
+#endif
 /*-------------------------------------------------------------------*/
 		//e = 0;
 		//ei[n] = 0;

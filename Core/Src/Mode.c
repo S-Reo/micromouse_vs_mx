@@ -65,9 +65,9 @@ void InitExplore()
 	TargetAngularV = 0;
 	Acceleration = 0;
 	AngularAcceleration = 0;
-	TotalPulseLeft = 0;
-	TotalPulseRight = 0;
-	TotalPulseBody = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
 	IMU_Calib();
@@ -93,15 +93,14 @@ void InitExplore()
 	//CS_RESET;
 
 	//PID制御準備
-	PIDInit();
-//	PIDChangeFlag(L_VELO_PID, 0);
-//	PIDChangeFlag(R_VELO_PID, 0);
-//
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	//PIDChangeFlag(B_VELO, 0);
-//	PIDChangeFlag(A_VELO_PID, 0);
+	//PIDInit();
+	PIDChangeFlag(L_VELO_PID, 0);
+	PIDChangeFlag(R_VELO_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 0);
+	//PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
 
 
 	Load_Gain();
@@ -114,16 +113,16 @@ void InitExplore()
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
 
-	TargetVelocityBody = 0;
+	TargetVelocity[BODY] = 0;
 	TargetAngularV = 0;
 	Acceleration = 0;
 	AngularAcceleration = 0;
-	TotalPulseLeft = 0;
-	TotalPulseRight = 0;
-	TotalPulseBody = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
+	//IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
 
 	TargetPhoto[SL] = Photo[SL];
 	TargetPhoto[SR] = Photo[SR];
@@ -163,9 +162,9 @@ void Debug()
 	InitPosition();
 	wall_init();
 
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 
 	//スタート時のアクションに設定
 	//direction action_type = front;
@@ -174,14 +173,14 @@ void Debug()
 	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
 //void ChangeNowStatus()
 
-	//PIDChangeFlag(L_VELO_PID, 1);
-	//PIDChangeFlag(R_VELO_PID, 1);
-	//printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulseBody,TotalPulseLeft,TotalPulseRight);
-	PIDChangeFlagStraight(N_WALL_PID);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
-//	PIDChangeFlag(A_VELO_PID, 0);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+	//PIDChangeFlagStraight(N_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
 	ExploreVelocity=0;
 	ChangeLED(3);
 	//HAL_Delay(500);
@@ -198,12 +197,12 @@ void Debug()
 //	}
 
 	//直進テスト
-	ExploreVelocity=300;
+	ExploreVelocity=90;
 	t = 0;
 	timer1=0;
 	timer8=0;
 
-	//TargetVelocityBody = ExploreVelocity;
+	TargetVelocity[BODY] = ExploreVelocity;
 	TIM1 ->CNT = 0;
 	TIM8 ->CNT = 0;//これ大事かも
 	t = 1;
@@ -271,7 +270,7 @@ void Debug()
 //	{
 //		//正にも負にも回転するからパルスの条件式は一概にかけない。
 //		//途中で追加する
-//		//TotalPulseBody
+//		//TotalPulse[BODY]
 //		//Move(action, cardinal, direction, &move_pulse[LEFT], &move_pulse[RIGHT]);
 //		//目標移動量が正か負かで条件分岐。左右でも分ける。
 //		//正なら
@@ -327,16 +326,16 @@ void GainTestLWall()
 	InitExplore();
 	InitPosition();
 	wall_init();
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 
-//	PIDChangeFlag(L_VELO_PID, 1);
-//	PIDChangeFlag(R_VELO_PID, 1);
-	PIDChangeFlagStraight(L_WALL_PID);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag(L_WALL_PID, 1);
-//	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	//PIDChangeFlagStraight(L_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 1);
+	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(4);
@@ -350,16 +349,16 @@ void GainTestRWall()
 	InitExplore();
 	InitPosition();
 	wall_init();
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 
-//	PIDChangeFlag(L_VELO_PID, 1);
-//	PIDChangeFlag(R_VELO_PID, 1);
-	PIDChangeFlagStraight(R_WALL_PID);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 1);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	//PIDChangeFlagStraight(R_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 1);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(1);
@@ -373,16 +372,16 @@ void GainTestDWall()
 	InitExplore();
 	InitPosition();
 	wall_init();
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 
-//	PIDChangeFlag(L_VELO_PID, 1);
-//	PIDChangeFlag(R_VELO_PID, 1);
-	PIDChangeFlagStraight(D_WALL_PID);
-//	PIDChangeFlag(D_WALL_PID, 1);
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	//PIDChangeFlagStraight(D_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 1);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(2);
@@ -397,17 +396,17 @@ void GainTestAVelo()
 	InitExplore();
 	InitPosition();
 	wall_init();
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 
-//	PIDChangeFlag(L_VELO_PID, 1);
-//	PIDChangeFlag(R_VELO_PID, 1);
-	PIDChangeFlagStraight(A_VELO_PID);
-//	PIDChangeFlag(A_VELO_PID, 1);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	//PIDChangeFlagStraight(A_VELO_PID);
+	PIDChangeFlag(A_VELO_PID, 1);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(5);
@@ -441,9 +440,9 @@ void WritingFree()
 	//時間用の処理の初期化。
 	//int timer = 0;
 	//エンコーダ移動量の初期化。
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 	//スタート時のアクションに設定
 	//direction action_type = front;
 	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
@@ -451,14 +450,14 @@ void WritingFree()
 	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
 //void ChangeNowStatus()
 
-//	PIDChangeFlag(L_VELO_PID, 1);
-//	PIDChangeFlag(R_VELO_PID, 1);
-	printf("パルスチェック: BODY %f, LEFT %f, RIGHT %f\r\n",TotalPulseBody,TotalPulseLeft,TotalPulseRight);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
 
-	PIDChangeFlagStraight(N_WALL_PID);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
+	//PIDChangeFlagStraight(N_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(7);
@@ -596,9 +595,9 @@ void Explore()
 	//時間用の処理の初期化。
 	//int timer = 0;
 	//エンコーダ移動量の初期化。
-	TotalPulseRight = 0;
-	TotalPulseLeft = 0;
-	TotalPulseBody = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
 	//スタート時のアクションに設定
 	//direction action_type = front;
 	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
@@ -606,13 +605,13 @@ void Explore()
 	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
 //void ChangeNowStatus()
 
-//	PIDChangeFlag(L_VELO_PID, 1);
-//	PIDChangeFlag(R_VELO_PID, 1);
-	printf("パルスチェック: BODY %f, LEFT %f, RIGHT %f\r\n",TotalPulseBody,TotalPulseLeft,TotalPulseRight);
-	PIDChangeFlagStraight(N_WALL_PID);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+	//PIDChangeFlagStraight(N_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=90;
 	ChangeLED(2);

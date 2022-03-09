@@ -263,10 +263,10 @@ void ControlWall()
 	int wall_ctrl_dir = GetWallCtrlDirection();	//次の座標のも返してみて、できれば連続で制御をする。
 	//割り込み中に呼ぶかアクション中に呼ぶか。アクション中の方が座標と壁の状態が確実。いや、判定が遅れると嫌だからやっぱり割り込み。移動量はflagで。
 
-	PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
-//	PIDChangeFlag(R_WALL_PID, 0);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag( A_VELO_PID, 0);
+	//PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag( A_VELO_PID, 0);
 	//アクションごとに壁制御を記述した方がいいかも
 
 	//アクション、方向、壁安全。
@@ -277,7 +277,7 @@ void ControlWall()
 		switch(Pos.Act)
 		{
 		case accel:
-			PIDChangeFlagStraight( A_VELO_PID);
+			PIDChangeFlag( A_VELO_PID , 1);
 			//一つ先の区画がわかっていて加速したいときに
 			break;
 		case decel:
@@ -289,18 +289,18 @@ void ControlWall()
 			{
 				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
 				{
-					PIDChangeFlagStraight(wall_ctrl_dir);
-					//PIDChangeFlag( A_VELO_PID, 0);
+					PIDChangeFlag(wall_ctrl_dir, 1);
+					PIDChangeFlag( A_VELO_PID, 0);
 				}
 				else
 				{
-					//PIDChangeFlag(wall_ctrl_dir, 0);
-					PIDChangeFlagStraight( A_VELO_PID );
+					PIDChangeFlag(wall_ctrl_dir, 0);
+					PIDChangeFlag( A_VELO_PID , 1);
 				}
 			}
 			else
 			{
-				PIDChangeFlagStraight( A_VELO_PID );
+				PIDChangeFlag( A_VELO_PID , 1);
 			}
 			break;
 			//wait
@@ -334,27 +334,27 @@ void ControlWall()
 			{
 				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
 				{
-					PIDChangeFlagStraight(wall_ctrl_dir);
-					//PIDChangeFlag( A_VELO_PID, 0);
+					PIDChangeFlag(wall_ctrl_dir, 1);
+					PIDChangeFlag( A_VELO_PID, 0);
 				}
 				else
 				{
-					//PIDChangeFlag(wall_ctrl_dir, 0);
-					PIDChangeFlagStraight( A_VELO_PID );
+					PIDChangeFlag(wall_ctrl_dir, 0);
+					PIDChangeFlag( A_VELO_PID , 1);
 				}
 			}
 			else
 			{
-				PIDChangeFlagStraight( A_VELO_PID );
+				PIDChangeFlag( A_VELO_PID , 1);
 			}
 		}
 		else if(Pos.Act == accel)
 		{
-			PIDChangeFlagStraight( A_VELO_PID );
+			PIDChangeFlag( A_VELO_PID , 1);
 		}
 		else if(Pos.Act == rotate)
 		{
-			PIDChangeFlagStraight( N_WALL_PID );
+			PIDChangeFlag( A_VELO_PID , 0);
 		}
 
 
@@ -376,27 +376,27 @@ void ControlWall()
 			{
 				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
 				{
-					PIDChangeFlagStraight(wall_ctrl_dir);
-					//PIDChangeFlag( A_VELO_PID, 0);
+					PIDChangeFlag(wall_ctrl_dir, 1);
+					PIDChangeFlag( A_VELO_PID, 0);
 				}
 				else
 				{
-					//PIDChangeFlag(wall_ctrl_dir, 0);
-					PIDChangeFlagStraight( A_VELO_PID );
+					PIDChangeFlag(wall_ctrl_dir, 0);
+					PIDChangeFlag( A_VELO_PID , 1);
 				}
 			}
 			else
 			{
-				PIDChangeFlagStraight( A_VELO_PID );
+				PIDChangeFlag( A_VELO_PID , 1);
 			}
 		}
 		else if(Pos.Act == accel)
 		{
-			PIDChangeFlagStraight( A_VELO_PID );
+			PIDChangeFlag( A_VELO_PID , 1);
 		}
 		else if(Pos.Act == rotate)
 		{
-			PIDChangeFlagStraight( N_WALL_PID );
+			PIDChangeFlag( A_VELO_PID , 0);
 		}
 
 	}
@@ -408,18 +408,18 @@ void ControlWall()
 		{
 			if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
 			{
-				PIDChangeFlagStraight(wall_ctrl_dir);
-				//PIDChangeFlag( A_VELO_PID, 0);
+				PIDChangeFlag(wall_ctrl_dir , 1);
+				PIDChangeFlag( A_VELO_PID, 0);
 			}
 			else
 			{
-				//PIDChangeFlag(wall_ctrl_dir, 0);
-				PIDChangeFlagStraight( A_VELO_PID );
+				PIDChangeFlag(wall_ctrl_dir, 0);
+				PIDChangeFlag( A_VELO_PID , 1);
 			}
 		}
 		else if(Pos.Act == accel)
 		{
-			PIDChangeFlagStraight( A_VELO_PID );
+			PIDChangeFlag( A_VELO_PID , 1);
 		}
 		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
 
@@ -1137,10 +1137,10 @@ void Decel(float dec_distance, float end_speed)
 		{
 			WallWarn();
 			//ControlWall();
-//			PIDChangeFlag(L_WALL_PID, 0);
-//			PIDChangeFlag(R_WALL_PID, 0);
-//			PIDChangeFlag(D_WALL_PID, 0);
-			PIDChangeFlagStraight( A_VELO_PID );
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			PIDChangeFlag( A_VELO_PID , 1);
 
 		}
 
@@ -1253,10 +1253,10 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulseBody )
 			{
 				WallWarn();
-//				PIDChangeFlag(L_WALL_PID, 0);
-//				PIDChangeFlag(R_WALL_PID, 0);
-//				PIDChangeFlag(D_WALL_PID, 0);
-				PIDChangeFlagStraight( A_VELO_PID );
+				PIDChangeFlag(L_WALL_PID, 0);
+				PIDChangeFlag(R_WALL_PID, 0);
+				PIDChangeFlag(D_WALL_PID, 0);
+				PIDChangeFlag( A_VELO_PID , 1);
 			}
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulseBody) )	//移動量に応じて処理を変える。
 	//		{
@@ -1307,7 +1307,7 @@ void TurnRight(char mode)
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
 		HAL_Delay(250);
-		PIDChangeFlagStraight( A_VELO_PID );
+		PIDChangeFlag( A_VELO_PID , 1);
 		Accel(45, ExploreVelocity);
 		break;
 	case 'S':
@@ -1349,7 +1349,7 @@ void TurnLeft(char mode)
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
 		HAL_Delay(250);
-		PIDChangeFlagStraight( A_VELO_PID );
+		PIDChangeFlag( A_VELO_PID , 1);
 		Accel(45, ExploreVelocity);
 		break;
 	case 'S':

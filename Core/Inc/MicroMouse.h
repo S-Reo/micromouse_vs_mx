@@ -36,13 +36,18 @@ extern float PhotoDiff;
 extern int KeepCounter;
 //速度 mm/s
 extern float CurrentVelocity[3];
+extern float TargetVelocity[3];
+
 extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
 extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
 //移動量 mm/msを積算
 extern float TotalPulseBody;
 extern float TotalPulseLeft;
 extern float TotalPulseRight;
+
 extern int KeepPulse[3];
+extern int PulseDisplacement[3];
+extern int TotalPulse[3];
 
 //角速度 rad/s
 extern float AngularV;
@@ -138,7 +143,7 @@ extern int L_motor, R_motor;
 
 //別のとこ
 //この設定はここじゃない方が使いやすいかも。
-#define ENCODER_PULSE 			4096//*4//8192  //  モータ//エンコーダ値をプリスケーラで1/4倍中
+#define ENCODER_PULSE 			4096*4//8192  //  モータ//エンコーダ値をプリスケーラで1/4倍中
 #define REDUCATION_RATIO 		4  //
 //エンコーダパルスの基準値
 #define INITIAL_PULSE_L (30000 - 1)
