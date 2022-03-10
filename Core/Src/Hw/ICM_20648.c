@@ -143,7 +143,7 @@ void IMU_Calib(){
 	for(int i = 0; i < num; i++){
 		zg_vals[i] = ZGyro;
 		sum += zg_vals[i];
-		HAL_Delay(1);
+		HAL_Delay(2);
 	}
 //	for(int i=0; i < num; i++)
 //	{

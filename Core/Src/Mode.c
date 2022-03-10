@@ -88,7 +88,10 @@ void InitExplore()
 	EncoderStart(); //戻し忘れないように
 	EmitterON();
 	ADCStart();
-	IMU_init();
+	uint8_t imu_check;
+	imu_check =IMU_init();
+
+	printf("imu_check 1ならOK: %d\r\n",imu_check);
 	//IMU_DMA_Start();
 	//CS_RESET;
 
@@ -107,6 +110,44 @@ void InitExplore()
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
+#if 0
+	//ジャイロの読み取りにかかる時間の計測
+//  int16_t data[1000]={0};
+//  int i=0, elaps=0;
+
+  HAL_TIM_Base_Start_IT(&htim9);
+  t = 1;
+  for(int i = 0; i < 500 ;i++)
+  {
+		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
+		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
+		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+  }
+
+  t = 0;
+  HAL_TIM_Base_Stop_IT(&htim9);
+  //data[i] = zg;
+  while(1)
+  {
+	  printf("timer8 : %d\r\n",timer8);
+//	  t = 1;
+//	  //read_gyro_data();
+//	  ZGyro = ReadByte();
+//	  t = 0;
+//	  HAL_TIM_Base_Stop_IT(&htim8);
+//	  data[i] = zg;
+//	  i++;
+//	  zg = 0;
+//	  if(i == 1000)
+//	  {
+//		  t = 0;
+//		  HAL_TIM_Base_Stop_IT(&htim8);
+//		  break;
+//	  }
+
+  }
+#endif
 	//割り込みを有効化
 	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start_IT(&htim8);
@@ -123,7 +164,7 @@ void InitExplore()
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
 	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
-
+	//zg_offset = 0;
 	TargetPhoto[SL] = Photo[SL];
 	TargetPhoto[SR] = Photo[SR];
 	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
@@ -211,7 +252,7 @@ void Debug()
 	{
 		if(t == 0)
 		{
-			printf("1: %d, 8 :%d, ImuAngV:%f, ImuAngle:%f, ZGyro:%f\r\n",timer1, timer8, ImuAngV, ImuAngle, ZGyro);
+			printf("1: %d, 8 :%d, ImuAngV:%f, ImuAngle:%f, ZGyro:%f\r\n",timer1, timer8, AngularV, Angle, ZGyro);
 		}
 
 	}
@@ -663,7 +704,7 @@ void Explore()
 		//ChangeLED(0);
 		//方向決定と、座標方角の更新。
 		//方向決定を変える。
-		LeftHandJudge('S');
+		LeftHandJudge('T');
 
 		//i++;
 		//マップデータに基づき、次の目標座標を決定する。目標座標から進行方向を決める。

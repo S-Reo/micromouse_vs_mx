@@ -314,6 +314,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			t = 0;
 		}
+//*-----------------*/
 		//ControlMotor();
 		PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
 		TIM3->CNT = INITIAL_PULSE;
@@ -341,11 +342,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//z_gyro = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));//read_zg_data();
 
 	    imu_accel =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
-	    ImuAngV = -((0.01*imu_accel) + (0.99)* (last));
+	    //ImuAngV = -((0.01*imu_accel) + (0.99)* (last));
+	    AngularV = -((0.01*imu_accel) + (0.99)* (last));
 	    last = imu_accel;
-	    ImuAngle += ImuAngV * T1;//角度 rad/msを積算
+	    //ImuAngle += ImuAngV * T1;//角度 rad/msを積算
 
-		AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+		//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 		Angle += AngularV * T1;
 		int out=0;
 		out += PIDControl( A_VELO_PID, TargetAngle, Angle);
@@ -371,6 +373,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		//モータに出力
 		Motor_Switch( VelocityLeftOut, VelocityRightOut );
+
+//*-----------------*/
+
 //		float cpdl, cpdr;
 //		cpdl = TIM3 -> CNT;
 //		TIM3->CNT = INITIAL_PULSE;
@@ -664,6 +669,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 //	if( htim == &htim9)
 //	{
+//		timer8 += t;
 //
 //	}
 }

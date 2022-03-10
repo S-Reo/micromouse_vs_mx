@@ -13,8 +13,13 @@
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim9;
 
 extern int timer1,timer8, t;
+
+extern const float convert_to_velocity;
+extern const float convert_to_angularv;
+extern const float convert_to_imu_angv;
 ////エンコーダ値から生成する変数。割り込みで更新。
 //extern float velocity[ ENC_NUM ];
 //extern float total_mileage[ ENC_NUM ];
