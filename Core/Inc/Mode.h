@@ -13,6 +13,7 @@ void Debug();
 void ParameterSetting();
 void Explore();
 void WritingFree();
+void FastestRun();
 
 void GainTestLWall();
 void GainTestRWall();

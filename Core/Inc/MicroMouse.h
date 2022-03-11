@@ -101,7 +101,7 @@ extern int L_motor, R_motor;
 //一辺の区画数
 //#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
-//最終ゴール区画座標
+//最終ゴール区画座標 全日本(6,9) (7,10)
 #define X_GOAL_LESSER 6
 #define Y_GOAL_LESSER 9
 
@@ -122,8 +122,8 @@ extern int L_motor, R_motor;
 
 #define NOWALL 0
 #define WALL 1
-#define VIRTUAL	2
-#define UNKNOWN 3
+#define VIRTUAL	3
+#define UNKNOWN 2
 //壁の閾値(走行中に変更できるようにしたい)
 #define FRONT_WALL 70  //２つの和/2
 #define RIGHT_WALL 90//90 //380
@@ -176,6 +176,10 @@ typedef struct{
 
 //インクルード先で宣言
 extern t_wall Wall [NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
+
+extern uint16_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
+
+extern uint16_t walk_log[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES];
 //方角データ
 typedef enum{
 	north = 0,
@@ -190,8 +194,8 @@ typedef enum Direction	//区画の境界に来た時の状態表現だから
 {
 	front	= 0,
 	right		= 1,
-	left		= 2,
-	back		= 3
+	back		= 2,
+	left		= 3,
 						//斜めで4種類追加
 }direction;
 //extern direction my_dir;
@@ -210,8 +214,8 @@ typedef enum Action	//区画の境界に来た時の状態表現だから
 typedef enum WallStatus{
 	nowall 		= 0,
 	wall 			= 1,
-	virtual		= 2,
-	unknown 	= 3
+	unknown	= 2,
+	virtual 		= 3
 
 }wall_status;
 typedef enum WallSafety
@@ -252,6 +256,11 @@ typedef struct Position
 	cardinal Car;	//東西南北
 	action Act;
 	wall_safety WallSaf;
+	uint8_t NextX;
+	uint8_t NextY;
+	direction NextDir;	//前後左右
+    cardinal NextCar;	//東西南北
+    action NextAct;
 	float sl;
 	float sr;
 	float fl;

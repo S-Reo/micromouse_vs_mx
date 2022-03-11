@@ -19,6 +19,8 @@
 #include "UI.h"
 #include "Interrupt.h"
 #include "Motor_Driver.h"
+
+#include "Map.h"
 //現在の速度と総走行距離と左右それぞれ
 //現在の角度と角速度
 
@@ -805,7 +807,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
 	float pre = 4;         //スラローム前距離
 	float fol = 6;         //スラローム後距離
-	float alpha_turn = 0.08;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = 0.046;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -899,6 +901,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//alpha_flag = 0;
 	AngularAcceleration = 0;
 	TargetAngularV = 0;
+	Calc = SearchOrFast;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
@@ -906,6 +909,17 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			TargetAngularV = 0;
 			TargetVelocity[BODY] = v_turn;
 			//printf("直進2\r\n");
+
+			//後半の直線に入ったら計算する。
+			if(Calc == 0)
+			{
+				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+				//計算して
+				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+				//UpdateWalkMap();
+				//次のアクションを渡すのは別のところで。
+				Calc = 1;
+			}
 	}
 	TargetAngle += 90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
@@ -940,7 +954,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
 	float pre = 4;         //スラローム前距離
 	float fol = 6;         //スラローム後距離
-	float alpha_turn = -0.08;//046;//125;//125;//16;//0.015*13;  //スラローム時の角加速度
+	float alpha_turn = -0.046;//046;//125;//125;//16;//0.015*13;  //スラローム時の角加速度
 	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -1001,6 +1015,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//alpha_flag = 0;
 	AngularAcceleration = 0;
 	TargetAngularV = 0;
+	Calc = SearchOrFast;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
@@ -1008,6 +1023,15 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 			TargetAngularV = 0;
 			TargetVelocity[BODY] = v_turn;
 			//printf("直進2\r\n");
+			if(Calc == 0)
+			{
+				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+				//計算して
+				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+				//UpdateWalkMap();
+				//次のアクションを渡すのは別のところで。
+				Calc = 1;
+			}
 	}
 	TargetAngle += -90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
@@ -1042,8 +1066,19 @@ void Accel(float add_distance, float explore_speed)
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
+	Calc = SearchOrFast;//Fastでは1を代入。
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
+		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
+		{
+			wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+			//計算して
+			make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+			//UpdateWalkMap();
+			//次のアクションを渡すのは別のところで。
+			Calc = 1;
+		}
+
 		//ControlWall();
 #if 1
 		//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
@@ -1068,6 +1103,8 @@ void Accel(float add_distance, float explore_speed)
 #endif
 	}
 	Acceleration = 0;
+	//壁読んで、
+
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
@@ -1251,6 +1288,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 		Pos.Act = straight;
 		WallSafe();
 		ControlWall();
+		Calc = SearchOrFast;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
 			//最初の45mmで加速をストップ
@@ -1264,11 +1302,23 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				PIDChangeFlag(D_WALL_PID, 0);
 				PIDChangeFlag( A_VELO_PID , 1);
 			}
+			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
+			{
+				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+				//計算して
+				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+				//UpdateWalkMap();
+				//次のアクションを渡すのは別のところで。
+				Calc = 1;
+			}
+
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;
 	//		}
 		}
+
+
 	}
 
 	//余分に加速した場合、あとの減速で速度を落としきれないことになっていたので、減速時にその時の速度を使うようにした。

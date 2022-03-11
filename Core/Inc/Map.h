@@ -10,6 +10,9 @@
 
 #include <main.h>
 #include <MicroMouse.h>
+
+extern int Calc;
+extern int SearchOrFast;
 /*
  * map.h
  *
@@ -45,14 +48,22 @@
 
 /*関数プロトタイプ*/
 void wall_init();
+void flash_store_init();
 void wall_store_running(uint8_t x, uint8_t y);
-void wall_set(uint8_t x, uint8_t y, cardinal car,float side_left, float side_right, float front_left, float front_right);
+void wall_set();
 void wall_ram_print();
 void wall_flash_print();
+void flash_copy_to_ram();
 void UpdateWalkMap();
 void LeftHandJudge(char turn_mode);
+void KyushinJudge(char turn_mode);
 
 
+//RT
+void make_map(int x, int y, int mask);
+void map_print();
+
+void fast_run(int x, int y);
 
 
 

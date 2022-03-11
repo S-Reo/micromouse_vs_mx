@@ -68,7 +68,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 	//壁センサの値を持ってくる。
 	//エンコーダ開始。初期値セット込み
 	EncoderStart();
-
+	HAL_Delay(1000);
 	//while中で選択
 	*pMode=min;
 

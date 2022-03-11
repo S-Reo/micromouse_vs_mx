@@ -111,26 +111,24 @@ void InitExplore()
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 
 #if 0
+	wall_init();
 	//ジャイロの読み取りにかかる時間の計測
 //  int16_t data[1000]={0};
 //  int i=0, elaps=0;
 
-  HAL_TIM_Base_Start_IT(&htim9);
-  t = 1;
-  for(int i = 0; i < 500 ;i++)
-  {
-		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
-		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
-		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
-		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
-  }
-
+  HAL_TIM_Base_Start_IT(&htim8);
+t = 1;
+//	wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+//	//計算して
+//	UpdateWalkMap();
+  make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01); //0.05*7=0.35msで済んだ。
   t = 0;
-  HAL_TIM_Base_Stop_IT(&htim9);
+  HAL_TIM_Base_Stop_IT(&htim8);
   //data[i] = zg;
   while(1)
   {
 	  printf("timer8 : %d\r\n",timer8);
+	  map_print();
 //	  t = 1;
 //	  //read_gyro_data();
 //	  ZGyro = ReadByte();
@@ -178,6 +176,100 @@ void InitExplore()
 	PIDReset(D_WALL_PID);
 
 #endif
+}
+
+void InitFastest()
+{
+	Motor_PWM_Start();
+	EncoderStart(); //戻し忘れないように
+	EmitterON();
+	ADCStart();
+	uint8_t imu_check;
+	imu_check =IMU_init();
+
+	printf("imu_check 1ならOK: %d\r\n",imu_check);
+	//IMU_DMA_Start();
+	//CS_RESET;
+
+	//PID制御準備
+	//PIDInit();
+	PIDChangeFlag(L_VELO_PID, 0);
+	PIDChangeFlag(R_VELO_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 0);
+	//PIDChangeFlag(B_VELO, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
+
+
+	Load_Gain();
+	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+
+#if 0
+	wall_init();
+	//ジャイロの読み取りにかかる時間の計測
+//  int16_t data[1000]={0};
+//  int i=0, elaps=0;
+
+  HAL_TIM_Base_Start_IT(&htim8);
+t = 1;
+	wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+	//計算して
+	UpdateWalkMap();
+
+  t = 0;
+  HAL_TIM_Base_Stop_IT(&htim8);
+  //data[i] = zg;
+  while(1)
+  {
+	  printf("timer8 : %d\r\n",timer8);
+//	  t = 1;
+//	  //read_gyro_data();
+//	  ZGyro = ReadByte();
+//	  t = 0;
+//	  HAL_TIM_Base_Stop_IT(&htim8);
+//	  data[i] = zg;
+//	  i++;
+//	  zg = 0;
+//	  if(i == 1000)
+//	  {
+//		  t = 0;
+//		  HAL_TIM_Base_Stop_IT(&htim8);
+//		  break;
+//	  }
+
+  }
+#endif
+	//割り込みを有効化
+	HAL_TIM_Base_Start_IT(&htim1);
+	HAL_TIM_Base_Start_IT(&htim8);
+	//ここまででハードの準備はできた。
+	//ここからはソフト的な準備
+
+	TargetVelocity[BODY] = 0;
+	TargetAngularV = 0;
+	Acceleration = 0;
+	AngularAcceleration = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[BODY] = 0;
+
+	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
+	//zg_offset = 0;
+	TargetPhoto[SL] = Photo[SL];
+	TargetPhoto[SR] = Photo[SR];
+	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
+
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+	PIDReset(A_VELO_PID);
+	PIDReset(L_WALL_PID);
+	PIDReset(R_WALL_PID);
+	PIDReset(D_WALL_PID);
+
+
 }
 void Debug()
 {
@@ -259,16 +351,16 @@ void Debug()
 #endif
 
 #if 0
-	//直進テスト
+	//スラロームテスト
+	ExploreVelocity = 240;
 	Pos.Dir = front;
 	Accel(61.75,ExploreVelocity);
-	for(int i=0; i < 6; i++)
+	for(int i=0; i < 1; i++)
 	{
 		Pos.Dir = front;
 		GoStraight(90, ExploreVelocity, AddVelocity);
 		//Pos.Dir = right;
-		//SlalomRight();
-
+		SlalomRight();
 
 	}
 	Pos.Dir = front;
@@ -372,7 +464,6 @@ void ParameterSetting()
 
 }
 
-
 void GainTestLWall()
 {
 	InitExplore();
@@ -469,7 +560,23 @@ void GainTestAVelo()
 }
 void WritingFree()
 {
+//	wall_init();
+//	wall_ram_print();
+	printf("flashコピーる\r\n");
+	flash_copy_to_ram();
+	wall_flash_print();
+	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+	map_print();
+	printf("flashおわったはず\r\n");
 
+	printf("最短用の歩数マップ\r\n");
+	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x03);
+	map_print();
+	while(1)
+	{
+
+
+	}
 	InitExplore();
 
 	printf("3\r\n");
@@ -620,11 +727,55 @@ while(1)
 
 }
 
+void FastestRun()
+{
+	//諸々の初期化
+	InitFastest();
+	InitPosition();
+
+	wall_init();
+
+	TotalPulse[RIGHT] = 0;
+	TotalPulse[LEFT] = 0;
+	TotalPulse[BODY] = 0;
+
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+	//PIDChangeFlagStraight(N_WALL_PID);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	//PIDSetGain(D_WALL_PID, 10, 0, 0);
+	ExploreVelocity=180;
+	ChangeLED(4);
+
+	//マップデータの取得。flashから壁データを取得。
+	flash_copy_to_ram();
+	//最短経路導出(今回は省けそう。)
+
+	//走る
+	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER);
+
+	//ゴールしたら減速して、停止。
+	Decel(45,0);
+	//終了合図
+	Signal(7);
+
+}
 void Explore()
 {
 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マップを初期化する。
 	//一回目で失敗していたら、flash消してram初期化
 	//一回目で成功したら、flashをramに移す
+
+	HAL_Delay(1000);
+	Photo[FR] = 0;
+	  int8_t mode=1;
+	  printf("mode : %d\r\n", mode);
+	  ModeSelect( 1, 2, &mode);
+	  Signal( mode );
+	  printf("Switch\r\n");
 	InitExplore();
 
 	printf("3\r\n");
@@ -665,19 +816,36 @@ void Explore()
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-	ExploreVelocity=240;
+	ExploreVelocity=180;
 	ChangeLED(2);
+	char turn_mode;
+	if(mode == 1)
+	{
+		turn_mode = 'T';
+	}
+	else if(mode == 2)
+	{
+		turn_mode = 'S';
+
+	}
 //	while(1)
 //	{
 //
 //	}
 	int i=0;
+	SearchOrFast = 0;
+	Pos.Dir = front;
+	Pos.Car = north;
+	Pos.NextX = Pos.X;
+	Pos.NextY = Pos.Y + 1;
+	Pos.NextCar = north;
 	Accel(61.5, ExploreVelocity);
-	//y++;
-	Pos.Y++;
+ 	Pos.X = Pos.NextX;
+    Pos.Y = Pos.NextY;
+	Pos.Car = Pos.NextCar;
 	//uint8_t xlog[10]={0},ylog[10]={0};
 
-	while( (Pos.X != 3) || (Pos.Y != 3))
+	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
 
 		//xlog[i]=x;
@@ -696,7 +864,7 @@ void Explore()
 		else
 			ChangeLED(0);
 
-		wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
+		//wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
 		//ControlWall();
 		//評価値マップ、歩数マップをどうするか。最短経路計算同様、走行中に計算させる。
 		//UpdateWalkMap();
@@ -704,7 +872,8 @@ void Explore()
 		//ChangeLED(0);
 		//方向決定と、座標方角の更新。
 		//方向決定を変える。
-		LeftHandJudge('T');
+		//LeftHandJudge('T');
+		KyushinJudge( turn_mode );
 
 		//i++;
 		//マップデータに基づき、次の目標座標を決定する。目標座標から進行方向を決める。
@@ -720,10 +889,25 @@ void Explore()
 		my_direction = DetermineDirection();
 #endif
 	}
-	Decel(35, 0);
-	//flashに保存
+	Decel(45, 0);
 
+	//ゴールエリアチェック。
+	//諸々停止。
+
+	//flashのクリア。
+	Flash_clear_sector1();
+	//マップ書き込み
+	flash_store_init();
+
+	//完了の合図
 	Signal(7);
+
+	//flashに保存
+	while(1)
+	{
+		wall_ram_print();
+	}
+
 	while(1)
 	{
 		for(i=0;i < 10; i++)

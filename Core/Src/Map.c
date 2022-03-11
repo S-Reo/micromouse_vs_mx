@@ -20,6 +20,11 @@
 #include <stdlib.h>
 #include "MicroMouse.h"
 
+#include "Interrupt.h"
+
+
+int Calc;
+int SearchOrFast;
 //壁センサデータを利用した処理
 //マップデータ構造体を利用した処理
 
@@ -90,7 +95,8 @@ void wall_init(){
 	//スタート座標の東壁に壁ありにする
 	Wall[0][0].east = WALL;
 	Wall[0][0].north = NOWALL;
-
+	Wall[1][0].west = WALL;
+	Wall[0][1].south = NOWALL;
 	//flashに書き込む
 	//消す
 
@@ -118,50 +124,238 @@ void wall_store_running(uint8_t x, uint8_t y)
 
 }
 //壁の更新xyグローバル
-void wall_set(uint8_t x, uint8_t y, cardinal car, float side_left, float side_right, float front_left, float front_right){
+void wall_set(){
 	uint8_t wall_dir[4];
 	//壁センサ値を読んで、各方角の壁の有無を判定
-	  wall_dir[car] = ((front_left + front_right)/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
-	  wall_dir[(car + 1)%4] = side_right > RIGHT_WALL  ?  WALL :  NOWALL;
-	  wall_dir[(car + 2)%4] = NOWALL;
-	  wall_dir[(car + 3)%4] = side_left > LEFT_WALL ?  WALL :  NOWALL;
+	  wall_dir[Pos.NextCar] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+	  wall_dir[(Pos.NextCar + 1)%4] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
+	  wall_dir[(Pos.NextCar + 2)%4] = NOWALL;
+	  wall_dir[(Pos.NextCar + 3)%4] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
 
 	  //各方角の壁に壁の有無を代入
-	  Wall[x][y].north = wall_dir[0];
-	  Wall[x][y].east = wall_dir[1];
-	  Wall[x][y].south = wall_dir[2];
-	  Wall[x][y].west = wall_dir[3];
+	  Wall[Pos.NextX][Pos.NextY].north = wall_dir[0];
+	  Wall[Pos.NextX][Pos.NextY].east = wall_dir[1];
+	  Wall[Pos.NextX][Pos.NextY].south = wall_dir[2];
+	  Wall[Pos.NextX][Pos.NextY].west = wall_dir[3];
 
 	  //端の座標でなければ反対の壁も記入
 	  //uint32_t address;
-	  if(y < (NUMBER_OF_SQUARES-1) )
+	  if(Pos.NextY < (NUMBER_OF_SQUARES-1) )
 	  {
-		  Wall[x][y+1].south = wall_dir[0];//北端でなければ
-		  //address = start_adress_sector1 + ( x*16) + ( (y+1)*16*(NUMBER_OF_SQUARES) );
-		  //FLASH_Write_Word(address+8, Wall[x][y+1].south);
+		  Wall[Pos.NextX][Pos.NextY+1].south = wall_dir[0];//北端でなければ
+		  //address = start_adress_sector1 + ( Pos.NextX*16) + ( (Pos.NextY+1)*16*(NUMBER_OF_SQUARES) );
+		  //FLASH_Write_Word(address+8, Wall[Pos.NextX][Pos.NextY+1].south);
 	  }
-	  if(x < (NUMBER_OF_SQUARES-1) )
+	  if(Pos.NextX < (NUMBER_OF_SQUARES-1) )
 	  {
-		  Wall[x+1][y].west = wall_dir[1];//東端でなければ
-//		  address = start_adress_sector1 + ( (x+1)*16) + ( (y)*16*(NUMBER_OF_SQUARES) );
-//		  FLASH_Write_Word(address+12, Wall[x+1][y].west);
+		  Wall[Pos.NextX+1][Pos.NextY].west = wall_dir[1];//東端でなければ
+//		  address = start_adress_sector1 + ( (Pos.NextX+1)*16) + ( (Pos.NextY)*16*(NUMBER_OF_SQUARES) );
+//		  FLASH_Write_Word(address+12, Wall[Pos.NextX+1][Pos.NextY].west);
 	  }
-	  if(y > 0 )
+	  if(Pos.NextY > 0 )
 	  {
-		  Wall[x][y-1].north = wall_dir[2];//南端でなければ
-//		  address = start_adress_sector1 + ( x*16) + ( (y-1)*16*(NUMBER_OF_SQUARES) );
-//		  FLASH_Write_Word(address+0, Wall[x][y-1].north);
+		  Wall[Pos.NextX][Pos.NextY-1].north = wall_dir[2];//南端でなければ
+//		  address = start_adress_sector1 + ( Pos.NextX*16) + ( (Pos.NextY-1)*16*(NUMBER_OF_SQUARES) );
+//		  FLASH_Write_Word(address+0, Wall[Pos.NextX][Pos.NextY-1].north);
 	  }
-	  if(x > 0 )
+	  if(Pos.NextX > 0 )
 	  {
-		  Wall[x-1][y].east = wall_dir[3];//西端でなければ
-//		  address = start_adress_sector1 + ( (x-1)*16) + ( y*16*(NUMBER_OF_SQUARES) );
-//		  FLASH_Write_Word(address+4, Wall[x-1][y].east);
+		  Wall[Pos.NextX-1][Pos.NextY].east = wall_dir[3];//西端でなければ
+//		  address = start_adress_sector1 + ( (Pos.NextX-1)*16) + ( Pos.NextY*16*(NUMBER_OF_SQUARES) );
+//		  FLASH_Write_Word(address+4, Wall[Pos.NextX-1][Pos.NextY].east);
 	  }
+
 
 	  //一旦flashお休み。
 	  //flashに書き込む
-//	  wall_store_running(x,y);
+//	  wall_store_running(Pos.X,Pos.Y);
+}
+
+
+void init_map(int x, int y)
+{
+//迷路の歩数Mapを初期化する。全体を0xff、引数の座標x,yは0で初期化する
+
+	int i,j;
+
+	for(i = 0; i < NUMBER_OF_SQUARES; i++)		//迷路の大きさ分ループ(x座標)
+	{
+		for(j = 0; j < NUMBER_OF_SQUARES; j++)	//迷路の大きさ分ループ(y座標)
+		{
+			walk_map[i][j] = 255;	//すべて255で埋める
+		}
+	}
+
+	walk_map[x][y] = 0;				//ゴール座標の歩数を０に設定
+	walk_map[x][y+1] = 0;
+	walk_map[x+1][y] = 0;
+	walk_map[x+1][y+1] = 0;
+	//歩数マップは合ってることにしよう。
+
+}
+
+
+void make_map(int x, int y, int mask)	//歩数マップを作成する
+{
+//座標x,yをゴールとした歩数Mapを作成する。
+//maskの値(MASK_SEARCH or MASK_SECOND)によって、
+//探索用の歩数Mapを作るか、最短走行の歩数Mapを作るかが切り替わる
+	int i,j;
+	_Bool change_flag;			//Map作成終了を見極めるためのフラグ
+
+	init_map(x,y);				//Mapを初期化する
+
+	do //(6,9)(7,10)に対して、7,11がおかしい。
+	{
+		change_flag = false;				//変更がなかった場合にはループを抜ける
+		for(i = 0; i < NUMBER_OF_SQUARES; i++)			//迷路の大きさ分ループ(x座標)
+		{
+			for(j = 0; j < NUMBER_OF_SQUARES; j++)		//迷路の大きさ分ループ(y座標)
+			{
+				if(walk_map[i][j] == 255)		//255の場合は次へ
+				{
+					continue;
+				}
+
+				if(j < NUMBER_OF_SQUARES-1)					//範囲チェック
+				{
+					if( (Wall[i][j].north & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
+					{
+						if(walk_map[i][j+1] == 255)			//まだ値が入っていなければ
+						{
+							walk_map[i][j+1] = walk_map[i][j] + 1;	//値を代入
+							change_flag = true;		//値が更新されたことを示す
+						}
+					}
+				}
+
+				if(i < NUMBER_OF_SQUARES-1)					//範囲チェック
+				{
+					if( (Wall[i][j].east & mask) == NOWALL)		//壁がなければ
+					{
+						if(walk_map[i+1][j] == 255)			//値が入っていなければ
+						{
+							walk_map[i+1][j] = walk_map[i][j] + 1;	//値を代入
+							change_flag = true;		//値が更新されたことを示す
+						}
+					}
+				}
+
+				if(j > 0)						//範囲チェック
+				{
+					if( (Wall[i][j].south & mask) == NOWALL)	//壁がなければ
+					{
+						if(walk_map[i][j-1] == 255)			//値が入っていなければ
+						{
+							walk_map[i][j-1] = walk_map[i][j] + 1;	//値を代入
+							change_flag = true;		//値が更新されたことを示す
+						}
+					}
+				}
+
+				if(i > 0)						//範囲チェック
+				{
+					if( (Wall[i][j].west & mask) == NOWALL)		//壁がなければ
+					{
+						if(walk_map[i-1][j] == 255)			//値が入っていなければ
+						{
+							walk_map[i-1][j] = walk_map[i][j] + 1;	//値を代入
+							change_flag = true;		//値が更新されたことを示す
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}while(change_flag == true);	//全体を作り終わるまで待つ
+
+}
+void CheckGoalArea()
+{
+	//( X_GOAL_LESSER <= Pos.X && Pos.X <=X_GOAL_LARGER)
+
+//	for(int i=0; i < 1; i++)
+//	{
+//		GoalAreaFlag = (Wall[ X_GOAL_LESSER+i][Y_GOAL_LESSER].north == UNKNOWN) ? 0 : 1;
+//		GoalAreaFlag = (Wall[ X_GOAL_LESSER+i][Y_GOAL_LESSER].east == UNKNOWN) ? 0 : 1;
+//		GoalAreaFlag = (Wall[ X_GOAL_LESSER+i][Y_GOAL_LESSER].south == UNKNOWN) ? 0 : 1;
+//		GoalAreaFlag = (Wall[ X_GOAL_LESSER+i][Y_GOAL_LESSER].west == UNKNOWN) ? 0 : 1;
+//	}
+
+}
+void map_print()
+{
+	int i,j;
+	for(j = NUMBER_OF_SQUARES-1; 0 <= j  ; j--)
+	{
+		for(i = 0; i < NUMBER_OF_SQUARES ; i++)
+		{
+			printf("%d ",walk_map[i][j]);
+//			if(j == NUMBER_OF_SQUARES)
+//			{
+//				printf("\r\n");
+//			}
+		}
+		printf("\r\n");
+	}
+}
+void mapprint(){
+
+	static int i = 0, j=0,k=0;
+#if 1
+	//迷路?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?報
+	for(i=0; i < NUMBER_OF_SQUARES; i++){
+		for(j=0; j < NUMBER_OF_SQUARES * 4; j++){
+			printf("%u",work_ram[k]);
+			if((k+1)%(NUMBER_OF_SQUARES * 4) != 0){
+			if((k+1) >= 4 && (k+1)%4 == 0)
+				printf("  ");
+			}
+			if((k+1)%(NUMBER_OF_SQUARES * 4) == 0){
+				printf("\r\n");
+			}
+			k++;
+		}
+		printf("\r\n");
+	}
+
+	printf("\r\n");
+	printf("\r\n");
+
+
+	//歩数マッ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+	for(i=0; i < NUMBER_OF_SQUARES; i++){
+		for(j=0; j < NUMBER_OF_SQUARES; j++){
+			printf("%u  ",work_ram[k]);
+			k++;
+		}
+		printf("\r\n");
+		printf("\r\n");
+	}
+
+#else
+	wall[1][1].north = 3;
+	for(i=0; i < 16; i++){
+		for(j=0; j < 16; j++){
+			printf("%d%d%d%d",wall[i][j].north, wall[i][j].east, wall[i][j].south, wall[i][j].west);
+
+			if((j+1)%16 != 0){
+			//if((j+1)%4 == 0)
+				printf(" ");
+			}
+			k++;
+
+		}
+		printf("\r\n");
+	}
+#endif
+//	for(int i=0; i <=10; i++)
+//	printf("保存データ :: %d \r\n",work_ram[i][0]);
+
 }
 //壁データの復元
 void wall_recover()
@@ -260,33 +454,38 @@ void flash_copy_to_ram()
 
 }
 //評価値マップ生成。
-uint16_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
-void UpdateWalkMap(){
+
+void UpdateWalkMap()
+{
 	//初期化大事すぎた。hosu
 	int i = 0, j=0, flag=0, hosu=0;
 
-	//区画数に応じて"?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?大歩数 + ゴールのマス?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?-1"に初期?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+	//区画数に応じて全てを最大値で初期化
 	for(i=0; i < NUMBER_OF_SQUARES; i++){
 		for(j=0; j < NUMBER_OF_SQUARES; j++){
 			walk_map[i][j] = NUMBER_OF_SQUARES * NUMBER_OF_SQUARES - 1;
 		}
 	}
 
-	//ゴール区画?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?0に初期?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+	//ゴール区画を0にする。
 	for(i=X_GOAL_LESSER; i <= X_GOAL_LARGER; i++){
 		for(j=Y_GOAL_LESSER; j <= Y_GOAL_LARGER; j++){
 			walk_map[i][j] = 0;
 		}
 	}
+	t = 0;
 
-	//壁が無?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?として????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��区画に歩数を割り当てる�??
+	//119カウント = 5.95msかかっている
+	//
 	do{
 		flag = 0;
 		  for(i=0; i < NUMBER_OF_SQUARES; i++){
 
 			  for(j=0; j < NUMBER_OF_SQUARES; j++){
-				  //map?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?"?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?大歩数 + ゴールのマス?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?-1"でなければ値を代入?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+				  //map
 				  //walk_map[i][j] != NUMBER_OF_SQUARES * NUMBER_OF_SQUARES - 1 &&
+
+				  //歩数がでるまでなので時間がかかる。
 				  if(walk_map[i][j] == hosu){
 
 					  if(Wall[i][j].north != WALL && walk_map[i][j+1] > walk_map[i][j] && j < NUMBER_OF_SQUARES - 1){
@@ -309,6 +508,209 @@ void UpdateWalkMap(){
 		  //歩数と繰り返しの回数は等し?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
 		  hosu++;
 	}while(flag);
+
+}
+void KyushinJudge(char turn_mode)
+{
+	//歩数マップから進行方向を導き出すのは、アクションが終わった後、座標と方角が更新されてから。
+	switch(Pos.Car)
+	{
+		  case north:
+			  if(Wall[Pos.X][Pos.Y].north == NOWALL && walk_map[Pos.X][Pos.Y+1] < walk_map[Pos.X][Pos.Y] && Pos.Y < NUMBER_OF_SQUARES-1){
+				  //前北
+				  Pos.Dir = front;
+				  Pos.NextX = Pos.X;
+				  Pos.NextY = Pos.Y+1;
+				  Pos.NextCar = north;
+				  SelectAction(turn_mode);
+				  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].west == NOWALL &&walk_map[Pos.X-1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X > 0){
+				  //左西
+    			  Pos.Dir = left;
+    			  Pos.NextX = Pos.X - 1;
+    			  Pos.NextY = Pos.Y;
+    			  Pos.NextCar = west;
+    			  SelectAction(turn_mode);
+    			  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].east == NOWALL &&walk_map[Pos.X+1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X <  NUMBER_OF_SQUARES-1){
+				  //右東
+				  Pos.Dir = right;//この方角で右と決まった時点で次の座標が決まっている
+				  Pos.NextX = Pos.X + 1;
+				  Pos.NextY = Pos.Y;
+				  Pos.NextCar = east;
+				  SelectAction(turn_mode);
+		          Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else {
+				  Pos.Dir = back;
+				  Pos.NextX = Pos.X;
+				  Pos.NextY = Pos.Y - 1;
+				  Pos.NextCar = south;
+				  //後南
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  break;
+
+		  case east:
+
+			  if(Wall[Pos.X][Pos.Y].east == NOWALL && walk_map[Pos.X+1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X < NUMBER_OF_SQUARES-1){
+				  //前東
+				  Pos.Dir = front;
+				  Pos.NextX = Pos.X + 1;
+				  Pos.NextY = Pos.Y;
+				  Pos.NextCar = east;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].north == NOWALL && walk_map[Pos.X][Pos.Y+1] < walk_map[Pos.X][Pos.Y] && Pos.Y < NUMBER_OF_SQUARES-1){
+				  //左?��?
+
+    			  Pos.Dir = left;
+    			  Pos.NextX = Pos.X;
+    			  Pos.NextY = Pos.Y+1;
+    			  Pos.NextCar = north;
+    			  SelectAction(turn_mode);
+    			  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].south == NOWALL && walk_map[Pos.X][Pos.Y-1] < walk_map[Pos.X][Pos.Y] && Pos.Y > 0){
+				  //右?��?
+				  Pos.Dir = right;
+				  Pos.NextX = Pos.X;
+				  Pos.NextY = Pos.Y - 1;
+				  Pos.NextCar = south;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else {
+				  //後西
+				  Pos.Dir = back;
+				  Pos.NextX = Pos.X - 1;
+				  Pos.NextY = Pos.Y;
+				  Pos.NextCar = west;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  break;
+
+		  case south:
+
+			  if(Wall[Pos.X][Pos.Y].south == NOWALL &&walk_map[Pos.X][Pos.Y-1] < walk_map[Pos.X][Pos.Y] && Pos.Y > 0){
+				  //前南
+				  Pos.Dir = front;
+				  Pos.NextX = Pos.X;
+				  Pos.NextY = Pos.Y - 1;
+				  Pos.NextCar = south;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].east == NOWALL &&walk_map[Pos.X+1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X < NUMBER_OF_SQUARES-1){
+				  //左東
+    			  Pos.Dir = left;
+    			  Pos.NextX = Pos.X + 1;
+    			  Pos.NextY = Pos.Y;
+    			  Pos.NextCar = east;
+    			  SelectAction(turn_mode);
+    			  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].west == NOWALL &&walk_map[Pos.X-1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X > 0){
+				  //右西
+				  Pos.Dir = right;
+				  Pos.NextX = Pos.X - 1;
+				  Pos.NextY = Pos.Y;
+				  Pos.NextCar = west;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else {
+				  //後北
+				  Pos.Dir = back;
+				  Pos.NextX = Pos.X;
+				  Pos.NextY = Pos.Y+1;
+				  Pos.NextCar = north;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  break;
+
+		  case west:
+
+			  if(Wall[Pos.X][Pos.Y].west == NOWALL &&walk_map[Pos.X-1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X > 0){
+				  //前西
+				  Pos.Dir = front;
+				  Pos.NextX = Pos.X - 1;
+				  Pos.NextY = Pos.Y;
+				  Pos.NextCar = west;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].south == NOWALL &&walk_map[Pos.X][Pos.Y-1] < walk_map[Pos.X][Pos.Y] && Pos.Y > 0){
+				  //左?��?
+    			  Pos.Dir = left;
+    			  Pos.NextX = Pos.X;
+    			  Pos.NextY = Pos.Y - 1;
+    			  Pos.NextCar = south;
+    			  SelectAction(turn_mode);
+    			  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else if(Wall[Pos.X][Pos.Y].north == NOWALL &&walk_map[Pos.X][Pos.Y+1] < walk_map[Pos.X][Pos.Y] && Pos.Y < NUMBER_OF_SQUARES-1){
+				  //右?��?
+				  Pos.Dir = right;
+				  Pos.NextX = Pos.X;
+				  Pos.NextY = Pos.Y+1;
+				  Pos.NextCar = north;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		          Pos.Y = Pos.NextY;
+			  }
+			  else {
+				  //後東
+				  Pos.Dir = back;
+				  Pos.NextX = Pos.X + 1;
+				  Pos.NextY = Pos.Y;
+				  Pos.NextCar = east;
+				  SelectAction(turn_mode);
+		       	  Pos.Car = Pos.NextCar;
+		       	  Pos.X = Pos.NextX;
+		       	  Pos.Y = Pos.NextY;
+			  }
+			  break;
+
+		  default:
+			  break;
+		  //swtich end
+	}
 
 }
 //ノード
@@ -450,109 +852,372 @@ void LeftHandJudge(char turn_mode){
     		  break;
     	  }//swtich end
 }
+_Bool is_unknown(int x, int y)	//指定された区画が未探索か否かを判断する関数 未探索:true　探索済:false
+{
+	//座標x,yが未探索区間か否かを調べる
+
+	if((Wall[x][y].north == UNKNOWN) || (Wall[x][y].east == UNKNOWN) || (Wall[x][y].south == UNKNOWN) || (Wall[x][y].west == UNKNOWN))
+	{			//どこかの壁情報が不明のままであれば
+		return true;	//未探索
+	}
+	else
+	{
+		return false;	//探索済
+	}
+}
+int get_priority(int x, int y, cardinal car)	//そのマスの情報から、優先度を算出する
+{
+	//座標x,yと、向いている方角dirから優先度を算出する
+
+	//未探索が一番優先度が高い.(4)
+	//それに加え、自分の向きと、行きたい方向から、
+	//前(2)横(1)後(0)の優先度を付加する。
+
+	int priority;	//優先度を記録する変数
+
+	priority = 0;
+
+	if(Pos.Car == car)				//行きたい方向が現在の進行方向と同じ場合
+	{
+		priority = 2;
+	}
+	else if( ((4+Pos.Car-car)%4) == 2)		//行きたい方向が現在の進行方向と逆の場合
+	{
+		priority = 0;
+	}
+	else						//それ以外(左右どちらか)の場合
+	{
+		priority = 1;
+	}
+
+
+	if(is_unknown(x,y) == true)
+	{
+		priority += 4;				//未探索の場合優先度をさらに付加
+	}
+
+	return priority;				//優先度を返す
+
+}
+int get_nextdir(int x, int y, int mask)
+{
+	//ゴール座標x,yに向かう場合、今どちらに行くべきかを判断する。
+	//探索、最短の切り替えのためのmaskを指定、dirは方角を示す
+	int little,priority,tmp_priority;		//最小の値を探すために使用する変数
+
+
+	make_map(x,y,mask);				//歩数Map生成
+	little = 255;					//最小歩数を255歩(mapがunsigned char型なので)に設定
+
+	priority = 0;					//優先度の初期値は0
+
+		//maskの意味はstatic_parameter.hを参照
+	if( (Wall[Pos.X][Pos.Y].north & mask) == NOWALL)			//北に壁がなければ
+	{
+		tmp_priority = get_priority(Pos.X, Pos.Y + 1, north);	//優先度を算出
+		if(walk_map[Pos.X][Pos.Y+1] < little)				//一番歩数が小さい方向を見つける
+		{
+			little = walk_map[Pos.X][Pos.Y+1];			//ひとまず北が歩数が小さい事にする
+			Pos.NextCar = north;						//方向を保存
+			priority = tmp_priority;				//優先度を保存
+		}
+		else if(walk_map[Pos.X][Pos.Y+1] == little)			//歩数が同じ場合は優先度から判断する
+		{
+			if(priority < tmp_priority )				//優先度を評価
+			{
+				Pos.NextCar = north;					//方向を更新
+				priority = tmp_priority;			//優先度を保存
+			}
+		}
+	}
+
+	if( (Wall[Pos.X][Pos.Y].east & mask) == NOWALL)			//東に壁がなければ
+	{
+		tmp_priority = get_priority(Pos.X + 1, Pos.Y, east);	//優先度を算出
+		if(walk_map[Pos.X + 1][Pos.Y] < little)				//一番歩数が小さい方向を見つける
+		{
+			little = walk_map[Pos.X+1][Pos.Y];			//ひとまず東が歩数が小さい事にする
+			Pos.NextCar = east;						//方向を保存
+			priority = tmp_priority;				//優先度を保存
+		}
+		else if(walk_map[Pos.X + 1][Pos.Y] == little)			//歩数が同じ場合、優先度から判断
+		{
+			if(priority < tmp_priority)				//優先度を評価
+			{
+				Pos.NextCar = east;					//方向を保存
+				priority = tmp_priority;			//優先度を保存
+			}
+		}
+	}
+
+	if( (Wall[Pos.X][Pos.Y].south & mask) == NOWALL)			//南に壁がなければ
+	{
+		tmp_priority = get_priority(Pos.X, Pos.Y - 1, south);	//優先度を算出
+		if(walk_map[Pos.X][Pos.Y - 1] < little)				//一番歩数が小さい方向を見つける
+		{
+			little = walk_map[Pos.X][Pos.Y-1];			//ひとまず南が歩数が小さい事にする
+			Pos.NextCar = south;						//方向を保存
+			priority = tmp_priority;				//優先度を保存
+		}
+		else if(walk_map[Pos.X][Pos.Y - 1] == little)			//歩数が同じ場合、優先度で評価
+		{
+			if(priority < tmp_priority)				//優先度を評価
+			{
+				Pos.NextCar = south;					//方向を保存
+				priority = tmp_priority;			//優先度を保存
+			}
+		}
+	}
+
+	if( (Wall[Pos.X][Pos.Y].west & mask) == NOWALL)			//西に壁がなければ
+	{
+		tmp_priority = get_priority(Pos.X - 1, Pos.Y, west);	//優先度を算出
+		if(walk_map[Pos.X-1][Pos.Y] < little)				//一番歩数が小さい方向を見つける
+		{
+			little = walk_map[Pos.X-1][Pos.Y];			//西が歩数が小さい
+			Pos.NextCar = west;						//方向を保存
+			priority = tmp_priority;				//優先度を保存
+		}
+		else if(walk_map[Pos.X - 1][Pos.Y] == little)			//歩数が同じ場合、優先度で評価
+		{
+			Pos.NextCar = west;						//方向を保存
+			priority = tmp_priority;				//優先度を保存
+		}
+	}
+
+
+	return ( (int)( ( 4 + Pos.NextCar - Pos.Car) % 4 ) );			//どっちに向かうべきかを返す。
+										//演算の意味はmytyedef.h内のenum宣言から。
+
+}
+void fast_run(int x, int y)
+{
+//引数の座標x,yに向かって最短走行する
+
+	//t_direction glob_nextdir;
+	//int straight_count=0;
+
+	//現在の向きから、次に行くべき方向へ向く
+//	switch(get_nextdir(x,y,MASK_SECOND))	//次に行く方向を戻り値とする関数を呼ぶ
+//	{
+//		case front:
+//			Accel			//前向きだった場合は直線を走る距離を伸ばす
+//			break;
+//
+//		case right:					//右に向く
+//			turn(90,TURN_ACCEL,TURN_SPEED,RIGHT);				//右に曲がって
+//			straight_count = 1;
+//			break;
+//
+//		case left:					//左に向く
+//			turn(90,TURN_ACCEL,TURN_SPEED,LEFT);				//左に曲がって
+//			straight_count = 1;
+//			break;
+//
+//		case rear:					//後ろに向く
+//			turn(180,TURN_ACCEL,TURN_SPEED,LEFT);				//左に曲がって
+//			straight_count = 1;
+//			break;
+//	}
+
+
+//	//向いた方向によって自分の座標を更新する
+//	switch(Pos.Car)
+//	{
+//		case north:
+//			Pos.Y++;	//北を向いた時はY座標を増やす
+//			break;
+//
+//		case east:
+//			Pos.X++;	//東を向いた時はX座標を増やす
+//			break;
+//
+//		case south:
+//			Pos.Y--;	//南を向いた時はY座標を減らす
+//			break;
+//
+//		case west:
+//			Pos.X--;	//西を向いたときはX座標を減らす
+//			break;
+//
+//	}
+	SearchOrFast = 1;
+	Pos.Dir = front;
+	Pos.Car = north;
+	Pos.NextX = Pos.X;
+	Pos.NextY = Pos.Y + 1;
+	Pos.NextCar = north;
+	Accel(61.75, ExploreVelocity);
+ 	Pos.X = Pos.NextX;
+    Pos.Y = Pos.NextY;
+	Pos.Car = Pos.NextCar;	//自分の向きを更新
+
+	while((Pos.X != x) || (Pos.Y != y)){			//ゴールするまで繰り返す
+		Pos.Dir = get_nextdir(x,y,0x03);//新しい区画に入ったところで、次の方向を求める。方向と方角がわかる。
+		//向いた方向によって自分の座標を更新する
+		switch(Pos.NextCar)//
+		{
+			case north:
+				Pos.NextX = Pos.X;
+				Pos.NextY = Pos.Y + 1;	//北を向いた時はY座標を増やす
+				break;
+
+			case east:
+				Pos.NextX = Pos.X + 1;	//東を向いた時はX座標を増やす
+				Pos.NextY = Pos.Y;
+				break;
+
+			case south:
+				Pos.NextX = Pos.X;
+				Pos.NextY = Pos.Y - 1;	//南を向いた時はY座標を減らす
+				break;
+
+			case west:
+				Pos.NextX = Pos.X - 1;	//西を向いたときはX座標を減らす
+				Pos.NextY = Pos.Y;
+				break;
+
+		}
+		SelectAction('S');
+	 	Pos.X = Pos.NextX;
+	    Pos.Y = Pos.NextY;
+		Pos.Car = Pos.NextCar;	//自分の向きを修正
+
+//		switch(Pos.Dir)	//次に行く方向を戻り値とする関数を呼ぶ
+//		{
+//			case front:					//直線をまとめて走るようにする
+//				SelectAction('S');
+//				break;
+//
+//			case right:
+//				straight(SECTION*straight_count,FAST_ACCEL,FAST_SPEED,0.0);
+//				turn(90,TURN_ACCEL,TURN_SPEED,RIGHT);				//右に曲がって
+//				straight_count = 1;			//走る直線の距離をリセット
+//				break;
+//
+//			case left:
+//				straight(SECTION*straight_count,FAST_ACCEL,FAST_SPEED,0.0);
+//				turn(90,TURN_ACCEL,TURN_SPEED,LEFT);				//左に曲がって
+//				straight_count = 1;			//走る直線の距離をリセット
+//				break;
+//
+//			case rear:
+//				straight(SECTION*straight_count,FAST_ACCEL,FAST_SPEED,0.0);
+//				SelectAction();				//左に曲がって
+//				straight_count = 1;			//走る直線の距離をリセット
+//				break;
+//		}
+//
+//		Pos.Car = Pos.NextCar;	//自分の向きを修正
+//
+//
+	}
+//	straight(SECTION*straight_count,FAST_ACCEL,FAST_SPEED,0.0);
+}
+
 //求心法での方向決定
-void DetermineDirection(uint8_t x, uint8_t y, int dir, char action_type)
-{
-	UpdateWalkMap();
-
-	//評価値比較して小さいほうを進行方向とする。
-
-	//*action_type = 'S';
-
-}
-//最短経路導出
-//今いる位置からの最短経路を求めるのが足立法
-//2点間の最短経路導出の関数を用意する。目標座標とスタート座標は引数でとる
-//void AddCost(int x, int y)
+//void DetermineDirection(uint8_t x, uint8_t y, int dir, char action_type)
 //{
-//	unsigned short int cost[9][9]={0};
-//	cost[x][y] += 1;
+//	UpdateWalkMap();
 //
-//	if(Wall[x][y+1].south == NOWALL)
-//	{
-//		//その座標までのコストを求める
-//		//その座標からの予測コストを求める
-//		//和を返す
-//		//
-//	}
+//	//評価値比較して小さいほうを進行方向とする。
 //
-//
-//	//4区画の予測コストを求め、比較
-//	if(Wall[x+1][y].west == NOWALL)
-//	{
-//	}
-//	if(Wall[x][y-1].north == NOWALL)
-//	{
-//	}
-//	if(Wall[x-1][y].east == NOWALL)
-//	{
-//	}
+//	//*action_type = 'S';
 //
 //}
-//int Astar(unsigned short int x, unsigned short int y)
+////最短経路導出
+////今いる位置からの最短経路を求めるのが足立法
+////2点間の最短経路導出の関数を用意する。目標座標とスタート座標は引数でとる
+////void AddCost(int x, int y)
+////{
+////	unsigned short int cost[9][9]={0};
+////	cost[x][y] += 1;
+////
+////	if(Wall[x][y+1].south == NOWALL)
+////	{
+////		//その座標までのコストを求める
+////		//その座標からの予測コストを求める
+////		//和を返す
+////		//
+////	}
+////
+////
+////	//4区画の予測コストを求め、比較
+////	if(Wall[x+1][y].west == NOWALL)
+////	{
+////	}
+////	if(Wall[x][y-1].north == NOWALL)
+////	{
+////	}
+////	if(Wall[x-1][y].east == NOWALL)
+////	{
+////	}
+////
+////}
+////int Astar(unsigned short int x, unsigned short int y)
+////{
+////	//
+////	unsigned short int cost[9][9]={0};
+////	//座標0 0 から現在座標まで毎回計算しなおす。
+////	if( (GOAL_X_LESSER <= x && x <= GOAL_X_LARGER) && (GOAL_Y_LESSER <= y && y <= GOAL_Y_LARGER) )
+////	{
+////		//ゴール
+////		return cost[x][y];
+////
+////	}
+////
+////	else
+////	{
+////		//ゴール以外
+////		//一つの座標から周辺区画のコストを計算」する
+////
+////	}
+////
+////}
+//////2点間のコスト 取得
+//int GetWalkCost(int start_x, int start_y, int target_x, int target_y)
 //{
-//	//
-//	unsigned short int cost[9][9]={0};
-//	//座標0 0 から現在座標まで毎回計算しなおす。
-//	if( (GOAL_X_LESSER <= x && x <= GOAL_X_LARGER) && (GOAL_Y_LESSER <= y && y <= GOAL_Y_LARGER) )
-//	{
-//		//ゴール
-//		return cost[x][y];
-//
-//	}
-//
-//	else
-//	{
-//		//ゴール以外
-//		//一つの座標から周辺区画のコストを計算」する
-//
-//	}
-//
+//	int walk_cost=0;
+//	walk_cost = abs( (int)walk_map[start_x][start_y] - (int)walk_map[target_x][target_y] );
+//	return walk_cost;
 //}
-////2点間のコスト 取得
-int GetWalkCost(int start_x, int start_y, int target_x, int target_y)
-{
-	int walk_cost=0;
-	walk_cost = abs( (int)walk_map[start_x][start_y] - (int)walk_map[target_x][target_y] );
-	return walk_cost;
-}
-//パルスを進み切ったら現在座標を変える(進む予定だった座標になる)。壁判定をしたらマップを更新し、次の目標座標が決まる。現在座標との差分を取る。向くべき方向が決まる。動作は別で書く。
-void UpdateCoordinates(int current_direction)
-{
-	//90度曲がっただけの座標更新と、2区画直進した時の更新。
-	//2区画直進した場合、移動量が満たされたかどうかの判定はどうするか。壁の判定との相性。
-	//→移動量判定を、アクションの中で呼べばよさそう。1区画ごとの移動量を満たしたときに壁判定を入れる。そこは関数ごとに記述する
-	//2区画直進の関数内で、壁の判定を途中で挟むだけ
-//	switch(current_direction)
-//	{
-//	case north:
-//		y++;
-//		break;
-//	case east:
-//		x++;
-//		break;
-//	case south:
-//		y--;
-//		break;
-//	case west:
-//		x--;
-//		break;
-//	default:
-//		//斜め方向の時にどうするか
-//		break;
-//	}
-}
-//区画の終了時　＝　一つの区画を移動し終えるときの向きで、どの座標を増やすかが決まる
-//袋小路、直進、右、左、のいずれかを返す。
-//現在の向きと座標、移動後の座標から進行方向を返す
-int GetSlope(int start_x, int start_y, int target_x, int target_y)
-{
-	int dx, dy;
-	dx = target_x - start_x;
-	dy = target_y - start_y;
-
-	return dy/dx;
-}
+////パルスを進み切ったら現在座標を変える(進む予定だった座標になる)。壁判定をしたらマップを更新し、次の目標座標が決まる。現在座標との差分を取る。向くべき方向が決まる。動作は別で書く。
+//void UpdateCoordinates(int current_direction)
+//{
+//	//90度曲がっただけの座標更新と、2区画直進した時の更新。
+//	//2区画直進した場合、移動量が満たされたかどうかの判定はどうするか。壁の判定との相性。
+//	//→移動量判定を、アクションの中で呼べばよさそう。1区画ごとの移動量を満たしたときに壁判定を入れる。そこは関数ごとに記述する
+//	//2区画直進の関数内で、壁の判定を途中で挟むだけ
+////	switch(current_direction)
+////	{
+////	case north:
+////		y++;
+////		break;
+////	case east:
+////		x++;
+////		break;
+////	case south:
+////		y--;
+////		break;
+////	case west:
+////		x--;
+////		break;
+////	default:
+////		//斜め方向の時にどうするか
+////		break;
+////	}
+//}
+////区画の終了時　＝　一つの区画を移動し終えるときの向きで、どの座標を増やすかが決まる
+////袋小路、直進、右、左、のいずれかを返す。
+////現在の向きと座標、移動後の座標から進行方向を返す
+//int GetSlope(int start_x, int start_y, int target_x, int target_y)
+//{
+//	int dx, dy;
+//	dx = target_x - start_x;
+//	dy = target_y - start_y;
+//
+//	return dy/dx;
+//}
 //進行方向の決定方法を整理したい//ここ以外はどれも一緒のはず。
 
 //足立法 → 壁情報から最短経路導出、今いる座標と、最短経路の2番目の配列データから方向を返す
@@ -757,60 +1422,7 @@ void mapcopy(){
 	}
 	//to 5120...(max)
 }
-void mapprint(){
 
-	static int i = 0, j=0,k=0;
-#if 1
-	//迷路?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?報
-	for(i=0; i < NUMBER_OF_SQUARES; i++){
-		for(j=0; j < NUMBER_OF_SQUARES * 4; j++){
-			printf("%u",work_ram[k]);
-			if((k+1)%(NUMBER_OF_SQUARES * 4) != 0){
-			if((k+1) >= 4 && (k+1)%4 == 0)
-				printf("  ");
-			}
-			if((k+1)%(NUMBER_OF_SQUARES * 4) == 0){
-				printf("\r\n");
-			}
-			k++;
-		}
-		printf("\r\n");
-	}
-
-	printf("\r\n");
-	printf("\r\n");
-
-
-	//歩数マッ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-	for(i=0; i < NUMBER_OF_SQUARES; i++){
-		for(j=0; j < NUMBER_OF_SQUARES; j++){
-			printf("%u  ",work_ram[k]);
-			k++;
-		}
-		printf("\r\n");
-		printf("\r\n");
-	}
-
-#else
-	wall[1][1].north = 3;
-	for(i=0; i < 16; i++){
-		for(j=0; j < 16; j++){
-			printf("%d%d%d%d",wall[i][j].north, wall[i][j].east, wall[i][j].south, wall[i][j].west);
-
-			if((j+1)%16 != 0){
-			//if((j+1)%4 == 0)
-				printf(" ");
-			}
-			k++;
-
-		}
-		printf("\r\n");
-	}
-#endif
-//	for(int i=0; i <=10; i++)
-//	printf("保存データ :: %d \r\n",work_ram[i][0]);
-
-}
 
 
 void Walk_Count_Map(){
@@ -912,20 +1524,20 @@ void judge(){
     	  case north:
 
     		  if(wall[x][y].west == NOWALL){
-    			  L_turn_select();
+    			  SelectAction(turn_mode);;
     			  my_direction = west;
     		      x--;
     		  }
 
     		  else if(wall[x][y].north == NOWALL){
-    			  straight();
+    			  SelectAction(turn_mode);
     			  my_direction = north;
     			  y++;
     		  }
 
 
     		  else if(wall[x][y].east == NOWALL){
-    			  R_turn_select();
+    			  SelectAction(turn_mode);;
     	          my_direction = east;
     	          x++;
     		  }
@@ -951,20 +1563,20 @@ void judge(){
     		  break;
     	  case east:
     		  if(wall[x][y].north== NOWALL){
-    			  L_turn_select();
+    			  SelectAction(turn_mode);;
     			  my_direction = north;
     			  y++;
     		  }
 
     		  else if(wall[x][y].east == NOWALL){
-    			  straight();
+    			  SelectAction(turn_mode);
     	          my_direction = east;
     	          x++;
     		  }
 
 
     		  else if(wall[x][y].south == NOWALL){
-    			  R_turn_select();
+    			  SelectAction(turn_mode);;
     	       	  my_direction = south;
     	       	  y--;
     		  }
@@ -987,20 +1599,20 @@ void judge(){
     		  break;
     	  case south:
     		  if(wall[x][y].east == NOWALL){
-    			  L_turn_select();
+    			  SelectAction(turn_mode);;
     	          my_direction = east;
     	          x++;
     		  }
 
     		  else if(wall[x][y].south == NOWALL){
-    			  straight();
+    			  SelectAction(turn_mode);
     	       	  my_direction = south;
     	       	  y--;
     		  }
 
 
     		  else if(wall[x][y].west == NOWALL){
-    			  R_turn_select();
+    			  SelectAction(turn_mode);;
       			  my_direction = west;
       		      x--;
     		  }
@@ -1023,13 +1635,13 @@ void judge(){
     		  break;
     	  case west:
     		  if(wall[x][y].south == NOWALL){
-    			  L_turn_select();
+    			  SelectAction(turn_mode);;
     	       	  my_direction = south;
     	       	  y--;
     		  }
 
     		  else if(wall[x][y].west == NOWALL){
-    			  straight();
+    			  SelectAction(turn_mode);
 
     			  my_direction = west;
     		      x--;
@@ -1037,7 +1649,7 @@ void judge(){
 
 
     		  else if(wall[x][y].north == NOWALL){
-    			  R_turn_select();
+    			  SelectAction(turn_mode);;
       			  my_direction = north;
       			  y++;
     		  }
@@ -1129,7 +1741,7 @@ void left_search(){
 //o左に曲がる
          }else if( (sl_average+sr_average)/2 < FRONT_WALL ){ //o前に壁が無??????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
 
-            straight();
+            SelectAction(turn_mode);
             mode.action = 2;
         	//printf("前に壁ない\r\n");
          }
@@ -1673,19 +2285,19 @@ void Shortest_Run_Judge(){
 	  		  case north:
 	  			  if(wall[x][y].north == NOWALL &&walk_map[x][y+1] < walk_map[x][y] && y < NUMBER_OF_SQUARES-1 /*&& Impasse_Judge(x,y+1,north)*/){
 	  				  //前北
-	  				  straight();
+	  				  SelectAction(turn_mode);
 	  				  my_direction = north;
 	  				  y++;
 	  			  }
 	  			  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] < walk_map[x][y] && x > 0 /*&& Impasse_Judge(x-1,y,west)*/ ){
 	  				  //左西
-	  				  L_turn_select();
+	  				  SelectAction(turn_mode);;
 	  				  my_direction = west;
 	  			      x--;
 	  			  }
 	  			  else if(wall[x][y].east == NOWALL &&walk_map[x+1][y] < walk_map[x][y] && x <  NUMBER_OF_SQUARES-1 /*&& Impasse_Judge(x+1,y,east)*/){
 	  				  //右東
-	  				  R_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		          my_direction = east;
 	  		          x++;
 	  			  }
@@ -1710,19 +2322,19 @@ void Shortest_Run_Judge(){
 
 	  			  if(wall[x][y].east == NOWALL && walk_map[x+1][y] < walk_map[x][y] && x < NUMBER_OF_SQUARES-1 /*&& Impasse_Judge(x+1,y,east)*/){
 	  				  //前東
-	  				  straight();
+	  				  SelectAction(turn_mode);
 	  		       	  my_direction = east;
 	  		       	  x++;
 	  			  }
 	  			  else if(wall[x][y].north == NOWALL && walk_map[x][y+1] < walk_map[x][y] && y < NUMBER_OF_SQUARES-1 /*&& Impasse_Judge(x,y+1,north)*/){
 	  				  //左?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-	  				  L_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		       	  my_direction = north;
 	  		       	  y++;
 	  			  }
 	  			  else if(wall[x][y].south == NOWALL && walk_map[x][y-1] < walk_map[x][y] && y > 0 /*&& Impasse_Judge(x,y-1,south)*/){
 	  				  //右?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-	  				  R_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		       	  my_direction = south;
 	  		       	  y--;
 	  			  }
@@ -1747,19 +2359,19 @@ void Shortest_Run_Judge(){
 
 	  			  if(wall[x][y].south == NOWALL && walk_map[x][y-1] < walk_map[x][y] && y > 0 /*&& Impasse_Judge(x,y-1,south)*/){
 	  				  //前南
-	  				  straight();
+	  				  SelectAction(turn_mode);
 	  		       	  my_direction = south;
 	  		       	  y--;
 	  			  }
 	  			  else if(wall[x][y].east == NOWALL && walk_map[x+1][y] < walk_map[x][y] && x < NUMBER_OF_SQUARES-1 /*&& Impasse_Judge(x+1,y,east)*/){
 	  				  //左東
-	  				  L_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		       	  my_direction = east;
 	  		       	  x++;
 	  			  }
 	  			  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] < walk_map[x][y] && x > 0 /*&& Impasse_Judge(x-1,y,west) */){
 	  				  //右西
-	  				  R_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		       	  my_direction = west;
 	  		       	  x--;
 	  			  }
@@ -1784,19 +2396,19 @@ void Shortest_Run_Judge(){
 
 	  			  if(wall[x][y].west == NOWALL &&walk_map[x-1][y] < walk_map[x][y] && x > 0 /*&& Impasse_Judge(x-1,y,west)*/){
 	  				  //前西
-	  				  straight();
+	  				  SelectAction(turn_mode);
 	  		       	  my_direction = west;
 	  		       	  x--;
 	  			  }
 	  			  else if(wall[x][y].south == NOWALL &&walk_map[x][y-1] < walk_map[x][y] && y > 0 /*&& Impasse_Judge(x,y-1,south)*/){
 	  				  //左?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-	  				  L_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		       	  my_direction = south;
 	  		       	  y--;
 	  			  }
 	  			  else if(wall[x][y].north == NOWALL &&walk_map[x][y+1] < walk_map[x][y] && y < NUMBER_OF_SQUARES-1 /*&& Impasse_Judge(x,y+1,north)*/){
 	  				  //右?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-	  				  R_turn_select();
+	  				  SelectAction(turn_mode);;
 	  		       	  my_direction = north;
 	  		       	  y++;
 	  			  }
@@ -1884,19 +2496,19 @@ void Adachi_judge(){
 	  case north:
 		  if(wall[x][y].north == NOWALL &&walk_map[x][y+1] < walk_map[x][y] && y < NUMBER_OF_SQUARES-1){
 			  //前北
-			  straight();
+			  SelectAction(turn_mode);
 			  my_direction = north;
 			  y++;
 		  }
 		  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] < walk_map[x][y] && x > 0){
 			  //左西
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 			  my_direction = west;
 		      x--;
 		  }
 		  else if(wall[x][y].east == NOWALL &&walk_map[x+1][y] < walk_map[x][y] && x <  NUMBER_OF_SQUARES-1){
 			  //右東
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	          my_direction = east;
 	          x++;
 		  }
@@ -1922,19 +2534,19 @@ void Adachi_judge(){
 
 		  if(wall[x][y].east == NOWALL && walk_map[x+1][y] < walk_map[x][y] && x < NUMBER_OF_SQUARES-1){
 			  //前東
-			  straight();
+			  SelectAction(turn_mode);
 	       	  my_direction = east;
 	       	  x++;
 		  }
 		  else if(wall[x][y].north == NOWALL && walk_map[x][y+1] < walk_map[x][y] && y < NUMBER_OF_SQUARES-1){
 			  //左?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = north;
 	       	  y++;
 		  }
 		  else if(wall[x][y].south == NOWALL && walk_map[x][y-1] < walk_map[x][y] && y > 0){
 			  //右?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = south;
 	       	  y--;
 		  }
@@ -1961,19 +2573,19 @@ void Adachi_judge(){
 
 		  if(wall[x][y].south == NOWALL &&walk_map[x][y-1] < walk_map[x][y] && y > 0){
 			  //前南
-			  straight();
+			  SelectAction(turn_mode);
 	       	  my_direction = south;
 	       	  y--;
 		  }
 		  else if(wall[x][y].east == NOWALL &&walk_map[x+1][y] < walk_map[x][y] && x < NUMBER_OF_SQUARES-1){
 			  //左東
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = east;
 	       	  x++;
 		  }
 		  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] < walk_map[x][y] && x > 0){
 			  //右西
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = west;
 	       	  x--;
 		  }
@@ -2000,19 +2612,19 @@ void Adachi_judge(){
 
 		  if(wall[x][y].west == NOWALL &&walk_map[x-1][y] < walk_map[x][y] && x > 0){
 			  //前西
-			  straight();
+			  SelectAction(turn_mode);
 	       	  my_direction = west;
 	       	  x--;
 		  }
 		  else if(wall[x][y].south == NOWALL &&walk_map[x][y-1] < walk_map[x][y] && y > 0){
 			  //左?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = south;
 	       	  y--;
 		  }
 		  else if(wall[x][y].north == NOWALL &&walk_map[x][y+1] < walk_map[x][y] && y < NUMBER_OF_SQUARES-1){
 			  //右?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = north;
 	       	  y++;
 		  }
@@ -2060,19 +2672,19 @@ void Adachi_go_back(){
 
 		  if(wall[x][y].west == NOWALL &&walk_map[x-1][y] > walk_map[x][y] && x > 0 && Impasse_Judge(x-1,y,west)){
 			  //左西
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 			  my_direction = west;
 		      x--;
 		  }
 		  else if(wall[x][y].east == NOWALL &&walk_map[x+1][y] > walk_map[x][y] && x <  NUMBER_OF_SQUARES-1 && Impasse_Judge(x+1,y,east)){
 			  //右東
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	          my_direction = east;
 	          x++;
 		  }
 		  else if(wall[x][y].north == NOWALL &&walk_map[x][y+1] > walk_map[x][y] && y < NUMBER_OF_SQUARES-1 && Impasse_Judge(x,y+1,north)){
 			  //前北
-			  straight();
+			  SelectAction(turn_mode);
 			  my_direction = north;
 			  y++;
 		  }
@@ -2099,19 +2711,19 @@ void Adachi_go_back(){
 
 		  if(wall[x][y].north == NOWALL && walk_map[x][y+1] > walk_map[x][y] && y < NUMBER_OF_SQUARES-1 && Impasse_Judge(x,y+1,north)){
 			  //左?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = north;
 	       	  y++;
 		  }
 		  else if(wall[x][y].south == NOWALL && walk_map[x][y-1] > walk_map[x][y] && y > 0 && Impasse_Judge(x,y-1,south)){
 			  //右?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = south;
 	       	  y--;
 		  }
 		  else if(wall[x][y].east == NOWALL && walk_map[x+1][y] > walk_map[x][y] && x < NUMBER_OF_SQUARES-1 && Impasse_Judge(x+1,y,east)){
 			  //前東
-			  straight();
+			  SelectAction(turn_mode);
 	       	  my_direction = east;
 	       	  x++;
 		  }
@@ -2138,19 +2750,19 @@ void Adachi_go_back(){
 
 		  if(wall[x][y].east == NOWALL &&walk_map[x+1][y] > walk_map[x][y] && x < NUMBER_OF_SQUARES-1 && Impasse_Judge(x+1,y,east)){
 			  //左東
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = east;
 	       	  x++;
 		  }
 		  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] > walk_map[x][y] && x > 0 && Impasse_Judge(x-1,y,west)){
 			  //右西
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = west;
 	       	  x--;
 		  }
 	      else if(wall[x][y].south == NOWALL &&walk_map[x][y-1] > walk_map[x][y] && y > 0 && Impasse_Judge(x,y-1,south)){
 			  //前南
-			  straight();
+			  SelectAction(turn_mode);
 	       	  my_direction = south;
 	       	  y--;
 		  }
@@ -2178,19 +2790,19 @@ void Adachi_go_back(){
 
 		  if(wall[x][y].south == NOWALL &&walk_map[x][y-1] > walk_map[x][y] && y > 0 && Impasse_Judge(x,y-1,south)){
 			  //左?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  L_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = south;
 	       	  y--;
 		  }
 		  else if(wall[x][y].north == NOWALL &&walk_map[x][y+1] > walk_map[x][y] && y < NUMBER_OF_SQUARES-1 && Impasse_Judge(x,y+1,north)){
 			  //右?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-			  R_turn_select();
+			  SelectAction(turn_mode);;
 	       	  my_direction = north;
 	       	  y++;
 		  }
 		  else if(wall[x][y].west == NOWALL &&walk_map[x-1][y] > walk_map[x][y] && x > 0 && Impasse_Judge(x-1,y,west)){
 			  //前西
-			  straight();
+			  SelectAction(turn_mode);
 	       	  my_direction = west;
 	       	  x--;
 		  }

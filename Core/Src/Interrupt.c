@@ -331,16 +331,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 		TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 		//角速度 rad/s
-
+#if 0
 		//static float angle=0;
 		static float last=0;
 		float imu_accel=0;
 		//uint8_t zgb,zgf;
-
 		ZGyro = ReadByte();
 //		angle += z_gyro;
 		//z_gyro = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));//read_zg_data();
-
 	    imu_accel =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
 	    //ImuAngV = -((0.01*imu_accel) + (0.99)* (last));
 	    AngularV = -((0.01*imu_accel) + (0.99)* (last));
@@ -349,6 +347,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 		Angle += AngularV * T1;
+#else
+		AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+		Angle += AngularV * T1;
+
+#endif
 		int out=0;
 		out += PIDControl( A_VELO_PID, TargetAngle, Angle);
 	    out += PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
