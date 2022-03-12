@@ -270,7 +270,18 @@ typedef struct Position
 extern position Pos;	//現在と、目標
 //void WritingFree();
 
+typedef struct Slalom
+{
+	float Pre;
+	float Fol;
+	float Alpha;
+	float Theta1;
+	float Theta2;
+	float Theta3;
 
+}slalom_parameter;
+
+extern slalom_parameter Sla;
 //void ControlMotor();
 //void UpdatePhotoData();
 

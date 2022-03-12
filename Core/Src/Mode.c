@@ -330,7 +330,7 @@ void Debug()
 //	}
 
 	//割り込み処理テスト
-#if 1
+#if 0
 	ExploreVelocity=240;
 	t = 0;
 	timer1=0;
@@ -350,9 +350,9 @@ void Debug()
 	}
 #endif
 
-#if 0
+#if 1
 	//スラロームテスト
-	ExploreVelocity = 240;
+	ExploreVelocity = 135;
 	Pos.Dir = front;
 	Accel(61.75,ExploreVelocity);
 	for(int i=0; i < 1; i++)
@@ -378,7 +378,7 @@ void Debug()
 		Pos.Dir = back;
 		theta_log[i] = Angle;
 
-		Rotate(90,M_PI);
+		Rotate(90,M_PI*0.3);
 		theta_log[i+1] = Angle;
 
 		HAL_Delay(100);
@@ -386,7 +386,7 @@ void Debug()
 		ChangeLED(0);
 		Pos.Car = north;
 		Pos.Dir = back;
-		Rotate(90,-M_PI);
+		Rotate(90,-M_PI*0.3);
 		HAL_Delay(100);
 		//theta_log[i] = Angle;
 	}
@@ -562,21 +562,21 @@ void WritingFree()
 {
 //	wall_init();
 //	wall_ram_print();
-	printf("flashコピーる\r\n");
-	flash_copy_to_ram();
-	wall_flash_print();
-	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
-	map_print();
-	printf("flashおわったはず\r\n");
-
-	printf("最短用の歩数マップ\r\n");
-	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x03);
-	map_print();
-	while(1)
-	{
-
-
-	}
+//	printf("flashコピーる\r\n");
+//	flash_copy_to_ram();
+//	wall_flash_print();
+//	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+//	map_print();
+//	printf("flashおわったはず\r\n");
+//
+//	printf("最短用の歩数マップ\r\n");
+//	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x03);
+//	map_print();
+//	while(1)
+//	{
+//
+//
+//	}
 	InitExplore();
 
 	printf("3\r\n");
@@ -730,6 +730,22 @@ while(1)
 void FastestRun()
 {
 	//諸々の初期化
+	HAL_Delay(250);
+	Photo[FR] = 0;
+	  int8_t mode=1;
+	  printf("mode : %d\r\n", mode);
+	  ModeSelect( 1, 2, &mode);
+	  Signal( mode );
+	  printf("Switch\r\n");
+
+		HAL_Delay(250);
+		Photo[FR] = 0;
+		  int8_t mode2=1;
+		  printf("mode : %d\r\n", mode2);
+		  ModeSelect( 1, 4, &mode2);
+		  Signal( mode2 );
+		  printf("Switch\r\n");
+
 	InitFastest();
 	InitPosition();
 
@@ -747,15 +763,73 @@ void FastestRun()
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-	ExploreVelocity=180;
+
+
+	//こちらもスラロームかそうでないか、速度はどうか、でモード分けする
+
+	char turn_mode;
+	if(mode == 1)
+	{
+		turn_mode = 'T';
+	}
+	else if(mode == 2)
+	{
+		turn_mode = 'S';
+	}
+	//ExploreVelocity=135;
+	switch(mode2)
+	{
+	case 1:
+		ExploreVelocity=90;
+		//未
+		Sla.Pre = 8;
+		Sla.Fol = 8;
+		Sla.Alpha = 0.014;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 2:
+		//完
+		ExploreVelocity=135;
+		Sla.Pre = 5;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.0273;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 3:
+		//未
+		ExploreVelocity=180;
+		Sla.Pre = 4;
+		Sla.Fol = 6;
+		Sla.Alpha = 0.04478;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 4:
+		ExploreVelocity=240;
+		Sla.Pre = 5;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.083;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+
+	}
+
 	ChangeLED(4);
+
 
 	//マップデータの取得。flashから壁データを取得。
 	flash_copy_to_ram();
 	//最短経路導出(今回は省けそう。)
 
 	//走る
-	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER);
+	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER, turn_mode);
 
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
@@ -769,16 +843,24 @@ void Explore()
 	//一回目で失敗していたら、flash消してram初期化
 	//一回目で成功したら、flashをramに移す
 
-	HAL_Delay(1000);
+	HAL_Delay(250);
 	Photo[FR] = 0;
 	  int8_t mode=1;
 	  printf("mode : %d\r\n", mode);
 	  ModeSelect( 1, 2, &mode);
 	  Signal( mode );
 	  printf("Switch\r\n");
+
+		HAL_Delay(250);
+		Photo[FR] = 0;
+		  int8_t mode2=1;
+		  printf("mode : %d\r\n", mode2);
+		  ModeSelect( 1, 3, &mode2);
+		  Signal( mode2 );
+		  printf("Switch\r\n");
 	InitExplore();
 
-	printf("3\r\n");
+	//printf("3\r\n");
 
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
@@ -794,7 +876,7 @@ void Explore()
 //	Pos.Car = north;
 //	x=0,y=0;
 	wall_init();
-	printf("4\r\n");
+	//printf("4\r\n");
 	//時間用の処理の初期化。
 	//int timer = 0;
 	//エンコーダ移動量の初期化。
@@ -810,14 +892,17 @@ void Explore()
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
-	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+	//printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
 	//PIDChangeFlagStraight(N_WALL_PID);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-	ExploreVelocity=180;
+	//ExploreVelocity=180;
+
 	ChangeLED(2);
+
+	//スラロームか、一区画ずつかを選ぶ。
 	char turn_mode;
 	if(mode == 1)
 	{
@@ -826,8 +911,45 @@ void Explore()
 	else if(mode == 2)
 	{
 		turn_mode = 'S';
+	}
+	//ExploreVelocity=135;
+	switch(mode2)
+	{
+	case 1:
+		ExploreVelocity=90;
+		//未
+		Sla.Pre = 8;
+		Sla.Fol = 8;
+		Sla.Alpha = 0.014;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 2:
+		//完
+		ExploreVelocity=135;
+		Sla.Pre = 5;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.0273;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 3:
+		//未
+		ExploreVelocity=180;
+		Sla.Pre = 4;
+		Sla.Fol = 6;
+		Sla.Alpha = 0.04478;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
 
 	}
+
+
+	//速度の段階を選ぶ。
 //	while(1)
 //	{
 //

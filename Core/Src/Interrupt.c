@@ -309,11 +309,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		//目標値 - 現在値(変換済み)で制御出力値の計算
 
-		timer1 += t;
-		if(timer1 == 30000)
-		{
-			t = 0;
-		}
+//		timer1 += t;
+//		if(timer1 == 30000)
+//		{
+//			t = 0;
+//		}
 //*-----------------*/
 		//ControlMotor();
 		PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
@@ -331,7 +331,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 		TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 		//角速度 rad/s
-#if 0
+
+		//IMUが動けばIMUでいいけど、いちか撥か.
+		//1. 探索 90,135,180のどれか。スラロームで。自信のある速度から。
+		//2. スラローム失敗したら一区画ずつ。次に自信のある速度
+		//3. 3回目も失敗したら、やけっぱち
+		//2. 一回でもゴールしたら、最短走行の高速パラメータからスタート。
+		//3.それ以降は速度を上げるか下げるか.
+
+#if 1
 		//static float angle=0;
 		static float last=0;
 		float imu_accel=0;
@@ -352,6 +360,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		Angle += AngularV * T1;
 
 #endif
+#if 0
 		int out=0;
 		out += PIDControl( A_VELO_PID, TargetAngle, Angle);
 	    out += PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
@@ -366,7 +375,37 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			TargetAngularV += AngularAcceleration;
 		}
+#else
+		int wall_d =0,wall_l =0,wall_r =0;
+			int ang_out=0;
+		//処理を減らすには、
+			if( Pos.Dir == front)
+			{
+				if( Pid[A_VELO_PID].flag == 1 )
+				{
+					ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+					TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+				}
+				else if( Pid[D_WALL_PID].flag == 1 )
+				{
+					wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+					TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+				}
+				else if( Pid[L_WALL_PID].flag == 1 )
+				{
+					wall_l = PIDControl( L_WALL_PID,  Photo[SL], TargetPhoto[SL]);
+					TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+
+				}
+				else if( Pid[R_WALL_PID].flag == 1 )
+				{
+					wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+					TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+				}
+			}
+#endif
 		TargetVelocity[BODY] += Acceleration;
+		TargetAngularV += AngularAcceleration;
 		//TargetAngularV += AngularAcceleration;
 		TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
 		TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
@@ -640,7 +679,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if( htim == &htim8)
 	{
 		//timer += t;
-		timer8 += t;
+		//timer8 += t;
 
 		//壁センサデータの更新だけ
 		//UpdatePhotoData();

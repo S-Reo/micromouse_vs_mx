@@ -990,7 +990,7 @@ int get_nextdir(int x, int y, int mask)
 										//演算の意味はmytyedef.h内のenum宣言から。
 
 }
-void fast_run(int x, int y)
+void fast_run(int x, int y, char turn_mode)
 {
 //引数の座標x,yに向かって最短走行する
 
@@ -1078,7 +1078,7 @@ void fast_run(int x, int y)
 				break;
 
 		}
-		SelectAction('S');
+		SelectAction(turn_mode);
 	 	Pos.X = Pos.NextX;
 	    Pos.Y = Pos.NextY;
 		Pos.Car = Pos.NextCar;	//自分の向きを修正

@@ -75,6 +75,7 @@ position Pos =
 		wall_safe//移動量安全フラグ
 };
 
+slalom_parameter Sla;
 
 
 

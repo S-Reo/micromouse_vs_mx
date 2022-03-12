@@ -63,7 +63,7 @@ void KyushinJudge(char turn_mode);
 void make_map(int x, int y, int mask);
 void map_print();
 
-void fast_run(int x, int y);
+void fast_run(int x, int y, char turn_mode);
 
 
 

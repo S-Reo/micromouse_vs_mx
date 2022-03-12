@@ -805,12 +805,12 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = 4;         //スラローム前距離
-	float fol = 6;         //スラローム後距離
-	float alpha_turn = 0.046;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
-	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
-	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
-	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
+	float pre = Sla.Pre;         //スラローム前距離
+	float fol = Sla.Fol;         //スラローム後距離
+	float alpha_turn = Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
+	float ang1 = Sla.Theta1*M_PI/180;         //角速度が上がるのは0からang1まで
+	float ang2 = Sla.Theta2*M_PI/180;         //角速度が一定なのはang1からang2まで
+	float ang3 = Sla.Theta3*M_PI/180;         //角速度が下がるのはang2からang3まで
 	//このあたりのパラメータをどう調整、設計するかが鍵
 	float now_angv = AngularV;
 	int now_pulse;
@@ -952,12 +952,12 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = 4;         //スラローム前距離
-	float fol = 6;         //スラローム後距離
-	float alpha_turn = -0.046;//046;//125;//125;//16;//0.015*13;  //スラローム時の角加速度
-	float ang1 = 30*M_PI/180;         //角速度が上がるのは0からang1まで
-	float ang2 = 60*M_PI/180;         //角速度が一定なのはang1からang2まで
-	float ang3 = 90*M_PI/180;         //角速度が下がるのはang2からang3まで
+	float pre = Sla.Pre;         //スラローム前距離
+	float fol = Sla.Fol;         //スラローム後距離
+	float alpha_turn = -Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度s
+	float ang1 = Sla.Theta1*M_PI/180;         //角速度が上がるのは0からang1まで
+	float ang2 = Sla.Theta2*M_PI/180;         //角速度が一定なのはang1からang2まで
+	float ang3 = Sla.Theta3*M_PI/180;         //角速度が下がるのはang2からang3まで
 	//このあたりのパラメータをどう調整、設計するかが鍵
 
 	int now_pulse;
@@ -1176,7 +1176,7 @@ void Decel(float dec_distance, float end_speed)
 			AngularAcceleration = 0;
 			break;
 		}
-		if(KeepPulse[BODY] + (target_pulse/2) < TotalPulse[BODY] )
+		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] )
 		{
 			WallWarn();
 			//ControlWall();
@@ -1352,7 +1352,7 @@ void TurnRight(char mode)
 
 		//補正
 		//Calib();
-		Rotate( 90 , 2*M_PI);
+		Rotate( 90 , 1.5*M_PI);
 
 		TargetAngle += 90*M_PI/180;
 		//補正
@@ -1396,7 +1396,7 @@ void TurnLeft(char mode)
 
 		//補正
 		//Calib();
-		Rotate( 90 , -2*M_PI);
+		Rotate( 90 , -1.5*M_PI);
 		//HAL_Delay(500);
 		TargetAngle += -90*M_PI/180;
 		//補正
@@ -1427,7 +1427,7 @@ void GoBack()
 	//Compensate();
 	//Calib();
 	//回転して
-	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。
+	Rotate(180, 1.5*M_PI);//もしくは二回とも左。ここの加速でバグ。
 
 	//HAL_Delay(500);
 	//TargetAngle += 90*M_PI/180;
