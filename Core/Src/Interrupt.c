@@ -23,6 +23,8 @@ int timer1,timer8, t;
 const float convert_to_velocity = MM_PER_PULSE/T1;
 const float convert_to_angularv = 1/TREAD_WIDTH;
 const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
+const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんちゃらg×9.80392157 = mm/s^2
+
 //static int StraightWay;
 //以下割り込みで呼ぶ関数
 //このあたりの関数は、構造体変数を扱うファイルにまとめたほうがいいかもしれない。(メインのアルゴリズム、アクション)
@@ -341,20 +343,29 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 #if 1
 		//static float angle=0;
-		static float last=0;
-		float imu_accel=0;
+		static float zg_last, ya_last;
+		float zg_law, ya_law;
 		//uint8_t zgb,zgf;
-		ZGyro = ReadByte();
-//		angle += z_gyro;
-		//z_gyro = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));//read_zg_data();
-	    imu_accel =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
-	    //ImuAngV = -((0.01*imu_accel) + (0.99)* (last));
-	    AngularV = -((0.01*imu_accel) + (0.99)* (last));
-	    last = imu_accel;
-	    //ImuAngle += ImuAngV * T1;//角度 rad/msを積算
-
-		//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+		ZGyro = ReadIMU(0x37, 0x38);
+	    zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
+	    AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
+	    zg_last = zg_law;
 		Angle += AngularV * T1;
+
+		//加速度はmm/s^2。速度はmm/s。速度にするときにms値を積分すること。
+		YAccel = ReadIMU(0x2F, 0x30);
+	    ya_law =  ( YAccel - ya_offset )*convert_to_imu_yaccel;//センサ値に何をかけたら加速度になるか。理解した。
+	    ImuAccel = -((0.01*ya_law) + (0.99)* (ya_last));
+	    ya_last = ya_law;
+		ImuVelocity += ImuAccel * T1;//速度はmm/sで扱う。加速度m/ssがms毎に取得され、
+
+		//角速度と加速度からオドメトリ取ってみる。
+
+	    //angle += z_gyro;
+	    //z_gyro = ((uint16_t)read_byte(0x37) << 8) | ((uint16_t)read_byte(0x38));//read_zg_data();
+	    //ImuAngV = -((0.01*imu_accel) + (0.99)* (last));
+	    //ImuAngle += ImuAngV * T1;//角度 rad/msを積算
+		//AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 #else
 		AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 		Angle += AngularV * T1;

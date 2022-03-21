@@ -14,17 +14,17 @@ extern SPI_HandleTypeDef hspi3;
 // IMUから取得したデータ
 extern volatile int16_t 	xa, ya, za; // 加速度(16bitデータ)
 extern volatile int16_t 	xg, yg, zg;	// 角加速度(16bitデータ)
-extern float zg_offset;
-extern uint8_t val[2];
-extern int16_t spi_dma_data;
-extern float  ZGyro;
+extern float zg_offset, ya_offset;
+//extern uint8_t val[2];
+//extern int16_t spi_dma_data;
+extern float  ZGyro, YAccel;
 
 #define CS_RESET HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET)
 #define CS_SET   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET)
 
 void IMU_DMA_Start();
 uint8_t read_byte( uint8_t );
-float ReadByte();
+float ReadIMU(uint8_t a, uint8_t b);
 void write_byte( uint8_t, uint8_t);
 uint8_t IMU_init(void);
 void read_gyro_data(void);

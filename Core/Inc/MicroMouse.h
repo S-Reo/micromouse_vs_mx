@@ -56,6 +56,7 @@ extern float EncAngV;
 extern float Angle;
 
 extern float ImuAngV,ImuAngle;
+extern float ImuAccel, ImuVelocity, ImuMileage;
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。

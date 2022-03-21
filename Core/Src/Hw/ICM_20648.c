@@ -9,10 +9,10 @@
 #include <stdio.h>
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t xg, yg, zg;	// 角加速度(16bitデータ)
-float zg_offset;
+float zg_offset=0, ya_offset=0;
 //uint8_t val[2]={0};
-int16_t spi_dma_data;
-float  ZGyro;
+//int16_t spi_dma_data;
+float  ZGyro=0, YAccel=0;
 //const uint8_t ret[2] = {
 //		0x37 | 0x80,
 //		0x38 | 0x80
@@ -50,14 +50,14 @@ inline uint8_t read_byte( uint8_t reg ) {
 	//値の取得は1msが妥当。2台目のエンコーダではどれくらいがいいか。as5047Pは4.5MHz
 	return val;
 }
-inline float ReadByte() {
+inline float ReadIMU(uint8_t a, uint8_t b) {
 
 	uint8_t ret1, ret2,val1,val2;
 	uint8_t ret[2] = {
-			0x37,
-			0x38,
+			a,//0x37,
+			b//0x38,
 	};
-	int16_t z_gyro;
+	int16_t law_data;
 	float res;
 	ret1 = ret[0] | 0x80;
 	ret2 = ret[1] | 0x80;
@@ -75,8 +75,8 @@ inline float ReadByte() {
 	HAL_SPI_Transmit(&hspi3,&ret2,1,100);
 	HAL_SPI_Receive(&hspi3,&val2,1,100);
 	CS_SET;
-	z_gyro = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );
-	res = (float)z_gyro;
+	law_data = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );
+	res = (float)law_data;
 	//1回の取得は0.2msだった
 	//値の更新は4回分で0.8ms = 1.25kHz . 656250Bit/s 1回で131.25bit, 4回で525Bit=65.625byte
 	//値の取得は1msが妥当。2台目のエンコーダではどれくらいがいいか。as5047Pは4.5MHz
@@ -106,13 +106,16 @@ uint8_t IMU_init() {
 		//write_byte(0x01,0x07);	//range±2000dps DLPF enable DLPFCFG = 0
 		//write_byte(0x01,0x0F);	//range±2000dps DLPF enable DLPFCFG = 1
 		write_byte(0x01,0x17);	//range±2000dps DLPF enable DLPFCFG = 2
-
 		//2:1 GYRO_FS_SEL[1:0] 00:±250	01:±500 10:±1000 11:±2000
+
 		write_byte(0x14,0x06);	//	レンジ±16g
 		//2:1 ACCEL_FS_SEL[1:0] 00:±2	01:±4 10:±8 11:±16
+
 		write_byte(0x7F,0x00);	//USER_BANK0
 	}
 	return ret;
+	//0x14, 0x7F : 0000 1110, 0111 1111
+	//retはregのまま。
 }
 
 void read_gyro_data() {

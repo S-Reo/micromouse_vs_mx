@@ -166,6 +166,14 @@ t = 1;
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
 
+#if 1
+	while(1)
+	{
+		printf("加速度%f g, %f mm/s\r\n",YAccel/2048.0f, ImuAccel);
+	}
+
+#endif
+
 	TargetVelocity[BODY] = 0;
 	TargetAngularV = 0;
 	Acceleration = 0;
