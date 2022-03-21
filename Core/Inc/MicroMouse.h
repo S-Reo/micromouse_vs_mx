@@ -92,7 +92,7 @@ extern int L_motor, R_motor;
 
 #define DRIFT_FIX 0.00006375
 
-#define NUMBER_OF_SQUARES 16//4 //16
+#define NUMBER_OF_SQUARES 9//4 //16
 
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
@@ -102,11 +102,11 @@ extern int L_motor, R_motor;
 //#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標 全日本(6,9) (7,10)
-#define X_GOAL_LESSER 6
-#define Y_GOAL_LESSER 9
+#define X_GOAL_LESSER 2
+#define Y_GOAL_LESSER 1
 
-#define X_GOAL_LARGER 7
-#define Y_GOAL_LARGER 10
+#define X_GOAL_LARGER 2
+#define Y_GOAL_LARGER 1
 
 #define FL	0
 #define SR	1

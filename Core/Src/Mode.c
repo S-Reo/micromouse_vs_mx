@@ -88,6 +88,20 @@ void InitExplore()
 	EncoderStart(); //戻し忘れないように
 	EmitterON();
 	ADCStart();
+//	htim2.Init.Prescaler = 20-1;
+//	for(int i=0; i < 9 ; i++)
+//	{
+//		  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+//		  {
+//		    Error_Handler();
+//		  }
+//		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1000);
+//		HAL_Delay(500);
+//		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+//		HAL_Delay(500);
+//		htim2.Init.Prescaler -= 2;
+//
+//	}
 	uint8_t imu_check;
 	imu_check =IMU_init();
 
@@ -620,11 +634,9 @@ void WritingFree()
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(7);
-#if 0
-	while(1)
-	{
+#if 1
 
-	}
+
 #else
 	while(1)
 	{
