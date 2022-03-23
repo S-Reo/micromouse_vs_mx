@@ -169,7 +169,8 @@ t = 1;
 #if 1
 	while(1)
 	{
-		printf("加速度%f g, %f mm/s\r\n",YAccel/2048.0f, ImuAccel);
+		printf("生値%f, 加速度%f g, %f mm/s\r\n",YAccel,YAccel/2048.0f, ImuAccel);
+		printf("生値%f, 角速度%f ang/s, %f rad/s\r\n",ZGyro,ZGyro/16.4f, AngularV);
 	}
 
 #endif

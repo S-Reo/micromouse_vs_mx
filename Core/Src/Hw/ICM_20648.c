@@ -75,7 +75,7 @@ inline float ReadIMU(uint8_t a, uint8_t b) {
 	HAL_SPI_Transmit(&hspi3,&ret2,1,100);
 	HAL_SPI_Receive(&hspi3,&val2,1,100);
 	CS_SET;
-	law_data = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );
+	law_data = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );//何で8bitシフトかというと、ローバイトとハイバイトにわかれているものを一つにしたいから。16bitADCで得た値を二つに分けて出力しているのを元に戻す。
 	res = (float)law_data;
 	//1回の取得は0.2msだった
 	//値の更新は4回分で0.8ms = 1.25kHz . 656250Bit/s 1回で131.25bit, 4回で525Bit=65.625byte
@@ -108,7 +108,7 @@ uint8_t IMU_init() {
 		write_byte(0x01,0x17);	//range±2000dps DLPF enable DLPFCFG = 2
 		//2:1 GYRO_FS_SEL[1:0] 00:±250	01:±500 10:±1000 11:±2000
 
-		write_byte(0x14,0x06);	//	レンジ±16g
+		write_byte(0x14,0x17);	//	レンジ±16g 0x06
 		//2:1 ACCEL_FS_SEL[1:0] 00:±2	01:±4 10:±8 11:±16
 
 		write_byte(0x7F,0x00);	//USER_BANK0
