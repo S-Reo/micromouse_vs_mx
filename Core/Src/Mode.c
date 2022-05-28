@@ -375,10 +375,10 @@ void Debug()
 
 #if 1
 	//スラロームテスト
-	ExploreVelocity = 300;
+	ExploreVelocity = 1000;
 	Pos.Dir = front;
 	Accel(61.75,ExploreVelocity);
-	for(int i=0; i < 10; i++)
+	for(int i=0; i < 14; i++)
 	{
 		Pos.Dir = front;
 		GoStraight(90, ExploreVelocity, AddVelocity);

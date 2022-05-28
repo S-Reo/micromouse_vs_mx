@@ -2819,8 +2819,8 @@ void Rotate(float deg, float ang_accel)
  8009940:	46bd      	mov	sp, r7
  8009942:	bd80      	pop	{r7, pc}
  8009944:	f3af 8000 	nop.w
- 8009948:	676d3723 	.word	0x676d3723
- 800994c:	40fd7596 	.word	0x40fd7596
+ 8009948:	90c63a46 	.word	0x90c63a46
+ 800994c:	40fd6e3f 	.word	0x40fd6e3f
  8009950:	20000000 	.word	0x20000000
  8009954:	42b40000 	.word	0x42b40000
  8009958:	43b40000 	.word	0x43b40000
@@ -3147,8 +3147,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
  8009b96:	bf00      	nop
  8009b98:	54442d18 	.word	0x54442d18
  8009b9c:	400921fb 	.word	0x400921fb
- 8009ba0:	32deb154 	.word	0x32deb154
- 8009ba4:	3f501fcd 	.word	0x3f501fcd
+ 8009ba0:	8fa963a1 	.word	0x8fa963a1
+ 8009ba4:	3f5023d2 	.word	0x3f5023d2
  8009ba8:	20000000 	.word	0x20000000
  8009bac:	200002cc 	.word	0x200002cc
  8009bb0:	200006ec 	.word	0x200006ec
@@ -3265,8 +3265,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
  8009c90:	bdb0      	pop	{r4, r5, r7, pc}
  8009c92:	bf00      	nop
  8009c94:	f3af 8000 	nop.w
- 8009c98:	32deb154 	.word	0x32deb154
- 8009c9c:	3f501fcd 	.word	0x3f501fcd
+ 8009c98:	8fa963a1 	.word	0x8fa963a1
+ 8009c9c:	3f5023d2 	.word	0x3f5023d2
  8009ca0:	54442d18 	.word	0x54442d18
  8009ca4:	3ff921fb 	.word	0x3ff921fb
  8009ca8:	200002d8 	.word	0x200002d8
@@ -3575,8 +3575,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
  8009ee6:	bf00      	nop
  8009ee8:	54442d18 	.word	0x54442d18
  8009eec:	400921fb 	.word	0x400921fb
- 8009ef0:	32deb154 	.word	0x32deb154
- 8009ef4:	3f501fcd 	.word	0x3f501fcd
+ 8009ef0:	8fa963a1 	.word	0x8fa963a1
+ 8009ef4:	3f5023d2 	.word	0x3f5023d2
  8009ef8:	20000000 	.word	0x20000000
  8009efc:	200002cc 	.word	0x200002cc
  8009f00:	200006ec 	.word	0x200006ec
@@ -3689,8 +3689,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
  8009fda:	46bd      	mov	sp, r7
  8009fdc:	bdb0      	pop	{r4, r5, r7, pc}
  8009fde:	bf00      	nop
- 8009fe0:	32deb154 	.word	0x32deb154
- 8009fe4:	3f501fcd 	.word	0x3f501fcd
+ 8009fe0:	8fa963a1 	.word	0x8fa963a1
+ 8009fe4:	3f5023d2 	.word	0x3f5023d2
  8009fe8:	54442d18 	.word	0x54442d18
  8009fec:	3ff921fb 	.word	0x3ff921fb
  8009ff0:	200002d8 	.word	0x200002d8
@@ -3884,8 +3884,8 @@ void Accel(float add_distance, float explore_speed)
  800a158:	bdb0      	pop	{r4, r5, r7, pc}
  800a15a:	bf00      	nop
  800a15c:	f3af 8000 	nop.w
- 800a160:	32deb154 	.word	0x32deb154
- 800a164:	3f501fcd 	.word	0x3f501fcd
+ 800a160:	8fa963a1 	.word	0x8fa963a1
+ 800a164:	3f5023d2 	.word	0x3f5023d2
  800a168:	9999999a 	.word	0x9999999a
  800a16c:	3fe99999 	.word	0x3fe99999
  800a170:	20000000 	.word	0x20000000
@@ -4109,8 +4109,8 @@ void Decel(float dec_distance, float end_speed)
  800a330:	bdb0      	pop	{r4, r5, r7, pc}
  800a332:	bf00      	nop
  800a334:	f3af 8000 	nop.w
- 800a338:	32deb154 	.word	0x32deb154
- 800a33c:	3f501fcd 	.word	0x3f501fcd
+ 800a338:	8fa963a1 	.word	0x8fa963a1
+ 800a33c:	3f5023d2 	.word	0x3f5023d2
  800a340:	cccccccd 	.word	0xcccccccd
  800a344:	3fe4cccc 	.word	0x3fe4cccc
  800a348:	20000000 	.word	0x20000000
@@ -4240,8 +4240,8 @@ void Calib(int distance)
  800a42c:	200002a0 	.word	0x200002a0
  800a430:	200002b8 	.word	0x200002b8
  800a434:	c28c0000 	.word	0xc28c0000
- 800a438:	32deb154 	.word	0x32deb154
- 800a43c:	3f501fcd 	.word	0x3f501fcd
+ 800a438:	8fa963a1 	.word	0x8fa963a1
+ 800a43c:	3f5023d2 	.word	0x3f5023d2
 
 0800a440 <Compensate>:
 void Compensate()
@@ -4538,8 +4538,8 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
  800a65c:	20000260 	.word	0x20000260
  800a660:	2000025c 	.word	0x2000025c
  800a664:	200002d4 	.word	0x200002d4
- 800a668:	32deb154 	.word	0x32deb154
- 800a66c:	3f501fcd 	.word	0x3f501fcd
+ 800a668:	8fa963a1 	.word	0x8fa963a1
+ 800a66c:	3f5023d2 	.word	0x3f5023d2
 
 0800a670 <TurnRight>:
 void TurnRight(char mode)
@@ -6322,7 +6322,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  800b374:	40000400 	.word	0x40000400
  800b378:	200002ac 	.word	0x200002ac
  800b37c:	40000800 	.word	0x40000800
- 800b380:	3f7bf0e5 	.word	0x3f7bf0e5
+ 800b380:	3f7c2fb9 	.word	0x3f7c2fb9
  800b384:	20000288 	.word	0x20000288
  800b388:	200002b8 	.word	0x200002b8
  800b38c:	20000be8 	.word	0x20000be8
@@ -10205,7 +10205,7 @@ void Debug()
 
 #if 1
 	//スラロームテスト
-	ExploreVelocity = 300;
+	ExploreVelocity = 1000;
  800ced8:	4b29      	ldr	r3, [pc, #164]	; (800cf80 <Debug+0x11c>)
  800ceda:	4a2a      	ldr	r2, [pc, #168]	; (800cf84 <Debug+0x120>)
  800cedc:	601a      	str	r2, [r3, #0]
@@ -10219,7 +10219,7 @@ void Debug()
  800ceea:	eef0 0a67 	vmov.f32	s1, s15
  800ceee:	ed9f 0a27 	vldr	s0, [pc, #156]	; 800cf8c <Debug+0x128>
  800cef2:	f7fd f889 	bl	800a008 <Accel>
-	for(int i=0; i < 10; i++)
+	for(int i=0; i < 14; i++)
  800cef6:	2300      	movs	r3, #0
  800cef8:	67fb      	str	r3, [r7, #124]	; 0x7c
  800cefa:	e013      	b.n	800cf24 <Debug+0xc0>
@@ -10237,12 +10237,12 @@ void Debug()
  800cf12:	eef0 0a67 	vmov.f32	s1, s15
  800cf16:	ed9f 0a1f 	vldr	s0, [pc, #124]	; 800cf94 <Debug+0x130>
  800cf1a:	f7fd faa5 	bl	800a468 <GoStraight>
-	for(int i=0; i < 10; i++)
+	for(int i=0; i < 14; i++)
  800cf1e:	6ffb      	ldr	r3, [r7, #124]	; 0x7c
  800cf20:	3301      	adds	r3, #1
  800cf22:	67fb      	str	r3, [r7, #124]	; 0x7c
  800cf24:	6ffb      	ldr	r3, [r7, #124]	; 0x7c
- 800cf26:	2b09      	cmp	r3, #9
+ 800cf26:	2b0d      	cmp	r3, #13
  800cf28:	dde8      	ble.n	800cefc <Debug+0x98>
 		//Pos.Dir = right;
 		//SlalomRight();
@@ -10295,7 +10295,7 @@ void Debug()
  800cf78:	200002b8 	.word	0x200002b8
  800cf7c:	0801a684 	.word	0x0801a684
  800cf80:	200002cc 	.word	0x200002cc
- 800cf84:	43960000 	.word	0x43960000
+ 800cf84:	447a0000 	.word	0x447a0000
  800cf88:	20000000 	.word	0x20000000
  800cf8c:	42770000 	.word	0x42770000
  800cf90:	200002d0 	.word	0x200002d0
