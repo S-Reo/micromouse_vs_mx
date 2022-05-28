@@ -353,11 +353,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		Angle += AngularV * T1;
 
 		//加速度はmm/s^2。速度はmm/s。速度にするときにms値を積分すること。
-		YAccel = ReadIMU(0x2F, 0x30);//1gあたり2048で値が来る。2048が来たら1g。そこに9.8....をかけたらm/s^2になる。mmにするには1000倍する。4.78515625mm/s^2が最小単位。
-	    ya_law =  ( YAccel - ya_offset )*convert_to_imu_yaccel;//センサ値に何をかけたら加速度になるか。理解した。
-	    ImuAccel = ((0.01*ya_law) + (0.99)* (ya_last));
-	    ya_last = ya_law;
-		ImuVelocity += ImuAccel * T1;//速度はmm/sで扱う。加速度m/ssがms毎に取得され、
+//		YAccel = ReadIMU(0x2F, 0x30);//1gあたり2048で値が来る。2048が来たら1g。そこに9.8....をかけたらm/s^2になる。mmにするには1000倍する。4.78515625mm/s^2が最小単位。
+//	    ya_law =  ( YAccel - ya_offset )*convert_to_imu_yaccel;//センサ値に何をかけたら加速度になるか。理解した。
+//	    ImuAccel = ((0.01*ya_law) + (0.99)* (ya_last));
+//	    ya_last = ya_law;
+//		ImuVelocity += ImuAccel * T1;//速度はmm/sで扱う。加速度m/ssがms毎に取得され、
 		//送られてくるデータが軒並みデカい。オフセットもひどい。初期化時にフィルタリング有効化してみるか。無効だと値が使い物にならないのってあり得る?
 		//角速度と加速度からオドメトリ取ってみる。
 

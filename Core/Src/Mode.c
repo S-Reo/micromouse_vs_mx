@@ -166,7 +166,7 @@ t = 1;
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
 
-#if 1
+#if 0
 	while(1)
 	{
 		printf("生値%f, 加速度%f g, %f mm/s\r\n",YAccel,YAccel/2048.0f, ImuAccel);
@@ -375,15 +375,15 @@ void Debug()
 
 #if 1
 	//スラロームテスト
-	ExploreVelocity = 135;
+	ExploreVelocity = 300;
 	Pos.Dir = front;
 	Accel(61.75,ExploreVelocity);
-	for(int i=0; i < 1; i++)
+	for(int i=0; i < 10; i++)
 	{
 		Pos.Dir = front;
 		GoStraight(90, ExploreVelocity, AddVelocity);
 		//Pos.Dir = right;
-		SlalomRight();
+		//SlalomRight();
 
 	}
 	Pos.Dir = front;
@@ -928,6 +928,7 @@ void Explore()
 	if(mode == 1)
 	{
 		turn_mode = 'T';
+		ExploreVelocity=300;
 	}
 	else if(mode == 2)
 	{
@@ -958,7 +959,7 @@ void Explore()
 		break;
 	case 3:
 		//未
-		ExploreVelocity=180;
+		//ExploreVelocity=180;
 		Sla.Pre = 4;
 		Sla.Fol = 6;
 		Sla.Alpha = 0.04478;
