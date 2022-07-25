@@ -139,7 +139,7 @@ extern int L_motor, R_motor;
 
 #define TIRE_DEAMETER 20.55f//20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 37.8f //36.8//34.4 //36.8 34.2//.8
+#define TREAD_WIDTH 37.85f //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
 //別のとこ

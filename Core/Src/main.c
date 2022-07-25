@@ -22,6 +22,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <HPP/wrapper.hpp>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -39,8 +40,8 @@
 //
 //#include "IEH2_4096.h"		//エンコー
 #include "ADC.h"
-//#include "LED_Driver.h"
-#include "IR_Emitter.h"	//発?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+#include "LED_Driver.h"
+#include "IR_Emitter.h"	//発
 #include "Convert.h"
 
 #include "UI.h"
@@ -49,6 +50,7 @@
 #include "Map.h"
 #include "ICM_20648.h"
 #include "PID_Control.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -146,6 +148,13 @@ Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
 
 return(Data);
 }
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	  static int i=0;
+	  ChangeLED(i);
+	  i++;
+	  if(i > 7) i=0;
+}
 // Flashから読みしたータを避するRAM
 // 4byteごとにアクセスをするで、アドレスに配置する
 
@@ -202,7 +211,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+  //wowowo
   //IMU_init();
 //  int16_t data[1000]={0};
 //  int i=0, elaps=0;
@@ -235,6 +244,7 @@ int main(void)
 //
 //  }
 
+  //cpploop();
 
   ADCStart();
   HAL_Delay(500);
@@ -249,7 +259,7 @@ int main(void)
 
   //pidパラメータの初期化をもっと書き換えやすいところで
 // Flashから読みしたータを避するRAM
-  //軽くなったあとはこ�?�ゲインで上手くいく�?�は�?信地旋回くら�?。�?�続スラロー�?は求�?法�?�計算が合ってち�?っと間に合って�?な�?のかも
+  //軽くなったあとはこ�???��?��ゲインで上手くいく�???��?��は??��?��?信地旋回くら??��?��?。�???��?��続スラロー??��?��?は求�?法�???��?��計算が合ってち??��?��?っと間に合って??��?��?な??��?��?のかも
 
   PIDSetGain(L_VELO_PID, 11.1, 2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
   PIDSetGain(R_VELO_PID, 11.1, 2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
@@ -258,10 +268,10 @@ int main(void)
   PIDSetGain(A_VELO_PID, 1,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iは積�?=偏差を消す。ゲインが大きいと偏差が縮まるが、収束が
   //Dは微
-  //壁�?�ゲインは緩め�?�方がよさそ�?。強�?と�?瞬ガタンと動いてあと固定になってしま�?�?
-  PIDSetGain(D_WALL_PID, 1, 0, 0);//3.2,0,0);//4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御?��??// 3.200000, 50.000000, 0.00025i55000
-  PIDSetGain(L_WALL_PID, 1,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
-  PIDSetGain(R_WALL_PID, 1,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+  //?��??��?��???��?��ゲインは緩?��??��?��???��?��方がよさそ??��?��?。強??��?��?と??��?��?瞬ガタンと動いてあと固定になってしま??��?��???��?��?
+  PIDSetGain(D_WALL_PID, 3, 0, 0);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御???��?��??��?��??// 3.200000, 50.000000, 0.00025i55000
+  PIDSetGain(L_WALL_PID, 3,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+  PIDSetGain(R_WALL_PID, 3,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   //PidFlag = A_VELO_PID;
   while (1)
   {
@@ -946,7 +956,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB2 PB12 */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_12;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -969,6 +979,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
 }
 

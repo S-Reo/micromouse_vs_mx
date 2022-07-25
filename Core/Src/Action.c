@@ -1474,7 +1474,7 @@ void SelectAction(char turn_mode)	//前後左右であらわす
 	case front:
 		//直進flagオン
 		//PIDChangeFlag( A_VELO_PID, 1);
-
+		AddVelocity = 0;
 		GoStraight(90, ExploreVelocity, AddVelocity);
 
 		break;

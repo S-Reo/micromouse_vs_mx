@@ -106,6 +106,13 @@ void InitExplore()
 	imu_check =IMU_init();
 
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+	imu_check =IMU_init();
+
+	printf("imu_check 1ならOK: %d\r\n",imu_check);
+	HAL_Delay(250);
+
+	ZGyro = ReadIMU(0x37, 0x38);
+	printf("gyro : %f\r\n",ZGyro);
 	//IMU_DMA_Start();
 	//CS_RESET;
 
@@ -373,7 +380,7 @@ void Debug()
 	}
 #endif
 
-#if 1
+#if 0
 	//スラロームテスト
 	ExploreVelocity = 1000;
 	Pos.Dir = front;
@@ -391,7 +398,7 @@ void Debug()
 	HAL_Delay(30000);
 #endif
 
-#if 0
+#if 1
 	//旋回テスト
 	ExploreVelocity=0;
 	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
@@ -401,7 +408,7 @@ void Debug()
 		Pos.Dir = back;
 		theta_log[i] = Angle;
 
-		Rotate(90,M_PI*0.3);
+		Rotate(90,M_PI*2);
 		theta_log[i+1] = Angle;
 
 		HAL_Delay(100);
@@ -409,7 +416,7 @@ void Debug()
 		ChangeLED(0);
 		Pos.Car = north;
 		Pos.Dir = back;
-		Rotate(90,-M_PI*0.3);
+		Rotate(90,-M_PI*2);
 		HAL_Delay(100);
 		//theta_log[i] = Angle;
 	}
@@ -928,7 +935,7 @@ void Explore()
 	if(mode == 1)
 	{
 		turn_mode = 'T';
-		ExploreVelocity=300;
+		ExploreVelocity=230;
 	}
 	else if(mode == 2)
 	{
@@ -938,7 +945,7 @@ void Explore()
 	switch(mode2)
 	{
 	case 1:
-		ExploreVelocity=90;
+		//ExploreVelocity=90;
 		//未
 		Sla.Pre = 8;
 		Sla.Fol = 8;
@@ -959,7 +966,7 @@ void Explore()
 		break;
 	case 3:
 		//未
-		//ExploreVelocity=180;
+		ExploreVelocity=180;
 		Sla.Pre = 4;
 		Sla.Fol = 6;
 		Sla.Alpha = 0.04478;
