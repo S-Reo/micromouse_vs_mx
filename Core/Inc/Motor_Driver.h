@@ -30,4 +30,5 @@ void Motor_PWM_Stop();
 //出力反転処理してそのまま出力
 void Motor_Switch(int left, int right);
 
+void Motor_Buzzer(float helz, int ms);
 #endif /* INC_MOTOR_DRIVER_H_ */

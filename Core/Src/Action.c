@@ -1246,6 +1246,10 @@ void Compensate()
 #endif
 
 }
+void AjustPosition()
+{
+
+}
 void GoStraight(float move_distance,  float explore_speed, float accel)
 {
 	//直進は加速度を調節して距離を見る。 (移動量)
@@ -1347,18 +1351,14 @@ void TurnRight(char mode)
 	switch( mode )
 	{
 	case 'T' :
-		//減速
-		Decel(45, 0);
 
-		//補正
+		Decel(45, 0);
 		//Calib();
 		Rotate( 90 , 1.5*M_PI);
-
 		TargetAngle += 90*M_PI/180;
-		//補正
 		//Calib();
 
-		//ここも微妙。リセットするか,delayも
+
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);

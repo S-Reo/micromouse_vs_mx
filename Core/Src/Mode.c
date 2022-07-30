@@ -104,11 +104,11 @@ void InitExplore()
 //	}
 	uint8_t imu_check;
 	imu_check =IMU_init();
-
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+#if 0
 	imu_check =IMU_init();
-
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+#endif
 	HAL_Delay(250);
 
 	ZGyro = ReadIMU(0x37, 0x38);
@@ -650,13 +650,16 @@ void WritingFree()
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(7);
-#if 1
+#if 0
 
 
 #else
 	while(1)
 	{
-		printf("%f, %f, %f, %f\r\n", Photo[FL],Photo[FR],Photo[FL]+Photo[FR],(Photo[FL]+Photo[FR])/2);//壁センサ前のチェック。
+//		ExploreVelocity=300;
+//		GoStraight(9000, ExploreVelocity, 0);
+		TargetVelocity[BODY] = 500;
+		printf("%f, %f, %f, %f, %f\r\n",ZGyro, Photo[FL],Photo[FR],Photo[FL]+Photo[FR],(Photo[FL]+Photo[FR])/2);//壁センサ前のチェック。
 	}
 #endif
 	Accel(61.5, ExploreVelocity);

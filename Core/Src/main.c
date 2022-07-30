@@ -50,6 +50,7 @@
 #include "Map.h"
 #include "ICM_20648.h"
 #include "PID_Control.h"
+#include "Motor_Driver.h"
 
 /* USER CODE END Includes */
 
@@ -173,7 +174,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  printf("test\r\n");
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -245,7 +246,19 @@ int main(void)
 //  }
 
   //cpploop();
+//  while(1){
+//	  ChangeLED(7)
+//  }
+  float helz;
 
+  for(int i=0; i < 2; i++){
+	  Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)i), 100);
+	  HAL_Delay(200);
+	  helz = 440.0f*powf(powf((float)2,(float)1/12),(float)i+1.2);
+  }
+  Motor_Buzzer(helz,600);
+
+  MX_TIM5_Init();
   ADCStart();
   HAL_Delay(500);
 

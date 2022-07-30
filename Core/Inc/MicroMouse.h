@@ -126,7 +126,7 @@ extern int L_motor, R_motor;
 #define VIRTUAL	3
 #define UNKNOWN 2
 //壁の閾値(走行中に変更できるようにしたい)
-#define FRONT_WALL 70  //２つの和/2
+#define FRONT_WALL 70  //２つの和/2 //1700 になるように前壁制御
 #define RIGHT_WALL 90//90 //380
 #define LEFT_WALL 100//90 //420
 

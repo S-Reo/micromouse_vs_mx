@@ -8,6 +8,7 @@
 //このファイルを別のマウスで使うときにどこを変えることになるのかという視点でまとめる
 #include <MicroMouse.h>
 #include "UI.h"
+
 //ハードウェアを操作する処理からユーザインタフェースを組み立てる
 #include "Convert.h"
 
@@ -19,6 +20,7 @@
 #include "Motor_Driver.h"//モータの設定ヘッダ
 
 #include <stdio.h>
+#include <math.h>
 //中間モジュール。
 
 //エンコーダはモード選択時には直で取得しちゃってよいので引数にしない。while中で取得。
@@ -91,6 +93,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  		  *pMode = min;
 		  	  }
 		  	  ChangeLED(*pMode);
+		  	  Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
 		  	  InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE);
 		  	  HAL_Delay(500);
 
@@ -103,6 +106,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  	  		  *pMode = max;
 		  	  }
 		  	  ChangeLED(*pMode);
+		  	  Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
 		  	  InitPulse( (int *)&(TIM3->CNT), INITIAL_PULSE);
 		  	  HAL_Delay(500);
 		  }
