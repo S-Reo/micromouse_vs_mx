@@ -355,10 +355,7 @@ void Debug()
 	//HAL_Delay(500);
 
 
-	//旋回テスト
 
-	//10回分の角度を取得。
-	float theta_log[30];//, angv_log[2000];
 //	HAL_Delay(500);
 //	while(1)
 //	{
@@ -406,6 +403,8 @@ void Debug()
 
 #if 1 //旋回テスト
 
+	//n回分の角度を取得。
+	float theta_log[30];//, angv_log[2000];
 	ExploreVelocity=0;
 	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
 	{
@@ -425,15 +424,29 @@ void Debug()
 		Rotate(90,-M_PI*2);
 		HAL_Delay(100);
 		//theta_log[i] = Angle;
-	}
-#endif
-	while(1)
-	{
-		for(int i=0; i < 30; i++)
+		while(1)
 		{
-			printf("%d : %f\r\n",i,theta_log[i]);
+			for(int i=0; i < 30; i++)
+			{
+				printf("%d : %f\r\n",i,theta_log[i]);
+			}
 		}
 	}
+#endif
+
+#if 1 //壁制御テスト
+	//Uターン
+		//袋小路の中央の一区画半手前(90+45mm)からスタートさせる
+		//加速で45mm
+		//実際何ミリの距離を使えるのか
+	//Uターン
+
+	//制御方法がおかしいせいでゆらゆらしているのだと思う
+#endif
+
+#if 1 //壁切れテスト
+	//
+#endif
 //	uint32_t address_theta = start_adress_sector8;
 //	uint32_t address_angv = start_adress_sector8+0x04;
 //	//4byteの1000個で1s分。5秒で5000個、2変数で10000個

@@ -103,11 +103,11 @@ extern int L_motor, R_motor;
 //#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標 全日本(6,9) (7,10)
-#define X_GOAL_LESSER 0
-#define Y_GOAL_LESSER 7
+#define X_GOAL_LESSER 3
+#define Y_GOAL_LESSER 3
 
-#define X_GOAL_LARGER 1
-#define Y_GOAL_LARGER 8
+#define X_GOAL_LARGER 3
+#define Y_GOAL_LARGER 3
 
 #define FL	0
 #define SR	1

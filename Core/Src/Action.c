@@ -546,7 +546,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 //			TotalPulse[LEFT],
 //			TotalPulse[RIGHT]
 //	};
-	float move_angle = deg * M_PI/ 180;
+	float move_angle = deg * M_PI/ 180; //ラジアンに直してる
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
@@ -554,12 +554,12 @@ void RotateAccel(float deg, float rotate_ang_v)
 	debug[0] = Angle;
 	if( rotate_ang_v > 0)	//右回転
 	{
-		move_angle = move_angle + Angle;//Angleが負にずれ過ぎて、
+		TargetAngle += move_angle;//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
 		debug[1] = move_angle;
 		//ここのwhileが抜けないことがある
-		while( (move_angle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
+		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
-			AngularAccelerssation = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
+			AngularAcceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
 			//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
 #if 0
 			if( AngularV == -0)	//ベイブレードになりそうだったら止まる。
@@ -579,9 +579,9 @@ void RotateAccel(float deg, float rotate_ang_v)
 	}
 	else if( rotate_ang_v < 0)
 	{
-		move_angle = -move_angle + Angle;
+		TargetAngle -= move_angle; //move_angle = -move_angle + Angle;
 		//printf("加速 負\r\n");
-		while( (move_angle < Angle)/* && ( ( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) ) ) */)
+		while( (TargetAngle < Angle)/* && ( ( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) ) ) */)
 		{
 
 			AngularAcceleration = -1*64*T1*additional_ang_v*additional_ang_v / (2*deg);
@@ -610,7 +610,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	//90mmでうまくやるには0から60000カウントまで
 	if (rotate_ang_v > 0)
 	{
-		move_angle += Angle;
+		TargetAngle += move_angle;
 		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
 		{
 			//TargetAngularV = rotate_ang_v;
@@ -625,7 +625,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	}
 	else if (rotate_ang_v < 0)
 	{
-		move_angle = -move_angle + Angle;
+		TargetAngle -= move_angle;
 		//printf("定速 負\r\n");
 		while( (move_angle < Angle))// &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
 		{
@@ -658,9 +658,9 @@ void RotateDecel(float deg, float rotate_ang_v)
 	//90mmでうまくやるには0から60000カウントまで
 	if( rotate_ang_v > 0)
 	{
-		move_angle += Angle;
+		TargetAngle += move_angle;
 
-		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
+		while( (TargetAngle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
 		{
 			AngularAcceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if(CurrentVelocity[LEFT] > 500)
@@ -677,7 +677,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	}
 	else if( rotate_ang_v < 0)
 	{
-		move_angle = -move_angle + Angle;
+		TargetAngle -= move_angle;
 		//printf("減速 負\r\n");
 		while( (move_angle < Angle) )//&&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
 		{

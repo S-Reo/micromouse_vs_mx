@@ -232,7 +232,7 @@ void Explore_IT()
 	//2. 一回でもゴールしたら、最短走行の高速パラメータからスタート。
 	//3.それ以降は速度を上げるか下げるか.
 
-#if 0
+#if 1
 	//static float angle=0;
 	static float zg_last=0, ya_last=0;
 	float zg_law, ya_law;
