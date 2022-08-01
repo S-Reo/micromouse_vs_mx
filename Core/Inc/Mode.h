@@ -9,6 +9,12 @@
 #define INC_MODE_H_
 
 #include <main.h>
+
+#define EXPLORE				0
+#define WRITINGFREE 		1
+#define DEBUG				2
+#define PARAMETERSETTING	3
+
 void Debug();
 void ParameterSetting();
 void Explore();

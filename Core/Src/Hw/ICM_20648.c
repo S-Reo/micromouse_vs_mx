@@ -138,7 +138,7 @@ void read_accel_data() {
 void IMU_Calib(){
 
 
-	HAL_Delay(500);
+	HAL_Delay(100);
 
 	int num = 2000;
 	float zg_vals[2000]={0.0f};

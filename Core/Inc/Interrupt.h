@@ -16,7 +16,7 @@ extern TIM_HandleTypeDef htim8;
 extern TIM_HandleTypeDef htim9;
 
 extern int timer1,timer8, t;
-
+extern int IT_mode;
 extern const float convert_to_velocity;
 extern const float convert_to_angularv;
 extern const float convert_to_imu_angv;

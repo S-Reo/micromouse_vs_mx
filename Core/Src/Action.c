@@ -21,6 +21,7 @@
 #include "Motor_Driver.h"
 
 #include "Map.h"
+#include "Search.h"
 //現在の速度と総走行距離と左右それぞれ
 //現在の角度と角速度
 
@@ -150,6 +151,7 @@ void InitPosition()
 	Pos.WallSaf = wall_warn;//どっちにするか
 
 }
+
 int GetWallCtrlDirection()
 {
 
@@ -237,6 +239,26 @@ int GetWallCtrlDirection()
 	}
 
 }
+
+void ChangeCardinal()
+{
+	switch(Pos.Dir)
+	{
+	case right :
+		Pos.Car ++;
+		break;
+	case left :
+		Pos.Car --;
+		break;
+	case back:
+		Pos.Car += 2;
+		break;
+	default:
+		break;
+	}
+
+}
+
 void UpdatePosition(uint8_t x, uint8_t y, cardinal car, direction dir, wall_safety safe_or_warn)
 {
 	Pos.X = x;
@@ -537,7 +559,7 @@ void RotateAccel(float deg, float rotate_ang_v)
 		//ここのwhileが抜けないことがある
 		while( (move_angle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
-			AngularAcceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
+			AngularAccelerssation = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
 			//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
 #if 0
 			if( AngularV == -0)	//ベイブレードになりそうだったら止まる。
@@ -594,7 +616,9 @@ void RotateConst(float deg, float rotate_ang_v)
 			//TargetAngularV = rotate_ang_v;
 			AngularAcceleration = 0;
 			if(CurrentVelocity[LEFT] > 500)
-				printf("回転定速中: %f\r\n", move_angle);
+			{
+				//printf("回転定速中: %f\r\n", move_angle);
+			}
 
 		}
 
@@ -640,10 +664,14 @@ void RotateDecel(float deg, float rotate_ang_v)
 		{
 			AngularAcceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 			if(CurrentVelocity[LEFT] > 500)
-				printf("回転減速中: %f\r\n", move_angle);
+			{
+				//printf("回転減速中: %f\r\n", move_angle);
+			}
 
 			if( AngularV <= 0)
+			{
 				break;
+			}
 		}
 
 	}
@@ -695,11 +723,11 @@ void Rotate(float deg, float ang_accel)
 
 	WallWarn();
 	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
-	RotateAccel(deg*30/90, ang_accel);//15
+	RotateAccel(deg*40/90, ang_accel);//15
 	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
 	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
-	RotateConst(deg*30/90, ang_accel);//25
-	RotateDecel(deg*30/90, ang_accel);//50
+	RotateConst(deg*10/90, ang_accel);//25
+	RotateDecel(deg*40/90, ang_accel);//50
 
 //	if( ang_accel > 0 )	//時計回り
 //	{
@@ -757,6 +785,8 @@ void Rotate(float deg, float ang_accel)
 	}
 	KeepPulse[BODY] = KeepPulse[BODY];
 
+	//向いた方角を変える
+	ChangeCardinal();
 	//printf("回転終了\r\n");
 }
 //背中あて補正
@@ -1148,7 +1178,7 @@ void Decel(float dec_distance, float end_speed)
 		//これより前の直進が長くても壁センサのおかげで止まれるはずなので出力が残っちゃったパターン。
 		//かもしくは条件が成立しちゃっているセンサ値が問題のパターン。
 	//スラロームのあとはKeepPulse[BODY]が変わっていないので、そのせいで減速距離が取れていない可能性がある。壁センサも一応見る
-	while( (	(Photo[FR]+Photo[FL]) < 3600) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+	while(/* (	(Photo[FR]+Photo[FL]) < 3800) && */( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
 //		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
@@ -1218,7 +1248,7 @@ void Calib(int distance)
 		while( KeepPulse[BODY] + target_pulse < TotalPulse[BODY] )
 		{
 			Acceleration = 0;
-			TargetVelocity[BODY] = -70;
+			TargetVelocity[BODY] = -100;
 		}
 		KeepPulse[BODY] += target_pulse;
 	}
@@ -1236,9 +1266,9 @@ void Compensate()
 
 #else
 	//バック補正
-	ControlWall();
+	//ControlWall();
 	Calib(-50);
-	HAL_Delay(250);
+	HAL_Delay(500);
 	//Calib(15);
 
 //	Accel(7,-70);
@@ -1246,9 +1276,66 @@ void Compensate()
 #endif
 
 }
-void AjustPosition()
-{
+float AjustCenter(){
+	//x,y,lrfb
+	PIDChangeFlag(L_WALL_PID, 0);
+	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag( A_VELO_PID, 0);
 
+	int wall_ctrl = GetWallCtrlDirection();
+	PIDChangeFlag(wall_ctrl, 1);
+
+	switch(Pos.Car%4)
+	{
+	case north: //use west or north wall
+			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
+			{
+				//前壁調整
+			}
+			else if (Wall[Pos.X][Pos.Y].south == wall) //後ろに壁があるときはバック
+			{
+				Compensate();	//後ろ壁調整
+				return 61.5;
+			}
+		break;
+	case east:
+			if (Wall[Pos.X][Pos.Y].east == wall) //前に壁があれば前で調整
+			{
+				//前壁調整
+			}
+			else if (Wall[Pos.X][Pos.Y].west == wall) //後ろに壁があるときはバック
+			{
+				Compensate();//後ろ壁調整
+				return 61.5;
+			}
+		break;
+	case south:
+			if (Wall[Pos.X][Pos.Y].south == wall) //前に壁があれば前で調整
+			{
+				//前壁調整
+			}
+			else if (Wall[Pos.X][Pos.Y].north == wall) //後ろに壁があるときはバック
+			{
+				Compensate();//後ろ壁調整
+				return 61.5;
+			}
+		break;
+	case west:
+			if (Wall[Pos.X][Pos.Y].west == wall) //前に壁があれば前で調整
+			{
+				//前壁調整
+			}
+			else if (Wall[Pos.X][Pos.Y].east == wall) //後ろに壁があるときはバック
+			{
+				Compensate();//後ろ壁調整
+				return 61.5;
+			}
+	default:
+		break;
+	}
+	Pid[wall_ctrl].flag = 0;
+	return 45;
 }
 void GoStraight(float move_distance,  float explore_speed, float accel)
 {
@@ -1353,18 +1440,19 @@ void TurnRight(char mode)
 	case 'T' :
 
 		Decel(45, 0);
+		//AjustCenter();
 		//Calib();
-		Rotate( 90 , 1.5*M_PI);
+		Rotate( 90 , 2*M_PI);//1.5
 		TargetAngle += 90*M_PI/180;
 		//Calib();
-
+		float acc = AjustCenter();
 
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
 		HAL_Delay(250);
 		PIDChangeFlag( A_VELO_PID , 1);
-		Accel(45, ExploreVelocity);
+		Accel(acc, ExploreVelocity);
 		break;
 	case 'S':
 		//スラローム
@@ -1393,10 +1481,10 @@ void TurnLeft(char mode)
 	case 'T' :
 		//超信地旋回
 		Decel(45, 0);
-
+		//AjustCenter();
 		//補正
 		//Calib();
-		Rotate( 90 , -1.5*M_PI);
+		Rotate( 90 , -2*M_PI);//-1.5
 		//HAL_Delay(500);
 		TargetAngle += -90*M_PI/180;
 		//補正
@@ -1405,8 +1493,10 @@ void TurnLeft(char mode)
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
 		HAL_Delay(250);
+		float acc = AjustCenter();
+
 		PIDChangeFlag( A_VELO_PID , 1);
-		Accel(45, ExploreVelocity);
+		Accel(acc, ExploreVelocity);
 		break;
 	case 'S':
 		//スラローム
@@ -1421,14 +1511,15 @@ void GoBack()
 {
 	//減速して
 	Decel(45, 0);
+	//AjustCenter();
 //	PIDChangeFlag( A_VELO_PID, 0);
 //	HAL_Delay(500);
 	//補正して
 	//Compensate();
 	//Calib();
 	//回転して
-	Rotate(180, 1.5*M_PI);//もしくは二回とも左。ここの加速でバグ。
-
+	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。
+	float acc = AjustCenter();
 	//HAL_Delay(500);
 	//TargetAngle += 90*M_PI/180;
 	//リセット消してみる
@@ -1452,9 +1543,10 @@ void GoBack()
 //	PIDReset(R_VELO_PID);
 //	PIDReset(A_VELO_PID);
 	HAL_Delay(200);
-	Compensate();
+
+//	Compensate();
 	//PIDChangeFlag( A_VELO_PID, 1);
-	Accel(61.5, ExploreVelocity);
+	Accel(acc, ExploreVelocity);
 	//ここまでで目標走行距離を完了する
 
 }
@@ -1468,7 +1560,7 @@ void GoBack()
 void SelectAction(char turn_mode)	//前後左右であらわす
 {
 	//現在の座標から次の座標に行くまでの処理を一つのアクションとする
-	switch(Pos.Dir)
+	switch(Pos.Dir%4) //条件を増やす場合は割る数字に注意
 	{
 	//直進
 	case front:

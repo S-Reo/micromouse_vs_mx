@@ -21,10 +21,13 @@
 #include "ICM_20648.h"
 #include "UI.h"
 #include "Map.h"
+#include "Search.h"
 #include "Flash.h"
 #include "Interrupt.h"
 #include "Debug.h"
 
+#include <main.h>
+void TIM5Init();
 void InitExplore()
 {
 #if 0
@@ -103,13 +106,13 @@ void InitExplore()
 //
 //	}
 	uint8_t imu_check;
-	imu_check =IMU_init();
+	imu_check = IMU_init();
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#if 0
+#if 1 //IMUから値が来なくなる現象の対策
 	imu_check =IMU_init();
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
 #endif
-	HAL_Delay(250);
+	HAL_Delay(100);
 
 	ZGyro = ReadIMU(0x37, 0x38);
 	printf("gyro : %f\r\n",ZGyro);
@@ -214,6 +217,7 @@ void InitFastest()
 	EncoderStart(); //戻し忘れないように
 	EmitterON();
 	ADCStart();
+
 	uint8_t imu_check;
 	imu_check =IMU_init();
 
@@ -274,6 +278,8 @@ t = 1;
 	//割り込みを有効化
 	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start_IT(&htim8);
+
+
 	//ここまででハードの準備はできた。
 	//ここからはソフト的な準備
 
@@ -398,8 +404,8 @@ void Debug()
 	HAL_Delay(30000);
 #endif
 
-#if 1
-	//旋回テスト
+#if 1 //旋回テスト
+
 	ExploreVelocity=0;
 	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
 	{
@@ -496,6 +502,7 @@ void ParameterSetting()
 
 void GainTestLWall()
 {
+	IT_mode = EXPLORE;
 	InitExplore();
 	InitPosition();
 	wall_init();
@@ -514,11 +521,12 @@ void GainTestLWall()
 	ChangeLED(4);
 	while(1)
 	{
-
+		TargetVelocity[BODY] = 300;
 	}
 }
 void GainTestRWall()
 {
+	IT_mode = EXPLORE;
 	InitExplore();
 	InitPosition();
 	wall_init();
@@ -537,11 +545,13 @@ void GainTestRWall()
 	ChangeLED(1);
 	while(1)
 	{
+		TargetVelocity[BODY] = 300;
 
 	}
 }
 void GainTestDWall()
 {
+	IT_mode = EXPLORE;
 	InitExplore();
 	InitPosition();
 	wall_init();
@@ -560,12 +570,13 @@ void GainTestDWall()
 	ChangeLED(2);
 	while(1)
 	{
-
+		TargetVelocity[BODY] = 300;
 	}
 }
 
 void GainTestAVelo()
 {
+	IT_mode = EXPLORE;
 	InitExplore();
 	InitPosition();
 	wall_init();
@@ -585,11 +596,13 @@ void GainTestAVelo()
 	ChangeLED(5);
 	while(1)
 	{
+		TargetVelocity[BODY] = 300;
 
 	}
 }
 void WritingFree()
 {
+	IT_mode = WRITINGFREE;
 //	wall_init();
 //	wall_ram_print();
 //	printf("flashコピーる\r\n");
@@ -611,33 +624,17 @@ void WritingFree()
 
 	printf("3\r\n");
 
-	//ここまででハードの準備はできた。
-	//ここからはソフト的な準備
-//while(1)
-//{
-//	printf("オフセット:%f, double角速度:%f, double角度:%f, float角速度:%f, float角度:%f",zg_offset,ImuAngV, ImuAngle, AngularV, Angle);
-//}
-
-	//迷路とステータスの準備
-	//方角と座標の初期化。
 	InitPosition();
 //	uint8_t x, y;
 //	Pos.Car = north;
 //	x=0,y=0;
 	wall_init();
 	printf("4\r\n");
-	//時間用の処理の初期化。
-	//int timer = 0;
-	//エンコーダ移動量の初期化。
+
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
-	//スタート時のアクションに設定
-	//direction action_type = front;
-	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
-	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
-	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
-//void ChangeNowStatus()
+
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
@@ -658,8 +655,11 @@ void WritingFree()
 	{
 //		ExploreVelocity=300;
 //		GoStraight(9000, ExploreVelocity, 0);
-		TargetVelocity[BODY] = 500;
+		TargetVelocity[BODY] = 0;
+
+
 		printf("%f, %f, %f, %f, %f\r\n",ZGyro, Photo[FL],Photo[FR],Photo[FL]+Photo[FR],(Photo[FL]+Photo[FR])/2);//壁センサ前のチェック。
+
 	}
 #endif
 	Accel(61.5, ExploreVelocity);
@@ -760,6 +760,7 @@ while(1)
 
 void FastestRun()
 {
+	IT_mode = EXPLORE;
 	//諸々の初期化
 	HAL_Delay(250);
 	Photo[FR] = 0;
@@ -776,9 +777,11 @@ void FastestRun()
 		  ModeSelect( 1, 4, &mode2);
 		  Signal( mode2 );
 		  printf("Switch\r\n");
+	TIM5Init();
 
 	InitFastest();
 	InitPosition();
+
 
 	wall_init();
 
@@ -801,6 +804,7 @@ void FastestRun()
 	char turn_mode;
 	if(mode == 1)
 	{
+		ExploreVelocity = 500;
 		turn_mode = 'T';
 	}
 	else if(mode == 2)
@@ -811,7 +815,7 @@ void FastestRun()
 	switch(mode2)
 	{
 	case 1:
-		ExploreVelocity=90;
+		//ExploreVelocity=90;
 		//未
 		Sla.Pre = 8;
 		Sla.Fol = 8;
@@ -867,47 +871,51 @@ void FastestRun()
 	//終了合図
 	Signal(7);
 
+	while(1)
+	{
+		HAL_Delay(10*1000);
+		printf("ログ出力\r\n");
+		//RAMに入れて保存しておく
+			//走行中に定期的にflashに書き込む
+			//MATLABにプロットすることも想定する
+
+	}
+
 }
 void Explore()
 {
+	IT_mode = EXPLORE;
 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マップを初期化する。
 	//一回目で失敗していたら、flash消してram初期化
 	//一回目で成功したら、flashをramに移す
 
-	HAL_Delay(250);
+	HAL_Delay(100);
 	Photo[FR] = 0;
-	  int8_t mode=1;
-	  printf("mode : %d\r\n", mode);
-	  ModeSelect( 1, 2, &mode);
-	  Signal( mode );
-	  printf("Switch\r\n");
+	int8_t mode=1;
+		printf("mode : %d\r\n", mode);
+	ModeSelect( 1, 2, &mode);
+	Signal( mode );
+		printf("Switch\r\n");
 
-		HAL_Delay(250);
-		Photo[FR] = 0;
-		  int8_t mode2=1;
-		  printf("mode : %d\r\n", mode2);
-		  ModeSelect( 1, 3, &mode2);
-		  Signal( mode2 );
-		  printf("Switch\r\n");
+	HAL_Delay(100);
+	Photo[FR] = 0;
+	int8_t mode2=1;
+		printf("mode : %d\r\n", mode2);
+	ModeSelect( 1, 3, &mode2);
+	Signal( mode2 );
+		printf("Switch\r\n");
+
+	TIM5Init();
 	InitExplore();
+		printf("aaa\r\n");
 
-	//printf("3\r\n");
-
-	//ここまででハードの準備はできた。
-	//ここからはソフト的な準備
-//while(1)
-//{
-//	printf("オフセット:%f, double角速度:%f, double角度:%f, float角速度:%f, float角度:%f",zg_offset,ImuAngV, ImuAngle, AngularV, Angle);
-//}
-
-	//迷路とステータスの準備
-	//方角と座標の初期化。
 	InitPosition();
+		printf("bbb\r\n");
 //	uint8_t x, y;
 //	Pos.Car = north;
 //	x=0,y=0;
 	wall_init();
-	//printf("4\r\n");
+		printf("ccc\r\n");
 	//時間用の処理の初期化。
 	//int timer = 0;
 	//エンコーダ移動量の初期化。
@@ -938,7 +946,7 @@ void Explore()
 	if(mode == 1)
 	{
 		turn_mode = 'T';
-		ExploreVelocity=230;
+		ExploreVelocity=300;
 	}
 	else if(mode == 2)
 	{
@@ -948,7 +956,7 @@ void Explore()
 	switch(mode2)
 	{
 	case 1:
-		//ExploreVelocity=90;
+		//ExploreVelocity=300;
 		//未
 		Sla.Pre = 8;
 		Sla.Fol = 8;
@@ -993,6 +1001,7 @@ void Explore()
 	Pos.NextX = Pos.X;
 	Pos.NextY = Pos.Y + 1;
 	Pos.NextCar = north;
+	printf("nomnom : %f\r\n", ExploreVelocity);
 	Accel(61.5, ExploreVelocity);
  	Pos.X = Pos.NextX;
     Pos.Y = Pos.NextY;
@@ -1012,16 +1021,18 @@ void Explore()
 		//現在の方角と座標を更新
 
 		//移動後の座標と方角で新たに壁情報を取得
-		i++;
-		if(i%2)
-			ChangeLED(7);
-		else
-			ChangeLED(0);
+//		i++;
+//		if(i%2)
+//			ChangeLED(7);
+//		else
+//			ChangeLED(0);
+		ChangeLED(Pos.Car);
 
 		//wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
 		//ControlWall();
 		//評価値マップ、歩数マップをどうするか。最短経路計算同様、走行中に計算させる。
 		//UpdateWalkMap();
+
 
 		//ChangeLED(0);
 		//方向決定と、座標方角の更新。
@@ -1074,8 +1085,21 @@ void Explore()
 
 }
 
+void Init()
+{
+
+}
+
+void Run()
+{
+
+}
 void FullyAutonomous()
 {
+	Init();
+
+	Run();
+
 	//五回の走行全てを完全自律で。
 
 }

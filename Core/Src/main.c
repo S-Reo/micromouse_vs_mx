@@ -22,7 +22,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <HPP/wrapper.hpp>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -52,6 +51,7 @@
 #include "PID_Control.h"
 #include "Motor_Driver.h"
 
+#include "MicroMouse.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,7 +114,7 @@ static void MX_TIM4_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
-
+extern void TIM5Init();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -150,6 +150,10 @@ Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
 return(Data);
 }
 
+void TIM5Init(){
+	MX_TIM5_Init();
+	printf("OKOK\r\n");
+}
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	  static int i=0;
 	  ChangeLED(i);
@@ -213,6 +217,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   //wowowo
+  Pos.Car = 0;
+  for(int i=0; i < 8; i++)
+  {
+	  printf("%d  Pos.Car : %d\r\n",i,Pos.Car+i );
+  }
   //IMU_init();
 //  int16_t data[1000]={0};
 //  int i=0, elaps=0;
@@ -258,7 +267,6 @@ int main(void)
   }
   Motor_Buzzer(helz,600);
 
-  MX_TIM5_Init();
   ADCStart();
   HAL_Delay(500);
 
@@ -267,24 +275,25 @@ int main(void)
   int8_t mode=0;
   printf("mode : %d\r\n", mode);
   ModeSelect( 0, 7, &mode);
+  MX_TIM5_Init();
   Signal( mode );
   printf("Switch\r\n");
 
   //pidãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®åˆæœŸåŒ–ã‚’ã‚‚ã£ã¨æ›¸ãæ›ãˆã‚„ã™ã„ã¨ã“ã‚ã§
 // Flashã‹ã‚‰èª­ã¿ã—ãŸãƒ¼ã‚¿ã‚’é¿ã™ã‚‹RAM
-  //è»½ããªã£ãŸã‚ã¨ã¯ã“ï¿½???ï¿½ï¿½?ï¿½ï¿½ã‚²ã‚¤ãƒ³ã§ä¸Šæ‰‹ãã„ãï¿½???ï¿½ï¿½?ï¿½ï¿½ã¯??ï¿½ï¿½?ï¿½ï¿½?ä¿¡åœ°æ—‹å›žãã‚‰??ï¿½ï¿½?ï¿½ï¿½?ã€‚ï¿½???ï¿½ï¿½?ï¿½ï¿½ç¶šã‚¹ãƒ©ãƒ­ãƒ¼??ï¿½ï¿½?ï¿½ï¿½?ã¯æ±‚ï¿½?æ³•ï¿½???ï¿½ï¿½?ï¿½ï¿½è¨ˆç®—ãŒåˆã£ã¦ã¡??ï¿½ï¿½?ï¿½ï¿½?ã£ã¨é–“ã«åˆã£ã¦??ï¿½ï¿½?ï¿½ï¿½?ãª??ï¿½ï¿½?ï¿½ï¿½?ã®ã‹ã‚‚
+  //è»½ããªã£ãŸã‚ã¨ã¯ã“ï¿½????¿½?¿½??¿½?¿½ã‚²ã‚¤ãƒ³ã§ä¸Šæ‰‹ãã„ãï¿½????¿½?¿½??¿½?¿½ã¯???¿½?¿½??¿½?¿½?ä¿¡åœ°æ—‹å›žãã‚‰???¿½?¿½??¿½?¿½?ã€‚ï¿½????¿½?¿½??¿½?¿½ç¶šã‚¹ãƒ©ãƒ­ãƒ¼???¿½?¿½??¿½?¿½?ã¯æ±‚ï¿½?æ³•ï¿½????¿½?¿½??¿½?¿½è¨ˆç®—ãŒåˆã£ã¦ã¡???¿½?¿½??¿½?¿½?ã£ã¨é–“ã«åˆã£ã¦???¿½?¿½??¿½?¿½?ãª???¿½?¿½??¿½?¿½?ã®ã‹ã‚‚
 
-  PIDSetGain(L_VELO_PID, 11.1, 2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430ãã‚‰ 36.6*0.6=18+3.96
-  PIDSetGain(R_VELO_PID, 11.1, 2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
+  PIDSetGain(L_VELO_PID, 10.5, 2430,0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430ãã‚‰ 36.6*0.6=18+3.96
+  PIDSetGain(R_VELO_PID, 10.5, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
   //æœªèª¿æ•´
-  PIDSetGain(A_VELO_PID, 1,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+  PIDSetGain(A_VELO_PID, 48,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iã¯ç©ï¿½?=åå·®ã‚’æ¶ˆã™ã€‚ã‚²ã‚¤ãƒ³ãŒå¤§ãã„ã¨åå·®ãŒç¸®ã¾ã‚‹ãŒã€åŽæŸãŒ
   //Dã¯å¾®
-  //?ï¿½ï¿½??ï¿½ï¿½?ï¿½ï¿½???ï¿½ï¿½?ï¿½ï¿½ã‚²ã‚¤ãƒ³ã¯ç·©?ï¿½ï¿½??ï¿½ï¿½?ï¿½ï¿½???ï¿½ï¿½?ï¿½ï¿½æ–¹ãŒã‚ˆã•ã??ï¿½ï¿½?ï¿½ï¿½?ã€‚å¼·??ï¿½ï¿½?ï¿½ï¿½?ã¨??ï¿½ï¿½?ï¿½ï¿½?çž¬ã‚¬ã‚¿ãƒ³ã¨å‹•ã„ã¦ã‚ã¨å›ºå®šã«ãªã£ã¦ã—ã¾??ï¿½ï¿½?ï¿½ï¿½???ï¿½ï¿½?ï¿½ï¿½?
-  PIDSetGain(D_WALL_PID, 3, 0, 0);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//é€Ÿåº¦åˆ¶å¾¡???ï¿½ï¿½?ï¿½ï¿½??ï¿½ï¿½?ï¿½ï¿½??// 3.200000, 50.000000, 0.00025i55000
-  PIDSetGain(L_WALL_PID, 3,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
-  PIDSetGain(R_WALL_PID, 3,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+  //??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½ã‚²ã‚¤ãƒ³ã¯ç·©??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½æ–¹ãŒã‚ˆã•ã???¿½?¿½??¿½?¿½?ã€‚å¼·???¿½?¿½??¿½?¿½?ã¨???¿½?¿½??¿½?¿½?çž¬ã‚¬ã‚¿ãƒ³ã¨å‹•ã„ã¦ã‚ã¨å›ºå®šã«ãªã£ã¦ã—ã¾???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½?
+  PIDSetGain(D_WALL_PID, 6, 0, 0.1	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//é€Ÿåº¦åˆ¶å¾¡????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½??// 3.200000, 50.000000, 0.00025i55000
+  PIDSetGain(L_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+  PIDSetGain(R_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   //PidFlag = A_VELO_PID;
   while (1)
   {
@@ -889,7 +898,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -967,8 +976,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB2 PB12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_12;
+  /*Configure GPIO pin : PB2 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

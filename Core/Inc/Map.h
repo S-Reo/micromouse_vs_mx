@@ -11,8 +11,7 @@
 #include <main.h>
 #include <MicroMouse.h>
 
-extern int Calc;
-extern int SearchOrFast;
+
 /*
  * map.h
  *
@@ -54,16 +53,9 @@ void wall_set();
 void wall_ram_print();
 void wall_flash_print();
 void flash_copy_to_ram();
+
 void UpdateWalkMap();
-void LeftHandJudge(char turn_mode);
-void KyushinJudge(char turn_mode);
 
-
-//RT
-void make_map(int x, int y, int mask);
-void map_print();
-
-void fast_run(int x, int y, char turn_mode);
 
 
 
