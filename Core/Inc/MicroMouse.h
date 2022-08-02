@@ -104,9 +104,9 @@ extern int L_motor, R_motor;
 
 //最終ゴール区画座標 全日本(6,9) (7,10)
 #define X_GOAL_LESSER 3
-#define Y_GOAL_LESSER 3
+#define Y_GOAL_LESSER 2
 
-#define X_GOAL_LARGER 3
+#define X_GOAL_LARGER 4
 #define Y_GOAL_LARGER 3
 
 #define FL	0

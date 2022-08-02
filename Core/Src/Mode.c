@@ -614,7 +614,8 @@ void GainTestAVelo()
 	ChangeLED(5);
 	while(1)
 	{
-		TargetVelocity[BODY] = 300;
+		TargetVelocity[BODY] = 0;
+		printf("%f, %f\r\n", AngularV, Angle);
 
 	}
 }

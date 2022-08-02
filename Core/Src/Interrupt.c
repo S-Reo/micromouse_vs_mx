@@ -252,7 +252,7 @@ void Explore_IT()
 	int wall_d =0,wall_l =0,wall_r =0;
 		int ang_out=0;
 	//処理を減らすには、
-		if( Pos.Dir == front || Pos.Act == compensate)
+		if( Pos.Dir == front || Pos.Act == compensate || Pos.Act == rotate)
 		{
 			if( Pid[A_VELO_PID].flag == 1 )
 			{

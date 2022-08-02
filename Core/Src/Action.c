@@ -914,6 +914,50 @@ void Rotate(float deg, float ang_v)
 	ChangeCardinal();
 	//printf("回転終了\r\n");
 }
+
+void RotateTest(float deg)
+{
+	Pos.Act = rotate;
+	WallWarn();
+	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
+	TargetAngularV = 0;
+
+	//目標角度にdegを追加
+	TargetAngle += deg*M_PI/180;
+
+	//角度のPID制御で旋回
+	PIDChangeFlag(A_VELO_PID, 1);
+	while(!( (TargetAngle - 0.04 < Angle && Angle < TargetAngle + 0.04) && (-0.02 < AngularV && AngularV < 0.02)) )
+	{
+
+	}
+	PIDChangeFlag(A_VELO_PID, 0);
+
+
+
+	AngularAcceleration = 0;
+	//TargetAngularV = 0;
+	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
+	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
+
+	WaitStopAndReset();
+	ControlWall();
+	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	if(deg < 0)
+	{
+		KeepPulse[LEFT] -= target_pulse/2;
+		KeepPulse[RIGHT] += target_pulse/2;
+	}
+	else 	if(deg > 0)
+	{
+		KeepPulse[LEFT] += target_pulse/2;
+		KeepPulse[RIGHT] -= target_pulse/2;
+	}
+	KeepPulse[BODY] = KeepPulse[BODY];
+
+	//向いた方角を変える
+	ChangeCardinal();
+}
 //背中あて補正
 void back_calib()
 {
@@ -1417,6 +1461,8 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
+					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
+
 			}
 			else if (Wall[Pos.X][Pos.Y].south == wall) //後ろに壁があるときはバック
 			{
@@ -1566,10 +1612,10 @@ void TurnRight(char mode)
 
 		Decel(45, 0);
 		//AjustCenter();
-		//Calib();
+
 		Rotate( 90 , 2*M_PI);//1.5
-		//TargetAngle += 90*M_PI/180;
-		//Calib();
+		//RotateTest(90);
+
 		float acc = AjustCenter();
 
 //		PIDReset(L_VELO_PID);
@@ -1607,13 +1653,9 @@ void TurnLeft(char mode)
 		//超信地旋回
 		Decel(45, 0);
 		//AjustCenter();
-		//補正
-		//Calib();
+
 		Rotate( 90 , -2*M_PI);//-1.5
-		//HAL_Delay(500);
-		//TargetAngle += -90*M_PI/180;
-		//補正
-		//Calib();
+		//RotateTest(-90);
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
@@ -1643,7 +1685,17 @@ void GoBack()
 	//Compensate();
 	//Calib();
 	//回転して
+#if 1
 	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。
+#else
+	//AjustCenter();
+	//RotateTest(90);
+	AjustCenter();
+	RotateTest(180);
+	AjustCenter();
+
+#endif
+
 	float acc = AjustCenter();
 	//HAL_Delay(500);
 	//TargetAngle += 90*M_PI/180;
