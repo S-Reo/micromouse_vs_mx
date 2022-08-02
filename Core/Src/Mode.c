@@ -383,12 +383,11 @@ void Debug()
 	}
 #endif
 
-#if 0
-	//スラロームテスト
-	ExploreVelocity = 1000;
+#if 1 //直進テスト
+	ExploreVelocity = 300;
 	Pos.Dir = front;
 	Accel(61.75,ExploreVelocity);
-	for(int i=0; i < 14; i++)
+	for(int i=0; i < 1; i++)
 	{
 		Pos.Dir = front;
 		GoStraight(90, ExploreVelocity, AddVelocity);
@@ -397,11 +396,12 @@ void Debug()
 
 	}
 	Pos.Dir = front;
-	Decel(45,0);
+	//Decel(45,0);
+	TargetVelocity[BODY] = 0;
 	HAL_Delay(30000);
 #endif
 
-#if 1 //旋回テスト
+#if 0 //旋回テスト
 
 	//n回分の角度を取得。
 	float theta_log[30];//, angv_log[2000];
@@ -440,6 +440,7 @@ void Debug()
 #endif
 
 #if 1 //壁制御テスト
+
 	//Uターン
 		//袋小路の中央の一区画半手前(90+45mm)からスタートさせる
 		//加速で45mm
