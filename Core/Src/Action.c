@@ -521,7 +521,7 @@ void WaitStopAndReset()
 			printf("回転停止中\r\n");
 
 	}while(CurrentVelocity[BODY] != 0);
-	HAL_Delay(200);
+	HAL_Delay(100);
 }
 void RotateAccel(float deg, float rotate_ang_v)
 {
@@ -611,7 +611,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	if (rotate_ang_v > 0)
 	{
 		TargetAngle += move_angle;
-		while( (move_angle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
+		while( (TargetAngle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
 		{
 			//TargetAngularV = rotate_ang_v;
 			AngularAcceleration = 0;
@@ -627,7 +627,7 @@ void RotateConst(float deg, float rotate_ang_v)
 	{
 		TargetAngle -= move_angle;
 		//printf("定速 負\r\n");
-		while( (move_angle < Angle))// &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
+		while( (TargetAngle < Angle))// &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
 		{
 			//TargetAngularV = rotate_ang_v;
 
@@ -679,7 +679,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	{
 		TargetAngle -= move_angle;
 		//printf("減速 負\r\n");
-		while( (move_angle < Angle) )//&&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
+		while( (TargetAngle < Angle) )//&&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
 		{
 			AngularAcceleration = 64*(T1*additional_ang_v*additional_ang_v / (2*deg));
 
@@ -691,7 +691,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 	AngularAcceleration = 0;
 	TargetAngularV = 0;
 }
-void Rotate(float deg, float ang_accel)
+void RotateOld(float deg, float ang_accel)
 {
 	Pos.Act = rotate;
 	//Rotate(90, 0.05);
@@ -779,6 +779,131 @@ void Rotate(float deg, float ang_accel)
 		KeepPulse[RIGHT] += target_pulse/2;
 	}
 	else 	if(ang_accel > 0)
+	{
+		KeepPulse[LEFT] += target_pulse/2;
+		KeepPulse[RIGHT] -= target_pulse/2;
+	}
+	KeepPulse[BODY] = KeepPulse[BODY];
+
+	//向いた方角を変える
+	ChangeCardinal();
+	//printf("回転終了\r\n");
+}
+void Rotate(float deg, float ang_v)
+{
+	Pos.Act = rotate;
+	WallWarn();
+	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
+	TargetAngularV = 0;
+
+	//rotate_ang_v - AngularV;
+	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
+	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
+	//角速度 + 角加速度(ms)/T1 = 角度
+	//加速度が一定。角速度が増加。角速度を積分して角度。角速度の式を作り、角速度を積分して角度を求める等式を立てる。
+	//Angle = インテグラル(ang_v(t))dt
+	//v = v0+at	|	t=v/a	||		ang_v = ang_v0 + ang_accel *t		||	t = ang_v/ang_accel
+	//x=0.5*v*v/a	|	a = 0.5*v*v*/x		||		θ=ang_v0*t+0.5*ang_v^2/ang_accel	||	ang_accel =
+	//加速度(mm/((ms)^2)) =  割り込み周期(1ms)*到達速度*到達速度(((mm/s)^2)) /(2*移動距離) x = v0t + 0.5at^2 →	a=2*(x-v0*t)/t^2 	a = t*vv/(2*x)
+	float accel_deg = deg*30/90;
+	float const_deg = deg*30/90;
+	float decel_deg = deg*30/90;
+	float angular_acceleration[3] = {
+			64*T1*ang_v*ang_v / (2*accel_deg),
+			0,
+			64*T1*ang_v*ang_v / (2*decel_deg)
+	};
+	float move_angle[3] = {
+			accel_deg * M_PI/ 180, //ラジアンに直してる
+			const_deg * M_PI/ 180,
+			decel_deg * M_PI/ 180,
+	};
+	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
+	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
+	//90mmでうまくやるには0から60000カウントまで
+	//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
+#if 0
+	if( AngularV == -0)	//ベイブレードになりそうだったら止まる。
+	{
+		//緊急停止。センサの値を見る。
+		Motor_PWM_Stop();
+		while(1)
+		{
+			Signal(7);
+			printf("回転加速中: photo : %f, %f, debug : %f, %f, AngV:%f, zg:%d, timer1:%d, timer8:%d\r\n",Photo[FL],Photo[FR], debug[0], debug[1], AngularV, zg,timer1,timer8);
+		}
+
+	}
+#endif
+
+	if( ang_v > 0)	//右回転
+	{
+		TargetAngle += move_angle[0];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+
+		//ここのwhileが抜けないことがある
+		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
+		{
+			AngularAcceleration = angular_acceleration[0]; //ここまで
+		}
+		TargetAngle += move_angle[1];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+
+		while(TargetAngle > Angle)
+		{
+			AngularAcceleration = angular_acceleration[1];//0
+		}
+		TargetAngle += move_angle[2];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+
+		while(TargetAngle > Angle)
+		{
+			 AngularAcceleration = -angular_acceleration[2];
+			 if( AngularV <= 0)
+			 {
+				 break;
+			 }
+		}
+
+	}
+	else if( ang_v < 0)
+	{
+		TargetAngle -= move_angle[0];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+
+		//ここのwhileが抜けないことがある
+		while( (TargetAngle < Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
+		{
+			AngularAcceleration = -angular_acceleration[0]; //ここまで
+		}
+		TargetAngle -= move_angle[1];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+
+		while(TargetAngle < Angle)
+		{
+			AngularAcceleration = angular_acceleration[1];//0
+		}
+		TargetAngle -= move_angle[2];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+
+		while(TargetAngle < Angle)
+		{
+			 AngularAcceleration = angular_acceleration[2];
+			 if( AngularV >= 0)
+			 {
+			 		break;
+			 }
+		}
+
+	}
+	AngularAcceleration = 0;
+	//TargetAngularV = 0;
+	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
+	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
+
+	WaitStopAndReset();
+	ControlWall();
+	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
+	if(ang_v < 0)
+	{
+		KeepPulse[LEFT] -= target_pulse/2;
+		KeepPulse[RIGHT] += target_pulse/2;
+	}
+	else 	if(ang_v > 0)
 	{
 		KeepPulse[LEFT] += target_pulse/2;
 		KeepPulse[RIGHT] -= target_pulse/2;
@@ -1443,14 +1568,14 @@ void TurnRight(char mode)
 		//AjustCenter();
 		//Calib();
 		Rotate( 90 , 2*M_PI);//1.5
-		TargetAngle += 90*M_PI/180;
+		//TargetAngle += 90*M_PI/180;
 		//Calib();
 		float acc = AjustCenter();
 
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
-		HAL_Delay(250);
+		HAL_Delay(100);
 		PIDChangeFlag( A_VELO_PID , 1);
 		Accel(acc, ExploreVelocity);
 		break;
@@ -1486,13 +1611,13 @@ void TurnLeft(char mode)
 		//Calib();
 		Rotate( 90 , -2*M_PI);//-1.5
 		//HAL_Delay(500);
-		TargetAngle += -90*M_PI/180;
+		//TargetAngle += -90*M_PI/180;
 		//補正
 		//Calib();
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
-		HAL_Delay(250);
+		HAL_Delay(100);
 		float acc = AjustCenter();
 
 		PIDChangeFlag( A_VELO_PID , 1);
@@ -1537,7 +1662,7 @@ void GoBack()
 	//HAL_Delay(200);
 	//Rotate(90, 2.5);
 	//HAL_Delay(500);
-	TargetAngle += 180*M_PI/180;
+	//TargetAngle += 180*M_PI/180;
 	//加速する
 //	PIDReset(L_VELO_PID);
 //	PIDReset(R_VELO_PID);

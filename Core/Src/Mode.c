@@ -405,6 +405,7 @@ void Debug()
 
 	//n回分の角度を取得。
 	float theta_log[30];//, angv_log[2000];
+	float target_angle_log[30];
 	ExploreVelocity=0;
 	for(int i=0; i < 30; i+=3)//Photo[FR] < 250)
 	{
@@ -412,26 +413,30 @@ void Debug()
 		Pos.Car = north;
 		Pos.Dir = back;
 		theta_log[i] = Angle;
+		target_angle_log[i] = TargetAngle;
 
 		Rotate(90,M_PI*2);
 		theta_log[i+1] = Angle;
+		target_angle_log[i+1] = TargetAngle;
 
 		HAL_Delay(100);
 		theta_log[i+2] = Angle;
+		target_angle_log[i+2] = TargetAngle;
+
 		ChangeLED(0);
 		Pos.Car = north;
 		Pos.Dir = back;
 		Rotate(90,-M_PI*2);
 		HAL_Delay(100);
 		//theta_log[i] = Angle;
-		while(1)
-		{
-			for(int i=0; i < 30; i++)
-			{
-				printf("%d : %f\r\n",i,theta_log[i]);
-			}
-		}
 	}
+	while(1)
+			{
+				for(int i=0; i < 30; i++)
+				{
+					printf("%d, %f, %f\r\n",i,theta_log[i], target_angle_log[i]);
+				}
+			}
 #endif
 
 #if 1 //壁制御テスト
