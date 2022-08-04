@@ -1035,23 +1035,36 @@ void Explore()
 		break;
 	case 2:
 		//完
-		ExploreVelocity=135;
+		ExploreVelocity=135;//*40/1000
 		Sla.Pre = 5;
 		Sla.Fol = 10;
 		Sla.Alpha = 0.0273;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
+//		Sla.Pre = 10;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.03;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
 		break;
 	case 3:
-		//未
-		ExploreVelocity=180;
-		Sla.Pre = 4;
+		ExploreVelocity=240;
+		Sla.Pre = 3;
 		Sla.Fol = 10;
-		Sla.Alpha = 0.04478;
+		Sla.Alpha = 0.08;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
+//		//未
+//		ExploreVelocity=180;
+//		Sla.Pre = 4;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.04478;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
 		break;
 
 	}
