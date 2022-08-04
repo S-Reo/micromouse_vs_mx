@@ -154,11 +154,15 @@ void TIM5Init(){
 	MX_TIM5_Init();
 	printf("OKOK\r\n");
 }
+int gpio_callback_count=0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	  static int i=0;
-	  ChangeLED(i);
-	  i++;
-	  if(i > 7) i=0;
+	if(GPIO_Pin == GPIO_PIN_12)
+	{
+	  gpio_callback_count++;
+	  //ChangeLED(gpio_callback_count);
+
+	  if(gpio_callback_count > 7) gpio_callback_count=0;
+	}
 }
 // Flashã‹ã‚‰èª­ã¿ã—ãŸãƒ¼ã‚¿ã‚’é¿ã™ã‚‹RAM
 // 4byteã”ã¨ã«ã‚¢ã‚¯ã‚»ã‚¹ã‚’ã™ã‚‹ã§ã€ã‚¢ãƒ‰ãƒ¬ã‚¹ã«é…ç½®ã™ã‚‹
@@ -272,6 +276,7 @@ int main(void)
 
   BatteryCheck( (int)adc1[2] );
 
+
   int8_t mode=0;
   printf("mode : %d\r\n", mode);
   ModeSelect( 0, 7, &mode);
@@ -282,15 +287,16 @@ int main(void)
   //pidãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®åˆæœŸåŒ–ã‚’ã‚‚ã£ã¨æ›¸ãæ›ãˆã‚„ã™ã„ã¨ã“ã‚ã§
 // Flashã‹ã‚‰èª­ã¿ã—ãŸãƒ¼ã‚¿ã‚’é¿ã™ã‚‹RAM
 
-  PIDSetGain(L_VELO_PID, 10.5, 2430,0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430ãã‚‰ 36.6*0.6=18+3.96
-  PIDSetGain(R_VELO_PID, 10.5, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
+  PIDSetGain(L_VELO_PID, 14.6,1200,0.0);//, 2430,0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430ãã‚‰ 36.6*0.6=18+3.96
+  PIDSetGain(R_VELO_PID, 14.6,1200,0.0);//, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
   //æœªèª¿æ•´
   PIDSetGain(A_VELO_PID, 12,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   //Iã¯ç©ï¿½?=åå·®ã‚’æ¶ˆã™ã€‚ã‚²ã‚¤ãƒ³ãŒå¤§ãã„ã¨åå·®ãŒç¸®ã¾ã‚‹ãŒã€åæŸãŒ
   //Dã¯å¾®
   //
-  PIDSetGain(D_WALL_PID, 6, 0, 0.1	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//é€Ÿåº¦åˆ¶å¾¡????ï¿½ï¿½?ï¿½ï¿½??ï¿½ï¿½?ï¿½ï¿½???ï¿½ï¿½?ï¿½ï¿½??ï¿½ï¿½?ï¿½ï¿½??// 3.200000, 50.000000, 0.00025i55000
+  PIDSetGain(F_WALL_PID, 6, 0, 0	);
+  PIDSetGain(D_WALL_PID, 6, 0, 0.1	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//é€Ÿåº¦åˆ¶å¾¡???????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½?????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½??????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½?????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½??// 3.200000, 50.000000, 0.00025i55000
   PIDSetGain(L_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   PIDSetGain(R_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   //PidFlag = A_VELO_PID;
@@ -975,12 +981,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB2 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /*Configure GPIO pin : PA14 */
   GPIO_InitStruct.Pin = GPIO_PIN_14;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -1000,10 +1000,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
 }
 

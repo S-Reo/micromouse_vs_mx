@@ -104,10 +104,10 @@ extern int L_motor, R_motor;
 
 //最終ゴール区画座標 全日本(6,9) (7,10)
 #define X_GOAL_LESSER 3
-#define Y_GOAL_LESSER 2
+#define Y_GOAL_LESSER 3
 
 #define X_GOAL_LARGER 4
-#define Y_GOAL_LARGER 3
+#define Y_GOAL_LARGER 4
 
 #define FL	0
 #define SR	1
@@ -212,12 +212,12 @@ typedef enum Action	//区画の境界に来た時の状態表現だから
 						//斜めで4種類追加
 }action;
 
-typedef enum WallStatus{
+typedef enum WallStatus
+{
 	nowall 		= 0,
 	wall 			= 1,
 	unknown	= 2,
-	virtual 		= 3
-
+	vir		= 3
 }wall_status;
 typedef enum WallSafety
 {
@@ -233,7 +233,9 @@ typedef enum PIDNumber
 	L_VELO_PID,
 	R_VELO_PID,
 	N_WALL_PID,
-	B_VELO_PID
+	B_VELO_PID,
+	F_WALL_PID,
+	FD_WALL_PID
 }pid_number;
 
 //typedef enum Action

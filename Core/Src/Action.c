@@ -1437,7 +1437,6 @@ void Compensate()
 	//バック補正
 	//ControlWall();
 	Calib(-50);
-	HAL_Delay(500);
 	//Calib(15);
 
 //	Accel(7,-70);
@@ -1467,6 +1466,7 @@ float AjustCenter(){
 			else if (Wall[Pos.X][Pos.Y].south == wall) //後ろに壁があるときはバック
 			{
 				Compensate();	//後ろ壁調整
+				Pid[wall_ctrl].flag = 0;
 				return 61.5;
 			}
 		break;
@@ -1478,6 +1478,7 @@ float AjustCenter(){
 			else if (Wall[Pos.X][Pos.Y].west == wall) //後ろに壁があるときはバック
 			{
 				Compensate();//後ろ壁調整
+				Pid[wall_ctrl].flag = 0;
 				return 61.5;
 			}
 		break;
@@ -1489,6 +1490,7 @@ float AjustCenter(){
 			else if (Wall[Pos.X][Pos.Y].north == wall) //後ろに壁があるときはバック
 			{
 				Compensate();//後ろ壁調整
+				Pid[wall_ctrl].flag = 0;
 				return 61.5;
 			}
 		break;
@@ -1500,6 +1502,7 @@ float AjustCenter(){
 			else if (Wall[Pos.X][Pos.Y].east == wall) //後ろに壁があるときはバック
 			{
 				Compensate();//後ろ壁調整
+				Pid[wall_ctrl].flag = 0;
 				return 61.5;
 			}
 	default:
@@ -1564,6 +1567,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				PIDChangeFlag(D_WALL_PID, 0);
 				PIDChangeFlag( A_VELO_PID , 1);
 			}
+
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
 				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
@@ -1661,6 +1665,7 @@ void TurnLeft(char mode)
 //		PIDReset(A_VELO_PID);
 		HAL_Delay(100);
 		float acc = AjustCenter();
+		HAL_Delay(100);
 
 		PIDChangeFlag( A_VELO_PID , 1);
 		Accel(acc, ExploreVelocity);
@@ -1686,7 +1691,7 @@ void GoBack()
 	//Calib();
 	//回転して
 #if 1
-	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。
+	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
 #else
 	//AjustCenter();
 	//RotateTest(90);

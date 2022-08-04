@@ -31,7 +31,7 @@ typedef struct {
 	int flag;
 
 }motor_control;
-extern motor_control Pid[ 8 ];
+extern motor_control Pid[ 10 ];
 
 //extern float KP[PID_TARGET_NUM],
 //					KI[PID_TARGET_NUM],

@@ -8,7 +8,7 @@
 #include "PID_Control.h"
 #include "math.h"
 //motor_control Pid;//[ PID_TARGET_NUM ] = {0};
-motor_control Pid[ 8 ] = {0};
+motor_control Pid[ 10 ] = {0};
 //motor_control *p;
 //control angular_velocity[1] = {0};
 //control distance_wall[ WALL_SENSOR_NUM] = {0};

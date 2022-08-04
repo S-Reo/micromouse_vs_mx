@@ -21,6 +21,9 @@
 
 int timer1,timer8, t;
 int IT_mode;
+int velodebug_flag=0;
+float velodebugL[1000],velodebugR[1000];
+
 const float convert_to_velocity = MM_PER_PULSE/T1;
 const float convert_to_angularv = 1/TREAD_WIDTH;
 const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
@@ -220,6 +223,20 @@ void Explore_IT()
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
 	//移動量 mm/msを積算
+	if(velodebug_flag == 1)
+	{
+		static int vdn=0;
+
+		velodebugL[vdn] = CurrentVelocity[LEFT];
+		velodebugR[vdn] = CurrentVelocity[RIGHT];
+		vdn++;
+		if(vdn == 1000)
+		{
+			velodebug_flag = 0;
+		}
+
+	}
+
 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
@@ -249,7 +266,7 @@ void Explore_IT()
 
 #endif
 
-	int wall_d =0,wall_l =0,wall_r =0;
+	int wall_d =0,wall_l =0,wall_r =0,wall_f=0,wall_fd=0;
 		int ang_out=0;
 	//処理を減らすには、
 		if( Pos.Dir == front || Pos.Act == compensate || Pos.Act == rotate)
@@ -274,6 +291,13 @@ void Explore_IT()
 			{
 				wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
 				TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+			}
+			else if( Pid[F_WALL_PID].flag == 1)
+			{
+				wall_f = PIDControl( F_WALL_PID,   Photo[FR], Photo[FL]+1000);
+				TargetAngularV = (float)wall_f*0.001;
+
+				TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
 			}
 		}
 
@@ -300,6 +324,20 @@ void WritingFree_IT()
 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+
+	if(velodebug_flag == 1)
+	{
+		static int vdn=0;
+
+		velodebugL[vdn] = CurrentVelocity[LEFT];
+		velodebugR[vdn] = CurrentVelocity[RIGHT];
+		vdn++;
+		if(vdn == 1000)
+		{
+			velodebug_flag = 0;
+		}
+
+	}
 	//移動量 mm/msを積算
 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
@@ -392,10 +430,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//壁センサデータの更新だけ
 		//UpdatePhotoData();
 		//処理がこれだけなら影響しない。問題はTIM1の処理の重さ。1msで終えられていないから狂ってくる。
-		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
-		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
-		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
-		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
+		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
+		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
+		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
 
 	}
 //	if( htim == &htim9)

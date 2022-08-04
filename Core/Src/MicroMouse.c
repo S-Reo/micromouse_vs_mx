@@ -49,9 +49,9 @@ float Angle=0;				//角度 rad/msを積算
 //float TargetVelocityRight;
 float ExploreVelocity;
 float AddVelocity;
-float Acceleration;
+float Acceleration=0;
 float TargetAngularV;
-float AngularAcceleration;
+float AngularAcceleration=0;
 float TargetAngle;
 float ImuAngV,ImuAngle;
 float ImuAccel=0, ImuVelocity=0, ImuMileage=0;

@@ -196,10 +196,16 @@ t = 1;
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
 	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
 	//zg_offset = 0;
+#if 0
 	TargetPhoto[SL] = Photo[SL];
 	TargetPhoto[SR] = Photo[SR];
 	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
+#else
+	TargetPhoto[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
+	TargetPhoto[SR] = Photo[SR];//294.299988;//THRESHOLD_SR;
+	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
 
+#endif
 	PIDReset(L_VELO_PID);
 	PIDReset(R_VELO_PID);
 
@@ -349,13 +355,33 @@ void Debug()
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(A_VELO_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 1);
 	ExploreVelocity=0;
 	ChangeLED(3);
 	//HAL_Delay(500);
 
+	//IT_mode = WRITINGFREE;
+	IT_mode = EXPLORE;
+//
+#if 0
+	TargetAngle = 0;
+	TargetVelocity[BODY] = 180;
+	velodebug_flag = 1;
 
+	while(velodebug_flag == 1) //速度デバッグ
+	{
 
+	}
+	TargetVelocity[BODY] = 0;
+	HAL_Delay(10000);
+	while(1)
+	{
+		for(int i=0; i < 1000; i++)
+		{
+			printf("%d, %f, %f\r\n",i, velodebugL[i], velodebugR[i]);
+		}
+	}
+#endif
 //	HAL_Delay(500);
 //	while(1)
 //	{
@@ -382,9 +408,27 @@ void Debug()
 
 	}
 #endif
+#if 0
+	while(1)
+	{
+		printf("%f, %f\r\n",TargetPhoto[SL], TargetPhoto[SR] );
+		HAL_Delay(2000);
+	}
+#endif
 
+#if 0 //前壁補正
+	Pos.Act = compensate;
+
+	PIDChangeFlag(F_WALL_PID, 1);
+	PIDChangeFlag(FD_WALL_PID, 1);
+	while(1)
+	{
+		printf("%f, %f, %f, %f\r\n", Photo[FL], Photo[FR], Photo[FL] - Photo[FR],Photo[FL] + Photo[FR] );
+	}
+	PIDChangeFlag(F_WALL_PID, 0);
+#endif
 #if 1 //直進テスト
-	ExploreVelocity = 300;
+	ExploreVelocity = 135;
 	Pos.Dir = front;
 	Accel(61.75,ExploreVelocity);
 	for(int i=0; i < 1; i++)
@@ -392,14 +436,16 @@ void Debug()
 		Pos.Dir = front;
 		GoStraight(90, ExploreVelocity, AddVelocity);
 		//Pos.Dir = right;
-		//SlalomRight();
+		SlalomRight();
 
 	}
 	Pos.Dir = front;
 	//Decel(45,0);
 	TargetVelocity[BODY] = 0;
-	HAL_Delay(30000);
+	HAL_Delay(1000);
+
 #endif
+
 
 #if 0 //旋回テスト
 
@@ -564,7 +610,7 @@ void GainTestRWall()
 	ChangeLED(1);
 	while(1)
 	{
-		TargetVelocity[BODY] = 300;
+		TargetVelocity[BODY] = 0;
 
 	}
 }
@@ -606,7 +652,7 @@ void GainTestAVelo()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	//PIDChangeFlagStraight(A_VELO_PID);
-	PIDChangeFlag(A_VELO_PID, 1);
+	PIDChangeFlag(A_VELO_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
@@ -616,7 +662,7 @@ void GainTestAVelo()
 	while(1)
 	{
 		TargetVelocity[BODY] = 0;
-		printf("%f, %f\r\n", AngularV, Angle);
+		//printf("%f, %f\r\n", AngularV, Angle);
 
 	}
 }
@@ -780,7 +826,8 @@ while(1)
 
 void FastestRun()
 {
-	IT_mode = EXPLORE;
+	//IT_mode = EXPLORE;
+	IT_mode = WRITINGFREE;
 	//諸々の初期化
 	HAL_Delay(250);
 	Photo[FR] = 0;
@@ -835,10 +882,10 @@ void FastestRun()
 	switch(mode2)
 	{
 	case 1:
-		//ExploreVelocity=90;
+		ExploreVelocity=90;
 		//未
 		Sla.Pre = 8;
-		Sla.Fol = 8;
+		Sla.Fol = 12;
 		Sla.Alpha = 0.014;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -858,7 +905,7 @@ void FastestRun()
 		//未
 		ExploreVelocity=180;
 		Sla.Pre = 4;
-		Sla.Fol = 6;
+		Sla.Fol = 10;
 		Sla.Alpha = 0.04478;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -905,6 +952,7 @@ void FastestRun()
 void Explore()
 {
 	IT_mode = EXPLORE;
+	//IT_mode = WRITINGFREE;
 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マップを初期化する。
 	//一回目で失敗していたら、flash消してram初期化
 	//一回目で成功したら、flashをramに移す
@@ -976,10 +1024,10 @@ void Explore()
 	switch(mode2)
 	{
 	case 1:
-		//ExploreVelocity=300;
+		ExploreVelocity=90;
 		//未
 		Sla.Pre = 8;
-		Sla.Fol = 8;
+		Sla.Fol = 13;
 		Sla.Alpha = 0.014;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -989,7 +1037,7 @@ void Explore()
 		//完
 		ExploreVelocity=135;
 		Sla.Pre = 5;
-		Sla.Fol = 5;
+		Sla.Fol = 10;
 		Sla.Alpha = 0.0273;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -999,7 +1047,7 @@ void Explore()
 		//未
 		ExploreVelocity=180;
 		Sla.Pre = 4;
-		Sla.Fol = 6;
+		Sla.Fol = 10;
 		Sla.Alpha = 0.04478;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -1046,6 +1094,7 @@ void Explore()
 //			ChangeLED(7);
 //		else
 //			ChangeLED(0);
+
 		ChangeLED(Pos.Car);
 
 		//wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
@@ -1058,7 +1107,14 @@ void Explore()
 		//方向決定と、座標方角の更新。
 		//方向決定を変える。
 		//LeftHandJudge('T');
+
 		KyushinJudge( turn_mode );
+//		static int i=0;
+//		i++;
+//		if(i==5)
+//		{
+//			break;
+//		}
 
 		//i++;
 		//マップデータに基づき、次の目標座標を決定する。目標座標から進行方向を決める。
@@ -1074,6 +1130,10 @@ void Explore()
 		my_direction = DetermineDirection();
 #endif
 	}
+//	while(1)
+//	{
+//		TargetVelocity[BODY] = 0;
+//	}
 	Decel(45, 0);
 
 	//ゴールエリアチェック。

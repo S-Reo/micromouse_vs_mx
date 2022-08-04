@@ -61,8 +61,9 @@ inline void Motor_Switch(int left, int right){
 	if(left > 4200*0.6) left = 4200*0.6;
 	if(right > 4200*0.6) right = 4200*0.6;
 
-	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, left); //tim2ch4が左
+
 	  __HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, right); //tim5ch2が右
+	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, left); //tim2ch4が左
 }
 void Motor_Buzzer(float helz, int ms){
 	  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
