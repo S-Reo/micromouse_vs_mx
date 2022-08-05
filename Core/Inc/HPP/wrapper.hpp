@@ -11,6 +11,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include "Motor_Driver.h"
 void cpploop(void);
 #ifdef __cplusplus
 };

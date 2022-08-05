@@ -52,6 +52,8 @@
 #include "Motor_Driver.h"
 
 #include "MicroMouse.h"
+
+//#include <HPP/wrapper.hpp>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -119,8 +121,6 @@ extern void TIM5Init();
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-
 #ifdef __GNUC__
 	#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 	#define GETCHAR_PROTOTYPE int __io_getchar(void)
@@ -144,9 +144,7 @@ Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
 //	return 0;
 //	break;
 //}
-
 }
-
 return(Data);
 }
 
@@ -164,9 +162,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	  if(gpio_callback_count > 7) gpio_callback_count=0;
 	}
 }
-// Flashã‹ã‚‰èª­ã¿ã—ãŸãƒ¼ã‚¿ã‚’é¿ã™ã‚‹RAM
-// 4byteã”ã¨ã«ã‚¢ã‚¯ã‚»ã‚¹ã‚’ã™ã‚‹ã§ã€ã‚¢ãƒ‰ãƒ¬ã‚¹ã«é…ç½®ã™ã‚‹
-
 /*---- DEFINING FUNCTION ----*/
 
 
@@ -220,48 +215,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //wowowo
-  Pos.Car = 0;
-  for(int i=0; i < 8; i++)
-  {
-	  printf("%d  Pos.Car : %d\r\n",i,Pos.Car+i );
-  }
-  //IMU_init();
-//  int16_t data[1000]={0};
-//  int i=0, elaps=0;
-//	HAL_TIM_Base_Start_IT(&htim8);
-//
-//  while(1)
-//  {
-//	  t = 1;
-//	  read_gyro_data();
-//	  data[i] = zg;
-//	  i++;
-//	  zg = 0;
-//	  if(i == 1000)
-//	  {
-//		  elaps = timer;
-//		  break;
-//	  }
-//
-//  }
-//
-//  for(i=0; i < 1000; i++)
-//  {
-//	  printf("ãƒ¼ã‚¿ : %d\r\n", data[i]);
-//
-//  }
-//  printf("çµŒéæ™‚é–“ : %d\r\n", elaps);
-//
-//  while(1)
-//  {
-//
-//  }
 
   //cpploop();
-//  while(1){
-//	  ChangeLED(7)
-//  }
+
   float helz;
 
   for(int i=0; i < 2; i++){
@@ -284,25 +240,17 @@ int main(void)
   Signal( mode );
   printf("Switch\r\n");
 
-  //pidãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®åˆæœŸåŒ–ã‚’ã‚‚ã£ã¨æ›¸ãæ›ãˆã‚„ã™ã„ã¨ã“ã‚ã§
-// Flashã‹ã‚‰èª­ã¿ã—ãŸãƒ¼ã‚¿ã‚’é¿ã™ã‚‹RAM
-
   PIDSetGain(L_VELO_PID, 14.6,1200,0.0);//, 2430,0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430ãã‚‰ 36.6*0.6=18+3.96
   PIDSetGain(R_VELO_PID, 14.6,1200,0.0);//, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-  //æœªèª¿æ•´
   PIDSetGain(A_VELO_PID, 12,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
-  //Iã¯ç©ï¿½?=åå·®ã‚’æ¶ˆã™ã€‚ã‚²ã‚¤ãƒ³ãŒå¤§ãã„ã¨åå·®ãŒç¸®ã¾ã‚‹ãŒã€åæŸãŒ
-  //Dã¯å¾®
-  //
   PIDSetGain(F_WALL_PID, 6, 0, 0	);
-  PIDSetGain(D_WALL_PID, 6, 0, 0.1	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//é€Ÿåº¦åˆ¶å¾¡???????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½?????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½??????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½?????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½??// 3.200000, 50.000000, 0.00025i55000
+  PIDSetGain(D_WALL_PID, 6, 0, 0.1	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//é€Ÿåº¦åˆ¶å¾¡
   PIDSetGain(L_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   PIDSetGain(R_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
-  //PidFlag = A_VELO_PID;
+
   while (1)
   {
-
 	  switch( mode )
 	  {
 	  case 0:
@@ -335,8 +283,6 @@ int main(void)
 	  default :
 		  break;
 	  }
-
-	  //æ¢ç´¢ã‚¢ãƒ«ã‚´ãƒªã‚º
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

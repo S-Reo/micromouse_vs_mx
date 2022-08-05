@@ -12,7 +12,7 @@
 
 #define EXPLORE				0
 #define WRITINGFREE 		1
-#define DEBUG				2
+//#define DEBUG				2
 #define PARAMETERSETTING	3
 
 void Debug();

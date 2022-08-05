@@ -18,11 +18,10 @@
 #include "ICM_20648.h"
 #include "Mode.h"
 
-
 int timer1,timer8, t;
 int IT_mode;
 int velodebug_flag=0;
-float velodebugL[1000],velodebugR[1000];
+//float velodebugL[1000],velodebugR[1000];
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
 const float convert_to_angularv = 1/TREAD_WIDTH;
@@ -184,75 +183,33 @@ void UpdatePhotoData()
 	Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
 	//4つめが終わる前に0.5msが過ぎる説。
 }
-//void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-//{
-//	if( hspi == &hspi3)
-//	{
-//		//CS_SET;
-//		 spi_dma_data = (((uint16_t)val[0] << 8) | (uint16_t)val[1]);
-//		 //t += 1;
-//		 //CS_RESET;
-//	}
-//}
+
+
 void Explore_IT()
 {
-	//TimeMonitor();
-	//エンコーダから取得
-	//UpdateEncData();
-	//変換
-	//ConvertEncData();
-	//目標値生成はメイン処理で
 
-	//目標値 - 現在値(変換済み)で制御出力値の計算
-
-//		timer1 += t;
-//		if(timer1 == 30000)
-//		{
-//			t = 0;
-//		}
 //*-----------------*/
-	//ControlMotor();
+
 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
 	TIM3->CNT = INITIAL_PULSE;
 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
 	TIM4->CNT = INITIAL_PULSE;
-//	PulseDisplacement[LEFT] = GetPulseDisplacement( (int*)(&(TIM3->CNT)),  INITIAL_PULSE/*&KeepCounter[LEFT]*/);
-//	PulseDisplacement[RIGHT] = GetPulseDisplacement( (int*)(&(TIM4->CNT)),  INITIAL_PULSE/*&KeepCounter[RIGHT]*/);
+
 	//速度 mm/s
 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
 	//移動量 mm/msを積算
-	if(velodebug_flag == 1)
-	{
-		static int vdn=0;
-
-		velodebugL[vdn] = CurrentVelocity[LEFT];
-		velodebugR[vdn] = CurrentVelocity[RIGHT];
-		vdn++;
-		if(vdn == 1000)
-		{
-			velodebug_flag = 0;
-		}
-
-	}
 
 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 	//角速度 rad/s
 
-	//IMUが動けばIMUでいいけど、いちか撥か.
-	//1. 探索 90,135,180のどれか。スラロームで。自信のある速度から。
-	//2. スラローム失敗したら一区画ずつ。次に自信のある速度
-	//3. 3回目も失敗したら、やけっぱち
-	//2. 一回でもゴールしたら、最短走行の高速パラメータからスタート。
-	//3.それ以降は速度を上げるか下げるか.
-
 #if 1
 	//static float angle=0;
-	static float zg_last=0, ya_last=0;
-	float zg_law, ya_law;
+	static float zg_last=0;
+	float zg_law;
 	//uint8_t zgb,zgf;
 	ZGyro = ReadIMU(0x37, 0x38);
     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
@@ -266,9 +223,9 @@ void Explore_IT()
 
 #endif
 
-	int wall_d =0,wall_l =0,wall_r =0,wall_f=0,wall_fd=0;
+	int wall_d =0,wall_l =0,wall_r =0,wall_f=0;
 		int ang_out=0;
-	//処理を減らすには、
+
 		if( Pos.Dir == front || Pos.Act == compensate || Pos.Act == rotate)
 		{
 			if( Pid[A_VELO_PID].flag == 1 )
@@ -325,28 +282,28 @@ void WritingFree_IT()
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
 
-	if(velodebug_flag == 1)
-	{
-		static int vdn=0;
-
-		velodebugL[vdn] = CurrentVelocity[LEFT];
-		velodebugR[vdn] = CurrentVelocity[RIGHT];
-		vdn++;
-		if(vdn == 1000)
-		{
-			velodebug_flag = 0;
-		}
-
-	}
+//	if(velodebug_flag == 1)
+//	{
+//		static int vdn=0;
+//
+//		velodebugL[vdn] = CurrentVelocity[LEFT];
+//		velodebugR[vdn] = CurrentVelocity[RIGHT];
+//		vdn++;
+//		if(vdn == 1000)
+//		{
+//			velodebug_flag = 0;
+//		}
+//
+//	}
 	//移動量 mm/msを積算
 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 
 #if 1
-	//static float angle=0;
-	static float zg_last=0, ya_last=0;
-	float zg_law, ya_law;
+
+	static float zg_last=0;
+	float zg_law;
 	//uint8_t zgb,zgf;
 	ZGyro = ReadIMU(0x37, 0x38);
     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
@@ -402,7 +359,6 @@ void WritingFree_IT()
 
 }
 
-//壁センサの実データ生成はどこでやるか。Convertを使って変換して構造体にいれる。
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if( htim == &htim1)
@@ -417,30 +373,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		default :
 			break;
 		}
-
-
-
 	}
 
 	if( htim == &htim8)
 	{
-		//timer += t;
 		//timer8 += t;
 
-		//壁センサデータの更新だけ
-		//UpdatePhotoData();
-		//処理がこれだけなら影響しない。問題はTIM1の処理の重さ。1msで終えられていないから狂ってくる。
+		//壁センサデータの更新
 		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
 		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
 		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
 		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
-
 	}
-//	if( htim == &htim9)
-//	{
-//		timer8 += t;
-//
-//	}
 }
 
 

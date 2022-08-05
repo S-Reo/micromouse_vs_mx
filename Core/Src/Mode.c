@@ -341,13 +341,6 @@ void Debug()
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
 
-	//スタート時のアクションに設定
-	//direction action_type = front;
-	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
-	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
-	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
-//void ChangeNowStatus()
-
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
@@ -499,54 +492,7 @@ void Debug()
 #if 1 //壁切れテスト
 	//
 #endif
-//	uint32_t address_theta = start_adress_sector8;
-//	uint32_t address_angv = start_adress_sector8+0x04;
-//	//4byteの1000個で1s分。5秒で5000個、2変数で10000個
-//	float theta_log[2000], angv_log[2000];
-//	for(int i=0; i < 2000; i++)
-//	{
-//		FLASH_Read_Word_F(address_theta, &theta_log[i]);
-//		FLASH_Read_Word_F(address_angv, &angv_log[i]);
-//		printf("%d : %f, %f\r\n",angv_log[i],theta_log[i]);
-//	}
 
-
-//	while ( 1 ) //ぶん回しで道中でパルスを追加していく。どこで判断するか。
-//	{
-//		//正にも負にも回転するからパルスの条件式は一概にかけない。
-//		//途中で追加する
-//		//TotalPulse[BODY]
-//		//Move(action, cardinal, direction, &move_pulse[LEFT], &move_pulse[RIGHT]);
-//		//目標移動量が正か負かで条件分岐。左右でも分ける。
-//		//正なら
-//		if( (move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] > 0) ) //直進かスラローム、減速加速。
-//		{
-//			//while条件式が変わる
-//		}
-//		else if((move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] > 0))	//回転
-//		{
-//
-//		}
-//		else if((move_pulse[LEFT] > 0) && ( move_pulse[RIGHT] < 0)) //回転
-//		{
-//
-//		}
-//		else if( (move_pulse[LEFT] < 0) && ( move_pulse[RIGHT] < 0) )//バック
-//		{
-//
-//		}
-//		else if( (move_pulse[LEFT] == 0) && ( move_pulse[RIGHT] == 0) )	//停止。
-//		{
-//
-//		}
-//		else //片方だけが0のパターンはパグに近い。
-//		{
-//
-//		}
-
-
-
-//}
 #else
 
 	EmitterON();
@@ -669,31 +615,13 @@ void GainTestAVelo()
 void WritingFree()
 {
 	IT_mode = WRITINGFREE;
-//	wall_init();
-//	wall_ram_print();
-//	printf("flashコピーる\r\n");
-//	flash_copy_to_ram();
-//	wall_flash_print();
-//	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
-//	map_print();
-//	printf("flashおわったはず\r\n");
-//
-//	printf("最短用の歩数マップ\r\n");
-//	make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x03);
-//	map_print();
-//	while(1)
-//	{
-//
-//
-//	}
+
 	InitExplore();
 
 	printf("3\r\n");
 
 	InitPosition();
-//	uint8_t x, y;
-//	Pos.Car = north;
-//	x=0,y=0;
+
 	wall_init();
 	printf("4\r\n");
 
@@ -701,10 +629,8 @@ void WritingFree()
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
 
-
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
-	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
 
 	//PIDChangeFlagStraight(N_WALL_PID);
 	PIDChangeFlag(D_WALL_PID, 0);
@@ -732,18 +658,7 @@ void WritingFree()
 	SelectAction('S');
 	SelectAction('S');
 	Decel(35, 0);
-	//スタート時の出力値を見たい。matlabで可視化しよう。
-//	Accel(61.5, ExploreVelocity);
-//	Accel(61.5, ExploreVelocity);
 
-	//ここまででハードの準備はできた。
-	//ここからはソフト的な準備
-
-//	for(n=0; n < 10; n++)
-//	{
-//
-//		printf("%f, %f\r\n",out_log_L[n],out_log_R[n]);
-//	}
 while(1)
 {
 	//printf("zg : %d, %lf, %f\r\n",zg,(double)zg,(float)zg);	//zgは右回転が負。どの型でもおかしい値は出なかった。
@@ -770,26 +685,6 @@ while(1)
 
 	Accel(61.5, ExploreVelocity);
 
-
-
-
-//	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-//	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
-//	HAL_Delay(500);
-//	Rotate( 90 , -M_PI);
-//	HAL_Delay(500);
-//	Accel(45, velocity);
-//	//printf("VelocityLeftOut, VelocityRightOut : %d,%d\r\n", VelocityLeftOut, VelocityRightOut);
-//	GoStraight( 90,velocity, 0);
-//	Decel(45, 0);
-//	HAL_Delay(500);
-//	Rotate( 90 , M_PI);
-//	HAL_Delay(500);
-//	Accel(45, velocity);
-//	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-//	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
-
-
 	printf("VelocityLeftOut, VelocityRightOut : %d,%d\r\n", VelocityLeftOut, VelocityRightOut);	//微妙に出力値が残る。
 #else
 
@@ -800,10 +695,7 @@ while(1)
 	Rotate( 180 , 5);
 	//Rotate( 90 , 1*M_PI);
 #endif
-	//
-//	RotateAccel(15, 2);
-//
-//	RotateDecel(15, 2);
+
 	while(1)
 	{
 		TargetAngularV = 0;
@@ -819,9 +711,6 @@ while(1)
 		//printf("VelocityLeftOut, TargetVelocity[LEFT], CurrentVelocity[LEFT] : %d, %f, %f\r\n", VelocityLeftOut, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
 	}
 	//探索の場合は迷路とステータスの準備
-
-
-
 }
 
 void FastestRun()
@@ -865,9 +754,6 @@ void FastestRun()
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 
-
-	//こちらもスラロームかそうでないか、速度はどうか、でモード分けする
-
 	char turn_mode;
 	if(mode == 1)
 	{
@@ -878,7 +764,7 @@ void FastestRun()
 	{
 		turn_mode = 'S';
 	}
-	//ExploreVelocity=135;
+
 	switch(mode2)
 	{
 	case 1:
@@ -942,12 +828,7 @@ void FastestRun()
 	{
 		HAL_Delay(10*1000);
 		printf("ログ出力\r\n");
-		//RAMに入れて保存しておく
-			//走行中に定期的にflashに書き込む
-			//MATLABにプロットすることも想定する
-
 	}
-
 }
 void Explore()
 {
@@ -979,33 +860,22 @@ void Explore()
 
 	InitPosition();
 		printf("bbb\r\n");
-//	uint8_t x, y;
-//	Pos.Car = north;
-//	x=0,y=0;
+
 	wall_init();
 		printf("ccc\r\n");
-	//時間用の処理の初期化。
-	//int timer = 0;
-	//エンコーダ移動量の初期化。
+
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
-	//スタート時のアクションに設定
-	//direction action_type = front;
-	//見えておくべき処理、データと、見えなくていいものとを分ける。何が見えるべきか。
-	//while ゴール座標にいないまたはゴール座標の未探索壁がある。
-	//x,y,dir,sbrl,現在→ x2,y2,dir2,sbrl2更新
-//void ChangeNowStatus()
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
-	//printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
+
 	//PIDChangeFlagStraight(N_WALL_PID);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-	//ExploreVelocity=180;
 
 	ChangeLED(2);
 
@@ -1020,7 +890,7 @@ void Explore()
 	{
 		turn_mode = 'S';
 	}
-	//ExploreVelocity=135;
+
 	switch(mode2)
 	{
 	case 1:
@@ -1042,12 +912,6 @@ void Explore()
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
-//		Sla.Pre = 10;
-//		Sla.Fol = 10;
-//		Sla.Alpha = 0.03;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
 		break;
 	case 3:
 		ExploreVelocity=240;
@@ -1068,89 +932,24 @@ void Explore()
 		break;
 
 	}
-
-
-	//速度の段階を選ぶ。
-//	while(1)
-//	{
-//
-//	}
-	int i=0;
 	SearchOrFast = 0;
 	Pos.Dir = front;
 	Pos.Car = north;
 	Pos.NextX = Pos.X;
 	Pos.NextY = Pos.Y + 1;
 	Pos.NextCar = north;
-	printf("nomnom : %f\r\n", ExploreVelocity);
 	Accel(61.5, ExploreVelocity);
  	Pos.X = Pos.NextX;
     Pos.Y = Pos.NextY;
 	Pos.Car = Pos.NextCar;
-	//uint8_t xlog[10]={0},ylog[10]={0};
 
 	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
-
-		//xlog[i]=x;
-		//ylog[i]=y;
-		//0,0から0,1に北向きのまま移動したい→直進、移動しきった。座標と向きを更新
-		//0,1から1,1に行きたい。今の向きは北。→ 右に旋回、移動しきった。座標と向きを更新。
-		//ChangeNowStatus(&x,&y,&my_direction,&action_type);
-		//移動しきったあとに状態を更新するか、アクションが決まった時点で更新するか。後者にすれば、移動しきる前に、壁の状態を検知して、次のマップ更新ができる。次のアクションを用意しておく。
-		//今の座標と進行方向から次の方角がわかり座標を更新できる。
-		//現在の方角と座標を更新
-
-		//移動後の座標と方角で新たに壁情報を取得
-//		i++;
-//		if(i%2)
-//			ChangeLED(7);
-//		else
-//			ChangeLED(0);
-
 		ChangeLED(Pos.Car);
 
-		//wall_set(Pos.X, Pos.Y,Pos.Car,Photo[SL], Photo[SR], Photo[FL], Photo[FR]);
-		//ControlWall();
-		//評価値マップ、歩数マップをどうするか。最短経路計算同様、走行中に計算させる。
-		//UpdateWalkMap();
-
-
-		//ChangeLED(0);
-		//方向決定と、座標方角の更新。
-		//方向決定を変える。
-		//LeftHandJudge('T');
-
 		KyushinJudge( turn_mode );
-//		static int i=0;
-//		i++;
-//		if(i==5)
-//		{
-//			break;
-//		}
-
-		//i++;
-		//マップデータに基づき、次の目標座標を決定する。目標座標から進行方向を決める。
-		//DetermineDirection(&x,&y,&my_direction,&action_type);		//マップデータと現在座標、方角から次の方角、前後左右を返す。現在の状態から次の状態を求める。その状態になるためのアクションを返す。状態は先に更新しておく。
-#if 0
-		//アクション関数 (どのアクションを行うことになったかと、現在の方角が見たい)
-		Action( my_direction , action_type );	//内部で、移動しきるまでwhile処理。//もしくは割り込み内で目標移動量と現在移動量の比較をして、終わっていなければフラグ1、終わっていればフラグ0という処理。
-		//壁判定			(現在の座標、方角、
-		wall_set();
-		//マップ更新		(現在の座標とその周りの座標の評価値と壁情報)
-		UpdateMap();
-		//進行方向決定 (最短経路導出から決定するか、評価値比較か、単純な左手か)
-		my_direction = DetermineDirection();
-#endif
 	}
-//	while(1)
-//	{
-//		TargetVelocity[BODY] = 0;
-//	}
 	Decel(45, 0);
-
-	//ゴールエリアチェック。
-	//諸々停止。
 
 	//flashのクリア。
 	Flash_clear_sector1();
@@ -1165,35 +964,14 @@ void Explore()
 	{
 		wall_ram_print();
 	}
-
-	while(1)
-	{
-		for(i=0;i < 10; i++)
-		{
-			//printf("%d: %d,%d\r\n",i,xlog[i],ylog[i]);
-		}
-	}
-	//一旦全ての処理をできるだけ細かく書いてみる。そのあとモジュール化してみる。構造化分析的な。
-
-
 }
 
-void Init()
-{
-
-}
-
-void Run()
-{
-
-}
 void FullyAutonomous()
 {
-	Init();
-
-	Run();
-
 	//五回の走行全てを完全自律で。
+
+
+
 
 }
 

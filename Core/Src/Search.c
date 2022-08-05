@@ -13,6 +13,7 @@
 #include "Action.h"
 int Calc;
 int SearchOrFast;
+
 void AdachiJudge(){
 }
 void KyushinJudge(char turn_mode)
