@@ -70,6 +70,7 @@ extern float AddVelocity;
 extern float Acceleration;
 extern float TargetAngularV;
 extern float AngularAcceleration;
+extern float AngularLeapsity;
 extern float TargetAngle;
 extern int VelocityLeftOut, VelocityRightOut;
 extern int WallRightOut, WallLeftOut;
@@ -278,6 +279,7 @@ typedef struct Slalom
 	float Pre;
 	float Fol;
 	float Alpha;
+	float Alalpha;
 	float Theta1;
 	float Theta2;
 	float Theta3;

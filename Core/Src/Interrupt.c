@@ -346,6 +346,8 @@ void WritingFree_IT()
 			}
 		}
 #endif
+
+	AngularAcceleration += AngularLeapsity;
 	TargetVelocity[BODY] += Acceleration;
 	TargetAngularV += AngularAcceleration;
 

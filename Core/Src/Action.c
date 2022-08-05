@@ -1007,6 +1007,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	float pre = Sla.Pre;         //スラローム前距離
 	float fol = Sla.Fol;         //スラローム後距離
 	float alpha_turn = Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
+	float alalpha_turn = Sla.Alalpha;
 	float ang1 = Sla.Theta1*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = Sla.Theta2*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = Sla.Theta3*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -1020,6 +1021,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	{
 			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
+			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
 
@@ -1035,7 +1037,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			//velocity_ctrl_flag = 1;
 			//割り込みの中で角速度を上げていく
 			//alpha_flag = 1;
-			AngularAcceleration = alpha_turn;
+		AngularLeapsity = alalpha_turn;
+			//AngularAcceleration = alpha_turn;
 			TargetVelocity[BODY] = v_turn;
 
 #if 0
@@ -1058,6 +1061,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			//printf("クロソイド1\r\n");
 	}
 	AngularAcceleration = 0;
+	AngularLeapsity = 0;
 	now_angv = AngularV;
 	//alpha_flag = 0;
 
@@ -1088,7 +1092,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 
 			//velocity_ctrl_flag = 1;
 			//alpha_flag = 2;
-			AngularAcceleration = -alpha_turn;
+		AngularLeapsity = -alalpha_turn;
+			//AngularAcceleration = -alpha_turn;
 			if(TargetAngularV < 0)
 			{
 				TargetAngularV = 0;
@@ -1099,6 +1104,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	}
 	//alpha_flag = 0;
 	AngularAcceleration = 0;
+	AngularLeapsity = 0;
 	TargetAngularV = 0;
 	Calc = SearchOrFast;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
@@ -1154,6 +1160,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	float pre = Sla.Pre;         //スラローム前距離
 	float fol = Sla.Fol;         //スラローム後距離
 	float alpha_turn = -Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度s
+	float alalpha_turn = -Sla.Alalpha;
 	float ang1 = Sla.Theta1*M_PI/180;         //角速度が上がるのは0からang1まで
 	float ang2 = Sla.Theta2*M_PI/180;         //角速度が一定なのはang1からang2まで
 	float ang3 = Sla.Theta3*M_PI/180;         //角速度が下がるのはang2からang3まで
@@ -1181,12 +1188,14 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 			//velocity_ctrl_flag = 1;
 			//割り込みの中で角速度を上げていく
 			//alpha_flag = 1;
+			AngularLeapsity = alalpha_turn;
 			AngularAcceleration = alpha_turn;
 			TargetVelocity[BODY] = v_turn;
 
 			//printf("クロソイド1\r\n");
 	}
 	AngularAcceleration = 0;
+	AngularLeapsity = 0;
 	//alpha_flag = 0;
 
 	while(start_angle - ang2 < Angle)
@@ -1202,7 +1211,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 
 			//velocity_ctrl_flag = 1;
 			//alpha_flag = 2;
-			AngularAcceleration = -alpha_turn;
+		AngularLeapsity = -alalpha_turn;
+			//AngularAcceleration = -alpha_turn;
 			if(TargetAngularV > 0)
 			{
 				TargetAngularV = 0;
@@ -1213,6 +1223,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	}
 	//alpha_flag = 0;
 	AngularAcceleration = 0;
+	AngularLeapsity = 0;
 	TargetAngularV = 0;
 	Calc = SearchOrFast;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];

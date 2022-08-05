@@ -52,6 +52,7 @@ float AddVelocity;
 float Acceleration=0;
 float TargetAngularV;
 float AngularAcceleration=0;
+float AngularLeapsity=0;
 float TargetAngle;
 float ImuAngV,ImuAngle;
 float ImuAccel=0, ImuVelocity=0, ImuMileage=0;
