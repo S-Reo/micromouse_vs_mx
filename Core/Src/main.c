@@ -37,7 +37,7 @@
 
 //#include "ICM_20648.h"
 //
-//#include "IEH2_4096.h"		//エンコー
+#include "IEH2_4096.h"		//エンコー
 #include "ADC.h"
 #include "LED_Driver.h"
 #include "IR_Emitter.h"	//発
@@ -159,9 +159,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	  gpio_callback_count++;
 	  //ChangeLED(gpio_callback_count);
 
-	  if(gpio_callback_count > 7) gpio_callback_count=0;
+	  if(gpio_callback_count > 1) gpio_callback_count=0;
 	}
 }
+
 /*---- DEFINING FUNCTION ----*/
 
 
@@ -177,7 +178,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  printf("test\r\n");
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -218,6 +219,7 @@ int main(void)
 
   //cpploop();
 
+#if 0
   float helz;
 
   for(int i=0; i < 2; i++){
@@ -226,7 +228,44 @@ int main(void)
 	  helz = 440.0f*powf(powf((float)2,(float)1/12),(float)i+1.2);
   }
   Motor_Buzzer(helz,600);
+#endif
+#if 0
+  printf("test\r\n");
+  ChangeLED(7);
+  HAL_Delay(1000);
+  IT_mode = WRITINGFREE;
+  //エンコー
+  EncoderStart();
+  //モータタイ?��?
+  Motor_PWM_Start();
+  //割込み
+  HAL_TIM_Base_Start_IT(&htim1);
 
+  HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2が左SET:1で正転
+  HAL_GPIO_WritePin(GPIO_RIGHT, GPIO_R_PIN_NUM, GPIO_PIN_RESET);
+  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty?��?//tim2ch4が左
+  	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 1050/4);
+  	while(data[1999] == 0)
+  	{
+
+  	}
+  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+  	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 0);
+  	HAL_TIM_Base_Stop_IT(&htim1);
+  //t = 1;
+  while(1)
+  {
+
+		  for(int i=0; i < 2000; i++)
+		  {
+			  printf("%d, %f\r\n",i,data[i]);
+			  HAL_Delay(1);
+		  }
+	  HAL_Delay(10000);
+
+  }
+
+#endif
   ADCStart();
   HAL_Delay(500);
 
@@ -240,12 +279,12 @@ int main(void)
   Signal( mode );
   printf("Switch\r\n");
 
-  PIDSetGain(L_VELO_PID, 14.6,1200,0.0);//, 2430,0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
-  PIDSetGain(R_VELO_PID, 14.6,1200,0.0);//, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
+  PIDSetGain(L_VELO_PID, 14.6, 1200,0);//2430,0);//7.3,1215,0);//40kHzの//14.6, 2430,0);//(20khzのと?��?);//1200,0.0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
+  PIDSetGain(R_VELO_PID, 14.6, 1200,0);//2430,0);//7.3,1215,0);//14.6, 2430,0);//1200,0.0);//, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
   PIDSetGain(A_VELO_PID, 12,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   PIDSetGain(F_WALL_PID, 6, 0, 0	);
-  PIDSetGain(D_WALL_PID, 6, 0, 0.1	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
+  PIDSetGain(D_WALL_PID, 6, 0, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
   PIDSetGain(L_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   PIDSetGain(R_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
 
@@ -849,7 +888,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
+  huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -927,6 +966,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PB12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /*Configure GPIO pin : PA14 */
   GPIO_InitStruct.Pin = GPIO_PIN_14;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -946,6 +991,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

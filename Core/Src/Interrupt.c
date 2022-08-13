@@ -21,6 +21,7 @@
 int timer1,timer8, t;
 int IT_mode;
 int velodebug_flag=0;
+float data[2000] = {0};
 //float velodebugL[1000],velodebugR[1000];
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
@@ -259,6 +260,7 @@ void Explore_IT()
 		}
 
 	TargetVelocity[BODY] += Acceleration;
+	AngularAcceleration += AngularLeapsity;
 	TargetAngularV += AngularAcceleration;
 	//TargetAngularV += AngularAcceleration;
 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
@@ -281,7 +283,15 @@ void WritingFree_IT()
 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+#if 0
+	static int count=0;
 
+	if(count < 2000)
+	{
+		data[count] = CurrentVelocity[LEFT];
+	}
+	count ++;
+#endif
 //	if(velodebug_flag == 1)
 //	{
 //		static int vdn=0;
@@ -359,6 +369,7 @@ void WritingFree_IT()
 
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
 
+
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -371,6 +382,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			break;
 		case WRITINGFREE:
 			WritingFree_IT();
+			break;
+		case 2:
+
 			break;
 		default :
 			break;

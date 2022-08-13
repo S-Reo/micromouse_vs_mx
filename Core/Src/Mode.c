@@ -581,7 +581,8 @@ void GainTestDWall()
 	ChangeLED(2);
 	while(1)
 	{
-		TargetVelocity[BODY] = 300;
+		TargetVelocity[BODY] = 0;
+		printf("前左: %f,前右: %f,横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[SL],Photo[SR]);
 	}
 }
 
@@ -715,8 +716,8 @@ while(1)
 
 void FastestRun()
 {
-	//IT_mode = EXPLORE;
-	IT_mode = WRITINGFREE;
+	IT_mode = EXPLORE;
+	//IT_mode = WRITINGFREE;
 	//諸々の初期化
 	HAL_Delay(250);
 	Photo[FR] = 0;
@@ -757,7 +758,7 @@ void FastestRun()
 	char turn_mode;
 	if(mode == 1)
 	{
-		ExploreVelocity = 500;
+		ExploreVelocity = 400;
 		turn_mode = 'T';
 	}
 	else if(mode == 2)
@@ -789,22 +790,29 @@ void FastestRun()
 		break;
 	case 3:
 		//未
+//		ExploreVelocity=180;
+//		Sla.Pre = 5;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.04478;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
 		ExploreVelocity=180;
-		Sla.Pre = 4;
-		Sla.Fol = 10;
-		Sla.Alpha = 0.04478;
+		Sla.Pre = 2;
+		Sla.Fol = 3.5;
+		Sla.Alpha = 0.04;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
 		break;
 	case 4:
-		ExploreVelocity=240;
-		Sla.Pre = 5;
-		Sla.Fol = 5;
-		Sla.Alpha = 0.083;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
+//		ExploreVelocity=240;
+//		Sla.Pre = 5;
+//		Sla.Fol = 5;
+//		Sla.Alpha = 0.083;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
 		break;
 
 	}
@@ -817,7 +825,7 @@ void FastestRun()
 	//最短経路導出(今回は省けそう。)
 
 	//走る
-	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER, turn_mode);
+	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode);
 
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
@@ -850,7 +858,7 @@ void Explore()
 	Photo[FR] = 0;
 	int8_t mode2=1;
 		printf("mode : %d\r\n", mode2);
-	ModeSelect( 1, 3, &mode2);
+	ModeSelect( 1, 4, &mode2);
 	Signal( mode2 );
 		printf("Switch\r\n");
 
@@ -902,13 +910,31 @@ void Explore()
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
+
+//		ExploreVelocity=180;//*40/1000
+//		Sla.Pre = 5;
+//		Sla.Fol = 12;
+//		Sla.Alalpha = 0.0007;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
 		break;
 	case 2:
 		//完
-		ExploreVelocity=135;//*40/1000
-		Sla.Pre = 5;
-		Sla.Fol = 10;
-		Sla.Alpha = 0.0273;
+//		ExploreVelocity=135;//*40/1000
+//		Sla.Pre = 5;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.0273;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+
+
+
+		ExploreVelocity=180;
+		Sla.Pre = 2;
+		Sla.Fol = 3.5;
+		Sla.Alpha = 0.04;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -921,14 +947,17 @@ void Explore()
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
-//		//未
-//		ExploreVelocity=180;
-//		Sla.Pre = 4;
-//		Sla.Fol = 10;
-//		Sla.Alpha = 0.04478;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
+		break;
+	case 4:
+		ExploreVelocity=300;
+		Sla.Pre = 2;
+		Sla.Fol = 4;
+		Sla.Alalpha = 0.12;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		//		//未
+
 		break;
 
 	}
@@ -946,9 +975,13 @@ void Explore()
 	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
 		ChangeLED(Pos.Car);
-
 		KyushinJudge( turn_mode );
+		//break;
 	}
+//	while(1)
+//	{
+//		TargetVelocity[BODY] = 0;
+//	}
 	Decel(45, 0);
 
 	//flashのクリア。

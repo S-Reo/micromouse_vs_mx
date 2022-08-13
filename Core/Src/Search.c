@@ -496,7 +496,7 @@ int get_nextdir(int x, int y, int mask)
 										//演算の意味はmytyedef.h内のenum宣言から。
 
 }
-void fast_run(int x, int y, char turn_mode)
+void fast_run(int x, int y,int x2, int y2, char turn_mode)
 {
 //引数の座標x,yに向かって最短走行する
 
@@ -558,7 +558,7 @@ void fast_run(int x, int y, char turn_mode)
     Pos.Y = Pos.NextY;
 	Pos.Car = Pos.NextCar;	//自分の向きを更新
 
-	while((Pos.X != x) || (Pos.Y != y)){			//ゴールするまで繰り返す
+	while( !((x <= Pos.X && Pos.X <= x2) && (y <= Pos.Y && Pos.Y <= y2)) ){			//ゴールするまで繰り返す
 		Pos.Dir = get_nextdir(x,y,0x03);//新しい区画に入ったところで、次の方向を求める。方向と方角がわかる。
 		//向いた方向によって自分の座標を更新する
 		switch(Pos.NextCar)//

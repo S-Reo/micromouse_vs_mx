@@ -18,8 +18,8 @@ extern TIM_HandleTypeDef htim9;
 extern int timer1,timer8, t;
 extern int IT_mode;
 extern int velodebug_flag;
-extern float velodebugL[1000],velodebugR[1000];
-
+//extern float velodebugL[1000],velodebugR[1000];
+extern float data[2000];
 extern const float convert_to_velocity;
 extern const float convert_to_angularv;
 extern const float convert_to_imu_angv;

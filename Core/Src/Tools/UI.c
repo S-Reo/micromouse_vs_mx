@@ -93,7 +93,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  		  *pMode = min;
 		  	  }
 		  	  ChangeLED(*pMode);
-		  	  Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
+		  	  //Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
 		  	  InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE);
 		  	  HAL_Delay(500);
 
@@ -106,7 +106,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  	  		  *pMode = max;
 		  	  }
 		  	  ChangeLED(*pMode);
-		  	  Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
+		  	  //Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
 		  	  InitPulse( (int *)&(TIM3->CNT), INITIAL_PULSE);
 		  	  HAL_Delay(500);
 		  }
