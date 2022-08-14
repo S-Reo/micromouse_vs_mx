@@ -905,7 +905,7 @@ void Explore()
 		ExploreVelocity=90;
 		//未
 		Sla.Pre = 9;
-		Sla.Fol = 13;
+		Sla.Fol = 20;
 		Sla.Alpha = 0.014;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -933,17 +933,17 @@ void Explore()
 
 		ExploreVelocity=180;
 		Sla.Pre = 2;
-		Sla.Fol = 3.5;
-		Sla.Alpha = 0.04;
+		Sla.Fol = 16.5;
+		Sla.Alpha = 0.043;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
 		break;
 	case 3:
 		ExploreVelocity=240;
-		Sla.Pre = 3;
-		Sla.Fol = 10;
-		Sla.Alpha = 0.08;
+		Sla.Pre = 2;
+		Sla.Fol = 16;
+		Sla.Alpha = 0.078;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -951,8 +951,8 @@ void Explore()
 	case 4:
 		ExploreVelocity=300;
 		Sla.Pre = 2;
-		Sla.Fol = 4;
-		Sla.Alalpha = 0.12;
+		Sla.Fol = 19;
+		Sla.Alpha = 0.13;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -975,14 +975,19 @@ void Explore()
 
 	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
-//		static int cc =0;
+
 		ChangeLED(Pos.Car);
 		KyushinJudge( turn_mode );
-//		cc ++;
-//		if(cc == 7)
-//		{
-//			break;
-//		}
+#if 0
+		static int cc =0;
+		cc ++;
+		if(cc == 1)
+		{
+			break;
+		}
+#else
+		//break;
+#endif
 	}
 //	while(1)
 //	{

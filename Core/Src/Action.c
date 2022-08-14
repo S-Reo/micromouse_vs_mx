@@ -1056,7 +1056,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall() == WALL/*前に壁があれば、*/)
 	{
-		while(Photo[FL] < 220 || Photo[FR] < 270/*前壁の閾値より低い間*/)
+		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
@@ -1225,7 +1225,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall() == WALL/*前に壁があれば、*/)
 	{
-		while(Photo[FL] < 220 || Photo[FR] < 270/*前壁の閾値より低い間*/)
+		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
