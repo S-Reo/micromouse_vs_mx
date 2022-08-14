@@ -964,6 +964,43 @@ void back_calib()
 
 }
 
+int getFrontWall()
+{
+
+	switch(Pos.Car)//方角に合わせて、
+	{
+
+	case north:
+
+	return Wall[Pos.X][Pos.Y].north;
+
+	break;
+
+	case east:
+
+	return Wall[Pos.X][Pos.Y].east;
+
+	break;
+
+	case south:
+
+	return Wall[Pos.X][Pos.Y].south;
+
+	break;
+
+	case west:
+
+	return Wall[Pos.X][Pos.Y].west;
+
+	break;
+
+	default:
+
+	break;
+
+	}
+
+}
 //void Calib()
 //{
 //	//壁使ってセンサ補正か、背中あて補正。状況に応じて補正パターンを変える
@@ -1017,15 +1054,31 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+	if (getFrontWall() == WALL/*前に壁があれば、*/)
 	{
-			//velocity_ctrl_flag = 1;
+		while(Photo[FL] < 220 || Photo[FR] < 270/*前壁の閾値より低い間*/)
+		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
 
-			////printf("直進1\r\n");
+		}
+
+
+	}
+	else//なければ
+	{
+		while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+		{
+				//velocity_ctrl_flag = 1;
+				TargetAngularV = 0;
+				AngularLeapsity = 0;
+				AngularAcceleration = 0;
+				TargetVelocity[BODY] = v_turn;
+
+				////printf("直進1\r\n");
+		}
 	}
 	now_angv = AngularV;
 
@@ -1170,14 +1223,30 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+	if (getFrontWall() == WALL/*前に壁があれば、*/)
 	{
-			//velocity_ctrl_flag = 1;
+		while(Photo[FL] < 220 || Photo[FR] < 270/*前壁の閾値より低い間*/)
+		{
 			TargetAngularV = 0;
+			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
 
-			////printf("直進1\r\n");
+		}
+
+
+	}
+	else//なければ
+	{
+		while( now_pulse + (2*pre/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+		{
+				//velocity_ctrl_flag = 1;
+				TargetAngularV = 0;
+				AngularAcceleration = 0;
+				TargetVelocity[BODY] = v_turn;
+
+				////printf("直進1\r\n");
+		}
 	}
 
 

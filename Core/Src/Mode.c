@@ -599,7 +599,7 @@ void GainTestAVelo()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	//PIDChangeFlagStraight(A_VELO_PID);
-	PIDChangeFlag(A_VELO_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 1);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
@@ -771,8 +771,8 @@ void FastestRun()
 	case 1:
 		ExploreVelocity=90;
 		//未
-		Sla.Pre = 8;
-		Sla.Fol = 12;
+		Sla.Pre = 9;
+		Sla.Fol = 13;
 		Sla.Alpha = 0.014;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -904,7 +904,7 @@ void Explore()
 	case 1:
 		ExploreVelocity=90;
 		//未
-		Sla.Pre = 8;
+		Sla.Pre = 9;
 		Sla.Fol = 13;
 		Sla.Alpha = 0.014;
 		Sla.Theta1 = 30;
@@ -967,6 +967,7 @@ void Explore()
 	Pos.NextX = Pos.X;
 	Pos.NextY = Pos.Y + 1;
 	Pos.NextCar = north;
+	dbc = 1;
 	Accel(61.5, ExploreVelocity);
  	Pos.X = Pos.NextX;
     Pos.Y = Pos.NextY;
@@ -974,15 +975,33 @@ void Explore()
 
 	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
+//		static int cc =0;
 		ChangeLED(Pos.Car);
 		KyushinJudge( turn_mode );
-		//break;
+//		cc ++;
+//		if(cc == 7)
+//		{
+//			break;
+//		}
 	}
 //	while(1)
 //	{
 //		TargetVelocity[BODY] = 0;
 //	}
 	Decel(45, 0);
+//	HAL_Delay(10000);
+//	while(1)
+//	{
+//		for (int s=0; s < 8000; s ++)
+//		{
+//			printf("%d,%f, %f\r\n",s,debugVL[s],debugVR[s]);
+//		}
+//		HAL_Delay(10000);
+//	}
+
+//		printf("total L: %d, total R: %d\r\n",TotalPulse[LEFT],TotalPulse[RIGHT]);
+//		HAL_Delay(1000);
+
 
 	//flashのクリア。
 	Flash_clear_sector1();

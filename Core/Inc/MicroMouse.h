@@ -104,11 +104,11 @@ extern int L_motor, R_motor;
 //#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標 全日本(6,9) (7,10)
-#define X_GOAL_LESSER 4
-#define Y_GOAL_LESSER 4
+#define X_GOAL_LESSER 5
+#define Y_GOAL_LESSER 3
 
-#define X_GOAL_LARGER 5
-#define Y_GOAL_LARGER 5
+#define X_GOAL_LARGER 6
+#define Y_GOAL_LARGER 4
 
 #define FL	0
 #define SR	1
@@ -138,9 +138,9 @@ extern int L_motor, R_motor;
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 
-#define TIRE_DEAMETER 20.55f//20.70945//20.70945 //20.5591111111111//
+#define TIRE_DEAMETER 20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 37.85f //36.8//34.4 //36.8 34.2//.8
+#define TREAD_WIDTH 37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
 //別のとこ
