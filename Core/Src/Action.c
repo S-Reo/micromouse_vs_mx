@@ -19,7 +19,7 @@
 #include "UI.h"
 #include "Interrupt.h"
 #include "Motor_Driver.h"
-
+#include "IR_Emitter.h"
 #include "Map.h"
 #include "Search.h"
 //現在の速度と総走行距離と左右それぞれ
@@ -995,12 +995,13 @@ int getFrontWall()
 	break;
 
 	default:
-
+		return 999;
 	break;
 
 	}
 
 }
+
 //void Calib()
 //{
 //	//壁使ってセンサ補正か、背中あて補正。状況に応じて補正パターンを変える
@@ -1702,11 +1703,12 @@ void TurnRight(char mode)
 
 		Decel(45, 0);
 		//AjustCenter();
-
+		EmitterOFF();
 		Rotate( 90 , 2*M_PI);//1.5
 		//RotateTest(90);
 
 		float acc = AjustCenter();
+		EmitterON();
 
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
@@ -1743,12 +1745,13 @@ void TurnLeft(char mode)
 		//超信地旋回
 		Decel(45, 0);
 		//AjustCenter();
-
+		EmitterOFF();
 		Rotate( 90 , -2*M_PI);//-1.5
 		//RotateTest(-90);
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
 //		PIDReset(A_VELO_PID);
+		EmitterON();
 		HAL_Delay(100);
 		float acc = AjustCenter();
 		HAL_Delay(100);
@@ -1776,8 +1779,10 @@ void GoBack()
 	//Compensate();
 	//Calib();
 	//回転して
+	EmitterOFF();
 #if 1
 	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+	EmitterON();
 #else
 	//AjustCenter();
 	//RotateTest(90);

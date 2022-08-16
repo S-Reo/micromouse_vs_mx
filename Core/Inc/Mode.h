@@ -10,10 +10,12 @@
 
 #include <main.h>
 
-#define EXPLORE				0
-#define WRITINGFREE 		1
-//#define DEBUG				2
-#define PARAMETERSETTING	3
+#define PARAMETERSETTING	0
+#define GAINTEST			2
+#define DEBUGGER					3
+#define FASTEST_RUN		4
+#define EXPLORE				6
+#define WRITINGFREE 		7
 
 void Debug();
 void ParameterSetting();

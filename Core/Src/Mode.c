@@ -27,7 +27,6 @@
 #include "Debug.h"
 
 #include <main.h>
-void TIM5Init();
 void InitExplore()
 {
 #if 0
@@ -86,11 +85,7 @@ void InitExplore()
 
 	HAL_Delay(500);
 #else
-	//ペリフェラルの動作開始
-	Motor_PWM_Start();
-	EncoderStart(); //戻し忘れないように
-	EmitterON();
-	ADCStart();
+
 //	htim2.Init.Prescaler = 20-1;
 //	for(int i=0; i < 9 ; i++)
 //	{
@@ -105,17 +100,6 @@ void InitExplore()
 //		htim2.Init.Prescaler -= 2;
 //
 //	}
-	uint8_t imu_check;
-	imu_check = IMU_init();
-	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#if 1 //IMUから値が来なくなる現象の対策
-	imu_check =IMU_init();
-	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#endif
-	HAL_Delay(100);
-
-	ZGyro = ReadIMU(0x37, 0x38);
-	printf("gyro : %f\r\n",ZGyro);
 	//IMU_DMA_Start();
 	//CS_RESET;
 
@@ -131,8 +115,18 @@ void InitExplore()
 
 
 	Load_Gain();
-	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+	uint8_t imu_check;
+	imu_check = IMU_init();
+	printf("imu_check 1ならOK: %d\r\n",imu_check);
+#if 1 //IMUから値が来なくなる現象の対策
+	imu_check =IMU_init();
+	printf("imu_check 1ならOK: %d\r\n",imu_check);
+#endif
+	HAL_Delay(100);
+
+	ZGyro = ReadIMU(0x37, 0x38);
+	printf("gyro : %f\r\n",ZGyro);
+
 
 #if 0
 	wall_init();
@@ -201,6 +195,14 @@ t = 1;
 	TargetPhoto[SR] = Photo[SR];
 	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
 #else
+	//ペリフェラルの動作開始
+	Motor_PWM_Start();
+	EncoderStart(); //戻し忘れないように
+	EmitterON();
+	ADCStart();
+	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+
 	TargetPhoto[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
 	TargetPhoto[SR] = Photo[SR];//294.299988;//THRESHOLD_SR;
 	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
@@ -734,7 +736,6 @@ void FastestRun()
 		  ModeSelect( 1, 4, &mode2);
 		  Signal( mode2 );
 		  printf("Switch\r\n");
-	TIM5Init();
 
 	InitFastest();
 	InitPosition();
@@ -849,28 +850,17 @@ void Explore()
 	HAL_Delay(100);
 	Photo[FR] = 0;
 	int8_t mode=1;
-		printf("mode : %d\r\n", mode);
 	ModeSelect( 1, 2, &mode);
 	Signal( mode );
-		printf("Switch\r\n");
-
 	HAL_Delay(100);
-	Photo[FR] = 0;
+
 	int8_t mode2=1;
-		printf("mode : %d\r\n", mode2);
 	ModeSelect( 1, 4, &mode2);
 	Signal( mode2 );
-		printf("Switch\r\n");
-
-	TIM5Init();
+	PhotoSwitch();
 	InitExplore();
-		printf("aaa\r\n");
-
 	InitPosition();
-		printf("bbb\r\n");
-
 	wall_init();
-		printf("ccc\r\n");
 
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;

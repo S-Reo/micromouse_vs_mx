@@ -22,12 +22,21 @@
 #include <stdio.h>
 #include <math.h>
 //中間モジュール。
+int gpio_callback_count=0;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	if(GPIO_Pin == GPIO_PIN_12)
+	{
+	  gpio_callback_count++;
+	  //ChangeLED(gpio_callback_count);
 
+	  if(gpio_callback_count > 1) gpio_callback_count=0;
+	}
+}
 //エンコーダはモード選択時には直で取得しちゃってよいので引数にしない。while中で取得。
 //float Photo[4];
 
 //led_driver
-void Signal(int mode)
+void Signal(int8_t mode)
 {
 	for(int i=0; i < 5; i++)
 	{
@@ -57,31 +66,41 @@ void BatteryCheck(int adc_data)
 //ここ書いたら大事な処理を書き始められる
 //enc, emitter,receiver
 //壁センサのデータをどうやってもってくるか。構造体にしておいてアローでアクセスするか、別の処理を考えるか。スイッチを使うか。中でフラグ作るか、それならそのままセンサの値を突っ込んだ方がいい。
+void PhotoSwitch()
+{
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t *) adc2, 2);
+//	HAL_TIM_OC_Start_IT(&htim8,TIM_CHANNEL_1);
+	HAL_TIMEx_OCN_Start_IT(&htim8, TIM_CHANNEL_1);
+	while(adc2[1] < 250)
+	{
 
+	}
+	HAL_ADC_Stop_DMA(&hadc2);
+//	HAL_TIM_OC_Stop_IT(&htim8,TIM_CHANNEL_1);
+	HAL_TIMEx_OCN_Stop_IT(&htim8, TIM_CHANNEL_1);
+	Signal( 7 );
+}
 
 void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 {
 	//メインフローで呼び出す
 	//0-7番で設定
 	//起動時に呼ぶ
-	EmitterON();
-	ADCStart();
-	HAL_TIM_Base_Start_IT(&htim8);
-	//壁センサの値を持ってくる。
+
 	//エンコーダ開始。初期値セット込み
-	EncoderStart();
-	HAL_Delay(1000);
+	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1);
+	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_2);
 	//while中で選択
 	*pMode=min;
 
 	//壁センサデータをどうもってくるか。adcの生値を入れ、均して使う。関数呼び出し時の値
 
-	InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE);
-
+	TIM3->CNT = INITIAL_PULSE;
+	gpio_callback_count = 0;
 	int ENC3_LEFT;
-	while(Photo[FR]/*構造体アロー*/ < 250/**/) //前向きの
+	while(gpio_callback_count == 0/**/) //前向きの
 	{
-		printf("Photo[FR] : %f, ENC3 : %d\r\n", Photo[FR], ENC3_LEFT);
+		//printf("Photo[FR] : %f, ENC3 : %d\r\n", Photo[FR], ENC3_LEFT);
 		//センサデータを一個取得して戻り値で返す関数を使う。
 		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、センサデータもグローバルでいい。
 
@@ -93,9 +112,7 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  		  *pMode = min;
 		  	  }
 		  	  ChangeLED(*pMode);
-		  	  //Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
-		  	  InitPulse((int *) &(TIM3->CNT), INITIAL_PULSE);
-		  	  HAL_Delay(500);
+		  	  TIM3->CNT = INITIAL_PULSE;
 
 		  }
 		  if(INITIAL_PULSE - (ENCODER_PULSE * REDUCATION_RATIO) /4 >= ENC3_LEFT)
@@ -106,20 +123,12 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 		  	  		  *pMode = max;
 		  	  }
 		  	  ChangeLED(*pMode);
-		  	  //Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)*pMode), 250);
-		  	  InitPulse( (int *)&(TIM3->CNT), INITIAL_PULSE);
-		  	  HAL_Delay(500);
+		  	  TIM3->CNT = INITIAL_PULSE;
 		  }
 	}
-
-	EmitterOFF();
-	ADCStop();
-	HAL_TIM_Base_Stop_IT(&htim8);
-
-	//エンコーダストップ
-	EncoderStop();
-
-	//モード選択後どうするか
+	gpio_callback_count = 0;
+	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_1);
+	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_2);
 }
 
 void EmergencyStop()

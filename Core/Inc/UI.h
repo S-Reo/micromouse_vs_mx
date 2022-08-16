@@ -23,10 +23,11 @@
 #define V_SPLIT_NUM		3		//抵抗分圧の割合の逆数
 #define PIN_V_MAX			3.3	//ピンの最高電圧
 
+extern int gpio_callback_count;
 
-
-void Signal(int mode);
+void Signal(int8_t mode);
 void BatteryCheck(int adc_data);
+void PhotoSwitch();
 void ModeSelect(int8_t min, int8_t max, int8_t *pMode);
 void EmergencyStop();
 

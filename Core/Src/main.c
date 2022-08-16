@@ -147,22 +147,6 @@ Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
 }
 return(Data);
 }
-
-void TIM5Init(){
-	MX_TIM5_Init();
-	printf("OKOK\r\n");
-}
-int gpio_callback_count=0;
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	if(GPIO_Pin == GPIO_PIN_12)
-	{
-	  gpio_callback_count++;
-	  //ChangeLED(gpio_callback_count);
-
-	  if(gpio_callback_count > 1) gpio_callback_count=0;
-	}
-}
-
 /*---- DEFINING FUNCTION ----*/
 
 
@@ -201,42 +185,10 @@ int main(void)
   //モード選択 //スイッチが押されるまでエンコーダの処理を受け付ける
   MX_TIM3_Init();
 
-  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1);
-  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_2);
-  TIM3->CNT = INITIAL_PULSE;
-  int startup_mode;
-  int ENC3_LEFT;
-  while(gpio_callback_count == 0) //起動時のモードを選ぶ処理
-  {
-	  //printf("mode : %d, ENC3 : %d\r\n",startup_mode, ENC3_LEFT);
-		ENC3_LEFT = TIM3 -> CNT;
-
-		if(INITIAL_PULSE + (ENCODER_PULSE * REDUCATION_RATIO) /4 <= ENC3_LEFT )
-		{
-		  startup_mode += 1;
-		  if(startup_mode > 7)
-		  {
-			  startup_mode = 0;
-		  }
-		  ChangeLED(startup_mode);
-
-		  TIM3->CNT = INITIAL_PULSE;
-		}
-		if(INITIAL_PULSE - (ENCODER_PULSE * REDUCATION_RATIO) /4 >= ENC3_LEFT)
-		{
-		  startup_mode -= 1;
-		  if(startup_mode < 0)
-		  {
-				  startup_mode = 7;
-		  }
-		  ChangeLED(startup_mode);
-		  TIM3->CNT = INITIAL_PULSE;
-		}//Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)startup_mode), 250);
-
-  }
-  HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_1);
-  HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_2);
+  int8_t startup_mode;
+  ModeSelect(0, 7, &startup_mode);
   Signal( startup_mode );
+
   //MAX45mAでモード選択できる
 
   /* USER CODE END Init */
@@ -263,6 +215,14 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
+  //赤外線LEDの消費電流テスト
+  //何も無し70mA
+  //これまで
+  //101mAになったので31mA. 2本で.
+
+  //周波数を上げる
+
+  //周波数を下げる
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -321,7 +281,7 @@ int main(void)
   {
 	  switch( startup_mode )
 	  {
-	  case 0:
+	  case PARAMETERSETTING:
 
 		  ParameterSetting();
 		//wall_flash_print();
@@ -329,23 +289,23 @@ int main(void)
 	  case 1:
 		  GainTestRWall();
 		  break;
-	  case 2:
+	  case GAINTEST:
 		  GainTestDWall();
 		  break;
-	  case 3:
+	  case DEBUGGER:
 		  Debug();
 		  break;
-	  case 4:
+	  case FASTEST_RUN:
 		  //GainTestLWall();
 		  FastestRun();
 		  break;
 	  case 5:
 		  GainTestAVelo();
 		  break;
-	  case 6:
+	  case EXPLORE:
 		  Explore();
 		  break;
-	  case 7:
+	  case WRITINGFREE:
 		  WritingFree();
 		  break;
 	  default :
