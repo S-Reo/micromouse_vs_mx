@@ -188,6 +188,57 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+  //バッテリチェック
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
+
+  ADCStart();
+  BatteryCheck( (int)adc1[2] );
+  ADCStop();
+
+  //モード選択 //スイッチが押されるまでエンコーダの処理を受け付ける
+  MX_TIM3_Init();
+
+  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1);
+  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_2);
+  TIM3->CNT = INITIAL_PULSE;
+  int startup_mode;
+  int ENC3_LEFT;
+  while(gpio_callback_count == 0) //起動時のモードを選ぶ処理
+  {
+	  //printf("mode : %d, ENC3 : %d\r\n",startup_mode, ENC3_LEFT);
+		ENC3_LEFT = TIM3 -> CNT;
+
+		if(INITIAL_PULSE + (ENCODER_PULSE * REDUCATION_RATIO) /4 <= ENC3_LEFT )
+		{
+		  startup_mode += 1;
+		  if(startup_mode > 7)
+		  {
+			  startup_mode = 0;
+		  }
+		  ChangeLED(startup_mode);
+
+		  TIM3->CNT = INITIAL_PULSE;
+		}
+		if(INITIAL_PULSE - (ENCODER_PULSE * REDUCATION_RATIO) /4 >= ENC3_LEFT)
+		{
+		  startup_mode -= 1;
+		  if(startup_mode < 0)
+		  {
+				  startup_mode = 7;
+		  }
+		  ChangeLED(startup_mode);
+		  TIM3->CNT = INITIAL_PULSE;
+		}//Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)startup_mode), 250);
+
+  }
+  HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_1);
+  HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_2);
+  Signal( startup_mode );
+  //MAX45mAでモード選択できる
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -219,16 +270,6 @@ int main(void)
 
   //cpploop();
 
-#if 0
-  float helz;
-
-  for(int i=0; i < 2; i++){
-	  Motor_Buzzer(440.0f*powf(powf((float)2,(float)1/12),(float)i), 100);
-	  HAL_Delay(200);
-	  helz = 440.0f*powf(powf((float)2,(float)1/12),(float)i+1.2);
-  }
-  Motor_Buzzer(helz,600);
-#endif
 #if 0
   printf("test\r\n");
   ChangeLED(7);
@@ -266,24 +307,11 @@ int main(void)
   }
 
 #endif
-  ADCStart();
-  HAL_Delay(500);
-
-  BatteryCheck( (int)adc1[2] );
-
-
-  int8_t mode=0;
-  printf("mode : %d\r\n", mode);
-  ModeSelect( 0, 7, &mode);
-  MX_TIM5_Init();
-  Signal( mode );
-  printf("Switch\r\n");
 
   PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);//1200,0);//2430,0);//7.3,1215,0);//40kHzの//14.6, 2430,0);//(20khzのと?��?);//1200,0.0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
   PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);// 1200,0);//2430,0);//7.3,1215,0);//14.6, 2430,0);//1200,0.0);//, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
-  PIDSetGain(A_VELO_PID, 12,0,
-		  0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+  PIDSetGain(A_VELO_PID, 12,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
   PIDSetGain(F_WALL_PID, 6, 0, 0	);
   PIDSetGain(D_WALL_PID, 6, 0, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
   PIDSetGain(L_WALL_PID, 12,0,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
@@ -291,7 +319,7 @@ int main(void)
 
   while (1)
   {
-	  switch( mode )
+	  switch( startup_mode )
 	  {
 	  case 0:
 
