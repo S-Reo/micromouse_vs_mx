@@ -172,7 +172,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  //バッテリチェック
+  //バッ�?リチェ�?ク
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -182,7 +182,7 @@ int main(void)
   BatteryCheck( (int)adc1[2] );
   ADCStop();
 
-  //モード選択 //スイッチが押されるまでエンコーダの処理を受け付ける
+  //モード選�? //スイ�?チが押されるまでエンコー�?の処�?を受け付け�?
   MX_TIM3_Init();
 
   int8_t startup_mode;
@@ -215,14 +215,14 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  //赤外線LEDの消費電流テスト
-  //何も無し70mA
+  //赤外線LEDの消費電流テス�?
+  //何も無�?70mA
   //これまで
-  //101mAになったので31mA. 2本で.
+  //101mAになった�?�で31mA. 2本で.
 
-  //周波数を上げる
+  //周波数を上げ�?
 
-  //周波数を下げる
+  //周波数を下げ�?
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -237,14 +237,14 @@ int main(void)
   IT_mode = WRITINGFREE;
   //エンコー
   EncoderStart();
-  //モータタイ?��?
+  //モータタイ??��?��?
   Motor_PWM_Start();
   //割込み
   HAL_TIM_Base_Start_IT(&htim1);
 
   HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2が左SET:1で正転
   HAL_GPIO_WritePin(GPIO_RIGHT, GPIO_R_PIN_NUM, GPIO_PIN_RESET);
-  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty?��?//tim2ch4が左
+  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty??��?��?//tim2ch4が左
   	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 1050/4);
   	while(data[1999] == 0)
   	{
@@ -268,7 +268,7 @@ int main(void)
 
 #endif
 
-  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);//1200,0);//2430,0);//7.3,1215,0);//40kHzの//14.6, 2430,0);//(20khzのと?��?);//1200,0.0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
+  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);//1200,0);//2430,0);//7.3,1215,0);//40kHzの//14.6, 2430,0);//(20khzのと??��?��?);//1200,0.0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
   PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);// 1200,0);//2430,0);//7.3,1215,0);//14.6, 2430,0);//1200,0.0);//, 2430,0);//17.5//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);//I150,
   //PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
   PIDSetGain(A_VELO_PID, 12,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);

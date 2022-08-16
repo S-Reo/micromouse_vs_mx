@@ -11193,7 +11193,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  //バッテリチェック
+  //バッ�?リチェ�?ク
   MX_GPIO_Init();
  800d58a:	f000 fcfd 	bl	800df88 <MX_GPIO_Init>
   MX_DMA_Init();
@@ -11213,7 +11213,7 @@ int main(void)
   ADCStop();
  800d5a8:	f001 fa3c 	bl	800ea24 <ADCStop>
 
-  //モード選択 //スイッチが押されるまでエンコーダの処理を受け付ける
+  //モード選�? //スイ�?チが押されるまでエンコー�?の処�?を受け付け�?
   MX_TIM3_Init();
  800d5ac:	f000 fad4 	bl	800db58 <MX_TIM3_Init>
 
@@ -11269,7 +11269,7 @@ int main(void)
 
 #endif
 
-  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);//1200,0);//2430,0);//7.3,1215,0);//40kHzの//14.6, 2430,0);//(20khzのと?��?);//1200,0.0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
+  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);//1200,0);//2430,0);//7.3,1215,0);//40kHzの//14.6, 2430,0);//(20khzのと??��?��?);//1200,0.0);//2430, 0.002);//21.96,2450,0.002);//14,6000,0.002);//11.1, 2430, 0.002);////D0.0036 //I2430くら 36.6*0.6=18+3.96
  800d5fa:	ed9f 1a39 	vldr	s2, [pc, #228]	; 800d6e0 <main+0x160>
  800d5fe:	eddf 0a39 	vldr	s1, [pc, #228]	; 800d6e4 <main+0x164>
  800d602:	ed9f 0a39 	vldr	s0, [pc, #228]	; 800d6e8 <main+0x168>
@@ -17784,16 +17784,17 @@ void PhotoSwitch()
  800ff1e:	490c      	ldr	r1, [pc, #48]	; (800ff50 <PhotoSwitch+0x38>)
  800ff20:	480c      	ldr	r0, [pc, #48]	; (800ff54 <PhotoSwitch+0x3c>)
  800ff22:	f000 f9ab 	bl	801027c <HAL_ADC_Start_DMA>
-//	HAL_TIM_OC_Start_IT(&htim8,TIM_CHANNEL_1);
+	//tim8のduty比を下げて電流消費を削減
 	HAL_TIMEx_OCN_Start_IT(&htim8, TIM_CHANNEL_1);
  800ff26:	2100      	movs	r1, #0
  800ff28:	480b      	ldr	r0, [pc, #44]	; (800ff58 <PhotoSwitch+0x40>)
  800ff2a:	f004 f9c4 	bl	80142b6 <HAL_TIMEx_OCN_Start_IT>
-	while(adc2[1] < 250)
+
+	while(adc2[1] < 200)
  800ff2e:	bf00      	nop
  800ff30:	4b07      	ldr	r3, [pc, #28]	; (800ff50 <PhotoSwitch+0x38>)
  800ff32:	685b      	ldr	r3, [r3, #4]
- 800ff34:	2bf9      	cmp	r3, #249	; 0xf9
+ 800ff34:	2bc7      	cmp	r3, #199	; 0xc7
  800ff36:	d9fb      	bls.n	800ff30 <PhotoSwitch+0x18>
 	{
 
@@ -17801,7 +17802,6 @@ void PhotoSwitch()
 	HAL_ADC_Stop_DMA(&hadc2);
  800ff38:	4806      	ldr	r0, [pc, #24]	; (800ff54 <PhotoSwitch+0x3c>)
  800ff3a:	f000 fa91 	bl	8010460 <HAL_ADC_Stop_DMA>
-//	HAL_TIM_OC_Stop_IT(&htim8,TIM_CHANNEL_1);
 	HAL_TIMEx_OCN_Stop_IT(&htim8, TIM_CHANNEL_1);
  800ff3e:	2100      	movs	r1, #0
  800ff40:	4805      	ldr	r0, [pc, #20]	; (800ff58 <PhotoSwitch+0x40>)

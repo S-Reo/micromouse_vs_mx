@@ -69,14 +69,14 @@ void BatteryCheck(int adc_data)
 void PhotoSwitch()
 {
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *) adc2, 2);
-//	HAL_TIM_OC_Start_IT(&htim8,TIM_CHANNEL_1);
+	//tim8のduty比を下げて電流消費を削減
 	HAL_TIMEx_OCN_Start_IT(&htim8, TIM_CHANNEL_1);
-	while(adc2[1] < 250)
+
+	while(adc2[1] < 200)
 	{
 
 	}
 	HAL_ADC_Stop_DMA(&hadc2);
-//	HAL_TIM_OC_Stop_IT(&htim8,TIM_CHANNEL_1);
 	HAL_TIMEx_OCN_Stop_IT(&htim8, TIM_CHANNEL_1);
 	Signal( 7 );
 }
