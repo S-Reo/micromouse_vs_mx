@@ -202,12 +202,12 @@ void Explore_IT()
 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
-	if((1 <= dbc) && (dbc <= 8000))
-	{
-		debugVL[dbc-1] = CurrentVelocity[LEFT];
-		debugVR[dbc-1] = CurrentVelocity[RIGHT];
-		dbc ++;
-	}
+//	if((1 <= dbc) && (dbc <= 8000))
+//	{
+//		debugVL[dbc-1] = CurrentVelocity[LEFT];
+//		debugVR[dbc-1] = CurrentVelocity[RIGHT];
+//		dbc ++;
+//	}
 
 
 	//移動量 mm/msを積算

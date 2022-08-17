@@ -848,7 +848,6 @@ void Explore()
 	//一回目で成功したら、flashをramに移す
 
 	HAL_Delay(100);
-	Photo[FR] = 0;
 	int8_t mode=1;
 	ModeSelect( 1, 2, &mode);
 	Signal( mode );

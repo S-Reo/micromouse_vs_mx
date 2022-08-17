@@ -1621,6 +1621,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 
 	if(accel != 0) //加速するとき
 	{
+		//移動後は今の方角が維持される、
 		WallWarn();
 		ControlWall();
 		Accel( move_distance/2 , explore_speed+accel);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
