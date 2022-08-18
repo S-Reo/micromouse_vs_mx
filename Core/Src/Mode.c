@@ -164,6 +164,13 @@ t = 1;
 
   }
 #endif
+	//ペリフェラルの動作開始
+	Motor_PWM_Start();
+	EncoderStart(); //戻し忘れないように
+	EmitterON();
+	ADCStart();
+	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 	//割り込みを有効化
 	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start_IT(&htim8);
@@ -195,13 +202,7 @@ t = 1;
 	TargetPhoto[SR] = Photo[SR];
 	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
 #else
-	//ペリフェラルの動作開始
-	Motor_PWM_Start();
-	EncoderStart(); //戻し忘れないように
-	EmitterON();
-	ADCStart();
-	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+
 
 	TargetPhoto[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
 	TargetPhoto[SR] = Photo[SR];//294.299988;//THRESHOLD_SR;
@@ -721,22 +722,17 @@ void FastestRun()
 	IT_mode = EXPLORE;
 	//IT_mode = WRITINGFREE;
 	//諸々の初期化
-	HAL_Delay(250);
-	Photo[FR] = 0;
-	  int8_t mode=1;
-	  printf("mode : %d\r\n", mode);
+	HAL_Delay(100);
+	int8_t mode=1;
 	  ModeSelect( 1, 2, &mode);
 	  Signal( mode );
-	  printf("Switch\r\n");
 
-		HAL_Delay(250);
-		Photo[FR] = 0;
+		HAL_Delay(100);
 		  int8_t mode2=1;
-		  printf("mode : %d\r\n", mode2);
 		  ModeSelect( 1, 4, &mode2);
 		  Signal( mode2 );
-		  printf("Switch\r\n");
 
+		  PhotoSwitch();
 	InitFastest();
 	InitPosition();
 
@@ -807,13 +803,13 @@ void FastestRun()
 		Sla.Theta3 = 90;
 		break;
 	case 4:
-//		ExploreVelocity=240;
-//		Sla.Pre = 5;
-//		Sla.Fol = 5;
-//		Sla.Alpha = 0.083;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
+		ExploreVelocity=300;
+		Sla.Pre = 2;
+		Sla.Fol = 19;
+		Sla.Alpha = 0.13;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
 		break;
 
 	}
@@ -823,6 +819,7 @@ void FastestRun()
 
 	//マップデータの取得。flashから壁データを取得。
 	flash_copy_to_ram();
+	printf("あ\r\n");
 	//最短経路導出(今回は省けそう。)
 
 	//走る

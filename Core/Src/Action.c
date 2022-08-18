@@ -1335,6 +1335,7 @@ void Accel(float add_distance, float explore_speed)
 	TargetAngularV = 0;
 	float additional_speed=0;
 	additional_speed = explore_speed - CurrentVelocity[BODY];
+	printf("%f,%f,%f\r\n",additional_speed,explore_speed,CurrentVelocity[BODY]);
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
 	 //TotalPulse[BODY];
@@ -1342,7 +1343,7 @@ void Accel(float add_distance, float explore_speed)
 	WallWarn();
 	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
 	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
-
+	printf("target_pulse : %d",target_pulse);
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
