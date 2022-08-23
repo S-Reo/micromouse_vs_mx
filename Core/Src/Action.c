@@ -22,6 +22,9 @@
 #include "IR_Emitter.h"
 #include "Map.h"
 #include "Search.h"
+
+#include <stdbool.h>
+static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
 //現在の速度と総走行距離と左右それぞれ
 //現在の角度と角速度
 
@@ -158,7 +161,11 @@ int GetWallCtrlDirection()
 	switch(Pos.Car)
 	{
 	case north:
-		if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall)
+		if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall && Wall[Pos.X][Pos.Y].north == wall)
+		{
+			return F_WALL_PID;
+		}
+		else if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall)
 		{
 			return D_WALL_PID;
 		}
@@ -177,7 +184,11 @@ int GetWallCtrlDirection()
 		break;
 
 	case east:
-		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//south)
+		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall && Wall[Pos.X][Pos.Y].east == wall)
+		{
+			return F_WALL_PID;
+		}
+		else if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//south)
 		{
 			return D_WALL_PID;
 		}
@@ -195,7 +206,11 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case south:
-		if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall)
+		if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall && Wall[Pos.X][Pos.Y].south == wall)
+		{
+			return F_WALL_PID;
+		}
+		else if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall)
 		{
 			return D_WALL_PID;
 		}
@@ -213,8 +228,11 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case west:
-
-		if ( Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//.westになってた。あと == south )で意味わからない処理に。
+		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall && Wall[Pos.X][Pos.Y].west == wall)
+		{
+			return F_WALL_PID;
+		}
+		else if ( Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//.westになってた。あと == south )で意味わからない処理に。
 		{
 			return D_WALL_PID;
 		}
@@ -1335,7 +1353,7 @@ void Accel(float add_distance, float explore_speed)
 	TargetAngularV = 0;
 	float additional_speed=0;
 	additional_speed = explore_speed - CurrentVelocity[BODY];
-	printf("%f,%f,%f\r\n",additional_speed,explore_speed,CurrentVelocity[BODY]);
+	//printf("%f,%f,%f\r\n",additional_speed,explore_speed,CurrentVelocity[BODY]);
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
 	 //TotalPulse[BODY];
@@ -1343,11 +1361,12 @@ void Accel(float add_distance, float explore_speed)
 	WallWarn();
 	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
 	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
-	printf("target_pulse : %d",target_pulse);
+	//printf("target_pulse : %d",target_pulse);
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
 	Calc = SearchOrFast;//Fastでは1を代入。
+	_Bool wall_cut = false;
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
@@ -1358,6 +1377,13 @@ void Accel(float add_distance, float explore_speed)
 			//UpdateWalkMap();
 			//次のアクションを渡すのは別のところで。
 			Calc = 1;
+		}
+		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
+		{
+			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
+			//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
+			wall_cut = true;
+			ChangeLED(3);
 		}
 
 		//ControlWall();
@@ -1385,7 +1411,8 @@ void Accel(float add_distance, float explore_speed)
 	}
 	Acceleration = 0;
 	//壁読んで、
-
+	wall_cut = false;
+	ChangeLED(0);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
@@ -1429,7 +1456,7 @@ void Decel(float dec_distance, float end_speed)
 		//これより前の直進が長くても壁センサのおかげで止まれるはずなので出力が残っちゃったパターン。
 		//かもしくは条件が成立しちゃっているセンサ値が問題のパターン。
 	//スラロームのあとはKeepPulse[BODY]が変わっていないので、そのせいで減速距離が取れていない可能性がある。壁センサも一応見る
-	while(/* (	(Photo[FR]+Photo[FL]) < 3800) && */( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+	while( (	(Photo[FR]+Photo[FL]) < 4000) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
 //		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
@@ -1542,6 +1569,10 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
+				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+				{
+				}
+
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
 
 			}
@@ -1558,6 +1589,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
+				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+					{
+					}
 			}
 			else if (Wall[Pos.X][Pos.Y].west == wall) //後ろに壁があるときはバック
 			{
@@ -1571,6 +1605,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
+				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+					{
+					}
 			}
 			else if (Wall[Pos.X][Pos.Y].north == wall) //後ろに壁があるときはバック
 			{
@@ -1584,6 +1621,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
+				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+					{
+					}
 			}
 			else if (Wall[Pos.X][Pos.Y].east == wall) //後ろに壁があるときはバック
 			{
@@ -1643,6 +1683,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 		WallSafe();
 		ControlWall();
 		Calc = SearchOrFast;
+		_Bool wall_cut=false;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
 			//最初の45mmで加速をストップ
@@ -1655,6 +1696,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				PIDChangeFlag(R_WALL_PID, 0);
 				PIDChangeFlag(D_WALL_PID, 0);
 				PIDChangeFlag( A_VELO_PID , 1);
+				//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
 			}
 
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
@@ -1666,16 +1708,22 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				//次のアクションを渡すのは別のところで。
 				Calc = 1;
 			}
-
+			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
+			{
+				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
+				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
+				wall_cut = true;
+				ChangeLED(3);
+			}
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;
 	//		}
 		}
-
+		wall_cut = false;
 
 	}
-
+	ChangeLED(0);
 	//余分に加速した場合、あとの減速で速度を落としきれないことになっていたので、減速時にその時の速度を使うようにした。
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 //	int target_pulse = (int)(2*(move_distance/2)/MM_PER_PULSE);
@@ -1774,54 +1822,29 @@ void GoBack()
 {
 	//減速して
 	Decel(45, 0);
-	//AjustCenter();
-//	PIDChangeFlag( A_VELO_PID, 0);
-//	HAL_Delay(500);
-	//補正して
-	//Compensate();
-	//Calib();
-	//回転して
+	float acc = AjustCenter();
+
+#if 0
 	EmitterOFF();
-#if 1
+
 	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
 	EmitterON();
+
 #else
-	//AjustCenter();
-	//RotateTest(90);
-	AjustCenter();
-	RotateTest(180);
-	AjustCenter();
+	Pos.Dir = right;
+	Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+	acc = AjustCenter();
+	Pos.Dir = right;
+	Rotate(90, 2*M_PI);
+	Pos.Dir = back;
 
 #endif
 
-	float acc = AjustCenter();
+	acc = AjustCenter();
 	Angle = TargetAngle;
-	//HAL_Delay(500);
-	//TargetAngle += 90*M_PI/180;
-	//リセット消してみる
-//	PIDReset(L_VELO_PID);
-//	PIDReset(R_VELO_PID);
-//	PIDReset(A_VELO_PID);
-	//HAL_Delay(200);
-	//補正して
-	//Compensate();
-	//Calib();
-	//回転して
-//	PIDReset(L_VELO_PID);
-//	PIDReset(R_VELO_PID);
-//	PIDReset(A_VELO_PID);
-	//HAL_Delay(200);
-	//Rotate(90, 2.5);
-	//HAL_Delay(500);
-	//TargetAngle += 180*M_PI/180;
-	//加速する
-//	PIDReset(L_VELO_PID);
-//	PIDReset(R_VELO_PID);
-//	PIDReset(A_VELO_PID);
+
 	HAL_Delay(200);
 
-//	Compensate();
-	//PIDChangeFlag( A_VELO_PID, 1);
 	Accel(acc, ExploreVelocity);
 	//ここまでで目標走行距離を完了する
 

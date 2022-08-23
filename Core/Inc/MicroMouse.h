@@ -131,6 +131,8 @@ extern int L_motor, R_motor;
 #define RIGHT_WALL 90//90 //380
 #define LEFT_WALL 100//90 //420
 
+//#define LEFT_CUT_WALL		230
+//#define RIGHT_CUT_WALL
 
 /*--調整パラメータ--*/
 #define SEARCH_SPEED 235

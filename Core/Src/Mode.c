@@ -962,7 +962,7 @@ void Explore()
 	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
 
-		ChangeLED(Pos.Car);
+		//ChangeLED(Pos.Car);
 		KyushinJudge( turn_mode );
 #if 0
 		static int cc =0;
