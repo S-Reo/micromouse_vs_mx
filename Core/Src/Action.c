@@ -161,7 +161,7 @@ int GetWallCtrlDirection()
 	switch(Pos.Car)
 	{
 	case north:
-		if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall && Wall[Pos.X][Pos.Y].north == wall)
+		if(Wall[Pos.X][Pos.Y].north == wall)
 		{
 			return F_WALL_PID;
 		}
@@ -184,7 +184,7 @@ int GetWallCtrlDirection()
 		break;
 
 	case east:
-		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall && Wall[Pos.X][Pos.Y].east == wall)
+		if(Wall[Pos.X][Pos.Y].east == wall)
 		{
 			return F_WALL_PID;
 		}
@@ -206,7 +206,7 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case south:
-		if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall && Wall[Pos.X][Pos.Y].south == wall)
+		if(Wall[Pos.X][Pos.Y].south == wall)
 		{
 			return F_WALL_PID;
 		}
@@ -228,7 +228,7 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case west:
-		if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall && Wall[Pos.X][Pos.Y].west == wall)
+		if(Wall[Pos.X][Pos.Y].west == wall)
 		{
 			return F_WALL_PID;
 		}
@@ -1456,7 +1456,7 @@ void Decel(float dec_distance, float end_speed)
 		//これより前の直進が長くても壁センサのおかげで止まれるはずなので出力が残っちゃったパターン。
 		//かもしくは条件が成立しちゃっているセンサ値が問題のパターン。
 	//スラロームのあとはKeepPulse[BODY]が変わっていないので、そのせいで減速距離が取れていない可能性がある。壁センサも一応見る
-	while( (	(Photo[FR]+Photo[FL]) < 4000) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+	while( (	(Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
 //		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
@@ -1559,7 +1559,7 @@ float AjustCenter(){
 	PIDChangeFlag(R_WALL_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag( A_VELO_PID, 0);
-
+	Pos.Act = compensate;
 	int wall_ctrl = GetWallCtrlDirection();
 	PIDChangeFlag(wall_ctrl, 1);
 
@@ -1569,8 +1569,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+				while( !( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100)))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 				{
+					ChangeLED(Pid[F_WALL_PID].flag);
 				}
 
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
@@ -1589,8 +1590,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 					{
+					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (Wall[Pos.X][Pos.Y].west == wall) //後ろに壁があるときはバック
@@ -1605,8 +1607,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 					{
+					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (Wall[Pos.X][Pos.Y].north == wall) //後ろに壁があるときはバック
@@ -1621,8 +1624,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(-2 < CurrentVelocity[BODY]  &&CurrentVelocity[BODY] < 2) )
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 					{
+					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (Wall[Pos.X][Pos.Y].east == wall) //後ろに壁があるときはバック

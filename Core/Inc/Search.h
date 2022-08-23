@@ -12,7 +12,8 @@
 extern int Calc;
 extern int SearchOrFast;
 
-void KyushinJudge(char turn_mode);
+void shiftPos();
+void KyushinJudge();
 
 void LeftHandJudge(char turn_mode);
 

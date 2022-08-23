@@ -23,7 +23,6 @@
 #include "Interrupt.h"
 
 
-
 //壁センサデータを利用した処理
 //マップデータ構造体を利用した処理
 
@@ -273,10 +272,29 @@ void make_map(int x, int y, int mask)	//歩数マップを作成する
 	}while(change_flag == true);	//全体を作り終わるまで待つ
 
 }
-void CheckGoalArea()
+
+_Bool CheckGoalArea()
 {
 	//( X_GOAL_LESSER <= Pos.X && Pos.X <=X_GOAL_LARGER)
+	//ゴールエリアに未知壁があるか
+	//あればtrueで巡回、無ければfalse
+	uint8_t check[4]={0};
+	for(int i=X_GOAL_LESSER; i <= X_GOAL_LARGER; i++)
+	{
+		for(int j=Y_GOAL_LESSER; j <= Y_GOAL_LARGER; j++)
+		{
+			check[0] = Wall[i][j].north;
+			check[1] = Wall[i][j].east;
+			check[2] = Wall[i][j].south;
+			check[3] = Wall[i][j].west;
 
+			if(check[0] == UNKNOWN) return false;
+			if(check[1] == UNKNOWN) return false;
+			if(check[2] == UNKNOWN) return false;
+			if(check[3] == UNKNOWN) return false;
+		}
+	}
+	return true;
 //	for(int i=0; i < 1; i++)
 //	{
 //		GoalAreaFlag = (Wall[ X_GOAL_LESSER+i][Y_GOAL_LESSER].north == UNKNOWN) ? 0 : 1;
@@ -306,7 +324,7 @@ void mapprint(){
 
 	static int i = 0, j=0,k=0;
 #if 1
-	//迷路?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?報
+	//迷路
 	for(i=0; i < NUMBER_OF_SQUARES; i++){
 		for(j=0; j < NUMBER_OF_SQUARES * 4; j++){
 			printf("%u",work_ram[k]);

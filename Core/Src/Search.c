@@ -13,10 +13,15 @@
 #include "Action.h"
 int Calc;
 int SearchOrFast;
-
+void shiftPos()
+{
+	Pos.Car = Pos.NextCar;
+	Pos.X = Pos.NextX;
+	Pos.Y = Pos.NextY;
+}
 void AdachiJudge(){
 }
-void KyushinJudge(char turn_mode)
+void KyushinJudge()
 {
 	//歩数マップから進行方向を導き出すのは、アクションが終わった後、座標と方角が更新されてから。
 	switch(Pos.Car)
@@ -28,10 +33,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X;
 				  Pos.NextY = Pos.Y+1;
 				  Pos.NextCar = north;
-				  SelectAction(turn_mode);
-				  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].west == NOWALL &&walk_map[Pos.X-1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X > 0){
 				  //左西
@@ -39,10 +40,6 @@ void KyushinJudge(char turn_mode)
     			  Pos.NextX = Pos.X - 1;
     			  Pos.NextY = Pos.Y;
     			  Pos.NextCar = west;
-    			  SelectAction(turn_mode);
-    			  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].east == NOWALL &&walk_map[Pos.X+1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X <  NUMBER_OF_SQUARES-1){
 				  //右東
@@ -50,10 +47,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X + 1;
 				  Pos.NextY = Pos.Y;
 				  Pos.NextCar = east;
-				  SelectAction(turn_mode);
-		          Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else {
 				  Pos.Dir = back;
@@ -61,10 +54,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextY = Pos.Y - 1;
 				  Pos.NextCar = south;
 				  //後南
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  break;
 
@@ -76,10 +65,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X + 1;
 				  Pos.NextY = Pos.Y;
 				  Pos.NextCar = east;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].north == NOWALL && walk_map[Pos.X][Pos.Y+1] < walk_map[Pos.X][Pos.Y] && Pos.Y < NUMBER_OF_SQUARES-1){
 				  //左?��?
@@ -88,10 +73,6 @@ void KyushinJudge(char turn_mode)
     			  Pos.NextX = Pos.X;
     			  Pos.NextY = Pos.Y+1;
     			  Pos.NextCar = north;
-    			  SelectAction(turn_mode);
-    			  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].south == NOWALL && walk_map[Pos.X][Pos.Y-1] < walk_map[Pos.X][Pos.Y] && Pos.Y > 0){
 				  //右?��?
@@ -99,10 +80,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X;
 				  Pos.NextY = Pos.Y - 1;
 				  Pos.NextCar = south;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else {
 				  //後西
@@ -110,10 +87,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X - 1;
 				  Pos.NextY = Pos.Y;
 				  Pos.NextCar = west;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  break;
 
@@ -125,10 +98,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X;
 				  Pos.NextY = Pos.Y - 1;
 				  Pos.NextCar = south;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].east == NOWALL &&walk_map[Pos.X+1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X < NUMBER_OF_SQUARES-1){
 				  //左東
@@ -136,10 +105,6 @@ void KyushinJudge(char turn_mode)
     			  Pos.NextX = Pos.X + 1;
     			  Pos.NextY = Pos.Y;
     			  Pos.NextCar = east;
-    			  SelectAction(turn_mode);
-    			  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].west == NOWALL &&walk_map[Pos.X-1][Pos.Y] < walk_map[Pos.X][Pos.Y] && Pos.X > 0){
 				  //右西
@@ -147,10 +112,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X - 1;
 				  Pos.NextY = Pos.Y;
 				  Pos.NextCar = west;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else {
 				  //後北
@@ -158,10 +119,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X;
 				  Pos.NextY = Pos.Y+1;
 				  Pos.NextCar = north;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  break;
 
@@ -173,10 +130,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X - 1;
 				  Pos.NextY = Pos.Y;
 				  Pos.NextCar = west;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].south == NOWALL &&walk_map[Pos.X][Pos.Y-1] < walk_map[Pos.X][Pos.Y] && Pos.Y > 0){
 				  //左?��?
@@ -184,10 +137,6 @@ void KyushinJudge(char turn_mode)
     			  Pos.NextX = Pos.X;
     			  Pos.NextY = Pos.Y - 1;
     			  Pos.NextCar = south;
-    			  SelectAction(turn_mode);
-    			  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else if(Wall[Pos.X][Pos.Y].north == NOWALL &&walk_map[Pos.X][Pos.Y+1] < walk_map[Pos.X][Pos.Y] && Pos.Y < NUMBER_OF_SQUARES-1){
 				  //右?��?
@@ -195,10 +144,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X;
 				  Pos.NextY = Pos.Y+1;
 				  Pos.NextCar = north;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		          Pos.Y = Pos.NextY;
 			  }
 			  else {
 				  //後東
@@ -206,10 +151,6 @@ void KyushinJudge(char turn_mode)
 				  Pos.NextX = Pos.X + 1;
 				  Pos.NextY = Pos.Y;
 				  Pos.NextCar = east;
-				  SelectAction(turn_mode);
-		       	  Pos.Car = Pos.NextCar;
-		       	  Pos.X = Pos.NextX;
-		       	  Pos.Y = Pos.NextY;
 			  }
 			  break;
 
@@ -217,6 +158,12 @@ void KyushinJudge(char turn_mode)
 			  break;
 		  //swtich end
 	}
+
+
+}
+void Move()
+{
+	//目標座標に未知壁を設定
 
 }
 //ノード

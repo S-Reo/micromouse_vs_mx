@@ -264,6 +264,8 @@ void Explore_IT()
 			{
 				wall_f = PIDControl( F_WALL_PID,   4000, (	(Photo[FR]+Photo[FL])));
 				TargetVelocity[BODY] = (float)wall_f*0.001;
+				ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+				TargetAngularV = (float)ang_out;
 
 				//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
 			}

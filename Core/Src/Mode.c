@@ -959,11 +959,13 @@ void Explore()
     Pos.Y = Pos.NextY;
 	Pos.Car = Pos.NextCar;
 
-	while(  !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER) )  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
+	while( !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER)) ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
 
 		//ChangeLED(Pos.Car);
-		KyushinJudge( turn_mode );
+		KyushinJudge();
+		SelectAction(turn_mode);
+		shiftPos();
 #if 0
 		static int cc =0;
 		cc ++;
@@ -980,6 +982,7 @@ void Explore()
 //		TargetVelocity[BODY] = 0;
 //	}
 	Decel(45, 0);
+	shiftPos();
 //	HAL_Delay(10000);
 //	while(1)
 //	{
@@ -998,9 +1001,51 @@ void Explore()
 	Flash_clear_sector1();
 	//マップ書き込み
 	flash_store_init();
-
 	//完了の合図
 	Signal(7);
+
+//	if(CheckGoalArea())
+//	{
+//		//ゴールエリア内を探索
+//		SearchOrFast = 0;
+//		Pos.Dir = front;
+//		switch(Pos.Car)
+//		{
+//		case north:
+//			Pos.NextX = Pos.X;
+//			Pos.NextY = Pos.Y + 1;
+//			Pos.NextCar = north;
+//			break;
+//		case east:
+//			Pos.NextX = Pos.X + 1;
+//			Pos.NextY = Pos.Y;
+//			Pos.NextCar = east;
+//			break;
+//		case south:
+//			Pos.NextX = Pos.X;
+//			Pos.NextY = Pos.Y - 1;
+//			Pos.NextCar = south;
+//			break;
+//		case west:
+//			Pos.NextX = Pos.X - 1;
+//			Pos.NextY = Pos.Y;
+//			Pos.NextCar = west;
+//			break;
+//		}
+//		Accel(45, ExploreVelocity);
+//		shiftPos();
+//		while(   (CheckGoalArea() == false)) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
+//			{
+//				//ChangeLED(Pos.Car);
+//				LeftHandJudge( turn_mode );
+//			}
+//		Decel(45, 0);
+//		shiftPos();
+//	}
+	//未知壁の座標を確認
+	//未知壁がなくなるまで、歩数が最も近い座標を目標座標にして走行
+	//未知壁を消すごとに歩数マップを更新（現在座標からの歩数が最も小さい座標へ）
+
 
 	//flashに保存
 	while(1)

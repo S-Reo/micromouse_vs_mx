@@ -10,7 +10,8 @@
 
 #include <main.h>
 #include <MicroMouse.h>
-
+#include <stdbool.h>
+_Bool CheckGoalArea();
 
 /*
  * map.h

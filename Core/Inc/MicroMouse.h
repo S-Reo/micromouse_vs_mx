@@ -258,6 +258,8 @@ typedef struct Position
 {
 	uint8_t X;
 	uint8_t Y;
+	uint8_t TargetX;
+	uint8_t TargetY;
 	direction Dir;	//前後左右
 	cardinal Car;	//東西南北
 	action Act;
