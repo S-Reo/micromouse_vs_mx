@@ -821,9 +821,20 @@ void FastestRun()
 	flash_copy_to_ram();
 	printf("あ\r\n");
 	//最短経路導出(今回は省けそう。)
+	SearchOrFast = 1;
+		Pos.Dir = front;
+		Pos.Car = north;
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y + 1;
+		Pos.NextCar = north;
+		//printf("い : %f\r\n",ExploreVelocity);
+		Accel(61.75, ExploreVelocity);
 
+	 	Pos.X = Pos.NextX;
+	    Pos.Y = Pos.NextY;
+		Pos.Car = Pos.NextCar;	//自分の向きを更新
 	//走る
-	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode);
+	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
 
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
@@ -1045,12 +1056,51 @@ void Explore()
 	//未知壁の座標を確認
 	//未知壁がなくなるまで、歩数が最も近い座標を目標座標にして走行
 	//未知壁を消すごとに歩数マップを更新（現在座標からの歩数が最も小さい座標へ）
+	//未探索座標を設定
+	SearchOrFast = 0;
+	Pos.Dir = front;
+	switch(Pos.Car)
+	{
+	case north:
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y + 1;
+		Pos.NextCar = north;
+		break;
+	case east:
+		Pos.NextX = Pos.X + 1;
+		Pos.NextY = Pos.Y;
+		Pos.NextCar = east;
+		break;
+	case south:
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y - 1;
+		Pos.NextCar = south;
+		break;
+	case west:
+		Pos.NextX = Pos.X - 1;
+		Pos.NextY = Pos.Y;
+		Pos.NextCar = west;
+		break;
+	}
+	Accel(45, ExploreVelocity);
+	shiftPos();
+	Pos.TargetX = 0;
+	Pos.TargetY = 0;
+	fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
 
-
+	Decel(45,0);
+	shiftPos();
 	//flashに保存
+	//flashのクリア。
+	Flash_clear_sector1();
+	//マップ書き込み
+	flash_store_init();
+	//完了の合図
+	Signal(7);
 	while(1)
 	{
 		wall_ram_print();
+		map_print();
 	}
 }
 
