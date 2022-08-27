@@ -104,11 +104,11 @@ extern int L_motor, R_motor;
 //#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
 //最終ゴール区画座標 全日本(6,9) (7,10)
-#define X_GOAL_LESSER 1
-#define Y_GOAL_LESSER 0
+#define X_GOAL_LESSER 6
+#define Y_GOAL_LESSER 9
 
-#define X_GOAL_LARGER 2
-#define Y_GOAL_LARGER 1
+#define X_GOAL_LARGER 7
+#define Y_GOAL_LARGER 10
 
 #define FL	0
 #define SR	1
@@ -142,7 +142,7 @@ extern int L_motor, R_motor;
 
 #define TIRE_DEAMETER 21.1f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
-#define TREAD_WIDTH 37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
+#define TREAD_WIDTH 34.4f //37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
 //別のとこ
@@ -241,6 +241,14 @@ typedef enum PIDNumber
 	FD_WALL_PID
 }pid_number;
 
+typedef enum GoalEdge
+{
+	one = 1,
+	two = 2,
+	three = 3
+
+}goal_edge;
+extern goal_edge goal_edge_num;
 //typedef enum Action
 //{
 //	wait = 0,

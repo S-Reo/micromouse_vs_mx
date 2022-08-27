@@ -41,6 +41,6 @@ void Accel(float add_distance, float explore_speed);
 void Decel(float dec_distance, float end_speed);
 void Calib(int distance);
 void GoStraight(float move_distance,  float explore_speed, float accel);
-
+void Aim();
 void SelectAction(char turn_mode);
 #endif /* INC_ACTION_H_ */

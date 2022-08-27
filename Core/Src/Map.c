@@ -22,7 +22,6 @@
 
 #include "Interrupt.h"
 
-
 //壁センサデータを利用した処理
 //マップデータ構造体を利用した処理
 
@@ -169,8 +168,7 @@ void wall_set(){
 //	  wall_store_running(Pos.X,Pos.Y);
 }
 
-
-void init_map(int x, int y)
+void init_map(int goal_x, int goal_y)
 {
 //迷路の歩数Mapを初期化する。全体を0xff、引数の座標x,yは0で初期化する
 
@@ -183,13 +181,14 @@ void init_map(int x, int y)
 			walk_map[i][j] = 255;	//すべて255で埋める
 		}
 	}
-
-	walk_map[x][y] = 0;				//ゴール座標の歩数を０に設定
-	walk_map[x][y+1] = 0;
-	walk_map[x+1][y] = 0;
-	walk_map[x+1][y+1] = 0;
-	//歩数マップは合ってることにしよう。
-
+	for(; goal_x < goal_x + goal_edge_num; goal_x++)
+	{
+		for(; goal_y < goal_y + goal_edge_num; goal_y++)
+		{
+			walk_map[goal_x][goal_y] = 0;
+		}
+	}
+	//set_walk_val_goal(x, y,2);			//ゴール座標の歩数を０に設定
 }
 
 
@@ -344,7 +343,7 @@ void mapprint(){
 	printf("\r\n");
 
 
-	//歩数マッ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+	//歩数マップ
 	for(i=0; i < NUMBER_OF_SQUARES; i++){
 		for(j=0; j < NUMBER_OF_SQUARES; j++){
 			printf("%u  ",work_ram[k]);
@@ -528,6 +527,124 @@ void UpdateWalkMap()
 
 }
 
+void setNotExploredArea()
+{
+	int not_explored_area_number;
+	_Bool not_explored_area[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES]={0};
+	for(int i=0; i < NUMBER_OF_SQUARES; i++)
+	{
+		for(int j=0; j < NUMBER_OF_SQUARES; j++)
+		{
+			//三つ壁があるところは除外する
+
+			if(Wall[i][j].north == UNKNOWN)
+			{
+				//三つとも壁があるとき以外は見に行く必要がある
+				if(!(Wall[i][j].east == WALL && Wall[i][j].south == WALL && Wall[i][j].west == WALL) )
+				{
+					not_explored_area_number ++;
+					not_explored_area[i][j] = 1;
+				}
+			}
+			else if(Wall[i][j].east == UNKNOWN)
+			{
+				if(!(Wall[i][j].south == WALL && Wall[i][j].west == WALL && Wall[i][j].north == WALL) )
+				{
+					not_explored_area_number ++;
+					not_explored_area[i][j] = 1;
+				}
+			}
+			else if(Wall[i][j].south == UNKNOWN)
+			{
+				if(!(Wall[i][j].west == WALL && Wall[i][j].north == WALL && Wall[i][j].east == WALL) )
+				{
+					not_explored_area_number ++;
+					not_explored_area[i][j] = 1;
+				}
+			}
+			else if(Wall[i][j].west == UNKNOWN)
+			{
+				if(!(Wall[i][j].north == WALL && Wall[i][j].east == WALL && Wall[i][j].south == WALL) )
+				{
+					not_explored_area_number ++;
+					not_explored_area[i][j] = 1;
+				}
+			}
+		}
+	}
+	//行くべき座標に1が入った
+	int num = not_explored_area_number;
+	int target_x[num];
+	int target_y[num];
+	//行くべき座標のxyを取得
+	int n=0;
+	for(int i=0; i < NUMBER_OF_SQUARES; i++)
+	{
+		target_x[n] = 0;
+		target_y[n] = 0;
+		for(int j=0; j < NUMBER_OF_SQUARES; j++)
+		{
+			if(not_explored_area[i][j] == 1)
+			{
+				target_x[n] = i;
+				target_y[n] = j;
+				n++;
+			}
+		}
+	}
+	if(n == 0)
+	{
+		Pos.TargetX = 0;
+		Pos.TargetY = 0;
+	}
+	//評価値を求めて比較し最も近い座標を設定
+	else
+	{
+		Pos.TargetX = target_x[0];
+		Pos.TargetY = target_y[0];
+		goal_edge_num = one;
+		for(int i = 0; i < num; i ++)
+		{
+			init_map(target_x[i], target_y[i]);
+			make_map(target_x[i], target_y[i],0x01);
+
+			//現在座標の評価値を比較していく
+			uint16_t current=0;
+			static uint16_t last;
+			current = walk_map[Pos.X][Pos.Y];
+
+			//最小の歩数をもつxy座標を次の目標座標にする
+			if( current < last )
+			{
+				Pos.TargetX = target_x[i];
+				Pos.TargetY = target_y[i];
+			}
+			last = current;
+		}
+	}
+	//一番近い未探索マスのxyが出る
+//
+//	CheckGoalArea();
+
+
+}
+//未探索壁を持つ座標を数え、その分の配列を確保
+
+//void getPass()
+//{
+//	//評価値マップの座標は一マス？
+//	goal_edge_num = one;
+//	init_map();
+//
+//	//ゴールエリアの
+//	//ゴール座標を決めて、評価値マップを作る
+//	//未探索座標の評価値を0にしたときの現在の座標の評価値が最も低い座標に向かう
+//	setNotExploredArea();
+//
+//	//次に向かうべき座標と今の座標から、向くべき方向に回転する（停止状態からの挙動）
+//	//加速する
+//
+//}
 
 //求心法での方向決定
 //void DetermineDirection(uint8_t x, uint8_t y, int dir, char action_type)

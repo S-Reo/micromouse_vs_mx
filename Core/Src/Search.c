@@ -451,29 +451,54 @@ void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask)
 	//int straight_count=0;
 
 	//現在の向きから、次に行くべき方向へ向く
-//	switch(get_nextdir(x,y,MASK_SECOND))	//次に行く方向を戻り値とする関数を呼ぶ
-//	{
-//		case front:
-//			Accel			//前向きだった場合は直線を走る距離を伸ばす
-//			break;
-//
-//		case right:					//右に向く
-//			turn(90,TURN_ACCEL,TURN_SPEED,RIGHT);				//右に曲がって
-//			straight_count = 1;
-//			break;
-//
-//		case left:					//左に向く
-//			turn(90,TURN_ACCEL,TURN_SPEED,LEFT);				//左に曲がって
-//			straight_count = 1;
-//			break;
-//
-//		case rear:					//後ろに向く
-//			turn(180,TURN_ACCEL,TURN_SPEED,LEFT);				//左に曲がって
-//			straight_count = 1;
-//			break;
-//	}
+	Pos.Dir = get_nextdir(x,y,mask);
+	switch(Pos.Dir)	//次に行く方向を戻り値とする関数を呼ぶ
+	{
+		case front:
+				//前向きだった場合はそのまま加速
+			break;
 
+		case right:					//右に向く
+			Rotate( 90 , 2*M_PI);
+			break;
 
+		case left:					//左に向く
+			Rotate( 90 , -2*M_PI);			//左に曲がって
+			break;
+
+		case back:					//後ろに向く
+			Rotate( 180 , 2*M_PI);
+			break;
+	}
+	//shiftPos();
+	HAL_Delay(100);
+	//加速
+	Pos.Dir = front;
+	switch(Pos.Car)
+	{
+	case north:
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y + 1;
+		Pos.NextCar = north;
+		break;
+	case east:
+		Pos.NextX = Pos.X + 1;
+		Pos.NextY = Pos.Y;
+		Pos.NextCar = east;
+		break;
+	case south:
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y - 1;
+		Pos.NextCar = south;
+		break;
+	case west:
+		Pos.NextX = Pos.X - 1;
+		Pos.NextY = Pos.Y;
+		Pos.NextCar = west;
+		break;
+	}
+	Accel(45, ExploreVelocity);
+	shiftPos();
 //	//向いた方向によって自分の座標を更新する
 //	switch(Pos.Car)
 //	{
@@ -494,7 +519,6 @@ void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask)
 //			break;
 //
 //	}
-
 
 	while( !((x <= Pos.X && Pos.X <= x2) && (y <= Pos.Y && Pos.Y <= y2)) ){			//ゴールするまで繰り返す
 		Pos.Dir = get_nextdir(x,y,mask);//新しい区画に入ったところで、次の方向を求める。方向と方角がわかる。

@@ -1569,7 +1569,7 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100)))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))&& !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 				{
 					ChangeLED(Pid[F_WALL_PID].flag);
 				}
@@ -1590,7 +1590,7 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) && !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))
 					{
 					ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -1607,9 +1607,9 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) && !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))
 					{
-					ChangeLED(Pid[F_WALL_PID].flag);
+						ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (Wall[Pos.X][Pos.Y].north == wall) //後ろに壁があるときはバック
@@ -1624,7 +1624,7 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) && !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))
 					{
 					ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -1713,7 +1713,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				Calc = 1;
 			}
 			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
-			{
+			{//
 				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
 				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
 				wall_cut = true;
@@ -1854,13 +1854,73 @@ void GoBack()
 
 }
 
+void changeDirection()
+{
+	//停止状態から、次の座標がわかっているときに使う
+	//次に向かうべき座標と今の座標から、向くべき方向に回転する（停止状態からの挙動）
+		//差はxyが±どちらかに1違うだけ
+
+	if(Pos.X + 1 == Pos.NextX)
+	{
+		Pos.NextCar = east;
+	}
+	else if(Pos.X - 1 == Pos.NextX)
+	{
+		Pos.NextCar = west;
+	}
+	else if(Pos.Y + 1 == Pos.NextY)
+	{
+		Pos.NextCar = north;
+	}
+	else if(Pos.Y - 1 == Pos.NextY)
+	{
+		Pos.NextCar = south;
+	}
+
+}
+void Aim()
+{	//次の座標の方向を向く
+
+	//次の座標と現在の座標から向くべき方角を取得
+	changeDirection();
+
+	//次に向くべき方角と今の方角のギャップを埋める旋回をする
+	int now = Pos.Car % 4;
+	int next = Pos.NextCar % 4;
+
+	//差が正なら右回転
+	switch(next-now)
+	{
+	case 0:
+		break;
+	case 1:
+		Pos.Dir = right;
+		Rotate( 90 , 2*M_PI);
+		break;
+	case -1:
+		Pos.Dir = left;
+		Rotate( 90 , -2*M_PI);
+		break;
+	case 2:
+		Pos.Dir = back;
+		Rotate( 180 , 2*M_PI);
+		break;
+	case -2:
+		Pos.Dir = back;
+		Rotate( 180 , -2*M_PI);
+		break;
+	default:
+		break;
+	}
+	Pos.Car = Pos.NextCar;
+}
 //戻り値でdirectionを返す関数を作る→探索方法によってどう返すか変わる。
 //direction SelectDirection()
 //{
 //
 //}
 //進行方向決定の処理をどうするかで書き方が変わる。フラグを使うとか。
-void SelectAction(char turn_mode)	//前後左右であらわす
+ void SelectAction(char turn_mode)	//前後左右であらわす
 {
 	//現在の座標から次の座標に行くまでの処理を一つのアクションとする
 	switch(Pos.Dir%4) //条件を増やす場合は割る数字に注意

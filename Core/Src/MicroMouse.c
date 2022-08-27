@@ -62,7 +62,7 @@ int L_motor, R_motor;
 
 
 //direction my_direction = north;
-
+goal_edge goal_edge_num;
 t_wall Wall [NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 uint16_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 

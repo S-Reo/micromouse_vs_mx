@@ -647,6 +647,11 @@ void WritingFree()
 
 
 #else
+
+	//目標座標だけ
+	Aim();
+
+	//shiftPos();
 	while(1)
 	{
 //		ExploreVelocity=300;
@@ -804,9 +809,9 @@ void FastestRun()
 		break;
 	case 4:
 		ExploreVelocity=300;
-		Sla.Pre = 2;
-		Sla.Fol = 19;
-		Sla.Alpha = 0.13;
+		Sla.Pre = 3;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.117;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -815,7 +820,6 @@ void FastestRun()
 	}
 
 	ChangeLED(4);
-
 
 	//マップデータの取得。flashから壁データを取得。
 	flash_copy_to_ram();
@@ -947,9 +951,9 @@ void Explore()
 		break;
 	case 4:
 		ExploreVelocity=300;
-		Sla.Pre = 2;
-		Sla.Fol = 19;
-		Sla.Alpha = 0.13;
+		Sla.Pre = 3;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.117;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -958,6 +962,7 @@ void Explore()
 		break;
 
 	}
+	goal_edge_num = two;
 	SearchOrFast = 0;
 	Pos.Dir = front;
 	Pos.Car = north;
@@ -1015,6 +1020,7 @@ void Explore()
 	//完了の合図
 	Signal(7);
 
+
 //	if(CheckGoalArea())
 //	{
 //		//ゴールエリア内を探索
@@ -1057,35 +1063,10 @@ void Explore()
 	//未知壁がなくなるまで、歩数が最も近い座標を目標座標にして走行
 	//未知壁を消すごとに歩数マップを更新（現在座標からの歩数が最も小さい座標へ）
 	//未探索座標を設定
+
+	goal_edge_num = one;
 	SearchOrFast = 0;
-	Pos.Dir = front;
-	switch(Pos.Car)
-	{
-	case north:
-		Pos.NextX = Pos.X;
-		Pos.NextY = Pos.Y + 1;
-		Pos.NextCar = north;
-		break;
-	case east:
-		Pos.NextX = Pos.X + 1;
-		Pos.NextY = Pos.Y;
-		Pos.NextCar = east;
-		break;
-	case south:
-		Pos.NextX = Pos.X;
-		Pos.NextY = Pos.Y - 1;
-		Pos.NextCar = south;
-		break;
-	case west:
-		Pos.NextX = Pos.X - 1;
-		Pos.NextY = Pos.Y;
-		Pos.NextCar = west;
-		break;
-	}
-	Accel(45, ExploreVelocity);
-	shiftPos();
-	Pos.TargetX = 0;
-	Pos.TargetY = 0;
+
 	fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
 
 	Decel(45,0);
