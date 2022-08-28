@@ -823,22 +823,96 @@ void FastestRun()
 
 	//マップデータの取得。flashから壁データを取得。
 	flash_copy_to_ram();
-	printf("あ\r\n");
-	//最短経路導出(今回は省けそう。)
+
 	SearchOrFast = 1;
-//		Pos.Dir = front;
-//		Pos.Car = north;
-//		Pos.NextX = Pos.X;
-//		Pos.NextY = Pos.Y + 1;
-//		Pos.NextCar = north;
-//		//printf("い : %f\r\n",ExploreVelocity);
-//		Accel(61.75, ExploreVelocity);
-//
-//	 	Pos.X = Pos.NextX;
-//	    Pos.Y = Pos.NextY;
-//		Pos.Car = Pos.NextCar;	//自分の向きを更新
 	//走る
 	goal_edge_num = two;
+//	float acc;// = AjustCenter();
+//	//現在の向きから、次に行くべき方向へ向く
+//	Pos.Dir = get_nextdir(x,y,mask);
+//
+//	switch(Pos.Dir%4)	//次に行く方向を戻り値とする関数を呼ぶ
+//	{
+//		case front:
+//				//前向きだった場合はそのまま加速
+//			if(Pos.X == 0 && Pos.Y == 0)
+//			{
+//				acc = 61.75;
+//			}
+//			else
+//			{
+//				acc = 45;
+//			}
+//
+//			break;
+//
+//		case right:					//右に向く
+//			acc = AjustCenter();
+//			Rotate( 90 , 2*M_PI);
+//			acc = AjustCenter();
+//			HAL_Delay(100);
+//			PIDChangeFlag( A_VELO_PID , 1);
+//			break;
+//
+//		case left:					//左に向く
+//			acc = AjustCenter();
+//			Rotate( 90 , -2*M_PI);			//左に曲がって
+//			acc = AjustCenter();
+//			HAL_Delay(100);
+//			PIDChangeFlag( A_VELO_PID , 1);
+//			break;
+//
+//		case back:					//後ろに向く
+//			acc = AjustCenter();
+//			Pos.Dir = right;
+//			Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+//			acc = AjustCenter();
+//			Pos.Dir = right;
+//			Rotate(90, 2*M_PI);
+//			Pos.Dir = back;
+//			acc = AjustCenter();
+//			Angle = TargetAngle;
+//			HAL_Delay(300);
+//			break;
+//	}
+	//shiftPos();
+
+	TargetVelocity[BODY] = 0;
+	Acceleration = 0;
+	TargetAngularV = 0;
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+	PIDReset(A_VELO_PID);
+	PIDReset(L_WALL_PID);
+	PIDReset(R_WALL_PID);
+	HAL_Delay(200);
+	//加速
+	Pos.Dir = front;
+	switch(Pos.Car%4)
+	{
+	case north:
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y + 1;
+		Pos.NextCar = north;
+		break;
+	case east:
+		Pos.NextX = Pos.X + 1;
+		Pos.NextY = Pos.Y;
+		Pos.NextCar = east;
+		break;
+	case south:
+		Pos.NextX = Pos.X;
+		Pos.NextY = Pos.Y - 1;
+		Pos.NextCar = south;
+		break;
+	case west:
+		Pos.NextX = Pos.X - 1;
+		Pos.NextY = Pos.Y;
+		Pos.NextCar = west;
+		break;
+	}
+	Accel(61.5, ExploreVelocity);
+	shiftPos();
 	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
 
 	//ゴールしたら減速して、停止。
@@ -1071,26 +1145,139 @@ void Explore()
 	//未知壁がなくなるまで、歩数が最も近い座標を目標座標にして走行
 	//未知壁を消すごとに歩数マップを更新（現在座標からの歩数が最も小さい座標へ）
 	//未探索座標を設定
-
+	uint8_t target_x[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
+	uint8_t target_y[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
+	uint16_t walk_val[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
 	goal_edge_num = one;
 	SearchOrFast = 0;
 
-	while(!(Pos.X == 0 && Pos.Y == 0))
-	{
+	int area_num = 	setNotExploredArea((uint8_t *)target_x, (uint8_t *)target_x, (uint16_t *)walk_val);
+	ChangeLED(3);
 
-		setNotExploredArea();
-		fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
-		Decel(45,0);
-		//shiftPos();
-
+	while(1){
+		for(int i=0; i < area_num; i++)
+		{
+		printf("%d, %u, %u, %u\r\n",i,target_x[i],target_y[i],walk_val[i]);
+		}
 	}
-	//flashに保存
-	//flashのクリア。
-	Flash_clear_sector1();
-	//マップ書き込み
-	flash_store_init();
-	//完了の合図
-	Signal(7);
+
+	if(area_num != 0)
+	{
+		//目標座標の配列を得たので、
+		float acc;// = AjustCenter();
+		//現在の向きから、次に行くべき方向へ向く
+		Pos.Dir = get_nextdir(target_x[0],target_y[0],0x01);
+		ChangeLED(2);
+		switch(Pos.Dir%4)	//次に行く方向を戻り値とする関数を呼ぶ
+		{
+			case front:
+					//前向きだった場合はそのまま加速
+				if(Pos.X == 0 && Pos.Y == 0)
+				{
+					acc = 61.75;
+				}
+				else
+				{
+					acc = 45;
+				}
+
+				break;
+
+			case right:					//右に向く
+				acc = AjustCenter();
+				Rotate( 90 , 2*M_PI);
+				acc = AjustCenter();
+				HAL_Delay(100);
+				PIDChangeFlag( A_VELO_PID , 1);
+				break;
+
+			case left:					//左に向く
+				acc = AjustCenter();
+				Rotate( 90 , -2*M_PI);			//左に曲がって
+				acc = AjustCenter();
+				HAL_Delay(100);
+				PIDChangeFlag( A_VELO_PID , 1);
+				break;
+
+			case back:					//後ろに向く
+				acc = AjustCenter();
+				Pos.Dir = right;
+				Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+				acc = AjustCenter();
+				Pos.Dir = right;
+				Rotate(90, 2*M_PI);
+				Pos.Dir = back;
+				acc = AjustCenter();
+				Angle = TargetAngle;
+				HAL_Delay(300);
+				break;
+		}
+			//shiftPos();
+
+			TargetVelocity[BODY] = 0;
+			Acceleration = 0;
+			TargetAngularV = 0;
+			PIDReset(L_VELO_PID);
+			PIDReset(R_VELO_PID);
+			PIDReset(A_VELO_PID);
+			PIDReset(L_WALL_PID);
+			PIDReset(R_WALL_PID);
+			HAL_Delay(200);
+			ChangeLED(1);
+			//加速
+			Pos.Dir = front;
+			switch(Pos.Car%4)
+			{
+			case north:
+				Pos.NextX = Pos.X;
+				Pos.NextY = Pos.Y + 1;
+				Pos.NextCar = north;
+				break;
+			case east:
+				Pos.NextX = Pos.X + 1;
+				Pos.NextY = Pos.Y;
+				Pos.NextCar = east;
+				break;
+			case south:
+				Pos.NextX = Pos.X;
+				Pos.NextY = Pos.Y - 1;
+				Pos.NextCar = south;
+				break;
+			case west:
+				Pos.NextX = Pos.X - 1;
+				Pos.NextY = Pos.Y;
+				Pos.NextCar = west;
+				break;
+			}
+			ChangeLED(0);
+			Accel(acc, ExploreVelocity);
+			shiftPos();
+		while(!(Pos.X == 0 && Pos.Y == 0))
+		{
+			for(int i=0; i < area_num; i++)
+			{
+				Pos.TargetX = target_x[i];
+				Pos.TargetY = target_y[i];
+				//向くべき方を向いて加速して、あとは未探索の配列が終了するまで繰り返し
+				fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
+			}
+		}
+		Decel(45,0);
+		//flashに保存
+		//flashのクリア。
+		Flash_clear_sector1();
+		//マップ書き込み
+		flash_store_init();
+		//完了の合図
+		Signal(7);
+	}
+	else//未探索がなければ、LEDで知らせる
+	{
+		Signal(1);
+	}
+
+	//未探索が終わったら
+	//00に帰ってくる
 	while(1)
 	{
 		ChangeLED(2);

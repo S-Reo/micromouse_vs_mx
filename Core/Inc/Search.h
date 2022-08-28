@@ -22,5 +22,5 @@ void make_map(int x, int y, int mask);
 void map_print();
 _Bool is_unknown(int x, int y);
 void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask);
-
+int get_nextdir(int x, int y, int mask);
 #endif /* INC_SEARCH_H_ */
