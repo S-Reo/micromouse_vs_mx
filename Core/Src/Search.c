@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "Action.h"
+#include "PID_Control.h"
+#include "Action.h"
 int Calc;
 int SearchOrFast;
 void shiftPos()
@@ -24,7 +26,7 @@ void AdachiJudge(){
 void KyushinJudge()
 {
 	//歩数マップから進行方向を導き出すのは、アクションが終わった後、座標と方角が更新されてから。
-	switch(Pos.Car)
+	switch(Pos.Car%4)
 	{
 		  case north:
 			  if(Wall[Pos.X][Pos.Y].north == NOWALL && walk_map[Pos.X][Pos.Y+1] < walk_map[Pos.X][Pos.Y] && Pos.Y < NUMBER_OF_SQUARES-1){
@@ -450,31 +452,68 @@ void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask)
 	//t_direction glob_nextdir;
 	//int straight_count=0;
 
+	float acc;// = AjustCenter();
 	//現在の向きから、次に行くべき方向へ向く
 	Pos.Dir = get_nextdir(x,y,mask);
-	switch(Pos.Dir)	//次に行く方向を戻り値とする関数を呼ぶ
+
+	switch(Pos.Dir%4)	//次に行く方向を戻り値とする関数を呼ぶ
 	{
 		case front:
 				//前向きだった場合はそのまま加速
+			if(Pos.X == 0 && Pos.Y == 0)
+			{
+				acc = 61.75;
+			}
+			else
+			{
+				acc = 45;
+			}
+
 			break;
 
 		case right:					//右に向く
+			acc = AjustCenter();
 			Rotate( 90 , 2*M_PI);
+			acc = AjustCenter();
+			HAL_Delay(100);
+			PIDChangeFlag( A_VELO_PID , 1);
 			break;
 
 		case left:					//左に向く
+			acc = AjustCenter();
 			Rotate( 90 , -2*M_PI);			//左に曲がって
+			acc = AjustCenter();
+			HAL_Delay(100);
+			PIDChangeFlag( A_VELO_PID , 1);
 			break;
 
 		case back:					//後ろに向く
-			Rotate( 180 , 2*M_PI);
+			acc = AjustCenter();
+			Pos.Dir = right;
+			Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+			acc = AjustCenter();
+			Pos.Dir = right;
+			Rotate(90, 2*M_PI);
+			Pos.Dir = back;
+			acc = AjustCenter();
+			Angle = TargetAngle;
+			HAL_Delay(300);
 			break;
 	}
 	//shiftPos();
-	HAL_Delay(100);
+
+	TargetVelocity[BODY] = 0;
+	Acceleration = 0;
+	TargetAngularV = 0;
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+	PIDReset(A_VELO_PID);
+	PIDReset(L_WALL_PID);
+	PIDReset(R_WALL_PID);
+	HAL_Delay(200);
 	//加速
 	Pos.Dir = front;
-	switch(Pos.Car)
+	switch(Pos.Car%4)
 	{
 	case north:
 		Pos.NextX = Pos.X;
@@ -497,7 +536,7 @@ void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask)
 		Pos.NextCar = west;
 		break;
 	}
-	Accel(45, ExploreVelocity);
+	Accel(acc, ExploreVelocity);
 	shiftPos();
 //	//向いた方向によって自分の座標を更新する
 //	switch(Pos.Car)

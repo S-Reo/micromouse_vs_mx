@@ -8,7 +8,7 @@
 
 
 //動作を定義する //割り込みで呼ぶ。
-#include <action.h>
+#include "Action.h"
 #include <main.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1373,7 +1373,7 @@ void Accel(float add_distance, float explore_speed)
 		{
 			wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
 			//計算して
-			make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+			make_map(Pos.TargetX, Pos.TargetY, 0x01);
 			//UpdateWalkMap();
 			//次のアクションを渡すのは別のところで。
 			Calc = 1;
@@ -1562,14 +1562,14 @@ float AjustCenter(){
 	Pos.Act = compensate;
 	int wall_ctrl = GetWallCtrlDirection();
 	PIDChangeFlag(wall_ctrl, 1);
-
+	//HAL_Delay(100);
 	switch(Pos.Car%4)
 	{
 	case north: //use west or north wall
 			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))&& !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 				{
 					ChangeLED(Pid[F_WALL_PID].flag);
 				}
@@ -1590,7 +1590,7 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) && !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
 					ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -1607,7 +1607,7 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) && !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
 						ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -1624,7 +1624,7 @@ float AjustCenter(){
 			if (Wall[Pos.X][Pos.Y].west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) && !(-2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  2))
+				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
 					ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -1707,7 +1707,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 			{
 				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
 				//計算して
-				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
+				make_map(Pos.TargetX, Pos.TargetY, 0x01);
 				//UpdateWalkMap();
 				//次のアクションを渡すのは別のところで。
 				Calc = 1;

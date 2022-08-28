@@ -33,6 +33,7 @@ void WaitStopAndReset();
 void straight_time(double time_s);
 void SlalomRight();
 void SlalomLeft();
+float AjustCenter();
 void RotateAccel(float deg, float rotate_ang_v);
 void RotateConst(float deg, float rotate_ang_v);
 void RotateDecel(float deg, float rotate_ang_v);

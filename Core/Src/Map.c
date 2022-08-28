@@ -181,9 +181,14 @@ void init_map(int goal_x, int goal_y)
 			walk_map[i][j] = 255;	//すべて255で埋める
 		}
 	}
-	for(; goal_x < goal_x + goal_edge_num; goal_x++)
+	int n[2] =
 	{
-		for(; goal_y < goal_y + goal_edge_num; goal_y++)
+			goal_x + goal_edge_num,
+			goal_y + goal_edge_num
+	};
+	for(; goal_x < n[0]; goal_x++)
+	{
+		for(; goal_y < n[1]; goal_y++)
 		{
 			walk_map[goal_x][goal_y] = 0;
 		}
@@ -574,14 +579,17 @@ void setNotExploredArea()
 	}
 	//行くべき座標に1が入った
 	int num = not_explored_area_number;
-	int target_x[num];
-	int target_y[num];
+	ChangeLED(7);
+	HAL_Delay(1000);
+	int target_x[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
+	int target_y[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
 	//行くべき座標のxyを取得
 	int n=0;
+	ChangeLED(2);
 	for(int i=0; i < NUMBER_OF_SQUARES; i++)
 	{
-		target_x[n] = 0;
-		target_y[n] = 0;
+//		target_x[n] = 0;
+//		target_y[n] = 0;
 		for(int j=0; j < NUMBER_OF_SQUARES; j++)
 		{
 			if(not_explored_area[i][j] == 1)
@@ -592,10 +600,12 @@ void setNotExploredArea()
 			}
 		}
 	}
+	ChangeLED(3);
 	if(n == 0)
 	{
 		Pos.TargetX = 0;
 		Pos.TargetY = 0;
+		ChangeLED(4);
 	}
 	//評価値を求めて比較し最も近い座標を設定
 	else
@@ -603,24 +613,33 @@ void setNotExploredArea()
 		Pos.TargetX = target_x[0];
 		Pos.TargetY = target_y[0];
 		goal_edge_num = one;
+		ChangeLED(5);
 		for(int i = 0; i < num; i ++)
 		{
+			//未探索がなくなるまでは目標座標は00にしない
+			if(target_x[i] == 0 && target_y[i] == 0)
+				continue;
+
+			//
 			init_map(target_x[i], target_y[i]);
 			make_map(target_x[i], target_y[i],0x01);
 
 			//現在座標の評価値を比較していく
 			uint16_t current=0;
-			static uint16_t last;
+
+			static uint16_t last=0;//NUMBER_OF_SQUARES*NUMBER_OF_SQUARES;
 			current = walk_map[Pos.X][Pos.Y];
 
 			//最小の歩数をもつxy座標を次の目標座標にする
-			if( current < last )
+			if( current > last )
 			{
 				Pos.TargetX = target_x[i];
 				Pos.TargetY = target_y[i];
+				last = current;
 			}
-			last = current;
+
 		}
+		ChangeLED(6);
 	}
 	//一番近い未探索マスのxyが出る
 //

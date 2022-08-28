@@ -272,7 +272,7 @@ void Explore_IT()
 		}
 
 	TargetVelocity[BODY] += Acceleration;
-	AngularAcceleration += AngularLeapsity;
+	//AngularAcceleration += AngularLeapsity;
 	TargetAngularV += AngularAcceleration;
 	//TargetAngularV += AngularAcceleration;
 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );

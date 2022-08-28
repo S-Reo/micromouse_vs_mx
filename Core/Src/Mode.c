@@ -773,8 +773,8 @@ void FastestRun()
 	case 1:
 		ExploreVelocity=90;
 		//未
-		Sla.Pre = 9;
-		Sla.Fol = 13;
+		Sla.Pre = 7;//9;
+		Sla.Fol = 11;//13;
 		Sla.Alpha = 0.014;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -826,18 +826,19 @@ void FastestRun()
 	printf("あ\r\n");
 	//最短経路導出(今回は省けそう。)
 	SearchOrFast = 1;
-		Pos.Dir = front;
-		Pos.Car = north;
-		Pos.NextX = Pos.X;
-		Pos.NextY = Pos.Y + 1;
-		Pos.NextCar = north;
-		//printf("い : %f\r\n",ExploreVelocity);
-		Accel(61.75, ExploreVelocity);
-
-	 	Pos.X = Pos.NextX;
-	    Pos.Y = Pos.NextY;
-		Pos.Car = Pos.NextCar;	//自分の向きを更新
+//		Pos.Dir = front;
+//		Pos.Car = north;
+//		Pos.NextX = Pos.X;
+//		Pos.NextY = Pos.Y + 1;
+//		Pos.NextCar = north;
+//		//printf("い : %f\r\n",ExploreVelocity);
+//		Accel(61.75, ExploreVelocity);
+//
+//	 	Pos.X = Pos.NextX;
+//	    Pos.Y = Pos.NextY;
+//		Pos.Car = Pos.NextCar;	//自分の向きを更新
 	//走る
+	goal_edge_num = two;
 	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
 
 	//ゴールしたら減速して、停止。
@@ -962,6 +963,8 @@ void Explore()
 		break;
 
 	}
+	Pos.TargetX = X_GOAL_LESSER;
+	Pos.TargetY = Y_GOAL_LESSER;
 	goal_edge_num = two;
 	SearchOrFast = 0;
 	Pos.Dir = front;
@@ -971,9 +974,14 @@ void Explore()
 	Pos.NextCar = north;
 	dbc = 1;
 	Accel(61.5, ExploreVelocity);
- 	Pos.X = Pos.NextX;
-    Pos.Y = Pos.NextY;
-	Pos.Car = Pos.NextCar;
+	shiftPos();
+//
+//	while(1)
+//
+//	{
+//		ChangeLED(7);
+//		TargetVelocity[BODY] = 0;
+//	}
 
 	while( !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER)) ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
@@ -1067,10 +1075,15 @@ void Explore()
 	goal_edge_num = one;
 	SearchOrFast = 0;
 
-	fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
+	while(!(Pos.X == 0 && Pos.Y == 0))
+	{
 
-	Decel(45,0);
-	shiftPos();
+		setNotExploredArea();
+		fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
+		Decel(45,0);
+		//shiftPos();
+
+	}
 	//flashに保存
 	//flashのクリア。
 	Flash_clear_sector1();
@@ -1080,6 +1093,7 @@ void Explore()
 	Signal(7);
 	while(1)
 	{
+		ChangeLED(2);
 		wall_ram_print();
 		map_print();
 	}
