@@ -21,6 +21,51 @@ void shiftPos()
 	Pos.X = Pos.NextX;
 	Pos.Y = Pos.NextY;
 }
+_Bool judgeAdjacency(uint8_t x, uint8_t y)
+{
+	//xyが、今いる座標に隣接しているかどうか
+
+	int abstract_x = abs((int)Pos.X - (int)x);
+	int abstract_y = abs((int)Pos.Y - (int)y);
+	if( abstract_x == 1 && abstract_y == 0)
+		return true;
+	if( abstract_x == 0 && abstract_y == 1)
+		return true;
+
+	return false;//隣接していない
+	//隣接している場合、共に差は2以上にならない
+	//少なくとも片方の差が0
+}
+_Bool judgeImpasse(uint8_t x, uint8_t y)
+{
+
+		//袋小路かどうかの判定
+	//全て壁があったら0
+	if(Wall[x][y].east == WALL && Wall[x][y].south == WALL && Wall[x][y].west == WALL && Wall[x][y].north == WALL)
+	{
+		return 0;
+	}
+	else if(Wall[x][y].east == WALL && Wall[x][y].south == WALL && Wall[x][y].west == WALL)
+	{
+		return 1;
+	}
+	else if(Wall[x][y].south == WALL && Wall[x][y].west == WALL && Wall[x][y].north == WALL)
+	{
+		return 1;
+	}
+	else if(Wall[x][y].west == WALL && Wall[x][y].north == WALL && Wall[x][y].east == WALL)
+	{
+		return 1;
+	}
+	else if(Wall[x][y].north == WALL && Wall[x][y].east == WALL && Wall[x][y].south == WALL )
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 void AdachiJudge(){
 }
 void KyushinJudge()

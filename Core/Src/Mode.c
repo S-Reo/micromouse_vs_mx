@@ -1257,10 +1257,115 @@ void Explore()
 		{
 			for(int i=0; i < area_num; i++)
 			{
+				static int reset_cnt = 0;
+				if(reset_cnt == 1)
+				{
+					i = 0;
+					reset_cnt = 0;
+				}
 				Pos.TargetX = target_x[i];
 				Pos.TargetY = target_y[i];
+				if(judgeImpasse(Pos.TargetX, Pos.TargetY) == 1)
+				{
+					//目標座標が袋小路なら次の座標を目標座標にする
+					continue;
+				}
+
 				//向くべき方を向いて加速して、あとは未探索の配列が終了するまで繰り返し
 				fast_run( Pos.TargetX, Pos.TargetY,Pos.TargetX,Pos.TargetY, turn_mode,0x01);
+				//袋小路が来たら、停止、再計算、補正して加速
+				if(judgeImpasse(Pos.X, Pos.Y) == 1 || judgeAdjacency(target_x[i+1], target_y[i+1]) == 0/*現在座標と次の目標座標が隣り合っていなければ、*/)
+				{
+					Decel(45, 0);
+					area_num = 	setNotExploredArea((uint8_t *)target_x, (uint8_t *)target_y, (uint16_t *)walk_val);
+					reset_cnt = 1;
+					Pos.Dir = get_nextdir(target_x[0],target_y[0],0x01);
+					ChangeLED(2);
+					switch(Pos.Dir%4)	//次に行く方向を戻り値とする関数を呼ぶ
+					{
+						case front:
+								//前向きだった場合はそのまま加速
+							if(Pos.X == 0 && Pos.Y == 0)
+							{
+								acc = 61.75;
+							}
+							else
+							{
+								acc = 45;
+							}
+
+							break;
+
+						case right:					//右に向く
+							acc = AjustCenter();
+							Rotate( 90 , 2*M_PI);
+							acc = AjustCenter();
+							HAL_Delay(100);
+							PIDChangeFlag( A_VELO_PID , 1);
+							break;
+
+						case left:					//左に向く
+							acc = AjustCenter();
+							Rotate( 90 , -2*M_PI);			//左に曲がって
+							acc = AjustCenter();
+							HAL_Delay(100);
+							PIDChangeFlag( A_VELO_PID , 1);
+							break;
+
+						case back:					//後ろに向く
+							acc = AjustCenter();
+							Pos.Dir = right;
+							Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+							acc = AjustCenter();
+							Pos.Dir = right;
+							Rotate(90, 2*M_PI);
+							Pos.Dir = back;
+							acc = AjustCenter();
+							Angle = TargetAngle;
+							HAL_Delay(300);
+							break;
+					}
+
+						TargetVelocity[BODY] = 0;
+						Acceleration = 0;
+						TargetAngularV = 0;
+						PIDReset(L_VELO_PID);
+						PIDReset(R_VELO_PID);
+						PIDReset(A_VELO_PID);
+						PIDReset(L_WALL_PID);
+						PIDReset(R_WALL_PID);
+						HAL_Delay(200);
+						ChangeLED(1);
+						//加速
+						Pos.Dir = front;
+						switch(Pos.Car%4)
+						{
+						case north:
+							Pos.NextX = Pos.X;
+							Pos.NextY = Pos.Y + 1;
+							Pos.NextCar = north;
+							break;
+						case east:
+							Pos.NextX = Pos.X + 1;
+							Pos.NextY = Pos.Y;
+							Pos.NextCar = east;
+							break;
+						case south:
+							Pos.NextX = Pos.X;
+							Pos.NextY = Pos.Y - 1;
+							Pos.NextCar = south;
+							break;
+						case west:
+							Pos.NextX = Pos.X - 1;
+							Pos.NextY = Pos.Y;
+							Pos.NextCar = west;
+							break;
+						}
+						ChangeLED(0);
+
+						Accel(acc, ExploreVelocity);
+						shiftPos();
+				}
 			}
 		}
 		Decel(45,0);

@@ -13,6 +13,8 @@ extern int Calc;
 extern int SearchOrFast;
 
 void shiftPos();
+_Bool judgeImpasse(uint8_t x, uint8_t y);
+_Bool judgeAdjacency(uint8_t x, uint8_t y);
 void KyushinJudge();
 
 void LeftHandJudge(char turn_mode);
