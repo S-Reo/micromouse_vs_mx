@@ -168,7 +168,7 @@ void wall_set(){
 //	  wall_store_running(Pos.X,Pos.Y);
 }
 
-void init_map(int goal_x, int goal_y)
+void init_map(uint8_t goal_x, uint8_t goal_y)
 {
 //迷路の歩数Mapを初期化する。全体を0xff、引数の座標x,yは0で初期化する
 
@@ -181,7 +181,7 @@ void init_map(int goal_x, int goal_y)
 			walk_map[i][j] = 255;	//すべて255で埋める
 		}
 	}
-	int n[2] =
+	uint8_t n[2] =
 	{
 			goal_x + goal_edge_num,
 			goal_y + goal_edge_num
@@ -197,7 +197,7 @@ void init_map(int goal_x, int goal_y)
 }
 
 
-void make_map(int x, int y, int mask)	//歩数マップを作成する
+void make_map(uint8_t x, uint8_t y, int mask)	//歩数マップを作成する
 {
 //座標x,yをゴールとした歩数Mapを作成する。
 //maskの値(MASK_SEARCH or MASK_SECOND)によって、
@@ -526,7 +526,7 @@ void UpdateWalkMap()
 			       }
 			  }
 		  }
-		  //歩数と繰り返しの回数は等し?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+		  //歩数と繰り返しの回数は等し
 		  hosu++;
 	}while(flag);
 
@@ -534,11 +534,7 @@ void UpdateWalkMap()
 
 int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 {
-	uint8_t *pTx = target_x;
-	uint8_t *pTy = target_y;
-	uint16_t *pWv = walk_val;
-
-	int not_explored_area_number;
+	int not_explored_area_number=0;
 	_Bool not_explored_area[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES]={0};
 	for(int i=0; i < NUMBER_OF_SQUARES; i++)
 	{
@@ -581,6 +577,9 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 			}
 		}
 	}
+//未探索座標xyを表示
+#if 0
+	printf("未探索座標xyを表示\r\n");
 	while(1)
 	{
 		for(int i=0; i < NUMBER_OF_SQUARES; i++)
@@ -591,30 +590,58 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 			}
 		}
 	}
+#endif
 	//行くべき座標に1が入った
 	int num = not_explored_area_number;
 	ChangeLED(7);
 	HAL_Delay(1000);
 	//行くべき座標のxyを取得
+	//ここまで合ってる
 	ChangeLED(2);
+
 	int n = 0;
-	for(int i=0; i < NUMBER_OF_SQUARES; i++)
-	{
-//		target_x[n] = 0;
-//		target_y[n] = 0;
-		for(int j=0; j < NUMBER_OF_SQUARES; j++)
+		for(int i=0; i < NUMBER_OF_SQUARES; i++)
 		{
-			if(not_explored_area[i][j] == 1)
+			for(int j=0; j < NUMBER_OF_SQUARES; j++)
 			{
-				*target_x = (uint8_t)i;
-				*target_y = (uint8_t)j;
-				target_x += sizeof(*target_x);
-				target_y += sizeof(*target_y);
-				n++;
+				if(not_explored_area[i][j] == 1)
+				{
+					//printf("n:%d, i:%u, j:%u, x:%u, y:%u, %p, %p\r\n",n,(uint8_t)i,(uint8_t)j,*target_x, *target_y, target_x, target_y);
+#if 0
+					*target_x = (uint8_t)i;
+					*target_y = (uint8_t)j;
+					target_x += sizeof(*target_x);
+					target_y += sizeof(*target_y);
+#else
+					target_x[n] = (uint8_t)i;
+					target_y[n] = (uint8_t)j;
+#endif
+					n++;
+				}
 			}
 		}
+//		target_x = pTx;
+//		target_y = pTy;
+
+
+	//ここでどうなったか
+//未探索座標のxy配列を表示
+	//ここで間違っていれば↑の処理を直す
+	//合っていれば
+#if 0
+	while(1)
+	{
+		printf("未探索座標のxy配列\r\n");
+		for(int i = 0; i < num; i ++)
+		{
+				printf("%d, %u, %u, %p, %p, %p, %p\r\n",i,*target_x, *target_y, target_x, target_y, pTx, pTy);
+				target_x += sizeof(*target_x);
+				target_y += sizeof(*target_y);
+		}
+		target_x = pTx;
+		target_y = pTy;
 	}
-	//ここで切り
+#endif
 	ChangeLED(3);
 	if(n == 0)
 	{
@@ -628,30 +655,41 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 		//目標座標を設定したときの現在座標の重みが小さい順に、walk_valをソートしたい
 		//walk_valをソートするときは一緒にxyをソートする
 		//ソートの準備
-		//
-		//アドレスを保存
-		target_x = pTx;
-		target_y = pTy;
-		Pos.TargetX = *target_x;
-		Pos.TargetY = *target_y;
 		goal_edge_num = one;
+
 		ChangeLED(5);
-		for(int i = 0; i < num; i ++)
+		//HAL_Delay(15000);
+		for(int i = 0; i < n; i ++)
 		{
+#if 0
+
 			init_map(*target_x, *target_y);
 			make_map(*target_x, *target_y,0x01);
 			*walk_val = walk_map[Pos.X][Pos.Y];
-
+			printf("%d, %u, %u, %u\r\n",i,*target_x, *target_y, *walk_val);
 			walk_val += sizeof(*walk_val);
 			target_x += sizeof(*target_x);
 			target_y += sizeof(*target_y);
+#else
+			//HAL_Delay(1000);
+			ChangeLED(i%8);
+			init_map(target_x[i], target_y[i]);
+			make_map(target_x[i], target_y[i],0x01);
+			walk_val[i] = walk_map[Pos.X][Pos.Y];
+			//printf("%d, %d, %d, %d, %u, %u, %u\r\n",i,num,not_explored_area_number,n,target_x[i], target_y[i], walk_val[i]);
+#endif
 		}//歩数が入った
 
-		walk_val = pWv;
-		target_x = pTx;
-		target_y = pTy;
+//		walk_val = pWv;
+//		target_x = pTx;
+//		target_y = pTy;
+
+		ChangeLED(4);
+//未探索xy座標とそこにかかる歩数:ソート前
+#if 0
 		while(1)
 		{
+			printf("未探索xy座標とそこにかかる歩数\r\n");
 			walk_val = pWv;
 			target_x = pTx;
 			target_y = pTy;
@@ -664,27 +702,34 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 			}
 
 		}
+#endif
 		//ソート
+//		uint8_t *pTx;
+//		pTx = target_x;
+//		uint8_t *pTy;
+//		pTy = target_y;
+//		uint16_t *pWv;
+//		pWv = walk_val;
 		uint16_t tmp_w = 0;
 		uint8_t tmp_x = 0;
 		uint8_t tmp_y = 0;
-		for(int i=0; i < num; i++)
+		for(int i=0; i < n-1; i++)
 		{
-			for(int j=0; j < num; j++)
+			for(int j=i+1; j < n; j++)
 			{
-				if(*(walk_val + (i * sizeof(*walk_val)) ) > *(walk_val + (j * sizeof(*walk_val))) )
+				if( walk_val[i]  > walk_val[j] )
 				{
-					tmp_w = *(walk_val + (i * sizeof(*walk_val)) );
-					*(walk_val + (i * sizeof(*walk_val)) ) = *(walk_val + (j*sizeof(*walk_val)) );
-					*(walk_val + (j*sizeof(*walk_val)) ) = tmp_w;
+					tmp_w = walk_val[i];
+					walk_val[i] = walk_val[j];
+					walk_val[j] = tmp_w;
 
-					tmp_x = *(target_x + (i * sizeof(*target_x)) );
-					*(target_x + (i * sizeof(*target_x)) ) = *(target_x + (j*sizeof(*target_x)) );
-					*(target_x + (j*sizeof(*target_x)) ) = tmp_x;
+					tmp_x = target_x[i];
+					target_x[i] = target_x[j];
+					target_x[j] = tmp_x;
 
-					tmp_y = *(target_y + (i * sizeof(*target_y)) );
-					*(target_y + (i * sizeof(*target_y)) ) = *(target_y + (j*sizeof(*target_y)) );
-					*(target_y + (j*sizeof(*target_y)) ) = tmp_y;
+					tmp_y = target_y[i];
+					target_y[i] = target_y[j];
+					target_y[j] = tmp_y;
 				}
 			}
 		}//ソート
@@ -696,7 +741,7 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 
 		ChangeLED(6);
 	}
-	return not_explored_area_number;
+	return n;
 	//一番近い未探索マスのxyが出る
 
 }

@@ -18,7 +18,7 @@ void KyushinJudge();
 void LeftHandJudge(char turn_mode);
 
 //RT
-void make_map(int x, int y, int mask);
+void make_map(uint8_t x, uint8_t y, int mask);
 void map_print();
 _Bool is_unknown(int x, int y);
 void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask);

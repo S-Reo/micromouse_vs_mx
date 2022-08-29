@@ -1151,15 +1151,16 @@ void Explore()
 	goal_edge_num = one;
 	SearchOrFast = 0;
 
-	int area_num = 	setNotExploredArea((uint8_t *)target_x, (uint8_t *)target_x, (uint16_t *)walk_val);
+	int area_num = 	setNotExploredArea((uint8_t *)target_x, (uint8_t *)target_y, (uint16_t *)walk_val);
 	ChangeLED(3);
 
-	while(1){
-		for(int i=0; i < area_num; i++)
-		{
-		printf("%d, %u, %u, %u\r\n",i,target_x[i],target_y[i],walk_val[i]);
-		}
-	}
+	//ソート後
+//	while(1){
+//		for(int i=0; i < area_num; i++)
+//		{
+//			printf("%d, %u, %u, %u\r\n",i,target_x[i],target_y[i],walk_val[i]);
+//		}
+//	}
 
 	if(area_num != 0)
 	{
