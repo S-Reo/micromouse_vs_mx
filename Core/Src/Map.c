@@ -645,6 +645,9 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 	ChangeLED(3);
 	if(n == 0)
 	{
+		goal_edge_num = one;
+		target_x[0] = 0;
+		target_y[0] = 0;
 		Pos.TargetX = 0;
 		Pos.TargetY = 0;
 		ChangeLED(4);
@@ -704,35 +707,32 @@ int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val)
 		}
 #endif
 		//ソート
-//		uint8_t *pTx;
-//		pTx = target_x;
-//		uint8_t *pTy;
-//		pTy = target_y;
-//		uint16_t *pWv;
-//		pWv = walk_val;
-		uint16_t tmp_w = 0;
-		uint8_t tmp_x = 0;
-		uint8_t tmp_y = 0;
-		for(int i=0; i < n-1; i++)
+		if( n > 1)
 		{
-			for(int j=i+1; j < n; j++)
+			uint16_t tmp_w = 0;
+			uint8_t tmp_x = 0;
+			uint8_t tmp_y = 0;
+			for(int i=0; i < n-1; i++)
 			{
-				if( walk_val[i]  > walk_val[j] )
+				for(int j=i+1; j < n; j++)
 				{
-					tmp_w = walk_val[i];
-					walk_val[i] = walk_val[j];
-					walk_val[j] = tmp_w;
+					if( walk_val[i]  < walk_val[j] )//遠い順 <
+					{
+						tmp_w = walk_val[i];
+						walk_val[i] = walk_val[j];
+						walk_val[j] = tmp_w;
 
-					tmp_x = target_x[i];
-					target_x[i] = target_x[j];
-					target_x[j] = tmp_x;
+						tmp_x = target_x[i];
+						target_x[i] = target_x[j];
+						target_x[j] = tmp_x;
 
-					tmp_y = target_y[i];
-					target_y[i] = target_y[j];
-					target_y[j] = tmp_y;
+						tmp_y = target_y[i];
+						target_y[i] = target_y[j];
+						target_y[j] = tmp_y;
+					}
 				}
-			}
-		}//ソート
+			}//ソート
+		}
 
 			//最小歩数じゃなくて、小さい順にソート
 			//座標と歩数を一緒に並べ替える
