@@ -23,6 +23,8 @@
 #include "Map.h"
 #include "Search.h"
 
+#include "MazeLib.h"
+#include "test.h"
 #include <stdbool.h>
 static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
 //現在の速度と総走行距離と左右それぞれ
@@ -293,227 +295,225 @@ void WallWarn()
 {
 	Pos.WallSaf = wall_warn;
 }
-void ControlWall()
-{
-	//壁制御flagを管理する
-	//結局すべてはアクション中の出来事。アクションの細かいモジュールの中の、移動量と壁の状態
-	//直進中で
-		//端の座標なら確実に型壁制御
-	//斜め走行は別でアクションを定義
-
-	//横壁制御
-	int wall_ctrl_dir = GetWallCtrlDirection();	//次の座標のも返してみて、できれば連続で制御をする。
-	//割り込み中に呼ぶかアクション中に呼ぶか。アクション中の方が座標と壁の状態が確実。いや、判定が遅れると嫌だからやっぱり割り込み。移動量はflagで。
-
-	//PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(D_WALL_PID, 0);
-	PIDChangeFlag( A_VELO_PID, 0);
-	//アクションごとに壁制御を記述した方がいいかも
-
-	//アクション、方向、壁安全。
-
-	//減速の時、壁の状態
-	if(Pos.Dir == front)		//区画の区切りで前方に進むと決めたあと、動作としては加速か、straight。初期状態はwaitから加速へ
-	{
-		switch(Pos.Act)
-		{
-		case accel:
-			PIDChangeFlag( A_VELO_PID , 1);
-			//一つ先の区画がわかっていて加速したいときに
-			break;
-		case decel:
-			//減速はないけど一応今後のため。
-			break;
-		case straight:
-			//3/3おっけーかも
-			if( (wall_ctrl_dir != N_WALL_PID)  && (AddVelocity == 0) )	//左右どちらかに壁があるとき
-			{
-				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
-				{
-					PIDChangeFlag(wall_ctrl_dir, 1);
-					PIDChangeFlag( A_VELO_PID, 0);
-				}
-				else
-				{
-					PIDChangeFlag(wall_ctrl_dir, 0);
-					PIDChangeFlag( A_VELO_PID , 1);
-				}
-			}
-			else
-			{
-				PIDChangeFlag( A_VELO_PID , 1);
-			}
-			break;
-			//wait
-		case Wait:
-			break;
-		default :
-			break;
-		}
-		//非斜め走行では、まだ壁制御の条件を考えないといけない
-		//方角チェック
-		//方角、座標からそのときの左右の壁データを取得。壁があるかどうかから、左のみ右のみ両壁の判定
-		//移動量がN割りのフラグ。直進は、Uターンの加減速を含まない、ただの一区画直進なので、移動量判定でできる。と思ったら分けてた?
-		//Actはstraight
-
-
-	}
-	else if(Pos.Dir == left)	//左に行くとき
-	{
-		if(Pos.Act == slalom)
-		{
-//			PIDChangeFlag(L_WALL_PID, 0);
-//			PIDChangeFlag(R_WALL_PID, 0);
-//			PIDChangeFlag(D_WALL_PID, 0);
-//			PIDChangeFlag( A_VELO_PID, 0);
-			TargetAngularV = 0;
-			AngularAcceleration = 0;
-		}
-		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
-		{
-			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
-			{
-				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
-				{
-					PIDChangeFlag(wall_ctrl_dir, 1);
-					PIDChangeFlag( A_VELO_PID, 0);
-				}
-				else
-				{
-					PIDChangeFlag(wall_ctrl_dir, 0);
-					PIDChangeFlag( A_VELO_PID , 1);
-				}
-			}
-			else
-			{
-				PIDChangeFlag( A_VELO_PID , 1);
-			}
-		}
-		else if(Pos.Act == accel)
-		{
-			PIDChangeFlag( A_VELO_PID , 1);
-		}
-		else if(Pos.Act == rotate)
-		{
-			PIDChangeFlag( A_VELO_PID , 0);
-		}
-
-
-	}
-	else if(Pos.Dir == right)
-	{
-		if(Pos.Act == slalom)
-		{
-//			PIDChangeFlag(L_WALL_PID, 0);
-//			PIDChangeFlag(R_WALL_PID, 0);
-//			PIDChangeFlag(D_WALL_PID, 0);
-//			PIDChangeFlag( A_VELO_PID, 0);
-			TargetAngularV = 0;
-			AngularAcceleration = 0;
-		}
-		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
-		{
-			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
-			{
-				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
-				{
-					PIDChangeFlag(wall_ctrl_dir, 1);
-					PIDChangeFlag( A_VELO_PID, 0);
-				}
-				else
-				{
-					PIDChangeFlag(wall_ctrl_dir, 0);
-					PIDChangeFlag( A_VELO_PID , 1);
-				}
-			}
-			else
-			{
-				PIDChangeFlag( A_VELO_PID , 1);
-			}
-		}
-		else if(Pos.Act == accel)
-		{
-			PIDChangeFlag( A_VELO_PID , 1);
-		}
-		else if(Pos.Act == rotate)
-		{
-			PIDChangeFlag( A_VELO_PID , 0);
-		}
-
-	}
-	else if(Pos.Dir == back)
-	{
-		//Actはaccel,decel,wait,turn。
-		//減速中の前半みwall_safeに変化。
-		if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
-		{
-			if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
-			{
-				PIDChangeFlag(wall_ctrl_dir , 1);
-				PIDChangeFlag( A_VELO_PID, 0);
-			}
-			else
-			{
-				PIDChangeFlag(wall_ctrl_dir, 0);
-				PIDChangeFlag( A_VELO_PID , 1);
-			}
-		}
-		else if(Pos.Act == accel)
-		{
-			PIDChangeFlag( A_VELO_PID , 1);
-		}
-		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
-
-		//停止中や旋回中はだめ。
-
-	}
-
-//	else if(Pos.Dir == left)
-//	{
-//		//減速中の前半みwall_safeに変化。
-//		if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
-//		{
-//			PIDChangeFlag(wall_ctrl_dir, 1);
-//			PIDChangeFlag( A_VELO_PID, 0);
-//		}
-//		else
-//		{
-//			PIDChangeFlag(wall_ctrl_dir, 0);
-//			PIDChangeFlag( A_VELO_PID, 1);
-//		}
-//		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
+//void ControlWall()
+//{
+//	//壁制御flagを管理する
+//	//結局すべてはアクション中の出来事。アクションの細かいモジュールの中の、移動量と壁の状態
+//	//直進中で
+//		//端の座標なら確実に型壁制御
+//	//斜め走行は別でアクションを定義
 //
-//		//停止中や旋回中はだめ。
+//	//横壁制御
+//	int wall_ctrl_dir = GetWallCtrlDirection();	//次の座標のも返してみて、できれば連続で制御をする。
+//	//割り込み中に呼ぶかアクション中に呼ぶか。アクション中の方が座標と壁の状態が確実。いや、判定が遅れると嫌だからやっぱり割り込み。移動量はflagで。
+//
+//	//PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
+//	PIDChangeFlag(L_WALL_PID, 0);
+//	PIDChangeFlag(R_WALL_PID, 0);
+//	PIDChangeFlag(D_WALL_PID, 0);
+//	PIDChangeFlag( A_VELO_PID, 0);
+//	//アクションごとに壁制御を記述した方がいいかも
+//
+//	//アクション、方向、壁安全。
+//
+//	//減速の時、壁の状態
+//	if(Pos.Dir == front)		//区画の区切りで前方に進むと決めたあと、動作としては加速か、straight。初期状態はwaitから加速へ
+//	{
+//		switch(Pos.Act)
+//		{
+//		case accel:
+//			PIDChangeFlag( A_VELO_PID , 1);
+//			//一つ先の区画がわかっていて加速したいときに
+//			break;
+//
+//		case straight:
+//			//3/3おっけーかも
+//			if( (wall_ctrl_dir != N_WALL_PID)  && (AddVelocity == 0) )	//左右どちらかに壁があるとき
+//			{
+//				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
+//				{
+//					PIDChangeFlag(wall_ctrl_dir, 1);
+//					PIDChangeFlag( A_VELO_PID, 0);
+//				}
+//				else
+//				{
+//					PIDChangeFlag(wall_ctrl_dir, 0);
+//					PIDChangeFlag( A_VELO_PID , 1);
+//				}
+//			}
+//			else
+//			{
+//				PIDChangeFlag( A_VELO_PID , 1);
+//			}
+//			break;
+//			//wait
+//		case Wait:
+//			break;
+//		default :
+//			break;
+//		}
+//		//非斜め走行では、まだ壁制御の条件を考えないといけない
+//		//方角チェック
+//		//方角、座標からそのときの左右の壁データを取得。壁があるかどうかから、左のみ右のみ両壁の判定
+//		//移動量がN割りのフラグ。直進は、Uターンの加減速を含まない、ただの一区画直進なので、移動量判定でできる。と思ったら分けてた?
+//		//Actはstraight
+//
+//
+//	}
+//	else if(Pos.Dir == left)	//左に行くとき
+//	{
+//		if(Pos.Act == slalom)
+//		{
+////			PIDChangeFlag(L_WALL_PID, 0);
+////			PIDChangeFlag(R_WALL_PID, 0);
+////			PIDChangeFlag(D_WALL_PID, 0);
+////			PIDChangeFlag( A_VELO_PID, 0);
+//			TargetAngularV = 0;
+//			AngularAcceleration = 0;
+//		}
+//		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
+//		{
+//			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
+//			{
+//				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
+//				{
+//					PIDChangeFlag(wall_ctrl_dir, 1);
+//					PIDChangeFlag( A_VELO_PID, 0);
+//				}
+//				else
+//				{
+//					PIDChangeFlag(wall_ctrl_dir, 0);
+//					PIDChangeFlag( A_VELO_PID , 1);
+//				}
+//			}
+//			else
+//			{
+//				PIDChangeFlag( A_VELO_PID , 1);
+//			}
+//		}
+//		else if(Pos.Act == accel)
+//		{
+//			PIDChangeFlag( A_VELO_PID , 1);
+//		}
+//		else if(Pos.Act == rotate)
+//		{
+//			PIDChangeFlag( A_VELO_PID , 0);
+//		}
+//
 //
 //	}
 //	else if(Pos.Dir == right)
 //	{
-//		//減速中の前半みwall_safeに変化。
-//		if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
+//		if(Pos.Act == slalom)
 //		{
-//			PIDChangeFlag(wall_ctrl_dir, 1);
-//			PIDChangeFlag( A_VELO_PID, 0);
+////			PIDChangeFlag(L_WALL_PID, 0);
+////			PIDChangeFlag(R_WALL_PID, 0);
+////			PIDChangeFlag(D_WALL_PID, 0);
+////			PIDChangeFlag( A_VELO_PID, 0);
+//			TargetAngularV = 0;
+//			AngularAcceleration = 0;
 //		}
-//		else
+//		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
 //		{
-//			PIDChangeFlag(wall_ctrl_dir, 0);
-//			PIDChangeFlag( A_VELO_PID, 1);
+//			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
+//			{
+//				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
+//				{
+//					PIDChangeFlag(wall_ctrl_dir, 1);
+//					PIDChangeFlag( A_VELO_PID, 0);
+//				}
+//				else
+//				{
+//					PIDChangeFlag(wall_ctrl_dir, 0);
+//					PIDChangeFlag( A_VELO_PID , 1);
+//				}
+//			}
+//			else
+//			{
+//				PIDChangeFlag( A_VELO_PID , 1);
+//			}
+//		}
+//		else if(Pos.Act == accel)
+//		{
+//			PIDChangeFlag( A_VELO_PID , 1);
+//		}
+//		else if(Pos.Act == rotate)
+//		{
+//			PIDChangeFlag( A_VELO_PID , 0);
+//		}
+//
+//	}
+//	else if(Pos.Dir == back)
+//	{
+//		//Actはaccel,decel,wait,turn。
+//		//減速中の前半みwall_safeに変化。
+//		if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
+//		{
+//			if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
+//			{
+//				PIDChangeFlag(wall_ctrl_dir , 1);
+//				PIDChangeFlag( A_VELO_PID, 0);
+//			}
+//			else
+//			{
+//				PIDChangeFlag(wall_ctrl_dir, 0);
+//				PIDChangeFlag( A_VELO_PID , 1);
+//			}
+//		}
+//		else if(Pos.Act == accel)
+//		{
+//			PIDChangeFlag( A_VELO_PID , 1);
 //		}
 //		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
 //
 //		//停止中や旋回中はだめ。
 //
 //	}
-	//どれでもなかったら全部0だと、右左はまだ。
-	//ControlWall();
-
-
-
-
-
-}
+//
+////	else if(Pos.Dir == left)
+////	{
+////		//減速中の前半みwall_safeに変化。
+////		if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
+////		{
+////			PIDChangeFlag(wall_ctrl_dir, 1);
+////			PIDChangeFlag( A_VELO_PID, 0);
+////		}
+////		else
+////		{
+////			PIDChangeFlag(wall_ctrl_dir, 0);
+////			PIDChangeFlag( A_VELO_PID, 1);
+////		}
+////		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
+////
+////		//停止中や旋回中はだめ。
+////
+////	}
+////	else if(Pos.Dir == right)
+////	{
+////		//減速中の前半みwall_safeに変化。
+////		if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
+////		{
+////			PIDChangeFlag(wall_ctrl_dir, 1);
+////			PIDChangeFlag( A_VELO_PID, 0);
+////		}
+////		else
+////		{
+////			PIDChangeFlag(wall_ctrl_dir, 0);
+////			PIDChangeFlag( A_VELO_PID, 1);
+////		}
+////		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
+////
+////		//停止中や旋回中はだめ。
+////
+////	}
+//	//どれでもなかったら全部0だと、右左はまだ。
+//	//ControlWall();
+//
+//
+//
+//
+//
+//}
 
 //void ResetCounter()
 //{
@@ -523,8 +523,8 @@ void ControlWall()
 
 void WaitStopAndReset()
 {
-	Pos.Act = Wait;
-	ControlWall();//ベイブレード対策
+//	Pos.Act = Wait;
+//	ControlWall();//ベイブレード対策
 	do
 	{
 
@@ -809,10 +809,12 @@ void RotateOld(float deg, float ang_accel)
 }
 void Rotate(float deg, float ang_v)
 {
-	Pos.Act = rotate;
-	WallWarn();
-	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
+//	Pos.Act = rotate;
+//	WallWarn();
+//	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
 	TargetAngularV = 0;
+
+	//角度制御切る
 
 	//rotate_ang_v - AngularV;
 	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
@@ -914,7 +916,7 @@ void Rotate(float deg, float ang_v)
 	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
 
 	WaitStopAndReset();
-	ControlWall();
+//	ControlWall();
 	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
 	if(ang_v < 0)
 	{
@@ -929,7 +931,7 @@ void Rotate(float deg, float ang_v)
 	KeepPulse[BODY] = KeepPulse[BODY];
 
 	//向いた方角を変える
-	ChangeCardinal();
+//	ChangeCardinal();
 	//printf("回転終了\r\n");
 }
 
@@ -1047,8 +1049,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 {
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
-	Pos.Act = slalom;
-	ControlWall();
+//	Pos.Act = slalom;
+//	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
 	//事前に決めておくものはここで定義
 	//引数は現在の状況を教えるもの
@@ -1217,7 +1219,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
 	Pos.Act = slalom;
-	ControlWall();
+//	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
 	//事前に決めておくものはここで定義
 	//引数は現在の状況を教えるもの
@@ -1348,8 +1350,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 //
 void Accel(float add_distance, float explore_speed)
 {
-	Pos.Act = accel;
-	ControlWall();
+//	Pos.Act = accel;
+//	ControlWall();
 	TargetAngularV = 0;
 	float additional_speed=0;
 	additional_speed = explore_speed - CurrentVelocity[BODY];
@@ -1358,22 +1360,23 @@ void Accel(float add_distance, float explore_speed)
 	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
 	 //TotalPulse[BODY];
 	Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
-	WallWarn();
+//	WallWarn();
 	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
 	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
 	//printf("target_pulse : %d",target_pulse);
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-	Calc = SearchOrFast;//Fastでは1を代入。
+
 	_Bool wall_cut = false;
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 		{
-			wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
-			//計算して
-			make_map(Pos.TargetX, Pos.TargetY, 0x01);
+//			wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+//			//計算して
+//			make_map(Pos.TargetX, Pos.TargetY, 0x01);
+			updateRealSearch();
 			//UpdateWalkMap();
 			//次のアクションを渡すのは別のところで。
 			Calc = 1;
@@ -1437,16 +1440,15 @@ void Accel(float add_distance, float explore_speed)
 }
 void Decel(float dec_distance, float end_speed)
 {
-	Pos.Act = decel;
-	//int keep_pulse = TotalPulse[BODY];
+//	Pos.Act = decel;
 	float down_speed=0;
 	down_speed = CurrentVelocity[BODY] - end_speed;
 	//速度減分 = 到達したい探索速度 - 現在の速度
 	//これなら現在速度が探索速度に追いついているときは加速度0にできる。
 	Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	WallSafe();
-	ControlWall();
+//	WallSafe();
+//	ControlWall();
 	//ここより下を分けて書くべきかはあとで考える
 	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
 
@@ -1486,11 +1488,11 @@ void Decel(float dec_distance, float end_speed)
 		}
 		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] )
 		{
-			WallWarn();
-			//ControlWall();
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
+//			WallWarn();
+//			//ControlWall();
+//			PIDChangeFlag(L_WALL_PID, 0);
+//			PIDChangeFlag(R_WALL_PID, 0);
+//			PIDChangeFlag(D_WALL_PID, 0);
 			PIDChangeFlag( A_VELO_PID , 1);
 
 		}
@@ -1668,7 +1670,7 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	{
 		//移動後は今の方角が維持される、
 		WallWarn();
-		ControlWall();
+//		ControlWall();
 		Accel( move_distance/2 , explore_speed+accel);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
 		while( ( KeepPulse[BODY] + (target_pulse/2)) > ( TotalPulse[BODY]) )
 		{
@@ -1683,10 +1685,10 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	}
 	else
 	{
-		Pos.Act = straight;
-		WallSafe();
-		ControlWall();
-		Calc = SearchOrFast;
+//		Pos.Act = straight;
+//		WallSafe();
+//		ControlWall();
+//		Calc = SearchOrFast;
 		_Bool wall_cut=false;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
@@ -1695,19 +1697,20 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
 			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] )
 			{
-				WallWarn();
-				PIDChangeFlag(L_WALL_PID, 0);
-				PIDChangeFlag(R_WALL_PID, 0);
-				PIDChangeFlag(D_WALL_PID, 0);
+//				WallWarn();
+//				PIDChangeFlag(L_WALL_PID, 0);
+//				PIDChangeFlag(R_WALL_PID, 0);
+//				PIDChangeFlag(D_WALL_PID, 0);
 				PIDChangeFlag( A_VELO_PID , 1);
 				//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
 			}
 
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
-				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
-				//計算して
-				make_map(Pos.TargetX, Pos.TargetY, 0x01);
+//				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
+//				//計算して
+//				make_map(Pos.TargetX, Pos.TargetY, 0x01);
+				updateRealSearch();
 				//UpdateWalkMap();
 				//次のアクションを渡すのは別のところで。
 				Calc = 1;
@@ -1758,10 +1761,11 @@ void TurnRight(char mode)
 		Decel(45, 0);
 		//AjustCenter();
 		EmitterOFF();
+		PIDChangeFlag(A_VELO_PID, 0);
 		Rotate( 90 , 2*M_PI);//1.5
 		//RotateTest(90);
 
-		float acc = AjustCenter();
+//		float acc = AjustCenter();
 		EmitterON();
 
 //		PIDReset(L_VELO_PID);
@@ -1769,7 +1773,7 @@ void TurnRight(char mode)
 //		PIDReset(A_VELO_PID);
 		HAL_Delay(100);
 		PIDChangeFlag( A_VELO_PID , 1);
-		Accel(acc, ExploreVelocity);
+		Accel(45, ExploreVelocity);
 		break;
 	case 'S':
 		//スラローム
@@ -1800,6 +1804,7 @@ void TurnLeft(char mode)
 		Decel(45, 0);
 		//AjustCenter();
 		EmitterOFF();
+		PIDChangeFlag(A_VELO_PID, 0);
 		Rotate( 90 , -2*M_PI);//-1.5
 		//RotateTest(-90);
 //		PIDReset(L_VELO_PID);
@@ -1807,11 +1812,11 @@ void TurnLeft(char mode)
 //		PIDReset(A_VELO_PID);
 		EmitterON();
 		HAL_Delay(100);
-		float acc = AjustCenter();
+//		float acc = AjustCenter();
 		HAL_Delay(100);
 
 		PIDChangeFlag( A_VELO_PID , 1);
-		Accel(acc, ExploreVelocity);
+		Accel(45, ExploreVelocity);
 		break;
 	case 'S':
 		//スラローム
@@ -1826,7 +1831,7 @@ void GoBack()
 {
 	//減速して
 	Decel(45, 0);
-	float acc = AjustCenter();
+	//float acc = AjustCenter();
 
 #if 0
 	EmitterOFF();
@@ -1836,20 +1841,22 @@ void GoBack()
 
 #else
 	Pos.Dir = right;
+	PIDChangeFlag(A_VELO_PID, 0);
 	Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
-	acc = AjustCenter();
+	//acc = AjustCenter();
 	Pos.Dir = right;
 	Rotate(90, 2*M_PI);
+	PIDChangeFlag(A_VELO_PID, 1);
 	Pos.Dir = back;
 
 #endif
 
-	acc = AjustCenter();
-	Angle = TargetAngle;
+	//acc = AjustCenter();
+//	/Angle = TargetAngle;
 
 	HAL_Delay(200);
 
-	Accel(acc, ExploreVelocity);
+	Accel(45, ExploreVelocity);
 	//ここまでで目標走行距離を完了する
 
 }

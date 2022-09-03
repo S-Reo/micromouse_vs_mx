@@ -2,7 +2,7 @@
 
 //#include "MazeLib.h"
 
-
+//0~15の値使ってない、名前おかしい
 _Bool convert16ValueToWallDirection_Simulation(simulation *simu, state *st, wall_state *wall_st)
 {
     //4方角の壁があるか無いかを返す

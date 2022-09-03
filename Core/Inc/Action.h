@@ -42,6 +42,8 @@ void Accel(float add_distance, float explore_speed);
 void Decel(float dec_distance, float end_speed);
 void Calib(int distance);
 void GoStraight(float move_distance,  float explore_speed, float accel);
+void TurnRight(char turn_mode);
+void TurnLeft(char turn_mode);
 void GoBack();
 void Aim();
 void SelectAction(char turn_mode);

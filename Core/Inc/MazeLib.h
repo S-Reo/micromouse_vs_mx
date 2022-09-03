@@ -2,7 +2,7 @@
 /* マイクロマウスの迷路管理ライブラリ */
 // 独立させる。ほかのライブラリと疎結合。
 // 仕様
-    // 管理方法は変わっても、データが示すものは一緒\
+    // 管理方法は変わっても、データが示すものは一緒
 
 // 重みづけ処理の管理
     //複数パターン用意する
@@ -31,14 +31,14 @@
 //ゴール座標は自分で設定する
 //読み込むときは、サイズを自分で設定しない。データから求める。
 
-#define NUMBER_OF_SQUARES_X 16
-#define NUMBER_OF_SQUARES_Y 16
+#define NUMBER_OF_SQUARES_X 9
+#define NUMBER_OF_SQUARES_Y 9
 
 #define GOAL_SIZE_X 2
 #define GOAL_SIZE_Y 2
 
-#define GOAL_X 6
-#define GOAL_Y 9
+#define GOAL_X 7
+#define GOAL_Y 7
 
 #define __JUDGE_GOAL__(x,y) ( (GOAL_X <= x) && (x < GOAL_X + GOAL_SIZE_X)) && ((GOAL_Y <= y) && (y < GOAL_Y + GOAL_SIZE_Y) )
 
@@ -147,6 +147,14 @@ typedef struct{
     uint8_t west:2;
 }wall_existence;
 
+typedef enum{
+    front,
+    right,
+	backright,		//Uターン+旋回のとき、まとめて動作させる
+    back,
+	backleft,
+    left
+}direction;
 // 探索者の情報には2種類。MazeLibに関連したデータと、物理的な情報を考慮したデータ。
     //まず前者を作る
 
@@ -154,6 +162,7 @@ typedef struct
 {
     position pos;
     cardinal car;
+    direction dir;
     //多分アクションも（コマンド？）
     wall_existence wall; //壁の有無
     node *node;
@@ -215,29 +224,28 @@ typedef struct
 
 
 
-typedef enum{
-    front,
-    right,
-    back,
-    left
-}direction;
 
-typedef enum{
-    wait,
-    accel,
-    constant,
-    decel
-}motion_state;
+//
+//typedef enum{
+//    wait,
+//    accel,
+//    constant,
+//    decel
+//}motion_state;
 
-typedef enum{
-    pose_and_spin,
-    slalom, 
-    diagonal, //角速度0, 加減速及び定速で直進。斜めに進む。
-    straight
-}turn_pattern;//次の座標への侵入パターン. 探索の時は、もう一つ先のノードまで見てストレートなら、加減速と単純な斜めを入れるとか？
+//typedef enum{
+//    pose_and_spin,
+//    slalom,
+//    diagonal, //角速度0, 加減速及び定速で直進。斜めに進む。
+//    straight
+//}turn_pattern;//次の座標への侵入パターン. 探索の時は、もう一つ先のノードまで見てストレートなら、加減速と単純な斜めを入れるとか？
 //探索は 新しい区画に入るときにマスに対して垂直水平に入って壁を判断する必要がある。既知区間は壁読みの処理が来ないようにする。。次の未知座標を仮の目標座標にして一気に進み、壁情報、マップの更新を遅らせる
 
 //最終的に、探索者が持つべき情報をすべてまとめた構造体
+
+//実環境処理用に、グローバルなマップデータとプロフィールを作成
+profile my_mouse;
+maze_node my_map;
 
 /* ----- 探索者データ管理 ここまで ----- */
 #endif /* MAZELIB_H_ */

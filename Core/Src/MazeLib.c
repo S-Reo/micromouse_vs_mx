@@ -1,4 +1,6 @@
 #include "MazeLib.h"
+
+
 //外からアクセスする関数. xyに制限が必要
 _Bool setExistanceRawNode(maze_node *maze, uint8_t x, uint8_t y, wall_state et)
 {
@@ -1037,6 +1039,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = front;
                     return next_state;
                 }
                 //後ろ
@@ -1045,6 +1048,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 2; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
+                    next_state->dir = back;
                     return next_state;
                 }
                 
@@ -1060,6 +1064,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
+                    next_state->dir = right;
                     return next_state;
                 }
 
@@ -1069,6 +1074,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
+                    next_state->dir = left;
                     return next_state;
                 }
 
@@ -1079,6 +1085,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y - 1;
+                    next_state->dir = backright;
                     return next_state;
                 }
                 //Uターンして左旋回
@@ -1088,6 +1095,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y - 1;
+                    next_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1105,6 +1113,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
+                    next_state->dir = front;
                     return next_state;
                 }
                 //後ろ
@@ -1113,6 +1122,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 2; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
+                    next_state->dir = back;
                     return next_state;
                 }
                 
@@ -1128,6 +1138,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1;
+                    next_state->dir = right;
                     return next_state;
                 }
 
@@ -1137,6 +1148,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = left;
                     return next_state;
                 }
                 //Uターンして右旋回
@@ -1146,6 +1158,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = north;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = backright;
                     return next_state;
                 }
 
@@ -1156,6 +1169,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = south;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y - 1;
+                    next_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1172,6 +1186,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
+                    next_state->dir = front;
                     return next_state;
                 }
                 //Uターン
@@ -1179,6 +1194,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 2;
+                    next_state->dir = back;
                     return next_state;
                 }
                 
@@ -1193,6 +1209,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
+                    next_state->dir = right;
                     //printf("南向きから南西:%u, %u\r\n",next_state->pos.y, now_state->pos.x);
                     return next_state;
                 }
@@ -1202,6 +1219,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
+                    next_state->dir = left;
                     return next_state;
                 }
                 
@@ -1212,6 +1230,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = backright;
                     return next_state;
                 }
                 //Uターンして直進して左旋回
@@ -1221,6 +1240,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1237,6 +1257,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
+                    next_state->dir = front;
                     return next_state;
                 }
                 //Uターンして直進
@@ -1245,6 +1266,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 2;
+                    next_state->dir = back;
                     return next_state;
                 }
                 
@@ -1260,6 +1282,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = right;
                     return next_state;
                 }
 
@@ -1269,6 +1292,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1;
+                    next_state->dir = left;
                     return next_state;
                 }
                 
@@ -1279,6 +1303,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = south;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y - 1;
+                    next_state->dir = backright;
                     return next_state;
                 }
                 //Uターンして左旋回
@@ -1288,6 +1313,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = north;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y + 1;
+                    next_state->dir = backleft;
                     return next_state;
                 }
             }

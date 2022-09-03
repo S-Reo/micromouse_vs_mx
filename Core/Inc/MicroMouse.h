@@ -10,6 +10,8 @@
 
 #include <main.h>
 #include <math.h>
+
+#include "MazeLib.h"
 extern TIM_HandleTypeDef htim1;
 //使用するデータ群の定義。データ群だけ定義して、どう処理するかは別でファイルを作る。実データをどこで入れるか。メインのフローで。
 //データにアクセスするための関数は書く。
@@ -185,23 +187,24 @@ extern uint16_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
 
 extern uint16_t walk_log[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES];
 //方角データ
-typedef enum{
-	north = 0,
-	east = 1,
-	south = 2,
-	west = 3
-						//斜めで4種類追加
-}cardinal;
+//typedef enum{
+//	north = 0,
+//	east = 1,
+//	south = 2,
+//	west = 3
+//						//斜めで4種類追加
+//}cardinal;
 //extern cardinal my_car;
 
-typedef enum Direction	//区画の境界に来た時の状態表現だから
-{
-	front	= 0,
-	right		= 1,
-	back		= 2,
-	left		= 3,
-						//斜めで4種類追加
-}direction;
+//新ライブラリと被るので消す
+//typedef enum Direction	//区画の境界に来た時の状態表現だから
+//{
+//	front	= 0,
+//	right		= 1,
+//	back		= 2,
+//	left		= 3,
+//						//斜めで4種類追加
+//}direction;
 //extern direction my_dir;
 typedef enum Action	//区画の境界に来た時の状態表現だから
 {
@@ -282,8 +285,8 @@ typedef struct Position
 	float fl;
 	float fr;
 
-}position;
-extern position Pos;	//現在と、目標
+}posit;
+extern posit Pos;	//現在と、目標
 //void WritingFree();
 
 typedef struct Slalom

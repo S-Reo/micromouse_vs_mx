@@ -26,7 +26,20 @@
 #include "Interrupt.h"
 #include "Debug.h"
 
+#include "MazeLib.h"
+#include "test.h"
 #include <main.h>
+//新しいライブラリを使った関数を書く
+//ハードウェアと一緒に行う初期化
+void initSearch()
+{
+	//データ処理
+	//新ライブラリ
+
+
+	//ハード処理
+
+}
 void InitExplore()
 {
 #if 0
@@ -1037,18 +1050,19 @@ void Explore()
 		break;
 
 	}
-	Pos.TargetX = X_GOAL_LESSER;
-	Pos.TargetY = Y_GOAL_LESSER;
-	goal_edge_num = two;
+//	Pos.TargetX = X_GOAL_LESSER;
+//	Pos.TargetY = Y_GOAL_LESSER;
+//	goal_edge_num = two;
 	SearchOrFast = 0;
-	Pos.Dir = front;
-	Pos.Car = north;
-	Pos.NextX = Pos.X;
-	Pos.NextY = Pos.Y + 1;
-	Pos.NextCar = north;
+//	Pos.Dir = front;
+//	Pos.Car = north;
+//	Pos.NextX = Pos.X;
+//	Pos.NextY = Pos.Y + 1;
+//	Pos.NextCar = north;
+	initSearchData(&my_map, &my_mouse);
 	dbc = 1;
 	Accel(61.5, ExploreVelocity);
-	shiftPos();
+	//shiftPos();
 //
 //	while(1)
 //
@@ -1057,13 +1071,15 @@ void Explore()
 //		TargetVelocity[BODY] = 0;
 //	}
 
-	while( !( (X_GOAL_LESSER <= Pos.X) && (Pos.X <= X_GOAL_LARGER) ) ||  !( ( Y_GOAL_LESSER <= Pos.Y) && (Pos.Y <= Y_GOAL_LARGER)) ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
+	while( ! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
+		//shiftState(&my_mouse); //アクションの中で呼舞踊に変更
 
-		//ChangeLED(Pos.Car);
-		KyushinJudge();
-		SelectAction(turn_mode);
-		shiftPos();
+//		//ChangeLED(Pos.Car);
+//		KyushinJudge();
+//		SelectAction(turn_mode);
+//		shiftPos();
+		getNextDirection(&my_map, &my_mouse, turn_mode);
 #if 0
 		static int cc =0;
 		cc ++;
@@ -1080,7 +1096,7 @@ void Explore()
 //		TargetVelocity[BODY] = 0;
 //	}
 	Decel(45, 0);
-	shiftPos();
+	shiftState(&my_mouse);
 //	HAL_Delay(10000);
 //	while(1)
 //	{
@@ -1095,14 +1111,20 @@ void Explore()
 //		HAL_Delay(1000);
 
 
-	//flashのクリア。
-	Flash_clear_sector1();
-	//マップ書き込み
-	flash_store_init();
+//	//flashのクリア。
+//	Flash_clear_sector1();
+//	//マップ書き込み
+//	flash_store_init();
 	//完了の合図
 	Signal(7);
 
-
+while(1)
+{
+	//迷路データの出力
+	printAllNode(&my_map);
+	printMatrix16ValueFromNode(&my_map);
+	printAllWeight(&my_map, &(my_mouse.now.node->pos) );
+}
 //	if(CheckGoalArea())
 //	{
 //		//ゴールエリア内を探索

@@ -471,28 +471,28 @@ void wall_flash_print()
 //	    //またあとで
 //}
 //
-//void flash_copy_to_ram()
-//{
-//	uint32_t address=start_adress_sector1;
-//
-//	for(int j=0; j < NUMBER_OF_SQUARES; j++)
-//	{
-//			for(int i=0; i < NUMBER_OF_SQUARES; i++)
-//			{
-//				uint32_t wall_data[4]={0};
-//				FLASH_Read_Word(address+0, &wall_data[0]);
-//				FLASH_Read_Word(address+4, &wall_data[1]);
-//				FLASH_Read_Word(address+8, &wall_data[2]);
-//				FLASH_Read_Word(address+12, &wall_data[3]);
-//				Wall[i][j].north = wall_data[0];
-//				Wall[i][j].east = wall_data[1];
-//				Wall[i][j].south = wall_data[2];
-//				Wall[i][j].west = wall_data[3];
-//				address += 16;
-//			}
-//	}
-//
-//}
+void flash_copy_to_ram()
+{
+	uint32_t address=start_adress_sector1;
+
+	for(int j=0; j < NUMBER_OF_SQUARES; j++)
+	{
+			for(int i=0; i < NUMBER_OF_SQUARES; i++)
+			{
+				uint32_t wall_data[4]={0};
+				FLASH_Read_Word(address+0, &wall_data[0]);
+				FLASH_Read_Word(address+4, &wall_data[1]);
+				FLASH_Read_Word(address+8, &wall_data[2]);
+				FLASH_Read_Word(address+12, &wall_data[3]);
+				Wall[i][j].north = wall_data[0];
+				Wall[i][j].east = wall_data[1];
+				Wall[i][j].south = wall_data[2];
+				Wall[i][j].west = wall_data[3];
+				address += 16;
+			}
+	}
+
+}
 //評価値マップ生成。
 
 void UpdateWalkMap()
