@@ -218,7 +218,8 @@ void make_map(uint8_t x, uint8_t y, int mask)	//歩数マップを作成する
 				{
 					continue;
 				}
-				//最短のときは、未探索座標を重みMAXにしている
+				//探索のときは
+				//最短のときは、未探索壁の経路は重みを更新しない
 				if(j < NUMBER_OF_SQUARES-1)					//範囲チェック
 				{
 					if( (Wall[i][j].north & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
@@ -451,47 +452,47 @@ void wall_flash_print()
 //	}
 
 }
-void wall_print_to_MATLAB()
-{
-	   int Value16[N][N] = {0};
-	    for(int y=N-1; y >= 0; y--)
-	    {
-	        for(int x=0; x < N; x++)
-	        {
-	            Value16[x][y] = Wall[x][y].north + 2*Wall[x][y].east + 4*Wall[x][y].south + 8*Wall[x][y].west;
-	            printf("%d",Value16[x][y]);
-	            if(x < N-1)
-	            {
-	            	printf(",");
-	            }
-	        }
-	        printf("\r\n");
-	    }//シリアル通信で受け取ってテキストファイルに流してほしい
-	    //またあとで
-}
-
-void flash_copy_to_ram()
-{
-	uint32_t address=start_adress_sector1;
-
-	for(int j=0; j < NUMBER_OF_SQUARES; j++)
-	{
-			for(int i=0; i < NUMBER_OF_SQUARES; i++)
-			{
-				uint32_t wall_data[4]={0};
-				FLASH_Read_Word(address+0, &wall_data[0]);
-				FLASH_Read_Word(address+4, &wall_data[1]);
-				FLASH_Read_Word(address+8, &wall_data[2]);
-				FLASH_Read_Word(address+12, &wall_data[3]);
-				Wall[i][j].north = wall_data[0];
-				Wall[i][j].east = wall_data[1];
-				Wall[i][j].south = wall_data[2];
-				Wall[i][j].west = wall_data[3];
-				address += 16;
-			}
-	}
-
-}
+//void wall_print_to_MATLAB()
+//{
+//	   int Value16[N][N] = {0};
+//	    for(int y=N-1; y >= 0; y--)
+//	    {
+//	        for(int x=0; x < N; x++)
+//	        {
+//	            Value16[x][y] = Wall[x][y].north + 2*Wall[x][y].east + 4*Wall[x][y].south + 8*Wall[x][y].west;
+//	            printf("%d",Value16[x][y]);
+//	            if(x < N-1)
+//	            {
+//	            	printf(",");
+//	            }
+//	        }
+//	        printf("\r\n");
+//	    }//シリアル通信で受け取ってテキストファイルに流してほしい
+//	    //またあとで
+//}
+//
+//void flash_copy_to_ram()
+//{
+//	uint32_t address=start_adress_sector1;
+//
+//	for(int j=0; j < NUMBER_OF_SQUARES; j++)
+//	{
+//			for(int i=0; i < NUMBER_OF_SQUARES; i++)
+//			{
+//				uint32_t wall_data[4]={0};
+//				FLASH_Read_Word(address+0, &wall_data[0]);
+//				FLASH_Read_Word(address+4, &wall_data[1]);
+//				FLASH_Read_Word(address+8, &wall_data[2]);
+//				FLASH_Read_Word(address+12, &wall_data[3]);
+//				Wall[i][j].north = wall_data[0];
+//				Wall[i][j].east = wall_data[1];
+//				Wall[i][j].south = wall_data[2];
+//				Wall[i][j].west = wall_data[3];
+//				address += 16;
+//			}
+//	}
+//
+//}
 //評価値マップ生成。
 
 void UpdateWalkMap()
