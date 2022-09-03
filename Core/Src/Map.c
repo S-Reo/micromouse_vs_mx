@@ -218,7 +218,7 @@ void make_map(uint8_t x, uint8_t y, int mask)	//歩数マップを作成する
 				{
 					continue;
 				}
-
+				//最短のときは、未探索座標を重みMAXにしている
 				if(j < NUMBER_OF_SQUARES-1)					//範囲チェック
 				{
 					if( (Wall[i][j].north & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
@@ -450,6 +450,24 @@ void wall_flash_print()
 //		printf("\r\n");
 //	}
 
+}
+void wall_print_to_MATLAB()
+{
+	   int Value16[N][N] = {0};
+	    for(int y=N-1; y >= 0; y--)
+	    {
+	        for(int x=0; x < N; x++)
+	        {
+	            Value16[x][y] = Wall[x][y].north + 2*Wall[x][y].east + 4*Wall[x][y].south + 8*Wall[x][y].west;
+	            printf("%d",Value16[x][y]);
+	            if(x < N-1)
+	            {
+	            	printf(",");
+	            }
+	        }
+	        printf("\r\n");
+	    }//シリアル通信で受け取ってテキストファイルに流してほしい
+	    //またあとで
 }
 
 void flash_copy_to_ram()
