@@ -562,7 +562,7 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 	t = 0;
 	HAL_TIM_Base_Start_IT(&htim8);
 	t = 1;
-    int i=0,j=0; //コンパイラオプションで-Ofastを付ければ、register修飾子は要らなかった。
+    int i,j; //コンパイラオプションで-Ofastを付ければ、register修飾子は要らなかった。
     _Bool change_flag;
 	do //(6,9)(7,10)に対して、7,11がおかしい。
 	{
