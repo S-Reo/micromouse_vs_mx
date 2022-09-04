@@ -656,11 +656,73 @@ void WritingFree()
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(7);
+
+
 #if 0
+	timer1 = 0;
+		t = 0;
+		HAL_TIM_Base_Start_IT(&htim1);
+		t = 1;
+		initSearchData(&my_map, &my_mouse); //9ms
+		t = 0;
+		HAL_TIM_Base_Stop_IT(&htim1);
+		printf("%dms\r\n",timer1);
 
+		timer1 = 0;
+		t = 0;
+		HAL_TIM_Base_Start_IT(&htim1);
+		t = 1;
+		updateRealSearch();	//8ms
+	//	initSearchData(&my_map, &my_mouse);
+		t = 0;
+		HAL_TIM_Base_Stop_IT(&htim1);
+		printf("%dms\r\n",timer1);
 
+		timer1 = 0;
+		t = 0;
+		HAL_TIM_Base_Start_IT(&htim1);
+		t = 1;
+		//メインでノード選択
+		//7ms
+		my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node,0x01);
+		getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);
+
+		//getNextDirection(&my_map, &my_mouse, turn_mode);
+	//	initSearchData(&my_map, &my_mouse);
+		t = 0;
+		HAL_TIM_Base_Stop_IT(&htim1);
+		printf("%dms\r\n",timer1);
 #else
+	printf("初期化時重み更新タイム\r\n");
+	initSearchData(&my_map, &my_mouse); //全体8.4ms . 初期化処理で1.2ms + 全体の重み更新で7.2ms
 
+	printf("走行時タイム\r\n");
+	updateRealSearch();	//7.6ms
+
+
+
+//	timer8 = 0;
+//	t = 0;
+//	HAL_TIM_Base_Start_IT(&htim8);
+//	t = 1;
+//	//メインでノード選択
+//	//7ms
+//	my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node,0x01);
+//	getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);//7.5ms
+//	//更新無しだったのでprintfデバッグ出力が呼ばれていて7.5msかかった可能性がある。ifの最下層まで行っていたらどうだったか
+//	//getNextDirection(&my_map, &my_mouse, turn_mode);
+////	initSearchData(&my_map, &my_mouse);
+//	t = 0;
+//	HAL_TIM_Base_Stop_IT(&htim8);
+//	printf("%d/20ms\r\n",timer8);
+
+#endif
+
+	//アクションが終わってから15ms程かかっている。
+	while(1)
+	{
+
+	}
 	//目標座標だけ
 	Aim();
 
@@ -675,7 +737,7 @@ void WritingFree()
 		printf("%f, %f, %f, %f, %f\r\n",ZGyro, Photo[FL],Photo[FR],Photo[FL]+Photo[FR],(Photo[FL]+Photo[FR])/2);//壁センサ前のチェック。
 
 	}
-#endif
+
 	Accel(61.5, ExploreVelocity);
 	SelectAction('S');
 	SelectAction('S');

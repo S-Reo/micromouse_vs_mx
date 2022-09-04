@@ -1,6 +1,7 @@
 #include "MazeLib.h"
 
-
+//直ぐ消す
+#include "Interrupt.h"
 //外からアクセスする関数. xyに制限が必要
 _Bool setExistanceRawNode(maze_node *maze, uint8_t x, uint8_t y, wall_state et)
 {
@@ -542,9 +543,10 @@ void initTargetAreaWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t target_
     
 void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_size_x, uint8_t area_size_y, int mask)
 {
+	//全体に154/20ms = 7.7ms
     //新しい区画に入ったときに、更新
 
-    initWeight(maze);
+    initWeight(maze); //3/20ms
     
     initTargetAreaWeight(maze, x,y, area_size_x,area_size_y);
    
@@ -555,14 +557,19 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
     //ターゲットとするエリアのサイズ情報がいる
     //スタートはターゲットエリアの外堀ノード
     //6個参照して
-    int i,j;
-	_Bool change_flag;
+    printf("重み全体の更新\r\n");
+	timer8 = 0;
+	t = 0;
+	HAL_TIM_Base_Start_IT(&htim8);
+	t = 1;
+    int i=0,j=0; //コンパイラオプションで-Ofastを付ければ、register修飾子は要らなかった。
+    _Bool change_flag;
 	do //(6,9)(7,10)に対して、7,11がおかしい。
 	{
 		change_flag = false;				//変更がなかった場合にはループを抜ける
         //行と列でわけて、一周
         //行から
-		for(i = 0; i < NUMBER_OF_SQUARES_X; i++)			//迷路の大きさ分ループ(x座標)
+		for( i = 0; i < NUMBER_OF_SQUARES_X; i++)			//迷路の大きさ分ループ(x座標)
 		{
 			for(j = 1; j < NUMBER_OF_SQUARES_Y; j++)		//迷路の大きさ分ループ(y座標)
 			{
@@ -577,27 +584,19 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
                 //北側ノード
 				if(j < NUMBER_OF_SQUARES_Y-1)   //範囲チェック. 座標のxyではなく、ノードのxy
 				{
-					if( (maze->RawNode[i][j+1].existence & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
+					if( ((maze->RawNode[i][j+1].existence & mask) == NOWALL) && (maze->RawNode[i][j+1].weight == MAX_WEIGHT) )	//壁がなければ(maskの意味はstatic_parametersを参照)
 					{
-						if(maze->RawNode[i][j+1].weight == MAX_WEIGHT)			//まだ値が入っていなければ
-						{
-							maze->RawNode[i][j+1].weight = maze->RawNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-                            // printf("北 : x:%u, y:%u, w:%x\r\n",i,j+1,maze->RawNode[i][j].weight+ WEIGHT_STRAIGHT);
-						}
+						maze->RawNode[i][j+1].weight = maze->RawNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
                 }
                 //南側ノード
 				if(j > 1)						//範囲チェック.ミスってた
 				{
-					if( (maze->RawNode[i][j-1].existence & mask) == NOWALL)	//壁がなければ
+					if( ((maze->RawNode[i][j-1].existence & mask) == NOWALL) && (maze->RawNode[i][j-1].weight == MAX_WEIGHT) )	//壁がなければ
 					{
-						if(maze->RawNode[i][j-1].weight == MAX_WEIGHT)			//値が入っていなければ
-						{
-							maze->RawNode[i][j-1].weight = maze->RawNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-                            // printf("南 : x:%u, y:%u, w:%x\r\n",i,j-1,maze->RawNode[i][j].weight+ WEIGHT_STRAIGHT);
-						}
+						maze->RawNode[i][j-1].weight = maze->RawNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
 				}
                 //東側に斜めが2方向
@@ -605,23 +604,17 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 				{
                     //y方向の制限は？
                     //北東
-					if( (maze->ColumnNode[i+1][j].existence & mask) == NOWALL)		//壁がなければ
+					if( ((maze->ColumnNode[i+1][j].existence & mask) == NOWALL) && (maze->ColumnNode[i+1][j].weight == MAX_WEIGHT))		//壁がなければ
 					{
-						if(maze->ColumnNode[i+1][j].weight == MAX_WEIGHT)			//更新されていなければ
-						{
-							maze->ColumnNode[i+1][j].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->ColumnNode[i+1][j].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
                 	
                     //南東
-                    if( (maze->ColumnNode[i+1][j-1].existence & mask) == NOWALL)		//壁がなければ
+                    if( ((maze->ColumnNode[i+1][j-1].existence & mask) == NOWALL) && (maze->ColumnNode[i+1][j-1].weight == MAX_WEIGHT)	)		//壁がなければ
 					{
-						if(maze->ColumnNode[i+1][j-1].weight == MAX_WEIGHT)			//更新されていなければ
-						{
-							maze->ColumnNode[i+1][j-1].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->ColumnNode[i+1][j-1].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
 				}
 
@@ -629,22 +622,17 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 				if(i > 0)						//範囲チェック
 				{
                     //北西
-					if( (maze->ColumnNode[i][j].existence & mask) == NOWALL)		//壁がなければ
+					if( ((maze->ColumnNode[i][j].existence & mask) == NOWALL)  && (maze->ColumnNode[i][j].weight == MAX_WEIGHT) )		//壁がなければ
 					{
-						if(maze->ColumnNode[i][j].weight == MAX_WEIGHT)			//値が入っていなければ
-						{
 							maze->ColumnNode[i][j].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
 							change_flag = true;		//値が更新されたことを示す
-						}
+
 					}
                     //南西
-    				if( (maze->ColumnNode[i][j-1].existence & mask) == NOWALL)		//壁がなければ
+    				if( ((maze->ColumnNode[i][j-1].existence & mask) == NOWALL) && (maze->ColumnNode[i][j-1].weight == MAX_WEIGHT))		//壁がなければ
 					{
-						if(maze->ColumnNode[i][j-1].weight == MAX_WEIGHT)			//値が入っていなければ
-						{
-							maze->ColumnNode[i][j-1].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->ColumnNode[i][j-1].weight = maze->RawNode[i][j].weight + WEIGHT_NANAME;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
 				}
 			}
@@ -652,7 +640,7 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
         //列
         for(i = 1; i < NUMBER_OF_SQUARES_X; i++)
 		{
-			for(j = 0; j < NUMBER_OF_SQUARES_Y; j++)		
+			for( j = 0; j < NUMBER_OF_SQUARES_Y; j++)
 			{
                 if(maze->ColumnNode[i][j].weight == MAX_WEIGHT)		//MAXの場合は次へ
 				{
@@ -664,52 +652,36 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 				if(i < NUMBER_OF_SQUARES_X-1)					//範囲チェック
 				{
                     // printf("列東%d,mask: %d, result: %d\r\n",maze->ColumnNode[i+1][j].existence, mask,((maze->ColumnNode[i+1][j].existence) & mask));
-					if( (maze->ColumnNode[i+1][j].existence & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
+					if( ((maze->ColumnNode[i+1][j].existence & mask) == NOWALL) && (maze->ColumnNode[i+1][j].weight == MAX_WEIGHT))	//壁がなければ(maskの意味はstatic_parametersを参照)
 					{
-                        // printf("列東%u\r\n",i+1);
-						if(maze->ColumnNode[i+1][j].weight == MAX_WEIGHT)			//まだ値が入っていなければ
-						{
-							maze->ColumnNode[i+1][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->ColumnNode[i+1][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
                 }
                 //西側ノード
 				if(i > 1)						//範囲チェック
 				{
-					if( (maze->ColumnNode[i-1][j].existence & mask) == NOWALL)	//壁がなければ
+					if( ((maze->ColumnNode[i-1][j].existence & mask) == NOWALL) && (maze->ColumnNode[i-1][j].weight == MAX_WEIGHT))	//壁がなければ
 					{
-                        // printf("列西%u\r\n",i-1);
-						if(maze->ColumnNode[i-1][j].weight == MAX_WEIGHT)			//値が入っていなければ
-						{
-							maze->ColumnNode[i-1][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->ColumnNode[i-1][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_STRAIGHT;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
 				}
                 //北側に斜めが2方向
 				if(j < NUMBER_OF_SQUARES_Y-1)					//範囲チェック
 				{
                     //北東
-					if( (maze->RawNode[i][j+1].existence & mask) == NOWALL)		//壁がなければ
+					if( ((maze->RawNode[i][j+1].existence & mask) == NOWALL) && (maze->RawNode[i][j+1].weight == MAX_WEIGHT))		//壁がなければ
 					{
-                        //printf("列北東%u\r\n",j+1);
-						if(maze->RawNode[i][j+1].weight == MAX_WEIGHT)			//更新されていなければ
-						{
-							maze->RawNode[i][j+1].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->RawNode[i][j+1].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
                 	
                     //北西
-                    if( (maze->RawNode[i-1][j+1].existence & mask) == NOWALL)		//壁がなければ
+                    if( ((maze->RawNode[i-1][j+1].existence & mask) == NOWALL) && (maze->RawNode[i-1][j+1].weight == MAX_WEIGHT))		//壁がなければ
 					{
-                        // printf("列北西%u\r\n",maze->RawNode[i-1][j+1].existence);
-						if(maze->RawNode[i-1][j+1].weight == MAX_WEIGHT)			//更新されていなければ
-						{
-							maze->RawNode[i-1][j+1].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->RawNode[i-1][j+1].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
 				}
 
@@ -717,37 +689,34 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 				if(j > 0)						//範囲チェック
 				{
                     //南東
-					if( (maze->RawNode[i][j].existence & mask) == NOWALL)		//壁がなければ
+					if( ((maze->RawNode[i][j].existence & mask) == NOWALL) && (maze->RawNode[i][j].weight == MAX_WEIGHT)	)		//壁がなければ
 					{
-                        // printf("列南東%u\r\n",maze->RawNode[i][j].existence);
-						if(maze->RawNode[i][j].weight == MAX_WEIGHT)			//値が入っていなければ
-						{
-							maze->RawNode[i][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
-							change_flag = true;		//値が更新されたことを示す
-						}
+						maze->RawNode[i][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
+						change_flag = true;		//値が更新されたことを示す
 					}
                     //南西
-    				if( (maze->RawNode[i-1][j].existence & mask) == NOWALL)		//壁がなければ
+    				if( ((maze->RawNode[i-1][j].existence & mask) == NOWALL) && (maze->RawNode[i-1][j].weight == MAX_WEIGHT))		//壁がなければ
 					{
-                        //printf("列南西%u\r\n",maze->RawNode[i-1][j].existence);
-						if(maze->RawNode[i-1][j].weight == MAX_WEIGHT)			//値が入っていなければ
-						{
 							maze->RawNode[i-1][j].weight = maze->ColumnNode[i][j].weight + WEIGHT_NANAME;	//値を代入
 							change_flag = true;		//値が更新されたことを示す
-						}
 					}
 				}
             }
         }
         //printf("重みの更新\r\n");//一回しか呼ばれていない
-
+        //cnt++;
 	}while(change_flag == true);	//全体を作り終わるまで待つ
+    t = 0;
+	HAL_TIM_Base_Stop_IT(&htim8);
+	printf("%d/20ms\r\n\r\n",timer8);
 }
 //今いるノードと向きに合わせて、ノードを比較し、行くべき座標を返す
 
 //今いるノード情報を返す（区画進入時の方角を使用する）
 node *getNodeInfo(maze_node *maze, uint8_t x, uint8_t y, cardinal car)
 {
+	node *error;
+	error = &(maze->RawNode[0][1]);
     //breakは要らないけどお決まりとして入れてるだけ
     switch (car)//区画侵入時の方角
     {
@@ -784,9 +753,10 @@ node *getNodeInfo(maze_node *maze, uint8_t x, uint8_t y, cardinal car)
     case nw:
         break;
     default:
+    	return error; //
         break;
     }
-
+    return error;
 }
 
 //ノード情報から、行けるノードを比較する
@@ -808,7 +778,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     //printf("マイノードが01のどちらか:%d\r\n",now_node->rc);
     if(now_node->rc == 0)
     {
+#if DEBUG_ON
         printf("行ノードから");
+#endif
         //条件がおかしい？printしている全ノードの重みと、アドレスを入れたはずのマイノードの重みが違う
         
         //行にいるとき
@@ -821,7 +793,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 // printf("%d\r\n", maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence);//壁があることになってた..
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
                 {
+#if DEBUG_ON
                     printf("北へ\r\n");
+#endif
                     compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight;
                     next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y+1]);
                     flag = true;
@@ -836,7 +810,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y-1].weight)
                 {
+#if DEBUG_ON
                     printf("南へ\r\n");
+#endif
                     compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y-1].weight;
                     next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y-1]);
                     flag = true;
@@ -852,7 +828,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight)
                 {
+#if DEBUG_ON
                     printf("北東へ\r\n");
+#endif
                     compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y]);
                     flag = true;
@@ -865,7 +843,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].weight)
                 {
+#if DEBUG_ON
                     printf("南東へ\r\n");
+#endif
                     compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1]);
                     flag = true;
@@ -883,7 +863,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                
                 if(compare_weight > maze->ColumnNode[now_node->pos.x][now_node->pos.y].weight)
                 {
+#if DEBUG_ON
                     printf("北西へ\r\n");
+#endif
                     compare_weight = maze->ColumnNode[now_node->pos.x][now_node->pos.y].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x][now_node->pos.y]);
                     flag = true;
@@ -895,7 +877,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->ColumnNode[now_node->pos.x][now_node->pos.y-1].weight)
                 {
+#if DEBUG_ON
                     printf("南西へ\r\n");
+#endif
                     compare_weight = maze->ColumnNode[now_node->pos.x][now_node->pos.y-1].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x][now_node->pos.y-1]);
                     //このノードあやしい
@@ -909,7 +893,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     {
         //printf("列にいる\r\n");
         //列にいるとき
+#if DEBUG_ON
         printf("列ノードから");
+#endif
         //東へ側ノード
         if(now_node->pos.x < NUMBER_OF_SQUARES_X-1)					//範囲チェック
         {
@@ -917,7 +903,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
             {
                 if(compare_weight > maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight)
                 {
+#if DEBUG_ON
                     printf("東へ\r\n");
+#endif
                     compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y]);
                     flag = true;
@@ -932,7 +920,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].weight)
                 {
+#if DEBUG_ON
                     printf("西へ\r\n");
+#endif
                     compare_weight = maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x-1][now_node->pos.y]);
                     flag = true;
@@ -948,7 +938,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
                 {
+#if DEBUG_ON
                     printf("北東へ\r\n");
+#endif
                     compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight;
                     next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y+1]);
                     flag = true;
@@ -961,7 +953,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].weight)
                 {
+#if DEBUG_ON
                     printf("北西へ\r\n");
+#endif
                     compare_weight = maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].weight;
                     next_node = &(maze->RawNode[now_node->pos.x-1][now_node->pos.y+1]);
                     flag = true;
@@ -978,7 +972,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y].weight)
                 {
+#if DEBUG_ON
                     printf("南東へ\r\n");
+#endif
                     compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y].weight;
                     next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y]);
                     flag = true;
@@ -990,7 +986,9 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x-1][now_node->pos.y].weight)
                 {
+#if DEBUG_ON
                     printf("南西へ\r\n");
+#endif
                     compare_weight = maze->RawNode[now_node->pos.x-1][now_node->pos.y].weight;
                     next_node = &(maze->RawNode[now_node->pos.x-1][now_node->pos.y]);
                     flag = true;
@@ -1002,14 +1000,20 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     //printf("ノード更新無し\r\n\r\n");
     if(flag == true)
     {
+#if DEBUG_ON
         printf("ノード更新有り:%p\r\n", next_node);
+#endif
         return next_node; 
     }
     if(flag == false)
     {
-        printf("ノード更新無し\r\n\r\n");
+#if DEBUG_ON
+    	printf("ノード更新無し\r\n\r\n");
+#endif
+
         return now_node;//万が一更新されなかったら、今いるノードが目標ノードなので、停止するはず。
     }
+    return now_node; //
         
 }
 //自分の状態から次の状態を得る
@@ -1321,7 +1325,9 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
         default:
             break;
     }
+#if DEBUG_ON
     printf("エラー in function 'getNextState'.\r\n");
+#endif
     return next_state; //ここまで来てしまったらエラー
 }
 //xyと次の向きを返す

@@ -31,14 +31,14 @@
 //ゴール座標は自分で設定する
 //読み込むときは、サイズを自分で設定しない。データから求める。
 
-#define NUMBER_OF_SQUARES_X 9
-#define NUMBER_OF_SQUARES_Y 9
+#define NUMBER_OF_SQUARES_X 32
+#define NUMBER_OF_SQUARES_Y 32
 
-#define GOAL_SIZE_X 2
-#define GOAL_SIZE_Y 2
+#define GOAL_SIZE_X 3
+#define GOAL_SIZE_Y 3
 
-#define GOAL_X 7
-#define GOAL_Y 7
+#define GOAL_X 16
+#define GOAL_Y 16
 
 #define __JUDGE_GOAL__(x,y) ( (GOAL_X <= x) && (x < GOAL_X + GOAL_SIZE_X)) && ((GOAL_Y <= y) && (y < GOAL_Y + GOAL_SIZE_Y) )
 
@@ -77,21 +77,26 @@ typedef struct
     uint8_t y;
 }position;
 typedef struct {
-    uint16_t existence  :2;
-    uint16_t weight     :12; //64×64対応
+    uint8_t existence;
+    uint16_t weight; //64×64対応
     //uint16_t pole       :2; //エッジに対して、柱は2つ. 柱の隣接壁予測に4パターン使う.計算時間とか、やり方がちょっと面倒. オプションにしよう.
     _Bool draw;
     _Bool rc; //行か列かを見たい
-
     position pos;
     //残り2ビットは工夫の余地を残す➡描画ように０１を保存するのと、既知区間かどうかの01保存
-}node;//16 + 16 = 24ビット
-
+}node;//8×3 + 16 + 1 × 2 = 42ビット = 5バイト+2ビット
+//typedef struct {
+//	_Bool rc;
+//	position pos;
+//	//ノードを選択した際に、要素番号のxyと行か列かをこの変数にコピーする
+//}node_pos;
+//node_pos my_node;
 typedef struct {
     node RawNode[NUMBER_OF_SQUARES_X][NUMBER_OF_SQUARES_Y+1];
     node ColumnNode[NUMBER_OF_SQUARES_X+1][NUMBER_OF_SQUARES_Y];
-}maze_node;//2バイト * N*(N+1) * 2 
+}maze_node;//42ビット * N*(N+1) * 2
 //N = 9, 90*4 = 360
+//N = 32, 32*33*2*42 = 88704ビット ≒ 11kByte
 
 //迷路の初期化
 void initMaze(maze_node *maze);
