@@ -5,6 +5,10 @@
 
 #include "MazeLib.h"
 
+#include "Search.h"
+#include <main.h>
+#include "MicroMouse.h"
+#include "Interrupt.h"
 #define DEBUG_ON    0
 #define SIMULATION  0
 
@@ -24,7 +28,7 @@
 void initSearchData(maze_node *my_maze, profile *Mouse)
 {
     initMaze(my_maze);
-    initWeight(my_maze);
+    initWeight(my_maze); //3/20ms
 
     //状態の初期化
     initProfile(Mouse, my_maze);
@@ -85,9 +89,11 @@ void updateRealSearch()
     my_mouse.now.wall.east = wall_dir[1];
     my_mouse.now.wall.south = wall_dir[2];
     my_mouse.now.wall.west = wall_dir[3];
+
 	//getWallNow(&(my_mouse->now), &wall[0]);
 
 	updateNodeThree(&my_map, &(my_mouse.now), my_mouse.now.pos.x, my_mouse.now.pos.y);
+
 	updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }
 //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせばよさそう。

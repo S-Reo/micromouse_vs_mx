@@ -388,6 +388,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if( htim == &htim1)
 	{
+		timer1 += t;
 		switch(IT_mode){
 		case EXPLORE:
 			Explore_IT();
@@ -405,7 +406,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	if( htim == &htim8)
 	{
-		//timer8 += t;
+		timer8 += t;
 
 		//壁センサデータの更新
 		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
