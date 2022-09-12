@@ -13,8 +13,8 @@
 #include "Action.h"
 #include "PID_Control.h"
 #include "Action.h"
-int Calc;
-int SearchOrFast;
+volatile int Calc;
+volatile int SearchOrFast;
 void shiftPos()
 {
 	Pos.Car = Pos.NextCar;

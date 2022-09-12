@@ -209,6 +209,7 @@ t = 1;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
 	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
+	printf("calib ok : %f\r\n",zg_offset);
 	//zg_offset = 0;
 #if 0
 	TargetPhoto[SL] = Photo[SL];
@@ -658,6 +659,11 @@ void WritingFree()
 	ChangeLED(7);
 
 
+	while(1)
+	{
+		Motor_Switch( 500, 500 );
+	}
+
 #if 0
 	timer1 = 0;
 		t = 0;
@@ -832,7 +838,7 @@ void FastestRun()
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 
-	char turn_mode;
+	char turn_mode = 'T';
 	if(mode == 1)
 	{
 		ExploreVelocity = 400;
@@ -1019,10 +1025,13 @@ void Explore()
 	ModeSelect( 1, 4, &mode2);
 	Signal( mode2 );
 	PhotoSwitch();
+	//printf("test\r\n");
 	InitExplore();
 	InitPosition();
+	printf("旧式の壁初期化\r\n");
 	wall_init();
 
+	printf("色々セット\r\n");
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -1039,7 +1048,7 @@ void Explore()
 	ChangeLED(2);
 
 	//スラロームか、一区画ずつかを選ぶ。
-	char turn_mode;
+	char turn_mode = 'T';
 	if(mode == 1)
 	{
 		turn_mode = 'T';
@@ -1116,14 +1125,18 @@ void Explore()
 //	Pos.TargetY = Y_GOAL_LESSER;
 //	goal_edge_num = two;
 	SearchOrFast = 0;
+	Calc = 0;
 //	Pos.Dir = front;
 //	Pos.Car = north;
 //	Pos.NextX = Pos.X;
 //	Pos.NextY = Pos.Y + 1;
 //	Pos.NextCar = north;
+	printf("a\r\n");
 	initSearchData(&my_map, &my_mouse);
 	dbc = 1;
+	printf("b\r\n");
 	Accel(61.5, ExploreVelocity);
+	ChangeLED(6);
 	//shiftPos();
 //
 //	while(1)

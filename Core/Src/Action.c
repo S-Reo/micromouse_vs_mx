@@ -536,7 +536,8 @@ void WaitStopAndReset()
 		AngularAcceleration = 0;
 		//AngularV = 0;
 		if(CurrentVelocity[LEFT] > 500)
-			printf("回転停止中\r\n");
+			ChangeLED(2);
+			//printf("回転停止中\r\n");
 
 	}while(CurrentVelocity[BODY] != 0);
 	HAL_Delay(100);
@@ -1367,10 +1368,12 @@ void Accel(float add_distance, float explore_speed)
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
 	//90mmでうまくやるには0から60000カウントまで
-
+	//printf("");
 	_Bool wall_cut = false;
+	//ChangeLED(1);
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
+		//printf("%d, %d, %d, %f, %f, %d, %f, %f, %d, %f, %f\r\n", TotalPulse[BODY], target_pulse, KeepPulse[BODY], TargetVelocity[BODY], Acceleration, VelocityLeftOut ,TargetVelocity[LEFT], CurrentVelocity[LEFT], Pid[L_VELO_PID].out, Pid[L_VELO_PID].KP,Pid[L_VELO_PID].KI);
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 		{
 //			wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
@@ -1381,13 +1384,14 @@ void Accel(float add_distance, float explore_speed)
 			//次のアクションを渡すのは別のところで。
 			Calc = 1;
 		}
-		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
-		{
-			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
-			//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
-			wall_cut = true;
-			ChangeLED(3);
-		}
+		//壁切れも一旦なし
+//		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
+//		{
+//			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
+//			//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
+//			wall_cut = true;
+//			ChangeLED(3);
+//		}
 
 		//ControlWall();
 #if 1
@@ -1480,6 +1484,7 @@ void Decel(float dec_distance, float end_speed)
 		//ControlWall();
 		if(TargetVelocity[BODY] <= 0)
 		{
+			ChangeLED(7);
 			TargetVelocity[BODY] = 0;
 			Acceleration = 0;
 			TargetAngularV = 0;
@@ -1499,7 +1504,9 @@ void Decel(float dec_distance, float end_speed)
 
 
 	}
+	ChangeLED(6);
 	WaitStopAndReset();
+	ChangeLED(5);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
@@ -1715,13 +1722,13 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 				//次のアクションを渡すのは別のところで。
 				Calc = 1;
 			}
-			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
-			{//
-				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
-				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
-				wall_cut = true;
-				ChangeLED(3);
-			}
+//			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
+//			{//
+//				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
+//				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
+//				wall_cut = true;
+//				ChangeLED(3);
+//			}
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;

@@ -25,20 +25,20 @@ int KeepCounter;//
 		INITIAL_PULSE,
 		INITIAL_PULSE
 };*/
-float CurrentVelocity[3];	//速度 mm/s
-float TargetVelocity[3];
+volatile float CurrentVelocity[3];	//速度 mm/s
+volatile float TargetVelocity[3];
 
 //float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
 //float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
 //float TotalPulseBody;	//移動量 mm/msを積算
 //float TotalPulseLeft;
 //float TotalPulseRight;
-int KeepPulse[3];
+volatile int KeepPulse[3];
 int PulseDisplacement[3];
-int TotalPulse[3];
-float AngularV=0;			//角速度 rad/s
+volatile int TotalPulse[3];
+volatile float AngularV=0;			//角速度 rad/s
 float EncAngV=0;
-float Angle=0;				//角度 rad/msを積算
+volatile float Angle=0;				//角度 rad/msを積算
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。
@@ -49,11 +49,11 @@ float Angle=0;				//角度 rad/msを積算
 //float TargetVelocityRight;
 float ExploreVelocity;
 float AddVelocity;
-float Acceleration=0;
-float TargetAngularV;
-float AngularAcceleration=0;
+volatile float Acceleration=0;
+volatile float TargetAngularV;
+volatile float AngularAcceleration=0;
 float AngularLeapsity=0;
-float TargetAngle;
+volatile float TargetAngle;
 float ImuAngV,ImuAngle;
 float ImuAccel=0, ImuVelocity=0, ImuMileage=0;
 int VelocityLeftOut, VelocityRightOut;

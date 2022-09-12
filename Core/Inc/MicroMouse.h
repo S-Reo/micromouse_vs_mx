@@ -37,8 +37,8 @@ extern float PhotoDiff;
 //extern int PulseDisplacement[2];
 extern int KeepCounter;
 //速度 mm/s
-extern float CurrentVelocity[3];
-extern float TargetVelocity[3];
+extern volatile float CurrentVelocity[3];
+extern volatile float TargetVelocity[3];
 
 //extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
 //extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
@@ -47,15 +47,15 @@ extern float TargetVelocity[3];
 //extern float TotalPulseLeft;
 //extern float TotalPulseRight;
 
-extern int KeepPulse[3];
+extern volatile int KeepPulse[3];
 extern int PulseDisplacement[3];
-extern int TotalPulse[3];
+extern volatile int TotalPulse[3];
 
 //角速度 rad/s
-extern float AngularV;
+extern volatile float AngularV;
 extern float EncAngV;
 //角度 rad/msを積算
-extern float Angle;
+extern volatile float Angle;
 
 extern float ImuAngV,ImuAngle;
 extern float ImuAccel, ImuVelocity, ImuMileage;
@@ -69,11 +69,11 @@ extern float ImuAccel, ImuVelocity, ImuMileage;
 
 extern float ExploreVelocity;
 extern float AddVelocity;
-extern float Acceleration;
-extern float TargetAngularV;
-extern float AngularAcceleration;
+extern volatile float Acceleration;
+extern volatile float TargetAngularV;
+extern volatile float AngularAcceleration;
 extern float AngularLeapsity;
-extern float TargetAngle;
+extern volatile float TargetAngle;
 extern int VelocityLeftOut, VelocityRightOut;
 extern int WallRightOut, WallLeftOut;
 extern int L_motor, R_motor;

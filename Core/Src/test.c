@@ -557,7 +557,7 @@ void Search(maze_node *my_maze, profile *Mouse)
 
         //待機
         //迷路出力
-        printMatrix16ValueFromNode(&my_maze);
+        printMatrix16ValueFromNode(my_maze);
     #endif
     printf("終了\r\n");
     //break;

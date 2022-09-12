@@ -9,8 +9,8 @@
 #define INC_SEARCH_H_
 
 #include <main.h>
-extern int Calc;
-extern int SearchOrFast;
+extern volatile int Calc;
+extern volatile int SearchOrFast;
 
 void shiftPos();
 _Bool judgeImpasse(uint8_t x, uint8_t y);

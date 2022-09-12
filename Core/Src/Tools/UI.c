@@ -74,6 +74,7 @@ void PhotoSwitch()
 
 	while(adc2[1] < 200)
 	{
+		printf("adc2[1] : %lu\r\n", adc2[1]);
 
 	}
 	HAL_ADC_Stop_DMA(&hadc2);

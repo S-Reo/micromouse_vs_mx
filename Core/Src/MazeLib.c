@@ -557,16 +557,31 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
     //ターゲットとするエリアのサイズ情報がいる
     //スタートはターゲットエリアの外堀ノード
     //6個参照して
-    printf("重み全体の更新\r\n");
-	timer8 = 0;
-	t = 0;
-	HAL_TIM_Base_Start_IT(&htim8);
-	t = 1;
+
+    //printf("重み全体の更新\r\n");
+//	timer8 = 0;
+//	t = 0;
+//	HAL_TIM_Base_Start_IT(&htim8);
+//	t = 1;
     int i,j; //コンパイラオプションで-Ofastを付ければ、register修飾子は要らなかった。
     _Bool change_flag;
+    int skip_raw=0, skip_column=0;
+    //せっかくdowhileなんだから、どこから更新するかをうまく操れば、continue要らずに無駄が消せるはず
+    //i,jじゃなくて、変数を4つ用意する
+    //rawに2つ、columnに2つ
+    //int rx=x + area_size_x, ry=y + area_size_y, cx=x + area_size_x, cy=y + area_size_y;
+    //ゴール座標を初期ノードとして、近辺の更新されたノードのいずれかを次のノードにすればいい、最大6ノード更新される。新しいのが更新されなくなったら全部見る。全部見て一個でも新しいのがあったらすぐに抜けてそこからスタート。更新がなければ終了。
+
 	do //(6,9)(7,10)に対して、7,11がおかしい。
 	{
 		change_flag = false;				//変更がなかった場合にはループを抜ける
+//		if(rx == NUMBER_OF_SQUARES_X) rx =0;
+//		if(ry == NUMBER_OF_SQUARES_Y) ry =1;
+//		if(cx == NUMBER_OF_SQUARES_X) cx =1;
+//		if(cy == NUMBER_OF_SQUARES_Y) cy =0;
+
+		//
+
         //行と列でわけて、一周
         //行から
 		for( i = 0; i < NUMBER_OF_SQUARES_X; i++)			//迷路の大きさ分ループ(x座標)
@@ -576,8 +591,9 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
                 //1ノードずつ見る.そこから加算対象が最大6個
                 //端を見ないので、一番上の列からスタート j=N; j >= 0, xを1からN-1まで
                 //次に行 j=N-1から1まで xを0からN-1まで
-				if(maze->RawNode[i][j].weight == MAX_WEIGHT)		//255の場合は次へ
+				if(maze->RawNode[i][j].weight == MAX_WEIGHT)		//MAXの場合は次へ
 				{
+					skip_raw ++;
 					continue;
 				}
 				// printf("continueはクリア. Raw[%d][%d]\r\n",i,j);
@@ -644,6 +660,7 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 			{
                 if(maze->ColumnNode[i][j].weight == MAX_WEIGHT)		//MAXの場合は次へ
 				{
+                	skip_column++;
 					continue;
 				}
                 // printf("continueはクリア. Column[%d][%d]\r\n",i,j);
@@ -706,9 +723,9 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
         //printf("重みの更新\r\n");//一回しか呼ばれていない
         //cnt++;
 	}while(change_flag == true);	//全体を作り終わるまで待つ
-    t = 0;
-	HAL_TIM_Base_Stop_IT(&htim8);
-	printf("%d/20ms\r\n\r\n",timer8);
+//    t = 0;
+//	HAL_TIM_Base_Stop_IT(&htim8);
+//	printf("%d/20ms, %d, %d\r\n\r\n",timer8, skip_raw, skip_column);
 }
 //今いるノードと向きに合わせて、ノードを比較し、行くべき座標を返す
 
