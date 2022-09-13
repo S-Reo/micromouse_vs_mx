@@ -41,7 +41,7 @@ void Rotate(float deg, float ang_accel);
 void Accel(float add_distance, float explore_speed);
 void Decel(float dec_distance, float end_speed);
 void Calib(int distance);
-void GoStraight(float move_distance,  float explore_speed, float accel);
+void GoStraight(float move_distance,  float explore_speed, int accel_or_decel);
 void TurnRight(char turn_mode);
 void TurnLeft(char turn_mode);
 void GoBack();

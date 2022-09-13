@@ -1482,10 +1482,10 @@ void Decel(float dec_distance, float end_speed)
 //		}
 		//式の順番はあとで前後するかも
 		//ControlWall();
-		if(TargetVelocity[BODY] <= 0)
+		if(TargetVelocity[BODY] <= end_speed)
 		{
 			ChangeLED(7);
-			TargetVelocity[BODY] = 0;
+			TargetVelocity[BODY] = end_speed;
 			Acceleration = 0;
 			TargetAngularV = 0;
 			AngularAcceleration = 0;
@@ -1505,8 +1505,6 @@ void Decel(float dec_distance, float end_speed)
 
 	}
 	ChangeLED(6);
-	WaitStopAndReset();
-	ChangeLED(5);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
@@ -1652,7 +1650,7 @@ float AjustCenter(){
 	TargetAngularV = 0;
 	return 45;
 }
-void GoStraight(float move_distance,  float explore_speed, float accel)
+void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 {
 	//直進は加速度を調節して距離を見る。 (移動量)
 	//その場での旋回は角加速度を調節して角度を見る。(移動角度)
@@ -1673,25 +1671,30 @@ void GoStraight(float move_distance,  float explore_speed, float accel)
 	//int keep_pulse = TotalPulse[BODY];
 	int target_pulse = (int)(2*move_distance/MM_PER_PULSE);
 
-	if(accel != 0) //加速するとき
+	if(accel_or_decel == 1) //加速するとき
 	{
-		//移動後は今の方角が維持される、
-		WallWarn();
-//		ControlWall();
-		Accel( move_distance/2 , explore_speed+accel);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
-		while( ( KeepPulse[BODY] + (target_pulse/2)) > ( TotalPulse[BODY]) )
+		explore_speed += AddVelocity;
+		VelocityMax = true;
+
+		Accel( move_distance , explore_speed);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
+	}
+	else if(accel_or_decel == -1) //探索速度までの減速. ターン速度までの減速も後で入れる
+	{
+		VelocityMax = false;
+		Decel( move_distance*0.8f, explore_speed); //0.8で減速
+		while( ( KeepPulse[BODY] +(target_pulse*0.2f)) > ( TotalPulse[BODY]) ) //残り0.2でマップの更新
 		{
-			//最初の45mmで加速をストップ
-			//ControlWall();
-			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
-	//		{
-	//			Acceleration = 0;
-	//		}
+			if(Calc == 0)//減速終了後直ぐにマップ更新
+			{
+				updateRealSearch();
+				Calc = 1;
+			}
 		}
 	}
+
 	else
 	{
+		//VelocityMaxはそのまま;
 //		Pos.Act = straight;
 //		WallSafe();
 //		ControlWall();
@@ -1766,6 +1769,8 @@ void TurnRight(char mode)
 	case 'T' :
 
 		Decel(45, 0);
+		WaitStopAndReset();
+		ChangeLED(5);
 		//AjustCenter();
 		EmitterOFF();
 		PIDChangeFlag(A_VELO_PID, 0);
@@ -1809,6 +1814,9 @@ void TurnLeft(char mode)
 	case 'T' :
 		//超信地旋回
 		Decel(45, 0);
+		WaitStopAndReset();
+		ChangeLED(5);
+
 		//AjustCenter();
 		EmitterOFF();
 		PIDChangeFlag(A_VELO_PID, 0);
@@ -1839,6 +1847,8 @@ void GoBack()
 	//減速して
 	Decel(45, 0);
 	//float acc = AjustCenter();
+	WaitStopAndReset();
+	ChangeLED(5);
 
 #if 0
 	EmitterOFF();
@@ -1944,7 +1954,7 @@ void Aim()
 		//直進flagオン
 		//PIDChangeFlag( A_VELO_PID, 1);
 		AddVelocity = 0;
-		GoStraight(90, ExploreVelocity, AddVelocity);
+		GoStraight(90, ExploreVelocity, 0);
 
 		break;
 	//右方向

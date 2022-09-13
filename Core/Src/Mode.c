@@ -902,12 +902,12 @@ void FastestRun()
 
 	ChangeLED(4);
 
-	//マップデータの取得。flashから壁データを取得。
-	flash_copy_to_ram();
+	VelocityMax = false;
 
 	SearchOrFast = 1;
+	Calc = SearchOrFast;
 	//走る
-	goal_edge_num = two;
+	goal_edge_num = GOAL_SIZE_X;
 //	float acc;// = AjustCenter();
 //	//現在の向きから、次に行くべき方向へ向く
 //	Pos.Dir = get_nextdir(x,y,mask);
@@ -966,35 +966,101 @@ void FastestRun()
 	PIDReset(A_VELO_PID);
 	PIDReset(L_WALL_PID);
 	PIDReset(R_WALL_PID);
+
+	//迷路データ
+	initSearchData(&my_map, &my_mouse);
+	//マップデータの取得。flashから壁データを取得。
+	flashCopyNodesToRam(); //existenceだけ
+	//flash_copy_to_ram();
+	//マップデータはあるので、最初だけ重みを計算
+	updateAllNodeWeight(&my_map,GOAL_X,GOAL_Y,GOAL_SIZE_X,GOAL_SIZE_Y,0x03);
+
 	HAL_Delay(200);
-	//加速
-	Pos.Dir = front;
-	switch(Pos.Car%4)
-	{
-	case north:
-		Pos.NextX = Pos.X;
-		Pos.NextY = Pos.Y + 1;
-		Pos.NextCar = north;
-		break;
-	case east:
-		Pos.NextX = Pos.X + 1;
-		Pos.NextY = Pos.Y;
-		Pos.NextCar = east;
-		break;
-	case south:
-		Pos.NextX = Pos.X;
-		Pos.NextY = Pos.Y - 1;
-		Pos.NextCar = south;
-		break;
-	case west:
-		Pos.NextX = Pos.X - 1;
-		Pos.NextY = Pos.Y;
-		Pos.NextCar = west;
-		break;
-	}
+
+
+	//最初の加速
 	Accel(61.5, ExploreVelocity);
-	shiftPos();
-	fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
+	//shiftState(&my_mouse);
+//	shiftPos();
+
+    //理想は、ゴールまで重み更新なしで、コマンドによるモータ制御のみ
+    //シミュレーションの1stステップとしては、重み更新無しでノード選択しながら、stateの更新だけする
+
+    //最初の加速コマンド
+    int cnt=0;
+
+    char r[]="行";
+	char c[]="列";
+    while(! ((my_mouse.goal_lesser.x <= my_mouse.next.pos.x && my_mouse.next.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.next.pos.y && my_mouse.next.pos.y <= my_mouse.goal_larger.y)))
+    {
+        shiftState(&my_mouse);
+        //updateAllNodeWeight(maze, mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
+        //現在ノードは、シフトstateで更新済み
+        //mouse->now.node = getNodeInfo(maze,mouse->now.pos.x,mouse->now.pos.y, mouse->now.car);
+        //選んだノードと、迷路上のノードの、アドレスが一致していればOK.
+
+
+        //printf("現ノード    重み:%x\r\n            %s x:%u, y:%u\r\n            侵入方角:%d, x:%d, y:%d\r\n",mouse->now.node->weight, (mouse->now.node->rc == 1) ? c:r, mouse->now.node->pos.x, mouse->now.node->pos.y, mouse->now.car, mouse->now.pos.x,mouse->now.pos.y);
+        my_mouse.next.node = getNextNode(&my_map,my_mouse.now.car, my_mouse.now.node, 0x03);//これらの引数のどれかがいけない. 迷路、方角、ノードポインタ. 一発目の、ノードの重みがfffなのはなぜ？
+
+        //printf("次ノード    重み:%x\r\n            %s x:%u, y:%u\r\n            ", mouse->next.node->weight, (mouse->next.node->rc == 1) ? c:r , mouse->next.node->pos.x, mouse->next.node->pos.y);
+
+        getNextState(&(my_mouse.now),&(my_mouse.next),my_mouse.next.node);
+        //printf("侵入方角:%d, x:%d, y:%d\r\n\r\n",mouse->next.car, mouse->next.pos.x,mouse->next.pos.y);
+        //デバッグ用
+        //getRouteFastRun( route_log, &(mouse->now), cnt);
+        AddVelocity = 0;
+        	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
+        	switch(my_mouse.next.dir)
+        	{
+        	case front:
+        		//ただ直進
+        		Calc = SearchOrFast;
+        		GoStraight(90, ExploreVelocity , AddVelocity);
+        		break;
+        	case right:
+        		//右旋回
+        		Calc = SearchOrFast;
+        		TurnRight(turn_mode);
+        		break;
+        	case backright:
+        		//Uターンして右旋回
+        		//壁の更新の処理を呼ばない
+        //		SearchOrFast = 1;
+        		Calc = 1;//マップ更新したくないときは1を代入。
+        		GoBack();
+        		Calc = SearchOrFast;
+        		TurnRight(turn_mode);
+
+
+        		break;
+        	case back:
+        		//Uターンして直進.加速できる
+        		Calc = 1;//マップ更新したくないときは1を代入。
+        		GoBack();
+        		Calc = SearchOrFast;
+        		GoStraight(90, ExploreVelocity , AddVelocity);
+        		break;
+        	case backleft:
+        		//Uターンして左旋回
+        		Calc = 1;//マップ更新したくないときは1を代入。
+        		GoBack();
+        		Calc = SearchOrFast;
+        		TurnLeft(turn_mode);
+        		break;
+        	case left:
+        		//左旋回
+        		Calc = SearchOrFast;
+        		TurnLeft(turn_mode);
+        		break;
+        	}
+        cnt++;
+        // if(cnt == 5) break;
+    }
+    printAllWeight(&my_map, &(my_mouse.now.pos));
+//    outputDataToFile(maze);
+
+	//fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
 
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
@@ -1003,8 +1069,8 @@ void FastestRun()
 
 	while(1)
 	{
-		HAL_Delay(10*1000);
-		printf("ログ出力\r\n");
+		printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",cnt, my_map.RawNode[0][1].weight);
+
 	}
 }
 void Explore()
@@ -1124,6 +1190,7 @@ void Explore()
 //	Pos.TargetX = X_GOAL_LESSER;
 //	Pos.TargetY = Y_GOAL_LESSER;
 //	goal_edge_num = two;
+	VelocityMax = false;
 	SearchOrFast = 0;
 	Calc = 0;
 //	Pos.Dir = front;
@@ -1131,10 +1198,9 @@ void Explore()
 //	Pos.NextX = Pos.X;
 //	Pos.NextY = Pos.Y + 1;
 //	Pos.NextCar = north;
-	printf("a\r\n");
+
 	initSearchData(&my_map, &my_mouse);
 	dbc = 1;
-	printf("b\r\n");
 	Accel(61.5, ExploreVelocity);
 	ChangeLED(6);
 	//shiftPos();

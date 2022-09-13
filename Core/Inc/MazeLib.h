@@ -208,6 +208,7 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 node *getNodeInfo(maze_node *maze, uint8_t x, uint8_t y, cardinal car);
 node *getNextNode(maze_node *maze, cardinal car, node *my_node, int mask);
 state *getNextState(state *now_state, state *next_state, node *next_node);
+_Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node);
 _Bool getWallNow(state *st, wall_state *wall_st);
 
 void printAllWeight(maze_node *maze, position *pos);

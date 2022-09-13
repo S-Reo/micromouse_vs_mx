@@ -29,7 +29,7 @@ extern TIM_HandleTypeDef htim1;
 //壁センサデータ
 	//平均をとった後の実際に使用する値
 	//
-
+extern volatile _Bool VelocityMax;
 
 extern float Photo[4];
 extern float TargetPhoto[4];
@@ -39,6 +39,7 @@ extern int KeepCounter;
 //速度 mm/s
 extern volatile float CurrentVelocity[3];
 extern volatile float TargetVelocity[3];
+extern volatile float ControlTargetVelocity;
 
 //extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
 //extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;

@@ -16,6 +16,8 @@
 #include "PID_Control.h"
 #include "Convert.h"
 
+volatile _Bool VelocityMax;
+
 float Photo[4];
 float TargetPhoto[4];
 float PhotoDiff;
@@ -27,7 +29,7 @@ int KeepCounter;//
 };*/
 volatile float CurrentVelocity[3];	//速度 mm/s
 volatile float TargetVelocity[3];
-
+volatile float ControlTargetVelocity;
 //float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
 //float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
 //float TotalPulseBody;	//移動量 mm/msを積算

@@ -549,10 +549,11 @@ void initTargetAreaWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t target_
             // maze->RawNode[x+i][y+j].weight = (maze->RawNode[x+i][y+j].weight == MAX_WEIGHT) ? MAX_WEIGHT : 0;           //南
             // maze->ColumnNode[x+i][y+j].weight = (maze->ColumnNode[x+i][y+j].weight == MAX_WEIGHT) ? MAX_WEIGHT : 0;     //西
 
-            maze->RawNode[x+i][y+1+j].weight = (maze->RawNode[x+i][y+1+j].draw == true) ? MAX_WEIGHT : 0;       //北
-            maze->ColumnNode[x+1+i][y+j].weight = (maze->ColumnNode[x+1+i][y+j].draw == true) ? MAX_WEIGHT : 0; //東
-            maze->RawNode[x+i][y+j].weight = (maze->RawNode[x+i][y+j].draw == true) ? MAX_WEIGHT : 0;           //南
-            maze->ColumnNode[x+i][y+j].weight = (maze->ColumnNode[x+i][y+j].draw == true) ? MAX_WEIGHT : 0;     //西
+        	//なぜdraw == trueでやっていたかわからない
+            maze->RawNode[x+i][y+1+j].weight = (maze->RawNode[x+i][y+1+j].existence == WALL) ? MAX_WEIGHT : 0;       //北
+            maze->ColumnNode[x+1+i][y+j].weight = (maze->ColumnNode[x+1+i][y+j].existence == WALL) ? MAX_WEIGHT : 0; //東
+            maze->RawNode[x+i][y+j].weight = (maze->RawNode[x+i][y+j].existence == WALL) ? MAX_WEIGHT : 0;           //南
+            maze->ColumnNode[x+i][y+j].weight = (maze->ColumnNode[x+i][y+j].existence == WALL) ? MAX_WEIGHT : 0;     //西
         }
     }
 }
@@ -878,7 +879,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                     flag = true;
                 }
             }
-            
+
             //南へ東へ
             if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].existence & mask) == NOWALL)		//壁がなければ
             {  
@@ -1057,6 +1058,279 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     }
     return now_node; //
         
+}
+
+//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
+_Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node)
+{
+	uint16_t compare_weight=0;
+	compare_weight = now_node->weight;
+
+	_Bool flag=false;
+	//現ノードから3方向ノードを見て、未知なら即return
+	if(now_node->rc == 0)
+	{
+		switch(car)
+		{
+		case north:
+		//行にいるとき
+	        //北側ノード
+	        if(now_node->pos.y < NUMBER_OF_SQUARES_Y-1)					//範囲チェック
+	        {
+	            //printf("%u\r\n",now_node->pos.y);
+	            if( (maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence ) == UNKNOWN)	//壁がなければ(maskの意味はstatic_parametersを参照)
+	            {
+	            	//UNKNOWNなら即return.
+	            	return false;
+	            }
+	            else if((maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence ) == NOWALL)
+	            {
+	            	// 壁が既知なら、あるかないかなので、無いときは、候補になりうるので重みの比較. 小さければ次のノードとする。直進方向ならreturn true
+	            	// UNKNOWNでなければ、重みを比較しておく. 一個もアンノウンでなければ、重みを比較して最小ノードを選択。それが直進なら.
+	                // printf("%d\r\n", maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence);//壁があることになってた..
+	                if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
+	                {
+	                    compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight;
+//	                    next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y+1]);
+	                    flag = true;
+	                }
+	            }
+	        }
+
+	        //北東
+	        if(now_node->pos.x < NUMBER_OF_SQUARES_X-1)					//範囲チェック
+	        {
+	            //北東へ
+	            if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].existence ) == UNKNOWN)
+	            {
+	            	return false;
+	            }
+	            else if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].existence ) == NOWALL)
+	            {//重みを比較して更新
+	                if(compare_weight > maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight)
+	                {
+	                    compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight;
+//	                    next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y]);
+	                    flag = false;
+	                }
+	            }
+	        }
+
+	        //北西
+	        if(now_node->pos.x > 0)						//範囲チェック
+	        {
+	            //北西へ
+	            if( (maze->ColumnNode[now_node->pos.x][now_node->pos.y].existence ) == UNKNOWN)		//壁がなければ
+	            {
+	            	return false;
+	            }
+	                //重みを比較して更新
+	            else if( (maze->ColumnNode[now_node->pos.x][now_node->pos.y].existence) == NOWALL)		//壁がなければ
+	            {
+	                if(compare_weight > maze->ColumnNode[now_node->pos.x][now_node->pos.y].weight)
+	                {
+	                    compare_weight = maze->ColumnNode[now_node->pos.x][now_node->pos.y].weight;
+//	                    next_node = &(maze->ColumnNode[now_node->pos.x][now_node->pos.y]);
+	                    flag = false;
+	                }
+	            }
+	        }
+	        break;
+		case south:
+			//南へ
+			if(now_node->pos.y > 1)						//範囲チェック
+			{
+				if( (maze->RawNode[now_node->pos.x][now_node->pos.y-1].existence ) == UNKNOWN)	//壁がなければ
+				{
+					return false;
+				}
+					//重みを比較して更新
+				else if( (maze->RawNode[now_node->pos.x][now_node->pos.y-1].existence ) == NOWALL)
+				{
+					if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y-1].weight)
+					{
+						compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y-1].weight;
+//						next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y-1]);
+						flag = true;
+					}
+				}
+			}
+			if(now_node->pos.x < NUMBER_OF_SQUARES_X-1)					//範囲チェック
+			{
+				//南へ東へ
+				if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].existence ) == UNKNOWN)		//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].existence ) == NOWALL)		//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].weight)
+					{
+						compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1].weight;
+//						next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y-1]);
+						flag = false;
+					}
+				}
+			}
+			if(now_node->pos.x > 0)						//範囲チェック
+			{
+				//南へ西へ
+				if( (maze->ColumnNode[now_node->pos.x][now_node->pos.y-1].existence ) == UNKNOWN)		//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->ColumnNode[now_node->pos.x][now_node->pos.y-1].existence ) == NOWALL)		//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->ColumnNode[now_node->pos.x][now_node->pos.y-1].weight)
+					{
+						compare_weight = maze->ColumnNode[now_node->pos.x][now_node->pos.y-1].weight;
+//						next_node = &(maze->ColumnNode[now_node->pos.x][now_node->pos.y-1]);
+						//このノードあやしい
+						flag = false;
+					}
+				}
+			}
+			break;
+		default :
+			//斜め向きは未定義
+			break;
+		}
+	        //6つのうち最小ノードを選ぶ
+	}
+	else if(now_node->rc == 1)
+	{
+		//列にいるとき
+		//東を向いているか、西を向いているか
+		switch(car)
+		{
+		case east:
+
+			//東側ノード
+			if(now_node->pos.x < NUMBER_OF_SQUARES_X-1)					//範囲チェック
+			{
+				if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].existence ) == UNKNOWN)	//壁がなければ(maskの意味はstatic_parametersを参照)
+				{
+					return false;
+				}
+				else if( (maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].existence ) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
+				{
+					if(compare_weight > maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight)
+					{
+						compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight;
+//							next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y]);
+						flag = true;
+					}
+				}
+			}
+
+			//北東
+			if(now_node->pos.y < NUMBER_OF_SQUARES_Y-1)					//範囲チェック
+			{
+				//北東へ
+				if( (maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence ) == UNKNOWN)		//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence ) == NOWALL)		//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
+					{
+						compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight;
+//							next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y+1]);
+						flag = false;
+					}
+				}
+			}
+
+			//南東
+			if(now_node->pos.y > 0)						//範囲チェック
+			{
+				//南東へ
+				if( (maze->RawNode[now_node->pos.x][now_node->pos.y].existence ) == UNKNOWN)		//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->RawNode[now_node->pos.x][now_node->pos.y].existence ) == NOWALL)		//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y].weight)
+					{
+						compare_weight = maze->RawNode[now_node->pos.x][now_node->pos.y].weight;
+//							next_node = &(maze->RawNode[now_node->pos.x][now_node->pos.y]);
+						flag = false;
+					}
+				}
+			}
+			break;
+
+		case west:
+			//西側ノード
+			if(now_node->pos.x > 1)						//範囲チェック
+			{
+				if( (maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].existence ) ==UNKNOWN)	//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].existence ) == NOWALL)	//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].weight)
+					{
+						compare_weight = maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].weight;
+//							next_node = &(maze->ColumnNode[now_node->pos.x-1][now_node->pos.y]);
+						flag = true;
+					}
+				}
+			}
+			if(now_node->pos.y < NUMBER_OF_SQUARES_Y-1)					//範囲チェック
+			{
+				//北西へ
+				if( (maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].existence ) == UNKNOWN)		//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].existence ) == NOWALL)		//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].weight)
+					{
+						compare_weight = maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].weight;
+//							next_node = &(maze->RawNode[now_node->pos.x-1][now_node->pos.y+1]);
+						flag = false;
+					}
+				}
+			}
+			if(now_node->pos.y > 0)						//範囲チェック
+			{
+				//南へ西へ
+				if( (maze->RawNode[now_node->pos.x-1][now_node->pos.y].existence ) == UNKNOWN)		//壁がなければ
+				{
+					return false;
+				}
+				else if( (maze->RawNode[now_node->pos.x-1][now_node->pos.y].existence ) == NOWALL)		//壁がなければ
+				{
+					//重みを比較して更新
+					if(compare_weight > maze->RawNode[now_node->pos.x-1][now_node->pos.y].weight)
+					{
+						compare_weight = maze->RawNode[now_node->pos.x-1][now_node->pos.y].weight;
+//							next_node = &(maze->RawNode[now_node->pos.x-1][now_node->pos.y]);
+						flag = false;
+					}
+				}
+
+			}
+			break;
+		default :
+			break;
+		}
+	}
+	return flag; //壁が全部あるときもfalseになっている
+	//未知があった時点でreturn false
+	//直進かどうかまで見て、直進でなければfalse
+	//既知でかつ直進ならtrue
 }
 //自分の状態から次の状態を得る
 state *getNextState(state *now_state, state *next_state, node *next_node)

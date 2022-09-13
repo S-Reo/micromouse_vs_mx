@@ -38,6 +38,7 @@ void initSearchData(maze_node *my_maze, profile *Mouse)
     //スタート座標にいる状態で、現在の重みを更新
      updateAllNodeWeight(my_maze, Mouse->goal_lesser.x, Mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }
+
 void updateRealSearch()
 {
 	//壁情報は
@@ -108,12 +109,52 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//コマンドキューのときはここでコマンドを発行してキューに渡す
 	AddVelocity = 0;
 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
+	_Bool accel_or_not = false;
+	int accel_or_decel = 0;
 	switch(Mouse->next.dir)
 	{
 	case front:
+
+		//直進後の選択肢も見ておく
+		accel_or_not = judgeAccelorNot(&my_maze, Mouse->next.car, Mouse->next.node);
+
+		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
+		if(accel_or_not == true) //既知で.直進
+		{
+			//加速かそのまま.
+			//現在速度がマックスかどうか
+			if(VelocityMax == true)
+			{
+				accel_or_decel = 0; //そのまま
+			}
+			else
+			{
+				accel_or_decel = 1; //加速
+				AddVelocity = 180;
+			}
+		}
+		else
+		{
+			//未知もしくは、既知でも直進で無ければ.減速かそのまま
+			//現在速度がマックスかどうか
+			if(VelocityMax == true)
+			{
+				accel_or_decel = -1; //減速
+			}
+			else //マックスでない
+			{
+				accel_or_decel = 0; //そのまま
+			}
+		}
+
+
+		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速する
+		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのまま
+		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索速度であればそのまま
+		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度がマックスなら減速
 		//ただ直進
 		Calc = SearchOrFast;
-		GoStraight(90, ExploreVelocity , AddVelocity);
+		GoStraight(90, ExploreVelocity , accel_or_decel);
 		break;
 	case right:
 		//右旋回
@@ -609,6 +650,7 @@ void Fastest_Run(maze_node *maze, profile *mouse, state *route_log)
     printAllWeight(maze, &(mouse->now.pos));
     outputDataToFile(maze);
     printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",cnt, maze->RawNode[0][1].weight);
+
 }
 
 //_Bool Simulation()
