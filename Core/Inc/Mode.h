@@ -28,5 +28,7 @@ void GainTestRWall();
 void GainTestDWall();
 void GainTestAVelo();
 
+void Simu();
+
 #endif /* INC_MODE_H_ */
 //右130、左140

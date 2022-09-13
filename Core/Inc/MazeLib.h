@@ -113,7 +113,7 @@ void printMatrix16ValueFromNode(maze_node *maze);
 //ノードの壁の有無
 void printSingleNode(maze_node *mn, uint8_t x, uint8_t y);
 void printAllNode(maze_node *mn);//外堀だけprintfせず、そのまま描画用データに。
-
+void printAllNodeExistence(maze_node *mn);//壁の存在
 
 /* ----- 迷路データ管理 ここまで----- */
 //     //座標を指定して、4方向の有無を書き込む

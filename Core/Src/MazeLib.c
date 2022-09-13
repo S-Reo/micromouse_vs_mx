@@ -323,6 +323,31 @@ void printAllNode(maze_node *mn)
     }
     printf("\r\n");
 }
+void printAllNodeExistence(maze_node *mn)
+{
+    printf("全ノードの壁の存在\r\n");
+    //間違ってるかも
+    //MATLABで保存するときと同じパターンで出力する
+    //Raw
+    //Column
+    //Rawを1列出力し、改行せずColumnの1列出力。
+    //行を増やして同じ処理
+    for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+    {
+        for(int j=1; j < NUMBER_OF_SQUARES_Y+1; j++)
+        {
+            printf("%u,",mn->RawNode[i][j].existence);
+        }
+        for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+        {
+            printf("%u",mn->ColumnNode[i+1][j].existence);
+            if(j < NUMBER_OF_SQUARES_Y-1)
+                printf(",");
+        }
+        printf("\r\n");
+    }
+    printf("\r\n");
+}
 _Bool outputDataToFile(maze_node *maze)
 {
     char weight_file[] = "weight.txt";
@@ -1347,6 +1372,8 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
 #endif
     return next_state; //ここまで来てしまったらエラー
 }
+
+
 //xyと次の向きを返す
 //ライブラリを使って自分で書くものなのか、ライブラリに書き足していくものか。とりあえず後
 

@@ -55,6 +55,8 @@ void wall_ram_print();
 void wall_flash_print();
 void flash_copy_to_ram();
 
+void flashStoreNodes();
+void flashCopyNodesToRam();
 void UpdateWalkMap();
 int setNotExploredArea(uint8_t *target_x,uint8_t *target_y, uint16_t *walk_val);
 

@@ -21,6 +21,7 @@
 #include "MicroMouse.h"
 
 #include "Interrupt.h"
+#include "MazeLib.h"
 
 //壁センサデータを利用した処理
 //マップデータ構造体を利用した処理
@@ -64,6 +65,28 @@ void flash_store_init()
 				FLASH_Write_Word(address+8, Wall[i][j].south);
 				FLASH_Write_Word(address+12, Wall[i][j].west);
 				address += 16;
+			}
+	}
+}
+void flashStoreNodes()
+{
+	uint32_t address=start_adress_sector1;
+
+	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+	{
+			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+			{
+				FLASH_Write_HalfWord(address+0,my_map.RawNode[i][j].existence);
+				address += 2;
+			}
+	}//2*N*(N+1)*2byte = 64*66byte
+	//列
+	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+	{
+			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+			{
+				FLASH_Write_HalfWord(address+0,my_map.ColumnNode[i][j].existence);
+				address += 2;
 			}
 	}
 }
@@ -494,7 +517,31 @@ void flash_copy_to_ram()
 
 }
 //評価値マップ生成。
+void flashCopyNodesToRam()
+{
+	uint32_t address=start_adress_sector1;
 
+	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+	{
+			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+			{
+				uint32_t wall_data=0;
+				FLASH_Read_Word(address, &wall_data);
+				my_map.RawNode[i][j].existence = wall_data;
+				address += 2;
+			}
+	}
+	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+	{
+			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+			{
+				uint32_t wall_data=0;
+				FLASH_Read_Word(address, &wall_data);
+				my_map.ColumnNode[i][j].existence = wall_data;
+				address += 2;
+			}
+	}
+}
 void UpdateWalkMap()
 {
 	//初期化大事すぎた。hosu

@@ -1186,10 +1186,10 @@ void Explore()
 //		HAL_Delay(1000);
 
 
-//	//flashのクリア。
-//	Flash_clear_sector1();
-//	//マップ書き込み
-//	flash_store_init();
+	//flashのクリア。
+	Flash_clear_sector1();
+	//マップ書き込み
+	flashStoreNodes();
 	//完了の合図
 	Signal(7);
 
@@ -1603,4 +1603,46 @@ void FullyAutonomous()
 
 
 }
+void Simu()
+{
+	//マップに仮でデータを入れる
+	printAllNodeExistence(&my_map);
+	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+	{
+			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+			{
+				my_map.RawNode[i][j].existence = 2;
+			}
+	}
+	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+	{
+			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+			{
+				my_map.ColumnNode[i][j].existence = 3;
+			}
+	}
+	printAllNodeExistence(&my_map);
+	//フラッシュに書き込む
+	flashStoreNodes();
 
+	//ramをリセット
+	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+		{
+				for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+				{
+					my_map.RawNode[i][j].existence = 0;
+				}
+		}
+		for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+		{
+				for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+				{
+					my_map.ColumnNode[i][j].existence = 0;
+				}
+		}
+		printAllNodeExistence(&my_map);
+	//フラッシュを読み出す
+	flashCopyNodesToRam();
+	//合っているか確認する
+	printAllNodeExistence(&my_map);
+}
