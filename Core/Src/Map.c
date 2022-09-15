@@ -76,17 +76,17 @@ void flashStoreNodes()
 	{
 			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
 			{
-				FLASH_Write_HalfWord(address+0,my_map.RawNode[i][j].existence);
-				address += 2;
+				FLASH_Write_Word(address+0, my_map.RawNode[i][j].existence);
+				address += 4;
 			}
-	}//2*N*(N+1)*2byte = 64*66byte
+	}//2*N*(N+1)*4byte = 64*33*4byte
 	//列
 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
 	{
 			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
 			{
-				FLASH_Write_HalfWord(address+0,my_map.ColumnNode[i][j].existence);
-				address += 2;
+				FLASH_Write_Word(address+0, my_map.ColumnNode[i][j].existence);
+				address += 4;
 			}
 	}
 }
@@ -528,7 +528,7 @@ void flashCopyNodesToRam()
 				uint32_t wall_data=0;
 				FLASH_Read_Word(address, &wall_data);
 				my_map.RawNode[i][j].existence = wall_data;
-				address += 2;
+				address += 4;
 			}
 	}
 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
@@ -538,7 +538,7 @@ void flashCopyNodesToRam()
 				uint32_t wall_data=0;
 				FLASH_Read_Word(address, &wall_data);
 				my_map.ColumnNode[i][j].existence = wall_data;
-				address += 2;
+				address += 4;
 			}
 	}
 }

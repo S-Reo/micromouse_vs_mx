@@ -29,6 +29,8 @@ void GainTestDWall();
 void GainTestAVelo();
 
 void Simu();
+void FlashWriteTest();
+void FlashReadTest();
 
 #endif /* INC_MODE_H_ */
 //右130、左140

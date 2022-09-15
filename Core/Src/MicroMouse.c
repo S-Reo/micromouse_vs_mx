@@ -55,7 +55,7 @@ volatile float Acceleration=0;
 volatile float TargetAngularV;
 volatile float AngularAcceleration=0;
 float AngularLeapsity=0;
-volatile float TargetAngle;
+volatile float TargetAngle=0;
 float ImuAngV,ImuAngle;
 float ImuAccel=0, ImuVelocity=0, ImuMileage=0;
 int VelocityLeftOut, VelocityRightOut;

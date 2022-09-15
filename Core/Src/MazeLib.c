@@ -830,12 +830,19 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
         //北側ノード
         if(now_node->pos.y < NUMBER_OF_SQUARES_Y-1)					//範囲チェック
         {
+
             //printf("%u\r\n",now_node->pos.y);
             if( (maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
             {
+            	static int cnt = 1;
+            				ChangeLED(cnt%7);
+            				cnt ++;
+
+
                 // printf("%d\r\n", maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence);//壁があることになってた..
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
                 {
+
 #if DEBUG_ON
                     printf("北へ\r\n");
 #endif
@@ -1055,6 +1062,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
 #endif
 
         return now_node;//万が一更新されなかったら、今いるノードが目標ノードなので、停止するはず。
+        //停止しなかった。前回の情報がそのまま反映されるだけ
     }
     return now_node; //
         
@@ -1644,6 +1652,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
 #if DEBUG_ON
     printf("エラー in function 'getNextState'.\r\n");
 #endif
+
     return next_state; //ここまで来てしまったらエラー
 }
 

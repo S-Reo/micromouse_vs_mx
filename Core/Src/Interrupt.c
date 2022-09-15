@@ -219,8 +219,8 @@ void Explore_IT()
 
 #if 1
 	//static float angle=0;
-	static float zg_last=0;
-	float zg_law;
+	volatile static float zg_last=0;
+	volatile float zg_law;
 	//uint8_t zgb,zgf;
 	ZGyro = ReadIMU(0x37, 0x38);
     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s

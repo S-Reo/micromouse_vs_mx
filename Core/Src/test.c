@@ -116,7 +116,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	case front:
 
 		//直進後の選択肢も見ておく
-		accel_or_not = judgeAccelorNot(&my_maze, Mouse->next.car, Mouse->next.node);
+		accel_or_not = judgeAccelorNot(my_maze, Mouse->next.car, Mouse->next.node);
 
 		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
 		if(accel_or_not == true) //既知で.直進
@@ -126,11 +126,14 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 			if(VelocityMax == true)
 			{
 				accel_or_decel = 0; //そのまま
+				AddVelocity = 245;
+				ChangeLED(0);
 			}
 			else
 			{
 				accel_or_decel = 1; //加速
-				AddVelocity = 180;
+				AddVelocity = 245;
+				ChangeLED(7);
 			}
 		}
 		else
@@ -140,10 +143,16 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 			if(VelocityMax == true)
 			{
 				accel_or_decel = -1; //減速
+				static int cnt = 1;
+				ChangeLED(cnt);
+				cnt += 2;
+				AddVelocity = 0;
 			}
 			else //マックスでない
 			{
 				accel_or_decel = 0; //そのまま
+				AddVelocity = 0;
+				ChangeLED(2);
 			}
 		}
 
@@ -154,7 +163,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度がマックスなら減速
 		//ただ直進
 		Calc = SearchOrFast;
-		GoStraight(90, ExploreVelocity , accel_or_decel);
+		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel);
 		break;
 	case right:
 		//右旋回
@@ -189,6 +198,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	case left:
 		//左旋回
 		Calc = SearchOrFast;
+		ChangeLED(4);
 		TurnLeft(turn_mode);
 		break;
 	}

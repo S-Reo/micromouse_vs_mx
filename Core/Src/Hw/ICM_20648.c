@@ -9,10 +9,10 @@
 #include <stdio.h>
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t xg, yg, zg;	// 角加速度(16bitデータ)
-float zg_offset=0, ya_offset=0;
+volatile float zg_offset=0, ya_offset=0;
 //uint8_t val[2]={0};
 //int16_t spi_dma_data;
-float  ZGyro=0, YAccel=0;
+volatile float  ZGyro=0, YAccel=0;
 //const uint8_t ret[2] = {
 //		0x37 | 0x80,
 //		0x38 | 0x80

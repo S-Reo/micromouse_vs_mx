@@ -172,22 +172,25 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  //バッ�?リチェ�?ク
+  //バッ?��?リチェ?��?ク
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
+  MX_USART1_UART_Init();
 
-  ADCStart();
-  BatteryCheck( (int)adc1[2] );
-  ADCStop();
+	ADCStart();
+	MX_TIM3_Init();
+	BatteryCheck( (int)adc1[2] );
+	ADCStop();
 
-  //モード選�? //スイ�?チが押されるまでエンコー�?の処�?を受け付け�?
-  MX_TIM3_Init();
+	int8_t startup_mode;
+	ModeSelect(0, 7, &startup_mode);
+	Signal( startup_mode );
+  //printf("adc1[2] : %lu\r\n ",adc1[2]);
 
-  int8_t startup_mode;
-  ModeSelect(0, 7, &startup_mode);
-  Signal( startup_mode );
+  //モード選?��? //スイ?��?チが押されるまでエンコー?��?の処?��?を受け付け?��?
+
 
   //MAX45mAでモード選択できる
 
@@ -215,20 +218,20 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  //モータ確認
+  //モータ確�?
 //  Motor_PWM_Start();
 //  while(1)
 //  {
 //	  Motor_Switch(500, 500);
 //  }
-  //赤外線LEDの消費電流テス�?
-  //何も無�?70mA
+  //赤外線LEDの消費電流テス?��?
+  //何も無?��?70mA
   //これまで
-  //101mAになった�?�で31mA. 2本で.
+  //101mAになった�??��で31mA. 2本で.
 
-  //周波数を上げ�?
+  //周波数を上げ?��?
 
-  //周波数を下げ�?
+  //周波数を下げ?��?
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -243,14 +246,14 @@ int main(void)
   IT_mode = WRITINGFREE;
   //エンコー
   EncoderStart();
-  //モータタイ??��?��?
+  //モータタイ???��?��??��?��?
   Motor_PWM_Start();
   //割込み
   HAL_TIM_Base_Start_IT(&htim1);
 
   HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2が左SET:1で正転
   HAL_GPIO_WritePin(GPIO_RIGHT, GPIO_R_PIN_NUM, GPIO_PIN_RESET);
-  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty??��?��?//tim2ch4が左
+  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty???��?��??��?��?//tim2ch4が左
   	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 1050/4);
   	while(data[1999] == 0)
   	{
@@ -277,10 +280,8 @@ int main(void)
 //  printf("フラッシュ確認\r\n");
 //  Simu();
 //  printf("終了\r\n");
-  while(1)
-  {
 
-  }
+
 
 
   while (1)
@@ -303,12 +304,22 @@ int main(void)
 		  break;
 	  case FASTEST_RUN:
 		  //GainTestLWall();
+//		  FlashReadTest();
+//		  printf("読み込み終了\r\n");
+//		  while(1){
+//
+//		  		  }
 		  FastestRun();
 		  break;
 	  case 5:
 		  GainTestAVelo();
 		  break;
 	  case EXPLORE:
+//		  FlashWriteTest();
+//		  printf("書き込み終了\r\n");
+//		  while(1){
+//
+//		  }
 		  Explore();
 		  break;
 	  case WRITINGFREE:
@@ -333,7 +344,8 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage **/
+  /** Configure the main internal regulator output voltage
+  */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
   /** Initializes the RCC Oscillators according to the specified parameters
@@ -882,7 +894,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;

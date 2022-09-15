@@ -146,6 +146,30 @@ static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
 //
 //
 //}
+
+/* バックエンドでコマンドとして処理する */
+
+void MotionBackend()
+{
+	/* 各種センサの更新 */
+
+	/* 条件判定 */ //ここをコマンドで条件定義
+
+	//距離もしくは角度の終了条件でコマンドを終了
+		//IMUによる角度検出
+		//エンコーダによる左右のパルス（総パルスもしくは増減分）
+		//終了してもモータ出力はそのまま。（クリアしない）
+
+	//終了していなければ、コマンドによる制御入力を更新する
+
+
+
+
+
+	/* 出力 */
+}
+
+
 void InitPosition()
 {
 	Pos.X = 0;
@@ -860,17 +884,60 @@ void Rotate(float deg, float ang_v)
 	if( ang_v > 0)	//右回転
 	{
 		TargetAngle += move_angle[0];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
+		ChangeLED(2);
 		//ここのwhileが抜けないことがある
 		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
+			//最短走行の時だけ、Angleが大きくならない、もしくは目標角度がかなり大きい。初期化？最初の旋回なので、0radから90度ぶん目標角度がズレている必要がある。Angleが積算できていないかも。
 			AngularAcceleration = angular_acceleration[0]; //ここまで
+//			if(ZGyro == 0)
+//			{
+//				float fin_angle = Angle;
+//				while(1)
+//				{
+//					TargetAngularV = 0;
+//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
+//				}
+//
+//			}
+//			if(AngularV > 3*M_PI)
+//			{
+//				float fin_angle = Angle;
+//				ChangeLED(2);
+//				while(1)
+//				{
+//					TargetAngularV = 0;
+//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
+//				}
+//
+//			}
 		}
 		TargetAngle += move_angle[1];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
+		ChangeLED(3);
 		while(TargetAngle > Angle)
 		{
 			AngularAcceleration = angular_acceleration[1];//0
+//			if(ZGyro == 0)
+//			{
+//				float fin_angle = Angle;
+//				while(1)
+//				{
+//					TargetAngularV = 0;
+//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
+//				}
+//
+//			}
+//			if(AngularV )
+//			{
+//				float fin_angle = Angle;
+//				ChangeLED(3);
+//				while(1)
+//				{
+//					TargetAngularV = 0;
+//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
+//				}
+//
+//			}
 		}
 		TargetAngle += move_angle[2];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
 
@@ -1419,7 +1486,7 @@ void Accel(float add_distance, float explore_speed)
 	Acceleration = 0;
 	//壁読んで、
 	wall_cut = false;
-	ChangeLED(0);
+//	ChangeLED(0);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
@@ -1501,10 +1568,12 @@ void Decel(float dec_distance, float end_speed)
 			PIDChangeFlag( A_VELO_PID , 1);
 
 		}
-
-
 	}
-	ChangeLED(6);
+	TargetVelocity[BODY] = end_speed;
+	Acceleration = 0;
+	TargetAngularV = 0;
+	AngularAcceleration = 0;
+	//ChangeLED(2);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse/2;
 	KeepPulse[RIGHT] += target_pulse/2;
@@ -1673,7 +1742,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 
 	if(accel_or_decel == 1) //加速するとき
 	{
-		explore_speed += AddVelocity;
+		//explore_speed += AddVelocity;
 		VelocityMax = true;
 
 		Accel( move_distance , explore_speed);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
@@ -1681,19 +1750,28 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 	else if(accel_or_decel == -1) //探索速度までの減速. ターン速度までの減速も後で入れる
 	{
 		VelocityMax = false;
-		Decel( move_distance*0.8f, explore_speed); //0.8で減速
-		while( ( KeepPulse[BODY] +(target_pulse*0.2f)) > ( TotalPulse[BODY]) ) //残り0.2でマップの更新
+		//ChangeLED(5);
+		Decel( move_distance*0.75f, explore_speed); //0.8で減速
+		ChangeLED(6);
+		while( ( KeepPulse[BODY] +(target_pulse*0.25f)) > ( TotalPulse[BODY]) ) //残り0.2でマップの更新
 		{
 			if(Calc == 0)//減速終了後直ぐにマップ更新
 			{
 				updateRealSearch();
+				//ChangeLED(7);
 				Calc = 1;
 			}
 		}
+		KeepPulse[BODY] += target_pulse*0.2f;
+		KeepPulse[LEFT] += target_pulse*0.2f*0.5f;
+		KeepPulse[RIGHT] += target_pulse*0.2f*0.5f;
 	}
 
 	else
 	{
+//		static int c = 1;
+//		ChangeLED(c);
+//		c++;
 		//VelocityMaxはそのまま;
 //		Pos.Act = straight;
 //		WallSafe();
@@ -1738,6 +1816,10 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 	//		}
 		}
 		wall_cut = false;
+		Acceleration = 0;
+		KeepPulse[BODY] += target_pulse;
+		KeepPulse[LEFT] += target_pulse*0.5f;
+		KeepPulse[RIGHT] += target_pulse*0.5f;
 
 	}
 	ChangeLED(0);
@@ -1746,10 +1828,8 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 //	int target_pulse = (int)(2*(move_distance/2)/MM_PER_PULSE);
 //	int keep_pulse = TotalPulse[BODY];
 	//WallWarn();
-	Acceleration = 0;
-	KeepPulse[BODY] += target_pulse;
-	KeepPulse[LEFT] += target_pulse/2;
-	KeepPulse[RIGHT] += target_pulse/2;
+
+
 
 	//keep_pulse = TotalPulse[BODY];
 
@@ -1775,6 +1855,7 @@ void TurnRight(char mode)
 		EmitterOFF();
 		PIDChangeFlag(A_VELO_PID, 0);
 		Rotate( 90 , 2*M_PI);//1.5
+		ChangeLED(0);
 		//RotateTest(90);
 
 //		float acc = AjustCenter();
@@ -1815,7 +1896,7 @@ void TurnLeft(char mode)
 		//超信地旋回
 		Decel(45, 0);
 		WaitStopAndReset();
-		ChangeLED(5);
+		//ChangeLED(5);
 
 		//AjustCenter();
 		EmitterOFF();

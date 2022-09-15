@@ -242,9 +242,16 @@ void InitFastest()
 	ADCStart();
 
 	uint8_t imu_check;
-	imu_check =IMU_init();
-
+	imu_check = IMU_init();
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+#if 1 //IMUから値が来なくなる現象の対策
+	imu_check =IMU_init();
+	printf("imu_check 1ならOK: %d\r\n",imu_check);
+#endif
+	HAL_Delay(100);
+
+	ZGyro = ReadIMU(0x37, 0x38);
+	printf("gyro : %f\r\n",ZGyro);
 	//IMU_DMA_Start();
 	//CS_RESET;
 
@@ -961,23 +968,33 @@ void FastestRun()
 	TargetVelocity[BODY] = 0;
 	Acceleration = 0;
 	TargetAngularV = 0;
+	TargetAngle = 0;
+	Angle = 0;
 	PIDReset(L_VELO_PID);
 	PIDReset(R_VELO_PID);
 	PIDReset(A_VELO_PID);
 	PIDReset(L_WALL_PID);
 	PIDReset(R_WALL_PID);
-
+//	while(1)
+//	{
+//		Rotate( 90 , 2*M_PI);
+//		//TurnRight(turn_mode);
+//		HAL_Delay(1000);
+//	}
 	//迷路データ
 	initSearchData(&my_map, &my_mouse);
+//	printAllNodeExistence(&my_map);
 	//マップデータの取得。flashから壁データを取得。
 	flashCopyNodesToRam(); //existenceだけ
+//	printAllNodeExistence(&my_map);
 	//flash_copy_to_ram();
 	//マップデータはあるので、最初だけ重みを計算
-	updateAllNodeWeight(&my_map,GOAL_X,GOAL_Y,GOAL_SIZE_X,GOAL_SIZE_Y,0x03);
+	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 
 	HAL_Delay(200);
-
-
+	//壁のあるなしと重みをprintしてチェック
+//	printAllNodeExistence(&my_map);
+//	printAllWeight(&my_map, &(my_mouse.goal_lesser));
 	//最初の加速
 	Accel(61.5, ExploreVelocity);
 	//shiftState(&my_mouse);
@@ -991,6 +1008,7 @@ void FastestRun()
 
     char r[]="行";
 	char c[]="列";
+
     while(! ((my_mouse.goal_lesser.x <= my_mouse.next.pos.x && my_mouse.next.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.next.pos.y && my_mouse.next.pos.y <= my_mouse.goal_larger.y)))
     {
         shiftState(&my_mouse);
@@ -1001,7 +1019,7 @@ void FastestRun()
 
 
         //printf("現ノード    重み:%x\r\n            %s x:%u, y:%u\r\n            侵入方角:%d, x:%d, y:%d\r\n",mouse->now.node->weight, (mouse->now.node->rc == 1) ? c:r, mouse->now.node->pos.x, mouse->now.node->pos.y, mouse->now.car, mouse->now.pos.x,mouse->now.pos.y);
-        my_mouse.next.node = getNextNode(&my_map,my_mouse.now.car, my_mouse.now.node, 0x03);//これらの引数のどれかがいけない. 迷路、方角、ノードポインタ. 一発目の、ノードの重みがfffなのはなぜ？
+        my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node, 0x03);//これらの引数のどれかがいけない. 迷路、方角、ノードポインタ. 一発目の、ノードの重みがfffなのはなぜ？
 
         //printf("次ノード    重み:%x\r\n            %s x:%u, y:%u\r\n            ", mouse->next.node->weight, (mouse->next.node->rc == 1) ? c:r , mouse->next.node->pos.x, mouse->next.node->pos.y);
 
@@ -1010,16 +1028,18 @@ void FastestRun()
         //デバッグ用
         //getRouteFastRun( route_log, &(mouse->now), cnt);
         AddVelocity = 0;
+        //ChangeLED(0);
         	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
         	switch(my_mouse.next.dir)
         	{
         	case front:
         		//ただ直進
         		Calc = SearchOrFast;
-        		GoStraight(90, ExploreVelocity , AddVelocity);
+        		GoStraight(90, ExploreVelocity , 0);
         		break;
         	case right:
         		//右旋回
+        		ChangeLED(1);
         		Calc = SearchOrFast;
         		TurnRight(turn_mode);
         		break;
@@ -1055,9 +1075,10 @@ void FastestRun()
         		break;
         	}
         cnt++;
+        //ChangeLED(cnt%7);
         // if(cnt == 5) break;
     }
-    printAllWeight(&my_map, &(my_mouse.now.pos));
+
 //    outputDataToFile(maze);
 
 	//fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
@@ -1070,7 +1091,7 @@ void FastestRun()
 	while(1)
 	{
 		printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",cnt, my_map.RawNode[0][1].weight);
-
+		printAllWeight(&my_map, &(my_mouse.now.pos));
 	}
 }
 void Explore()
@@ -1187,6 +1208,12 @@ void Explore()
 		break;
 
 	}
+//	while(1)
+//		{
+//			Rotate( 90 , 2*M_PI);
+//			//TurnRight(turn_mode);
+//			HAL_Delay(1000);
+//		}
 //	Pos.TargetX = X_GOAL_LESSER;
 //	Pos.TargetY = Y_GOAL_LESSER;
 //	goal_edge_num = two;
@@ -1259,10 +1286,12 @@ void Explore()
 	//完了の合図
 	Signal(7);
 
+
 while(1)
 {
 	//迷路データの出力
-	printAllNode(&my_map);
+	printAllNodeExistence(&my_map);
+	//printAllNode(&my_map); //drawを読み出す
 	printMatrix16ValueFromNode(&my_map);
 	printAllWeight(&my_map, &(my_mouse.now.node->pos) );
 }
@@ -1668,6 +1697,33 @@ void FullyAutonomous()
 
 
 
+}
+void FlashWriteTest()
+{
+	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+		{
+				for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+				{
+					my_map.RawNode[i][j].existence = NOWALL;
+				}
+		}
+		for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+		{
+				for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+				{
+					my_map.ColumnNode[i][j].existence = WALL;
+				}
+		}
+		printAllNodeExistence(&my_map);
+		//フラッシュに書き込む
+		flashStoreNodes();
+}
+void FlashReadTest()
+{
+	//フラッシュを読み出す
+	flashCopyNodesToRam();
+	//合っているか確認する
+	printAllNodeExistence(&my_map);
 }
 void Simu()
 {
