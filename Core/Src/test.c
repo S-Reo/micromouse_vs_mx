@@ -185,8 +185,48 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//Uターンして直進.加速できる
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack();
+		//直進後の選択肢も見ておく
+				accel_or_not = judgeAccelorNot(my_maze, Mouse->next.car, Mouse->next.node);
+
+				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
+				if(accel_or_not == true) //既知で.直進
+				{
+					//加速かそのまま.
+					//現在速度がマックスかどうか
+					if(VelocityMax == true)
+					{
+						accel_or_decel = 0; //そのまま
+						AddVelocity = 245;
+						ChangeLED(0);
+					}
+					else
+					{
+						accel_or_decel = 1; //加速
+						AddVelocity = 245;
+						ChangeLED(7);
+					}
+				}
+				else
+				{
+					//未知もしくは、既知でも直進で無ければ.減速かそのまま
+					//現在速度がマックスかどうか
+					if(VelocityMax == true)
+					{
+						accel_or_decel = -1; //減速
+						static int cnt = 1;
+						ChangeLED(cnt);
+						cnt += 2;
+						AddVelocity = 0;
+					}
+					else //マックスでない
+					{
+						accel_or_decel = 0; //そのまま
+						AddVelocity = 0;
+						ChangeLED(2);
+					}
+				}
 		Calc = SearchOrFast;
-		GoStraight(90, ExploreVelocity , AddVelocity);
+		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel);
 		break;
 	case backleft:
 		//Uターンして左旋回
