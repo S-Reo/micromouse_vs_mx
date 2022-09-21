@@ -579,3 +579,10 @@ void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask)
 	}
 //	straight(SECTION*straight_count,FAST_ACCEL,FAST_SPEED,0.0);
 }
+
+//未知壁探索用関数
+	//深さ優先とかと、そのための処理
+
+//最短走行時の行動選択のための処理
+	//単純な90度スラロームとストレート(加減速あり)のみなら今まで通りでいいが
+	//大周りのターンや斜め走行を入れるとなると、判定処理を毎回やるより、最初にアクションの配列を作るべき

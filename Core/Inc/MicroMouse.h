@@ -56,7 +56,7 @@ extern volatile int TotalPulse[3];
 extern float AngularV;
 extern float EncAngV;
 //角度 rad/msを積算
-extern float Angle;
+extern volatile float Angle;
 
 
 extern float ImuAngV,ImuAngle;

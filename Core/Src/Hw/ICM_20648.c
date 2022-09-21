@@ -191,7 +191,7 @@ void Update_IMU(float *angv, float *angle )
 		*angv = -ZGyro; //角速度 rad / s
 
 		//Angle;
-		*angle += *angv * 0.001  -0.000001784;//- 0.0000018432; //角度 rad
+		*angle += *angv * 0.001  - 0.000001784;//- 0.0000018432; //角度 rad
 #endif
 #else
 	uint8_t ret1, ret2,val1,val2;

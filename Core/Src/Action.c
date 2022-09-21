@@ -890,6 +890,7 @@ void Rotate(float deg, float ang_v)
 		{
 			//最短走行の時だけ、Angleが大きくならない、もしくは目標角度がかなり大きい。初期化？最初の旋回なので、0radから90度ぶん目標角度がズレている必要がある。Angleが積算できていないかも。
 			AngularAcceleration = angular_acceleration[0]; //ここまで
+			printf("あ\r\n");
 //			if(ZGyro == 0)
 //			{
 //				float fin_angle = Angle;

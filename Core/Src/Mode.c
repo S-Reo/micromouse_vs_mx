@@ -208,8 +208,8 @@ t = 1;
 	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
-	printf("calib ok : %f\r\n",zg_offset);
+//	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
+//	printf("calib ok : %f\r\n",zg_offset);
 	//zg_offset = 0;
 #if 0
 	TargetPhoto[SL] = Photo[SL];
@@ -657,18 +657,24 @@ void WritingFree()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 
-	//PIDChangeFlagStraight(N_WALL_PID);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
-	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(7);
 
+	Rotate(90, M_PI);
+	HAL_Delay(500);
 
 	while(1)
 	{
-		Motor_Switch( 500, 500 );
+		Rotate(90, M_PI);
+
+		HAL_Delay(500);
+		Rotate(90, -M_PI);
+
+		HAL_Delay(500);
+
 	}
 
 #if 0

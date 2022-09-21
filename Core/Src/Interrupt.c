@@ -217,7 +217,7 @@ void Explore_IT()
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 	//角速度 rad/s
 
-#if 1
+#if 0
 	//static float angle=0;
 	volatile static float zg_last=0;
 	volatile float zg_law;
@@ -229,8 +229,9 @@ void Explore_IT()
 	Angle += AngularV * T1;
 
 #else
-	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
-	Angle += AngularV * T1;
+	Update_IMU(&AngularV, &Angle); //メディアンフィルタとオフセットだけで何とかした.
+//	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+//	Angle += AngularV * T1;
 
 #endif
 
