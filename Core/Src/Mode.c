@@ -1206,7 +1206,6 @@ void Explore()
 		//		//未
 
 		break;
-
 	}
 //	while(1)
 //		{
@@ -1767,4 +1766,48 @@ void Simu()
 	flashCopyNodesToRam();
 	//合っているか確認する
 	printAllNodeExistence(&my_map);
+}
+
+void TestIMU()
+{
+	IT_mode = IMU_TEST;
+
+	uint8_t imu_check;
+		imu_check = IMU_init();
+		printf("imu_check 1ならOK: %d\r\n",imu_check);
+	#if 1 //IMUから値が来なくなる現象の対策
+		imu_check =IMU_init();
+		printf("imu_check 1ならOK: %d\r\n",imu_check);
+	#endif
+		HAL_Delay(100);
+
+		ZGyro = ReadIMU(0x37, 0x38);
+		printf("gyro : %f\r\n",ZGyro);
+
+//		printf("%d, %hd, %f, %f, %f\r\n", m,ZGFilterd,  ZGyro, AngularV, Angle);
+
+		timer1 = 0;
+		t = 1;
+		//割り込みを有効化
+
+		printf("timer1 : %d, 角度 : %f\r\n",timer1, Angle);
+		HAL_TIM_Base_Start_IT(&htim1);
+		while(t == 1) //10s
+		{
+			printf("\r\n");
+		}
+
+//		ag = Angle;
+		t = 0;
+		HAL_TIM_Base_Stop_IT(&htim1);
+		HAL_Delay(1000);
+
+
+
+			for(int i=0; i < 5000; i++) //0.007495 / 5000
+				printf("%d, %f\r\n",i, debugVL[i]); //-0.001331
+			while(1)
+					{
+		}
+
 }

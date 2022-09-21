@@ -14,6 +14,7 @@
 #define GAINTEST			2
 #define DEBUGGER					3
 #define FASTEST_RUN		4
+#define IMU_TEST 5
 #define EXPLORE				6
 #define WRITINGFREE 		7
 
@@ -31,6 +32,6 @@ void GainTestAVelo();
 void Simu();
 void FlashWriteTest();
 void FlashReadTest();
-
+void TestIMU();
 #endif /* INC_MODE_H_ */
 //右130、左140

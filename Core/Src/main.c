@@ -311,8 +311,9 @@ int main(void)
 //		  		  }
 		  FastestRun();
 		  break;
-	  case 5:
-		  GainTestAVelo();
+	  case IMU_TEST:
+		  TestIMU();
+//		  GainTestAVelo();
 		  break;
 	  case EXPLORE:
 //		  FlashWriteTest();

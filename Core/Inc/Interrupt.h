@@ -25,7 +25,7 @@ extern float debugVR[8000];
 extern int dbc;
 extern const float convert_to_velocity;
 extern const float convert_to_angularv;
-extern const float convert_to_imu_angv;
+
 ////エンコーダ値から生成する変数。割り込みで更新。
 //extern float velocity[ ENC_NUM ];
 //extern float total_mileage[ ENC_NUM ];

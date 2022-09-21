@@ -28,7 +28,7 @@ int dbc = 0;
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
 const float convert_to_angularv = 1/TREAD_WIDTH;
-const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
+//const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
 const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんちゃらg×9.80392157 = mm/s^2
 
 //static int StraightWay;
@@ -388,7 +388,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if( htim == &htim1)
 	{
-		//timer1 += t;
+
 		switch(IT_mode){
 		case EXPLORE:
 			Explore_IT();
@@ -396,8 +396,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		case WRITINGFREE:
 			WritingFree_IT();
 			break;
-		case 2:
+		case IMU_TEST:
 
+			if(timer1 < 5000)
+			{
+
+				Update_IMU(&AngularV, &Angle);
+				debugVL[timer1] = Angle;
+				timer1 += t;
+			}
+			else t = 0;
 			break;
 		default :
 			break;
