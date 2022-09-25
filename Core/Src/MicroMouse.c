@@ -38,7 +38,7 @@ volatile float ControlTargetVelocity;
 volatile int KeepPulse[3];
 int PulseDisplacement[3];
 volatile int TotalPulse[3];
-float AngularV=0;			//角速度 rad/s
+volatile float AngularV=0;			//角速度 rad/s
 float EncAngV=0;
 volatile float Angle=0;				//角度 rad/msを積算
 //ここまでがエンコーダからのUpdate

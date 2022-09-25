@@ -1269,6 +1269,7 @@ void Explore()
 //		TargetVelocity[BODY] = 0;
 //	}
 	Decel(45, 0);
+	WaitStopAndReset();//これがないとガクンとなる.
 	shiftState(&my_mouse);
 //	HAL_Delay(10000);
 //	while(1)

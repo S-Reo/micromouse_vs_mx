@@ -27,6 +27,7 @@
 #include "test.h"
 #include <stdbool.h>
 static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
+const float angle_range = 3*M_PI/180;  //領域
 //現在の速度と総走行距離と左右それぞれ
 //現在の角度と角速度
 
@@ -183,23 +184,23 @@ void InitPosition()
 
 int GetWallCtrlDirection()
 {
-
-	switch(Pos.Car)
+	//新ライブラリ用に変更
+	switch(my_mouse.now.car)
 	{
 	case north:
-		if(Wall[Pos.X][Pos.Y].north == wall)
+		if(my_mouse.now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
 		{
 			return F_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall)
+		else if(my_mouse.now.wall.east == wall && my_mouse.now.wall.west == wall)
 		{
 			return D_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].east == wall)
+		else if(my_mouse.now.wall.east == wall)
 		{
 			return R_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].west == wall)
+		else if(my_mouse.now.wall.west == wall)
 		{
 			return L_WALL_PID;
 		}
@@ -210,19 +211,19 @@ int GetWallCtrlDirection()
 		break;
 
 	case east:
-		if(Wall[Pos.X][Pos.Y].east == wall)
+		if(my_mouse.now.wall.east == wall)
 		{
 			return F_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//south)
+		else if(my_mouse.now.wall.north == wall && my_mouse.now.wall.south == wall)//south)
 		{
 			return D_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].north == wall)
+		else if(my_mouse.now.wall.north == wall)
 		{
 			return L_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].south == wall)
+		else if(my_mouse.now.wall.south == wall)
 		{
 			return R_WALL_PID;
 		}
@@ -232,19 +233,19 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case south:
-		if(Wall[Pos.X][Pos.Y].south == wall)
+		if(my_mouse.now.wall.south == wall)
 		{
 			return F_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].east == wall && Wall[Pos.X][Pos.Y].west == wall)
+		else if(my_mouse.now.wall.east == wall && my_mouse.now.wall.west == wall)
 		{
 			return D_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].east == wall)
+		else if(my_mouse.now.wall.east == wall)
 		{
 			return L_WALL_PID;
 		}
-		else if(Wall[Pos.X][Pos.Y].west == wall)
+		else if(my_mouse.now.wall.west == wall)
 		{
 			return R_WALL_PID;
 		}
@@ -254,19 +255,19 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case west:
-		if(Wall[Pos.X][Pos.Y].west == wall)
+		if(my_mouse.now.wall.west == wall)
 		{
 			return F_WALL_PID;
 		}
-		else if ( Wall[Pos.X][Pos.Y].north == wall && Wall[Pos.X][Pos.Y].south == wall)//.westになってた。あと == south )で意味わからない処理に。
+		else if ( my_mouse.now.wall.north == wall && my_mouse.now.wall.south == wall)//.westになってた。あと == south )で意味わからない処理に。
 		{
 			return D_WALL_PID;
 		}
-		else if ( Wall[Pos.X][Pos.Y].north == wall )
+		else if ( my_mouse.now.wall.north == wall )
 		{
 			return R_WALL_PID;
 		}
-		else if ( Wall[Pos.X][Pos.Y].south == wall )
+		else if ( my_mouse.now.wall.south == wall )
 		{
 			return L_WALL_PID;
 		}
@@ -319,6 +320,8 @@ void WallWarn()
 {
 	Pos.WallSaf = wall_warn;
 }
+//壁のステータス変更用のファイル
+
 //void ControlWall()
 //{
 //	//壁制御flagを管理する
@@ -327,8 +330,9 @@ void WallWarn()
 //		//端の座標なら確実に型壁制御
 //	//斜め走行は別でアクションを定義
 //
-//	//横壁制御
+//	//横壁制御のパターンを返す. 左右あり、どちらかひとつ、無し
 //	int wall_ctrl_dir = GetWallCtrlDirection();	//次の座標のも返してみて、できれば連続で制御をする。
+//	//このパターンをそのまま
 //	//割り込み中に呼ぶかアクション中に呼ぶか。アクション中の方が座標と壁の状態が確実。いや、判定が遅れると嫌だからやっぱり割り込み。移動量はflagで。
 //
 //	//PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
@@ -341,12 +345,15 @@ void WallWarn()
 //	//アクション、方向、壁安全。
 //
 //	//減速の時、壁の状態
+//
+//	//フラグを介さなくても、追加制御のモードとして変数をひとつにすればいい. 割込み内のswitchでフラグオンにすればいい.同時にほかのは切る
+//
 //	if(Pos.Dir == front)		//区画の区切りで前方に進むと決めたあと、動作としては加速か、straight。初期状態はwaitから加速へ
 //	{
 //		switch(Pos.Act)
 //		{
 //		case accel:
-//			PIDChangeFlag( A_VELO_PID , 1);
+//			Control_Mode =  A_VELO_PID;
 //			//一つ先の区画がわかっていて加速したいときに
 //			break;
 //
@@ -1118,7 +1125,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 {
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
-//	Pos.Act = slalom;
+	Pos.Act = slalom;
 //	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
 	//事前に決めておくものはここで定義
@@ -1154,7 +1161,6 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			TargetVelocity[BODY] = v_turn;
 
 		}
-
 
 	}
 	else//なければ
@@ -1249,7 +1255,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
 	TargetAngularV = 0;
-	Calc = SearchOrFast;
+	//Calc = SearchOrFast; //関数の前に別で設定する
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
@@ -1261,11 +1267,15 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 			//後半の直線に入ったら計算する。
 			if(Calc == 0)
 			{
+#if 0
 				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
 				//計算して
 				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
 				//UpdateWalkMap();
 				//次のアクションを渡すのは別のところで。
+#else
+				updateRealSearch();
+#endif
 				Calc = 1;
 			}
 	}
@@ -1384,7 +1394,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
 	TargetAngularV = 0;
-	Calc = SearchOrFast;
+//	Calc = SearchOrFast; //関数の前に別で設定
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + (2*fol/MM_PER_PULSE) > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
@@ -1394,11 +1404,15 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 			//printf("直進2\r\n");
 			if(Calc == 0)
 			{
+#if 0
 				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
 				//計算して
 				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
 				//UpdateWalkMap();
 				//次のアクションを渡すのは別のところで。
+#else
+				updateRealSearch();
+#endif
 				Calc = 1;
 			}
 	}
@@ -1514,7 +1528,7 @@ void Decel(float dec_distance, float end_speed)
 {
 //	Pos.Act = decel;
 	float down_speed=0;
-	down_speed = CurrentVelocity[BODY] - end_speed;
+	down_speed = CurrentVelocity[BODY] - end_speed; //end_speedが0かそうでないか
 	//速度減分 = 到達したい探索速度 - 現在の速度
 	//これなら現在速度が探索速度に追いついているときは加速度0にできる。
 	Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
@@ -1722,30 +1736,18 @@ float AjustCenter(){
 }
 void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 {
-	//直進は加速度を調節して距離を見る。 (移動量)
-	//その場での旋回は角加速度を調節して角度を見る。(移動角度)
-	//並進と旋回を同時に行うときは何を見るか。角度と移動量の二つ。加速度は0で角加速度を角度によって変化させる。その場での旋回と一緒で、直進成分が入っているだけ。
+	//斜め走行時の直進は別で作る
 
-	//エンコーダの移動量チェックって、もっと細かい間隔でやったほうがいいのでは。
 	//v = v0 + at
 	//x = v0t + 0.5*at^2
-		//TargetVelocity[BODY] = explore_speed;
-	//加速なら
-//	if(accel == TRUE)	//目標移動量と到達速度から加速度を計算する。
-
-
-	//explore_speed += accel;
-
 	//壁の有無をすべて知っている区間は更新する必要がないので一気に加速させて座標を二つ更新
-	//移動量は90だけど、加速に要する距離はその半分とか好きに変えられるように。
-	//int keep_pulse = TotalPulse[BODY];
+	Control_Mode = A_VELO_PID;
+	//加減速時は角度制御だけにしておいてあとで困ったら追加
 	int target_pulse = (int)(2*move_distance/MM_PER_PULSE);
-
 	if(accel_or_decel == 1) //加速するとき
 	{
 		//explore_speed += AddVelocity;
 		VelocityMax = true;
-
 		Accel( move_distance , explore_speed);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
 	}
 	else if(accel_or_decel == -1) //探索速度までの減速. ターン速度までの減速も後で入れる
@@ -1770,40 +1772,69 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 
 	else
 	{
-//		static int c = 1;
-//		ChangeLED(c);
-//		c++;
+		//ただの直進. 斜め走行時はそれように関数を作るほうがいいかも. 判定処理が面倒になるから.
 		//VelocityMaxはそのまま;
+		//壁の状態を見る.
+			//使えるかどうか判断して, 一定の距離制御する.
+				//IMUの角度が先か
+				//壁とのバランスが先か.
+					//IMUの角度を調整して,直後に壁見て、バランス調整する
+					//かもしくは、侵入直後の角度と壁センサのバランスを見て制御量を決めるか.
+					//ある距離になるまでにどのくらい動かないといけないかがわかる必要がある
+					//壁だけでバランス直せる？中央に
+					//角度制御ぎちぎちにやっておいて瞬間的に壁見て、ちょっと横向いて直進してまた角度制御、がとりあえずの最適解なきがする
+		//角度を取得
+		//センサ値を取得
+		//どのあたりにどの角度で居るのかを把握
+		//75mm後にまっすぐに戻るにはどれくらい制御するか.
+			//速度に合わせてゲインを強くすれば近似できそう
+			//あとは区画使って調整すればいい
+		//それを設定してwhileループ
 //		Pos.Act = straight;
 //		WallSafe();
 //		ControlWall();
-//		Calc = SearchOrFast;
-		_Bool wall_cut=false;
+		_Bool wall_cut=false;	//壁切れ用
+		_Bool face_check  = false; //一度でも正面領域に収まったか
+		int ctrl_mode = GetWallCtrlDirection();
+		//両壁がなければ, 角度制御しつつ柱を見たい. 細かすぎるかも.　今は角度制御
+		if (ctrl_mode == N_WALL_PID)
+			ctrl_mode = A_VELO_PID;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
-			//最初の45mmで加速をストップ
+			//角度が収まっていれば壁の値を見て微調整
+			//収まっていなければ角度制御して角度を落ち着かせてから壁制御↑
+			//一度正面を向いたかチェック
+			if(face_check == false){
+				if(TargetAngle - angle_range < Angle  && Angle < TargetAngle + angle_range){
+					//3度以内
+					face_check = true; //正面になったら
+					if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
+						Control_Mode = A_VELO_PID;
+					}
+					else Control_Mode = ctrl_mode;//壁見る
+				}
+				else{
+					Control_Mode = A_VELO_PID;
+				}
+			}
+			else
+			{	//一度でも向いていれば壁制御してもいい
+				if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
+					Control_Mode = A_VELO_PID;
+				}//壁がなくなるのを見越して角度のみに変更
+				else{
+					Control_Mode = ctrl_mode;
+				}//少しの間壁を見て制御
+			}
 			//ControlWall();
 			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] )
-			{
-//				WallWarn();
-//				PIDChangeFlag(L_WALL_PID, 0);
-//				PIDChangeFlag(R_WALL_PID, 0);
-//				PIDChangeFlag(D_WALL_PID, 0);
-				PIDChangeFlag( A_VELO_PID , 1);
-				//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
-			}
-
+			//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
-//				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
-//				//計算して
-//				make_map(Pos.TargetX, Pos.TargetY, 0x01);
 				updateRealSearch();
-				//UpdateWalkMap();
-				//次のアクションを渡すのは別のところで。
 				Calc = 1;
 			}
+			//壁切れ補正
 //			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
 //			{//
 //				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
@@ -1816,6 +1847,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 	//			Acceleration = 0;
 	//		}
 		}
+		Control_Mode = A_VELO_PID;
 		wall_cut = false;
 		Acceleration = 0;
 		KeepPulse[BODY] += target_pulse;
@@ -1829,17 +1861,10 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 //	int target_pulse = (int)(2*(move_distance/2)/MM_PER_PULSE);
 //	int keep_pulse = TotalPulse[BODY];
 	//WallWarn();
-
-
-
 	//keep_pulse = TotalPulse[BODY];
-
 	//計算は区切りのいいところで一回するだけ。移動しきるまでそのままか、条件に応じて変える。
-
 	//Uターンは別パターン
-
 	//各変数の状況毎に割り込み的に動作を追加していくほうが賢いのでは。
-
 }
 void TurnRight(char mode)
 {

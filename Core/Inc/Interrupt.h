@@ -23,9 +23,11 @@ extern int velodebug_flag;
 extern float debugVL[8000];
 extern float debugVR[8000];
 extern int dbc;
+extern int Control_Mode;
 extern const float convert_to_velocity;
 extern const float convert_to_angularv;
 
+void initInterruptValue();
 ////エンコーダ値から生成する変数。割り込みで更新。
 //extern float velocity[ ENC_NUM ];
 //extern float total_mileage[ ENC_NUM ];

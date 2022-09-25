@@ -53,7 +53,7 @@ extern int PulseDisplacement[3];
 extern volatile int TotalPulse[3];
 
 //角速度 rad/s
-extern float AngularV;
+extern volatile float AngularV;
 extern float EncAngV;
 //角度 rad/msを積算
 extern volatile float Angle;
