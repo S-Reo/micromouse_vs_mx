@@ -170,6 +170,7 @@ void Load_Gain()
 //			Pid[L_WALL_PID].KP = data[6];
 //			Pid[L_WALL_PID].KI = data[7];
 //			Pid[L_WALL_PID].KD = data[8];
+			//2回目以降こっちが呼ばれる
 			PIDSetGain(L_VELO_PID, data[0], data[1], data[2]);
 			PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
 			//PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);

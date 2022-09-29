@@ -19,8 +19,8 @@
 volatile _Bool VelocityMax;
 
 volatile float Photo[4];
-float TargetPhoto[4];
-float PhotoDiff;
+volatile float TargetPhoto[4];
+volatile float PhotoDiff;
 //int PulseDisplacement;//[2]={0};
 int KeepCounter;//
 /*[2]={

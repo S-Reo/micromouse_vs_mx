@@ -1809,7 +1809,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 		_Bool face_check  = false; //一度でも正面領域に収まったか
 		int ctrl_mode = GetWallCtrlDirection();
 		//両壁がなければ, 角度制御しつつ柱を見たい. 細かすぎるかも.　今は角度制御
-		if (ctrl_mode == N_WALL_PID)
+		if (ctrl_mode == N_WALL_PID )//|| ctrl_mode == F_WALL_PID)
 			ctrl_mode = A_VELO_PID;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{

@@ -32,8 +32,8 @@ extern TIM_HandleTypeDef htim1;
 extern volatile _Bool VelocityMax;
 
 extern volatile float Photo[4];
-extern float TargetPhoto[4];
-extern float PhotoDiff;
+extern volatile float TargetPhoto[4];
+extern volatile float PhotoDiff;
 //extern int PulseDisplacement[2];
 extern int KeepCounter;
 //速度 mm/s

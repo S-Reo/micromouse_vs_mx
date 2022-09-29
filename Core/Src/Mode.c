@@ -126,8 +126,26 @@ void InitExplore()
 	//PIDChangeFlag(B_VELO, 0);
 	PIDChangeFlag(A_VELO_PID, 0);
 
-
+//	HAL_ADC_Start_DMA(&hadc2, (uint32_t *) adc2, 2);
+//						//tim8のduty比を下げて電流消費を削減
+//						HAL_TIMEx_OCN_Start_IT(&htim8, TIM_CHANNEL_1);
+//						adc2[1] = 0;
+//					while(adc2[1] < 200)
+//									{
+//										printf("adc2[1] : %lu\r\n", adc2[1]);
+//
+//									}
+//					Signal( 2 );
 	Load_Gain();
+					PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
+							  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+
+							  PIDSetGain(A_VELO_PID, 14.6,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+							  PIDSetGain(F_WALL_PID, 14.6,0,0);
+							  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
+							  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+							  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+
 	uint8_t imu_check;
 	imu_check = IMU_init();
 	printf("imu_check 1ならOK: %d\r\n",imu_check);
@@ -184,6 +202,9 @@ t = 1;
 	ADCStart();
 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+
+
+
 	//割り込みを有効化
 	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start_IT(&htim8);
@@ -844,7 +865,7 @@ void FastestRun()
 	InitPosition();
 
 
-	wall_init();
+//	wall_init();
 
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
@@ -857,6 +878,7 @@ void FastestRun()
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 
 	char turn_mode = 'T';
@@ -987,8 +1009,10 @@ void FastestRun()
 	PIDReset(L_VELO_PID);
 	PIDReset(R_VELO_PID);
 	PIDReset(A_VELO_PID);
+
 	PIDReset(L_WALL_PID);
 	PIDReset(R_WALL_PID);
+	PIDReset(D_WALL_PID);
 //	while(1)
 //	{
 //		Rotate( 90 , 2*M_PI);
@@ -1020,8 +1044,8 @@ void FastestRun()
     //最初の加速コマンド
     int cnt=0;
 
-    char r[]="行";
-	char c[]="列";
+//    char r[]="行";
+//	char c[]="列";
 
     while(! ((my_mouse.goal_lesser.x <= my_mouse.next.pos.x && my_mouse.next.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.next.pos.y && my_mouse.next.pos.y <= my_mouse.goal_larger.y)))
     {
@@ -1127,12 +1151,16 @@ void Explore()
 	Signal( mode2 );
 	PhotoSwitch();
 	//printf("test\r\n");
-	InitExplore();
-	InitPosition();
-	printf("旧式の壁初期化\r\n");
-	wall_init();
+	HAL_Delay(2000);
 
-	printf("色々セット\r\n");
+	InitExplore();
+
+	InitPosition();
+
+//	printf("旧式の壁初期化\r\n");
+//	wall_init();
+//
+//	printf("色々セット\r\n");
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -1144,6 +1172,7 @@ void Explore()
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 
 //	ChangeLED(2);
@@ -1234,6 +1263,8 @@ void Explore()
 	VelocityMax = false;
 	SearchOrFast = 0;
 	Calc = 0;
+
+//	PhotoSwitch();
 	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
 //	Pos.Dir = front;
 //	Pos.Car = north;
@@ -1242,8 +1273,8 @@ void Explore()
 //	Pos.NextCar = north;
 
 	initSearchData(&my_map, &my_mouse);
-	printGoal(&my_mouse);
-	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
+//	printGoal(&my_mouse);
+//	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
 	Accel(61.5, ExploreVelocity);
 //	ChangeLED(6);

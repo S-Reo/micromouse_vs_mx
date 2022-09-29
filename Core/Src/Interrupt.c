@@ -276,7 +276,7 @@ void Explore_IT()
 	Pid[Control_Mode].flag = 1;
 	keep_mode = Control_Mode;
 
-//	keep_mode = Control_Mode;
+////	keep_mode = Control_Mode;
 	int wall_d =0,wall_l =0,wall_r =0,wall_f=0;
 		int ang_out=0;
 #if 0
@@ -331,10 +331,9 @@ void Explore_IT()
 		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		break;
 	case F_WALL_PID : //前壁補正のための制御. ミックスはよくない.
-		wall_f = PIDControl( Control_Mode,   4000, (	(Photo[FR]+Photo[FL])));
-		TargetVelocity[BODY] = (float)wall_f*0.001;
-//		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
-//		TargetAngularV = (float)ang_out;
+//		wall_f = PIDControl( Control_Mode,   4000, (	(Photo[FR]+Photo[FL])));
+//		TargetVelocity[BODY] = (float)wall_f*0.001;
+
 		break;
 	case NOT_CTRL_PID:
 		break;
