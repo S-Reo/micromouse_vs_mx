@@ -835,7 +835,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
             if( (maze->RawNode[now_node->pos.x][now_node->pos.y+1].existence & mask) == NOWALL)	//壁がなければ(maskの意味はstatic_parametersを参照)
             {
             	static int cnt = 1;
-            				ChangeLED(cnt%7);
+//            				ChangeLED(cnt%7);
             				cnt ++;
 
 
@@ -956,6 +956,8 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
 #if DEBUG_ON
                     printf("東へ\r\n");
 #endif
+                    //
+                    ChangeLED(2);
                     compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y]);
                     flag = true;
@@ -970,6 +972,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].weight)
                 {
+                	ChangeLED(3);
 #if DEBUG_ON
                     printf("西へ\r\n");
 #endif
@@ -988,6 +991,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
                 {
+                	ChangeLED(4);
 #if DEBUG_ON
                     printf("北東へ\r\n");
 #endif
@@ -1006,6 +1010,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
 #if DEBUG_ON
                     printf("北西へ\r\n");
 #endif
+                    ChangeLED(5);
                     compare_weight = maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].weight;
                     next_node = &(maze->RawNode[now_node->pos.x-1][now_node->pos.y+1]);
                     flag = true;
@@ -1022,6 +1027,8 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y].weight)
                 {
+                	//二回目にここが選ばれている
+//                	ChangeLED(2);
 #if DEBUG_ON
                     printf("南東へ\r\n");
 #endif
@@ -1050,6 +1057,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     //printf("ノード更新無し\r\n\r\n");
     if(flag == true)
     {
+//    	ChangeLED(7);
 #if DEBUG_ON
         printf("ノード更新有り:%p\r\n", next_node);
 #endif
@@ -1057,6 +1065,8 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     }
     if(flag == false)
     {
+
+    	ChangeLED(1);
 #if DEBUG_ON
     	printf("ノード更新無し\r\n\r\n");
 #endif
@@ -1393,6 +1403,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->dir = right;
+//                    ChangeLED(6);
                     return next_state;
                 }
 
@@ -1442,6 +1453,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->dir = front;
+//                    ChangeLED(4);
                     return next_state;
                 }
                 //後ろ
@@ -1467,6 +1479,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1;
                     next_state->dir = right;
+//                    ChangeLED(5);
                     return next_state;
                 }
 
@@ -1538,6 +1551,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->dir = right;
+//                    ChangeLED(4);
                     //printf("南向きから南西:%u, %u\r\n",next_state->pos.y, now_state->pos.x);
                     return next_state;
                 }
@@ -1611,6 +1625,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
                     next_state->dir = right;
+//                    ChangeLED(3);
                     return next_state;
                 }
 

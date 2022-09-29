@@ -17,7 +17,7 @@ extern volatile int16_t 	xg, yg, zg;	// 角加速度(16bitデータ)
 extern float zg_offset, ya_offset;
 //extern uint8_t val[2];
 //extern int16_t spi_dma_data;
-extern float  ZGyro, YAccel;
+extern volatile float  ZGyro, YAccel;
 extern int16_t ZGFilterd;
 extern const float convert_to_imu_angv;
 

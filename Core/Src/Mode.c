@@ -816,6 +816,14 @@ while(1)
 	//探索の場合は迷路とステータスの準備
 }
 
+void initSlalomParam()
+{
+	Sla.Pre *=  2/MM_PER_PULSE;
+	Sla.Fol *=  2/MM_PER_PULSE;
+	Sla.Theta1 = 30*M_PI/180;
+	Sla.Theta2 = 60*M_PI/180;
+	Sla.Theta3 = 90*M_PI/180;
+}
 void FastestRun()
 {
 	IT_mode = EXPLORE;
@@ -912,7 +920,7 @@ void FastestRun()
 		break;
 
 	}
-
+	initSlalomParam();
 	ChangeLED(4);
 
 	VelocityMax = false;
@@ -1138,7 +1146,7 @@ void Explore()
 	PIDChangeFlag(R_WALL_PID, 0);
 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 
-	ChangeLED(2);
+//	ChangeLED(2);
 
 	//スラロームか、一区画ずつかを選ぶ。
 	char turn_mode = 'T';
@@ -1213,6 +1221,7 @@ void Explore()
 
 		break;
 	}
+	initSlalomParam();
 //	while(1)
 //		{
 //			Rotate( 90 , 2*M_PI);
@@ -1225,6 +1234,7 @@ void Explore()
 	VelocityMax = false;
 	SearchOrFast = 0;
 	Calc = 0;
+	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
 //	Pos.Dir = front;
 //	Pos.Car = north;
 //	Pos.NextX = Pos.X;
@@ -1232,9 +1242,11 @@ void Explore()
 //	Pos.NextCar = north;
 
 	initSearchData(&my_map, &my_mouse);
+	printGoal(&my_mouse);
+	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
 	Accel(61.5, ExploreVelocity);
-	ChangeLED(6);
+//	ChangeLED(6);
 	//shiftPos();
 //
 //	while(1)

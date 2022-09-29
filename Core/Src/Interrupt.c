@@ -25,7 +25,7 @@ float debugVL[8000]={0};
 float debugVR[8000] = {0};
 int dbc = 0;
 
-int Control_Mode=0;
+int Control_Mode;
 	//float velodebugL[1000],velodebugR[1000];
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
@@ -265,18 +265,53 @@ void Explore_IT()
 			//ちょっと下がった時にセンサ値があがったかどうかで詰めすぎだったかどうか判定し、そのまま目標値になるように動く
 
 	//switch文でどれかひとつに絞らせたい
-	static int keep_mode = 0;
+	static int keep_mode = A_VELO_PID;
 
-	//違うモードに変わるとき、前のモードの値をリセットしておく
+	//0から違うモードに変わるとき、前のモードの値をリセットしておく
 	if( Control_Mode != keep_mode){
 		PIDReset(keep_mode);
-		PIDChangeFlag(keep_mode, 0);
+//		PIDChangeFlag(, 0);
+		Pid[keep_mode].flag = 0;
 	}
-	PIDChangeFlag(Control_Mode, 1);
+	Pid[Control_Mode].flag = 1;
 	keep_mode = Control_Mode;
 
+//	keep_mode = Control_Mode;
 	int wall_d =0,wall_l =0,wall_r =0,wall_f=0;
-	int ang_out=0;
+		int ang_out=0;
+#if 0
+
+				if( Pid[A_VELO_PID].flag == 1 )
+				{
+					ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+					TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+				}
+				else if( Pid[D_WALL_PID].flag == 1 )
+				{
+					wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+					TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+				}
+				else if( Pid[L_WALL_PID].flag == 1 )
+				{
+					wall_l = PIDControl( L_WALL_PID,  Photo[SL], TargetPhoto[SL]);
+					TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+
+				}
+				else if( Pid[R_WALL_PID].flag == 1 )
+				{
+					wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+					TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+				}
+				else if( Pid[F_WALL_PID].flag == 1)
+				{
+					wall_f = PIDControl( F_WALL_PID,   4000, (	(Photo[FR]+Photo[FL])));
+					TargetVelocity[BODY] = (float)wall_f*0.001;
+					ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+					TargetAngularV = (float)ang_out;
+
+					//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
+				}
+#endif
 	switch(Control_Mode)
 	{
 	case A_VELO_PID:
@@ -300,6 +335,8 @@ void Explore_IT()
 		TargetVelocity[BODY] = (float)wall_f*0.001;
 //		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
 //		TargetAngularV = (float)ang_out;
+		break;
+	case NOT_CTRL_PID:
 		break;
 	default :
 		break;
@@ -351,7 +388,12 @@ void Explore_IT()
 
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
-
+//	if(Acceleration == 0)
+//			ChangeLED(7);
+//	else
+//	{
+//		ChangeLED(4);
+//	}
 }
 void WritingFree_IT()
 {

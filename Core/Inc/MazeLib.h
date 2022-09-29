@@ -195,7 +195,7 @@ typedef struct
     // 一つ次の座標
     
 }profile;
-
+void printGoal(profile *prof);
 void setNextPosition(state *st);
 void setPosition(position *pos,uint8_t x, uint8_t y);
 void setGoal(profile *prof, uint8_t x, uint8_t y);

@@ -37,6 +37,7 @@ void initSearchData(maze_node *my_maze, profile *Mouse)
 
     //スタート座標にいる状態で、現在の重みを更新
      updateAllNodeWeight(my_maze, Mouse->goal_lesser.x, Mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
+//     updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }
 
 void updateRealSearch()
@@ -63,6 +64,13 @@ void updateRealSearch()
     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[3] = NOWALL;
     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+//    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどうかも気になる
+//    		ChangeLED(7);
+//    	else if(wall_dir[1] == NOWALL  && wall_dir[2] == WALL && wall_dir[0] == WALL)
+//		{
+//    		ChangeLED(1);
+//    		//全て正常に認識している
+//		}
         break;
     case south:
     	wall_dir[2] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
@@ -93,14 +101,23 @@ void updateRealSearch()
 
 	//getWallNow(&(my_mouse->now), &wall[0]);
 
+    //現在方角、壁は、合ってる。座標とノードは？
+    //ここで壁の存在を反映
 	updateNodeThree(&my_map, &(my_mouse.now), my_mouse.now.pos.x, my_mouse.now.pos.y);
 
+	//壁の存在を基に重みマップを更新
 	updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }
 //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせばよさそう。
 //現情報と次情報から次の進行方向を得る処理
+
 void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 {
+	//一回目の旋回後、東を向いている
+	//選ぶノードがおかしい
+	//重みが、壁がある方が小さくなってしまっている.
+	//
+
 	//メインでノード選択
 	Mouse->next.node = getNextNode(my_maze,Mouse->now.car,Mouse->now.node,0x01);
 	getNextState(&(Mouse->now),&(Mouse->next), Mouse->next.node);
@@ -111,7 +128,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
 	_Bool accel_or_not = false;
 	int accel_or_decel = 0;
-	switch(Mouse->next.dir)
+	switch(Mouse->next.dir) //次の方角からアクションを選択
 	{
 	case front:
 
@@ -127,13 +144,13 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 			{
 				accel_or_decel = 0; //そのまま
 				AddVelocity = 245;
-				ChangeLED(0);
+//				ChangeLED(0);
 			}
 			else
 			{
 				accel_or_decel = 1; //加速
 				AddVelocity = 245;
-				ChangeLED(7);
+//				ChangeLED(7);
 			}
 		}
 		else
@@ -144,7 +161,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 			{
 				accel_or_decel = -1; //減速
 				static int cnt = 1;
-				ChangeLED(cnt);
+//				ChangeLED(cnt);
 				cnt += 2;
 				AddVelocity = 0;
 			}
@@ -152,7 +169,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 			{
 				accel_or_decel = 0; //そのまま
 				AddVelocity = 0;
-				ChangeLED(2);
+//				ChangeLED(2);
 			}
 		}
 
@@ -168,6 +185,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	case right:
 		//右旋回
 		Calc = SearchOrFast;
+
 		TurnRight(turn_mode);
 		break;
 	case backright:
@@ -185,46 +203,48 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//Uターンして直進.加速できる
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack();
+		AddVelocity = 0;
+		accel_or_decel = 0;
 		//直進後の選択肢も見ておく
-				accel_or_not = judgeAccelorNot(my_maze, Mouse->next.car, Mouse->next.node);
-
-				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
-				if(accel_or_not == true) //既知で.直進
-				{
-					//加速かそのまま.
-					//現在速度がマックスかどうか
-					if(VelocityMax == true)
-					{
-						accel_or_decel = 0; //そのまま
-						AddVelocity = 245;
-						ChangeLED(0);
-					}
-					else
-					{
-						accel_or_decel = 1; //加速
-						AddVelocity = 245;
-						ChangeLED(7);
-					}
-				}
-				else
-				{
-					//未知もしくは、既知でも直進で無ければ.減速かそのまま
-					//現在速度がマックスかどうか
-					if(VelocityMax == true)
-					{
-						accel_or_decel = -1; //減速
-						static int cnt = 1;
-						ChangeLED(cnt);
-						cnt += 2;
-						AddVelocity = 0;
-					}
-					else //マックスでない
-					{
-						accel_or_decel = 0; //そのまま
-						AddVelocity = 0;
-						ChangeLED(2);
-					}
-				}
+//				accel_or_not = judgeAccelorNot(my_maze, Mouse->next.car, Mouse->next.node);
+//
+//				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
+//				if(accel_or_not == true) //既知で.直進
+//				{
+//					//加速かそのまま.
+//					//現在速度がマックスかどうか
+//					if(VelocityMax == true)
+//					{
+//						accel_or_decel = 0; //そのまま
+//						AddVelocity = 245;
+////						ChangeLED(0);
+//					}
+//					else
+//					{
+//						accel_or_decel = 1; //加速
+//						AddVelocity = 245;
+////						ChangeLED(7);
+//					}
+//				}
+//				else
+//				{
+//					//未知もしくは、既知でも直進で無ければ.減速かそのまま
+//					//現在速度がマックスかどうか
+//					if(VelocityMax == true)
+//					{
+//						accel_or_decel = -1; //減速
+//						static int cnt = 1;
+////						ChangeLED(cnt);
+//						cnt += 2;
+//						AddVelocity = 0;
+//					}
+//					else //マックスでない
+//					{
+//						accel_or_decel = 0; //そのまま
+//						AddVelocity = 0;
+////						ChangeLED(2);
+//					}
+//				}
 		Calc = SearchOrFast;
 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel);
 		break;
@@ -238,12 +258,24 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	case left:
 		//左旋回
 		Calc = SearchOrFast;
-		ChangeLED(4);
+//		ChangeLED(4);
 		TurnLeft(turn_mode);
 		break;
 	}
 
 }
+
+
+//未知壁探索用の次ノード決定処理.
+	//最短経路になりえないといえるノードをつぶしておく
+//ゴール後にもう一か所空きがあればそっちから出て(0,1)を目標座標にして足立法探索する.
+//足立法探索時に残していた分岐を追っていくのはどうか
+//分岐をスタックしていきつつ、近づく方に優先して曲がる
+//次の未知壁までの歩数が一番近いところ、というと、ゴール内になりそう.
+//ゴールをすべて知った時点から、最も近い未知ノード（最初の分岐）へ向かい、(0,1)につくまで深さ優先探索かつ直進優先で進。足立法探索
+//既に通ったノードの周りは壁の有無がわかるが、残りの方向はわからない
+//アルゴリズムがうかばない...
+//肝心の全面探索と、斜め最短が浮かばない...
 void Search(maze_node *my_maze, profile *Mouse)
 {   
     //迷路の初期化

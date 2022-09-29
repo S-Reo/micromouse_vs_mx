@@ -15,7 +15,7 @@ volatile int plot_angle;
 float zg_offset=0, ya_offset=0;
 //uint8_t val[2]={0};
 //int16_t spi_dma_data;
-float  ZGyro=0, YAccel=0;
+volatile float  ZGyro=0, YAccel=0;
 int16_t ZGFilterd;
 //const uint8_t ret[2] = {
 //		0x37 | 0x80,
@@ -107,8 +107,8 @@ int compare_num(const void * n1, const void * n2)
 }
 int16_t median_filter(int16_t *new_data) //中身変更しないが、値のコピーを避けて速度維持のためにアドレス
 {
-	static int16_t filter[5]={0};
-	int16_t sorted[5]={0};
+	static int16_t filter[3]={0};
+	int16_t sorted[3]={0};
 	//register static int cnt=0; //サイクリックバッファ用
 	//シフト
 #if 0
@@ -120,15 +120,15 @@ int16_t median_filter(int16_t *new_data) //中身変更しないが、値のコ�
 #else
 	filter[0] = filter[1];
 	filter[1] = filter[2];
-	filter[2] = filter[3];
-	filter[3] = filter[4];
-	filter[4] = *new_data;
+	filter[2] = *new_data;//filter[3];
+//	filter[3] = filter[4];
+//	filter[4] = *new_data;
 
 	sorted[0] = filter[0];
 	sorted[1] = filter[1];
-	sorted[2] = filter[2];
-	sorted[3] = filter[3];
-	sorted[4] = filter[4];
+	sorted[2] = *new_data;//filter[2];
+//	sorted[3] = filter[3];
+//	sorted[4] = filter[4];
 #endif
 
 
@@ -136,7 +136,7 @@ int16_t median_filter(int16_t *new_data) //中身変更しないが、値のコ�
 	qsort(sorted, sizeof(sorted) / sizeof(sorted[0]), sizeof(int16_t),compare_num);
 	//qsort(sorted, sizeof(sorted) / sizeof(sorted[0]), sizeof(int),compare_num);
 	//中央値を返す
-	return sorted[2];
+	return sorted[1];
 }
 //割込み内で呼ぶセット
 void Update_IMU(float *angv, float *angle )

@@ -31,7 +31,7 @@ extern TIM_HandleTypeDef htim1;
 	//
 extern volatile _Bool VelocityMax;
 
-extern float Photo[4];
+extern volatile float Photo[4];
 extern float TargetPhoto[4];
 extern float PhotoDiff;
 //extern int PulseDisplacement[2];
@@ -243,7 +243,8 @@ typedef enum PIDNumber
 	N_WALL_PID,
 	B_VELO_PID,
 	F_WALL_PID,
-	FD_WALL_PID
+	FD_WALL_PID,
+	NOT_CTRL_PID
 }pid_number;
 
 typedef enum GoalEdge

@@ -18,7 +18,7 @@
 
 volatile _Bool VelocityMax;
 
-float Photo[4];
+volatile float Photo[4];
 float TargetPhoto[4];
 float PhotoDiff;
 //int PulseDisplacement;//[2]={0};

@@ -10,7 +10,7 @@
 
 #include <main.h>
 
-#define PID_TARGET_NUM	8
+#define PID_TARGET_NUM 11
 
 
 typedef struct {
@@ -31,7 +31,7 @@ typedef struct {
 	int flag;
 
 }motor_control;
-extern motor_control Pid[ 10 ];
+extern motor_control Pid[ 11 ];
 
 //extern float KP[PID_TARGET_NUM],
 //					KI[PID_TARGET_NUM],
