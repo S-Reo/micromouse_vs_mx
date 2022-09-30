@@ -137,14 +137,14 @@ void InitExplore()
 //									}
 //					Signal( 2 );
 	Load_Gain();
-					PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
-							  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
-
-							  PIDSetGain(A_VELO_PID, 14.6,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
-							  PIDSetGain(F_WALL_PID, 14.6,0,0);
-							  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
-							  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
-							  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+//					PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
+//							  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+//
+//							  PIDSetGain(A_VELO_PID, 14.6,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+//							  PIDSetGain(F_WALL_PID, 14.6,0,0);
+//							  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
+//							  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+//							  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
 
 	uint8_t imu_check;
 	imu_check = IMU_init();
@@ -1068,7 +1068,7 @@ void FastestRun()
         AddVelocity = 0;
         //ChangeLED(0);
         	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
-        	switch(my_mouse.next.dir)
+        	switch(my_mouse.next.dir%8)
         	{
         	case front:
         		//ただ直進
@@ -1087,6 +1087,8 @@ void FastestRun()
         //		SearchOrFast = 1;
         		Calc = 1;//マップ更新したくないときは1を代入。
         		GoBack();
+        		//座標の更新が無いので、壁の判断をしない
+
         		Calc = SearchOrFast;
         		TurnRight(turn_mode);
 
@@ -1151,7 +1153,7 @@ void Explore()
 	Signal( mode2 );
 	PhotoSwitch();
 	//printf("test\r\n");
-	HAL_Delay(2000);
+	//HAL_Delay(2000);
 
 	InitExplore();
 

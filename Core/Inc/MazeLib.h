@@ -154,12 +154,14 @@ typedef struct{
 
 typedef enum{
     front,
+	frontright,
     right,
 	backright,		//Uターン+旋回のとき、まとめて動作させる
     back,
 	backleft,
-    left
-}direction;
+    left,
+	frontleft
+}direction; //8
 // 探索者の情報には2種類。MazeLibに関連したデータと、物理的な情報を考慮したデータ。
     //まず前者を作る
 

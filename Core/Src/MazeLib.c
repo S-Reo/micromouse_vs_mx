@@ -1363,7 +1363,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
     uint8_t next_x = next_node->pos.x; 
     uint8_t next_y = next_node->pos.y;
     
-    switch(now_state->car)
+    switch(now_state->car%8)
     {
         case north://行から、列に行くのか行に行くのかで、差分の取り方を変える
             if(next_node->rc == 0)

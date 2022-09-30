@@ -1153,7 +1153,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall() == WALL/*前に壁があれば、*/) //関数書き換え
+	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
 	{
 		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
@@ -1884,7 +1884,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 }
 void TurnRight(char mode)
 {
-	//関数呼び出しと判定処理が多いと遅いかなー。
+	//関数呼び出しと判定処理が多いと遅い。
 
 	switch( mode )
 	{
@@ -1906,7 +1906,9 @@ void TurnRight(char mode)
 
 //		PIDChangeFlag(A_VELO_PID, 0);
 		Rotate( 90 , 2*M_PI);//1.5
-
+		my_mouse.now.car += 2;
+		//方角+2
+		//
 		//ここより後ろで
 		//回転直後は問題なし
 
@@ -1976,6 +1978,7 @@ void TurnLeft(char mode)
 //		PIDChangeFlag(A_VELO_PID, 0);
 		Control_Mode = NOT_CTRL_PID;
 		Rotate( 90 , -2*M_PI);//-1.5
+		my_mouse.now.car -= 2;
 		//RotateTest(-90);
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);

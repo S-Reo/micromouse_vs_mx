@@ -128,7 +128,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
 	_Bool accel_or_not = false;
 	int accel_or_decel = 0;
-	switch(Mouse->next.dir) //次の方角からアクションを選択
+	switch(Mouse->next.dir%8) //次の方角からアクションを選択
 	{
 	case front:
 //		AddVelocity = 0;
@@ -195,7 +195,10 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//壁の更新の処理を呼ばない
 //		SearchOrFast = 1;
 		Calc = 1;//マップ更新したくないときは1を代入。
-		GoBack();
+		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態だけを更新したい.加速した後、旋回直前のノードと向きに合わせたい 目標ノードはその左後ろ
+		//1ノード、アクションごとに行動を更新したい.
+		//方角の更新は基本加減算でない
+		GoBack(); //間の座標変動を
 		Calc = SearchOrFast;
 		TurnRight(turn_mode);
 
