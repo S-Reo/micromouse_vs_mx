@@ -383,7 +383,7 @@ void Explore_IT()
 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
 
 	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
-	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIG=HT], CurrentVelocity[RIGHT]);
 
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
