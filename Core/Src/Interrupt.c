@@ -277,7 +277,7 @@ void Explore_IT()
 	keep_mode = Control_Mode;
 
 ////	keep_mode = Control_Mode;
-	int wall_d =0,wall_l =0,wall_r =0,wall_f=0;
+	int wall_d =0,wall_l =0,wall_r =0;
 		int ang_out=0;
 #if 0
 
@@ -383,7 +383,7 @@ void Explore_IT()
 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
 
 	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
-	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIG=HT], CurrentVelocity[RIGHT]);
+	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
 
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
