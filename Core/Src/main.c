@@ -172,7 +172,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  //バッ?��?リチェ?��?ク
+  //バッ???��?��??��?��?リチェ???��?��??��?��?ク
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -189,7 +189,7 @@ int main(void)
 	Signal( startup_mode );
   //printf("adc1[2] : %lu\r\n ",adc1[2]);
 
-  //モード選?��? //スイ?��?チが押されるまでエンコー?��?の処?��?を受け付け?��?
+  //モード選???��?��??��?��? //スイ???��?��??��?��?チが押されるまでエンコー???��?��??��?��?の処???��?��??��?��?を受け付け???��?��??��?��?
 
 
   //MAX45mAでモード選択できる
@@ -218,20 +218,20 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  //モータ確�?
+  //モータ確??��?��?
 //  Motor_PWM_Start();
 //  while(1)
 //  {
 //	  Motor_Switch(500, 500);
 //  }
-  //赤外線LEDの消費電流テス?��?
-  //何も無?��?70mA
+  //赤外線LEDの消費電流テス???��?��??��?��?
+  //何も無???��?��??��?��?70mA
   //これまで
-  //101mAになった�??��で31mA. 2本で.
+  //101mAになっ�?
 
-  //周波数を上げ?��?
+  //周波数を上げ
 
-  //周波数を下げ?��?
+  //周波数を下げ
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -246,14 +246,14 @@ int main(void)
   IT_mode = WRITINGFREE;
   //エンコー
   EncoderStart();
-  //モータタイ???��?��??��?��?
+  //モータタイ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
   Motor_PWM_Start();
   //割込み
   HAL_TIM_Base_Start_IT(&htim1);
 
   HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2が左SET:1で正転
   HAL_GPIO_WritePin(GPIO_RIGHT, GPIO_R_PIN_NUM, GPIO_PIN_RESET);
-  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty???��?��??��?��?//tim2ch4が左
+  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?//tim2ch4が左
   	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 1050/4);
   	while(data[1999] == 0)
   	{
@@ -277,9 +277,9 @@ int main(void)
 
 #endif
 
-//  printf("フラッシュ確認\r\n");
+//  printf("フラ?��?シュ確認\r\n");
 //  Simu();
-//  printf("終了\r\n");
+//  printf("終�?\r\n");
 
 
 
@@ -305,7 +305,7 @@ int main(void)
 	  case FASTEST_RUN:
 		  //GainTestLWall();
 //		  FlashReadTest();
-//		  printf("読み込み終了\r\n");
+//		  printf("読み込み終�?\r\n");
 //		  while(1){
 //
 //		  		  }
@@ -317,7 +317,7 @@ int main(void)
 		  break;
 	  case EXPLORE:
 //		  FlashWriteTest();
-//		  printf("書き込み終了\r\n");
+//		  printf("書き込み終�?\r\n");
 //		  while(1){
 //
 //		  }
