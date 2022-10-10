@@ -172,7 +172,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  //ãƒãƒƒ???¿½?¿½??¿½?¿½?ãƒªãƒã‚§???¿½?¿½??¿½?¿½?ã‚¯
+  //ãƒãƒƒ
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -189,9 +189,7 @@ int main(void)
 	Signal( startup_mode );
   //printf("adc1[2] : %lu\r\n ",adc1[2]);
 
-  //ãƒ¢ãƒ¼ãƒ‰é¸???¿½?¿½??¿½?¿½? //ã‚¹ã‚¤???¿½?¿½??¿½?¿½?ãƒãŒæŠ¼ã•ã‚Œã‚‹ã¾ã§ã‚¨ãƒ³ã‚³ãƒ¼???¿½?¿½??¿½?¿½?ã®å‡¦???¿½?¿½??¿½?¿½?ã‚’å—ã‘ä»˜ã‘???¿½?¿½??¿½?¿½?
-
-
+  //ãƒ¢ãƒ¼ãƒ‰é¸
   //MAX45mAã§ãƒ¢ãƒ¼ãƒ‰é¸æŠžã§ãã‚‹
 
   /* USER CODE END Init */
@@ -218,16 +216,16 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  //ãƒ¢ãƒ¼ã‚¿ç¢º??¿½?¿½?
+  //ãƒ¢ãƒ¼ã‚¿ç¢º
 //  Motor_PWM_Start();
 //  while(1)
 //  {
 //	  Motor_Switch(500, 500);
 //  }
-  //èµ¤å¤–ç·šLEDã®æ¶ˆè²»é›»æµãƒ†ã‚¹???¿½?¿½??¿½?¿½?
-  //ä½•ã‚‚ç„¡???¿½?¿½??¿½?¿½?70mA
+  //èµ¤å¤–ç·šLEDã®æ¶ˆè²»é›»æµãƒ†ã‚¹
+  //ä½•ã‚‚ç„¡70mA
   //ã“ã‚Œã¾ã§
-  //101mAã«ãªã£ã?
+  //101mAã«ãªã£
 
   //å‘¨æ³¢æ•°ã‚’ä¸Šã’
 
@@ -246,14 +244,14 @@ int main(void)
   IT_mode = WRITINGFREE;
   //ã‚¨ãƒ³ã‚³ãƒ¼
   EncoderStart();
-  //ãƒ¢ãƒ¼ã‚¿ã‚¿ã‚¤?????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½?
+  //ãƒ¢ãƒ¼ã‚¿ã‚¿ã‚¤
   Motor_PWM_Start();
   //å‰²è¾¼ã¿
   HAL_TIM_Base_Start_IT(&htim1);
 
   HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2ãŒå·¦SET:1ã§æ­£è»¢
   HAL_GPIO_WritePin(GPIO_RIGHT, GPIO_R_PIN_NUM, GPIO_PIN_RESET);
-  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty?????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½????¿½?¿½??¿½?¿½???¿½?¿½??¿½?¿½?//tim2ch4ãŒå·¦
+  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty
   	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 1050/4);
   	while(data[1999] == 0)
   	{
@@ -277,7 +275,7 @@ int main(void)
 
 #endif
 
-//  printf("ãƒ•ãƒ©?¿½?ã‚·ãƒ¥ç¢ºèª\r\n");
+//  printf("ãƒ•ãƒ©?ï¿½ï¿½?ã‚·ãƒ¥ç¢ºèª\r\n");
 //  Simu();
 //  printf("çµ‚ï¿½?\r\n");
 

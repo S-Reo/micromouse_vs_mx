@@ -131,6 +131,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	switch(Mouse->next.dir%8) //次の方角からアクションを選択
 	{
 	case front:
+		ChangeLED(0);
 //		AddVelocity = 0;
 //		accel_or_decel = 0;
 
@@ -185,12 +186,14 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel);
 		break;
 	case right:
+		ChangeLED(0);
 		//右旋回
 		Calc = SearchOrFast;
 
 		TurnRight(turn_mode);
 		break;
 	case backright:
+		ChangeLED(1);
 		//Uターンして右旋回
 		//壁の更新の処理を呼ばない
 //		SearchOrFast = 1;
@@ -205,6 +208,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 
 		break;
 	case back:
+		ChangeLED(0);
 		//Uターンして直進.加速できる
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack();
@@ -254,6 +258,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel);
 		break;
 	case backleft:
+		ChangeLED(4);
 		//Uターンして左旋回
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack();
@@ -261,6 +266,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		TurnLeft(turn_mode);
 		break;
 	case left:
+		ChangeLED(0);
 		//左旋回
 		Calc = SearchOrFast;
 //		ChangeLED(4);

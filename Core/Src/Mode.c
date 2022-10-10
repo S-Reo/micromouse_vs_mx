@@ -683,20 +683,18 @@ void WritingFree()
 	PIDChangeFlag(R_WALL_PID, 0);
 	ExploreVelocity=0;
 	ChangeLED(7);
+	Calc = 1;
+	Accel(61.5, 240);
 
-	Rotate(90, M_PI);
-	HAL_Delay(500);
-
-	while(1)
+	for(int i=0; i < 4; i ++)
 	{
-		Rotate(90, M_PI);
-
-		HAL_Delay(500);
-		Rotate(90, -M_PI);
-
-		HAL_Delay(500);
-
+		GoStraight(90, 240, 1);
 	}
+	for(int i=0; i < 4; i ++)
+	{
+		GoStraight(90, 240, -1);
+	}
+	Decel(45, 0);
 
 #if 0
 	timer1 = 0;
@@ -1316,6 +1314,7 @@ void Explore()
 	Decel(45, 0);
 	WaitStopAndReset();//これがないとガクンとなる.
 	shiftState(&my_mouse);
+	PIDChangeFlag(A_VELO_PID, 0);
 //	HAL_Delay(10000);
 //	while(1)
 //	{

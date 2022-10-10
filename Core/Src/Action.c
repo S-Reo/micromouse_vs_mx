@@ -568,7 +568,7 @@ void WaitStopAndReset()
 		AngularAcceleration = 0;
 		//AngularV = 0;
 //		if(CurrentVelocity[LEFT] > 500)
-			ChangeLED(3);
+//			ChangeLED(3);
 			//printf("回転停止中\r\n");
 
 	}while(CurrentVelocity[BODY] != 0);
@@ -1153,20 +1153,20 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
-	{
-		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
-		{
-			TargetAngularV = 0;
-			AngularLeapsity = 0;
-			AngularAcceleration = 0;
-			TargetVelocity[BODY] = v_turn;
-
-		}
-
-	}
-	else//なければ
-	{
+//	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
+//	{
+//		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+//		{
+//			TargetAngularV = 0;
+//			AngularLeapsity = 0;
+//			AngularAcceleration = 0;
+//			TargetVelocity[BODY] = v_turn;
+//			ChangeLED(7);
+//		}
+//
+//	}
+//	else//なければ
+//	{
 		while( now_pulse + pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				//velocity_ctrl_flag = 1;
@@ -1177,9 +1177,9 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 
 				////printf("直進1\r\n");
 		}
-	}
+//	}
 	now_angv = AngularV;
-
+	ChangeLED(3);
 	float start_angle = Angle;
 	Control_Mode = NOT_CTRL_PID;
 	while(start_angle + ang1 > Angle)
@@ -1327,21 +1327,21 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall() == WALL/*前に壁があれば、*/)
-	{
-		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
-		{
-			TargetAngularV = 0;
-			AngularLeapsity = 0;
-			AngularAcceleration = 0;
-			TargetVelocity[BODY] = v_turn;
-
-		}
-
-
-	}
-	else//なければ
-	{
+//	if (getFrontWall() == WALL/*前に壁があれば、*/)
+//	{
+//		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+//		{
+//			TargetAngularV = 0;
+//			AngularLeapsity = 0;
+//			AngularAcceleration = 0;
+//			TargetVelocity[BODY] = v_turn;
+//
+//		}
+//
+//
+//	}
+//	else//なければ
+//	{
 		while( now_pulse + pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				//velocity_ctrl_flag = 1;
@@ -1351,7 +1351,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 
 				////printf("直進1\r\n");
 		}
-	}
+//	}
 
 	Control_Mode = NOT_CTRL_PID;
 	float start_angle = Angle;
@@ -1580,9 +1580,9 @@ void Decel(float dec_distance, float end_speed)
 			TargetAngularV = 0;
 			AngularAcceleration = 0;
 			static int k = 1;
-
-			ChangeLED(k);
-			k++;
+//
+//			ChangeLED(k);
+//			k++;
 			break;
 		}
 		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] )
@@ -1871,7 +1871,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 		KeepPulse[RIGHT] += target_pulse*0.5f;
 
 	}
-	ChangeLED(0);
+//	ChangeLED(0);
 	//余分に加速した場合、あとの減速で速度を落としきれないことになっていたので、減速時にその時の速度を使うようにした。
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 //	int target_pulse = (int)(2*(move_distance/2)/MM_PER_PULSE);

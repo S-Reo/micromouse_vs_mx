@@ -957,7 +957,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                     printf("東へ\r\n");
 #endif
                     //
-                    ChangeLED(2);
+//                    ChangeLED(2);
                     compare_weight = maze->ColumnNode[now_node->pos.x+1][now_node->pos.y].weight;
                     next_node = &(maze->ColumnNode[now_node->pos.x+1][now_node->pos.y]);
                     flag = true;
@@ -972,7 +972,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->ColumnNode[now_node->pos.x-1][now_node->pos.y].weight)
                 {
-                	ChangeLED(3);
+//                	ChangeLED(3);
 #if DEBUG_ON
                     printf("西へ\r\n");
 #endif
@@ -991,7 +991,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
                 //重みを比較して更新
                 if(compare_weight > maze->RawNode[now_node->pos.x][now_node->pos.y+1].weight)
                 {
-                	ChangeLED(4);
+//                	ChangeLED(4);
 #if DEBUG_ON
                     printf("北東へ\r\n");
 #endif
@@ -1010,7 +1010,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
 #if DEBUG_ON
                     printf("北西へ\r\n");
 #endif
-                    ChangeLED(5);
+//                    ChangeLED(5);
                     compare_weight = maze->RawNode[now_node->pos.x-1][now_node->pos.y+1].weight;
                     next_node = &(maze->RawNode[now_node->pos.x-1][now_node->pos.y+1]);
                     flag = true;
@@ -1066,7 +1066,7 @@ node *getNextNode(maze_node *maze, cardinal car, node *now_node, int mask)
     if(flag == false)
     {
 
-    	ChangeLED(1);
+//    	ChangeLED(1);
 #if DEBUG_ON
     	printf("ノード更新無し\r\n\r\n");
 #endif

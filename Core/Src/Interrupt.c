@@ -319,16 +319,16 @@ void Explore_IT()
 		TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
 		break;
 	case D_WALL_PID:
-		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
-		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+//		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+//		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		break;
 	case L_WALL_PID:
-		wall_l = PIDControl( Control_Mode,  Photo[SL], TargetPhoto[SL]);
-		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+//		wall_l = PIDControl( Control_Mode,  Photo[SL], TargetPhoto[SL]);
+//		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		break;
 	case R_WALL_PID :
-		wall_r = PIDControl( Control_Mode,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
-		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+//		wall_r = PIDControl( Control_Mode,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+//		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		break;
 	case F_WALL_PID : //前壁補正のための制御. ミックスはよくない.
 //		wall_f = PIDControl( Control_Mode,   4000, (	(Photo[FR]+Photo[FL])));
@@ -387,7 +387,7 @@ void Explore_IT()
 
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
-//	if(Acceleration == 0)
+//	if(1)//my_mouse.goal_lesser.x == GOAL_X && my_mouse.goal_lesser.y == GOAL_Y)
 //			ChangeLED(7);
 //	else
 //	{
