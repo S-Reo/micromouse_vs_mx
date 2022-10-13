@@ -12,6 +12,6 @@ void initSearchData(maze_node *my_maze, profile *Mouse);
 void updateRealSearch();
 
 void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode);
-
+void getPathNode(maze_node *my_maze);
 
 #endif /* INC_TEST_H_ */

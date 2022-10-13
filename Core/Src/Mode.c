@@ -1027,23 +1027,21 @@ void FastestRun()
 	//マップデータはあるので、最初だけ重みを計算
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 
+	//ここで経路配列を用意. ノードの情報から道中でどう動けばよいかを求める
+		//フローチャートで整理する?
+	getPathNode(&my_map);
 	HAL_Delay(200);
 	//壁のあるなしと重みをprintしてチェック
 //	printAllNodeExistence(&my_map);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser));
-	//最初の加速
+
 	Accel(61.5, ExploreVelocity);
 	//shiftState(&my_mouse);
 //	shiftPos();
 
     //理想は、ゴールまで重み更新なしで、コマンドによるモータ制御のみ
-    //シミュレーションの1stステップとしては、重み更新無しでノード選択しながら、stateの更新だけする
 
-    //最初の加速コマンド
     int cnt=0;
-
-//    char r[]="行";
-//	char c[]="列";
 
     while(! ((my_mouse.goal_lesser.x <= my_mouse.next.pos.x && my_mouse.next.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.next.pos.y && my_mouse.next.pos.y <= my_mouse.goal_larger.y)))
     {

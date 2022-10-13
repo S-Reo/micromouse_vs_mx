@@ -1811,15 +1811,20 @@ void initProfile(profile *prof, maze_node *maze)
 void shiftState(profile *prof)
 {
     prof->now.car = prof->next.car;
+    prof->now.dir = prof->next.dir;
     prof->now.pos.x = prof->next.pos.x;
     prof->now.pos.y = prof->next.pos.y;
     prof->now.node = prof->next.node;//ポインタ渡し
 }
 void printState(state *st)
 {
+	  node *node;
     printf("    座標    :   %u, %u\r\n", st->pos.x, st->pos.y);
     printf("    方角    :   %d\r\n", st->car);
+    printf("    アクション    :   %d\r\n", st->dir);
     printf("    壁      :   %u, %u, %u, %u\r\n", st->wall.north, st->wall.east, st->wall.south, st->wall.west);
+
+    printf("    ノード      :   行(0) or 列(1) : %d, ノードx : %u, ノードy : %u, 重み : %u, 壁の状態 : %u\r\n", st->node->rc, st->node->pos.x, st->node->pos.y, st->node->weight, st->node->existence);
 }
 void printGoal(profile *prof)
 {
