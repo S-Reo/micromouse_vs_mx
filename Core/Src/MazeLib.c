@@ -475,9 +475,15 @@ _Bool getWallNow(state *st, wall_state *wall_st)//wall_existence *wall[4])(
         break;
     }
     return true;
-
 }
-
+//座標から壁の有無を取得
+void getNowWallVirtual(uint8_t next_x, uint8_t next_y)
+{
+	my_mouse.now.wall.north = my_map.RawNode[next_x][next_y+1].existence;//北
+	my_mouse.now.wall.east = my_map.ColumnNode[next_x+1][next_y].existence;//東
+	my_mouse.now.wall.south = my_map.RawNode[next_x][next_y].existence;//南
+	my_mouse.now.wall.west = my_map.ColumnNode[next_x][next_y].existence;//西
+}
 
 //壁があれば重みはデフォルト値を代入する
 //壁がなければそのままにしておく 前左右の情報の方角に合わせた変換は別のところで
@@ -1782,10 +1788,11 @@ void initProfile(profile *prof, maze_node *maze)
 
     setPosition(&(prof->now.pos), 0, 0);
     setCardinal(&(prof->now), north);
+    prof->now.dir = front;
 
     setPosition(&(prof->next.pos), 0, 1);
     setCardinal(&(prof->next), north);
-
+    prof->next.dir = front;
     //壁のセット
     wall_state w_st[4]={
         NOWALL,
@@ -1815,16 +1822,20 @@ void shiftState(profile *prof)
     prof->now.pos.x = prof->next.pos.x;
     prof->now.pos.y = prof->next.pos.y;
     prof->now.node = prof->next.node;//ポインタ渡し
+    prof->now.wall.north = prof->next.wall.north;
+    prof->now.wall.east = prof->next.wall.east;
+    prof->now.wall.south = prof->next.wall.south;
+    prof->now.wall.west = prof->next.wall.west;
 }
 void printState(state *st)
 {
-	  node *node;
     printf("    座標    :   %u, %u\r\n", st->pos.x, st->pos.y);
     printf("    方角    :   %d\r\n", st->car);
-    printf("    アクション    :   %d\r\n", st->dir);
+    printf("    向き    :   %d\r\n", st->dir);
     printf("    壁      :   %u, %u, %u, %u\r\n", st->wall.north, st->wall.east, st->wall.south, st->wall.west);
 
-    printf("    ノード      :   行(0) or 列(1) : %d, ノードx : %u, ノードy : %u, 重み : %u, 壁の状態 : %u\r\n", st->node->rc, st->node->pos.x, st->node->pos.y, st->node->weight, st->node->existence);
+    printf("    ノード :   行(0) or 列(1) : %d, ノードx : %u, ノードy : %u, 重み : %u, 壁の状態 : %u\r\n", st->node->rc, st->node->pos.x, st->node->pos.y, st->node->weight, st->node->existence);
+    printf("\r\n");
 }
 void printGoal(profile *prof)
 {

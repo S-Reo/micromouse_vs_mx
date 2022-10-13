@@ -277,6 +277,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 }
 
 
+
 //データ構造
 typedef struct {
 	state path_state;
@@ -299,8 +300,10 @@ void getPathNode(maze_node *my_maze)
 
 	static int path_num=0;
 	//最初の次ノードは既に入っているので格納
-	FastPath[path_num].path_state = my_mouse.next;
+	getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);//0,1の壁がうまく更新できてない
+	FastPath[path_num].path_state = my_mouse.now;
 	FastPath[path_num].path_ahead = true;
+
 	printState(&(my_mouse.now));
 	shiftState(&my_mouse);
 	printState(&(my_mouse.next));
@@ -308,45 +311,30 @@ void getPathNode(maze_node *my_maze)
 	//ゴールなら減速.　なのでwhile文
 	while(! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //nextがゴール到達するまでループ
 	{
-		printState(&(my_mouse.now));
-		//終了条件がおかしい. ゴールノードかどうかの判定. 座標のxyも使う.
+		//0,1。前方。
+		getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);
+			printf("now\r\n");
+			printState(&(my_mouse.now));
 		path_num ++;
+		//次の方向はこの時点で入れる.nextstateがわかった時点で入れたい
+		FastPath[path_num].path_state = my_mouse.now; //next.dir
+
 		my_mouse.next.node = getNextNode(my_maze, my_mouse.now.car, my_mouse.now.node, 0x03);
 		getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);
-		FastPath[path_num].path_state = my_mouse.next;
-		//壁の情報も欲しいところ
-
-		//基本的に外からの情報はノードのポインタのみで完結させられる
-		//同じ方角が連続なら直進で同じ動作
-		//同じ方角じゃないならターン系。同じ動作かどうか
-		//直進のマスカウント用
-		switch(FastPath[path_num].path_state.dir%8)
-		{
-		case front:
-			FastPath[path_num].path_ahead = true;
-			break;
-		default:
-			FastPath[path_num].path_ahead = false;
-			break;
-		}//0が続いている場合も、右左が交互に来ていれば斜め走行で直進扱いにできる. その前に予備動作（45°スラローム
-		//一旦は、1なら数えていってその分を加減速関数に渡す, 0なら右か左か選ぶ。これだけ
 
 		shiftState(&my_mouse);
-		printState(&(my_mouse.next));
+			printf("next\r\n");
+			printState(&(my_mouse.next));
 
-		printf("\r\n");
-		//しながらPath情報を計算していく
-		//選んだノードの配列から動作生成
-
-		//ノードが指すRawかColumnで直進かそれ以外か.
-		//配列が出来上がったらそれ通りにアクションを選択できるように
+			printf("\r\n");
 	}
 	//print
 	while(1)
 	{
 		for(int i=0; i <= path_num; i++)
 		{
-			printf("%d, %d\r\n", i, FastPath[i].path_ahead);
+//			printf("%d, %d\r\n", i, FastPath[i].path_ahead);
+			printState(&(FastPath[i].path_state));
 		}
 		printf("\r\n");
 	}
