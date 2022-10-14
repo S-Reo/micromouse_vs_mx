@@ -241,6 +241,19 @@ void initMaze(maze_node *maze) //重みは別で初期化
             maze->RawNode[i][j].pos.y = j;
         }
     }
+    for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+    {
+            maze->RawNode[i][0].existence = WALL;
+            maze->RawNode[i][0].draw = true;//未知壁は描画のときに無いものとする
+            maze->RawNode[i][0].rc = 0;
+            maze->RawNode[i][0].pos.x = i;
+            maze->RawNode[i][0].pos.y = 0;
+            maze->RawNode[i][NUMBER_OF_SQUARES_Y].existence = WALL;
+            maze->RawNode[i][NUMBER_OF_SQUARES_Y].draw = true;//未知壁は描画のときに無いものとする
+            maze->RawNode[i][NUMBER_OF_SQUARES_Y].rc = 0;
+            maze->RawNode[i][NUMBER_OF_SQUARES_Y].pos.x = i;
+            maze->RawNode[i][NUMBER_OF_SQUARES_Y].pos.y = NUMBER_OF_SQUARES_Y;
+    }
     for(int i=1; i < NUMBER_OF_SQUARES_X; i++)
     {
         for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
@@ -251,6 +264,19 @@ void initMaze(maze_node *maze) //重みは別で初期化
             maze->ColumnNode[i][j].pos.x = i;
             maze->ColumnNode[i][j].pos.y = j;
         }
+    }
+    for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+    {
+            maze->ColumnNode[0][j].existence = WALL;
+            maze->ColumnNode[0][j].draw = true;
+            maze->ColumnNode[0][j].rc = 1;
+            maze->ColumnNode[0][j].pos.x = 0;
+            maze->ColumnNode[0][j].pos.y = j;
+            maze->ColumnNode[NUMBER_OF_SQUARES_X][j].existence = WALL;
+            maze->ColumnNode[NUMBER_OF_SQUARES_X][j].draw = true;
+            maze->ColumnNode[NUMBER_OF_SQUARES_X][j].rc = 1;
+            maze->ColumnNode[NUMBER_OF_SQUARES_X][j].pos.x = NUMBER_OF_SQUARES_X;
+            maze->ColumnNode[NUMBER_OF_SQUARES_X][j].pos.y = j;
     }
     
     // 壁の有無を初期化
@@ -477,14 +503,20 @@ _Bool getWallNow(state *st, wall_state *wall_st)//wall_existence *wall[4])(
     return true;
 }
 //座標から壁の有無を取得
-void getNowWallVirtual(uint8_t next_x, uint8_t next_y)
+void getNowWallVirtual(uint8_t now_x, uint8_t now_y)
 {
-	my_mouse.now.wall.north = my_map.RawNode[next_x][next_y+1].existence;//北
-	my_mouse.now.wall.east = my_map.ColumnNode[next_x+1][next_y].existence;//東
-	my_mouse.now.wall.south = my_map.RawNode[next_x][next_y].existence;//南
-	my_mouse.now.wall.west = my_map.ColumnNode[next_x][next_y].existence;//西
+	my_mouse.now.wall.north = my_map.RawNode[now_x][now_y+1].existence;//北
+	my_mouse.now.wall.east = my_map.ColumnNode[now_x+1][now_y].existence;//東
+	my_mouse.now.wall.south = my_map.RawNode[now_x][now_y].existence;//南
+	my_mouse.now.wall.west = my_map.ColumnNode[now_x][now_y].existence;//西
 }
-
+void getNextWallVirtual(uint8_t next_x, uint8_t next_y)
+{
+	my_mouse.next.wall.north = my_map.RawNode[next_x][next_y+1].existence;//北
+	my_mouse.next.wall.east = my_map.ColumnNode[next_x+1][next_y].existence;//東
+	my_mouse.next.wall.south = my_map.RawNode[next_x][next_y].existence;//南
+	my_mouse.next.wall.west = my_map.ColumnNode[next_x][next_y].existence;//西
+}
 //壁があれば重みはデフォルト値を代入する
 //壁がなければそのままにしておく 前左右の情報の方角に合わせた変換は別のところで
 void updateNodeThree(maze_node *maze, state *st, uint8_t x, uint8_t y)
@@ -1383,7 +1415,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = front;
+                    now_state->dir = front;
                     return next_state;
                 }
                 //後ろ
@@ -1392,7 +1424,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 2; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
-                    next_state->dir = back;
+                    now_state->dir = back;
                     return next_state;
                 }
                 
@@ -1408,7 +1440,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
-                    next_state->dir = right;
+                    now_state->dir = right;
 //                    ChangeLED(6);
                     return next_state;
                 }
@@ -1419,7 +1451,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
-                    next_state->dir = left;
+                    now_state->dir = left;
                     return next_state;
                 }
 
@@ -1430,7 +1462,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y - 1;
-                    next_state->dir = backright;
+                    now_state->dir = backright;
                     return next_state;
                 }
                 //Uターンして左旋回
@@ -1440,7 +1472,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y - 1;
-                    next_state->dir = backleft;
+                    now_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1458,7 +1490,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
-                    next_state->dir = front;
+                    now_state->dir = front;
 //                    ChangeLED(4);
                     return next_state;
                 }
@@ -1468,7 +1500,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 2; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
-                    next_state->dir = back;
+                    now_state->dir = back;
                     return next_state;
                 }
                 
@@ -1484,7 +1516,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1;
-                    next_state->dir = right;
+                    now_state->dir = right;
 //                    ChangeLED(5);
                     return next_state;
                 }
@@ -1495,7 +1527,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = left;
+                    now_state->dir = left;
                     return next_state;
                 }
                 //Uターンして右旋回
@@ -1505,7 +1537,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = north;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = backright;
+                    now_state->dir = backright;
                     return next_state;
                 }
 
@@ -1516,7 +1548,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = south;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y - 1;
-                    next_state->dir = backleft;
+                    now_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1533,7 +1565,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
-                    next_state->dir = front;
+                    now_state->dir = front;
                     return next_state;
                 }
                 //Uターン
@@ -1541,7 +1573,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 2;
-                    next_state->dir = back;
+                    now_state->dir = back;
                     return next_state;
                 }
                 
@@ -1556,7 +1588,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
-                    next_state->dir = right;
+                    now_state->dir = right;
 //                    ChangeLED(4);
                     //printf("南向きから南西:%u, %u\r\n",next_state->pos.y, now_state->pos.x);
                     return next_state;
@@ -1567,7 +1599,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
-                    next_state->dir = left;
+                    now_state->dir = left;
                     return next_state;
                 }
                 
@@ -1578,7 +1610,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = backright;
+                    now_state->dir = backright;
                     return next_state;
                 }
                 //Uターンして直進して左旋回
@@ -1588,7 +1620,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = backleft;
+                    now_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1605,7 +1637,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = west;
                     next_state->pos.x = now_state->pos.x - 1; //次に壁を更新するタイミングは、この座標に到達したとき。コマンドでここまで進ませる.Uターンは既知区間であることを考慮する
-                    next_state->dir = front;
+                    now_state->dir = front;
                     return next_state;
                 }
                 //Uターンして直進
@@ -1614,7 +1646,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = east;
                     next_state->pos.x = now_state->pos.x + 2;
-                    next_state->dir = back;
+                    now_state->dir = back;
                     return next_state;
                 }
                 
@@ -1630,7 +1662,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = north;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = right;
+                    now_state->dir = right;
 //                    ChangeLED(3);
                     return next_state;
                 }
@@ -1641,7 +1673,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                 {
                     next_state->car = south;
                     next_state->pos.y = now_state->pos.y - 1;
-                    next_state->dir = left;
+                    now_state->dir = left;
                     return next_state;
                 }
                 
@@ -1652,7 +1684,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = south;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y - 1;
-                    next_state->dir = backright;
+                    now_state->dir = backright;
                     return next_state;
                 }
                 //Uターンして左旋回
@@ -1662,7 +1694,7 @@ state *getNextState(state *now_state, state *next_state, node *next_node)
                     next_state->car = north;
                     next_state->pos.x = now_state->pos.x + 1;
                     next_state->pos.y = now_state->pos.y + 1;
-                    next_state->dir = backleft;
+                    now_state->dir = backleft;
                     return next_state;
                 }
             }
@@ -1792,7 +1824,7 @@ void initProfile(profile *prof, maze_node *maze)
 
     setPosition(&(prof->next.pos), 0, 1);
     setCardinal(&(prof->next), north);
-    prof->next.dir = front;
+    prof->next.dir = 1; //not use while running
     //壁のセット
     wall_state w_st[4]={
         NOWALL,
@@ -1818,7 +1850,7 @@ void initProfile(profile *prof, maze_node *maze)
 void shiftState(profile *prof)
 {
     prof->now.car = prof->next.car;
-    prof->now.dir = prof->next.dir;
+//    prof->now.dir = prof->next.dir;
     prof->now.pos.x = prof->next.pos.x;
     prof->now.pos.y = prof->next.pos.y;
     prof->now.node = prof->next.node;//ポインタ渡し

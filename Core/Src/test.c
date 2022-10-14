@@ -128,7 +128,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
 	_Bool accel_or_not = false;
 	int accel_or_decel = 0;
-	switch(Mouse->next.dir%8) //次の方角からアクションを選択
+	switch(Mouse->now.dir%8) //次の方角からアクションを選択
 	{
 	case front:
 		ChangeLED(0);
@@ -276,8 +276,10 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 
 }
 
+//最短走行用のアクションに番号を振る
+typedef struct {
 
-
+}Action;
 //データ構造
 typedef struct {
 	state path_state;
@@ -288,7 +290,6 @@ typedef struct {
 	_Bool path_ahead;
 }Path;
 Path FastPath[16*16]={0};
-
 
 //最短走行用の経路配列作成
 void getPathNode(maze_node *my_maze)
@@ -301,27 +302,27 @@ void getPathNode(maze_node *my_maze)
 	static int path_num=0;
 	//最初の次ノードは既に入っているので格納
 	getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);//0,1の壁がうまく更新できてない
+	getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
 	FastPath[path_num].path_state = my_mouse.now;
 	FastPath[path_num].path_ahead = true;
 
-	printState(&(my_mouse.now));
+		printState(&(my_mouse.now));
 	shiftState(&my_mouse);
-	printState(&(my_mouse.next));
+		printState(&(my_mouse.next));
 	//一度データ上で最短走行する
 	//ゴールなら減速.　なのでwhile文
 	while(! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //nextがゴール到達するまでループ
 	{
 		//0,1。前方。
-		getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);
+//		getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);
+		my_mouse.next.node = getNextNode(my_maze, my_mouse.now.car, my_mouse.now.node, 0x03);
+		getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);
+		getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
 			printf("now\r\n");
 			printState(&(my_mouse.now));
 		path_num ++;
 		//次の方向はこの時点で入れる.nextstateがわかった時点で入れたい
 		FastPath[path_num].path_state = my_mouse.now; //next.dir
-
-		my_mouse.next.node = getNextNode(my_maze, my_mouse.now.car, my_mouse.now.node, 0x03);
-		getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);
-
 		shiftState(&my_mouse);
 			printf("next\r\n");
 			printState(&(my_mouse.next));
