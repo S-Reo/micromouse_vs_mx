@@ -29,12 +29,11 @@ void initSearchData(maze_node *my_maze, profile *Mouse)
 {
     initMaze(my_maze);
     initWeight(my_maze); //3/20ms
-
     //状態の初期化
     initProfile(Mouse, my_maze);
+
     Mouse->now.node = &(my_maze->RawNode[0][0]);
     Mouse->next.node = &(my_maze->RawNode[0][1]);
-
     //スタート座標にいる状態で、現在の重みを更新
      updateAllNodeWeight(my_maze, Mouse->goal_lesser.x, Mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 //     updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
@@ -277,14 +276,18 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 }
 
 //最短走行用のアクションに番号を振る
-typedef struct {
-
+typedef enum {
+	START,
+	ACC_DEC,
+	L_90_SEARCH,
+	R_90_SEARCH,
+	L_90_FAST,
+	R_90_FAST,
 }Action;
 //データ構造
 typedef struct {
 	state path_state;
-	position path_area;
-	int path_slope; //傾きは方角と同じ意味を持ちそう
+	Action path_action;
 	//斜めで壁を使うにはどうするか. 今回斜めまで入れられない...
 		//前壁を見るセンサを少し強めに傾けておいて見る
 	_Bool path_ahead;
@@ -305,7 +308,6 @@ void getPathNode(maze_node *my_maze)
 	getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
 	FastPath[path_num].path_state = my_mouse.now;
 	FastPath[path_num].path_ahead = true;
-
 		printState(&(my_mouse.now));
 	shiftState(&my_mouse);
 		printState(&(my_mouse.next));
@@ -340,9 +342,86 @@ void getPathNode(maze_node *my_maze)
 		printf("\r\n");
 	}
 }
+
 void getPathAction()
 {
 	//Pathからアクション計画を立てる
+	int count = 0;
+	if( (my_mouse.goal_lesser.x <= FastPath[count].path_state.node->pos.x &&  FastPath[count].path_state.node->pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= FastPath[count].path_state.node->pos.y &&  FastPath[count].path_state.node->pos.y <= my_mouse.goal_larger.y) ){
+		//ゴールノード
+		//終端速度の変数 0
+		//動いていなければ動かない
+		if(count == 0){ //初手ノードなら、加減速一回で終わり
+		}
+		else if(count == 1){ //一歩目がゴールなら（ありえない）
+			FastPath[0].path_action = ACC_DEC;//加減速一回で終わり
+			//61.5+45mm
+		}
+	}
+	else {
+		if(FastPath[2].path_state.node->rc == 1){
+			FastPath[0].path_action = START;	 //初手ターン用の加速
+			FastPath[1].path_action = R_90_SEARCH;
+		}
+		else{
+			//2マス以上直進
+			FastPath[0].path_action = ACC_DEC;
+			FastPath[1].path_action = ACC_DEC;
+		}
+		count = 2; //==2
+		//以降はゴールまで同じ流れで決定
+		while(1)
+		{
+				//今見ているノードがゴールノードでない. ゴールが3ノード目以上であるとき.
+				//パスの2個先のノードを見る
+				//ノード情報の変動に合わせてアクションを割り振る
+				//初手だけ注意
+				//直進が続くか、旋回に切り替えるか
+				if( (my_mouse.goal_lesser.x <= FastPath[count].path_state.node->pos.x &&  FastPath[count].path_state.node->pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= FastPath[count].path_state.node->pos.y &&  FastPath[count].path_state.node->pos.y <= my_mouse.goal_larger.y) )
+				{
+					//ゴールノード
+					//終端速度の変数 0
+					//前回がターンなら加減速を選択して、加速の割合を0として減速
+					//前回までが直進なら、加減速を選択して、ゴールラインを駆け抜ける処理を入れる
+						//一つ前のpath_actionによって変える
+						switch(FastPath[count-1].path_action)
+						{
+							case START:
+								//初手90°ターン用なので来ない
+								break;
+							case L_90_SEARCH: //LRで同じ
+							case R_90_SEARCH:
+								FastPath[count].path_action = ACC_DEC; //ただの減速.
+								//加速の割合を0にする
+								break;
+							case ACC_DEC:
+								//前回ACC_DECということはそのまま継続でひとまとめにする
+								FastPath[count].path_action = ACC_DEC; //前のアクションとひとまとめ（countを利用）
+								//ゴール通過時に速度を高くしておきたいので、通過後に壁が無ければ駆け抜ける仕様にする
+								break;
+							default :
+								printf("missng action !! in getPathAction.\r\n");
+								break;
+						}
+						break;
+				}
+				else{
+					//count+1の情報と比較してcountでのアクションを決定
+					///行行、列列なら直進加減速
+						//FastPath[count].path_action = ACC_DEC;
+						//添え字を保存
+						//連続で直進になったら別変数でインクリメント
+					//でなければ、if(FastPath[count+1].path_state.node->pos.xとyを使って傾きを求め. 8パターン？を左と右の2パターンに分類);
+						//FastPath[count].path_action = L_90_SEARCH;
+						//FastPath[count].path_action = R_90_SEARCH;
+						//ターンが来たらカウントを保存してリセット
+				}
+
+			count ++;
+		}
+	}
+
+		//LR90, ACCDEC, START
 
 	//selection limb
 

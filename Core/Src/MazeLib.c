@@ -292,7 +292,7 @@ void initMaze(maze_node *maze) //重みは別で初期化
         maze->RawNode[i][NUMBER_OF_SQUARES_Y].rc = 0;
 
         maze->RawNode[i][0].pos.x = i;
-        maze->RawNode[i][0].pos.y = NUMBER_OF_SQUARES_Y;
+        maze->RawNode[i][0].pos.y = 0;
         maze->RawNode[i][NUMBER_OF_SQUARES_Y].pos.x = i;
         maze->RawNode[i][NUMBER_OF_SQUARES_Y].pos.y = NUMBER_OF_SQUARES_Y;
     }
@@ -307,7 +307,7 @@ void initMaze(maze_node *maze) //重みは別で初期化
         maze->ColumnNode[0][j].rc = 1;
         maze->ColumnNode[NUMBER_OF_SQUARES_X][j].rc = 1;
 
-        maze->ColumnNode[0][j].pos.x = NUMBER_OF_SQUARES_X;
+        maze->ColumnNode[0][j].pos.x = 0;
         maze->ColumnNode[0][j].pos.y = j;
         maze->ColumnNode[NUMBER_OF_SQUARES_X][j].pos.x = NUMBER_OF_SQUARES_X;
         maze->ColumnNode[NUMBER_OF_SQUARES_X][j].pos.y = j;

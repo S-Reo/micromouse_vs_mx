@@ -1019,6 +1019,7 @@ void FastestRun()
 //	}
 	//迷路データ
 	initSearchData(&my_map, &my_mouse);
+
 //	printAllNodeExistence(&my_map);
 	//マップデータの取得。flashから壁データを取得。
 	flashCopyNodesToRam(); //existenceだけ
@@ -1026,7 +1027,6 @@ void FastestRun()
 	//flash_copy_to_ram();
 	//マップデータはあるので、最初だけ重みを計算
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
-
 	//ここで経路配列を用意. ノードの情報から道中でどう動けばよいかを求める
 		//フローチャートで整理する?
 	getPathNode(&my_map);
