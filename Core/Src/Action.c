@@ -1179,7 +1179,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 		}
 //	}
 	now_angv = AngularV;
-	ChangeLED(3);
+
 	float start_angle = Angle;
 	Control_Mode = NOT_CTRL_PID;
 	while(start_angle + ang1 > Angle)

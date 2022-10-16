@@ -24,7 +24,7 @@
 
 #include "Action.h"
 #include "test.h"
-
+int Num_Nodes = 0;
 void initSearchData(maze_node *my_maze, profile *Mouse)
 {
     initMaze(my_maze);
@@ -308,9 +308,9 @@ void getPathNode(maze_node *my_maze)
 	getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
 	FastPath[path_num].path_state = my_mouse.now;
 	FastPath[path_num].path_ahead = true;
-		printState(&(my_mouse.now));
+//		printState(&(my_mouse.now));
 	shiftState(&my_mouse);
-		printState(&(my_mouse.next));
+//		printState(&(my_mouse.next));
 	//一度データ上で最短走行する
 	//ゴールなら減速.　なのでwhile文
 	while(! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //nextがゴール到達するまでループ
@@ -320,27 +320,28 @@ void getPathNode(maze_node *my_maze)
 		my_mouse.next.node = getNextNode(my_maze, my_mouse.now.car, my_mouse.now.node, 0x03);
 		getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);
 		getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
-			printf("now\r\n");
-			printState(&(my_mouse.now));
+//			printf("now\r\n");
+//			printState(&(my_mouse.now));
 		path_num ++;
 		//次の方向はこの時点で入れる.nextstateがわかった時点で入れたい
 		FastPath[path_num].path_state = my_mouse.now; //next.dir
 		shiftState(&my_mouse);
-			printf("next\r\n");
-			printState(&(my_mouse.next));
+//			printf("next\r\n");
+//			printState(&(my_mouse.next));
 
 			printf("\r\n");
 	}
+	path_num ++;
+	FastPath[path_num].path_state = my_mouse.next;
+	Num_Nodes = path_num;
 	//print
-	while(1)
-	{
 		for(int i=0; i <= path_num; i++)
 		{
 //			printf("%d, %d\r\n", i, FastPath[i].path_ahead);
 			printState(&(FastPath[i].path_state));
 		}
 		printf("\r\n");
-	}
+
 }
 
 void getPathAction()
@@ -370,44 +371,56 @@ void getPathAction()
 		}
 		count = 2; //==2
 		//以降はゴールまで同じ流れで決定
-		while(1)
+		while( !((my_mouse.goal_lesser.x <= FastPath[count].path_state.pos.x &&  FastPath[count].path_state.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= FastPath[count].path_state.pos.y &&  FastPath[count].path_state.pos.y <= my_mouse.goal_larger.y)) )
 		{
 				//今見ているノードがゴールノードでない. ゴールが3ノード目以上であるとき.
 				//パスの2個先のノードを見る
 				//ノード情報の変動に合わせてアクションを割り振る
 				//初手だけ注意
 				//直進が続くか、旋回に切り替えるか
-				if( (my_mouse.goal_lesser.x <= FastPath[count].path_state.node->pos.x &&  FastPath[count].path_state.node->pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= FastPath[count].path_state.node->pos.y &&  FastPath[count].path_state.node->pos.y <= my_mouse.goal_larger.y) )
-				{
-					//ゴールノード
-					//終端速度の変数 0
-					//前回がターンなら加減速を選択して、加速の割合を0として減速
-					//前回までが直進なら、加減速を選択して、ゴールラインを駆け抜ける処理を入れる
-						//一つ前のpath_actionによって変える
-						switch(FastPath[count-1].path_action)
-						{
-							case START:
-								//初手90°ターン用なので来ない
-								break;
-							case L_90_SEARCH: //LRで同じ
-							case R_90_SEARCH:
-								FastPath[count].path_action = ACC_DEC; //ただの減速.
-								//加速の割合を0にする
-								break;
-							case ACC_DEC:
-								//前回ACC_DECということはそのまま継続でひとまとめにする
-								FastPath[count].path_action = ACC_DEC; //前のアクションとひとまとめ（countを利用）
-								//ゴール通過時に速度を高くしておきたいので、通過後に壁が無ければ駆け抜ける仕様にする
-								break;
-							default :
-								printf("missng action !! in getPathAction.\r\n");
-								break;
-						}
-						break;
-				}
-				else{
 					//count+1の情報と比較してcountでのアクションを決定
 					///行行、列列なら直進加減速
+					//2から見る
+						if(FastPath[count].path_state.node->rc == FastPath[count+1].path_state.node->rc){
+							FastPath[count].path_action = ACC_DEC;
+						}
+						else{
+							uint8_t now_x = FastPath[count].path_state.node->pos.x, now_y = FastPath[count].path_state.node->pos.y;
+							uint8_t next_x = FastPath[count+1].path_state.node->pos.x, next_y = FastPath[count+1].path_state.node->pos.y;
+							//ターン. 傾きで選ぶ. マクロ
+							//行から列.左右のどちらか判断.あとで後ろも候補にあげる
+							if(FastPath[count].path_state.node->rc == 0)
+							{
+								//右旋回
+								//北向きから北東
+								if( __RAW_TO_COLUMN_NE__(now_x, now_y, next_x, next_y) || __RAW_TO_COLUMN_SW__(now_x, now_y, next_x, next_y) )
+				                {
+									FastPath[count].path_action = R_90_SEARCH;
+				                }
+								//左旋回
+								//北向きから北西 or //南向きから南東
+								if( __RAW_TO_COLUMN_NW__(now_x, now_y, next_x, next_y) || __RAW_TO_COLUMN_SE__(now_x, now_y, next_x, next_y) )
+				                {
+									FastPath[count].path_action = L_90_SEARCH;
+				                }
+							}
+							else if(FastPath[count].path_state.node->rc == 1)
+							{
+								//右旋回
+								//東向きから南東
+								if( __COLUMN_TO_RAW_SE__(now_x, now_y, next_x, next_y) || __COLUMN_TO_RAW_NW__(now_x, now_y, next_x, next_y) )
+				                {
+									FastPath[count].path_action = R_90_SEARCH;
+				                }
+								//左旋回
+								//東向きから北東 or //西向きから南西
+								if( __COLUMN_TO_RAW_NE__(now_x, now_y, next_x, next_y) || __COLUMN_TO_RAW_SW__(now_x, now_y, next_x, next_y) )
+								{
+									FastPath[count].path_action = L_90_SEARCH;
+								}
+							}
+						}
+
 						//FastPath[count].path_action = ACC_DEC;
 						//添え字を保存
 						//連続で直進になったら別変数でインクリメント
@@ -415,12 +428,39 @@ void getPathAction()
 						//FastPath[count].path_action = L_90_SEARCH;
 						//FastPath[count].path_action = R_90_SEARCH;
 						//ターンが来たらカウントを保存してリセット
-				}
 
+			printf("%d, %d, %u, %u, %u, %u, %u, %u\r\n", count, FastPath[count].path_action, FastPath[count].path_state.pos.x,  FastPath[count].path_state.pos.y, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y ,  my_mouse.goal_larger.x,  my_mouse.goal_larger.y);
 			count ++;
 		}
 	}
-
+	//ゴールノード
+	//終端速度の変数 0
+	//前回がターンなら加減速を選択して、加速の割合を0として減速
+	//前回までが直進なら、加減速を選択して、ゴールラインを駆け抜ける処理を入れる
+		//一つ前のpath_actionによって変える
+		switch(FastPath[count-1].path_action)
+		{
+			case START:
+				//初手90°ターン用なので来ない
+				break;
+			case L_90_SEARCH: //LRで同じ
+			case R_90_SEARCH:
+				FastPath[count].path_action = ACC_DEC; //ただの減速.
+				//加速の割合を0にする
+				break;
+			case ACC_DEC:
+				//前回ACC_DECということはそのまま継続でひとまとめにする
+				FastPath[count].path_action = ACC_DEC; //前のアクションとひとまとめ（countを利用）
+				//ゴール通過時に速度を高くしておきたいので、通過後に壁が無ければ駆け抜ける仕様にする
+				break;
+			default :
+				printf("missng action !! in getPathAction.\r\n");
+				break;
+		}
+	//check
+	printf("count : %d\r\n", count);
+	for(int i=0; i <= count; i++)
+		printf("%d, %d\r\n",i, FastPath[i].path_action);
 		//LR90, ACCDEC, START
 
 	//selection limb
@@ -430,6 +470,98 @@ void getPathAction()
 		//90deg slalom
 		//45deg slalom
 		//180deg slalom
+}
+const float conv_pul = 2/MM_PER_PULSE;
+void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed)//加減速を切り替える割合と、マス数の指定
+{
+		float add_distance = cut*90*num;//スタート時の加速では61.5になるようにnumをかける
+		TargetAngularV = 0;
+		int target_pulse = (int)(add_distance*conv_pul);
+//		dbc = 1;
+		while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
+		{
+			if(TargetVelocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
+			{
+				Acceleration = 0;
+			}
+			else
+			{
+				Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
+			}
+		}
+		Acceleration = 0;
+		KeepPulse[BODY] += target_pulse;
+		KeepPulse[LEFT] += target_pulse*0.5f;
+		KeepPulse[RIGHT] += target_pulse*0.5f;
+
+		float dec_distance = (1-cut)*90*num;
+		target_pulse = (int)(dec_distance *conv_pul);
+
+		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+		{
+			if(TargetVelocity[BODY] <= end_speed) //
+			{
+				Acceleration = 0;
+//				TargetVelocity[BODY] = end_speed;
+			}
+			else
+			{
+				Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
+			}
+			//Acceleration = decel;//-2.89;//1.0000f;//
+//			if(TargetVelocity[BODY] <= 240)
+//				Acceleration = 0;
+		}
+		Acceleration = 0;
+//		TargetVelocity[BODY] = end_speed;
+		KeepPulse[BODY] += target_pulse;
+		KeepPulse[LEFT] += target_pulse*0.5f;
+		KeepPulse[RIGHT] += target_pulse*0.5f;
+
+}
+void MaxParaRunTest()
+{
+	int start_cnt=0;
+	float straight_num = 0;
+	//ノードの数だけループ
+	int num_nodes = Num_Nodes;
+	for(int count=0; count <= num_nodes; count++)
+	{
+		switch(FastPath[count].path_action)
+		{
+		case START:
+			FastStraight(1, 61.5/90, 2.89, -2.89, ExploreVelocity, ExploreVelocity);
+			break;
+		case ACC_DEC:
+			//加減速が続く回数を数える
+
+			ChangeLED(4);
+			start_cnt = count;
+			while(FastPath[count].path_action == ACC_DEC)
+			{
+				count ++;
+			}
+			straight_num = (float)(count - start_cnt);
+			if(start_cnt == 0){
+				straight_num -= ((90-61.5)/90);
+			}
+			ChangeLED(1);
+			FastStraight(0.5, straight_num, 2.89, -2.89, 4000, ExploreVelocity);
+			count--;
+			//countを飛ばす
+			break;
+		case L_90_SEARCH:
+			ChangeLED(2);
+			SlalomLeft();
+			break;
+		case R_90_SEARCH:
+			ChangeLED(3);
+			SlalomRight();
+			break;
+		default :
+			break;
+		}
+	}
 }
 //未知壁探索用の次ノード決定処理.
 	//最短経路になりえないといえるノードをつぶしておく

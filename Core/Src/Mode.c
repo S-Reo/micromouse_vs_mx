@@ -343,7 +343,7 @@ t = 1;
 	TotalPulse[BODY] = 0;
 
 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
+//	IMU_Calib();	//これにHAL_Delayがあることで割り込みがずれることがあるのではないか。
 	//zg_offset = 0;
 	TargetPhoto[SL] = Photo[SL];
 	TargetPhoto[SR] = Photo[SR];
@@ -930,10 +930,17 @@ void FastestRun()
 		Sla.Theta3 = 90;
 		break;
 	case 4:
-		ExploreVelocity=300;
-		Sla.Pre = 3;
-		Sla.Fol = 5;
-		Sla.Alpha = 0.117;
+//		ExploreVelocity=300;
+//		Sla.Pre = 3;
+//		Sla.Fol = 5;
+//		Sla.Alpha = 0.117;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+		ExploreVelocity=240;
+		Sla.Pre = 2;
+		Sla.Fol = 16;
+		Sla.Alpha = 0.078;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -1030,19 +1037,25 @@ void FastestRun()
 	//ここで経路配列を用意. ノードの情報から道中でどう動けばよいかを求める
 		//フローチャートで整理する?
 	getPathNode(&my_map);
+	getPathAction();
 	HAL_Delay(200);
+
+	//リセット、再取得
+	initSearchData(&my_map, &my_mouse);
+	flashCopyNodesToRam(); //existenceだけ
+	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 	//壁のあるなしと重みをprintしてチェック
 //	printAllNodeExistence(&my_map);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser));
 
-	Accel(61.5, ExploreVelocity);
-	//shiftState(&my_mouse);
-//	shiftPos();
+	MaxParaRunTest();
 
-    //理想は、ゴールまで重み更新なしで、コマンドによるモータ制御のみ
+#if 0
+	printf("%u, %u, %u, %u, %u, %u\r\n", my_mouse.next.pos.x, my_mouse.next.pos.y, my_mouse.goal_lesser.x,   my_mouse.goal_larger.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.y);
+	Accel(61.5, ExploreVelocity);
+	printf("%u, %u, %u, %u, %u, %u\r\n", my_mouse.next.pos.x, my_mouse.next.pos.y, my_mouse.goal_lesser.x,   my_mouse.goal_larger.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.y);
 
     int cnt=0;
-
     while(! ((my_mouse.goal_lesser.x <= my_mouse.next.pos.x && my_mouse.next.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.next.pos.y && my_mouse.next.pos.y <= my_mouse.goal_larger.y)))
     {
         shiftState(&my_mouse);
@@ -1064,7 +1077,7 @@ void FastestRun()
         AddVelocity = 0;
         //ChangeLED(0);
         	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
-        	switch(my_mouse.next.dir%8)
+        	switch(my_mouse.now.dir%8)
         	{
         	case front:
         		//ただ直進
@@ -1114,11 +1127,8 @@ void FastestRun()
         //ChangeLED(cnt%7);
         // if(cnt == 5) break;
     }
-
-//    outputDataToFile(maze);
-
-	//fast_run( X_GOAL_LESSER, Y_GOAL_LESSER,X_GOAL_LARGER,Y_GOAL_LARGER, turn_mode,0x03);
-
+    printf("%u, %u, %u, %u, %u, %u\r\n", my_mouse.next.pos.x, my_mouse.next.pos.y, my_mouse.goal_lesser.x,   my_mouse.goal_larger.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.y);
+#endif
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
 	//終了合図
@@ -1126,7 +1136,7 @@ void FastestRun()
 
 	while(1)
 	{
-		printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",cnt, my_map.RawNode[0][1].weight);
+		printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",Num_Nodes, my_map.RawNode[0][1].weight);
 		printAllWeight(&my_map, &(my_mouse.now.pos));
 	}
 }
@@ -1853,8 +1863,8 @@ void TestIMU()
 
 
 
-			for(int i=0; i < 5000; i++) //0.007495 / 5000
-				printf("%d, %f\r\n",i, debugVL[i]); //-0.001331
+			for(int i=0; i < 5000; i++) //0.007495 / 5000;
+//				printf("%d, %f\r\n",i, debugVL[i]); //-0.001331
 			while(1)
 					{
 		}

@@ -21,8 +21,8 @@
 int timer1,timer8, t;
 int IT_mode;
 int velodebug_flag=0;
-float debugVL[8000]={0};
-float debugVR[8000] = {0};
+//float debugVL[8000]={0};
+//float debugVR[8000] = {0};
 int dbc = 0;
 
 int Control_Mode;
@@ -511,7 +511,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			{
 
 				Update_IMU(&AngularV, &Angle);
-				debugVL[timer1] = Angle;
+//				debugVL[timer1] = Angle;
 				timer1 += t;
 			}
 			else t = 0;
