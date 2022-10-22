@@ -1153,20 +1153,20 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-//	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
-//	{
-//		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
-//		{
-//			TargetAngularV = 0;
-//			AngularLeapsity = 0;
-//			AngularAcceleration = 0;
-//			TargetVelocity[BODY] = v_turn;
-//			ChangeLED(7);
-//		}
-//
-//	}
-//	else//なければ
-//	{
+	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
+	{
+		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		{
+			TargetAngularV = 0;
+			AngularLeapsity = 0;
+			AngularAcceleration = 0;
+			TargetVelocity[BODY] = v_turn;
+			ChangeLED(7);
+		}
+
+	}
+	else//なければ
+	{
 		while( now_pulse + pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				//velocity_ctrl_flag = 1;
@@ -1177,7 +1177,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 
 				////printf("直進1\r\n");
 		}
-//	}
+	}
 	now_angv = AngularV;
 
 	float start_angle = Angle;
@@ -1327,21 +1327,21 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
 	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-//	if (getFrontWall() == WALL/*前に壁があれば、*/)
-//	{
-//		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
-//		{
-//			TargetAngularV = 0;
-//			AngularLeapsity = 0;
-//			AngularAcceleration = 0;
-//			TargetVelocity[BODY] = v_turn;
-//
-//		}
-//
-//
-//	}
-//	else//なければ
-//	{
+	if (getFrontWall() == WALL/*前に壁があれば、*/)
+	{
+		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		{
+			TargetAngularV = 0;
+			AngularLeapsity = 0;
+			AngularAcceleration = 0;
+			TargetVelocity[BODY] = v_turn;
+
+		}
+
+
+	}
+	else//なければ
+	{
 		while( now_pulse + pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				//velocity_ctrl_flag = 1;
@@ -1351,7 +1351,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 
 				////printf("直進1\r\n");
 		}
-//	}
+	}
 
 	Control_Mode = NOT_CTRL_PID;
 	float start_angle = Angle;
@@ -1442,11 +1442,7 @@ void Accel(float add_distance, float explore_speed)
 	TargetAngularV = 0;
 	float additional_speed=0;
 	additional_speed = explore_speed - CurrentVelocity[BODY];
-	//printf("%f,%f,%f\r\n",additional_speed,explore_speed,CurrentVelocity[BODY]);
-	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
-	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
-	 //TotalPulse[BODY];
-//	HAL_Delay(1000);
+
 	Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
 //	WallWarn();
 	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
@@ -1511,26 +1507,8 @@ void Accel(float add_distance, float explore_speed)
 //	wall_cut = false;
 //	ChangeLED(0);
 	KeepPulse[BODY] += target_pulse;
-	KeepPulse[LEFT] += target_pulse/2;
-	KeepPulse[RIGHT] += target_pulse/2;
-	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
-//
-//	int target_pulse[2] = {
-//			(int)( (deg/360) * ROTATE_PULSE),
-//			(int)( (deg/360) * ROTATE_PULSE)
-//	};
-//	while( ( (abs(TIM3->CNT - INITIAL_PULSE)) <= target_pulse[LEFT] /*左が順*/) && ( (abs(TIM4->CNT - INITIAL_PULSE)) <= target_pulse[RIGHT] /*右が逆*/) )	//左回転
-//	{
-//		TargetAngularV = ang_accel;
-//	}
-//	InitPulse((int*)(&(TIM3->CNT)), INITIAL_PULSE);
-//	InitPulse((int*)(&(TIM4->CNT)), INITIAL_PULSE);
-//	ResetCounter();
-	//今の速度を取得。
-	//到達速度と今の速度、到達に要する距離から加速度を計算する。
-//	float a_start = T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * START_ACCEL_DISTANCE);
-//	float a= T1 * SEARCH_SPEED * SEARCH_SPEED /(2 * ACCE_DECE_DISTANCE);
-//	float a_curve = T1 * SEARCH_SPEED * SEARCH_SPEED * (90+TREAD_WIDTH)*(90+TREAD_WIDTH) /(2 * 2 * CURVE_DISTANCE*90*90);
+	KeepPulse[LEFT] += target_pulse*0.5f;
+	KeepPulse[RIGHT] += target_pulse*0.5f;
 }
 void Decel(float dec_distance, float end_speed)
 {
@@ -2024,9 +2002,11 @@ void GoBack()
 	Control_Mode = NOT_CTRL_PID;
 //	PIDChangeFlag(A_VELO_PID, 0);
 	Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+	my_mouse.now.car = (my_mouse.now.car + 2) %8;
 	//acc = AjustCenter();
 	Pos.Dir = right;
 	Rotate(90, 2*M_PI);
+	my_mouse.now.car = (my_mouse.now.car + 2) %8;
 	Control_Mode = A_VELO_PID;
 //	PIDChangeFlag(A_VELO_PID, 1);
 	Pos.Dir = back;
@@ -2039,7 +2019,24 @@ void GoBack()
 	HAL_Delay(200);
 
 	Accel(45, ExploreVelocity);
-	//ここまでで目標走行距離を完了する
+	//方角に合わせてxyどちらかに±1
+	switch(my_mouse.now.car%8)
+	{
+	case north:
+		my_mouse.now.pos.y ++;
+		break;
+	case east:
+		my_mouse.now.pos.x ++;
+		break;
+	case south:
+		my_mouse.now.pos.y --;
+		break;
+	case west:
+		my_mouse.now.pos.x --;
+		break;
+	default:
+		break;
+	}
 
 }
 

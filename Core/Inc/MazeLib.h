@@ -9,27 +9,12 @@
         //マスの中央に評価値を置くパターン
         //エッジに評価値を置くパターン
 
-// 壁の有無の管理
-    //複数パターン用意
-        //今まで通り、ビットフィールドで管理するパターン
-            //変数を呼ばず、このなかで変数を使用した条件判断を記述
-        //
 #ifndef MAZELIB_H_
 #define MAZELIB_H_
 
 #include<stdint-gcc.h>
 #include <stdbool.h>
 #include <stdio.h>
-//反対側書き込むのめんどくさい
-    //エッジに壁の有無と重みを持たせればよさそう。壁があったら重みは∞とか
-    //xyを訪れたときに、参照先をちょちょっと工夫
-        //壁の有無2ビット
-        //重み6ビット?いや、14ビット。32×32マスで最大1024の重み？
-        //1マスに16ビット= 2バイト. 2 * 4 * 32 * 32 = 8092バイト = 8kバイト
-// #define NUMBER_OF_SQUARES 32
-// #define GOAL_SIZE 3
-//ゴール座標は自分で設定する
-//読み込むときは、サイズを自分で設定しない。データから求める。
 
 #define NUMBER_OF_SQUARES_X 9
 #define NUMBER_OF_SQUARES_Y 9
@@ -37,8 +22,8 @@
 #define GOAL_SIZE_X 2
 #define GOAL_SIZE_Y 2
 
-#define GOAL_X 4
-#define GOAL_Y 4
+#define GOAL_X 6
+#define GOAL_Y 0
 
 #define __JUDGE_GOAL__(x,y) (( (GOAL_X <= x) && (x < GOAL_X + GOAL_SIZE_X)) && ((GOAL_Y <= y) && (y < GOAL_Y + GOAL_SIZE_Y)) )
 
@@ -79,25 +64,15 @@ typedef struct
 typedef struct {
 	uint8_t existence;
 	uint16_t weight; //64×64対応
-    //uint16_t pole       :2; //エッジに対して、柱は2つ. 柱の隣接壁予測に4パターン使う.計算時間とか、やり方がちょっと面倒. オプションにしよう.
-    _Bool draw;
+	_Bool draw;
     _Bool rc; //行か列かを見たい
     position pos;
-    //残り2ビットは工夫の余地を残す➡描画ように０１を保存するのと、既知区間かどうかの01保存
-}node;//8×3 + 16 + 1 × 2 = 42ビット = 5バイト+2ビット
-//typedef struct {
-//	_Bool rc;
-//	position pos;
-//	//ノードを選択した際に、要素番号のxyと行か列かをこの変数にコピーする
-//}node_pos;
-//node_pos my_node;
+}node;
+
 typedef struct {
     node RawNode[NUMBER_OF_SQUARES_X][NUMBER_OF_SQUARES_Y+1];
     node ColumnNode[NUMBER_OF_SQUARES_X+1][NUMBER_OF_SQUARES_Y];
-}maze_node;//42ビット * N*(N+1) * 2
-//N = 9, 90*4 = 360
-//N = 32, 32*33*2*42 = 88704ビット ≒ 11kByte
-
+}maze_node;
 //迷路の初期化
 void initMaze(maze_node *maze);
 void initWeight(maze_node *maze);
@@ -112,20 +87,10 @@ void printMatrix16ValueFromNode(maze_node *maze);
 
 //ノードの壁の有無
 void printSingleNode(maze_node *mn, uint8_t x, uint8_t y);
-void printAllNode(maze_node *mn);//外堀だけprintfせず、そのまま描画用データに。
-void printAllNodeExistence(maze_node *mn);//壁の存在
+void printAllNode(maze_node *mn);//外堀だけprintfせず、そのまま描画用データに
+void printAllNodeExistence(maze_node *mn);
 
 /* ----- 迷路データ管理 ここまで----- */
-//     //座標を指定して、4方向の有無を書き込む
-// //壁の有無を更新、drawとフラグを更新
-// void writeNodeInfo(wall_existence et);
-
-// //迷路の更新 : 現在のexistanceからweightを計算
-// void updateMaze();
-
-// void updateWallExistence(wall_existence *wet, cardinal car);
-
-
 
 /* ----- 探索者データ管理 ここから----- */
 
@@ -161,9 +126,7 @@ typedef enum{
 	backleft,
     left,
 	frontleft
-}direction; //8
-// 探索者の情報には2種類。MazeLibに関連したデータと、物理的な情報を考慮したデータ。
-    //まず前者を作る
+}direction;
 
 typedef struct
 {
@@ -182,19 +145,11 @@ typedef struct
     position goal_larger;
     uint8_t target_size; //目標エリアのサイズ
 
-    state now;  //現在座標、方角
-    state next; //
+    state now;
+    state next;
     state target;
 
-    state pass[32];  //今決まっている、ある地点からある地点までの経路。これはなくてもいい。既知区間走行に使えるかも
-    
-    //四方の壁の有無
-    
-    // 旋回のモード（重み計算に使用するかも）
-    // 状態ごとに構造体を作ってもいいかも
-
-    // 現在の目標座標
-    // 一つ次の座標
+    state pass[32];
     
 }profile;
 void printGoal(profile *prof);
@@ -224,33 +179,7 @@ void printProfile(profile *prof);
 void initState(state *log_st, int n, node *nd);
 void getRouteFastRun(state *log_st, state *now_st, int n);
 void printRoute(state *route, int n);
-// 探索者の持つ情報群...また別ファイルの方がいいかも. 迷路に関係ない情報も扱うときに
-typedef struct
-{
- 
-    
-}explorer;
 
-
-
-
-//
-//typedef enum{
-//    wait,
-//    accel,
-//    constant,
-//    decel
-//}motion_state;
-
-//typedef enum{
-//    pose_and_spin,
-//    slalom,
-//    diagonal, //角速度0, 加減速及び定速で直進。斜めに進む。
-//    straight
-//}turn_pattern;//次の座標への侵入パターン. 探索の時は、もう一つ先のノードまで見てストレートなら、加減速と単純な斜めを入れるとか？
-//探索は 新しい区画に入るときにマスに対して垂直水平に入って壁を判断する必要がある。既知区間は壁読みの処理が来ないようにする。。次の未知座標を仮の目標座標にして一気に進み、壁情報、マップの更新を遅らせる
-
-//最終的に、探索者が持つべき情報をすべてまとめた構造体
 
 //実環境処理用に、グローバルなマップデータとプロフィールを作成
 profile my_mouse;

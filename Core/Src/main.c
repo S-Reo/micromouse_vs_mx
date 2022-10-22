@@ -172,7 +172,6 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  //バッ
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -216,71 +215,12 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  //モータ確
-//  Motor_PWM_Start();
-//  while(1)
-//  {
-//	  Motor_Switch(500, 500);
-//  }
-  //赤外線LEDの消費電流テス
-  //何も無70mA
-  //これまで
-  //101mAになっ
-
-  //周波数を上げ
-
-  //周波数を下げ
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
   //cpploop();
-
-#if 0
-  printf("test\r\n");
-  ChangeLED(7);
-  HAL_Delay(1000);
-  IT_mode = WRITINGFREE;
-  //エンコー
-  EncoderStart();
-  //モータタイ
-  Motor_PWM_Start();
-  //割込み
-  HAL_TIM_Base_Start_IT(&htim1);
-
-  HAL_GPIO_WritePin(GPIO_LEFT, GPIO_L_PIN_NUM, GPIO_PIN_SET); //A2が左SET:1で正転
-  HAL_GPIO_WritePin(GPIO_RIGHT, GPIO_R_PIN_NUM, GPIO_PIN_RESET);
-  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 1050/4); //duty
-  	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 1050/4);
-  	while(data[1999] == 0)
-  	{
-
-  	}
-  	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-  	__HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, 0);
-  	HAL_TIM_Base_Stop_IT(&htim1);
-  //t = 1;
-  while(1)
-  {
-
-		  for(int i=0; i < 2000; i++)
-		  {
-			  printf("%d, %f\r\n",i,data[i]);
-			  HAL_Delay(1);
-		  }
-	  HAL_Delay(10000);
-
-  }
-
-#endif
-
-//  printf("フラ?��?シュ確認\r\n");
-//  Simu();
-//  printf("終�?\r\n");
-
-
-
 
   while (1)
   {
