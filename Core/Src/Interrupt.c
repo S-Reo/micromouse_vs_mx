@@ -25,7 +25,6 @@ int velodebug_flag=0;
 //float debugVR[8000] = {0};
 int dbc = 0;
 
-int Control_Mode;
 	//float velodebugL[1000],velodebugR[1000];
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
@@ -35,7 +34,8 @@ const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんち
 
 void initInterruptValue()
 {
-	Control_Mode = A_VELO_PID;
+//	Control_Mode = A_VELO_PID;
+	Pid[A_VELO_PID].flag = 1;
 	IT_mode = EXPLORE;
 
 	timer1 = 0;
@@ -167,14 +167,14 @@ void ControlMotor()
 	out += PIDControl( L_WALL_PID,  Photo[SL], TargetPhoto[SL]);
 	out += PIDControl( R_WALL_PID, TargetPhoto[SR], Photo[SR]);
 	//TargetAngularV = (float)out*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-	if( Pos.Dir == front)
-	{
-		TargetAngularV = out*0.001;
-	}
-	else
-	{
-		TargetAngularV += AngularAcceleration;
-	}
+//	if( Pos.Dir == front)
+//	{
+//		TargetAngularV = out*0.001;
+//	}
+//	else
+//	{
+//		TargetAngularV += AngularAcceleration;
+//	}
 	TargetVelocity[BODY] += Acceleration;
 	//TargetAngularV += AngularAcceleration;
 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5 );
@@ -265,42 +265,44 @@ void Explore_IT()
 			//ちょっと下がった時にセンサ値があがったかどうかで詰めすぎだったかどうか判定し、そのまま目標値になるように動く
 
 	//switch文でどれかひとつに絞らせたい
-	static int keep_mode = A_VELO_PID;
+//	static int keep_mode = A_VELO_PID;
 
-	//0から違うモードに変わるとき、前のモードの値をリセットしておく
-	if( Control_Mode != keep_mode){
-		PIDReset(keep_mode);
-//		PIDChangeFlag(, 0);
-		Pid[keep_mode].flag = 0;
-	}
-	Pid[Control_Mode].flag = 1;
-	keep_mode = Control_Mode;
+//	//0から違うモードに変わるとき、前のモードの値をリセットしておく
+//	if( Control_Mode != keep_mode){
+//		PIDReset(keep_mode);
+//		Pid[keep_mode].flag = 0;
+//	}
+//	Pid[Control_Mode].flag = 1;
+//	keep_mode = Control_Mode;
 
 ////	keep_mode = Control_Mode;
-	int wall_d =0,wall_l =0,wall_r =0;
+	int wall_d =0,wall_l =0,wall_r =0, wall_f=0;
 		int ang_out=0;
-#if 0
+#if 1
 
 				if( Pid[A_VELO_PID].flag == 1 )
 				{
 					ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
 					TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+//					ChangeLED(2);
 				}
 				else if( Pid[D_WALL_PID].flag == 1 )
 				{
 					wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
 					TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+//					ChangeLED(5);
 				}
 				else if( Pid[L_WALL_PID].flag == 1 )
 				{
 					wall_l = PIDControl( L_WALL_PID,  Photo[SL], TargetPhoto[SL]);
 					TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
-
+//					ChangeLED(4);
 				}
 				else if( Pid[R_WALL_PID].flag == 1 )
 				{
 					wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
 					TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+//					ChangeLED(1);
 				}
 				else if( Pid[F_WALL_PID].flag == 1)
 				{
@@ -308,31 +310,36 @@ void Explore_IT()
 					TargetVelocity[BODY] = (float)wall_f*0.001;
 					ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
 					TargetAngularV = (float)ang_out;
-
+//					ChangeLED(7);
 					//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
 				}
-#endif
+#else
 	switch(Control_Mode)
 	{
 	case A_VELO_PID:
 		ang_out = PIDControl( Control_Mode,  TargetAngle, Angle);
 		TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。制御方法として有効なのがわかった。
+		ChangeLED(7);
 		break;
 	case D_WALL_PID:
-//		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
-//		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		ChangeLED(5);
 		break;
 	case L_WALL_PID:
-//		wall_l = PIDControl( Control_Mode,  Photo[SL], TargetPhoto[SL]);
-//		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		wall_l = PIDControl( Control_Mode,  Photo[SL], TargetPhoto[SL]);
+		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		ChangeLED(4);
 		break;
 	case R_WALL_PID :
-//		wall_r = PIDControl( Control_Mode,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
-//		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		wall_r = PIDControl( Control_Mode,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
+		ChangeLED(1);
 		break;
 	case F_WALL_PID : //前壁補正のための制御. ミックスはよくない.
-//		wall_f = PIDControl( Control_Mode,   4000, (	(Photo[FR]+Photo[FL])));
-//		TargetVelocity[BODY] = (float)wall_f*0.001;
+		wall_f = PIDControl( Control_Mode,   3500, (	(Photo[FR]+Photo[FL])));
+		TargetVelocity[BODY] = (float)wall_f*0.001;
+		ChangeLED(2);
 
 		break;
 	case NOT_CTRL_PID:
@@ -340,7 +347,7 @@ void Explore_IT()
 	default :
 		break;
 	}
-
+#endif
 //		if( Pos.Dir == front || Pos.Act == compensate || Pos.Act == rotate) //この判定は無いほうがいい. 別のところでいじればいい.割込みは最低限
 //		{
 //			if( Pid[A_VELO_PID].flag == 1 )

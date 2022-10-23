@@ -221,7 +221,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   //cpploop();
+  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
+  		  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
 
+  		  PIDSetGain(A_VELO_PID, 14.6,0,0);//P=14.6
+  		  PIDSetGain(F_WALL_PID, 14.6,0,0);
+  		  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
+  		  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+  		  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
   while (1)
   {
 	  switch( startup_mode )
@@ -250,8 +257,8 @@ int main(void)
 		  FastestRun();
 		  break;
 	  case IMU_TEST:
-		  TestIMU();
-//		  GainTestAVelo();
+//		  TestIMU();
+		  GainTestAVelo();
 		  break;
 	  case EXPLORE:
 //		  FlashWriteTest();

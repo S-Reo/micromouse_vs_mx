@@ -144,7 +144,7 @@ extern int L_motor, R_motor;
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 
-#define TIRE_DEAMETER 21.1f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
+#define TIRE_DEAMETER 20.55f//21.1f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
 #define TREAD_WIDTH 34.4f //37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
@@ -169,25 +169,9 @@ extern int L_motor, R_motor;
 #define SHINCHI_ROTATE_PULSE (TREAD_WIDTH * 2 * PI/4)/MM_PER_PULSE
 #define CURVE_KLOTHOIDE_PULSE CURVE_DISTANCE/MM_PER_PULSE
 #define WALL_JUDGE_PULSE 25/MM_PER_PULSE
-//
-////歩数マップデータ
-//uint8_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
-//uint8_t x=0, y=0;//座標
 
-typedef struct{
-    uint8_t north:2;
-    uint8_t east:2;
-    uint8_t south:2;
-    uint8_t west:2;
-    uint8_t hosu;
-}t_wall;
 
 //インクルード先で宣言
-extern t_wall Wall [NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
-
-extern uint16_t walk_map[NUMBER_OF_SQUARES][NUMBER_OF_SQUARES];
-
-extern uint16_t walk_log[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES];
 //方角データ
 //typedef enum{
 //	north = 0,
@@ -268,28 +252,7 @@ extern goal_edge goal_edge_num;
 //時間系
 //探索の状態遷移用の関数ポインタテーブル→やっぱり状態毎に処理を変えるようにしないと、汚くなっていく。
 //どの座標にどの向きで入っているか。どんなアクションをしているのか→新しい座標へ移動する、今向いている向きはどこか、壁センサはどうか、次の動きは何か。
-typedef struct Position
-{
-	uint8_t X;
-	uint8_t Y;
-	uint8_t TargetX;
-	uint8_t TargetY;
-	direction Dir;	//前後左右
-	cardinal Car;	//東西南北
-	action Act;
-	wall_safety WallSaf;
-	uint8_t NextX;
-	uint8_t NextY;
-	direction NextDir;	//前後左右
-    cardinal NextCar;	//東西南北
-    action NextAct;
-	float sl;
-	float sr;
-	float fl;
-	float fr;
 
-}posit;
-extern posit Pos;	//現在と、目標
 //void WritingFree();
 
 typedef struct Slalom

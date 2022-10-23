@@ -21,7 +21,6 @@ extern int velodebug_flag;
 //extern float debugVL[8000];
 //extern float debugVR[8000];
 extern int dbc;
-extern int Control_Mode;
 extern const float convert_to_velocity;
 extern const float convert_to_angularv;
 

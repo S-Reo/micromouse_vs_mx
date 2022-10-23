@@ -174,19 +174,19 @@ void MotionBackend()
 
 void InitPosition()
 {
-	Pos.X = 0;
-	Pos.Y = 0;
-	Pos.Car = north;
-	Pos.Dir = front;
-	Pos.Act = Wait;
-	Pos.WallSaf = wall_warn;//どっちにするか
+//	Pos.X = 0;
+//	Pos.Y = 0;
+//	Pos.Car = north;
+//	Pos.Dir = front;
+//	Pos.Act = Wait;
+//	Pos.WallSaf = wall_warn;//どっちにするか
 
 }
 
 int GetWallCtrlDirection()
 {
 	//新ライブラリ用に変更
-	switch(my_mouse.now.car)
+	switch(my_mouse.now.car%8)
 	{
 	case north:
 		if(my_mouse.now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
@@ -288,38 +288,38 @@ int GetWallCtrlDirection()
 
 void ChangeCardinal()
 {
-	switch(Pos.Dir)
-	{
-	case right :
-		Pos.Car ++;
-		break;
-	case left :
-		Pos.Car --;
-		break;
-	case back:
-		Pos.Car += 2;
-		break;
-	default:
-		break;
-	}
+//	switch(Pos.Dir)
+//	{
+//	case right :
+//		Pos.Car ++;
+//		break;
+//	case left :
+//		Pos.Car --;
+//		break;
+//	case back:
+//		Pos.Car += 2;
+//		break;
+//	default:
+//		break;
+//	}
 
 }
 
 void UpdatePosition(uint8_t x, uint8_t y, cardinal car, direction dir, wall_safety safe_or_warn)
 {
-	Pos.X = x;
-	Pos.Y = y;
-	Pos.Car = car;
-	Pos.Dir = dir;
-	Pos.WallSaf = safe_or_warn;
+//	Pos.X = x;
+//	Pos.Y = y;
+//	Pos.Car = car;
+//	Pos.Dir = dir;
+//	Pos.WallSaf = safe_or_warn;
 }
 void WallSafe()
 {
-	Pos.WallSaf = wall_safe;
+//	Pos.WallSaf = wall_safe;
 }
 void WallWarn()
 {
-	Pos.WallSaf = wall_warn;
+//	Pos.WallSaf = wall_warn;
 }
 //壁のステータス変更用のファイル
 
@@ -744,7 +744,7 @@ void RotateDecel(float deg, float rotate_ang_v)
 }
 void RotateOld(float deg, float ang_accel)
 {
-	Pos.Act = rotate;
+//	Pos.Act = rotate;
 	//Rotate(90, 0.05);
 
 	//符号アリなので、角度でマイナス入れると今は動作がおかしくなる。2/21
@@ -846,7 +846,8 @@ void Rotate(float deg, float ang_v)
 //	WallWarn();
 //	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
 	TargetAngularV = 0;
-
+//	Control_Mode = NOT_CTRL_PID;
+	Pid[A_VELO_PID].flag = 0;
 	//角度制御切る
 
 	//rotate_ang_v - AngularV;
@@ -1014,7 +1015,7 @@ void Rotate(float deg, float ang_v)
 
 void RotateTest(float deg)
 {
-	Pos.Act = rotate;
+//	Pos.Act = rotate;
 	WallWarn();
 	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
 	TargetAngularV = 0;
@@ -1064,7 +1065,7 @@ void back_calib()
 int getFrontWall()
 {
 
-	switch(my_mouse.now.car)//方角に合わせて、
+	switch(my_mouse.now.car%8)//方角に合わせて、
 	{
 
 	case north:
@@ -1126,8 +1127,9 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 {
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
-	Pos.Act = slalom;
-	Control_Mode = A_VELO_PID;
+//	Pos.Act = slalom;
+//	Control_Mode = A_VELO_PID;
+	Pid[A_VELO_PID].flag = 1;
 //	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
 	//事前に決めておくものはここで定義
@@ -1155,7 +1157,7 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
 	{
-		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
@@ -1181,7 +1183,8 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	now_angv = AngularV;
 
 	float start_angle = Angle;
-	Control_Mode = NOT_CTRL_PID;
+//	Control_Mode = NOT_CTRL_PID;
+	Pid[A_VELO_PID].flag = 0;
 	while(start_angle + ang1 > Angle)
 	{
 
@@ -1299,7 +1302,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 {
 	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
 	//最初の一回で現在移動量をkeepする。目標移動量を足す
-	Pos.Act = slalom;
+
 
 //	ControlWall();
 	//現在移動量と比較して移動しきっていれば終了
@@ -1311,7 +1314,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//移動しきっていなければ、現在の状態と目標値の状態を引数として目標値を更新する
 
 	//→ 前距離後距離を加速時の目標距離に反映すればいい
-	Control_Mode = A_VELO_PID;
+//	Control_Mode = A_VELO_PID;
+	Pid[A_VELO_PID].flag = 1;
 	//ここの値コピーとその他計算を事前に行う
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
 	float pre = Sla.Pre;         //スラローム前距離
@@ -1329,7 +1333,7 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall() == WALL/*前に壁があれば、*/)
 	{
-		while(Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
@@ -1353,7 +1357,8 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 		}
 	}
 
-	Control_Mode = NOT_CTRL_PID;
+//	Control_Mode = NOT_CTRL_PID;
+	Pid[A_VELO_PID].flag = 0;
 	float start_angle = Angle;
 	while(start_angle - ang1 < Angle)
 	{
@@ -1440,21 +1445,21 @@ void Accel(float add_distance, float explore_speed)
 //	Pos.Act = accel;
 //	ControlWall();
 	TargetAngularV = 0;
+#if 0
 	float additional_speed=0;
 	additional_speed = explore_speed - CurrentVelocity[BODY];
 
 	Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
 //	WallWarn();
 	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
+#else
+	Acceleration = 2.89000f;
+#endif
 	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
-	//printf("target_pulse : %d",target_pulse);
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
-	//90mmでうまくやるには0から60000カウントまで
-	//printf("");
+
 //	_Bool wall_cut = false;
 	//ChangeLED(1);
-
+	Pid[A_VELO_PID].flag = 1;
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
 		//printf("%d, %d, %d, %f, %f, %d, %f, %f, %d, %f, %f\r\n", TotalPulse[BODY], target_pulse, KeepPulse[BODY], TargetVelocity[BODY], Acceleration, VelocityLeftOut ,TargetVelocity[LEFT], CurrentVelocity[LEFT], Pid[L_VELO_PID].out, Pid[L_VELO_PID].KP,Pid[L_VELO_PID].KI);
@@ -1469,6 +1474,11 @@ void Accel(float add_distance, float explore_speed)
 			//UpdateWalkMap();
 			//次のアクションを渡すのは別のところで。
 			Calc = 1;
+		}
+		if(TargetVelocity[BODY] > explore_speed)
+		{
+			Acceleration = 0;
+			TargetVelocity[BODY] = explore_speed;
 		}
 		//壁切れも一旦なし
 //		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
@@ -1514,13 +1524,18 @@ void Decel(float dec_distance, float end_speed)
 {
 //	Pos.Act = decel;
 	float down_speed=0;
+#if 0
 	down_speed = CurrentVelocity[BODY] - end_speed; //end_speedが0かそうでないか
 	//速度減分 = 到達したい探索速度 - 現在の速度
 	//これなら現在速度が探索速度に追いついているときは加速度0にできる。
 	Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
 	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
 //	WallSafe();
+
 //	ControlWall();
+#else
+	Acceleration = -2.89;
+#endif
 	//ここより下を分けて書くべきかはあとで考える
 	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
 
@@ -1550,18 +1565,21 @@ void Decel(float dec_distance, float end_speed)
 //		}
 		//式の順番はあとで前後するかも
 		//ControlWall();
-		if(TargetVelocity[BODY] <= end_speed) //
-		{
-//			ChangeLED(7);
-			TargetVelocity[BODY] = end_speed;
-			Acceleration = 0;
-			TargetAngularV = 0;
-			AngularAcceleration = 0;
-			static int k = 1;
-//
-//			ChangeLED(k);
-//			k++;
-			break;
+		if(end_speed == 0){
+			if(TargetVelocity[BODY] <= 90){
+				TargetVelocity[BODY] = 90;//end_speed;
+				Acceleration = 0;
+				TargetAngularV = 0;
+				AngularAcceleration = 0;
+			}
+		}
+		else if(end_speed != 0){
+			if(TargetVelocity[BODY] <= end_speed){
+				TargetVelocity[BODY] = end_speed;//90;//end_speed;
+				Acceleration = 0;
+				TargetAngularV = 0;
+				AngularAcceleration = 0;
+			}
 		}
 		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] )
 		{
@@ -1571,7 +1589,8 @@ void Decel(float dec_distance, float end_speed)
 //			PIDChangeFlag(R_WALL_PID, 0);
 //			PIDChangeFlag(D_WALL_PID, 0);
 //			PIDChangeFlag( A_VELO_PID , 1);
-			Control_Mode = A_VELO_PID;
+//			Control_Mode = A_VELO_PID;
+			Pid[A_VELO_PID].flag = 1;
 		}
 	}
 	TargetVelocity[BODY] = end_speed;
@@ -1580,8 +1599,8 @@ void Decel(float dec_distance, float end_speed)
 	AngularAcceleration = 0;
 	//ChangeLED(2);
 	KeepPulse[BODY] += target_pulse;
-	KeepPulse[LEFT] += target_pulse/2;
-	KeepPulse[RIGHT] += target_pulse/2;
+	KeepPulse[LEFT] += target_pulse*0.5f;
+	KeepPulse[RIGHT] += target_pulse*0.5f;
 
 
 }
@@ -1618,7 +1637,6 @@ void Compensate()
 {
 	//誤差補正する
 	//Pos.を考え中
-	Pos.Act = compensate;
 #if 0
 	//前壁補正
 	TargetPhoto[FL];
@@ -1640,89 +1658,182 @@ float AjustCenter(){
 	PIDChangeFlag(R_WALL_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag( A_VELO_PID, 0);
-	Pos.Act = compensate;
 	int wall_ctrl = GetWallCtrlDirection();
-	PIDChangeFlag(wall_ctrl, 1);
+	if(wall_ctrl == 0)
+		ChangeLED(7);
+	else ChangeLED(0);
+//	Control_Mode = NOT_CTRL_PID;
 	//HAL_Delay(100);
-	switch(Pos.Car%4)
+//	float photo_threshold[2]=
+//	{
+//			3000,
+//			4000
+//	};
+	switch(my_mouse.now.car%8)
 	{
 	case north: //use west or north wall
-			if (Wall[Pos.X][Pos.Y].north == wall) //前に壁があれば前で調整
+			if (my_mouse.now.wall.north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				Calib(-10);
+//				Control_Mode = wall_ctrl;
+				PIDChangeFlag(wall_ctrl, 1);
+				while( !( (3000 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 				{
-					ChangeLED(Pid[F_WALL_PID].flag);
+//					ChangeLED(Pid[F_WALL_PID].flag);
 				}
 
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
 
 			}
-			else if (Wall[Pos.X][Pos.Y].south == wall) //後ろに壁があるときはバック
+			else if (my_mouse.now.wall.south == wall) //後ろに壁があるときはバック
 			{
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();	//後ろ壁調整
 
 				Pid[wall_ctrl].flag = 0;
 				TargetAngularV = 0;
+				Angle = TargetAngle;
 				return 61.5;
 			}
 		break;
 	case east:
-			if (Wall[Pos.X][Pos.Y].east == wall) //前に壁があれば前で調整
+			if (my_mouse.now.wall.east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				Calib(-10);
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
+				while( !(( (3000 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
-					ChangeLED(Pid[F_WALL_PID].flag);
+//					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (Wall[Pos.X][Pos.Y].west == wall) //後ろに壁があるときはバック
+			else if (my_mouse.now.wall.west == wall) //後ろに壁があるときはバック
 			{
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
 				Pid[wall_ctrl].flag = 0;
 				TargetAngularV = 0;
+				Angle = TargetAngle;
 				return 61.5;
 			}
 		break;
 	case south:
-			if (Wall[Pos.X][Pos.Y].south == wall) //前に壁があれば前で調整
+			if (my_mouse.now.wall.south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				Calib(-10);
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
+				while( !((3000< Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
-						ChangeLED(Pid[F_WALL_PID].flag);
+//						ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (Wall[Pos.X][Pos.Y].north == wall) //後ろに壁があるときはバック
+			else if (my_mouse.now.wall.north == wall) //後ろに壁があるときはバック
 			{
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
 				Pid[wall_ctrl].flag = 0;
 				TargetAngularV = 0;
+				Angle = TargetAngle;
 				return 61.5;
 			}
 		break;
 	case west:
-			if (Wall[Pos.X][Pos.Y].west == wall) //前に壁があれば前で調整
+			if (my_mouse.now.wall.west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				while( !(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				Calib(-10);
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
+				while( !((3000 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
-					ChangeLED(Pid[F_WALL_PID].flag);
+//					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (Wall[Pos.X][Pos.Y].east == wall) //後ろに壁があるときはバック
+			else if (my_mouse.now.wall.east == wall) //後ろに壁があるときはバック
 			{
+//				Control_Mode = wall_ctrl;
+//				Pid[Control_Mode].flag = 1;
+				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
 				Pid[wall_ctrl].flag = 0;
 				TargetAngularV = 0;
+				Angle = TargetAngle;
 				return 61.5;
 			}
 	default:
 		break;
 	}
+//	Control_Mode = NOT_CTRL_PID;
 	Pid[wall_ctrl].flag = 0;
 	TargetAngularV = 0;
 	return 45;
+}
+int GetWallCompensateDir()
+{
+	switch(my_mouse.now.car%8)
+			{
+			case north:
+
+				if(my_mouse.now.wall.east == wall)
+				{
+					return R_WALL_PID;
+				}
+				else if(my_mouse.now.wall.west == wall)
+				{
+					return L_WALL_PID;
+				}
+				break;
+
+			case east:
+				if(my_mouse.now.wall.north == wall)
+				{
+					return L_WALL_PID;
+				}
+				else if(my_mouse.now.wall.south == wall)
+				{
+					return R_WALL_PID;
+				}
+				break;
+			case south:
+				if(my_mouse.now.wall.east == wall)
+				{
+					return L_WALL_PID;
+				}
+				else if(my_mouse.now.wall.west == wall)
+				{
+					return R_WALL_PID;
+				}
+				break;
+			case west:
+				if ( my_mouse.now.wall.north == wall )
+				{
+					return R_WALL_PID;
+				}
+				else if ( my_mouse.now.wall.south == wall )
+				{
+					return L_WALL_PID;
+				}
+				break;
+
+			default:
+				//斜め方向
+				return N_WALL_PID;
+				break;
+			}
+	return N_WALL_PID;
 }
 void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 {
@@ -1731,7 +1842,8 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 	//v = v0 + at
 	//x = v0t + 0.5*at^2
 	//壁の有無をすべて知っている区間は更新する必要がないので一気に加速させて座標を二つ更新
-	Control_Mode = A_VELO_PID;
+//	Control_Mode = A_VELO_PID;
+	Pid[A_VELO_PID].flag = 1;
 	//加減速時は角度制御だけにしておいてあとで困ったら追加
 	int target_pulse = (int)(2*move_distance/MM_PER_PULSE);
 	if(accel_or_decel == 1) //加速するとき
@@ -1817,9 +1929,14 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 //				}//少しの間壁を見て制御
 //			}
 			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
-				Control_Mode = A_VELO_PID;
+//				Control_Mode = A_VELO_PID;
+				Pid[A_VELO_PID].flag = 1;
+				Pid[ctrl_mode].flag = 0;
 			}
-			else Control_Mode = ctrl_mode;//壁見る
+			else {
+				Pid[A_VELO_PID].flag = 0;
+				Pid[ctrl_mode].flag = 1;//壁見る
+			}
 			//ControlWall();
 			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
 			//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
@@ -1841,7 +1958,8 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 	//			Acceleration = 0;
 	//		}
 		}
-		Control_Mode = A_VELO_PID;
+		Pid[A_VELO_PID].flag = 1;
+		Pid[ctrl_mode].flag = 0;//壁見る
 		wall_cut = false;
 		Acceleration = 0;
 		KeepPulse[BODY] += target_pulse;
@@ -1875,7 +1993,8 @@ void TurnRight(char mode)
 		EmitterOFF();
 //		Pid[Control_Mode].flag = 0;
 //		PIDReset(Control_Mode);
-		Control_Mode = NOT_CTRL_PID;
+//		Control_Mode = NOT_CTRL_PID;
+		Pid[A_VELO_PID].flag = 0;
 //		Pid[Control_Mode].flag = 1;
 
 		//二回目の減速ではマップが完全におかし
@@ -1906,7 +2025,8 @@ void TurnRight(char mode)
 
 //		PIDChangeFlag( A_VELO_PID , 1);
 
-		Control_Mode = A_VELO_PID; //ゴールを破壊してるのはこれ
+//		Control_Mode = A_VELO_PID; //ゴールを破壊してるのはこれ
+		Pid[A_VELO_PID].flag = 1;
 //							static int cc = 0;
 //									if(cc == 0)//東を向いている状態での更新がおかしい
 //												{
@@ -1954,7 +2074,8 @@ void TurnLeft(char mode)
 		//AjustCenter();
 		EmitterOFF();
 //		PIDChangeFlag(A_VELO_PID, 0);
-		Control_Mode = NOT_CTRL_PID;
+//		Control_Mode = NOT_CTRL_PID;
+		Pid[A_VELO_PID].flag = 0;
 		Rotate( 90 , -2*M_PI);//-1.5
 		my_mouse.now.car -= 2;
 		//RotateTest(-90);
@@ -1965,7 +2086,8 @@ void TurnLeft(char mode)
 		HAL_Delay(100);
 //		float acc = AjustCenter();
 		HAL_Delay(100);
-		Control_Mode = A_VELO_PID;
+//		Control_Mode = A_VELO_PID;
+		Pid[A_VELO_PID].flag = 1;
 //		PIDChangeFlag( A_VELO_PID , 1);
 		Accel(45, ExploreVelocity);
 		break;
@@ -1982,7 +2104,7 @@ void GoBack()
 {
 	//減速して
 	Decel(45, 0);
-	//float acc = AjustCenter();
+	float acc = AjustCenter();
 	WaitStopAndReset();
 //	ChangeLED(5);
 
@@ -1991,12 +2113,36 @@ void GoBack()
 	//止まって
 	//PID制御で壁との距離を調整
 	//旋回
-#if 0
-	EmitterOFF();
-
-	Rotate(180, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
-	EmitterON();
-
+#if 1
+//	Control_Mode = NOT_CTRL_PID;
+	int wall_comp = GetWallCompensateDir();
+		//右か左かそれ以外か
+		if(wall_comp == L_WALL_PID)
+		{
+			Rotate(90, -2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+			my_mouse.now.car = (my_mouse.now.car - 2) %8;
+			acc = AjustCenter();
+//			Pos.Dir = left;
+			Rotate(90, -2*M_PI);
+			my_mouse.now.car = (my_mouse.now.car - 2) %8;
+//			Pos.Dir = back;
+		}
+		else if(wall_comp == R_WALL_PID)
+		{
+			Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+			my_mouse.now.car = (my_mouse.now.car + 2) %8;
+			acc = AjustCenter();
+//			Pos.Dir = right;
+			Rotate(90, 2*M_PI);
+			my_mouse.now.car = (my_mouse.now.car + 2) %8;
+//			Pos.Dir = back;
+		}
+		else if(wall_comp == N_WALL_PID)
+		{
+			Rotate(180, 2*M_PI);
+			my_mouse.now.car = (my_mouse.now.car + 2) %8;
+		}
+//		Control_Mode = A_VELO_PID;
 #else
 	Pos.Dir = right;
 	Control_Mode = NOT_CTRL_PID;
@@ -2013,12 +2159,12 @@ void GoBack()
 
 #endif
 
-	//acc = AjustCenter();
-//	/Angle = TargetAngle;
+
+	acc = AjustCenter();
 
 	HAL_Delay(200);
 
-	Accel(45, ExploreVelocity);
+	Accel(acc, ExploreVelocity);
 	//方角に合わせてxyどちらかに±1
 	switch(my_mouse.now.car%8)
 	{
@@ -2038,103 +2184,4 @@ void GoBack()
 		break;
 	}
 
-}
-
-void changeDirection()
-{
-	//停止状態から、次の座標がわかっているときに使う
-	//次に向かうべき座標と今の座標から、向くべき方向に回転する（停止状態からの挙動）
-		//差はxyが±どちらかに1違うだけ
-
-	if(Pos.X + 1 == Pos.NextX)
-	{
-		Pos.NextCar = east;
-	}
-	else if(Pos.X - 1 == Pos.NextX)
-	{
-		Pos.NextCar = west;
-	}
-	else if(Pos.Y + 1 == Pos.NextY)
-	{
-		Pos.NextCar = north;
-	}
-	else if(Pos.Y - 1 == Pos.NextY)
-	{
-		Pos.NextCar = south;
-	}
-
-}
-void Aim()
-{	//次の座標の方向を向く
-
-	//次の座標と現在の座標から向くべき方角を取得
-	changeDirection();
-
-	//次に向くべき方角と今の方角のギャップを埋める旋回をする
-	int now = Pos.Car % 4;
-	int next = Pos.NextCar % 4;
-
-	//差が正なら右回転
-	switch(next-now)
-	{
-	case 0:
-		break;
-	case 1:
-		Pos.Dir = right;
-		Rotate( 90 , 2*M_PI);
-		break;
-	case -1:
-		Pos.Dir = left;
-		Rotate( 90 , -2*M_PI);
-		break;
-	case 2:
-		Pos.Dir = back;
-		Rotate( 180 , 2*M_PI);
-		break;
-	case -2:
-		Pos.Dir = back;
-		Rotate( 180 , -2*M_PI);
-		break;
-	default:
-		break;
-	}
-	Pos.Car = Pos.NextCar;
-}
-//戻り値でdirectionを返す関数を作る→探索方法によってどう返すか変わる。
-//direction SelectDirection()
-//{
-//
-//}
-//進行方向決定の処理をどうするかで書き方が変わる。フラグを使うとか。
- void SelectAction(char turn_mode)	//前後左右であらわす
-{
-	//現在の座標から次の座標に行くまでの処理を一つのアクションとする
-	switch(Pos.Dir%4) //条件を増やす場合は割る数字に注意
-	{
-	//直進
-	case front:
-		//直進flagオン
-		//PIDChangeFlag( A_VELO_PID, 1);
-		AddVelocity = 0;
-		GoStraight(90, ExploreVelocity, 0);
-
-		break;
-	//右方向
-	case right:	//左右の違いは目標値がそれぞれ入れ替わるだけだから、上手く書けば一つの関数でできる
-		//スラロームターンと減速プラスターンetc
-		TurnRight(turn_mode);
-		break;
-	//左方向
-	case left:
-		TurnLeft(turn_mode);
-		break;
-	case back:
-		GoBack();	//Uターン
-		break;
-
-
-	default :
-		break;
-
-	}
 }

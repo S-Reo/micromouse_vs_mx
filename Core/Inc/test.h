@@ -16,4 +16,5 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode);
 void getPathNode(maze_node *my_maze);
 void getPathAction();
 void MaxParaRunTest();
+void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed);
 #endif /* INC_TEST_H_ */
