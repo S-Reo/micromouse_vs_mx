@@ -41,7 +41,6 @@ void initInterruptValue();
 //
 //extern Flag flag;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-void UpdatePhotoData();
 
 
 

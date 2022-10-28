@@ -4,14 +4,9 @@
  *  Created on: Feb 17, 2022
  *      Author: leopi
  */
-#include <action.h>
+
 #include "MicroMouse.h"
 #include "Mode.h"
-
-#include <stdio.h>
-
-#include "PID_Control.h"
-#include "Convert.h"
 
 #include "IEH2_4096.h"
 #include "ADC.h"
@@ -19,16 +14,26 @@
 #include "IR_Emitter.h"
 #include "Motor_Driver.h"
 #include "ICM_20648.h"
-#include "UI.h"
-#include "Map.h"
-#include "Search.h"
 #include "Flash.h"
-#include "Interrupt.h"
+
+
+#include "UI.h"
+#include "PID_Control.h"
+#include "Convert.h"
 #include "Debug.h"
 
+#include "Interrupt.h"
+#include "action.h"
 #include "MazeLib.h"
 #include "test.h"
+#include "Record.h"
+
 #include <main.h>
+#include <stdio.h>
+//実環境処理用に、グローバルなマップデータとプロフィールを作成
+profile my_mouse;
+maze_node my_map;
+
 //新しいライブラリを使った関数を書く
 //ハードウェアと一緒に行う初期化
 void initSearch()
@@ -173,7 +178,6 @@ void Debug()
 {
 	//テストする
 	InitExplore();
-	InitPosition();
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -205,8 +209,6 @@ void GainTestLWall()
 {
 	IT_mode = EXPLORE;
 	InitExplore();
-	InitPosition();
-	wall_init();
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -229,7 +231,6 @@ void GainTestRWall()
 {
 	IT_mode = EXPLORE;
 	InitExplore();
-	InitPosition();
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -253,7 +254,6 @@ void GainTestDWall()
 {
 	IT_mode = EXPLORE;
 	InitExplore();
-	InitPosition();
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -278,7 +278,6 @@ void GainTestAVelo()
 {
 	IT_mode = EXPLORE;
 	InitExplore();
-	InitPosition();
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -308,7 +307,7 @@ void WritingFree()
 
 	printf("3\r\n");
 
-	InitPosition();
+
 
 	printf("4\r\n");
 
@@ -358,7 +357,7 @@ void FastestRun()
 
 		  PhotoSwitch();
 	InitFastest();
-	InitPosition();
+
 
 
 //	wall_init();
@@ -470,23 +469,23 @@ void FastestRun()
 	//迷路データ
 	initSearchData(&my_map, &my_mouse);
 //	printAllNodeExistence(&my_map);
-	flashCopyNodesToRam(); //existenceだけ
+	flashCopyNodesToRam(&my_map); //existenceだけ
 //	printAllNodeExistence(&my_map);
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 
-	getPathNode(&my_map);
-	getPathAction();
+	getPathNode(&my_map, &my_mouse);
+	getPathAction(&my_mouse);
 	HAL_Delay(200);
 
 	//リセット、再取得
 	initSearchData(&my_map, &my_mouse);
-	flashCopyNodesToRam(); //existenceだけ
+	flashCopyNodesToRam(&my_map); //existenceだけ
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 	//壁のあるなしと重みをprintしてチェック
 //	printAllNodeExistence(&my_map);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser));
 
-	MaxParaRunTest();
+	MaxParaRunTest(&my_map, &my_mouse);
 
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
@@ -522,7 +521,6 @@ void Explore()
 
 	InitExplore();
 
-	InitPosition();
 	TotalPulse[RIGHT] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
@@ -622,7 +620,7 @@ void Explore()
 //	printGoal(&my_mouse);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
-	Accel(61.5, ExploreVelocity);
+	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
 
 	while( ! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
@@ -651,7 +649,7 @@ void Explore()
 	//flashのクリア。
 	Flash_clear_sector1();
 	//マップ書き込み
-	flashStoreNodes();
+	flashStoreNodes(&my_map);
 	//完了の合図
 	Signal(7);
 
@@ -1023,12 +1021,12 @@ void FlashWriteTest()
 		}
 		printAllNodeExistence(&my_map);
 		//フラッシュに書き込む
-		flashStoreNodes();
+		flashStoreNodes(&my_map);
 }
 void FlashReadTest()
 {
 	//フラッシュを読み出す
-	flashCopyNodesToRam();
+	flashCopyNodesToRam(&my_map);
 	//合っているか確認する
 	printAllNodeExistence(&my_map);
 }
@@ -1052,7 +1050,7 @@ void Simu()
 	}
 	printAllNodeExistence(&my_map);
 	//フラッシュに書き込む
-	flashStoreNodes();
+	flashStoreNodes(&my_map);
 
 	//ramをリセット
 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
@@ -1071,7 +1069,7 @@ void Simu()
 		}
 		printAllNodeExistence(&my_map);
 	//フラッシュを読み出す
-	flashCopyNodesToRam();
+	flashCopyNodesToRam(&my_map);
 	//合っているか確認する
 	printAllNodeExistence(&my_map);
 }

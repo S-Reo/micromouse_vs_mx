@@ -1,28 +1,30 @@
 /*
  * Search.h
  *
- *  Created on: Jul 30, 2022
+ *  Created on: 2022/10/28
  *      Author: leopi
  */
 
 #ifndef INC_SEARCH_H_
 #define INC_SEARCH_H_
 
-#include <main.h>
-extern volatile int Calc;
-extern volatile int SearchOrFast;
 
-void shiftPos();
-_Bool judgeImpasse(uint8_t x, uint8_t y);
-_Bool judgeAdjacency(uint8_t x, uint8_t y);
-void KyushinJudge();
+node *getNodeInfo(maze_node *maze, uint8_t x, uint8_t y, cardinal car);
+node *getNextNode(maze_node *maze, cardinal car, node *my_node, int mask);
+state *getNextState(state *now_state, state *next_state, node *next_node);
 
-void LeftHandJudge(char turn_mode);
+void getRouteFastRun(state *log_st, state *now_st, int n);
+void printRoute(state *route, int n);
 
-//RT
-void make_map(uint8_t x, uint8_t y, int mask);
-void map_print();
-_Bool is_unknown(int x, int y);
-void fast_run(int x, int y,int x2, int y2, char turn_mode, int mask);
-int get_nextdir(int x, int y, int mask);
+_Bool getWallNow(state *st, wall_state *wall_st);
+void getNowWallVirtual(uint8_t now_x, uint8_t now_y);
+void getNextWallVirtual(uint8_t next_x, uint8_t next_y);
+_Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node);
+
+
+
+
+/* ----- 探索者データ管理 ここまで ----- */
+
+
 #endif /* INC_SEARCH_H_ */

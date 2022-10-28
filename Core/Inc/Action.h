@@ -9,7 +9,7 @@
 #define INC_ACTION_H_
 
 #include <main.h>
-
+#include "MazeLib.h"
 typedef struct {
 
 	float KP;
@@ -24,27 +24,16 @@ typedef struct {
 extern uint8_t alpha_flag;
 extern float alpha_turn;  //スラローム時の角加速度
 
-void InitPosition();
-void ControlWall();
-void ResetCounter();
-
-void spin_turn(double angle_deg);
 void WaitStopAndReset();
-void straight_time(double time_s);
-void SlalomRight();
-void SlalomLeft();
-float AjustCenter();
-void RotateAccel(float deg, float rotate_ang_v);
-void RotateConst(float deg, float rotate_ang_v);
-void RotateDecel(float deg, float rotate_ang_v);
+void SlalomRight(maze_node *, profile *);
+void SlalomLeft(maze_node *, profile *);
+float AjustCenter(profile *);
 void Rotate(float deg, float ang_accel);
-void Accel(float add_distance, float explore_speed);
+void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mouse);
 void Decel(float dec_distance, float end_speed);
 void Calib(int distance);
-void GoStraight(float move_distance,  float explore_speed, int accel_or_decel);
-void TurnRight(char turn_mode);
-void TurnLeft(char turn_mode);
-void GoBack();
-void Aim();
-void SelectAction(char turn_mode);
+void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, maze_node *maze, profile *mouse);
+void TurnRight(char turn_mode, maze_node *, profile *);
+void TurnLeft(char turn_mode, maze_node *, profile *);
+void GoBack(maze_node *, profile *);
 #endif /* INC_ACTION_H_ */

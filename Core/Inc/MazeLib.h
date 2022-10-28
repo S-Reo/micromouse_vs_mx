@@ -82,22 +82,20 @@ _Bool setExistanceColumnNode(maze_node *maze, uint8_t x, uint8_t y, wall_state e
 _Bool setWeightRawNode(maze_node *maze, uint8_t x, uint8_t y, uint16_t wt);
 _Bool setWeightColumnNode(maze_node *maze, uint8_t x, uint8_t y, uint16_t wt);
 
-//迷路の状態確認
-void printMatrix16ValueFromNode(maze_node *maze);
-
+void printAllWeight(maze_node *maze, position *pos);
 //ノードの壁の有無
 void printSingleNode(maze_node *mn, uint8_t x, uint8_t y);
 void printAllNode(maze_node *mn);//外堀だけprintfせず、そのまま描画用データに
 void printAllNodeExistence(maze_node *mn);
+_Bool outputDataToFile(maze_node *maze);
+
+//迷路の状態確認
+void printMatrix16ValueFromNode(maze_node *maze);
 
 /* ----- 迷路データ管理 ここまで----- */
 
 /* ----- 探索者データ管理 ここから----- */
 
-// 探索者情報の管理 
-    //管理する情報は様々に変わるので、機能追加に対応するような形にする
-        //探索アルゴリズムを書く際は、ライブラリから得られる値をローカルに入れて、そのデータをまた探索者情報に反映する
-// 方角の種類
 typedef enum{
     north,
     ne,
@@ -152,38 +150,24 @@ typedef struct
     state pass[32];
     
 }profile;
-void printGoal(profile *prof);
+//ノードの更新
+void updateNodeThree(maze_node *maze, state *st, uint8_t x, uint8_t y);
+void updateNodeDraw(maze_node *maze, uint8_t x, uint8_t y);
+void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_size_x, uint8_t area_size_y, int mask);
+
 void setNextPosition(state *st);
 void setPosition(position *pos,uint8_t x, uint8_t y);
 void setGoal(profile *prof, uint8_t x, uint8_t y);
 //void setWall(state *st, wall_state *w_st);
 void setWallExistence(wall_existence *existence, wall_state *state);
-//ノードの更新
-void updateNodeThree(maze_node *maze, state *st, uint8_t x, uint8_t y);
-void updateNodeDraw(maze_node *maze, uint8_t x, uint8_t y);
-void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_size_x, uint8_t area_size_y, int mask);
-node *getNodeInfo(maze_node *maze, uint8_t x, uint8_t y, cardinal car);
-node *getNextNode(maze_node *maze, cardinal car, node *my_node, int mask);
-state *getNextState(state *now_state, state *next_state, node *next_node);
-_Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node);
-_Bool getWallNow(state *st, wall_state *wall_st);
-void getNowWallVirtual(uint8_t now_x, uint8_t now_y);
-void getNextWallVirtual(uint8_t next_x, uint8_t next_y);
-void printAllWeight(maze_node *maze, position *pos);
-_Bool outputDataToFile(maze_node *maze);
 
 void initProfile(profile *prof, maze_node *maze);
 void shiftState(profile *prof);
 void printState(state *st);
+void printGoal(profile *prof);
 void printProfile(profile *prof);
 void initState(state *log_st, int n, node *nd);
-void getRouteFastRun(state *log_st, state *now_st, int n);
-void printRoute(state *route, int n);
 
-
-//実環境処理用に、グローバルなマップデータとプロフィールを作成
-profile my_mouse;
-maze_node my_map;
 
 /* ----- 探索者データ管理 ここまで ----- */
 #endif /* MAZELIB_H_ */

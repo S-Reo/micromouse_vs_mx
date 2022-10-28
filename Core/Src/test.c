@@ -5,12 +5,12 @@
 
 #include "MazeLib.h"
 
-#include "Search.h"
 #include <main.h>
 #include "MicroMouse.h"
 #include "Interrupt.h"
 #include "PID_Control.h"
 #include "test.h"
+#include "Search.h"
 #define DEBUG_ON    0
 #define SIMULATION  0
 
@@ -25,7 +25,6 @@
 
 
 #include "Action.h"
-#include "test.h"
 int Num_Nodes = 0;
 void initSearchData(maze_node *my_maze, profile *Mouse)
 {
@@ -41,7 +40,7 @@ void initSearchData(maze_node *my_maze, profile *Mouse)
 //     updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }
 
-void updateRealSearch()
+void updateRealSearch(maze_node *maze, profile *mouse)
 {
 	//壁情報は
 	wall_state wall_dir[4]={0};
@@ -50,9 +49,9 @@ void updateRealSearch()
 	//壁センサ値を読んで、各方角の壁の有無を判定
 		//区画進入直前なので、更新予定の方角と座標がNextに入っているはず
 		//前後左右の値として入れる
-	shiftState(&my_mouse);
+	shiftState(mouse);
 
-    switch (my_mouse.now.car)
+    switch (mouse->now.car)
     {
     case north:
     	wall_dir[0] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
@@ -95,24 +94,24 @@ void updateRealSearch()
 //	Wall[Pos.NextX][Pos.NextY].south = wall_dir[2];
 //	Wall[Pos.NextX][Pos.NextY].west = wall_dir[3];
     //アクションが終わるときがノードの上にいる状態なので、状態シフト済みとする（この関数はアクション中に呼び出される想定）
-    my_mouse.now.wall.north = wall_dir[0];
-    my_mouse.now.wall.east = wall_dir[1];
-    my_mouse.now.wall.south = wall_dir[2];
-    my_mouse.now.wall.west = wall_dir[3];
+    mouse->now.wall.north = wall_dir[0];
+    mouse->now.wall.east = wall_dir[1];
+    mouse->now.wall.south = wall_dir[2];
+    mouse->now.wall.west = wall_dir[3];
 
 	//getWallNow(&(my_mouse->now), &wall[0]);
 
     //現在方角、壁は、合ってる。座標とノードは？
     //ここで壁の存在を反映
-	updateNodeThree(&my_map, &(my_mouse.now), my_mouse.now.pos.x, my_mouse.now.pos.y);
+	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
 
 	//壁の存在を基に重みマップを更新
-	updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
+	updateAllNodeWeight(maze, mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }
 //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせばよさそう。
 //現情報と次情報から次の進行方向を得る処理
 
-void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
+void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode)
 {
 	//一回目の旋回後、東を向いている
 	//選ぶノードがおかしい
@@ -120,8 +119,8 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 	//
 
 	//メインでノード選択
-	Mouse->next.node = getNextNode(my_maze,Mouse->now.car,Mouse->now.node,0x01);
-	getNextState(&(Mouse->now),&(Mouse->next), Mouse->next.node);
+	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, 0x01);
+	getNextState(&(Mouse->now), &(Mouse->next), Mouse->next.node);
 
 	//既知区間加速このswitch文中で書くかも
 		//コマンドキューのときはここでコマンドを発行してキューに渡す
@@ -137,7 +136,7 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 //		accel_or_decel = 0;
 
 		//直進後の選択肢も見ておく
-		accel_or_not = judgeAccelorNot(my_maze, Mouse->next.car, Mouse->next.node);
+		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
 
 		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
 		if(accel_or_not == true) //既知で.直進
@@ -184,14 +183,14 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度がマックスなら減速
 		//ただ直進
 		Calc = SearchOrFast;
-		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel);
+		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
 		break;
 	case right:
 		ChangeLED(0);
 		//右旋回
 		Calc = SearchOrFast;
 
-		TurnRight(turn_mode);
+		TurnRight(turn_mode, maze, Mouse);
 		break;
 	case backright:
 		ChangeLED(0);
@@ -202,9 +201,9 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態だけを更新したい.加速した後、旋回直前のノードと向きに合わせたい 目標ノードはその左後ろ
 		//1ノード、アクションごとに行動を更新したい.
 		//方角の更新は基本加減算でない
-		GoBack(); //間の座標変動を
+		GoBack(maze, Mouse); //間の座標変動を
 		Calc = SearchOrFast;
-		TurnRight(turn_mode);
+		TurnRight(turn_mode, maze, Mouse);
 
 
 		break;
@@ -212,11 +211,11 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 		ChangeLED(0);
 		//Uターンして直進.加速できる
 		Calc = 1;//マップ更新したくないときは1を代入。
-		GoBack();
+		GoBack(maze, Mouse);
 //		AddVelocity = 0;
 //		accel_or_decel = 0;
 		//直進後の選択肢も見ておく
-				accel_or_not = judgeAccelorNot(my_maze, Mouse->next.car, Mouse->next.node);
+				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
 
 				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
 				if(accel_or_not == true) //既知で.直進
@@ -256,22 +255,22 @@ void getNextDirection(maze_node *my_maze, profile *Mouse, char turn_mode)
 					}
 				}
 		Calc = SearchOrFast;
-		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel);
+		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
 		break;
 	case backleft:
 		ChangeLED(0);
 		//Uターンして左旋回
 		Calc = 1;//マップ更新したくないときは1を代入。
-		GoBack();
+		GoBack(maze, Mouse);
 		Calc = SearchOrFast;
-		TurnLeft(turn_mode);
+		TurnLeft(turn_mode, maze, Mouse);
 		break;
 	case left:
 		ChangeLED(0);
 		//左旋回
 		Calc = SearchOrFast;
 //		ChangeLED(4);
-		TurnLeft(turn_mode);
+		TurnLeft(turn_mode, maze, Mouse);
 		break;
 	}
 
@@ -297,7 +296,7 @@ typedef struct {
 Path FastPath[16*16]={0};
 
 //最短走行用の経路配列作成
-void getPathNode(maze_node *my_maze)
+void getPathNode(maze_node *maze, profile *mouse)
 {
 
 	//ノード情報は既にある前提
@@ -306,35 +305,35 @@ void getPathNode(maze_node *my_maze)
 
 	static int path_num=0;
 	//最初の次ノードは既に入っているので格納
-	getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);//0,1の壁がうまく更新できてない
-	getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
-	FastPath[path_num].path_state = my_mouse.now;
+	getNowWallVirtual(mouse->now.pos.x, mouse->now.pos.y);//0,1の壁がうまく更新できてない
+	getNextWallVirtual(mouse->next.pos.x, mouse->next.pos.y);
+	FastPath[path_num].path_state = mouse->now;
 	FastPath[path_num].path_ahead = true;
 //		printState(&(my_mouse.now));
-	shiftState(&my_mouse);
+	shiftState(mouse);
 //		printState(&(my_mouse.next));
 	//一度データ上で最短走行する
 	//ゴールなら減速.　なのでwhile文
-	while(! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //nextがゴール到達するまでループ
+	while(! ((mouse->goal_lesser.x <= mouse->now.pos.x && mouse->now.pos.x <= mouse->goal_larger.x) && (mouse->goal_lesser.y <= mouse->now.pos.y && mouse->now.pos.y <= mouse->goal_larger.y))  ) //nextがゴール到達するまでループ
 	{
 		//0,1。前方。
 //		getNowWallVirtual(my_mouse.now.pos.x, my_mouse.now.pos.y);
-		my_mouse.next.node = getNextNode(my_maze, my_mouse.now.car, my_mouse.now.node, 0x03);
-		getNextState(&(my_mouse.now),&(my_mouse.next), my_mouse.next.node);
-		getNextWallVirtual(my_mouse.next.pos.x, my_mouse.next.pos.y);
+		mouse->next.node = getNextNode(maze, mouse->now.car, mouse->now.node, 0x03);
+		getNextState(&(mouse->now),&(mouse->next), mouse->next.node);
+		getNextWallVirtual(mouse->next.pos.x, mouse->next.pos.y);
 //			printf("now\r\n");
 //			printState(&(my_mouse.now));
 		path_num ++;
 		//次の方向はこの時点で入れる.nextstateがわかった時点で入れたい
-		FastPath[path_num].path_state = my_mouse.now; //next.dir
-		shiftState(&my_mouse);
+		FastPath[path_num].path_state = mouse->now; //next.dir
+		shiftState(mouse);
 //			printf("next\r\n");
 //			printState(&(my_mouse.next));
 
 			printf("\r\n");
 	}
 	path_num ++;
-	FastPath[path_num].path_state = my_mouse.next;
+	FastPath[path_num].path_state = mouse->next;
 	Num_Nodes = path_num;
 	//print
 //		for(int i=0; i <= path_num; i++)
@@ -345,11 +344,11 @@ void getPathNode(maze_node *my_maze)
 
 }
 
-void getPathAction()
+void getPathAction(profile *mouse)
 {
 	//Pathからアクション計画を立てる
 	int count = 0;
-	if( (my_mouse.goal_lesser.x <= FastPath[count].path_state.node->pos.x &&  FastPath[count].path_state.node->pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= FastPath[count].path_state.node->pos.y &&  FastPath[count].path_state.node->pos.y <= my_mouse.goal_larger.y) ){
+	if( (mouse->goal_lesser.x <= FastPath[count].path_state.node->pos.x &&  FastPath[count].path_state.node->pos.x <= mouse->goal_larger.x) && (mouse->goal_lesser.y <= FastPath[count].path_state.node->pos.y &&  FastPath[count].path_state.node->pos.y <= mouse->goal_larger.y) ){
 		//ゴールノード
 		//終端速度の変数 0
 		//動いていなければ動かない
@@ -372,7 +371,7 @@ void getPathAction()
 		}
 		count = 2; //==2
 		//以降はゴールまで同じ流れで決定
-		while( !((my_mouse.goal_lesser.x <= FastPath[count].path_state.pos.x &&  FastPath[count].path_state.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= FastPath[count].path_state.pos.y &&  FastPath[count].path_state.pos.y <= my_mouse.goal_larger.y)) )
+		while( !((mouse->goal_lesser.x <= FastPath[count].path_state.pos.x &&  FastPath[count].path_state.pos.x <= mouse->goal_larger.x) && (mouse->goal_lesser.y <= FastPath[count].path_state.pos.y &&  FastPath[count].path_state.pos.y <= mouse->goal_larger.y)) )
 		{
 				//今見ているノードがゴールノードでない. ゴールが3ノード目以上であるとき.
 				//パスの2個先のノードを見る
@@ -424,7 +423,7 @@ void getPathAction()
 
 
 
-//			printf("%d, %d, %u, %u, %u, %u, %u, %u\r\n", count, FastPath[count].path_action, FastPath[count].path_state.pos.x,  FastPath[count].path_state.pos.y, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y ,  my_mouse.goal_larger.x,  my_mouse.goal_larger.y);
+//			printf("%d, %d, %u, %u, %u, %u, %u, %u\r\n", count, FastPath[count].path_action, FastPath[count].path_state.pos.x,  FastPath[count].path_state.pos.y, mouse->goal_lesser.x, mouse->goal_lesser.y ,  mouse->goal_larger.x,  mouse->goal_larger.y);
 			count ++;
 		}
 	}
@@ -568,7 +567,7 @@ void FastStraight(float cut, float num, float accel, float decel, float top_spee
 		KeepPulse[RIGHT] += target_pulse*0.5f;
 
 }
-void MaxParaRunTest()
+void MaxParaRunTest(maze_node *maze, profile *mouse)
 {
 	int start_cnt=0;
 	float straight_num = 0;
@@ -623,7 +622,7 @@ void MaxParaRunTest()
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			SlalomLeft();
+			SlalomLeft(maze, mouse);
 			break;
 		case R_90_SEARCH:
 //			ChangeLED(3);
@@ -631,7 +630,7 @@ void MaxParaRunTest()
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			SlalomRight();
+			SlalomRight(maze, mouse);
 			break;
 		default :
 			break;

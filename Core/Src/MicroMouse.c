@@ -17,7 +17,8 @@
 #include "Convert.h"
 
 volatile _Bool VelocityMax;
-
+volatile int Calc;
+volatile int SearchOrFast;
 volatile float Photo[4];
 volatile float TargetPhoto[4];
 volatile float PhotoDiff;

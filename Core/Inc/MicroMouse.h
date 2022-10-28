@@ -12,23 +12,10 @@
 #include <math.h>
 
 #include "MazeLib.h"
+extern volatile int Calc;
+extern volatile int SearchOrFast;
 extern TIM_HandleTypeDef htim1;
-//使用するデータ群の定義。データ群だけ定義して、どう処理するかは別でファイルを作る。実データをどこで入れるか。メインのフローで。
-//データにアクセスするための関数は書く。
-//マップはどうするか。データ定義だけして、map.cで管理。
 
-//変動する管理したい値、パラメータなど
-//独立二輪ロボットとしてのステータス
-	//現在速度、現在目標速度、探索速度 float
-	//現在角速度、現在目標角速度			float
-	//現在角度、現在目標角度、到達角度	float
-
-	//総走行パルス、 int
-	//オドメトリ用のx,y,θ float
-
-//壁センサデータ
-	//平均をとった後の実際に使用する値
-	//
 extern volatile _Bool VelocityMax;
 
 extern volatile float Photo[4];
@@ -41,12 +28,6 @@ extern volatile float CurrentVelocity[3];
 extern volatile float TargetVelocity[3];
 extern volatile float ControlTargetVelocity;
 
-//extern float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
-//extern float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
-//移動量 mm/msを積算
-//extern float TotalPulseBody;
-//extern float TotalPulseLeft;
-//extern float TotalPulseRight;
 
 extern volatile int KeepPulse[3];
 extern int PulseDisplacement[3];
@@ -63,11 +44,7 @@ extern float ImuAngV,ImuAngle;
 extern float ImuAccel, ImuVelocity, ImuMileage;
 //ここまでがエンコーダからのUpdate
 
-//ここからは目標値と現在値を用いた制御。
-//タイヤ目標値計算
-//extern float TargetVelocityBody;
-//extern float TargetVelocityLeft;
-//extern float TargetVelocityRight;
+//ここからは目標値と現在値を用いた制御
 
 extern float ExploreVelocity;
 extern float AddVelocity;
@@ -98,21 +75,11 @@ extern int L_motor, R_motor;
 
 #define DRIFT_FIX 0.00006375
 
-#define NUMBER_OF_SQUARES 9//4 //16
+//#define NUMBER_OF_SQUARES 9//4 //16
 
 #define BACKUP_FLASH_SECTOR_NUM     FLASH_SECTOR_1
 #define BACKUP_FLASH_SECTOR_SIZE    1024*16
-//実データは最後?それとも構造体を作って、構造体を操作する関数を構築した方がいい？
-//マップデータ
-//一辺の区画数
-//#define NUMBER_OF_SQUARES 9//4 //9 //16 //32
 
-//最終ゴール区画座標 全日本(6,9) (7,10)
-#define X_GOAL_LESSER 7
-#define Y_GOAL_LESSER 7
-
-#define X_GOAL_LARGER 8
-#define Y_GOAL_LARGER 8
 
 #define FL	0
 #define SR	1
@@ -171,27 +138,6 @@ extern int L_motor, R_motor;
 #define WALL_JUDGE_PULSE 25/MM_PER_PULSE
 
 
-//インクルード先で宣言
-//方角データ
-//typedef enum{
-//	north = 0,
-//	east = 1,
-//	south = 2,
-//	west = 3
-//						//斜めで4種類追加
-//}cardinal;
-//extern cardinal my_car;
-
-//新ライブラリと被るので消す
-//typedef enum Direction	//区画の境界に来た時の状態表現だから
-//{
-//	front	= 0,
-//	right		= 1,
-//	back		= 2,
-//	left		= 3,
-//						//斜めで4種類追加
-//}direction;
-//extern direction my_dir;
 typedef enum Action	//区画の境界に来た時の状態表現だから
 {
 	accel	= 0,
@@ -239,21 +185,7 @@ typedef enum GoalEdge
 
 }goal_edge;
 extern goal_edge goal_edge_num;
-//typedef enum Action
-//{
-//	wait = 0,
-//	calib = 1,
-//	straight = 2,
-//	 a = 3,
-//
-//
-//}action;
-//バッテリ電圧系
-//時間系
-//探索の状態遷移用の関数ポインタテーブル→やっぱり状態毎に処理を変えるようにしないと、汚くなっていく。
-//どの座標にどの向きで入っているか。どんなアクションをしているのか→新しい座標へ移動する、今向いている向きはどこか、壁センサはどうか、次の動きは何か。
 
-//void WritingFree();
 
 typedef struct Slalom
 {
@@ -268,7 +200,5 @@ typedef struct Slalom
 }slalom_parameter;
 
 extern slalom_parameter Sla;
-//void ControlMotor();
-//void UpdatePhotoData();
 
 #endif /* INC_MICROMOUSE_H_ */

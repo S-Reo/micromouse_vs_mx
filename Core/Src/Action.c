@@ -5,8 +5,6 @@
  *      Author: leopi
  */
 
-
-
 //動作を定義する //割り込みで呼ぶ。
 #include "Action.h"
 #include <main.h>
@@ -20,8 +18,6 @@
 #include "Interrupt.h"
 #include "Motor_Driver.h"
 #include "IR_Emitter.h"
-#include "Map.h"
-#include "Search.h"
 
 #include "MazeLib.h"
 #include "test.h"
@@ -29,179 +25,27 @@
 static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
 const float angle_range = 3*M_PI/180;  //領域
 
-//現在の速度と総走行距離と左右それぞれ
-//現在の角度と角速度
-
-//目標速度と目標角速度
-//角加速度と加速度 (目標値変更のための)
-
-//現在値をもとに目標値をどう変更するかの処理がアクション。
-//データを引数でとるのが面倒。だけどモジュール化するなら引数にしておいた方がよさそう。汎用性を上げる方法として構造体で管理する方がよさそう
-
-//アクションで決めた目標の速度、角速度になるようにモータ出力。壁の値に応じて出力を変える。コントロール
-
-// フラグでモードの管理。変数を1か所に集めてフラグ毎に目標値等を変更するとどうか。
-// 1ms毎にフラグとそれぞれの変数を全て格納してログに取ると、全部の遷移が可視化できる。//1ms毎に4byteとすると100sで10万*4byte = 390Kbytef405ならいけるな。フラグを1ビット単位で管理するとめちゃくちゃ保存できる1byteで8個のフラグ
-
-//制御に使える変数
-//時間計測 elapsed_time
-//エンコーダの総パルス All_Pulse
-//車体の角度 body_angle
-//各アクションにおける処理の流れ
-
-//移動量の指定
-//
-//現在データをどう管理するか
-//構造体ごとライブラリにするか？
-
-//PID_Control wall = {
-//		0.5,//0.5,//0.8,//0.9,//1.8,//1.0,//0.3, //0.8, ///oKP
-//		1,//0,//4,//0.5,//50,//30,//0.5,//0.25, //oKI //調整の余地あり
-//		0.00002//0.0000006//0.000006//.00003//0.0000006//0.001//0.0005 //oKD
-//}, Velocity = {//veloもしくはimuのゲインの0を増やすとロードするゲインがおかしくなりそう。9個中0は3個まで。
-//		1.1941,//6.6448,//0.099599,//4.8023,//1.5018,//2.0751,//1.88023//4.09640,//4.2616,//4.8023,//1.2, //10 //20 //KP
-//		33.5232,//248.4198,//10.1707,//91.6848,//24.0379,//6.0917,//5.4803//23.1431,//21.1832//91.6848,//100,//40, //100.0//50 //KI
-//	   0.0059922//0.03301//0.15432//0.17626//0.19124//1.2955
-//}, imu = {
-//		17.4394,//1.4912,      //2.0306,     ///17.4394,    //19.8142,//380.1873,//19.8142,//5.8646,//12.2859,//53.4571,////240,//66,//66 ///KP
-//		329.5622,//55.6412,   ///0.0024354, //321.233,    //329.5622,//4106.1009,//329.5622,//201.6374,//36.7868,//341.0224,////600,//85,//24500 //KI
-//		0.12492//0.0028126, //423.2477, //0.12492       //0.11897//8.8005//0.11897//0.89427//2.0949//17.4394,//
-//};
-
-//uint8_t alpha_flag=0;
-//float alpha_turn = 0.01;  //スラローム時の角加速度
-//90mm/s で0.01は結構いい感じ
-
-//移動量の取得が必要
-
-//待つ
-//void wait(double time_s)
-//{
-//	double start_time = elapsed_time;
-//
-//	while( ( start_time + time_s ) > elapsed_time  )
-//	{
-//		velocity_ctrl_flag = 0;
-////		imu_ctrl_flag = 0;
-//	}
-//
-//}
-////直進
-////時間で
-//void straight_time(double time_s)
-//{
-//	double start_time = elapsed_time;
-//
-//	while( ( start_time + time_s ) > elapsed_time  )
-//	{
-//		//printf("%lf\r\n",elapsed_time);
-//		velocity_ctrl_flag = 1;
-//		///imu_ctrl_flag = 1;
-//	}
-//
-//}
-////パルス、距離で
-//void straight_distance(float distance_mm )
-//{
-//	//距離をパルスに変換
-//	double start_pulse = elapsed_time;
-//
-//	while( ( start_pulse + distance_mm ) > elapsed_time  )
-//	{
-//		printf("%lf\r\n",elapsed_time);
-//		velocity_ctrl_flag = 1;
-//		///imu_ctrl_flag = 1;
-//	}
-//	velocity_ctrl_flag = 0;
-//}
-////後進もできるはず
-////超信地旋回
-//void spin_turn(double angle_deg)
-//{
-//
-//
-//#if 0
-//	double start_angle = body_angle;
-//
-//	while( ( start_angle + angle_deg ) > body_angle)
-//	{
-//		TargetVelocity = 0;
-//		Target_rad_velo = 2*M_PI;
-//		//printf("%lf\r\n",body_angle);
-//	}
-//	Target_rad_velo = 0;
-//#else
-////
-////	//右回転は引数が正
-////	//右回転は右が負、左が正
-////	int start_R_pulse = EN4_R.integrate;
-////	int start_L_pulse = EN3_L.integrate;
-////	while( (( start_R_pulse - (int)( ROTATE_PULSE *(angle_deg /360) )  ) < EN4_R.integrate) && ( (start_L_pulse + (int)( ROTATE_PULSE *(angle_deg /360) )  ) > EN3_L.integrate) )
-////	{
-////		TargetVelocity = 0;
-////		Target_rad_velo = 3;
-////		//printf("%lf\r\n",body_angle);
-////	}
-////	Target_rad_velo = 0;
-//#endif
-//
-//
-//
-//}
-
 /* バックエンドでコマンドとして処理する */
 
-void MotionBackend()
-{
-	/* 各種センサの更新 */
-
-	/* 条件判定 */ //ここをコマンドで条件定義
-
-	//距離もしくは角度の終了条件でコマンドを終了
-		//IMUによる角度検出
-		//エンコーダによる左右のパルス（総パルスもしくは増減分）
-		//終了してもモータ出力はそのまま。（クリアしない）
-
-	//終了していなければ、コマンドによる制御入力を更新する
-
-
-
-
-
-	/* 出力 */
-}
-
-
-void InitPosition()
-{
-//	Pos.X = 0;
-//	Pos.Y = 0;
-//	Pos.Car = north;
-//	Pos.Dir = front;
-//	Pos.Act = Wait;
-//	Pos.WallSaf = wall_warn;//どっちにするか
-
-}
-
-int GetWallCtrlDirection()
+int GetWallCtrlDirection(profile *mouse)
 {
 	//新ライブラリ用に変更
-	switch(my_mouse.now.car%8)
+	switch(mouse->now.car%8)
 	{
 	case north:
-		if(my_mouse.now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
+		if(mouse->now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
 		{
 			return F_WALL_PID;
 		}
-		else if(my_mouse.now.wall.east == wall && my_mouse.now.wall.west == wall)
+		else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
 		{
 			return D_WALL_PID;
 		}
-		else if(my_mouse.now.wall.east == wall)
+		else if(mouse->now.wall.east == wall)
 		{
 			return R_WALL_PID;
 		}
-		else if(my_mouse.now.wall.west == wall)
+		else if(mouse->now.wall.west == wall)
 		{
 			return L_WALL_PID;
 		}
@@ -212,19 +56,19 @@ int GetWallCtrlDirection()
 		break;
 
 	case east:
-		if(my_mouse.now.wall.east == wall)
+		if(mouse->now.wall.east == wall)
 		{
 			return F_WALL_PID;
 		}
-		else if(my_mouse.now.wall.north == wall && my_mouse.now.wall.south == wall)//south)
+		else if(mouse->now.wall.north == wall && mouse->now.wall.south == wall)//south)
 		{
 			return D_WALL_PID;
 		}
-		else if(my_mouse.now.wall.north == wall)
+		else if(mouse->now.wall.north == wall)
 		{
 			return L_WALL_PID;
 		}
-		else if(my_mouse.now.wall.south == wall)
+		else if(mouse->now.wall.south == wall)
 		{
 			return R_WALL_PID;
 		}
@@ -234,19 +78,19 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case south:
-		if(my_mouse.now.wall.south == wall)
+		if(mouse->now.wall.south == wall)
 		{
 			return F_WALL_PID;
 		}
-		else if(my_mouse.now.wall.east == wall && my_mouse.now.wall.west == wall)
+		else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
 		{
 			return D_WALL_PID;
 		}
-		else if(my_mouse.now.wall.east == wall)
+		else if(mouse->now.wall.east == wall)
 		{
 			return L_WALL_PID;
 		}
-		else if(my_mouse.now.wall.west == wall)
+		else if(mouse->now.wall.west == wall)
 		{
 			return R_WALL_PID;
 		}
@@ -256,19 +100,19 @@ int GetWallCtrlDirection()
 		}
 		break;
 	case west:
-		if(my_mouse.now.wall.west == wall)
+		if(mouse->now.wall.west == wall)
 		{
 			return F_WALL_PID;
 		}
-		else if ( my_mouse.now.wall.north == wall && my_mouse.now.wall.south == wall)//.westになってた。あと == south )で意味わからない処理に。
+		else if ( mouse->now.wall.north == wall && mouse->now.wall.south == wall)//.westになってた。あと == south )で意味わからない処理に。
 		{
 			return D_WALL_PID;
 		}
-		else if ( my_mouse.now.wall.north == wall )
+		else if ( mouse->now.wall.north == wall )
 		{
 			return R_WALL_PID;
 		}
-		else if ( my_mouse.now.wall.south == wall )
+		else if ( mouse->now.wall.south == wall )
 		{
 			return L_WALL_PID;
 		}
@@ -286,579 +130,23 @@ int GetWallCtrlDirection()
 
 }
 
-void ChangeCardinal()
-{
-//	switch(Pos.Dir)
-//	{
-//	case right :
-//		Pos.Car ++;
-//		break;
-//	case left :
-//		Pos.Car --;
-//		break;
-//	case back:
-//		Pos.Car += 2;
-//		break;
-//	default:
-//		break;
-//	}
-
-}
-
-void UpdatePosition(uint8_t x, uint8_t y, cardinal car, direction dir, wall_safety safe_or_warn)
-{
-//	Pos.X = x;
-//	Pos.Y = y;
-//	Pos.Car = car;
-//	Pos.Dir = dir;
-//	Pos.WallSaf = safe_or_warn;
-}
-void WallSafe()
-{
-//	Pos.WallSaf = wall_safe;
-}
-void WallWarn()
-{
-//	Pos.WallSaf = wall_warn;
-}
-//壁のステータス変更用のファイル
-
-//void ControlWall()
-//{
-//	//壁制御flagを管理する
-//	//結局すべてはアクション中の出来事。アクションの細かいモジュールの中の、移動量と壁の状態
-//	//直進中で
-//		//端の座標なら確実に型壁制御
-//	//斜め走行は別でアクションを定義
-//
-//	//横壁制御のパターンを返す. 左右あり、どちらかひとつ、無し
-//	int wall_ctrl_dir = GetWallCtrlDirection();	//次の座標のも返してみて、できれば連続で制御をする。
-//	//このパターンをそのまま
-//	//割り込み中に呼ぶかアクション中に呼ぶか。アクション中の方が座標と壁の状態が確実。いや、判定が遅れると嫌だからやっぱり割り込み。移動量はflagで。
-//
-//	//PIDChangeFlagStraight(N_WALL_PID);//直進flagはどれでも無い状態。制御なし。
-//	PIDChangeFlag(L_WALL_PID, 0);
-//	PIDChangeFlag(R_WALL_PID, 0);
-//	PIDChangeFlag(D_WALL_PID, 0);
-//	PIDChangeFlag( A_VELO_PID, 0);
-//	//アクションごとに壁制御を記述した方がいいかも
-//
-//	//アクション、方向、壁安全。
-//
-//	//減速の時、壁の状態
-//
-//	//フラグを介さなくても、追加制御のモードとして変数をひとつにすればいい. 割込み内のswitchでフラグオンにすればいい.同時にほかのは切る
-//
-//	if(Pos.Dir == front)		//区画の区切りで前方に進むと決めたあと、動作としては加速か、straight。初期状態はwaitから加速へ
-//	{
-//		switch(Pos.Act)
-//		{
-//		case accel:
-//			Control_Mode =  A_VELO_PID;
-//			//一つ先の区画がわかっていて加速したいときに
-//			break;
-//
-//		case straight:
-//			//3/3おっけーかも
-//			if( (wall_ctrl_dir != N_WALL_PID)  && (AddVelocity == 0) )	//左右どちらかに壁があるとき
-//			{
-//				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
-//				{
-//					PIDChangeFlag(wall_ctrl_dir, 1);
-//					PIDChangeFlag( A_VELO_PID, 0);
-//				}
-//				else
-//				{
-//					PIDChangeFlag(wall_ctrl_dir, 0);
-//					PIDChangeFlag( A_VELO_PID , 1);
-//				}
-//			}
-//			else
-//			{
-//				PIDChangeFlag( A_VELO_PID , 1);
-//			}
-//			break;
-//			//wait
-//		case Wait:
-//			break;
-//		default :
-//			break;
-//		}
-//		//非斜め走行では、まだ壁制御の条件を考えないといけない
-//		//方角チェック
-//		//方角、座標からそのときの左右の壁データを取得。壁があるかどうかから、左のみ右のみ両壁の判定
-//		//移動量がN割りのフラグ。直進は、Uターンの加減速を含まない、ただの一区画直進なので、移動量判定でできる。と思ったら分けてた?
-//		//Actはstraight
-//
-//
-//	}
-//	else if(Pos.Dir == left)	//左に行くとき
-//	{
-//		if(Pos.Act == slalom)
-//		{
-////			PIDChangeFlag(L_WALL_PID, 0);
-////			PIDChangeFlag(R_WALL_PID, 0);
-////			PIDChangeFlag(D_WALL_PID, 0);
-////			PIDChangeFlag( A_VELO_PID, 0);
-//			TargetAngularV = 0;
-//			AngularAcceleration = 0;
-//		}
-//		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
-//		{
-//			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
-//			{
-//				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
-//				{
-//					PIDChangeFlag(wall_ctrl_dir, 1);
-//					PIDChangeFlag( A_VELO_PID, 0);
-//				}
-//				else
-//				{
-//					PIDChangeFlag(wall_ctrl_dir, 0);
-//					PIDChangeFlag( A_VELO_PID , 1);
-//				}
-//			}
-//			else
-//			{
-//				PIDChangeFlag( A_VELO_PID , 1);
-//			}
-//		}
-//		else if(Pos.Act == accel)
-//		{
-//			PIDChangeFlag( A_VELO_PID , 1);
-//		}
-//		else if(Pos.Act == rotate)
-//		{
-//			PIDChangeFlag( A_VELO_PID , 0);
-//		}
-//
-//
-//	}
-//	else if(Pos.Dir == right)
-//	{
-//		if(Pos.Act == slalom)
-//		{
-////			PIDChangeFlag(L_WALL_PID, 0);
-////			PIDChangeFlag(R_WALL_PID, 0);
-////			PIDChangeFlag(D_WALL_PID, 0);
-////			PIDChangeFlag( A_VELO_PID, 0);
-//			TargetAngularV = 0;
-//			AngularAcceleration = 0;
-//		}
-//		else if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
-//		{
-//			if( wall_ctrl_dir != N_WALL_PID )	//左右どちらかに壁があるとき
-//			{
-//				if(Pos.WallSaf == wall_safe)	//90mm中なので、次の座標の壁の状態がわかっているとき(0または1である)は、
-//				{
-//					PIDChangeFlag(wall_ctrl_dir, 1);
-//					PIDChangeFlag( A_VELO_PID, 0);
-//				}
-//				else
-//				{
-//					PIDChangeFlag(wall_ctrl_dir, 0);
-//					PIDChangeFlag( A_VELO_PID , 1);
-//				}
-//			}
-//			else
-//			{
-//				PIDChangeFlag( A_VELO_PID , 1);
-//			}
-//		}
-//		else if(Pos.Act == accel)
-//		{
-//			PIDChangeFlag( A_VELO_PID , 1);
-//		}
-//		else if(Pos.Act == rotate)
-//		{
-//			PIDChangeFlag( A_VELO_PID , 0);
-//		}
-//
-//	}
-//	else if(Pos.Dir == back)
-//	{
-//		//Actはaccel,decel,wait,turn。
-//		//減速中の前半みwall_safeに変化。
-//		if(Pos.Act == decel)	//減速するときだけ壁制御をオン。
-//		{
-//			if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
-//			{
-//				PIDChangeFlag(wall_ctrl_dir , 1);
-//				PIDChangeFlag( A_VELO_PID, 0);
-//			}
-//			else
-//			{
-//				PIDChangeFlag(wall_ctrl_dir, 0);
-//				PIDChangeFlag( A_VELO_PID , 1);
-//			}
-//		}
-//		else if(Pos.Act == accel)
-//		{
-//			PIDChangeFlag( A_VELO_PID , 1);
-//		}
-//		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
-//
-//		//停止中や旋回中はだめ。
-//
-//	}
-//
-////	else if(Pos.Dir == left)
-////	{
-////		//減速中の前半みwall_safeに変化。
-////		if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
-////		{
-////			PIDChangeFlag(wall_ctrl_dir, 1);
-////			PIDChangeFlag( A_VELO_PID, 0);
-////		}
-////		else
-////		{
-////			PIDChangeFlag(wall_ctrl_dir, 0);
-////			PIDChangeFlag( A_VELO_PID, 1);
-////		}
-////		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
-////
-////		//停止中や旋回中はだめ。
-////
-////	}
-////	else if(Pos.Dir == right)
-////	{
-////		//減速中の前半みwall_safeに変化。
-////		if(Pos.WallSaf == wall_safe)	//フラグ作る。前に壁が無いパターンの減速は、後半の壁の状態の影響を受けることがある。35*0.5mmが目安か。
-////		{
-////			PIDChangeFlag(wall_ctrl_dir, 1);
-////			PIDChangeFlag( A_VELO_PID, 0);
-////		}
-////		else
-////		{
-////			PIDChangeFlag(wall_ctrl_dir, 0);
-////			PIDChangeFlag( A_VELO_PID, 1);
-////		}
-////		//加速中はほぼ無理。35mmしかない。61.5の直進だったらいける。とりあえず保留。
-////
-////		//停止中や旋回中はだめ。
-////
-////	}
-//	//どれでもなかったら全部0だと、右左はまだ。
-//	//ControlWall();
-//
-//
-//
-//
-//
-//}
-
-//void ResetCounter()
-//{
-//	KeepCounter[LEFT] = INITIAL_PULSE;
-//	KeepCounter[RIGHT] = INITIAL_PULSE;
-//}
-
 void WaitStopAndReset()
 {
-//	Pos.Act = Wait;
-//	ControlWall();//ベイブレード対策
 	do
 	{
-
-		//壁制御の更新
 		TargetVelocity[BODY] = 0;
 		Acceleration = 0;
-		//PIDChangeFlag( D_, 0);
 		TargetAngularV = 0;
 		AngularAcceleration = 0;
-		//AngularV = 0;
-//		if(CurrentVelocity[LEFT] > 500)
-//			ChangeLED(3);
-			//printf("回転停止中\r\n");
 
 	}while(CurrentVelocity[BODY] != 0);
 	HAL_Delay(100);
 }
-void RotateAccel(float deg, float rotate_ang_v)
-{
-	TargetAngularV = 0;
-	float additional_ang_v=0;
-	additional_ang_v = rotate_ang_v;//rotate_ang_v - AngularV;
-	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
-	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
-	//角速度 + 角加速度(ms)/T1 = 角度
-	//加速度が一定。角速度が増加。角速度を積分して角度。角速度の式を作り、角速度を積分して角度を求める等式を立てる。
-	//Angle = インテグラル(ang_v(t))dt
-	//v = v0+at	|	t=v/a	||		ang_v = ang_v0 + ang_accel *t		||	t = ang_v/ang_accel
-	//x=0.5*v*v/a	|	a = 0.5*v*v*/x		||		θ=ang_v0*t+0.5*ang_v^2/ang_accel	||	ang_accel =
-	//加速度(mm/((ms)^2)) =  割り込み周期(1ms)*到達速度*到達速度(((mm/s)^2)) /(2*移動距離) x = v0t + 0.5at^2 →	a=2*(x-v0*t)/t^2 	a = t*vv/(2*x)
-
-		//周期、角速度、距離
-
-
-//	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
-//
-//	int keep_pulse[2] = {
-//			TotalPulse[LEFT],
-//			TotalPulse[RIGHT]
-//	};
-	float move_angle = deg * M_PI/ 180; //ラジアンに直してる
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
-	//90mmでうまくやるには0から60000カウントまで
-	float debug[2] = {0};
-	debug[0] = Angle;
-	if( rotate_ang_v > 0)	//右回転
-	{
-		TargetAngle += move_angle;//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-		debug[1] = move_angle;
-		//ここのwhileが抜けないことがある
-		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
-		{
-			AngularAcceleration = 64*T1*additional_ang_v*additional_ang_v / (2*deg);
-			//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
-#if 0
-			if( AngularV == -0)	//ベイブレードになりそうだったら止まる。
-			{
-				//緊急停止。センサの値を見る。
-				Motor_PWM_Stop();
-				while(1)
-				{
-					Signal(7);
-					printf("回転加速中: photo : %f, %f, debug : %f, %f, AngV:%f, zg:%d, timer1:%d, timer8:%d\r\n",Photo[FL],Photo[FR], debug[0], debug[1], AngularV, zg,timer1,timer8);
-				}
-
-			}
-#endif
-		}
-
-	}
-	else if( rotate_ang_v < 0)
-	{
-		TargetAngle -= move_angle; //move_angle = -move_angle + Angle;
-		//printf("加速 負\r\n");
-		while( (TargetAngle < Angle)/* && ( ( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) ) ) */)
-		{
-
-			AngularAcceleration = -1*64*T1*additional_ang_v*additional_ang_v / (2*deg);
-
-		}
-
-	}
-	AngularAcceleration = 0;
-	//TargetAngularV = 0;
-}
-void RotateConst(float deg, float rotate_ang_v)
-{
-	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
-	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
-	//int add_distance = (int)( (deg/360) * ROTATE_PULSE) * MM_PER_PULSE;
-
-//	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
-//
-//	int keep_pulse[2] = {
-//			TotalPulse[LEFT],
-//			TotalPulse[RIGHT]
-//	};
-	float move_angle = deg * M_PI/ 180;
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
-	//90mmでうまくやるには0から60000カウントまで
-	if (rotate_ang_v > 0)
-	{
-		TargetAngle += move_angle;
-		while( (TargetAngle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
-		{
-			//TargetAngularV = rotate_ang_v;
-			AngularAcceleration = 0;
-			if(CurrentVelocity[LEFT] > 500)
-			{
-				//printf("回転定速中: %f\r\n", move_angle);
-			}
-
-		}
-
-	}
-	else if (rotate_ang_v < 0)
-	{
-		TargetAngle -= move_angle;
-		//printf("定速 負\r\n");
-		while( (TargetAngle < Angle))// &&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
-		{
-			//TargetAngularV = rotate_ang_v;
-
-			AngularAcceleration = 0;
-		}
-
-	}
-	AngularAcceleration = 0;
-	//TargetAngularV = 0;
-}
-void RotateDecel(float deg, float rotate_ang_v)
-{
-	float additional_ang_v=0;
-	additional_ang_v = rotate_ang_v;// - AngularV;
-	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
-	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
-	//int add_distance = (int)( (deg/360) * ROTATE_PULSE) * MM_PER_PULSE;
-		//周期、角速度、距離
-
-//	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
-//	int keep_pulse[2] = {
-//			TotalPulse[LEFT],
-//			TotalPulse[RIGHT]
-//	};
-	float move_angle = deg * M_PI / 180;
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
-	//90mmでうまくやるには0から60000カウントまで
-	if( rotate_ang_v > 0)
-	{
-		TargetAngle += move_angle;
-
-		while( (TargetAngle > Angle))// &&  (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) )) )
-		{
-			AngularAcceleration = -1*64*(T1*additional_ang_v*additional_ang_v / (2*deg));
-			if(CurrentVelocity[LEFT] > 500)
-			{
-				//printf("回転減速中: %f\r\n", move_angle);
-			}
-
-			if( AngularV <= 0)
-			{
-				break;
-			}
-		}
-
-	}
-	else if( rotate_ang_v < 0)
-	{
-		TargetAngle -= move_angle;
-		//printf("減速 負\r\n");
-		while( (TargetAngle < Angle) )//&&  (( ( keep_pulse[LEFT]-move_pulse ) < ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]+move_pulse ) > ( TotalPulse[RIGHT] ) )) )
-		{
-			AngularAcceleration = 64*(T1*additional_ang_v*additional_ang_v / (2*deg));
-
-			if( AngularV >= 0)
-				break;
-		}
-
-	}
-	AngularAcceleration = 0;
-	TargetAngularV = 0;
-}
-void RotateOld(float deg, float ang_accel)
-{
-//	Pos.Act = rotate;
-	//Rotate(90, 0.05);
-
-	//符号アリなので、角度でマイナス入れると今は動作がおかしくなる。2/21
-//	int move_pulse = (int)( (deg/360) * ROTATE_PULSE);
-
-	//int target_pulse[2] ={0};
-//	int keep_pulse[2] = {
-//			TotalPulse[LEFT],
-//			TotalPulse[RIGHT]
-//	};
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
-	//90mmでうまくやるには0から60000カウントまで
-//	while( ( keep_pulse ) >= ( TotalPulse[BODY] ) )
-//	{
-//	//カウントを直で状態確認してみた。回転時はカウンタが足りるが直進のときは一区画もたない。あと、判定が速いタイミングでできても、出力値の変更が1ms更新だからそこまで変わらなそう。カウントをどう読むかが課題。なるべくピッタリで、もしくはここにこだわらない。
-//	//ずれが大きいのは速度が速くてカウンタ値の1msあたりの変位が大きい時。それで問題があるのは減速停止のとき。
-//	//じゃあ終了値の余分な値だけ補正するように動くか、前に壁があるときはそちらで補正。スラロームの場合は曲がるタイミングが遅れるかもしれないので余ったカウント分を前距離として移動したことにしてしまうのはどうだろうか。
-//	//↑の案がいいかもしれない。今はカウントの余りを気にしないでおく。2/20
-//	while( ( (abs(keep_pulse[LEFT]+target_pulse)) <= TotalPulse[LEFT] /*左が順*/) && ( (abs(keep_pulse[RIGHT]+target_pulse)) <= TotalPulse[RIGHT] /*右が逆*/) )	//左回転
-//	{
-//		TargetAngularV = ang_accel;
-//	}
-//	InitPulse((int*)(&(TIM3->CNT)), INITIAL_PULSE);
-//	InitPulse((int*)(&(TIM4->CNT)), INITIAL_PULSE);
-//	ResetCounter();
-
-	WallWarn();
-	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
-	RotateAccel(deg*40/90, ang_accel);//15
-	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
-	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
-	RotateConst(deg*10/90, ang_accel);//25
-	RotateDecel(deg*40/90, ang_accel);//50
-
-//	if( ang_accel > 0 )	//時計回り
-//	{
-//		target_pulse[LEFT] = TotalPulse[LEFT] + move_pulse;
-//		target_pulse[RIGHT] = TotalPulse[RIGHT] - move_pulse;
-//		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
-//		//角加速度計算
-//		//どのくらい回転したかに応じて台形加減速
-//		printf("%d, %d, %d, %d\r\n",target_pulse[LEFT],TotalPulse[LEFT], target_pulse[RIGHT], TotalPulse[RIGHT]);
-//		while(  /*(Angle <= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] >= TotalPulse[LEFT] ) &&  (  target_pulse[RIGHT] <= TotalPulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
-//		{
-//			if(  (abs(target_pulse[LEFT]-TotalPulse[LEFT]) > (75/90)*move_pulse )  ||  (  abs(target_pulse[RIGHT]-TotalPulse[RIGHT]) > (75/90)*move_pulse ) /*0度から15度未満*/)
-//			{
-//				AngularAcceleration = 0;
-//			}
-//
-////			if(  /*15度から75度未満*/)
-////			{
-////				AngularAcceleration = 0;
-////				TargetAngularV = ang_accel;
-////			}
-////			if(/*75度から90度以下*/)
-////			{
-////
-////			}
-//			printf("deg:正, Angle, AngularV : %f, %f\r\n",Angle, AngularV );
-//		}
-//
-//		//target_pulse[RIGHT] *= 1;//-1 *(int)( (deg/360) * ROTATE_PULSE);
-//	}
-//	else if( ang_accel < 0)
-//	{
-//		target_pulse[LEFT] = TotalPulse[LEFT] - move_pulse;
-//		target_pulse[RIGHT] = TotalPulse[RIGHT] + move_pulse;
-//		//(int)( (deg/360) * ROTATE_PULSE);///MM_PER_PULSE
-//		while( /*(Angle >= (deg*M_PI/180)) ||*/ ( (target_pulse[LEFT] <= TotalPulse[LEFT] ) &&  (  target_pulse[RIGHT] >= TotalPulse[RIGHT] ) ) )//1/*左右のパルス移動量条件*/)
-//		{
-//			TargetAngularV = ang_accel;
-//			printf("deg:負, Angle, AngularV : %f, %f\r\n",Angle, AngularV );
-//		}
-//
-//	}
-	WaitStopAndReset();
-	ControlWall();
-	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
-	if(ang_accel < 0)
-	{
-		KeepPulse[LEFT] -= target_pulse/2;
-		KeepPulse[RIGHT] += target_pulse/2;
-	}
-	else 	if(ang_accel > 0)
-	{
-		KeepPulse[LEFT] += target_pulse/2;
-		KeepPulse[RIGHT] -= target_pulse/2;
-	}
-	KeepPulse[BODY] = KeepPulse[BODY];
-
-	//向いた方角を変える
-	ChangeCardinal();
-	//printf("回転終了\r\n");
-}
 void Rotate(float deg, float ang_v)
 {
-//	Pos.Act = rotate;
-//	WallWarn();
-//	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
 	TargetAngularV = 0;
-//	Control_Mode = NOT_CTRL_PID;
 	Pid[A_VELO_PID].flag = 0;
-	//角度制御切る
 
-	//rotate_ang_v - AngularV;
-	//速度増分 = 到達したい探索速度 - 現在の制御目標速度
-	//これなら目標速度が探索速度に追いついているときは加速度0にできる。
-	//角速度 + 角加速度(ms)/T1 = 角度
-	//加速度が一定。角速度が増加。角速度を積分して角度。角速度の式を作り、角速度を積分して角度を求める等式を立てる。
-	//Angle = インテグラル(ang_v(t))dt
-	//v = v0+at	|	t=v/a	||		ang_v = ang_v0 + ang_accel *t		||	t = ang_v/ang_accel
-	//x=0.5*v*v/a	|	a = 0.5*v*v*/x		||		θ=ang_v0*t+0.5*ang_v^2/ang_accel	||	ang_accel =
-	//加速度(mm/((ms)^2)) =  割り込み周期(1ms)*到達速度*到達速度(((mm/s)^2)) /(2*移動距離) x = v0t + 0.5at^2 →	a=2*(x-v0*t)/t^2 	a = t*vv/(2*x)
 	float accel_deg = deg*30/90;
 	float const_deg = deg*30/90;
 	float decel_deg = deg*30/90;
@@ -872,82 +160,20 @@ void Rotate(float deg, float ang_v)
 			const_deg * M_PI/ 180,
 			decel_deg * M_PI/ 180,
 	};
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-	//45mm直進ならパルスは足りるけど、一気に90mm直進のときは15000パルスくらい足りなさそう
-	//90mmでうまくやるには0から60000カウントまで
-	//printf("回転加速中: %f, %f, %f, %f\r\n", start_angle, move_angle, Angle, AngularV);
-#if 0
-	if( AngularV == -0)	//ベイブレードになりそうだったら止まる。
-	{
-		//緊急停止。センサの値を見る。
-		Motor_PWM_Stop();
-		while(1)
-		{
-			Signal(7);
-			printf("回転加速中: photo : %f, %f, debug : %f, %f, AngV:%f, zg:%d, timer1:%d, timer8:%d\r\n",Photo[FL],Photo[FR], debug[0], debug[1], AngularV, zg,timer1,timer8);
-		}
-
-	}
-#endif
 
 	if( ang_v > 0)	//右回転
 	{
 		TargetAngle += move_angle[0];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-//		ChangeLED(2);
-		//ここのwhileが抜けないことがある
+
 		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
 			//最短走行の時だけ、Angleが大きくならない、もしくは目標角度がかなり大きい。初期化？最初の旋回なので、0radから90度ぶん目標角度がズレている必要がある。Angleが積算できていないかも。
 			AngularAcceleration = angular_acceleration[0]; //ここまで
-//			printf("あ\r\n");
-//			if(ZGyro == 0)
-//			{
-//				float fin_angle = Angle;
-//				while(1)
-//				{
-//					TargetAngularV = 0;
-//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
-//				}
-//
-//			}
-//			if(AngularV > 3*M_PI)
-//			{
-//				float fin_angle = Angle;
-//				ChangeLED(2);
-//				while(1)
-//				{
-//					TargetAngularV = 0;
-//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
-//				}
-//
-//			}
 		}
 		TargetAngle += move_angle[1];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-//		ChangeLED(3);
 		while(TargetAngle > Angle)
 		{
 			AngularAcceleration = angular_acceleration[1];//0
-//			if(ZGyro == 0)
-//			{
-//				float fin_angle = Angle;
-//				while(1)
-//				{
-//					TargetAngularV = 0;
-//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
-//				}
-//
-//			}
-//			if(AngularV )
-//			{
-//				float fin_angle = Angle;
-//				ChangeLED(3);
-//				while(1)
-//				{
-//					TargetAngularV = 0;
-//					printf("読み出した角速度の値 : %f, オフセット : %f, 角度 : %f\r\n", ZGyro, zg_offset, fin_angle );
-//				}
-//
-//			}
 		}
 		TargetAngle += move_angle[2];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
 
@@ -989,12 +215,7 @@ void Rotate(float deg, float ang_v)
 
 	}
 	AngularAcceleration = 0;
-	//TargetAngularV = 0;
-	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
-	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
-
 	WaitStopAndReset();
-//	ControlWall();
 	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
 	if(ang_v < 0)
 	{
@@ -1008,87 +229,36 @@ void Rotate(float deg, float ang_v)
 	}
 	KeepPulse[BODY] = KeepPulse[BODY];
 
-	//向いた方角を変える
-//	ChangeCardinal();
-	//printf("回転終了\r\n");
 }
 
-void RotateTest(float deg)
-{
-//	Pos.Act = rotate;
-	WallWarn();
-	ControlWall(); //壁の読み間違いによる制御方式選択ミスで角加速から抜け出せないか、角度がリセットされている。
-	TargetAngularV = 0;
 
-	//目標角度にdegを追加
-	TargetAngle += deg*M_PI/180;
-
-	//角度のPID制御で旋回
-	PIDChangeFlag(A_VELO_PID, 1);
-	while(!( (TargetAngle - 0.04 < Angle && Angle < TargetAngle + 0.04) && (-0.02 < AngularV && AngularV < 0.02)) )
-	{
-
-	}
-	PIDChangeFlag(A_VELO_PID, 0);
-
-
-
-	AngularAcceleration = 0;
-	//TargetAngularV = 0;
-	//printf("加速後の角速度 : %f\r\n",AngularV);//1.74だった。
-	//printf("加速後の角加速度 : %f\r\n",AngularAcceleration);
-
-	WaitStopAndReset();
-	ControlWall();
-	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
-	if(deg < 0)
-	{
-		KeepPulse[LEFT] -= target_pulse/2;
-		KeepPulse[RIGHT] += target_pulse/2;
-	}
-	else 	if(deg > 0)
-	{
-		KeepPulse[LEFT] += target_pulse/2;
-		KeepPulse[RIGHT] -= target_pulse/2;
-	}
-	KeepPulse[BODY] = KeepPulse[BODY];
-
-	//向いた方角を変える
-	ChangeCardinal();
-}
-//背中あて補正
-void back_calib()
+int getFrontWall(profile *mouse)
 {
 
-}
-
-int getFrontWall()
-{
-
-	switch(my_mouse.now.car%8)//方角に合わせて、
+	switch(mouse->now.car%8)//方角に合わせて、
 	{
 
 	case north:
 
-	return my_mouse.now.wall.north;
+	return mouse->now.wall.north;
 
 	break;
 
 	case east:
 
-	return my_mouse.now.wall.east;
+	return mouse->now.wall.east;
 
 	break;
 
 	case south:
 
-	return my_mouse.now.wall.south;
+	return mouse->now.wall.south;
 
 	break;
 
 	case west:
 
-	return my_mouse.now.wall.west;
+	return mouse->now.wall.west;
 
 	break;
 
@@ -1100,46 +270,9 @@ int getFrontWall()
 
 }
 
-//void Calib()
-//{
-//	//壁使ってセンサ補正か、背中あて補正。状況に応じて補正パターンを変える
-//
-//	//フラグと変数の状態に応じてフラグを変更し、動作を変える
-//
-//}
-//int JudgeTargetMileage(float total_mileage_L, float target_mileage_L, float total_mileage_R, float target_mileage_R )
-//{
-//	static int keep_mileage=0;
-//	if( (keep_mileage + target_mileage ) <= total_mileage)
-//	{
-//		keep_mileage = total_mileage;
-//		return 0;
-//	}
-//	else
-//	{
-//		return 1;
-//	}
-//}
-
-//引数にデータを格納するタイミングは割り込みだけとか、1か所に集約する
-//2点間の座標から、移動量を算出
-void SlalomRight()	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
+void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
-	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
-	//最初の一回で現在移動量をkeepする。目標移動量を足す
-//	Pos.Act = slalom;
-//	Control_Mode = A_VELO_PID;
 	Pid[A_VELO_PID].flag = 1;
-//	ControlWall();
-	//現在移動量と比較して移動しきっていれば終了
-	//事前に決めておくものはここで定義
-	//引数は現在の状況を教えるもの
-	//スラロームは前距離と後距離と後距離があるから、連続スラロームとか加速して旋回とかに響く。
-
-	//移動しきったかどうか
-	//移動しきっていなければ、現在の状態と目標値の状態を引数として目標値を更新する
-
-	//→ 前距離後距離を加速時の目標距離に反映すればいい
 
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
 	float pre = Sla.Pre;         //スラローム前距離
@@ -1152,10 +285,9 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	//このあたりのパラメータをどう調整、設計するかが鍵
 	float now_angv = AngularV;
 	int now_pulse;
-	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
-	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
+
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall() == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
+	if (getFrontWall(mouse) == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
 	{
 		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
@@ -1183,36 +315,12 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 	now_angv = AngularV;
 
 	float start_angle = Angle;
-//	Control_Mode = NOT_CTRL_PID;
 	Pid[A_VELO_PID].flag = 0;
 	while(start_angle + ang1 > Angle)
 	{
-
-			//velocity_ctrl_flag = 1;
-			//割り込みの中で角速度を上げていく
-			//alpha_flag = 1;
-		//AngularLeapsity = alalpha_turn;
 			AngularAcceleration = alpha_turn;
 			TargetVelocity[BODY] = v_turn;
 
-#if 0
-			if( AngularV == 0)	//ベイブレードになりそうだったら止まる。AngularV == 0はIMUのとき。エンコーダのときは
-			{
-				t = 0;
-				//緊急停止。センサの値を見る。
-				Motor_PWM_Stop();
-				while(1)
-				{
-					Signal(7);
-					printf("スラローム加速中: photo : %f, %f, now_angv:%f, AngV:%f, zg:%d, timer1:%d, timer8:%d\r\n",Photo[FL],Photo[FR],now_angv,AngularV, zg,timer1,timer8);
-					//printf("回転加速中: photo : %f, %f, debug : %f, %f, AngV:%f, zg:%d, timer1:%d, timer8:%d\r\n",Photo[FL],Photo[FR], debug[0], debug[1], AngularV, zg,timer1,timer8);
-
-				}
-
-			}
-#endif
-
-			//printf("クロソイド1\r\n");
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
@@ -1221,32 +329,13 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 
 	while(start_angle + ang2 > Angle)
 	{
-			//velocity_ctrl_flag = 1;
 			TargetAngularV = TargetAngularV;
 			TargetVelocity[BODY] = v_turn;
-			////printf("円弧\r\n");
-#if 0
-			if(AngularV == 0)	//ベイブレードになりそうだったら止まる。
-			{
-				//緊急停止。センサの値を見る。
-				Motor_PWM_Stop();
-				while(1)
-				{
-					Signal(7);
-					printf("スラローム定速中: photo%f, %f, %f, %d\r\n",Photo[FL],Photo[FR], AngularV, zg);
-				}
-
-			}
-#endif
 	}
 
 	now_angv = AngularV;
 	while( start_angle + ang3 > Angle)
 	{
-
-			//velocity_ctrl_flag = 1;
-			//alpha_flag = 2;
-		//AngularLeapsity = -alalpha_turn;
 			AngularAcceleration = -alpha_turn;
 			if(TargetAngularV < 0)
 			{
@@ -1254,67 +343,27 @@ void SlalomRight()	//現在の速度から、最適な角加速度と、移動�
 				break;
 			}
 			TargetVelocity[BODY] = v_turn;
-			//printf("クロソイド2\r\n");
 	}
-	//alpha_flag = 0;
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
 	TargetAngularV = 0;
-	//Calc = SearchOrFast; //関数の前に別で設定する
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
-			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
 			TargetVelocity[BODY] = v_turn;
-			//printf("直進2\r\n");
-
-			//後半の直線に入ったら計算する。
 			if(Calc == 0)
 			{
-#if 0
-				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
-				//計算して
-				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
-				//UpdateWalkMap();
-				//次のアクションを渡すのは別のところで。
-#else
-				updateRealSearch();
-#endif
+				updateRealSearch(maze, mouse);
 				Calc = 1;
 			}
 	}
 	TargetAngle += 90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
-	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
-	//モータ出力に限らず、変数は集約している方が良い。
 
-//	距離preを速度v_turnで進む;
-//
-//	重心速度v = v_turnで
-//	角加速度alpha = alpha_turnでangleがang1になるまで進む;
-//	角加速度alpha = 0でangleがang2になるまで進む;
-//	角加速度alpha = -alpha_turnでangleがang3になるまで進む;
-//
-//	距離folを速度v_turnで進む;
 }
-void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
+void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
-	//目標移動量は事前に定義。状況に応じて値を増減させてもよし
-	//最初の一回で現在移動量をkeepする。目標移動量を足す
-
-
-//	ControlWall();
-	//現在移動量と比較して移動しきっていれば終了
-	//事前に決めておくものはここで定義
-	//引数は現在の状況を教えるもの
-	//スラロームは前距離と後距離と後距離があるから、連続スラロームとか加速して旋回とかに響く。
-
-	//移動しきったかどうか
-	//移動しきっていなければ、現在の状態と目標値の状態を引数として目標値を更新する
-
-	//→ 前距離後距離を加速時の目標距離に反映すればいい
-//	Control_Mode = A_VELO_PID;
 	Pid[A_VELO_PID].flag = 1;
 	//ここの値コピーとその他計算を事前に行う
 	float v_turn = ExploreVelocity;       //スラローム時の重心速度
@@ -1328,10 +377,9 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	//このあたりのパラメータをどう調整、設計するかが鍵
 
 	int now_pulse;
-	//割り込みで書くなら、センサデータを引数にとるか、グローバルで値を引っこ抜いておいてif文で値を変更する
-	//フラグでstatic変数を0にしておく。現在の移動量の段階しだいで出力を替えるのがスラロームなり加速なりだから、動き毎に移動量フラグを管理した方がいいかも？
+
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall() == WALL/*前に壁があれば、*/)
+	if (getFrontWall(mouse) == WALL/*前に壁があれば、*/)
 	{
 		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
@@ -1348,48 +396,30 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 	{
 		while( now_pulse + pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
-				//velocity_ctrl_flag = 1;
 				TargetAngularV = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = v_turn;
 
-				////printf("直進1\r\n");
 		}
 	}
 
-//	Control_Mode = NOT_CTRL_PID;
 	Pid[A_VELO_PID].flag = 0;
 	float start_angle = Angle;
 	while(start_angle - ang1 < Angle)
 	{
-
-			//velocity_ctrl_flag = 1;
-			//割り込みの中で角速度を上げていく
-			//alpha_flag = 1;
-			//AngularLeapsity = alalpha_turn;
 			AngularAcceleration = alpha_turn;
 			TargetVelocity[BODY] = v_turn;
-
-			//printf("クロソイド1\r\n");
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
-	//alpha_flag = 0;
-
 	while(start_angle - ang2 < Angle)
 	{
-			//velocity_ctrl_flag = 1;
 			TargetAngularV = TargetAngularV;
 			TargetVelocity[BODY] = v_turn;
-			////printf("円弧\r\n");
 	}
 
 	while( start_angle - ang3 < Angle)
 	{
-
-			//velocity_ctrl_flag = 1;
-			//alpha_flag = 2;
-		//AngularLeapsity = -alalpha_turn;
 			AngularAcceleration = -alpha_turn;
 			if(TargetAngularV > 0)
 			{
@@ -1397,82 +427,45 @@ void SlalomLeft()	//現在の速度から、最適な角加速度と、移動量
 				break;
 			}
 			TargetVelocity[BODY] = v_turn;
-			//printf("クロソイド2\r\n");
 	}
-	//alpha_flag = 0;
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
 	TargetAngularV = 0;
-//	Calc = SearchOrFast; //関数の前に別で設定
+
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
-			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
 			TargetVelocity[BODY] = v_turn;
-			//printf("直進2\r\n");
 			if(Calc == 0)
 			{
-#if 0
-				wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
-				//計算して
-				make_map(X_GOAL_LESSER, Y_GOAL_LESSER, 0x01);
-				//UpdateWalkMap();
-				//次のアクションを渡すのは別のところで。
-#else
-				updateRealSearch();
-#endif
+				updateRealSearch(maze, mouse);
 				Calc = 1;
 			}
 	}
 	TargetAngle += -90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
-	//割り込み内で書く場合は、目標値変更が関数の最後で行われる方が早くて良いのでここで計算して出力しよう。と思ったが、出力値のデバッグを考えると1か所のほうがいいはず。
-	//モータ出力に限らず、変数は集約している方が良い。
-
-//	距離preを速度v_turnで進む;
-//
-//	重心速度v = v_turnで
-//	角加速度alpha = alpha_turnでangleがang1になるまで進む;
-//	角加速度alpha = 0でangleがang2になるまで進む;
-//	角加速度alpha = -alpha_turnでangleがang3になるまで進む;
-//
-//	距離folを速度v_turnで進む;
 }
-//
-void Accel(float add_distance, float explore_speed)
+void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mouse)
 {
-//	Pos.Act = accel;
-//	ControlWall();
 	TargetAngularV = 0;
 #if 0
 	float additional_speed=0;
 	additional_speed = explore_speed - CurrentVelocity[BODY];
 
 	Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
-//	WallWarn();
-	//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
 #else
 	Acceleration = 2.89000f;
 #endif
 	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
 
 //	_Bool wall_cut = false;
-	//ChangeLED(1);
 	Pid[A_VELO_PID].flag = 1;
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
-		//printf("%d, %d, %d, %f, %f, %d, %f, %f, %d, %f, %f\r\n", TotalPulse[BODY], target_pulse, KeepPulse[BODY], TargetVelocity[BODY], Acceleration, VelocityLeftOut ,TargetVelocity[LEFT], CurrentVelocity[LEFT], Pid[L_VELO_PID].out, Pid[L_VELO_PID].KP,Pid[L_VELO_PID].KI);
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 		{
-//			wall_set();//現在座標じゃなくて、進行方向から求めた次の座標。
-//			//計算して
-//			make_map(Pos.TargetX, Pos.TargetY, 0x01);
-			//現在壁の情報が切り替わるので、壁制御を切り替える必要あり?
-			//壁制御オフはここより前に移動量で判断
-			updateRealSearch();
-			//UpdateWalkMap();
-			//次のアクションを渡すのは別のところで。
+			updateRealSearch(maze, mouse);
 			Calc = 1;
 		}
 		if(TargetVelocity[BODY] > explore_speed)
@@ -1489,33 +482,9 @@ void Accel(float add_distance, float explore_speed)
 //			ChangeLED(3);
 //		}
 
-		//ControlWall();
-#if 1
-		//printf("%d, %d\r\n",VelocityLeftOut,VelocityRightOut);
-		//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-//		if( ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
-//		{
-//			Acceleration = 0;
-//		}
-		//目標移動量のn割を超えたら
-
-#else
-		if( (abs(TIM3->CNT - INITIAL_PULSE) >= 29000) )
-		{
-			InitPulse((int*)(&(TIM3->CNT)), INITIAL_PULSE);
-			KeepCounter[LEFT] = INITIAL_PULSE;
-		}
-		if( (abs(TIM4->CNT - INITIAL_PULSE) >= 29000) )
-		{
-			InitPulse((int*)(&(TIM4->CNT)), INITIAL_PULSE);
-			KeepCounter[RIGHT] = INITIAL_PULSE;
-		}
-#endif
 	}
 	Acceleration = 0;
-	//壁読んで、
 //	wall_cut = false;
-//	ChangeLED(0);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse*0.5f;
 	KeepPulse[RIGHT] += target_pulse*0.5f;
@@ -1529,42 +498,15 @@ void Decel(float dec_distance, float end_speed)
 	//速度減分 = 到達したい探索速度 - 現在の速度
 	//これなら現在速度が探索速度に追いついているときは加速度0にできる。
 	Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-//	WallSafe();
 
-//	ControlWall();
 #else
 	Acceleration = -2.89;
 #endif
 	//ここより下を分けて書くべきかはあとで考える
 	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
 
-
-	//止まり切らずに壁に突っ込むのは、
-		//適切なタイミングでwhileを抜けたのに出力の反映が遅れたパターンと、
-		//これより前の直進が長くても壁センサのおかげで止まれるはずなので出力が残っちゃったパターン。
-		//かもしくは条件が成立しちゃっているセンサ値が問題のパターン。
-	//スラロームのあとはKeepPulse[BODY]が変わっていないので、そのせいで減速距離が取れていない可能性がある。壁センサも一応見る
 	while( (	(Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
-		//探索目標速度 <= 制御目標速度  となったら、減速をやめる。
-//		if(  ( ( keep_pulse - (target_pulse*0.1) ) ) <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
-//		{
-//			Acceleration = 0;
-//		}
-
-//		if( (abs(TIM3->CNT - INITIAL_PULSE) >= 29000) )
-//		{
-//			InitPulse((int*)(&(TIM3->CNT)), INITIAL_PULSE);
-//			KeepCounter[LEFT] = INITIAL_PULSE;
-//		}
-//		if( (abs(TIM4->CNT - INITIAL_PULSE) >= 29000) )
-//		{
-//			InitPulse((int*)(&(TIM4->CNT)), INITIAL_PULSE);
-//			KeepCounter[RIGHT] = INITIAL_PULSE;
-//		}
-		//式の順番はあとで前後するかも
-		//ControlWall();
 		if(end_speed == 0){
 			if(TargetVelocity[BODY] <= 90){
 				TargetVelocity[BODY] = 90;//end_speed;
@@ -1583,13 +525,6 @@ void Decel(float dec_distance, float end_speed)
 		}
 		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] )
 		{
-//			WallWarn();
-//			//ControlWall();
-//			PIDChangeFlag(L_WALL_PID, 0);
-//			PIDChangeFlag(R_WALL_PID, 0);
-//			PIDChangeFlag(D_WALL_PID, 0);
-//			PIDChangeFlag( A_VELO_PID , 1);
-//			Control_Mode = A_VELO_PID;
 			Pid[A_VELO_PID].flag = 1;
 		}
 	}
@@ -1652,13 +587,13 @@ void Compensate()
 #endif
 
 }
-float AjustCenter(){
+float AjustCenter(profile *mouse){
 	//x,y,lrfb
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag( A_VELO_PID, 0);
-	int wall_ctrl = GetWallCtrlDirection();
+	int wall_ctrl = GetWallCtrlDirection(mouse);
 	if(wall_ctrl == 0)
 		ChangeLED(7);
 	else ChangeLED(0);
@@ -1669,10 +604,10 @@ float AjustCenter(){
 //			3000,
 //			4000
 //	};
-	switch(my_mouse.now.car%8)
+	switch(mouse->now.car%8)
 	{
 	case north: //use west or north wall
-			if (my_mouse.now.wall.north == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-10);
@@ -1686,7 +621,7 @@ float AjustCenter(){
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
 
 			}
-			else if (my_mouse.now.wall.south == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.south == wall) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -1700,7 +635,7 @@ float AjustCenter(){
 			}
 		break;
 	case east:
-			if (my_mouse.now.wall.east == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-10);
@@ -1712,7 +647,7 @@ float AjustCenter(){
 //					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (my_mouse.now.wall.west == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.west == wall) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -1725,7 +660,7 @@ float AjustCenter(){
 			}
 		break;
 	case south:
-			if (my_mouse.now.wall.south == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-10);
@@ -1737,7 +672,7 @@ float AjustCenter(){
 //						ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (my_mouse.now.wall.north == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.north == wall) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -1750,7 +685,7 @@ float AjustCenter(){
 			}
 		break;
 	case west:
-			if (my_mouse.now.wall.west == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-10);
@@ -1762,7 +697,7 @@ float AjustCenter(){
 //					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (my_mouse.now.wall.east == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.east == wall) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -1781,48 +716,48 @@ float AjustCenter(){
 	TargetAngularV = 0;
 	return 45;
 }
-int GetWallCompensateDir()
+int GetWallCompensateDir(profile *mouse)
 {
-	switch(my_mouse.now.car%8)
+	switch(mouse->now.car%8)
 			{
 			case north:
 
-				if(my_mouse.now.wall.east == wall)
+				if(mouse->now.wall.east == wall)
 				{
 					return R_WALL_PID;
 				}
-				else if(my_mouse.now.wall.west == wall)
+				else if(mouse->now.wall.west == wall)
 				{
 					return L_WALL_PID;
 				}
 				break;
 
 			case east:
-				if(my_mouse.now.wall.north == wall)
+				if(mouse->now.wall.north == wall)
 				{
 					return L_WALL_PID;
 				}
-				else if(my_mouse.now.wall.south == wall)
+				else if(mouse->now.wall.south == wall)
 				{
 					return R_WALL_PID;
 				}
 				break;
 			case south:
-				if(my_mouse.now.wall.east == wall)
+				if(mouse->now.wall.east == wall)
 				{
 					return L_WALL_PID;
 				}
-				else if(my_mouse.now.wall.west == wall)
+				else if(mouse->now.wall.west == wall)
 				{
 					return R_WALL_PID;
 				}
 				break;
 			case west:
-				if ( my_mouse.now.wall.north == wall )
+				if ( mouse->now.wall.north == wall )
 				{
 					return R_WALL_PID;
 				}
-				else if ( my_mouse.now.wall.south == wall )
+				else if ( mouse->now.wall.south == wall )
 				{
 					return L_WALL_PID;
 				}
@@ -1835,7 +770,7 @@ int GetWallCompensateDir()
 			}
 	return N_WALL_PID;
 }
-void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
+void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, maze_node *maze, profile *mouse)
 {
 	//斜め走行時の直進は別で作る
 
@@ -1850,7 +785,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 	{
 		//explore_speed += AddVelocity;
 		VelocityMax = true;
-		Accel( move_distance , explore_speed);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
+		Accel( move_distance , explore_speed, maze, mouse);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
 	}
 	else if(accel_or_decel == -1) //探索速度までの減速. ターン速度までの減速も後で入れる
 	{
@@ -1862,7 +797,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 		{
 			if(Calc == 0)//減速終了後直ぐにマップ更新
 			{
-				updateRealSearch();
+				updateRealSearch(maze, mouse);
 				//ChangeLED(7);
 				Calc = 1;
 			}
@@ -1874,60 +809,14 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 
 	else
 	{
-		//ただの直進. 斜め走行時はそれように関数を作るほうがいいかも. 判定処理が面倒になるから.
-		//VelocityMaxはそのまま;
-		//壁の状態を見る.
-			//使えるかどうか判断して, 一定の距離制御する.
-				//IMUの角度が先か
-				//壁とのバランスが先か.
-					//IMUの角度を調整して,直後に壁見て、バランス調整する
-					//かもしくは、侵入直後の角度と壁センサのバランスを見て制御量を決めるか.
-					//ある距離になるまでにどのくらい動かないといけないかがわかる必要がある
-					//壁だけでバランス直せる？中央に
-					//角度制御ぎちぎちにやっておいて瞬間的に壁見て、ちょっと横向いて直進してまた角度制御、がとりあえずの最適解なきがする
-		//角度を取得
-		//センサ値を取得
-		//どのあたりにどの角度で居るのかを把握
-		//75mm後にまっすぐに戻るにはどれくらい制御するか.
-			//速度に合わせてゲインを強くすれば近似できそう
-			//あとは区画使って調整すればいい
-		//それを設定してwhileループ
-//		Pos.Act = straight;
-//		WallSafe();
-//		ControlWall();
 		_Bool wall_cut=false;	//壁切れ用
 		_Bool face_check  = false; //一度でも正面領域に収まったか
-		int ctrl_mode = GetWallCtrlDirection();
+		int ctrl_mode = GetWallCtrlDirection(mouse);
 		//両壁がなければ, 角度制御しつつ柱を見たい. 細かすぎるかも.　今は角度制御
 		if (ctrl_mode == N_WALL_PID )//|| ctrl_mode == F_WALL_PID)
 			ctrl_mode = A_VELO_PID;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
-			//角度が収まっていれば壁の値を見て微調整
-			//収まっていなければ角度制御して角度を落ち着かせてから壁制御↑
-//			//一度正面を向いたかチェック
-//			if(face_check == false){
-//				if(TargetAngle - angle_range < Angle  && Angle < TargetAngle + angle_range){
-//					//3度以内
-//					face_check = true; //正面になったら
-//					if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
-//						Control_Mode = A_VELO_PID;
-//					}
-//					else Control_Mode = ctrl_mode;//壁見る
-//				}
-//				else{
-//					Control_Mode = A_VELO_PID;
-//				}
-//			}
-//			else
-//			{	//一度でも向いていれば壁制御してもいい
-//				if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
-//					Control_Mode = A_VELO_PID;
-//				}//壁がなくなるのを見越して角度のみに変更
-//				else{
-//					Control_Mode = ctrl_mode;
-//				}//少しの間壁を見て制御
-//			}
 			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
 //				Control_Mode = A_VELO_PID;
 				Pid[A_VELO_PID].flag = 1;
@@ -1942,7 +831,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 			//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
-				updateRealSearch();
+				updateRealSearch(maze, mouse);
 				Calc = 1;
 			}
 			//壁切れ補正
@@ -1967,18 +856,8 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel)
 		KeepPulse[RIGHT] += target_pulse*0.5f;
 
 	}
-//	ChangeLED(0);
-	//余分に加速した場合、あとの減速で速度を落としきれないことになっていたので、減速時にその時の速度を使うようにした。
-	//printf("%f, %f, %f\r\n",CurrentVelocity[LEFT],CurrentVelocity[RIGHT], Acceleration);
-//	int target_pulse = (int)(2*(move_distance/2)/MM_PER_PULSE);
-//	int keep_pulse = TotalPulse[BODY];
-	//WallWarn();
-	//keep_pulse = TotalPulse[BODY];
-	//計算は区切りのいいところで一回するだけ。移動しきるまでそのままか、条件に応じて変える。
-	//Uターンは別パターン
-	//各変数の状況毎に割り込み的に動作を追加していくほうが賢いのでは。
 }
-void TurnRight(char mode)
+void TurnRight(char mode, maze_node *maze, profile *mouse)
 {
 	//関数呼び出しと判定処理が多いと遅い。
 
@@ -2003,7 +882,7 @@ void TurnRight(char mode)
 
 //		PIDChangeFlag(A_VELO_PID, 0);
 		Rotate( 90 , 2*M_PI);//1.5
-		my_mouse.now.car += 2;
+		mouse->now.car += 2;
 		//方角+2
 		//
 		//ここより後ろで
@@ -2039,11 +918,11 @@ void TurnRight(char mode)
 //													}
 //												}
 //												cc ++;
-		Accel(45, ExploreVelocity);
+		Accel(45, ExploreVelocity, maze, mouse);
 		break;
 	case 'S':
 		//スラローム
-		SlalomRight();
+		SlalomRight(maze, mouse);
 		break;
 	default :
 		break;
@@ -2051,18 +930,8 @@ void TurnRight(char mode)
 
 
 }
-void TurnLeft(char mode)
+void TurnLeft(char mode, maze_node *maze, profile *mouse)
 {
-	//スラロームなら
-	//一つ
-
-	//一時停止するなら
-	//減速して
-	//補正して
-	//回転して
-	//加速する
-	//関数呼び出しと判定処理が多いと遅いかなー。
-
 	switch( mode )
 	{
 	case 'T' :
@@ -2077,7 +946,7 @@ void TurnLeft(char mode)
 //		Control_Mode = NOT_CTRL_PID;
 		Pid[A_VELO_PID].flag = 0;
 		Rotate( 90 , -2*M_PI);//-1.5
-		my_mouse.now.car -= 2;
+		mouse->now.car -= 2;
 		//RotateTest(-90);
 //		PIDReset(L_VELO_PID);
 //		PIDReset(R_VELO_PID);
@@ -2089,58 +958,52 @@ void TurnLeft(char mode)
 //		Control_Mode = A_VELO_PID;
 		Pid[A_VELO_PID].flag = 1;
 //		PIDChangeFlag( A_VELO_PID , 1);
-		Accel(45, ExploreVelocity);
+		Accel(45, ExploreVelocity, maze, mouse);
 		break;
 	case 'S':
 		//スラローム
-		SlalomLeft();
+		SlalomLeft(maze, mouse);
 		break;
 	default :
 		break;
 	}
 
 }
-void GoBack()
+void GoBack(maze_node *maze, profile *mouse)
 {
 	//減速して
 	Decel(45, 0);
-	float acc = AjustCenter();
+	float acc = AjustCenter(mouse);
 	WaitStopAndReset();
 //	ChangeLED(5);
-
-	//少しバックして
-	//センサ値の傾きが負になるまで下がる
-	//止まって
-	//PID制御で壁との距離を調整
-	//旋回
 #if 1
 //	Control_Mode = NOT_CTRL_PID;
-	int wall_comp = GetWallCompensateDir();
+	int wall_comp = GetWallCompensateDir(mouse);
 		//右か左かそれ以外か
 		if(wall_comp == L_WALL_PID)
 		{
 			Rotate(90, -2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
-			my_mouse.now.car = (my_mouse.now.car - 2) %8;
-			acc = AjustCenter();
+			mouse->now.car = (mouse->now.car - 2) %8;
+			acc = AjustCenter(mouse);
 //			Pos.Dir = left;
 			Rotate(90, -2*M_PI);
-			my_mouse.now.car = (my_mouse.now.car - 2) %8;
+			mouse->now.car = (mouse->now.car - 2) %8;
 //			Pos.Dir = back;
 		}
 		else if(wall_comp == R_WALL_PID)
 		{
 			Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
-			my_mouse.now.car = (my_mouse.now.car + 2) %8;
-			acc = AjustCenter();
+			mouse->now.car = (mouse->now.car + 2) %8;
+			acc = AjustCenter(mouse);
 //			Pos.Dir = right;
 			Rotate(90, 2*M_PI);
-			my_mouse.now.car = (my_mouse.now.car + 2) %8;
+			mouse->now.car = (mouse->now.car + 2) %8;
 //			Pos.Dir = back;
 		}
 		else if(wall_comp == N_WALL_PID)
 		{
 			Rotate(180, 2*M_PI);
-			my_mouse.now.car = (my_mouse.now.car + 2) %8;
+			mouse->now.car = (mouse->now.car + 2) %8;
 		}
 //		Control_Mode = A_VELO_PID;
 #else
@@ -2148,11 +1011,11 @@ void GoBack()
 	Control_Mode = NOT_CTRL_PID;
 //	PIDChangeFlag(A_VELO_PID, 0);
 	Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
-	my_mouse.now.car = (my_mouse.now.car + 2) %8;
+	mouse->now.car = (mouse->now.car + 2) %8;
 	//acc = AjustCenter();
 	Pos.Dir = right;
 	Rotate(90, 2*M_PI);
-	my_mouse.now.car = (my_mouse.now.car + 2) %8;
+	mouse->now.car = (mouse->now.car + 2) %8;
 	Control_Mode = A_VELO_PID;
 //	PIDChangeFlag(A_VELO_PID, 1);
 	Pos.Dir = back;
@@ -2160,25 +1023,25 @@ void GoBack()
 #endif
 
 
-	acc = AjustCenter();
+	acc = AjustCenter(mouse);
 
 	HAL_Delay(200);
 
-	Accel(acc, ExploreVelocity);
+	Accel(acc, ExploreVelocity, maze, mouse);
 	//方角に合わせてxyどちらかに±1
-	switch(my_mouse.now.car%8)
+	switch(mouse->now.car%8)
 	{
 	case north:
-		my_mouse.now.pos.y ++;
+		mouse->now.pos.y ++;
 		break;
 	case east:
-		my_mouse.now.pos.x ++;
+		mouse->now.pos.x ++;
 		break;
 	case south:
-		my_mouse.now.pos.y --;
+		mouse->now.pos.y --;
 		break;
 	case west:
-		my_mouse.now.pos.x --;
+		mouse->now.pos.x --;
 		break;
 	default:
 		break;
