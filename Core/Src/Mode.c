@@ -25,7 +25,8 @@
 #include "Interrupt.h"
 #include "action.h"
 #include "MazeLib.h"
-#include "test.h"
+//#include "test.h"
+#include "Search.h"
 #include "Record.h"
 
 #include <main.h>
@@ -235,6 +236,8 @@ void GainTestRWall()
 	TotalPulse[LEFT] = 0;
 	TotalPulse[BODY] = 0;
 
+	//PIDFlag = L_VELO_PID; のように直接どれにするか指定してはどうか. 必ずどれか一つ. どれか一つでなければビット操作で
+	//char型のフラグ 8本のフラグ .最悪256パターン用意しないといけなくなる
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	//PIDChangeFlagStraight(R_WALL_PID);

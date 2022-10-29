@@ -20,7 +20,8 @@
 #include "IR_Emitter.h"
 
 #include "MazeLib.h"
-#include "test.h"
+//#include "test.h"
+#include "Search.h"
 #include <stdbool.h>
 static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
 const float angle_range = 3*M_PI/180;  //領域
@@ -523,7 +524,7 @@ void Decel(float dec_distance, float end_speed)
 				AngularAcceleration = 0;
 			}
 		}
-		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] )
+		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] ) //距離で制御を切り替えるなら、別のwhileを用意すればいいのでは
 		{
 			Pid[A_VELO_PID].flag = 1;
 		}
