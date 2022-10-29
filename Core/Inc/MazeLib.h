@@ -168,6 +168,40 @@ void printGoal(profile *prof);
 void printProfile(profile *prof);
 void initState(state *log_st, int n, node *nd);
 
+node *getNodeInfo(maze_node *maze, uint8_t x, uint8_t y, cardinal car);
+node *getNextNode(maze_node *maze, cardinal car, node *my_node, int mask);
+state *getNextState(state *now_state, state *next_state, node *next_node);
+
+void getRouteFastRun(state *log_st, state *now_st, int n);
+void printRoute(state *route, int n);
+
+_Bool getWallNow(state *st, wall_state *wall_st);
+void getNowWallVirtual(maze_node *, profile *, uint8_t now_x, uint8_t now_y);
+void getNextWallVirtual(maze_node *, profile *, uint8_t next_x, uint8_t next_y);
+_Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node);
+
+//最短走行用のアクションに番号を振る
+typedef enum {
+	START,
+	ACC_DEC,
+	L_90_SEARCH,
+	R_90_SEARCH,
+	L_90_FAST,
+	R_90_FAST,
+}Action;
+//データ構造
+typedef struct {
+	state path_state;
+	Action path_action;
+	//斜めで壁を使うにはどうするか. 今回斜めまで入れられない...
+		//前壁を見るセンサを少し強めに傾けておいて見る
+	_Bool path_ahead;
+}Path;
+extern Path FastPath[16*16];
+extern int Num_Nodes;
+void initSearchData(maze_node *my_maze, profile *Mouse);
+void getPathNode(maze_node *maze, profile *mouse);
+void getPathAction(profile *mouse);
 
 /* ----- 探索者データ管理 ここまで ----- */
 #endif /* MAZELIB_H_ */

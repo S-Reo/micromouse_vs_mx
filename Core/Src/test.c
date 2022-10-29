@@ -3,15 +3,15 @@
 #include <stdint-gcc.h>
 
 
-//#include "MazeLib.h"
-
-#include <main.h>
-#include "MicroMouse.h"
 #include "test.h"
-#include "Search.h"
+#include "MazeLib.h"
+#include "PID_Control.h"
+// シミュレーションしたいロジックが増えたら、適宜ファイルに追加
 
+// #include <main.h>
+// #include "MicroMouse.h"
+// #include "Search.h"
 //#include "Interrupt.h"
-//#include "PID_Control.h"
 //#include "Action.h"
 
 #define DEBUG_ON    0
@@ -559,18 +559,20 @@ void Fastest_Run(maze_node *maze, profile *mouse, state *route_log)
 //    return true;
 //
 //}
-//int main()
-//{
-//    //外部から迷路をインポートして走らせる
+#if SIMULATION
+int main()
+{
+  //外部から迷路をインポートして走らせる
 //    if(Simulation() == true)
 //    {
 //        printf("完了\r\n");
-//
+
 //    }
 //    else
 //    {
 //        printf("失敗\r\n");
 //    }
-//
-//    return 0;
-//}
+   printf("test!\n");
+  return 0;
+}
+#endif
