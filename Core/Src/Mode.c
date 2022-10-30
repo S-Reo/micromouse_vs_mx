@@ -616,16 +616,20 @@ void Explore()
 	VelocityMax = false;
 	SearchOrFast = 0;
 	Calc = 0;
-
+	WALL_MASK = 0x01;
 //	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
 	Pid[A_VELO_PID].flag = 1;
 	initSearchData(&my_map, &my_mouse);
 //	printGoal(&my_mouse);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
+	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
+	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+	my_mouse.target_size = goal_edge_num;
+#define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= large_x) && (less_y <= next_y && next_y <= large_y) )
 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
 
-	while( ! ((my_mouse.goal_lesser.x <= my_mouse.now.pos.x && my_mouse.now.pos.x <= my_mouse.goal_larger.x) && (my_mouse.goal_lesser.y <= my_mouse.now.pos.y && my_mouse.now.pos.y <= my_mouse.goal_larger.y))  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
+	while( ! IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
 		//shiftState(&my_mouse); //アクションの中で呼舞踊に変更
 
@@ -633,7 +637,7 @@ void Explore()
 //		KyushinJudge();
 //		SelectAction(turn_mode);
 //		shiftPos();
-		getNextDirection(&my_map, &my_mouse, turn_mode);
+		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
 #if 0
 		static int cc =0;
 		cc ++;
@@ -656,6 +660,124 @@ void Explore()
 	//完了の合図
 	Signal(7);
 
+	//スタートへ
+	//最短走行で帰る
+#if 0
+	updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
+
+		getPathNode(&my_map, &my_mouse);
+		getPathAction(&my_mouse);
+		HAL_Delay(200);
+
+		//リセット、再取得
+		initSearchData(&my_map, &my_mouse);
+		flashCopyNodesToRam(&my_map); //existenceだけ
+		updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
+
+		MaxParaRunTest(&my_map, &my_mouse);
+#else
+		//停止状態から帰還までの処理
+		//探索関数で、マップのアップデートしないとどうなるか. 既存のマップデータのみで行動決定. 壁制御が効かない.
+		VelocityMax = false;
+		goal_edge_num = GOAL_SIZE_X;
+		TargetVelocity[BODY] = 0;
+		Acceleration = 0;
+		TargetAngularV = 0;
+		TargetAngle = 0;
+		Angle = 0;
+
+		SearchOrFast = 0;
+		Calc = SearchOrFast;
+		PIDReset(L_VELO_PID);
+		PIDReset(R_VELO_PID);
+		PIDReset(A_VELO_PID);
+		PIDReset(L_WALL_PID);
+		PIDReset(R_WALL_PID);
+		PIDReset(D_WALL_PID);
+
+		my_mouse.target.pos.x = 0;
+		my_mouse.target.pos.y = 0;
+		my_mouse.target_size = 1;
+		WALL_MASK = 0x03;
+		//マップ
+		updateAllNodeWeight(&my_map, my_mouse.target.pos.x, my_mouse.target.pos.y, my_mouse.target_size, my_mouse.target_size, WALL_MASK);
+		//最小ノードを選択
+		my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node, WALL_MASK); //周囲ノードを見て重み最小を選択
+		getNextState(&(my_mouse.now), &(my_mouse.next), my_mouse.next.node);
+		//そのノードに行くための準備
+		//前なら45mm加速
+
+		switch(my_mouse.now.dir%8){
+		case front:
+		//		ChangeLED(0);
+				AddVelocity = 0;
+				//ただ直進
+				Calc = SearchOrFast;
+				Accel(45, ExploreVelocity, &my_map, &my_mouse);
+//				GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, my_map, my_mouse);
+				break;
+			case right:
+				ChangeLED(0);
+				//右旋回
+				Calc = SearchOrFast;
+				Rotate(90, M_PI);
+				Accel(45, ExploreVelocity, &my_map, &my_mouse);
+//				TurnRight(turn_mode, &my_map, &my_mouse);
+				break;
+			case backright:
+				ChangeLED(0);
+				Calc = 1;//マップ更新したくないときは1を代入。
+//				GoBack(my_map, my_mouse); //間の座標変動を
+				Rotate(180, M_PI);
+				Accel(45, ExploreVelocity, &my_map, &my_mouse);
+				Calc = SearchOrFast;
+				TurnRight(turn_mode, &my_map, &my_mouse);
+				break;
+			case back:
+				ChangeLED(0);
+				//Uターンして直進.加速できる
+				Calc = 1;//マップ更新したくないときは1を代入。
+//				GoBack(my_map, my_mouse);
+				Rotate(180, M_PI);
+				Accel(45, ExploreVelocity, &my_map, &my_mouse);
+				AddVelocity = 0;
+				Calc = SearchOrFast;
+				GoStraight(90, ExploreVelocity +AddVelocity, 0, &my_map, &my_mouse);
+				break;
+			case backleft:
+				ChangeLED(0);
+				//Uターンして左旋回
+				Calc = 1;//マップ更新したくないときは1を代入。
+//				GoBack(my_map, my_mouse);
+				Rotate(180, -M_PI);
+				Accel(45, ExploreVelocity, &my_map, &my_mouse);
+				Calc = SearchOrFast;
+				TurnLeft(turn_mode, &my_map, &my_mouse);
+				break;
+			case left:
+				ChangeLED(0);
+				//左旋回
+				Calc = SearchOrFast;
+		//		ChangeLED(4);
+				Rotate(90, -M_PI);
+				Accel(45, ExploreVelocity, &my_map, &my_mouse);
+//				TurnLeft(turn_mode, &my_map, &my_mouse);
+				break;
+			default:
+				break;
+		}
+//		shiftState(&my_mouse);
+		while( ! IS_GOAL(0,0,0,0, my_mouse.now.pos.x, my_mouse.now.pos.y)  ){
+				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+//				shiftState(&my_mouse);
+		}
+#endif
+		//ゴールしたら減速して、停止。
+		Decel(45,0);
+		shiftState(&my_mouse);
+
+		//終了合図
+		Signal(7);
 
 while(1)
 {

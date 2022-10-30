@@ -1,5 +1,6 @@
 #include "MazeLib.h"
 
+int WALL_MASK;
 //直ぐ消す
 // #include "Interrupt.h"
 

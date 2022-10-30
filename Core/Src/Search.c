@@ -81,14 +81,17 @@ void updateRealSearch(maze_node *maze, profile *mouse)
     //現在方角、壁は、合ってる。座標とノードは？
     //ここで壁の存在を反映
 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
+	//mouse->target.pos.x, mouse->target.pos.y;
 
+//	int WALL_MASK = 0x01;
 	//壁の存在を基に重みマップを更新
-	updateAllNodeWeight(maze, mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
+	updateAllNodeWeight(maze, mouse->target.pos.x, mouse->target.pos.y, mouse->target_size, mouse->target_size, WALL_MASK);
+			//mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01); // goal_lesser_x, goal_lesser_y,  goal_size_x, goal_size_y, mask);//
 }
 //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせばよさそう。
 //現情報と次情報から次の進行方向を得る処理
 
-void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode)
+void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
 {
 	//一回目の旋回後、東を向いている
 	//選ぶノードがおかしい
@@ -96,7 +99,7 @@ void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode)
 	//
 
 	//メインでノード選択
-	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, 0x01);
+	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, mask);
 	getNextState(&(Mouse->now), &(Mouse->next), Mouse->next.node);
 
 	//既知区間加速このswitch文中で書くかも

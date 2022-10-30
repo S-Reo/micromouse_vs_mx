@@ -1,7 +1,7 @@
 #include "MazeSimulation.h"
-
+#include <string.h>
 //#include "MazeLib.h"
-
+char FILE_NAME[200] = "/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2021MS.txt";
 //0~15の値使ってない、名前おかしい
 _Bool convert16ValueToWallDirection_Simulation(simulation *simu, state *st, wall_state *wall_st)
 {
@@ -120,8 +120,10 @@ void getNodeFrom16Value_Simulation(simulation *simu)
 _Bool getFileData(simulation *simu)
 {
     //ファイルの絶対パスを入力
-    printf("迷路テキストファイル名 : "); scanf("%s", (char *)(simu->filename) );
-    //simu->filename = "C:/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2021MM.png.txt";
+    //printf("迷路テキストファイル名 : "); scanf("%s", (char *)(simu->filename) );
+    
+    strcpy(simu->filename, FILE_NAME);
+    printf("%s\n%s\n", simu->filename, FILE_NAME);
     simu->fp = fopen(simu->filename, "r"); // ファイルを開く。失敗するとNULLを返す。
 	if(simu->fp == NULL) {
 		printf("%s file not open!\n", simu->filename);
