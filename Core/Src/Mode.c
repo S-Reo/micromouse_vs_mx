@@ -198,6 +198,13 @@ void Debug()
 	//IT_mode = WRITINGFREE;
 	IT_mode = EXPLORE;
 
+	//直線距離の計測
+	//加減速
+	FastStraight(0.5, (61.5+90*7)/90, 1.00, -1.00/*2.89, -2.89*/, 240, 0);
+	while(1){
+		PIDChangeFlag(L_VELO_PID, 0);
+		PIDChangeFlag(R_VELO_PID, 0);
+	}
 }
 void ParameterSetting()
 {
@@ -264,16 +271,24 @@ void GainTestDWall()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	//PIDChangeFlagStraight(D_WALL_PID);
-	PIDChangeFlag(D_WALL_PID, 1);
+	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
-	//PIDSetGain(D_WALL_PID, 10, 0, 0);
+	PIDChangeFlag(F_WALL_PID, 1);
+	PIDChangeFlag(A_VELO_PID, 0);
+
+//	PIDSetGain(D_WALL_PID, 10, 0, 0);
 	ExploreVelocity=0;
 	ChangeLED(2);
 	while(1)
 	{
 		TargetVelocity[BODY] = 0;
-		printf("前左: %f,前右: %f,横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[SL],Photo[SR]);
+		PIDChangeFlag(D_WALL_PID, 0);
+		PIDChangeFlag(L_WALL_PID, 0);
+		PIDChangeFlag(R_WALL_PID, 0);
+		PIDChangeFlag(F_WALL_PID, 1);
+		PIDChangeFlag(A_VELO_PID, 0);
+//		printf("前左: %f,前右: %f,横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[SL],Photo[SR]);
 	}
 }
 
@@ -592,9 +607,15 @@ void Explore()
 		break;
 	case 3:
 		ExploreVelocity=240;
-		Sla.Pre = 2;
-		Sla.Fol = 16;
-		Sla.Alpha = 0.078;
+//		Sla.Pre = 2;
+//		Sla.Fol = 16;
+//		Sla.Alpha = 0.078;
+//		Sla.Pre = 2;
+//		Sla.Fol = 4.5;
+//		Sla.Alpha = 0.072;
+		Sla.Pre = 5;
+		Sla.Fol = 7;
+		Sla.Alpha = 0.082;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;

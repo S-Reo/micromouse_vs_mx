@@ -23,7 +23,8 @@
 //#include "test.h"
 #include "Search.h"
 #include <stdbool.h>
-static const float Wall_Cut_Val = (2*38/MM_PER_PULSE);
+const float TO_PULSE = 2/MM_PER_PULSE;
+//const float Wall_Cut_Val = (38*TO_PULSE);
 const float angle_range = 3*M_PI/180;  //領域
 
 /* バックエンドでコマンドとして処理する */
@@ -139,6 +140,9 @@ void WaitStopAndReset()
 		Acceleration = 0;
 		TargetAngularV = 0;
 		AngularAcceleration = 0;
+		PIDReset(L_VELO_PID);
+		PIDReset(R_VELO_PID);
+		PIDReset(A_VELO_PID);
 
 	}while(CurrentVelocity[BODY] != 0);
 	HAL_Delay(100);
@@ -296,7 +300,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
-			ChangeLED(7);
+			ChangeLED(4);
 		}
 
 	}
@@ -309,12 +313,12 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 				AngularLeapsity = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = v_turn;
-
+				ChangeLED(2);
 				////printf("直進1\r\n");
 		}
 	}
 	now_angv = AngularV;
-
+	ChangeLED(0);
 	float start_angle = Angle;
 	Pid[A_VELO_PID].flag = 0;
 	while(start_angle + ang1 > Angle)
@@ -388,7 +392,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
-
+			ChangeLED(4);
 		}
 
 
@@ -400,10 +404,10 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 				TargetAngularV = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = v_turn;
-
+				ChangeLED(2);
 		}
 	}
-
+	ChangeLED(0);
 	Pid[A_VELO_PID].flag = 0;
 	float start_angle = Angle;
 	while(start_angle - ang1 < Angle)
@@ -458,7 +462,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 #else
 	Acceleration = 2.89000f;
 #endif
-	int target_pulse = (int)(2*add_distance/MM_PER_PULSE);
+	int target_pulse = (int)(add_distance*TO_PULSE);
 
 //	_Bool wall_cut = false;
 	Pid[A_VELO_PID].flag = 1;
@@ -504,7 +508,7 @@ void Decel(float dec_distance, float end_speed)
 	Acceleration = -2.89;
 #endif
 	//ここより下を分けて書くべきかはあとで考える
-	int target_pulse = (int)(2*dec_distance/MM_PER_PULSE);
+	int target_pulse = (int)(dec_distance*TO_PULSE);
 
 	while( (	(Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
@@ -545,14 +549,14 @@ void Decel(float dec_distance, float end_speed)
 void Calib(int distance)
 {
 	//Pos.を考え中
-	int target_pulse = (int)(2*distance/MM_PER_PULSE);
+	int target_pulse = (int)(distance*TO_PULSE);
 	//int keep_pulse = TotalPulse[BODY]+target_pulse;
 	if(target_pulse > 0)
 	{
 		while( KeepPulse[BODY] + target_pulse > TotalPulse[BODY] )
 		{
 			Acceleration = 0;
-			TargetVelocity[BODY] = 70;
+			TargetVelocity[BODY] = 45;
 		}
 		KeepPulse[BODY] += target_pulse;
 
@@ -562,7 +566,7 @@ void Calib(int distance)
 		while( KeepPulse[BODY] + target_pulse < TotalPulse[BODY] )
 		{
 			Acceleration = 0;
-			TargetVelocity[BODY] = -100;
+			TargetVelocity[BODY] = -45;
 		}
 		KeepPulse[BODY] += target_pulse;
 	}
@@ -580,7 +584,9 @@ void Compensate()
 #else
 	//バック補正
 	//ControlWall();
-	Calib(-50);
+	PIDChangeFlag(A_VELO_PID, 1);
+	Calib(-25);
+	PIDChangeFlag(A_VELO_PID, 0);
 	//Calib(15);
 
 //	Accel(7,-70);
@@ -600,21 +606,21 @@ float AjustCenter(profile *mouse){
 	else ChangeLED(0);
 //	Control_Mode = NOT_CTRL_PID;
 	//HAL_Delay(100);
-//	float photo_threshold[2]=
-//	{
-//			3000,
-//			4000
-//	};
+	float photo_threshold[2]=
+	{
+			3750,
+			4250
+	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さく。狭めると位置が安定するが環境しだいで怪しい挙動に。
 	switch(mouse->now.car%8)
 	{
 	case north: //use west or north wall
 			if (mouse->now.wall.north == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				Calib(-10);
+				Calib(-5);
 //				Control_Mode = wall_ctrl;
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !( (3000 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !( (photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 				{
 //					ChangeLED(Pid[F_WALL_PID].flag);
 				}
@@ -639,11 +645,11 @@ float AjustCenter(profile *mouse){
 			if (mouse->now.wall.east == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				Calib(-10);
+				Calib(-5);
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !(( (3000 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				while( !(( (photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1]))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
 //					ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -664,11 +670,11 @@ float AjustCenter(profile *mouse){
 			if (mouse->now.wall.south == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				Calib(-10);
+				Calib(-5);
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !((3000< Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				while( !((photo_threshold[0]< Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
 //						ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -689,11 +695,11 @@ float AjustCenter(profile *mouse){
 			if (mouse->now.wall.west == wall) //前に壁があれば前で調整
 			{
 				//前壁調整
-				Calib(-10);
+				Calib(-5);
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !((3000 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4000)) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				while( !((photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
 //					ChangeLED(Pid[F_WALL_PID].flag);
 					}
@@ -781,7 +787,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 //	Control_Mode = A_VELO_PID;
 	Pid[A_VELO_PID].flag = 1;
 	//加減速時は角度制御だけにしておいてあとで困ったら追加
-	int target_pulse = (int)(2*move_distance/MM_PER_PULSE);
+	int target_pulse = (int)(move_distance*TO_PULSE);
 	if(accel_or_decel == 1) //加速するとき
 	{
 		//explore_speed += AddVelocity;
@@ -842,7 +848,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 //				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
 //				wall_cut = true;
 //				ChangeLED(3);
-//			}
+			}
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;
@@ -1026,7 +1032,7 @@ void GoBack(maze_node *maze, profile *mouse)
 
 	acc = AjustCenter(mouse);
 
-	HAL_Delay(200);
+	WaitStopAndReset();
 
 	Accel(acc, ExploreVelocity, maze, mouse);
 	//方角に合わせてxyどちらかに±1
