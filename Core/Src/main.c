@@ -221,14 +221,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   //cpploop();
-  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
-  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+//  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001); //今まで
+//  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+  //16.35 or 15.3 or 25.5
+  PIDSetGain(L_VELO_PID, 16.35, 5000,0);
+  PIDSetGain(R_VELO_PID, 16.35, 5000,0);
 
-  PIDSetGain(A_VELO_PID, 20,0.1,0);//P=14.6
-  PIDSetGain(F_WALL_PID, 14.6*2.5,0,0);
-  PIDSetGain(D_WALL_PID, 6, 0,0);//4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
-  PIDSetGain(L_WALL_PID, 12, 0,0);//,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
-  PIDSetGain(R_WALL_PID, 12, 0,0);//,8,0);//6.4,0,0);//9,3,0.0s06);//1.8, 10, 0);
+  PIDSetGain(A_VELO_PID, 37.5, 80, 0); //42 //P=14.6
+  PIDSetGain(F_WALL_PID, 14.6*2.5,0, 0);
+  PIDSetGain(D_WALL_PID, 0,0,0);//6, 0,0);
+  PIDSetGain(L_WALL_PID, 0,0,0);//12, 0,0);
+  PIDSetGain(R_WALL_PID, 0,0,0);//12, 0,0);
   while (1)
   {
 	  switch( startup_mode )
@@ -239,15 +242,22 @@ int main(void)
 		//wall_flash_print();
 		  break;
 	  case 1:
+
 		  GainTestRWall();
 		  break;
 	  case GAINTEST:
+//		  PIDSetGain(L_VELO_PID, 16.35, 3000,0);
+//		  PIDSetGain(R_VELO_PID, 16.35, 3000,0);
+//		  GainTestAVelo();
+
 		  GainTestDWall();
 		  break;
 	  case DEBUGGER:
+
 		  Debug();
 		  break;
 	  case FASTEST_RUN:
+
 		  //GainTestLWall();
 //		  FlashReadTest();
 //		  printf("読み込み終�?\r\n");
@@ -258,9 +268,14 @@ int main(void)
 		  break;
 	  case IMU_TEST:
 //		  TestIMU();
+//		  PIDSetGain(L_VELO_PID, 16.35, 5,0);
+//		  PIDSetGain(R_VELO_PID, 16.35, 5,0);
+//		  WritingFree();
+
 		  GainTestAVelo();
 		  break;
 	  case EXPLORE:
+
 //		  FlashWriteTest();
 //		  printf("書き込み終�?\r\n");
 //		  while(1){
@@ -269,6 +284,8 @@ int main(void)
 		  Explore();
 		  break;
 	  case WRITINGFREE:
+//		  PIDSetGain(L_VELO_PID, 16.35, 50,0);
+//		  PIDSetGain(R_VELO_PID, 16.35, 50,0);
 		  WritingFree();
 		  break;
 	  default :

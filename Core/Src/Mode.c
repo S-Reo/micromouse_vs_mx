@@ -312,7 +312,7 @@ void GainTestAVelo()
 	ChangeLED(5);
 	while(1)
 	{
-		TargetVelocity[BODY] = 700;
+		TargetVelocity[BODY] = 0;
 		//printf("%f, %f\r\n", AngularV, Angle);
 
 	}
@@ -321,6 +321,7 @@ void WritingFree()
 {
 	IT_mode = WRITINGFREE;
 
+	dbc = 0;
 	InitExplore();
 
 	printf("3\r\n");
@@ -343,11 +344,19 @@ void WritingFree()
 	PIDChangeFlag(A_VELO_PID, 1);
 	ExploreVelocity=0;
 	ChangeLED(7);
-	FastStraight(0.5, 8, 1.0, -1.0, 4000, 0);
+	//データ取り（速度、角速度）
+	dbc = 1;
+	FastStraight(0.5, 2, 2.0, -2.0, 4000, 10);
+	dbc = 0;
+
 	while(1)
 	{
 		PIDChangeFlag(A_VELO_PID, 0);
 		TargetVelocity[BODY] = 0;
+		HAL_Delay(5000);
+		for(int i=0; i < 600; i++){
+			printf("%d, %lf, %lf\r\n", i, debugVL[i], debugVR[i]);
+		}
 	}
 }
 
@@ -781,7 +790,7 @@ void Explore()
 	case 3:
 		ExploreVelocity=240;
 		Sla.Pre = 8;//2;
-		Sla.Fol = 16;
+		Sla.Fol = 12; //16
 		Sla.Alpha = 0.078;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;

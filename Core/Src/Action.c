@@ -997,6 +997,7 @@ void GoBack(maze_node *maze, profile *mouse)
 			Rotate(90, -2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
 			mouse->now.car = (mouse->now.car - 2) %8;
 			acc = AjustCenter(mouse);
+			WaitStopAndReset();
 //			Pos.Dir = left;
 			Rotate(90, -2*M_PI);
 			mouse->now.car = (mouse->now.car - 2) %8;
@@ -1007,6 +1008,7 @@ void GoBack(maze_node *maze, profile *mouse)
 			Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
 			mouse->now.car = (mouse->now.car + 2) %8;
 			acc = AjustCenter(mouse);
+			WaitStopAndReset();
 //			Pos.Dir = right;
 			Rotate(90, 2*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
@@ -1016,6 +1018,7 @@ void GoBack(maze_node *maze, profile *mouse)
 		{
 			Rotate(180, 2*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
+			WaitStopAndReset();
 		}
 //		Control_Mode = A_VELO_PID;
 #else

@@ -497,7 +497,7 @@ void MaxParaRunTest(maze_node *maze, profile *mouse)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(1, 61.5/90, 1.00, -1.00/*2.89, -2.89*/, ExploreVelocity, ExploreVelocity);
+			FastStraight(1, 61.5/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
@@ -522,7 +522,7 @@ void MaxParaRunTest(maze_node *maze, profile *mouse)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num,1.00, -1.00/*2.89, -2.89*/, 4000, ExploreVelocity);
+			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
 			count--;
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
