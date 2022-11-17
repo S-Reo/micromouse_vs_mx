@@ -17,7 +17,7 @@ void MaxParaRunTest(maze_node *, profile *);
 
 void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed);
 
-
+void FindUnwantedSquares(maze_node *maze);
 /* ----- 探索者データ管理 ここまで ----- */
 
 

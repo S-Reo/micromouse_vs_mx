@@ -13,9 +13,40 @@
 #include "PID_Control.h"
  #include "LED_Driver.h"
 
+#include "dfs.h"
 
+void FindUnwantedSquares(maze_node *maze){
+	//未訪問のマスをピックアップ
+	//それぞれの四方のノードを確認
+	//未探索がひとつもなければVisitedに
+	//未探索が三つなら、全て壁があるのか見て、そうならVisitedに
+	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
+		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+			if(Visit[i][j] == true)
+				continue;
+			uint8_t n = maze->RawNode[i][j+1].existence;	//北
+			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+			uint8_t w = maze->ColumnNode[i][j].existence;//西
+			uint8_t s = maze->RawNode[i][j].existence;	//南
+			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+				Visit[i][j] = true;
+				continue;
+			}
+			int known_check=0;
+			known_check += (n == WALL) ? true : false;
+			known_check += (e == WALL) ? true : false;
+			known_check += (w == WALL) ? true : false;
+			known_check += (s == WALL) ? true : false;
+			if(known_check == 3){
+				Visit[i][j] = true;
+				continue;
+			}
+		}
+	}
+}
 //探索及び最短走行のロジック（制御ロジックは考慮しない）
 //後ろの方にはActionを含めた処理も. MazeSimulationでActionっぽい処理が書ければそれを入れてtestへ
+
 
 void updateRealSearch(maze_node *maze, profile *mouse)
 {
@@ -26,9 +57,11 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 	//壁センサ値を読んで、各方角の壁の有無を判定
 		//区画進入直前なので、更新予定の方角と座標がNextに入っているはず
 		//前後左右の値として入れる
-	shiftState(mouse);
 
-    switch (mouse->now.car)
+	shiftState(mouse);
+	VisitedMass(mouse->now.pos);
+
+    switch (mouse->now.car%8)
     {
     case north:
     	wall_dir[0] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
@@ -82,6 +115,95 @@ void updateRealSearch(maze_node *maze, profile *mouse)
     //ここで壁の存在を反映
 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
 	//mouse->target.pos.x, mouse->target.pos.y;
+
+	//これの前に、target.posに到達したかどうかが必要
+			//到達していればStackを再開
+	position start_pos = {0,0};
+	ChangeLED(0);
+			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
+				mouse->target_size = 1;
+				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
+				if(stacked_one_or_more == 0) ChangeLED(7);
+				else ChangeLED(0);
+
+				int n = GetStackNum();
+
+				//0なら
+				if(n == 0){
+					//本当にスタート座標に向かうべきかの確認
+					ChangeLED(7);
+					//向かうべきなら、DFSフラグをオフにしてtargetを(0,0)にセット
+//					LowDFSFlag();
+					WALL_MASK = 0x01;
+					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+					SetStackNum(n);
+				}//0以外なら通常通り
+				else{
+//					HighDFSFlag();
+					ChangeLED(1);
+					WALL_MASK = 0x01;
+					position pos;
+					_Bool is_first = false;
+					while( 1 ){
+						pos = GetStackMass();
+						is_first = GetVisited(&(pos)); //0なら未訪問
+						if(n == 0){
+							mouse->target.pos = pos;
+							ChangeLED(7);
+							break;
+						}
+						else if(is_first == false){
+
+							mouse->target.pos =pos;
+							--n;
+							SetStackNum(n);
+							break;
+						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルート
+						else if(is_first == true){
+							--n;
+							SetStackNum(n); //0になったら
+						}
+						 //訪問済みであれば更に下を読む
+					}
+				}
+
+			}//到達していなければ、そのまま最短でtarget.posに向かう
+//	int dfs_flag = GetDFSFlag();
+//	int stack_flag = GetStackFlag();
+//	//DFSで有効化
+//	if(stack_flag == true && dfs_flag == true){
+//		//スタックを積むだけのモードと、積みつつ取り出すモード
+//		int stack_num = GetStackNum();
+//		if( mass_stack[stack_num].x == mouse->now.pos.x && mass_stack[stack_num].y == mouse->now.pos.y ){
+//			--stack_num;
+//			SetStackNum(stack_num);
+//		}
+//		StackMass(maze, &(mouse->now));
+//
+//		//訪問済みのスタックがあれば省く
+//		while(Visit[mass_stack[stack_num].x][mass_stack[stack_num].y] == true){
+//			--stack_num;
+//		}
+//		//スタックを見て、そのマスと今のマスが一致していたら次のマスを取り出す
+//		// スタック
+//		if(!(mouse->target.pos.x == mass_stack[stack_num].x && mouse->target.pos.y == mass_stack[stack_num].y) ){
+//			//前回と違えばスタックカウントを減らす
+//			mouse->target.pos.x = mass_stack[stack_num].x;
+//			mouse->target.pos.y = mass_stack[stack_num].y;
+//			mouse->target_size = 1;
+//		}else{
+//			mouse->target.pos.x = mass_stack[stack_num].x;
+//			mouse->target.pos.y = mass_stack[stack_num].y;
+//			mouse->target_size = 1;
+//		}
+//	}
+//	else if(stack_flag == true && dfs_flag == false){
+//		//積むだけ
+//		StackMass(maze, &(mouse->now));
+//	}
+//	else if(dfs_flag == true) {
+//
+//	}
 
 //	int WALL_MASK = 0x01;
 	//壁の存在を基に重みマップを更新
@@ -166,14 +288,14 @@ void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
 		break;
 	case right:
-		ChangeLED(0);
+//		ChangeLED(0);
 		//右旋回
 		Calc = SearchOrFast;
 
 		TurnRight(turn_mode, maze, Mouse);
 		break;
 	case backright:
-		ChangeLED(0);
+//		ChangeLED(0);
 		//Uターンして右旋回
 		//壁の更新の処理を呼ばない
 //		SearchOrFast = 1;
@@ -188,7 +310,7 @@ void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
 
 		break;
 	case back:
-		ChangeLED(0);
+//		ChangeLED(0);
 		//Uターンして直進.加速できる
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack(maze, Mouse);
@@ -238,7 +360,7 @@ void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
 		break;
 	case backleft:
-		ChangeLED(0);
+//		ChangeLED(0);
 		//Uターンして左旋回
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack(maze, Mouse);
@@ -246,7 +368,7 @@ void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
 		TurnLeft(turn_mode, maze, Mouse);
 		break;
 	case left:
-		ChangeLED(0);
+//		ChangeLED(0);
 		//左旋回
 		Calc = SearchOrFast;
 //		ChangeLED(4);

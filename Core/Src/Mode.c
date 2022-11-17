@@ -28,7 +28,7 @@
 //#include "test.h"
 #include "Search.h"
 #include "Record.h"
-
+#include "dfs.h"
 #include <main.h>
 #include <stdio.h>
 //実環境処理用に、グローバルなマップデータとプロフィールを作成
@@ -286,9 +286,9 @@ void GainTestDWall()
 		PIDChangeFlag(D_WALL_PID, 0);
 		PIDChangeFlag(L_WALL_PID, 0);
 		PIDChangeFlag(R_WALL_PID, 0);
-		PIDChangeFlag(F_WALL_PID, 1);
-		PIDChangeFlag(A_VELO_PID, 0);
-//		printf("前左: %f,前右: %f,横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[SL],Photo[SR]);
+		PIDChangeFlag(F_WALL_PID, 0);
+		PIDChangeFlag(A_VELO_PID, 1);
+		printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SR]);
 	}
 }
 
@@ -346,6 +346,7 @@ void WritingFree()
 	FastStraight(0.5, 8, 1.0, -1.0, 4000, 0);
 	while(1)
 	{
+		PIDChangeFlag(A_VELO_PID, 0);
 		TargetVelocity[BODY] = 0;
 	}
 }
@@ -437,7 +438,7 @@ void FastestRun()
 //		Sla.Theta2 = 60;
 //		Sla.Theta3 = 90;
 		ExploreVelocity=180;
-		Sla.Pre = 2;
+		Sla.Pre = 5;
 		Sla.Fol = 3.5;
 		Sla.Alpha = 0.04;
 		Sla.Theta1 = 30;
@@ -471,6 +472,7 @@ void FastestRun()
 	Calc = SearchOrFast;
 	//走る
 	goal_edge_num = GOAL_SIZE_X;
+	my_mouse.target_size = goal_edge_num;
 
 	TargetVelocity[BODY] = 0;
 	Acceleration = 0;
@@ -486,6 +488,7 @@ void FastestRun()
 	PIDReset(D_WALL_PID);
 	//迷路データ
 	initSearchData(&my_map, &my_mouse);
+	InitVisit();
 //	printAllNodeExistence(&my_map);
 	flashCopyNodesToRam(&my_map); //existenceだけ
 //	printAllNodeExistence(&my_map);
@@ -501,7 +504,10 @@ void FastestRun()
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 	//壁のあるなしと重みをprintしてチェック
 //	printAllNodeExistence(&my_map);
-//	printAllWeight(&my_map, &(my_mouse.goal_lesser));
+//	while(1){
+//		printAllWeight(&my_map, &(my_mouse.goal_lesser));
+//		HAL_Delay(1000);
+//	}
 
 	MaxParaRunTest(&my_map, &my_mouse);
 
@@ -515,6 +521,175 @@ void FastestRun()
 		printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",Num_Nodes, my_map.RawNode[0][1].weight);
 		printAllWeight(&my_map, &(my_mouse.now.pos));
 	}
+}
+static void restart(char turn_mode){
+	//停止状態から帰還までの処理
+	//探索関数で、マップのアップデートしないとどうなるか. 既存のマップデータのみで行動決定. 壁制御が効かない.
+
+	TargetVelocity[BODY] = 0;
+	Acceleration = 0;
+	TargetAngularV = 0;
+	TargetAngle = 0;
+	Angle = 0;
+	PIDReset(L_VELO_PID);
+	PIDReset(R_VELO_PID);
+	PIDReset(A_VELO_PID);
+	PIDReset(L_WALL_PID);
+	PIDReset(R_WALL_PID);
+	PIDReset(D_WALL_PID);
+
+	//マップ22
+	updateAllNodeWeight(&my_map, my_mouse.target.pos.x, my_mouse.target.pos.y, my_mouse.target_size, my_mouse.target_size, WALL_MASK);
+//	int stack_num=0; //stackはマップを更新してから求める
+
+	//最小ノードを選択
+	my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node, WALL_MASK); //周囲ノードを見て重み最小を選択
+	getNextState(&(my_mouse.now), &(my_mouse.next), my_mouse.next.node);
+
+
+	//そのノードに行くための準備
+	//前なら45mm加速
+//	while(1){
+//		//ゴールとスタックと今と次
+//		printf("%u, %u\r\n",my_mouse.target.pos.x, my_mouse.target.pos.y);
+//		printAllWeight(&my_map, &(my_mouse.target.pos));
+//		printState(&(my_mouse.now));
+//		printState(&(my_mouse.next));
+//	}
+	switch(my_mouse.now.dir%8){
+	case front:
+	//		ChangeLED(0);
+			AddVelocity = 0;
+			//ただ直進
+			Calc = SearchOrFast;
+			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+//				GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, my_map, my_mouse);
+			break;
+		case right:
+			ChangeLED(0);
+			//右旋回
+			Calc = SearchOrFast;
+			Rotate(90, M_PI);
+			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+//				TurnRight(turn_mode, &my_map, &my_mouse);
+			break;
+		case backright:
+			ChangeLED(0);
+			Calc = 1;//マップ更新したくないときは1を代入。
+//				GoBack(my_map, my_mouse); //間の座標変動を
+			Rotate(180, M_PI);
+			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Calc = SearchOrFast;
+			TurnRight(turn_mode, &my_map, &my_mouse);
+			break;
+		case back:
+			ChangeLED(0);
+			//Uターンして直進.加速できる
+			Calc = 1;//マップ更新したくないときは1を代入。
+//				GoBack(my_map, my_mouse);
+			Rotate(180, M_PI);
+			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			AddVelocity = 0;
+			Calc = SearchOrFast;
+			GoStraight(90, ExploreVelocity +AddVelocity, 0, &my_map, &my_mouse);
+			break;
+		case backleft:
+			ChangeLED(0);
+			//Uターンして左旋回
+			Calc = 1;//マップ更新したくないときは1を代入。
+//				GoBack(my_map, my_mouse);
+			Rotate(180, -M_PI);
+			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Calc = SearchOrFast;
+			TurnLeft(turn_mode, &my_map, &my_mouse);
+			break;
+		case left:
+			ChangeLED(0);
+			//左旋回
+			Calc = SearchOrFast;
+	//		ChangeLED(4);
+			Rotate(90, -M_PI);
+			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+//				TurnLeft(turn_mode, &my_map, &my_mouse);
+			break;
+		default:
+			break;
+	}
+}
+
+
+void DFS_Running(char turn_mode){
+	//全探索（深さ優先探索）
+			WALL_MASK = 0x01;
+			VelocityMax = false;
+			goal_edge_num = 1;
+			SearchOrFast = 0; //search
+			Calc = SearchOrFast;
+
+			//0,0をゴールとして深さ優先探索すればいい
+			InitStackNum();
+			//stack_numをどうするか
+			StackMass(&my_map, &(my_mouse.now));
+			int stack_num=GetStackNum(); //stackでゴールしたマスの周辺が次のマスになる
+			my_mouse.target.pos.x = mass_stack[stack_num].x;
+			my_mouse.target.pos.y = mass_stack[stack_num].y;
+			my_mouse.target_size = 1;
+			stack_num--; //n=2から1へ
+			SetStackNum(stack_num);
+			restart(turn_mode); //次ノードの重みが0なのはなぜか⇒壁を認識しているのに重みは0
+//			Decel(45, 0);
+//						WaitStopAndReset();//これがないとガクンとなる.
+//						shiftState(&my_mouse);
+//						VisitedMass(my_mouse.now.pos);
+//
+//						PIDChangeFlag(A_VELO_PID, 0);
+//						PIDChangeFlag(L_VELO_PID, 0);
+//						PIDChangeFlag(R_VELO_PID, 0);
+//			while(1){
+//				printf("バッファ確認\r\n");
+//				Buffering();
+//				//どこをゴールとしているか
+//				//マップはどうなって、何に基づいて次の座標を決めているか
+//				//停止状態からstackを積み、左に行った。座標と向きは合っている
+//
+////				HAL_TIM_Base_Stop_IT(&htim1);
+////				HAL_TIM_Base_Stop_IT(&htim8);
+//				HAL_Delay(1000);
+//				printState(&(my_mouse.now));
+//				printState(&(my_mouse.next));
+//				printVisited();
+//				printAllWeight(&my_map, &(my_mouse.now.pos));
+//			}
+			//動き出して、壁を更新、重みマップを更新してからStackを取らないと..restartの中の加速後にやっているはず
+			//壁を読んで重みをUpdateしたからこそ次のスタックを積めるのか、
+			//重みマップのUpdateの前にstackから引っ張り出していないから、行先が決まらずノード更新されない
+	//		stack_num = StackMass(&my_map, &(my_mouse.now), stack_num);
+			while(stack_num != 0){
+//				if(stack_num == 0)
+//					break;
+				//目標ノードのx,yを更新
+				//現在ノードと目標ノードが一致しても特に何もない. stackを見るだけ
+				//ノードを確認したときの向き
+
+				//アクション
+				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK); //壁があるのに、ゴールエリアだから重みが0になっている？
+				stack_num = GetStackNum();
+//				ChangeLED(stack_num);
+				//			stack_num = StackMass(&my_map, &(my_mouse.now), stack_num);
+			}
+			//減速停止
+			Decel(45, 0);
+			WaitStopAndReset();//これがないとガクンとなる.
+			shiftState(&my_mouse);
+			VisitedMass(my_mouse.now.pos);
+
+			PIDChangeFlag(A_VELO_PID, 0);
+			//flashのクリア。
+			Flash_clear_sector1();
+			//マップ書き込み
+			flashStoreNodes(&my_map);
+			//完了の合図
+			Signal(7);
 }
 void Explore()
 {
@@ -595,10 +770,8 @@ void Explore()
 //		Sla.Theta2 = 60;
 //		Sla.Theta3 = 90;
 
-
-
 		ExploreVelocity=180;
-		Sla.Pre = 2;
+		Sla.Pre = 8;//2;
 		Sla.Fol = 16.5;
 		Sla.Alpha = 0.043;
 		Sla.Theta1 = 30;
@@ -607,15 +780,9 @@ void Explore()
 		break;
 	case 3:
 		ExploreVelocity=240;
-//		Sla.Pre = 2;
-//		Sla.Fol = 16;
-//		Sla.Alpha = 0.078;
-//		Sla.Pre = 2;
-//		Sla.Fol = 4.5;
-//		Sla.Alpha = 0.072;
-		Sla.Pre = 5;
-		Sla.Fol = 7;
-		Sla.Alpha = 0.082;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 16;
+		Sla.Alpha = 0.078;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
@@ -629,27 +796,50 @@ void Explore()
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
 		//		//未
-
 		break;
 	}
 	initSlalomParam();
-	goal_edge_num = two;
+	goal_edge_num = one;
 	VelocityMax = false;
 	SearchOrFast = 0;
 	Calc = 0;
 	WALL_MASK = 0x01;
+	LowDFSFlag();
+	HighStackFlag();
+	InitMassStack();
 //	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
 	Pid[A_VELO_PID].flag = 1;
 	initSearchData(&my_map, &my_mouse);
+	InitVisit();
 //	printGoal(&my_mouse);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
-	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
-	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+//	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
+//	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+	my_mouse.target.pos.x = 0;
+	my_mouse.target.pos.y = 1;
 	my_mouse.target_size = goal_edge_num;
+
+	//0,0をゴールとして深さ優先探索すればいい
+	InitStackNum();
 #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= large_x) && (less_y <= next_y && next_y <= large_y) )
 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
+	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) ){
+		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+	}
+	Decel(45, 0);
+	WaitStopAndReset();//これがないとガクンとなる.
+	shiftState(&my_mouse);
+	VisitedMass(my_mouse.now.pos);
 
+	PIDChangeFlag(A_VELO_PID, 0);
+	//flashのクリア。
+	Flash_clear_sector1();
+	//マップ書き込み
+	flashStoreNodes(&my_map);
+	//完了の合図
+	Signal(7);
+#if 0
 	while( ! IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
 		//shiftState(&my_mouse); //アクションの中で呼舞踊に変更
@@ -673,6 +863,8 @@ void Explore()
 	Decel(45, 0);
 	WaitStopAndReset();//これがないとガクンとなる.
 	shiftState(&my_mouse);
+	VisitedMass(my_mouse.now.pos);
+
 	PIDChangeFlag(A_VELO_PID, 0);
 	//flashのクリア。
 	Flash_clear_sector1();
@@ -680,6 +872,7 @@ void Explore()
 	flashStoreNodes(&my_map);
 	//完了の合図
 	Signal(7);
+
 
 	//スタートへ
 	//最短走行で帰る
@@ -697,96 +890,23 @@ void Explore()
 
 		MaxParaRunTest(&my_map, &my_mouse);
 #else
+		//ゴールエリアの制覇が必要？
+		HighDFSFlag();
+		HighStackFlag();
+		DFS_Running(turn_mode);
+		LowDFSFlag();
+		LowStackFlag();
 		//停止状態から帰還までの処理
 		//探索関数で、マップのアップデートしないとどうなるか. 既存のマップデータのみで行動決定. 壁制御が効かない.
+
+
+
 		VelocityMax = false;
 		goal_edge_num = GOAL_SIZE_X;
-		TargetVelocity[BODY] = 0;
-		Acceleration = 0;
-		TargetAngularV = 0;
-		TargetAngle = 0;
-		Angle = 0;
-
 		SearchOrFast = 0;
 		Calc = SearchOrFast;
-		PIDReset(L_VELO_PID);
-		PIDReset(R_VELO_PID);
-		PIDReset(A_VELO_PID);
-		PIDReset(L_WALL_PID);
-		PIDReset(R_WALL_PID);
-		PIDReset(D_WALL_PID);
-
-		my_mouse.target.pos.x = 0;
-		my_mouse.target.pos.y = 0;
-		my_mouse.target_size = 1;
 		WALL_MASK = 0x03;
-		//マップ
-		updateAllNodeWeight(&my_map, my_mouse.target.pos.x, my_mouse.target.pos.y, my_mouse.target_size, my_mouse.target_size, WALL_MASK);
-		//最小ノードを選択
-		my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node, WALL_MASK); //周囲ノードを見て重み最小を選択
-		getNextState(&(my_mouse.now), &(my_mouse.next), my_mouse.next.node);
-		//そのノードに行くための準備
-		//前なら45mm加速
-
-		switch(my_mouse.now.dir%8){
-		case front:
-		//		ChangeLED(0);
-				AddVelocity = 0;
-				//ただ直進
-				Calc = SearchOrFast;
-				Accel(45, ExploreVelocity, &my_map, &my_mouse);
-//				GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, my_map, my_mouse);
-				break;
-			case right:
-				ChangeLED(0);
-				//右旋回
-				Calc = SearchOrFast;
-				Rotate(90, M_PI);
-				Accel(45, ExploreVelocity, &my_map, &my_mouse);
-//				TurnRight(turn_mode, &my_map, &my_mouse);
-				break;
-			case backright:
-				ChangeLED(0);
-				Calc = 1;//マップ更新したくないときは1を代入。
-//				GoBack(my_map, my_mouse); //間の座標変動を
-				Rotate(180, M_PI);
-				Accel(45, ExploreVelocity, &my_map, &my_mouse);
-				Calc = SearchOrFast;
-				TurnRight(turn_mode, &my_map, &my_mouse);
-				break;
-			case back:
-				ChangeLED(0);
-				//Uターンして直進.加速できる
-				Calc = 1;//マップ更新したくないときは1を代入。
-//				GoBack(my_map, my_mouse);
-				Rotate(180, M_PI);
-				Accel(45, ExploreVelocity, &my_map, &my_mouse);
-				AddVelocity = 0;
-				Calc = SearchOrFast;
-				GoStraight(90, ExploreVelocity +AddVelocity, 0, &my_map, &my_mouse);
-				break;
-			case backleft:
-				ChangeLED(0);
-				//Uターンして左旋回
-				Calc = 1;//マップ更新したくないときは1を代入。
-//				GoBack(my_map, my_mouse);
-				Rotate(180, -M_PI);
-				Accel(45, ExploreVelocity, &my_map, &my_mouse);
-				Calc = SearchOrFast;
-				TurnLeft(turn_mode, &my_map, &my_mouse);
-				break;
-			case left:
-				ChangeLED(0);
-				//左旋回
-				Calc = SearchOrFast;
-		//		ChangeLED(4);
-				Rotate(90, -M_PI);
-				Accel(45, ExploreVelocity, &my_map, &my_mouse);
-//				TurnLeft(turn_mode, &my_map, &my_mouse);
-				break;
-			default:
-				break;
-		}
+		restart(turn_mode);
 //		shiftState(&my_mouse);
 		while( ! IS_GOAL(0,0,0,0, my_mouse.now.pos.x, my_mouse.now.pos.y)  ){
 				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
@@ -796,17 +916,20 @@ void Explore()
 		//ゴールしたら減速して、停止。
 		Decel(45,0);
 		shiftState(&my_mouse);
+		VisitedMass(my_mouse.now.pos);
 
 		//終了合図
 		Signal(7);
-
+#endif
 while(1)
 {
 	//迷路データの出力
 	printAllNodeExistence(&my_map);
 	//printAllNode(&my_map); //drawを読み出す
 	printMatrix16ValueFromNode(&my_map);
-	printAllWeight(&my_map, &(my_mouse.now.node->pos) );
+	printAllWeight(&my_map, &(my_mouse.goal_lesser) );
+	printVisited();
+
 }
 //	//未知壁の座標を確認
 //	//未知壁がなくなるまで、歩数が最も近い座標を目標座標にして走行

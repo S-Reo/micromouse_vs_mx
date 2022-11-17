@@ -24,7 +24,8 @@
 #include "Search.h"
 #include <stdbool.h>
 const float TO_PULSE = 2/MM_PER_PULSE;
-//const float Wall_Cut_Val = (38*TO_PULSE);
+#define WALL_CUT_VAL 34
+//const float Wall_Cut_Val = 38;
 const float angle_range = 3*M_PI/180;  //領域
 
 /* バックエンドでコマンドとして処理する */
@@ -300,7 +301,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
-			ChangeLED(4);
+//			ChangeLED(4);
 		}
 
 	}
@@ -313,12 +314,12 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 				AngularLeapsity = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = v_turn;
-				ChangeLED(2);
+//				ChangeLED(2);
 				////printf("直進1\r\n");
 		}
 	}
 	now_angv = AngularV;
-	ChangeLED(0);
+//	ChangeLED(0);
 	float start_angle = Angle;
 	Pid[A_VELO_PID].flag = 0;
 	while(start_angle + ang1 > Angle)
@@ -392,7 +393,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = v_turn;
-			ChangeLED(4);
+//			ChangeLED(4);
 		}
 
 
@@ -404,10 +405,10 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 				TargetAngularV = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = v_turn;
-				ChangeLED(2);
+//				ChangeLED(2);
 		}
 	}
-	ChangeLED(0);
+//	ChangeLED(0);
 	Pid[A_VELO_PID].flag = 0;
 	float start_angle = Angle;
 	while(start_angle - ang1 < Angle)
@@ -464,7 +465,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 #endif
 	int target_pulse = (int)(add_distance*TO_PULSE);
 
-//	_Bool wall_cut = false;
+	_Bool wall_cut = false;
 	Pid[A_VELO_PID].flag = 1;
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
@@ -481,14 +482,16 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 		//壁切れも一旦なし
 //		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
 //		{
-//			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
+//			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-(WALL_CUT_VAL*TO_PULSE));
 //			//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
 //			wall_cut = true;
 //			ChangeLED(3);
 //		}
 
 	}
+
 	Acceleration = 0;
+//	ChangeLED(0);
 //	wall_cut = false;
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse*0.5f;
@@ -601,15 +604,15 @@ float AjustCenter(profile *mouse){
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag( A_VELO_PID, 0);
 	int wall_ctrl = GetWallCtrlDirection(mouse);
-	if(wall_ctrl == 0)
-		ChangeLED(7);
-	else ChangeLED(0);
+//	if(wall_ctrl == 0)
+////		ChangeLED(7);
+//	else ChangeLED(0);
 //	Control_Mode = NOT_CTRL_PID;
 	//HAL_Delay(100);
 	float photo_threshold[2]=
 	{
-			3750,
-			4250
+			3300,
+			4500
 	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さく。狭めると位置が安定するが環境しだいで怪しい挙動に。
 	switch(mouse->now.car%8)
 	{
@@ -810,8 +813,8 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 			}
 		}
 		KeepPulse[BODY] += target_pulse*0.2f;
-		KeepPulse[LEFT] += target_pulse*0.2f*0.5f;
-		KeepPulse[RIGHT] += target_pulse*0.2f*0.5f;
+		KeepPulse[LEFT] += target_pulse*0.1f;
+		KeepPulse[RIGHT] += target_pulse*0.1f;
 	}
 
 	else
@@ -844,11 +847,12 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 			//壁切れ補正
 //			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
 //			{//
-//				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-Wall_Cut_Val);
+//				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-(WALL_CUT_VAL*TO_PULSE));
 //				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
 //				wall_cut = true;
-//				ChangeLED(3);
-			}
+//				ChangeLED(2);
+//			}
+
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
 	//			Acceleration = 0;
@@ -858,6 +862,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 		Pid[ctrl_mode].flag = 0;//壁見る
 		wall_cut = false;
 		Acceleration = 0;
+//		ChangeLED(0);
 		KeepPulse[BODY] += target_pulse;
 		KeepPulse[LEFT] += target_pulse*0.5f;
 		KeepPulse[RIGHT] += target_pulse*0.5f;
@@ -1033,7 +1038,8 @@ void GoBack(maze_node *maze, profile *mouse)
 	acc = AjustCenter(mouse);
 
 	WaitStopAndReset();
-
+	//マップの不要マスをつぶす
+	FindUnwantedSquares(maze);
 	Accel(acc, ExploreVelocity, maze, mouse);
 	//方角に合わせてxyどちらかに±1
 	switch(mouse->now.car%8)

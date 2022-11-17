@@ -153,7 +153,7 @@ static void Explore_IT()
 				}
 				else if( Pid[F_WALL_PID].flag == 1)
 				{
-					wall_f = PIDControl( F_WALL_PID,   4000, (	(Photo[FR]+Photo[FL])));
+					wall_f = PIDControl( F_WALL_PID,   3800, (	(Photo[FR]+Photo[FL])));
 					TargetVelocity[BODY] = (float)wall_f*0.001;
 					ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
 					TargetAngularV = (float)ang_out;
