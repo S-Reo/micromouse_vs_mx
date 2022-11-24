@@ -254,8 +254,7 @@ void updateAllNodeWeight(maze_node *maze, uint8_t x, uint8_t y, uint8_t area_siz
 //		if(cy == NUMBER_OF_SQUARES_Y) cy =0;
 
 		//
-
-
+		//1週目で縦横両方やらないとだめ
         //列
         for(i = 1; i < NUMBER_OF_SQUARES_X; i++)
 		{
@@ -810,13 +809,9 @@ void shiftState(profile *prof) //update
 
     prof->now.car = prof->next.car;
 //    prof->now.dir = prof->next.dir;
-    prof->now.pos.x = prof->next.pos.x;
-    prof->now.pos.y = prof->next.pos.y;
+    prof->now.pos = prof->next.pos;
     prof->now.node = prof->next.node;//ポインタ渡し
-    prof->now.wall.north = prof->next.wall.north;
-    prof->now.wall.east = prof->next.wall.east;
-    prof->now.wall.south = prof->next.wall.south;
-    prof->now.wall.west = prof->next.wall.west;
+    prof->now.wall = prof->next.wall;
 }
 void printState(state *st)
 {
@@ -1214,7 +1209,7 @@ _Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node)
 	//現ノードから3方向ノードを見て、未知なら即return
 	if(now_node->rc == 0)
 	{
-		switch(car)
+		switch(car%8)
 		{
 		case north:
 		//行にいるとき
@@ -1347,7 +1342,7 @@ _Bool judgeAccelorNot(maze_node *maze, cardinal car, node *now_node)
 	{
 		//列にいるとき
 		//東を向いているか、西を向いているか
-		switch(car)
+		switch(car%8)
 		{
 		case east:
 

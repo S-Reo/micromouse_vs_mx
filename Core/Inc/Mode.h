@@ -24,6 +24,8 @@ void Explore();
 void WritingFree();
 void FastestRun();
 
+
+int GainSetting(int n);
 void GainTestLWall();
 void GainTestRWall();
 void GainTestDWall();

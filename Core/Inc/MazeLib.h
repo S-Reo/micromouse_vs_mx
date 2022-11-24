@@ -16,8 +16,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define NUMBER_OF_SQUARES_X 9
-#define NUMBER_OF_SQUARES_Y 9
+#define NUMBER_OF_SQUARES_X 16
+#define NUMBER_OF_SQUARES_Y 16
 
 #define GOAL_SIZE_X 2
 #define GOAL_SIZE_Y 2

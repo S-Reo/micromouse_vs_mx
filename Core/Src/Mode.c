@@ -213,6 +213,80 @@ void ParameterSetting()
 
 }
 
+int GainSetting(int n){
+
+	_Bool loop_flag=true;
+	while(loop_flag){
+		Signal(n);
+		printf("セッティング対象の選択\r\n");
+		int8_t setting_target=0;
+		ModeSelect(0, 7, &setting_target);
+
+		if(setting_target == 0) {
+			continue;
+		}
+		else if(setting_target == 7) {
+			printf("トップのモード選択へ\r\n");
+			return 0;
+		}
+		else {
+			ChangeLED(setting_target);
+		}
+
+		//現在のパラメータを表示（初期のRAMでよい）
+//		printParameter(setting_target);
+		printf("対象の現在のパラメータを表示\r\n");
+
+		printf("パラメータ変更しますか? : to Head=0, Yes=1, No=2, to Top=3\r\n");
+		//パラメータ変更の有無
+		int8_t change = 0;
+		ModeSelect(0, 3, &change);
+		Signal(change);
+
+		//変更するならどれを変更するか（対象ごとに違う操作）
+		if(change == 0) {
+			continue;
+		}
+		else if(change == 1){ //0なら戻る2ならそのまま進む
+			 //どれを変更するか
+			//0なら一つ戻る、7ならトップに戻る （関数の戻り値かポインタで返し、returnで
+		}
+		else if(change == 2) {
+			//そのまま次へ
+			printf("変更せず次へ\r\n");
+		}
+		else if(change == 3) {
+			printf("トップのモード選択へ\r\n");
+			return 0;
+		}
+
+		printf("動作確認は手動で動かしますか？ロボットにアクションさせますか？ \r\n"
+				"to Head=0, 手動=1, アクション（+ログ可視化）=2, to Top=3\r\n");
+		//動作確認
+		int8_t self_or_action = 0;
+		ModeSelect(0, 3, &self_or_action);
+			//手動
+			//アクション（ログ可視化あり）
+
+		if(self_or_action == 0) continue;
+		else if(self_or_action == 1){ //0なら戻る2ならそのまま進む
+			loop_flag = false;
+			printf("手動\r\n");
+		}
+		else if(self_or_action == 2) {
+			loop_flag = false;
+			printf("アクション + ログ可視化\r\n");//そのまま次へ
+		}
+		else if(self_or_action == 3) return 0;
+
+		//ループを続けるか?（ハードウェアのスイッチの押下待ち）
+		loop_flag == true ? printf("続行\r\n") : printf("終了\r\n");
+
+		//そのままフラッシュに書き込みたい
+	}
+	return 1;
+
+}
 void GainTestLWall()
 {
 	IT_mode = EXPLORE;
@@ -271,10 +345,10 @@ void GainTestDWall()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	//PIDChangeFlagStraight(D_WALL_PID);
-	PIDChangeFlag(D_WALL_PID, 0);
+	PIDChangeFlag(D_WALL_PID, 1);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(F_WALL_PID, 1);
+	PIDChangeFlag(F_WALL_PID, 0);
 	PIDChangeFlag(A_VELO_PID, 0);
 
 //	PIDSetGain(D_WALL_PID, 10, 0, 0);
@@ -283,11 +357,11 @@ void GainTestDWall()
 	while(1)
 	{
 		TargetVelocity[BODY] = 0;
-		PIDChangeFlag(D_WALL_PID, 0);
-		PIDChangeFlag(L_WALL_PID, 0);
-		PIDChangeFlag(R_WALL_PID, 0);
-		PIDChangeFlag(F_WALL_PID, 0);
-		PIDChangeFlag(A_VELO_PID, 1);
+//		PIDChangeFlag(D_WALL_PID, 0);
+//		PIDChangeFlag(L_WALL_PID, 0);
+//		PIDChangeFlag(R_WALL_PID, 0);
+//		PIDChangeFlag(F_WALL_PID, 0);
+//		PIDChangeFlag(A_VELO_PID, 1);
 		printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SR]);
 	}
 }
@@ -303,7 +377,7 @@ void GainTestAVelo()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	//PIDChangeFlagStraight(A_VELO_PID);
-	PIDChangeFlag(A_VELO_PID, 1);
+	PIDChangeFlag(A_VELO_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
@@ -346,7 +420,7 @@ void WritingFree()
 	ChangeLED(7);
 	//データ取り（速度、角速度）
 	dbc = 1;
-	FastStraight(0.5, 2, 2.0, -2.0, 4000, 10);
+	FastStraight(0.5, 8, 0.5, -0.5, 4000, 10);
 	dbc = 0;
 
 	while(1)
@@ -462,9 +536,10 @@ void FastestRun()
 //		Sla.Theta1 = 30;
 //		Sla.Theta2 = 60;
 //		Sla.Theta3 = 90;
+
 		ExploreVelocity=240;
-		Sla.Pre = 2;
-		Sla.Fol = 16;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 12; //16
 		Sla.Alpha = 0.078;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
@@ -781,7 +856,7 @@ void Explore()
 
 		ExploreVelocity=180;
 		Sla.Pre = 8;//2;
-		Sla.Fol = 16.5;
+		Sla.Fol = 12;
 		Sla.Alpha = 0.043;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;

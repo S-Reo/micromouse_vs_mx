@@ -64,13 +64,13 @@ void updateRealSearch(maze_node *maze, profile *mouse)
     switch (mouse->now.car%8)
     {
     case north:
-    	wall_dir[0] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir[0] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
     	wall_dir[1] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[2] = NOWALL;
     	wall_dir[3] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case east:
-    	wall_dir[1] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir[1] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[3] = NOWALL;
     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
@@ -83,13 +83,13 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 //		}
         break;
     case south:
-    	wall_dir[2] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir[2] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[0] = NOWALL;
     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case west:
-    	wall_dir[3] = ((Photo[FL] + Photo[FR])/2 > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir[3] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[1] = NOWALL;
     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
@@ -119,7 +119,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 	//これの前に、target.posに到達したかどうかが必要
 			//到達していればStackを再開
 	position start_pos = {0,0};
-	ChangeLED(0);
+//	ChangeLED(0);
 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
 				mouse->target_size = 1;
 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
@@ -131,7 +131,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 				//0なら
 				if(n == 0){
 					//本当にスタート座標に向かうべきかの確認
-					ChangeLED(7);
+//					ChangeLED(7);
 					//向かうべきなら、DFSフラグをオフにしてtargetを(0,0)にセット
 //					LowDFSFlag();
 					WALL_MASK = 0x01;
@@ -140,7 +140,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 				}//0以外なら通常通り
 				else{
 //					HighDFSFlag();
-					ChangeLED(1);
+//					ChangeLED(1);
 					WALL_MASK = 0x01;
 					position pos;
 					_Bool is_first = false;
@@ -356,6 +356,7 @@ void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
 //						ChangeLED(2);
 					}
 				}
+				//壁と座標の更新が要りそう
 		Calc = SearchOrFast;
 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
 		break;

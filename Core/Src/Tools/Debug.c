@@ -23,6 +23,28 @@
 #include "UI.h"
 
 #include "MicroMouse.h"
+
+#include "tim_info.h"
+//ハードウェアの情報、ソフトウェアの情報（パラメータも）などすべてを可視化したい
+	//CPUの動作周波数の設定や、タイマの周期、割込み周期などの情報も見れるようにしたい
+
+//使用中のタイマ情報を表示するモード（CubeIDEで設定した初期値であることに注意）
+//引数はタイマのアドレス
+
+void printHardWareInformation(){
+	//使用中のタイマ
+	printTIMinfo(&htim1);
+	printTIMinfo(&htim8);
+	printTIMinfo(&htim2);
+	printTIMinfo(&htim5);
+	printTIMinfo(&htim3);
+	printTIMinfo(&htim4);
+
+	//ADCも入れたい
+}
+
+//フォトセンサの値の変動が大きいのを調整したい
+
 //領域を指定
 	//マップ
 	//区画ごとのログ(デバッグ用)

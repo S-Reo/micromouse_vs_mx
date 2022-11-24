@@ -380,10 +380,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//timer8 += t;
 
 		//壁センサデータの更新
-		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
-		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
-		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
-		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
+		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
+		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
+		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
 	}
 }
 

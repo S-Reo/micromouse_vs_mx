@@ -32,104 +32,105 @@ const float angle_range = 3*M_PI/180;  //領域
 
 int GetWallCtrlDirection(profile *mouse)
 {
-	//新ライブラリ用に変更
-	switch(mouse->now.car%8)
-	{
-	case north:
-		if(mouse->now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
-		{
-			return F_WALL_PID;
-		}
-		else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
-		{
-			return D_WALL_PID;
-		}
-		else if(mouse->now.wall.east == wall)
-		{
-			return R_WALL_PID;
-		}
-		else if(mouse->now.wall.west == wall)
-		{
-			return L_WALL_PID;
-		}
-		else
-		{
-			return N_WALL_PID;
-		}
-		break;
+		//新ライブラリ用に変更
 
-	case east:
-		if(mouse->now.wall.east == wall)
+		switch(mouse->now.car%8)
 		{
-			return F_WALL_PID;
-		}
-		else if(mouse->now.wall.north == wall && mouse->now.wall.south == wall)//south)
-		{
-			return D_WALL_PID;
-		}
-		else if(mouse->now.wall.north == wall)
-		{
-			return L_WALL_PID;
-		}
-		else if(mouse->now.wall.south == wall)
-		{
-			return R_WALL_PID;
-		}
-		else
-		{
-			return N_WALL_PID;
-		}
-		break;
-	case south:
-		if(mouse->now.wall.south == wall)
-		{
-			return F_WALL_PID;
-		}
-		else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
-		{
-			return D_WALL_PID;
-		}
-		else if(mouse->now.wall.east == wall)
-		{
-			return L_WALL_PID;
-		}
-		else if(mouse->now.wall.west == wall)
-		{
-			return R_WALL_PID;
-		}
-		else
-		{
-			return N_WALL_PID;
-		}
-		break;
-	case west:
-		if(mouse->now.wall.west == wall)
-		{
-			return F_WALL_PID;
-		}
-		else if ( mouse->now.wall.north == wall && mouse->now.wall.south == wall)//.westになってた。あと == south )で意味わからない処理に。
-		{
-			return D_WALL_PID;
-		}
-		else if ( mouse->now.wall.north == wall )
-		{
-			return R_WALL_PID;
-		}
-		else if ( mouse->now.wall.south == wall )
-		{
-			return L_WALL_PID;
-		}
-		else
-		{
-			return N_WALL_PID;
-		}
-		break;
+		case north:
+			if(mouse->now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
+			{
+				return F_WALL_PID;
+			}
+			else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
+			{
+				return D_WALL_PID;
+			}
+			else if(mouse->now.wall.east == wall)
+			{
+				return R_WALL_PID;
+			}
+			else if(mouse->now.wall.west == wall)
+			{
+				return L_WALL_PID;
+			}
+			else
+			{
+				return N_WALL_PID;
+			}
+			break;
 
-	default:
-		//斜め方向
-		return N_WALL_PID;
-		break;
-	}
+		case east:
+			if(mouse->now.wall.east == wall)
+			{
+				return F_WALL_PID;
+			}
+			else if(mouse->now.wall.north == wall && mouse->now.wall.south == wall)//south)
+			{
+				return D_WALL_PID;
+			}
+			else if(mouse->now.wall.north == wall)
+			{
+				return L_WALL_PID;
+			}
+			else if(mouse->now.wall.south == wall)
+			{
+				return R_WALL_PID;
+			}
+			else
+			{
+				return N_WALL_PID;
+			}
+			break;
+		case south:
+			if(mouse->now.wall.south == wall)
+			{
+				return F_WALL_PID;
+			}
+			else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
+			{
+				return D_WALL_PID;
+			}
+			else if(mouse->now.wall.east == wall)
+			{
+				return L_WALL_PID;
+			}
+			else if(mouse->now.wall.west == wall)
+			{
+				return R_WALL_PID;
+			}
+			else
+			{
+				return N_WALL_PID;
+			}
+			break;
+		case west:
+			if(mouse->now.wall.west == wall)
+			{
+				return F_WALL_PID;
+			}
+			else if ( mouse->now.wall.north == wall && mouse->now.wall.south == wall)//.westになってた。あと == south )で意味わからない処理に。
+			{
+				return D_WALL_PID;
+			}
+			else if ( mouse->now.wall.north == wall )
+			{
+				return R_WALL_PID;
+			}
+			else if ( mouse->now.wall.south == wall )
+			{
+				return L_WALL_PID;
+			}
+			else
+			{
+				return N_WALL_PID;
+			}
+			break;
+
+		default:
+			//斜め方向
+			return N_WALL_PID;
+			break;
+		}
 
 }
 
@@ -279,92 +280,92 @@ int getFrontWall(profile *mouse)
 void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
 	Pid[A_VELO_PID].flag = 1;
-
-	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = Sla.Pre;         //スラローム前距離
-	float fol = Sla.Fol;         //スラローム後距離
-	float alpha_turn = Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
-	//float alalpha_turn = Sla.Alalpha;
-	float ang1 = Sla.Theta1;         //角速度が上がるのは0からang1まで
-	float ang2 = Sla.Theta2;         //角速度が一定なのはang1からang2まで
-	float ang3 = Sla.Theta3;         //角速度が下がるのはang2からang3まで
+	//毎回変数のコピーするの無駄
+//	float v_turn = ExploreVelocity;       //スラローム時の重心速度
+//	float pre = Sla.Pre;         //スラローム前距離
+//	float fol = Sla.Fol;         //スラローム後距離
+//	float alpha_turn = Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
+//	//float alalpha_turn = Sla.Alalpha;
+//	float ang1 = Sla.Theta1;         //角速度が上がるのは0からang1まで
+//	float ang2 = Sla.Theta2;         //角速度が一定なのはang1からang2まで
+//	float ang3 = Sla.Theta3;         //角速度が下がるのはang2からang3まで
 	//このあたりのパラメータをどう調整、設計するかが鍵
-	float now_angv = AngularV;
+//	float now_angv = AngularV;
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall(mouse) == WALL/*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
+	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
 	{
 		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 //			ChangeLED(4);
 		}
 
 	}
 	else//なければ
 	{
-		while( now_pulse + pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+		while( now_pulse + Sla.Pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				//velocity_ctrl_flag = 1;
 				TargetAngularV = 0;
 				AngularLeapsity = 0;
 				AngularAcceleration = 0;
-				TargetVelocity[BODY] = v_turn;
+				TargetVelocity[BODY] = ExploreVelocity;
 //				ChangeLED(2);
 				////printf("直進1\r\n");
 		}
 	}
-	now_angv = AngularV;
+//	now_angv = AngularV;
 //	ChangeLED(0);
 	float start_angle = Angle;
 	Pid[A_VELO_PID].flag = 0;
-	while(start_angle + ang1 > Angle)
+	while(start_angle + Sla.Theta1 > Angle)
 	{
-			AngularAcceleration = alpha_turn;
-			TargetVelocity[BODY] = v_turn;
+			AngularAcceleration = Sla.Alpha;
+			TargetVelocity[BODY] = ExploreVelocity;
 
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
-	now_angv = AngularV;
+//	now_angv = AngularV;
 	//alpha_flag = 0;
 
-	while(start_angle + ang2 > Angle)
+	while(start_angle + Sla.Theta2 > Angle)
 	{
 			TargetAngularV = TargetAngularV;
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 	}
 
-	now_angv = AngularV;
-	while( start_angle + ang3 > Angle)
+//	now_angv = AngularV;
+	while( start_angle + Sla.Theta3 > Angle)
 	{
-			AngularAcceleration = -alpha_turn;
+			AngularAcceleration = -Sla.Alpha;
 			if(TargetAngularV < 0)
 			{
 				TargetAngularV = 0;
 				break;
 			}
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
 	TargetAngularV = 0;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
-	while( now_pulse + fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
+	while( now_pulse + Sla.Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
 			TargetAngularV = 0;
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
 				updateRealSearch(maze, mouse);
 				Calc = 1;
 			}
 	}
-	TargetAngle += 90*M_PI/180;
+	TargetAngle += 0.5f*M_PI;//90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 
 }
@@ -372,27 +373,27 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 {
 	Pid[A_VELO_PID].flag = 1;
 	//ここの値コピーとその他計算を事前に行う
-	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-	float pre = Sla.Pre;         //スラローム前距離
-	float fol = Sla.Fol;         //スラローム後距離
-	float alpha_turn = -Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度s
-	//float alalpha_turn = -Sla.Alalpha;
-	float ang1 = Sla.Theta1;         //角速度が上がるのは0からang1まで
-	float ang2 = Sla.Theta2;         //角速度が一定なのはang1からang2まで
-	float ang3 = Sla.Theta3;         //角速度が下がるのはang2からang3まで
+//	float v_turn = ExploreVelocity;       //スラローム時の重心速度
+//	float pre = Sla.Pre;         //スラローム前距離
+//	float fol = Sla.Fol;         //スラローム後距離
+//	float alpha_turn = -Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度s
+//	//float alalpha_turn = -Sla.Alalpha;
+//	float ang1 = Sla.Theta1;         //角速度が上がるのは0からang1まで
+//	float ang2 = Sla.Theta2;         //角速度が一定なのはang1からang2まで
+//	float ang3 = Sla.Theta3;         //角速度が下がるのはang2からang3まで
 	//このあたりのパラメータをどう調整、設計するかが鍵
 
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall(mouse) == WALL/*前に壁があれば、*/)
+	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/)
 	{
 		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 //			ChangeLED(4);
 		}
 
@@ -400,56 +401,56 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	}
 	else//なければ
 	{
-		while( now_pulse + pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+		while( now_pulse + Sla.Pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				TargetAngularV = 0;
 				AngularAcceleration = 0;
-				TargetVelocity[BODY] = v_turn;
+				TargetVelocity[BODY] = ExploreVelocity;
 //				ChangeLED(2);
 		}
 	}
 //	ChangeLED(0);
 	Pid[A_VELO_PID].flag = 0;
 	float start_angle = Angle;
-	while(start_angle - ang1 < Angle)
+	while(start_angle - Sla.Theta1 < Angle)
 	{
-			AngularAcceleration = alpha_turn;
-			TargetVelocity[BODY] = v_turn;
+			AngularAcceleration = -Sla.Alpha;
+			TargetVelocity[BODY] = ExploreVelocity;
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
-	while(start_angle - ang2 < Angle)
+	while(start_angle - Sla.Theta2 < Angle)
 	{
 			TargetAngularV = TargetAngularV;
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 	}
 
-	while( start_angle - ang3 < Angle)
+	while( start_angle - Sla.Theta3 < Angle)
 	{
-			AngularAcceleration = -alpha_turn;
+			AngularAcceleration = Sla.Alpha;
 			if(TargetAngularV > 0)
 			{
 				TargetAngularV = 0;
 				break;
 			}
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
 	TargetAngularV = 0;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
-	while( now_pulse + fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
+	while( now_pulse + Sla.Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
 			TargetAngularV = 0;
-			TargetVelocity[BODY] = v_turn;
+			TargetVelocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
 				updateRealSearch(maze, mouse);
 				Calc = 1;
 			}
 	}
-	TargetAngle += -90*M_PI/180;
+	TargetAngle += -0.5f*M_PI;//-90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 }
 void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mouse)
@@ -515,6 +516,10 @@ void Decel(float dec_distance, float end_speed)
 
 	while( (	(Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
+		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] ) //距離で制御を切り替えるなら、別のwhileを用意すればいいのでは
+		{
+			Pid[A_VELO_PID].flag = 1;
+		}
 		if(end_speed == 0){
 			if(TargetVelocity[BODY] <= 90){
 				TargetVelocity[BODY] = 90;//end_speed;
@@ -531,10 +536,7 @@ void Decel(float dec_distance, float end_speed)
 				AngularAcceleration = 0;
 			}
 		}
-		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] ) //距離で制御を切り替えるなら、別のwhileを用意すればいいのでは
-		{
-			Pid[A_VELO_PID].flag = 1;
-		}
+
 	}
 	TargetVelocity[BODY] = end_speed;
 	Acceleration = 0;
@@ -812,16 +814,22 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 				Calc = 1;
 			}
 		}
-		KeepPulse[BODY] += target_pulse*0.2f;
-		KeepPulse[LEFT] += target_pulse*0.1f;
-		KeepPulse[RIGHT] += target_pulse*0.1f;
+		KeepPulse[BODY] += target_pulse*0.25f;
+		KeepPulse[LEFT] += target_pulse*0.125f;
+		KeepPulse[RIGHT] += target_pulse*0.125f;
 	}
 
 	else
 	{
+		//右
 		_Bool wall_cut=false;	//壁切れ用
 		_Bool face_check  = false; //一度でも正面領域に収まったか
-		int ctrl_mode = GetWallCtrlDirection(mouse);
+
+		int ctrl_mode=A_VELO_PID;
+		direction dir = mouse->now.dir;
+		if(!(dir%8 == backright || dir%8 == backleft || dir%8 == back)){
+			ctrl_mode = GetWallCtrlDirection(mouse); //一個前の情報を使っているかも（Uターン時のプログラムでは位置の更新がない）
+		}
 		//両壁がなければ, 角度制御しつつ柱を見たい. 細かすぎるかも.　今は角度制御
 		if (ctrl_mode == N_WALL_PID )//|| ctrl_mode == F_WALL_PID)
 			ctrl_mode = A_VELO_PID;

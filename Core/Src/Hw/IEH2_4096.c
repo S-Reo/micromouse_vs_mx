@@ -6,6 +6,7 @@
  */
 #include "IEH2_4096.h"
 
+#include "tim_info.h"
 //TIM3_Left, TIM4_Right
 
 void EncoderStart()
@@ -21,6 +22,14 @@ void EncoderStop()
 	HAL_TIM_Encoder_Stop(&htim4,TIM_CHANNEL_ALL);
 }
 
+void EncoderPrintInfo(){
+	printTIMinfo(&htim3);
+	printTIMinfo(&htim4);
+	//パルス数なども表示したい
+
+	//動作確認もしたい
+
+}
 
 
 

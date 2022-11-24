@@ -111,7 +111,7 @@ extern int L_motor, R_motor;
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 
-#define TIRE_DEAMETER 21.0f //20.55f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
+#define TIRE_DEAMETER 21.1f //21.0f //20.55f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
 #define CURVE_DISTANCE (TIRE_DEAMETER *PI/4) * 0.3740544648
 #define TREAD_WIDTH 34.4f //37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
