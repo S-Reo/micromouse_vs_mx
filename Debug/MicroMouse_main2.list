@@ -41,15 +41,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  18 .debug_ranges 000028c8  00000000  00000000  00078028  2**3
                   CONTENTS, READONLY, DEBUGGING
- 19 .debug_macro  0002734d  00000000  00000000  0007a8f0  2**0
+ 19 .debug_macro  00027359  00000000  00000000  0007a8f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 20 .debug_line   00018e15  00000000  00000000  000a1c3d  2**0
+ 20 .debug_line   00018e15  00000000  00000000  000a1c49  2**0
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_str    000cab59  00000000  00000000  000baa52  2**0
+ 21 .debug_str    000cab7b  00000000  00000000  000baa5e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 22 .comment      0000007b  00000000  00000000  001855ab  2**0
+ 22 .comment      0000007b  00000000  00000000  001855d9  2**0
                   CONTENTS, READONLY
- 23 .debug_frame  00005754  00000000  00000000  00185628  2**2
+ 23 .debug_frame  00005754  00000000  00000000  00185654  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1914,7 +1914,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
  800927e:	f8dc e000 	ldr.w	lr, [ip]
  8009282:	4878      	ldr	r0, [pc, #480]	; (8009464 <SlalomRight+0x294>)
  8009284:	4979      	ldr	r1, [pc, #484]	; (800946c <SlalomRight+0x29c>)
-		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
  8009286:	ed9f 7a7a 	vldr	s14, [pc, #488]	; 8009470 <SlalomRight+0x2a0>
  800928a:	eddf 6a7a 	vldr	s13, [pc, #488]	; 8009474 <SlalomRight+0x2a4>
 			TargetVelocity[BODY] = ExploreVelocity;
@@ -1933,7 +1933,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
  800929e:	2701      	movs	r7, #1
 			TargetVelocity[BODY] = ExploreVelocity;
  80092a0:	f8c8 2008 	str.w	r2, [r8, #8]
-		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
  80092a4:	edd1 7a00 	vldr	s15, [r1]
  80092a8:	eef4 7ac7 	vcmpe.f32	s15, s14
  80092ac:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
@@ -2168,8 +2168,8 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
  8009464:	2000509c 	.word	0x2000509c
  8009468:	20005630 	.word	0x20005630
  800946c:	200056a0 	.word	0x200056a0
- 8009470:	43480000 	.word	0x43480000
- 8009474:	437a0000 	.word	0x437a0000
+ 8009470:	43340000 	.word	0x43340000
+ 8009474:	43660000 	.word	0x43660000
  8009478:	20005098 	.word	0x20005098
  800947c:	00000000 	.word	0x00000000
  8009480:	200056dc 	.word	0x200056dc
@@ -2455,7 +2455,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
  800968a:	f8d7 e000 	ldr.w	lr, [r7]
  800968e:	4825      	ldr	r0, [pc, #148]	; (8009724 <SlalomLeft+0x28c>)
  8009690:	492c      	ldr	r1, [pc, #176]	; (8009744 <SlalomLeft+0x2ac>)
-		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
  8009692:	ed9f 7a2d 	vldr	s14, [pc, #180]	; 8009748 <SlalomLeft+0x2b0>
  8009696:	eddf 6a2d 	vldr	s13, [pc, #180]	; 800974c <SlalomLeft+0x2b4>
 			TargetVelocity[BODY] = ExploreVelocity;
@@ -2474,7 +2474,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
  80096ac:	f04f 0c01 	mov.w	ip, #1
 			TargetVelocity[BODY] = ExploreVelocity;
  80096b0:	f8c8 2008 	str.w	r2, [r8, #8]
-		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
  80096b4:	edd1 7a00 	vldr	s15, [r1]
  80096b8:	eef4 7ac7 	vcmpe.f32	s15, s14
  80096bc:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
@@ -2524,8 +2524,8 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
  800973c:	200050a8 	.word	0x200050a8
  8009740:	20005694 	.word	0x20005694
  8009744:	200056a0 	.word	0x200056a0
- 8009748:	43480000 	.word	0x43480000
- 800974c:	437a0000 	.word	0x437a0000
+ 8009748:	43340000 	.word	0x43340000
+ 800974c:	43660000 	.word	0x43660000
  8009750:	200056b4 	.word	0x200056b4
  8009754:	20005678 	.word	0x20005678
 
@@ -3058,10 +3058,10 @@ float AjustCenter(profile *mouse){
 	int wall_ctrl = GetWallCtrlDirection(mouse);
  8009b30:	4628      	mov	r0, r5
  8009b32:	f7ff f961 	bl	8008df8 <GetWallCtrlDirection>
-	float photo_threshold[2]=
-	{
-			3300,
-			4500
+			3600,
+			4000
+			//3300,
+			//4500
 	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さく。狭めると位置が安定するが環境しだいで怪しい挙動に。
 	switch(mouse->now.car%8)
  8009b36:	7aab      	ldrb	r3, [r5, #10]
@@ -3281,8 +3281,8 @@ float AjustCenter(profile *mouse){
  8009d10:	42760000 	.word	0x42760000
  8009d14:	20005098 	.word	0x20005098
  8009d18:	200056a0 	.word	0x200056a0
- 8009d1c:	454e4000 	.word	0x454e4000
- 8009d20:	458ca000 	.word	0x458ca000
+ 8009d1c:	45610000 	.word	0x45610000
+ 8009d20:	457a0000 	.word	0x457a0000
 
 08009d24 <GetWallCompensateDir>:
 int GetWallCompensateDir(profile *mouse)
@@ -4139,10 +4139,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  800a2a8:	4bcc      	ldr	r3, [pc, #816]	; (800a5dc <HAL_TIM_PeriodElapsedCallback+0x344>)
  800a2aa:	429c      	cmp	r4, r3
  800a2ac:	f000 80e9 	beq.w	800a482 <HAL_TIM_PeriodElapsedCallback+0x1ea>
-		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
-		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
-		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
-		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
+		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
+		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
+		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
 	}
 }
  800a2b0:	ecbd 8b02 	vpop	{d8}
@@ -4355,43 +4355,43 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  800a47a:	4b58      	ldr	r3, [pc, #352]	; (800a5dc <HAL_TIM_PeriodElapsedCallback+0x344>)
  800a47c:	429c      	cmp	r4, r3
  800a47e:	f47f af17 	bne.w	800a2b0 <HAL_TIM_PeriodElapsedCallback+0x18>
-		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
+		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
  800a482:	4e6b      	ldr	r6, [pc, #428]	; (800a630 <HAL_TIM_PeriodElapsedCallback+0x398>)
  800a484:	4c6b      	ldr	r4, [pc, #428]	; (800a634 <HAL_TIM_PeriodElapsedCallback+0x39c>)
  800a486:	6831      	ldr	r1, [r6, #0]
-		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
+		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
  800a488:	4d6b      	ldr	r5, [pc, #428]	; (800a638 <HAL_TIM_PeriodElapsedCallback+0x3a0>)
-		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
+		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
  800a48a:	2200      	movs	r2, #0
- 800a48c:	2014      	movs	r0, #20
+ 800a48c:	200a      	movs	r0, #10
  800a48e:	f004 fb57 	bl	800eb40 <GetWallDataAverage>
-		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
+		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
  800a492:	6871      	ldr	r1, [r6, #4]
-		Photo[FL] = GetWallDataAverage(20, adc1[0], FL);	//adc1_IN10
+		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
  800a494:	ed84 0a00 	vstr	s0, [r4]
-		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
+		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
  800a498:	2201      	movs	r2, #1
- 800a49a:	2014      	movs	r0, #20
+ 800a49a:	200a      	movs	r0, #10
  800a49c:	f004 fb50 	bl	800eb40 <GetWallDataAverage>
-		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
+		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
  800a4a0:	6829      	ldr	r1, [r5, #0]
-		Photo[SR] = GetWallDataAverage(20, adc1[1], SR);	//adc1_IN14
+		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
  800a4a2:	ed84 0a01 	vstr	s0, [r4, #4]
-		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
+		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
  800a4a6:	2202      	movs	r2, #2
- 800a4a8:	2014      	movs	r0, #20
+ 800a4a8:	200a      	movs	r0, #10
  800a4aa:	f004 fb49 	bl	800eb40 <GetWallDataAverage>
-		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
+		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
  800a4ae:	6869      	ldr	r1, [r5, #4]
-		Photo[SL] = GetWallDataAverage(20, adc2[0], SL);	//adc2_IN11
+		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
  800a4b0:	ed84 0a02 	vstr	s0, [r4, #8]
-		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
+		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
  800a4b4:	2203      	movs	r2, #3
- 800a4b6:	2014      	movs	r0, #20
+ 800a4b6:	200a      	movs	r0, #10
  800a4b8:	f004 fb42 	bl	800eb40 <GetWallDataAverage>
 }
  800a4bc:	ecbd 8b02 	vpop	{d8}
-		Photo[FR] = GetWallDataAverage(20, adc2[1], FR);	//adc2_IN15
+		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
  800a4c0:	ed84 0a03 	vstr	s0, [r4, #12]
 }
  800a4c4:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
@@ -13061,23 +13061,23 @@ while(Status != HAL_OK)
  800ddfe:	eef0 0a41 	vmov.f32	s1, s2
  800de02:	2008      	movs	r0, #8
  800de04:	f000 ff1c 	bl	800ec40 <PIDSetGain>
-  PIDSetGain(D_WALL_PID, 0,0,0);//8,2,0);//8, 4,0);//6, 0,0);
+  PIDSetGain(D_WALL_PID, 3,1,0);//8,2,0);//8, 4,0);//6, 0,0);
  800de08:	ed9f 1a39 	vldr	s2, [pc, #228]	; 800def0 <main+0x48c>
- 800de0c:	2001      	movs	r0, #1
- 800de0e:	eef0 0a41 	vmov.f32	s1, s2
- 800de12:	eeb0 0a41 	vmov.f32	s0, s2
+ 800de0c:	eef7 0a00 	vmov.f32	s1, #112	; 0x3f800000  1.0
+ 800de10:	eeb0 0a08 	vmov.f32	s0, #8	; 0x40400000  3.0
+ 800de14:	2001      	movs	r0, #1
  800de16:	f000 ff13 	bl	800ec40 <PIDSetGain>
-  PIDSetGain(L_WALL_PID, 0,0,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(L_WALL_PID, 6,1,0);//14,4,0);//14,8,0);//12, 0,0);
  800de1a:	ed9f 1a35 	vldr	s2, [pc, #212]	; 800def0 <main+0x48c>
- 800de1e:	2002      	movs	r0, #2
- 800de20:	eef0 0a41 	vmov.f32	s1, s2
- 800de24:	eeb0 0a41 	vmov.f32	s0, s2
+ 800de1e:	eef7 0a00 	vmov.f32	s1, #112	; 0x3f800000  1.0
+ 800de22:	eeb1 0a08 	vmov.f32	s0, #24	; 0x40c00000  6.0
+ 800de26:	2002      	movs	r0, #2
  800de28:	f000 ff0a 	bl	800ec40 <PIDSetGain>
-  PIDSetGain(R_WALL_PID, 0,0,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(R_WALL_PID, 6,1,0);//14,4,0);//14,8,0);//12, 0,0);
  800de2c:	ed9f 1a30 	vldr	s2, [pc, #192]	; 800def0 <main+0x48c>
- 800de30:	2003      	movs	r0, #3
- 800de32:	eef0 0a41 	vmov.f32	s1, s2
- 800de36:	eeb0 0a41 	vmov.f32	s0, s2
+ 800de30:	eef7 0a00 	vmov.f32	s1, #112	; 0x3f800000  1.0
+ 800de34:	eeb1 0a08 	vmov.f32	s0, #24	; 0x40c00000  6.0
+ 800de38:	2003      	movs	r0, #3
  800de3a:	f000 ff01 	bl	800ec40 <PIDSetGain>
 	  switch( startup_mode )
  800de3e:	f99d 3007 	ldrsb.w	r3, [sp, #7]

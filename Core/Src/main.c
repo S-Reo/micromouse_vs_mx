@@ -229,9 +229,9 @@ int main(void)
 
   PIDSetGain(A_VELO_PID, 37.5, 80, 0); //42 //P=14.6
   PIDSetGain(F_WALL_PID, 14.6*2.5,0, 0);
-  PIDSetGain(D_WALL_PID, 0,0,0);//8,2,0);//8, 4,0);//6, 0,0);
-  PIDSetGain(L_WALL_PID, 0,0,0);//14,4,0);//14,8,0);//12, 0,0);
-  PIDSetGain(R_WALL_PID, 0,0,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(D_WALL_PID, 3,1,0);//8,2,0);//8, 4,0);//6, 0,0);
+  PIDSetGain(L_WALL_PID, 6,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(R_WALL_PID, 6,1,0);//14,4,0);//14,8,0);//12, 0,0);
   while (1)
   {
 	  switch( startup_mode )

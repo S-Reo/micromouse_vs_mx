@@ -28,6 +28,8 @@ const float TO_PULSE = 2/MM_PER_PULSE;
 //const float Wall_Cut_Val = 38;
 const float angle_range = 3*M_PI/180;  //領域
 
+#define SLA_CALIB_FL 180
+#define SLA_CALIB_FR	230
 /* バックエンドでコマンドとして処理する */
 
 int GetWallCtrlDirection(profile *mouse)
@@ -296,7 +298,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
 	{
-		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
@@ -388,7 +390,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/)
 	{
-		while(Photo[FL] < 200 || Photo[FR] < 250)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
@@ -613,8 +615,10 @@ float AjustCenter(profile *mouse){
 	//HAL_Delay(100);
 	float photo_threshold[2]=
 	{
-			3300,
-			4500
+			3600,
+			4000
+			//3300,
+			//4500
 	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さく。狭めると位置が安定するが環境しだいで怪しい挙動に。
 	switch(mouse->now.car%8)
 	{
