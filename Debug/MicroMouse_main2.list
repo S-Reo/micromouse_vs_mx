@@ -5470,9 +5470,9 @@ void printAllWeight(maze_node *maze, position *pos)
  800ac2e:	4633      	mov	r3, r6
  800ac30:	3378      	adds	r3, #120	; 0x78
  800ac32:	9302      	str	r3, [sp, #8]
- 800ac34:	230c      	movs	r3, #12
+ 800ac34:	2307      	movs	r3, #7
  800ac36:	9303      	str	r3, [sp, #12]
- 800ac38:	230b      	movs	r3, #11
+ 800ac38:	2306      	movs	r3, #6
  800ac3a:	9301      	str	r3, [sp, #4]
     for(int y=NUMBER_OF_SQUARES_Y; y > 0; y--)
  800ac3c:	f04f 0910 	mov.w	r9, #16
@@ -5508,7 +5508,7 @@ void printAllWeight(maze_node *maze, position *pos)
     if(maze->RawNode[x][y].weight == 0)
  800ac78:	8872      	ldrh	r2, [r6, #2]
         if ( __JUDGE_GOAL__ (x,y) || __JUDGE_GOAL__(x,y-1) )
- 800ac7a:	f1ab 0304 	sub.w	r3, fp, #4
+ 800ac7a:	f1ab 0309 	sub.w	r3, fp, #9
  800ac7e:	b2db      	uxtb	r3, r3
                 printf(" %3x ",maze->RawNode[x][y].weight);
  800ac80:	4611      	mov	r1, r2
@@ -5562,7 +5562,7 @@ void printAllWeight(maze_node *maze, position *pos)
     if(maze->ColumnNode[x][y].weight == 0)
  800acde:	eb0a 0106 	add.w	r1, sl, r6
         if ( __JUDGE_GOAL__ (x,y) || __JUDGE_GOAL__(x-1,y) )
- 800ace2:	f1ab 0304 	sub.w	r3, fp, #4
+ 800ace2:	f1ab 0309 	sub.w	r3, fp, #9
     if(maze->ColumnNode[x][y].weight == 0)
  800ace6:	f8b1 1882 	ldrh.w	r1, [r1, #2178]	; 0x882
         if ( __JUDGE_GOAL__ (x,y) || __JUDGE_GOAL__(x-1,y) )
@@ -7134,8 +7134,8 @@ void initSearchData(maze_node *my_maze, profile *Mouse)
  800b680:	d1f6      	bne.n	800b670 <initSearchData+0x2c>
     pos->x = x;
  800b682:	2300      	movs	r3, #0
- 800b684:	2005      	movs	r0, #5
- 800b686:	2204      	movs	r2, #4
+ 800b684:	200a      	movs	r0, #10
+ 800b686:	2209      	movs	r2, #9
  800b688:	70a8      	strb	r0, [r5, #2]
     pos->y = y;
  800b68a:	70e8      	strb	r0, [r5, #3]
@@ -8959,7 +8959,7 @@ void FastestRun()
 //	printAllNodeExistence(&my_map);
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
  800c1ea:	f04f 0903 	mov.w	r9, #3
- 800c1ee:	2204      	movs	r2, #4
+ 800c1ee:	2209      	movs	r2, #9
  800c1f0:	4633      	mov	r3, r6
  800c1f2:	4611      	mov	r1, r2
  800c1f4:	9600      	str	r6, [sp, #0]
@@ -8987,7 +8987,7 @@ void FastestRun()
  800c21c:	4628      	mov	r0, r5
  800c21e:	f000 fa29 	bl	800c674 <flashCopyNodesToRam>
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
- 800c222:	2204      	movs	r2, #4
+ 800c222:	2209      	movs	r2, #9
  800c224:	4633      	mov	r3, r6
  800c226:	4611      	mov	r1, r2
  800c228:	e9cd 6900 	strd	r6, r9, [sp]
