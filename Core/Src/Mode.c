@@ -701,6 +701,9 @@ static void restart(char turn_mode){
 	}
 }
 
+//一回目に通常の探索 + 二回目で最短 + 三回目で残りの探索 + 四回目で更に最短
+//一回目で全探索(DFS) + 失敗したら通常の探索と最短 + 成功すれば最短1回以上
+
 
 void DFS_Running(char turn_mode){
 	//全探索（深さ優先探索）
@@ -898,16 +901,22 @@ void Explore()
 //	printGoal(&my_mouse);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
-//	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
-//	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+#if 0
+	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
+	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+#else
 	my_mouse.target.pos.x = 0;
 	my_mouse.target.pos.y = 1;
+#endif
 	my_mouse.target_size = goal_edge_num;
 
 	//0,0をゴールとして深さ優先探索すればいい
 	InitStackNum();
 #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= large_x) && (less_y <= next_y && next_y <= large_y) )
 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
+//	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)/*! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) */){
+//		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+//	}
 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) ){
 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
 	}

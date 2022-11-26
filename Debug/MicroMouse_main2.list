@@ -31,11 +31,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  13 .ARM.attributes 00000030  00000000  00000000  000301e8  2**0
                   CONTENTS, READONLY
- 14 .debug_info   0002f0d9  00000000  00000000  00030218  2**0
+ 14 .debug_info   0002f0d8  00000000  00000000  00030218  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_abbrev 000066c8  00000000  00000000  0005f2f1  2**0
+ 15 .debug_abbrev 000066c8  00000000  00000000  0005f2f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_loc    00011223  00000000  00000000  000659b9  2**0
+ 16 .debug_loc    00011223  00000000  00000000  000659b8  2**0
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_aranges 00001448  00000000  00000000  00076be0  2**3
                   CONTENTS, READONLY, DEBUGGING
@@ -43,13 +43,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  19 .debug_macro  00027359  00000000  00000000  0007a8f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 20 .debug_line   00018e15  00000000  00000000  000a1c49  2**0
+ 20 .debug_line   00018e1b  00000000  00000000  000a1c49  2**0
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_str    000cab7b  00000000  00000000  000baa5e  2**0
+ 21 .debug_str    000cab7b  00000000  00000000  000baa64  2**0
                   CONTENTS, READONLY, DEBUGGING
- 22 .comment      0000007b  00000000  00000000  001855d9  2**0
+ 22 .comment      0000007b  00000000  00000000  001855df  2**0
                   CONTENTS, READONLY
- 23 .debug_frame  00005754  00000000  00000000  00185654  2**2
+ 23 .debug_frame  00005754  00000000  00000000  0018565c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -9389,11 +9389,11 @@ void Explore()
  800c49e:	f7ff f8d1 	bl	800b644 <initSearchData>
 	InitVisit();
  800c4a2:	f000 fe63 	bl	800d16c <InitVisit>
-	dbc = 1;
-//	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
-//	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+#else
 	my_mouse.target.pos.x = 0;
 	my_mouse.target.pos.y = 1;
+#endif
 	my_mouse.target_size = goal_edge_num;
  800c4a6:	f89a 3000 	ldrb.w	r3, [sl]
 	dbc = 1;
@@ -9415,6 +9415,9 @@ void Explore()
  800c4bc:	edd5 0a00 	vldr	s1, [r5]
  800c4c0:	ed9f 0a41 	vldr	s0, [pc, #260]	; 800c5c8 <Explore+0x268>
  800c4c4:	4631      	mov	r1, r6
+//	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)/*! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) */){
+//		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+//	}
 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) ){
 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  800c4c6:	4605      	mov	r5, r0
@@ -9947,10 +9950,10 @@ void updateRealSearch(maze_node *maze, profile *mouse)
  800c85e:	4630      	mov	r0, r6
  800c860:	7a2a      	ldrb	r2, [r5, #8]
 
+
 	//これの前に、target.posに到達したかどうかが必要
 			//到達していればStackを再開
 	position start_pos = {0,0};
-//	ChangeLED(0);
 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
  800c862:	f105 0720 	add.w	r7, r5, #32
 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
@@ -9988,11 +9991,9 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 
 				int n = GetStackNum();
  800c8a0:	f000 fc3c 	bl	800d11c <GetStackNum>
+
+				//0なら
 				if(n == 0){
-					//本当にスタート座標に向かうべきかの確認
-//					ChangeLED(7);
-					//向かうべきなら、DFSフラグをオフにしてtargetを(0,0)にセット
-//					LowDFSFlag();
 					WALL_MASK = 0x01;
  800c8a4:	f8df 81b8 	ldr.w	r8, [pc, #440]	; 800ca60 <updateRealSearch+0x2a8>
  800c8a8:	2301      	movs	r3, #1
@@ -10003,7 +10004,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 				if(n == 0){
  800c8b0:	2800      	cmp	r0, #0
  800c8b2:	f000 80c0 	beq.w	800ca36 <updateRealSearch+0x27e>
-//					ChangeLED(1);
+				else{
 					WALL_MASK = 0x01;
 					position pos;
 					_Bool is_first = false;
@@ -10045,8 +10046,8 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 							ChangeLED(7);
  800c8f0:	2007      	movs	r0, #7
  800c8f2:	f002 f857 	bl	800e9a4 <ChangeLED>
-//
-//	}
+			}//到達していなければ、そのまま最短でtarget.posに向かう
+
 
 //	int WALL_MASK = 0x01;
 	//壁の存在を基に重みマップを更新

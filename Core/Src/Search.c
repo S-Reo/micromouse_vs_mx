@@ -114,12 +114,11 @@ void updateRealSearch(maze_node *maze, profile *mouse)
     //現在方角、壁は、合ってる。座標とノードは？
     //ここで壁の存在を反映
 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
-	//mouse->target.pos.x, mouse->target.pos.y;
+
 
 	//これの前に、target.posに到達したかどうかが必要
 			//到達していればStackを再開
 	position start_pos = {0,0};
-//	ChangeLED(0);
 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
 				mouse->target_size = 1;
 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
@@ -130,17 +129,11 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 
 				//0なら
 				if(n == 0){
-					//本当にスタート座標に向かうべきかの確認
-//					ChangeLED(7);
-					//向かうべきなら、DFSフラグをオフにしてtargetを(0,0)にセット
-//					LowDFSFlag();
 					WALL_MASK = 0x01;
 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
 					SetStackNum(n);
 				}//0以外なら通常通り
 				else{
-//					HighDFSFlag();
-//					ChangeLED(1);
 					WALL_MASK = 0x01;
 					position pos;
 					_Bool is_first = false;
@@ -168,42 +161,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 				}
 
 			}//到達していなければ、そのまま最短でtarget.posに向かう
-//	int dfs_flag = GetDFSFlag();
-//	int stack_flag = GetStackFlag();
-//	//DFSで有効化
-//	if(stack_flag == true && dfs_flag == true){
-//		//スタックを積むだけのモードと、積みつつ取り出すモード
-//		int stack_num = GetStackNum();
-//		if( mass_stack[stack_num].x == mouse->now.pos.x && mass_stack[stack_num].y == mouse->now.pos.y ){
-//			--stack_num;
-//			SetStackNum(stack_num);
-//		}
-//		StackMass(maze, &(mouse->now));
-//
-//		//訪問済みのスタックがあれば省く
-//		while(Visit[mass_stack[stack_num].x][mass_stack[stack_num].y] == true){
-//			--stack_num;
-//		}
-//		//スタックを見て、そのマスと今のマスが一致していたら次のマスを取り出す
-//		// スタック
-//		if(!(mouse->target.pos.x == mass_stack[stack_num].x && mouse->target.pos.y == mass_stack[stack_num].y) ){
-//			//前回と違えばスタックカウントを減らす
-//			mouse->target.pos.x = mass_stack[stack_num].x;
-//			mouse->target.pos.y = mass_stack[stack_num].y;
-//			mouse->target_size = 1;
-//		}else{
-//			mouse->target.pos.x = mass_stack[stack_num].x;
-//			mouse->target.pos.y = mass_stack[stack_num].y;
-//			mouse->target_size = 1;
-//		}
-//	}
-//	else if(stack_flag == true && dfs_flag == false){
-//		//積むだけ
-//		StackMass(maze, &(mouse->now));
-//	}
-//	else if(dfs_flag == true) {
-//
-//	}
+
 
 //	int WALL_MASK = 0x01;
 	//壁の存在を基に重みマップを更新
