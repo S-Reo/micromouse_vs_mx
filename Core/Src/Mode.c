@@ -892,7 +892,7 @@ void Explore()
 	Calc = 0;
 	WALL_MASK = 0x01;
 	LowDFSFlag();
-	HighStackFlag();
+	LowStackFlag();
 	InitMassStack();
 //	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
 	Pid[A_VELO_PID].flag = 1;
@@ -901,7 +901,7 @@ void Explore()
 //	printGoal(&my_mouse);
 //	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
-#if 0
+#if 1
 	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
 	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
 #else
@@ -914,9 +914,10 @@ void Explore()
 	InitStackNum();
 #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= large_x) && (less_y <= next_y && next_y <= large_y) )
 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
-//	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)/*! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) */){
-//		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
-//	}
+	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)/*! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) */){
+		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+	}
+	HighStackFlag();
 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 && my_mouse.now.pos.y == 0)) ){
 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
 	}

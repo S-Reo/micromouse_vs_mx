@@ -119,6 +119,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 	//これの前に、target.posに到達したかどうかが必要
 			//到達していればStackを再開
 	position start_pos = {0,0};
+	if(GetStackFlag() == true){
 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
 				mouse->target_size = 1;
 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
@@ -161,7 +162,7 @@ void updateRealSearch(maze_node *maze, profile *mouse)
 				}
 
 			}//到達していなければ、そのまま最短でtarget.posに向かう
-
+	}
 
 //	int WALL_MASK = 0x01;
 	//壁の存在を基に重みマップを更新

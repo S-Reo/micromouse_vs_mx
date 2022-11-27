@@ -117,6 +117,8 @@ static void MX_TIM8_Init(void);
 static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 extern void TIM5Init();
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -229,37 +231,14 @@ int main(void)
 
   PIDSetGain(A_VELO_PID, 37.5, 80, 0); //42 //P=14.6
   PIDSetGain(F_WALL_PID, 14.6*2.5,0, 0);
-  PIDSetGain(D_WALL_PID, 3,1,0);//8,2,0);//8, 4,0);//6, 0,0);
-  PIDSetGain(L_WALL_PID, 6,1,0);//14,4,0);//14,8,0);//12, 0,0);
-  PIDSetGain(R_WALL_PID, 6,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(D_WALL_PID, 6,1,0);//8,2,0);//8, 4,0);//6, 0,0);
+  PIDSetGain(L_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
   while (1)
   {
 	  switch( startup_mode )
 	  {
 	  case PARAMETERSETTING:
-			IT_mode = EXPLORE;
-			InitExplore();
-			TotalPulse[RIGHT] = 0;
-			TotalPulse[LEFT] = 0;
-			TotalPulse[BODY] = 0;
-
-			//PIDFlag = L_VELO_PID; のように直接どれにするか指定してはどうか. 必ずどれか一つ. どれか一つでなければビット操作で
-			//char型のフラグ 8本のフラグ .最悪256パターン用意しないといけなくなる
-			PIDChangeFlag(L_VELO_PID, 1);
-			PIDChangeFlag(R_VELO_PID, 1);
-			//PIDChangeFlagStraight(R_WALL_PID);
-			PIDChangeFlag(D_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 1);
-			PIDChangeFlag(R_WALL_PID, 0);
-			//PIDSetGain(D_WALL_PID, 10, 0, 0);
-			ExploreVelocity=0;
-			ChangeLED(1);
-			while(1)
-			{
-				TargetVelocity[BODY] = 0;
-
-			}
-		  ParameterSetting();
 		//wall_flash_print();
 		  break;
 	  case 1:
