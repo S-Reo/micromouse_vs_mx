@@ -15,7 +15,7 @@
 #include "Convert.h"
 
 #include "IEH2_4096.h"
-#include "ADC.h"
+#include "mouse_ADC.h"
 #include "LED_Driver.h"
 #include "IR_Emitter.h"
 #include "Motor_Driver.h"

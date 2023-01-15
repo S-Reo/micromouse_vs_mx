@@ -14,7 +14,7 @@
 
 
 #include "IEH2_4096.h"		//エンコーダ
-#include "ADC.h"
+#include "mouse_ADC.h"
 #include "LED_Driver.h"
 #include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
 #include "Motor_Driver.h"//モータの設定ヘッダ

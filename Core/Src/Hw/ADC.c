@@ -5,7 +5,7 @@
  *      Author: leopi
  */
 
-#include "ADC.h"
+#include "mouse_ADC.h"
 
 #include <stdio.h>
 uint32_t adc1[3]={0};

@@ -11,7 +11,7 @@
 #include "Convert.h"
 #include "PID_Control.h"
 
-#include "ADC.h"
+#include "mouse_ADC.h"
 //#include "LED_Driver.h"
 #include "IR_Emitter.h"
 #include "Motor_Driver.h"

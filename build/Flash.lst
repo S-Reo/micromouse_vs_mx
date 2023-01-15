@@ -1,0 +1,2669 @@
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Flash.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.FLASH_WaitBusy,"ax",%progbits
+  18              		.align	1
+  19              		.global	FLASH_WaitBusy
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	FLASH_WaitBusy:
+  27              	.LFB240:
+  28              		.file 1 "Core/Src/Hw/Flash.c"
+   1:Core/Src/Hw/Flash.c **** /*
+   2:Core/Src/Hw/Flash.c ****  * Flash.c
+   3:Core/Src/Hw/Flash.c ****  *
+   4:Core/Src/Hw/Flash.c ****  *  Created on: Feb 18, 2022
+   5:Core/Src/Hw/Flash.c ****  *      Author: leopi
+   6:Core/Src/Hw/Flash.c ****  */
+   7:Core/Src/Hw/Flash.c **** 
+   8:Core/Src/Hw/Flash.c **** 
+   9:Core/Src/Hw/Flash.c **** #include "Flash.h"
+  10:Core/Src/Hw/Flash.c **** 
+  11:Core/Src/Hw/Flash.c **** 
+  12:Core/Src/Hw/Flash.c **** #include "stdio.h"
+  13:Core/Src/Hw/Flash.c **** 
+  14:Core/Src/Hw/Flash.c **** //FLASH_SR_SNBはビット6:3　セクタ数を3ビットシフトした値
+  15:Core/Src/Hw/Flash.c **** #define FLASH_SECTOR1       0x08 //0x0001000
+  16:Core/Src/Hw/Flash.c **** //#define FLASH_SECTOR6
+  17:Core/Src/Hw/Flash.c **** //#define FLASH_SECTOR7
+  18:Core/Src/Hw/Flash.c **** #define FLASH_SECTOR8		0x40	//0x1000000
+  19:Core/Src/Hw/Flash.c **** #define FLASH_SECTOR9		0x48	//0x1001000
+  20:Core/Src/Hw/Flash.c **** #define FLASH_SECTOR10		0x50	//0x1010000
+  21:Core/Src/Hw/Flash.c **** #define FLASH_SECTOR11		0x58	//0x1011000
+  22:Core/Src/Hw/Flash.c **** 
+  23:Core/Src/Hw/Flash.c **** // flash use address
+  24:Core/Src/Hw/Flash.c **** const uint32_t start_adress_sector1  = 	0x08004000; //sentor1 start address
+  25:Core/Src/Hw/Flash.c **** const uint32_t end_adress_sector1   = 	0x08007FFF;
+  26:Core/Src/Hw/Flash.c **** //const uint32_t start_adress_sector6//  = 	0x8080000; //sentor8 start address
+  27:Core/Src/Hw/Flash.c **** //const uint32_t end_adress_sector6
+  28:Core/Src/Hw/Flash.c **** //const uint32_t start_adress_sector7//  = 	0x8080000; //sentor8 start address
+  29:Core/Src/Hw/Flash.c **** //const uint32_t end_adress_sector7
+  30:Core/Src/Hw/Flash.c **** const uint32_t start_adress_sector8  = 	0x8080000; //sentor8 start address
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 2
+
+
+  31:Core/Src/Hw/Flash.c **** const uint32_t end_adress_sector8 	 = 	0x809FFFF;
+  32:Core/Src/Hw/Flash.c **** const uint32_t start_adress_sector9  = 	0x80A0000; //sentor9 start address
+  33:Core/Src/Hw/Flash.c **** const uint32_t end_adress_sector9 	 = 	0x80BFFFF;
+  34:Core/Src/Hw/Flash.c **** const uint32_t start_adress_sector10 =  0x80C0000; //sentor10 start address
+  35:Core/Src/Hw/Flash.c **** const uint32_t end_adress_sector10 	 = 	0x80DFFFF;
+  36:Core/Src/Hw/Flash.c **** const uint32_t start_adress_sector11 =  0x80E0000; //sentor11 start address
+  37:Core/Src/Hw/Flash.c **** const uint32_t end_adress_sector11 	 = 	0x80FFFFF;
+  38:Core/Src/Hw/Flash.c **** uint32_t run_log_address;
+  39:Core/Src/Hw/Flash.c **** 
+  40:Core/Src/Hw/Flash.c **** 
+  41:Core/Src/Hw/Flash.c **** inline static void FLASH_Unlock(void)
+  42:Core/Src/Hw/Flash.c **** {
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0x45670123;
+  44:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+  45:Core/Src/Hw/Flash.c **** }
+  46:Core/Src/Hw/Flash.c **** 
+  47:Core/Src/Hw/Flash.c **** inline static void FLASH_Lock(void)
+  48:Core/Src/Hw/Flash.c **** {
+  49:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_LOCK;
+  50:Core/Src/Hw/Flash.c **** 
+  51:Core/Src/Hw/Flash.c **** }
+  52:Core/Src/Hw/Flash.c **** 
+  53:Core/Src/Hw/Flash.c **** void FLASH_WaitBusy(void)
+  54:Core/Src/Hw/Flash.c **** {
+  29              		.loc 1 54 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              	.L2:
+  55:Core/Src/Hw/Flash.c **** 	while(FLASH->SR & FLASH_SR_BSY);//BSYがクリアされるまで待機
+  35              		.loc 1 55 33 discriminator 1 view .LVU1
+  36              		.loc 1 55 7 discriminator 1 view .LVU2
+  37              		.loc 1 55 13 is_stmt 0 discriminator 1 view .LVU3
+  38 0000 024B     		ldr	r3, .L3
+  39 0002 DB68     		ldr	r3, [r3, #12]
+  40              		.loc 1 55 7 discriminator 1 view .LVU4
+  41 0004 13F4803F 		tst	r3, #65536
+  42 0008 FAD1     		bne	.L2
+  56:Core/Src/Hw/Flash.c **** }
+  43              		.loc 1 56 1 view .LVU5
+  44 000a 7047     		bx	lr
+  45              	.L4:
+  46              		.align	2
+  47              	.L3:
+  48 000c 003C0240 		.word	1073888256
+  49              		.cfi_endproc
+  50              	.LFE240:
+  52              		.section	.text.FLASH_Erase1,"ax",%progbits
+  53              		.align	1
+  54              		.global	FLASH_Erase1
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  58              		.fpu fpv4-sp-d16
+  60              	FLASH_Erase1:
+  61              	.LFB241:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 3
+
+
+  57:Core/Src/Hw/Flash.c **** 
+  58:Core/Src/Hw/Flash.c **** //1を追加する。map用
+  59:Core/Src/Hw/Flash.c **** void FLASH_Erase1(void)
+  60:Core/Src/Hw/Flash.c **** {
+  62              		.loc 1 60 1 is_stmt 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 10B5     		push	{r4, lr}
+  67              	.LCFI0:
+  68              		.cfi_def_cfa_offset 8
+  69              		.cfi_offset 4, -8
+  70              		.cfi_offset 14, -4
+  61:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+  71              		.loc 1 61 2 view .LVU7
+  72              	.LBB50:
+  73              	.LBI50:
+  41:Core/Src/Hw/Flash.c **** {
+  74              		.loc 1 41 20 view .LVU8
+  75              	.LBB51:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+  76              		.loc 1 43 2 view .LVU9
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+  77              		.loc 1 43 14 is_stmt 0 view .LVU10
+  78 0002 0D4C     		ldr	r4, .L7
+  79 0004 0D4B     		ldr	r3, .L7+4
+  80 0006 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+  81              		.loc 1 44 2 is_stmt 1 view .LVU11
+  44:Core/Src/Hw/Flash.c **** }
+  82              		.loc 1 44 14 is_stmt 0 view .LVU12
+  83 0008 03F18833 		add	r3, r3, #-2004318072
+  84 000c 6360     		str	r3, [r4, #4]
+  85              	.LBE51:
+  86              	.LBE50:
+  62:Core/Src/Hw/Flash.c **** 
+  63:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+  87              		.loc 1 63 2 is_stmt 1 view .LVU13
+  88 000e FFF7FEFF 		bl	FLASH_WaitBusy
+  89              	.LVL0:
+  64:Core/Src/Hw/Flash.c **** 
+  65:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+  90              		.loc 1 65 2 view .LVU14
+  91              		.loc 1 65 12 is_stmt 0 view .LVU15
+  92 0012 2369     		ldr	r3, [r4, #16]
+  93 0014 43F00203 		orr	r3, r3, #2
+  94 0018 2361     		str	r3, [r4, #16]
+  66:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_SECTOR1 & FLASH_CR_SNB_Msk;//セクタ選択
+  95              		.loc 1 66 2 is_stmt 1 view .LVU16
+  96              		.loc 1 66 12 is_stmt 0 view .LVU17
+  97 001a 2369     		ldr	r3, [r4, #16]
+  98 001c 43F00803 		orr	r3, r3, #8
+  99 0020 2361     		str	r3, [r4, #16]
+  67:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+ 100              		.loc 1 67 2 is_stmt 1 view .LVU18
+ 101              		.loc 1 67 12 is_stmt 0 view .LVU19
+ 102 0022 2369     		ldr	r3, [r4, #16]
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 4
+
+
+ 103 0024 43F48033 		orr	r3, r3, #65536
+ 104 0028 2361     		str	r3, [r4, #16]
+  68:Core/Src/Hw/Flash.c **** 
+  69:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 105              		.loc 1 69 2 is_stmt 1 view .LVU20
+ 106 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 107              	.LVL1:
+  70:Core/Src/Hw/Flash.c **** 
+  71:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 108              		.loc 1 71 2 view .LVU21
+ 109              	.LBB52:
+ 110              	.LBI52:
+  47:Core/Src/Hw/Flash.c **** {
+ 111              		.loc 1 47 20 view .LVU22
+ 112              	.LBB53:
+  49:Core/Src/Hw/Flash.c **** 
+ 113              		.loc 1 49 2 view .LVU23
+  49:Core/Src/Hw/Flash.c **** 
+ 114              		.loc 1 49 12 is_stmt 0 view .LVU24
+ 115 002e 2369     		ldr	r3, [r4, #16]
+ 116 0030 43F00043 		orr	r3, r3, #-2147483648
+ 117 0034 2361     		str	r3, [r4, #16]
+ 118              	.LBE53:
+ 119              	.LBE52:
+  72:Core/Src/Hw/Flash.c **** 
+  73:Core/Src/Hw/Flash.c **** }
+ 120              		.loc 1 73 1 view .LVU25
+ 121 0036 10BD     		pop	{r4, pc}
+ 122              	.L8:
+ 123              		.align	2
+ 124              	.L7:
+ 125 0038 003C0240 		.word	1073888256
+ 126 003c 23016745 		.word	1164378403
+ 127              		.cfi_endproc
+ 128              	.LFE241:
+ 130              		.section	.text.FLASH_Erase8,"ax",%progbits
+ 131              		.align	1
+ 132              		.global	FLASH_Erase8
+ 133              		.syntax unified
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.fpu fpv4-sp-d16
+ 138              	FLASH_Erase8:
+ 139              	.LFB242:
+  74:Core/Src/Hw/Flash.c **** //void FLASH_Erase6(void)
+  75:Core/Src/Hw/Flash.c **** //{
+  76:Core/Src/Hw/Flash.c **** //	FLASH_Unlock();
+  77:Core/Src/Hw/Flash.c **** //
+  78:Core/Src/Hw/Flash.c **** //	FLASH_WaitBusy();
+  79:Core/Src/Hw/Flash.c **** //
+  80:Core/Src/Hw/Flash.c **** //	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+  81:Core/Src/Hw/Flash.c **** //	FLASH->CR |= FLASH_SECTOR6 & FLASH_CR_SNB_Msk;//セクタ選択
+  82:Core/Src/Hw/Flash.c **** //	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+  83:Core/Src/Hw/Flash.c **** //
+  84:Core/Src/Hw/Flash.c **** //	FLASH_WaitBusy();
+  85:Core/Src/Hw/Flash.c **** //
+  86:Core/Src/Hw/Flash.c **** //	FLASH_Lock();
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 5
+
+
+  87:Core/Src/Hw/Flash.c **** //
+  88:Core/Src/Hw/Flash.c **** //}
+  89:Core/Src/Hw/Flash.c **** //void FLASH_Erase7(void)
+  90:Core/Src/Hw/Flash.c **** //{
+  91:Core/Src/Hw/Flash.c **** //	FLASH_Unlock();
+  92:Core/Src/Hw/Flash.c **** //
+  93:Core/Src/Hw/Flash.c **** //	FLASH_WaitBusy();
+  94:Core/Src/Hw/Flash.c **** //
+  95:Core/Src/Hw/Flash.c **** //	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+  96:Core/Src/Hw/Flash.c **** //	FLASH->CR |= FLASH_SECTOR7 & FLASH_CR_SNB_Msk;//セクタ選択
+  97:Core/Src/Hw/Flash.c **** //	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+  98:Core/Src/Hw/Flash.c **** //
+  99:Core/Src/Hw/Flash.c **** //	FLASH_WaitBusy();
+ 100:Core/Src/Hw/Flash.c **** //
+ 101:Core/Src/Hw/Flash.c **** //	FLASH_Lock();
+ 102:Core/Src/Hw/Flash.c **** //
+ 103:Core/Src/Hw/Flash.c **** //}
+ 104:Core/Src/Hw/Flash.c **** 
+ 105:Core/Src/Hw/Flash.c **** //8はノムさんもうまくいかなかったらしい。
+ 106:Core/Src/Hw/Flash.c **** //8のクリアはid研のを使う。
+ 107:Core/Src/Hw/Flash.c **** void FLASH_Erase8(void)
+ 108:Core/Src/Hw/Flash.c **** {
+ 140              		.loc 1 108 1 is_stmt 1 view -0
+ 141              		.cfi_startproc
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 10B5     		push	{r4, lr}
+ 145              	.LCFI1:
+ 146              		.cfi_def_cfa_offset 8
+ 147              		.cfi_offset 4, -8
+ 148              		.cfi_offset 14, -4
+ 109:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 149              		.loc 1 109 2 view .LVU27
+ 150              	.LBB54:
+ 151              	.LBI54:
+  41:Core/Src/Hw/Flash.c **** {
+ 152              		.loc 1 41 20 view .LVU28
+ 153              	.LBB55:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 154              		.loc 1 43 2 view .LVU29
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 155              		.loc 1 43 14 is_stmt 0 view .LVU30
+ 156 0002 0D4C     		ldr	r4, .L11
+ 157 0004 0D4B     		ldr	r3, .L11+4
+ 158 0006 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 159              		.loc 1 44 2 is_stmt 1 view .LVU31
+  44:Core/Src/Hw/Flash.c **** }
+ 160              		.loc 1 44 14 is_stmt 0 view .LVU32
+ 161 0008 03F18833 		add	r3, r3, #-2004318072
+ 162 000c 6360     		str	r3, [r4, #4]
+ 163              	.LBE55:
+ 164              	.LBE54:
+ 110:Core/Src/Hw/Flash.c **** 
+ 111:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 165              		.loc 1 111 2 is_stmt 1 view .LVU33
+ 166 000e FFF7FEFF 		bl	FLASH_WaitBusy
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 6
+
+
+ 167              	.LVL2:
+ 112:Core/Src/Hw/Flash.c **** 
+ 113:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+ 168              		.loc 1 113 2 view .LVU34
+ 169              		.loc 1 113 12 is_stmt 0 view .LVU35
+ 170 0012 2369     		ldr	r3, [r4, #16]
+ 171 0014 43F00203 		orr	r3, r3, #2
+ 172 0018 2361     		str	r3, [r4, #16]
+ 114:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_SECTOR8 & FLASH_CR_SNB_Msk;//セクタ選択
+ 173              		.loc 1 114 2 is_stmt 1 view .LVU36
+ 174              		.loc 1 114 12 is_stmt 0 view .LVU37
+ 175 001a 2369     		ldr	r3, [r4, #16]
+ 176 001c 43F04003 		orr	r3, r3, #64
+ 177 0020 2361     		str	r3, [r4, #16]
+ 115:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+ 178              		.loc 1 115 2 is_stmt 1 view .LVU38
+ 179              		.loc 1 115 12 is_stmt 0 view .LVU39
+ 180 0022 2369     		ldr	r3, [r4, #16]
+ 181 0024 43F48033 		orr	r3, r3, #65536
+ 182 0028 2361     		str	r3, [r4, #16]
+ 116:Core/Src/Hw/Flash.c **** 
+ 117:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 183              		.loc 1 117 2 is_stmt 1 view .LVU40
+ 184 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 185              	.LVL3:
+ 118:Core/Src/Hw/Flash.c **** 
+ 119:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 186              		.loc 1 119 2 view .LVU41
+ 187              	.LBB56:
+ 188              	.LBI56:
+  47:Core/Src/Hw/Flash.c **** {
+ 189              		.loc 1 47 20 view .LVU42
+ 190              	.LBB57:
+  49:Core/Src/Hw/Flash.c **** 
+ 191              		.loc 1 49 2 view .LVU43
+  49:Core/Src/Hw/Flash.c **** 
+ 192              		.loc 1 49 12 is_stmt 0 view .LVU44
+ 193 002e 2369     		ldr	r3, [r4, #16]
+ 194 0030 43F00043 		orr	r3, r3, #-2147483648
+ 195 0034 2361     		str	r3, [r4, #16]
+ 196              	.LBE57:
+ 197              	.LBE56:
+ 120:Core/Src/Hw/Flash.c **** }
+ 198              		.loc 1 120 1 view .LVU45
+ 199 0036 10BD     		pop	{r4, pc}
+ 200              	.L12:
+ 201              		.align	2
+ 202              	.L11:
+ 203 0038 003C0240 		.word	1073888256
+ 204 003c 23016745 		.word	1164378403
+ 205              		.cfi_endproc
+ 206              	.LFE242:
+ 208              		.section	.text.FLASH_Erase9,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	FLASH_Erase9
+ 211              		.syntax unified
+ 212              		.thumb
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 7
+
+
+ 213              		.thumb_func
+ 214              		.fpu fpv4-sp-d16
+ 216              	FLASH_Erase9:
+ 217              	.LFB243:
+ 121:Core/Src/Hw/Flash.c **** 
+ 122:Core/Src/Hw/Flash.c **** void FLASH_Erase9(void)
+ 123:Core/Src/Hw/Flash.c **** {
+ 218              		.loc 1 123 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222 0000 10B5     		push	{r4, lr}
+ 223              	.LCFI2:
+ 224              		.cfi_def_cfa_offset 8
+ 225              		.cfi_offset 4, -8
+ 226              		.cfi_offset 14, -4
+ 124:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 227              		.loc 1 124 2 view .LVU47
+ 228              	.LBB58:
+ 229              	.LBI58:
+  41:Core/Src/Hw/Flash.c **** {
+ 230              		.loc 1 41 20 view .LVU48
+ 231              	.LBB59:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 232              		.loc 1 43 2 view .LVU49
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 233              		.loc 1 43 14 is_stmt 0 view .LVU50
+ 234 0002 0D4C     		ldr	r4, .L15
+ 235 0004 0D4B     		ldr	r3, .L15+4
+ 236 0006 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 237              		.loc 1 44 2 is_stmt 1 view .LVU51
+  44:Core/Src/Hw/Flash.c **** }
+ 238              		.loc 1 44 14 is_stmt 0 view .LVU52
+ 239 0008 03F18833 		add	r3, r3, #-2004318072
+ 240 000c 6360     		str	r3, [r4, #4]
+ 241              	.LBE59:
+ 242              	.LBE58:
+ 125:Core/Src/Hw/Flash.c **** 
+ 126:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 243              		.loc 1 126 2 is_stmt 1 view .LVU53
+ 244 000e FFF7FEFF 		bl	FLASH_WaitBusy
+ 245              	.LVL4:
+ 127:Core/Src/Hw/Flash.c **** 
+ 128:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+ 246              		.loc 1 128 2 view .LVU54
+ 247              		.loc 1 128 12 is_stmt 0 view .LVU55
+ 248 0012 2369     		ldr	r3, [r4, #16]
+ 249 0014 43F00203 		orr	r3, r3, #2
+ 250 0018 2361     		str	r3, [r4, #16]
+ 129:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_SECTOR9 & FLASH_CR_SNB_Msk;//セクタ選択
+ 251              		.loc 1 129 2 is_stmt 1 view .LVU56
+ 252              		.loc 1 129 12 is_stmt 0 view .LVU57
+ 253 001a 2369     		ldr	r3, [r4, #16]
+ 254 001c 43F04803 		orr	r3, r3, #72
+ 255 0020 2361     		str	r3, [r4, #16]
+ 130:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 8
+
+
+ 256              		.loc 1 130 2 is_stmt 1 view .LVU58
+ 257              		.loc 1 130 12 is_stmt 0 view .LVU59
+ 258 0022 2369     		ldr	r3, [r4, #16]
+ 259 0024 43F48033 		orr	r3, r3, #65536
+ 260 0028 2361     		str	r3, [r4, #16]
+ 131:Core/Src/Hw/Flash.c **** 
+ 132:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 261              		.loc 1 132 2 is_stmt 1 view .LVU60
+ 262 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 263              	.LVL5:
+ 133:Core/Src/Hw/Flash.c **** 
+ 134:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 264              		.loc 1 134 2 view .LVU61
+ 265              	.LBB60:
+ 266              	.LBI60:
+  47:Core/Src/Hw/Flash.c **** {
+ 267              		.loc 1 47 20 view .LVU62
+ 268              	.LBB61:
+  49:Core/Src/Hw/Flash.c **** 
+ 269              		.loc 1 49 2 view .LVU63
+  49:Core/Src/Hw/Flash.c **** 
+ 270              		.loc 1 49 12 is_stmt 0 view .LVU64
+ 271 002e 2369     		ldr	r3, [r4, #16]
+ 272 0030 43F00043 		orr	r3, r3, #-2147483648
+ 273 0034 2361     		str	r3, [r4, #16]
+ 274              	.LBE61:
+ 275              	.LBE60:
+ 135:Core/Src/Hw/Flash.c **** }
+ 276              		.loc 1 135 1 view .LVU65
+ 277 0036 10BD     		pop	{r4, pc}
+ 278              	.L16:
+ 279              		.align	2
+ 280              	.L15:
+ 281 0038 003C0240 		.word	1073888256
+ 282 003c 23016745 		.word	1164378403
+ 283              		.cfi_endproc
+ 284              	.LFE243:
+ 286              		.section	.text.FLASH_Erase10,"ax",%progbits
+ 287              		.align	1
+ 288              		.global	FLASH_Erase10
+ 289              		.syntax unified
+ 290              		.thumb
+ 291              		.thumb_func
+ 292              		.fpu fpv4-sp-d16
+ 294              	FLASH_Erase10:
+ 295              	.LFB244:
+ 136:Core/Src/Hw/Flash.c **** 
+ 137:Core/Src/Hw/Flash.c **** void FLASH_Erase10(void)
+ 138:Core/Src/Hw/Flash.c **** {
+ 296              		.loc 1 138 1 is_stmt 1 view -0
+ 297              		.cfi_startproc
+ 298              		@ args = 0, pretend = 0, frame = 0
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300 0000 10B5     		push	{r4, lr}
+ 301              	.LCFI3:
+ 302              		.cfi_def_cfa_offset 8
+ 303              		.cfi_offset 4, -8
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 9
+
+
+ 304              		.cfi_offset 14, -4
+ 139:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 305              		.loc 1 139 2 view .LVU67
+ 306              	.LBB62:
+ 307              	.LBI62:
+  41:Core/Src/Hw/Flash.c **** {
+ 308              		.loc 1 41 20 view .LVU68
+ 309              	.LBB63:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 310              		.loc 1 43 2 view .LVU69
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 311              		.loc 1 43 14 is_stmt 0 view .LVU70
+ 312 0002 0D4C     		ldr	r4, .L19
+ 313 0004 0D4B     		ldr	r3, .L19+4
+ 314 0006 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 315              		.loc 1 44 2 is_stmt 1 view .LVU71
+  44:Core/Src/Hw/Flash.c **** }
+ 316              		.loc 1 44 14 is_stmt 0 view .LVU72
+ 317 0008 03F18833 		add	r3, r3, #-2004318072
+ 318 000c 6360     		str	r3, [r4, #4]
+ 319              	.LBE63:
+ 320              	.LBE62:
+ 140:Core/Src/Hw/Flash.c **** 
+ 141:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 321              		.loc 1 141 2 is_stmt 1 view .LVU73
+ 322 000e FFF7FEFF 		bl	FLASH_WaitBusy
+ 323              	.LVL6:
+ 142:Core/Src/Hw/Flash.c **** 
+ 143:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+ 324              		.loc 1 143 2 view .LVU74
+ 325              		.loc 1 143 12 is_stmt 0 view .LVU75
+ 326 0012 2369     		ldr	r3, [r4, #16]
+ 327 0014 43F00203 		orr	r3, r3, #2
+ 328 0018 2361     		str	r3, [r4, #16]
+ 144:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_SECTOR10 & FLASH_CR_SNB_Msk;//セクタ選択
+ 329              		.loc 1 144 2 is_stmt 1 view .LVU76
+ 330              		.loc 1 144 12 is_stmt 0 view .LVU77
+ 331 001a 2369     		ldr	r3, [r4, #16]
+ 332 001c 43F05003 		orr	r3, r3, #80
+ 333 0020 2361     		str	r3, [r4, #16]
+ 145:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+ 334              		.loc 1 145 2 is_stmt 1 view .LVU78
+ 335              		.loc 1 145 12 is_stmt 0 view .LVU79
+ 336 0022 2369     		ldr	r3, [r4, #16]
+ 337 0024 43F48033 		orr	r3, r3, #65536
+ 338 0028 2361     		str	r3, [r4, #16]
+ 146:Core/Src/Hw/Flash.c **** 
+ 147:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 339              		.loc 1 147 2 is_stmt 1 view .LVU80
+ 340 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 341              	.LVL7:
+ 148:Core/Src/Hw/Flash.c **** 
+ 149:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 342              		.loc 1 149 2 view .LVU81
+ 343              	.LBB64:
+ 344              	.LBI64:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 10
+
+
+  47:Core/Src/Hw/Flash.c **** {
+ 345              		.loc 1 47 20 view .LVU82
+ 346              	.LBB65:
+  49:Core/Src/Hw/Flash.c **** 
+ 347              		.loc 1 49 2 view .LVU83
+  49:Core/Src/Hw/Flash.c **** 
+ 348              		.loc 1 49 12 is_stmt 0 view .LVU84
+ 349 002e 2369     		ldr	r3, [r4, #16]
+ 350 0030 43F00043 		orr	r3, r3, #-2147483648
+ 351 0034 2361     		str	r3, [r4, #16]
+ 352              	.LBE65:
+ 353              	.LBE64:
+ 150:Core/Src/Hw/Flash.c **** }
+ 354              		.loc 1 150 1 view .LVU85
+ 355 0036 10BD     		pop	{r4, pc}
+ 356              	.L20:
+ 357              		.align	2
+ 358              	.L19:
+ 359 0038 003C0240 		.word	1073888256
+ 360 003c 23016745 		.word	1164378403
+ 361              		.cfi_endproc
+ 362              	.LFE244:
+ 364              		.section	.text.FLASH_Erase11,"ax",%progbits
+ 365              		.align	1
+ 366              		.global	FLASH_Erase11
+ 367              		.syntax unified
+ 368              		.thumb
+ 369              		.thumb_func
+ 370              		.fpu fpv4-sp-d16
+ 372              	FLASH_Erase11:
+ 373              	.LFB245:
+ 151:Core/Src/Hw/Flash.c **** 
+ 152:Core/Src/Hw/Flash.c **** void FLASH_Erase11(void)
+ 153:Core/Src/Hw/Flash.c **** {
+ 374              		.loc 1 153 1 is_stmt 1 view -0
+ 375              		.cfi_startproc
+ 376              		@ args = 0, pretend = 0, frame = 0
+ 377              		@ frame_needed = 0, uses_anonymous_args = 0
+ 378 0000 10B5     		push	{r4, lr}
+ 379              	.LCFI4:
+ 380              		.cfi_def_cfa_offset 8
+ 381              		.cfi_offset 4, -8
+ 382              		.cfi_offset 14, -4
+ 154:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 383              		.loc 1 154 2 view .LVU87
+ 384              	.LBB66:
+ 385              	.LBI66:
+  41:Core/Src/Hw/Flash.c **** {
+ 386              		.loc 1 41 20 view .LVU88
+ 387              	.LBB67:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 388              		.loc 1 43 2 view .LVU89
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 389              		.loc 1 43 14 is_stmt 0 view .LVU90
+ 390 0002 0D4C     		ldr	r4, .L23
+ 391 0004 0D4B     		ldr	r3, .L23+4
+ 392 0006 6360     		str	r3, [r4, #4]
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 11
+
+
+  44:Core/Src/Hw/Flash.c **** }
+ 393              		.loc 1 44 2 is_stmt 1 view .LVU91
+  44:Core/Src/Hw/Flash.c **** }
+ 394              		.loc 1 44 14 is_stmt 0 view .LVU92
+ 395 0008 03F18833 		add	r3, r3, #-2004318072
+ 396 000c 6360     		str	r3, [r4, #4]
+ 397              	.LBE67:
+ 398              	.LBE66:
+ 155:Core/Src/Hw/Flash.c **** 
+ 156:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 399              		.loc 1 156 2 is_stmt 1 view .LVU93
+ 400 000e FFF7FEFF 		bl	FLASH_WaitBusy
+ 401              	.LVL8:
+ 157:Core/Src/Hw/Flash.c **** 
+ 158:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_SER;//SER Bitset
+ 402              		.loc 1 158 2 view .LVU94
+ 403              		.loc 1 158 12 is_stmt 0 view .LVU95
+ 404 0012 2369     		ldr	r3, [r4, #16]
+ 405 0014 43F00203 		orr	r3, r3, #2
+ 406 0018 2361     		str	r3, [r4, #16]
+ 159:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_SECTOR11 & FLASH_CR_SNB_Msk;//セクタ選択
+ 407              		.loc 1 159 2 is_stmt 1 view .LVU96
+ 408              		.loc 1 159 12 is_stmt 0 view .LVU97
+ 409 001a 2369     		ldr	r3, [r4, #16]
+ 410 001c 43F05803 		orr	r3, r3, #88
+ 411 0020 2361     		str	r3, [r4, #16]
+ 160:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_STRT;//STRT Bitset
+ 412              		.loc 1 160 2 is_stmt 1 view .LVU98
+ 413              		.loc 1 160 12 is_stmt 0 view .LVU99
+ 414 0022 2369     		ldr	r3, [r4, #16]
+ 415 0024 43F48033 		orr	r3, r3, #65536
+ 416 0028 2361     		str	r3, [r4, #16]
+ 161:Core/Src/Hw/Flash.c **** 
+ 162:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 417              		.loc 1 162 2 is_stmt 1 view .LVU100
+ 418 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 419              	.LVL9:
+ 163:Core/Src/Hw/Flash.c **** 
+ 164:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 420              		.loc 1 164 2 view .LVU101
+ 421              	.LBB68:
+ 422              	.LBI68:
+  47:Core/Src/Hw/Flash.c **** {
+ 423              		.loc 1 47 20 view .LVU102
+ 424              	.LBB69:
+  49:Core/Src/Hw/Flash.c **** 
+ 425              		.loc 1 49 2 view .LVU103
+  49:Core/Src/Hw/Flash.c **** 
+ 426              		.loc 1 49 12 is_stmt 0 view .LVU104
+ 427 002e 2369     		ldr	r3, [r4, #16]
+ 428 0030 43F00043 		orr	r3, r3, #-2147483648
+ 429 0034 2361     		str	r3, [r4, #16]
+ 430              	.LBE69:
+ 431              	.LBE68:
+ 165:Core/Src/Hw/Flash.c **** }
+ 432              		.loc 1 165 1 view .LVU105
+ 433 0036 10BD     		pop	{r4, pc}
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 12
+
+
+ 434              	.L24:
+ 435              		.align	2
+ 436              	.L23:
+ 437 0038 003C0240 		.word	1073888256
+ 438 003c 23016745 		.word	1164378403
+ 439              		.cfi_endproc
+ 440              	.LFE245:
+ 442              		.section	.text.FLASH_EraseSector,"ax",%progbits
+ 443              		.align	1
+ 444              		.global	FLASH_EraseSector
+ 445              		.syntax unified
+ 446              		.thumb
+ 447              		.thumb_func
+ 448              		.fpu fpv4-sp-d16
+ 450              	FLASH_EraseSector:
+ 451              	.LVL10:
+ 452              	.LFB246:
+ 166:Core/Src/Hw/Flash.c **** 
+ 167:Core/Src/Hw/Flash.c **** void FLASH_EraseSector( uint16_t sector ){	//FLASH_SECTOR11
+ 453              		.loc 1 167 42 is_stmt 1 view -0
+ 454              		.cfi_startproc
+ 455              		@ args = 0, pretend = 0, frame = 24
+ 456              		@ frame_needed = 0, uses_anonymous_args = 0
+ 457              		.loc 1 167 42 is_stmt 0 view .LVU107
+ 458 0000 10B5     		push	{r4, lr}
+ 459              	.LCFI5:
+ 460              		.cfi_def_cfa_offset 8
+ 461              		.cfi_offset 4, -8
+ 462              		.cfi_offset 14, -4
+ 463 0002 86B0     		sub	sp, sp, #24
+ 464              	.LCFI6:
+ 465              		.cfi_def_cfa_offset 32
+ 466 0004 0446     		mov	r4, r0
+ 168:Core/Src/Hw/Flash.c **** 	HAL_FLASH_Unlock();
+ 467              		.loc 1 168 2 is_stmt 1 view .LVU108
+ 468 0006 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 469              	.LVL11:
+ 169:Core/Src/Hw/Flash.c **** 
+ 170:Core/Src/Hw/Flash.c **** 	FLASH_EraseInitTypeDef EraseInit;
+ 470              		.loc 1 170 2 view .LVU109
+ 171:Core/Src/Hw/Flash.c **** 	EraseInit.TypeErase = FLASH_TYPEERASE_SECTORS;
+ 471              		.loc 1 171 2 view .LVU110
+ 472              		.loc 1 171 22 is_stmt 0 view .LVU111
+ 473 000a 0023     		movs	r3, #0
+ 474 000c 0193     		str	r3, [sp, #4]
+ 172:Core/Src/Hw/Flash.c **** 	EraseInit.Sector = sector;
+ 475              		.loc 1 172 2 is_stmt 1 view .LVU112
+ 476              		.loc 1 172 19 is_stmt 0 view .LVU113
+ 477 000e 0394     		str	r4, [sp, #12]
+ 173:Core/Src/Hw/Flash.c **** 	EraseInit.NbSectors = 1;
+ 478              		.loc 1 173 2 is_stmt 1 view .LVU114
+ 479              		.loc 1 173 22 is_stmt 0 view .LVU115
+ 480 0010 0122     		movs	r2, #1
+ 481 0012 0492     		str	r2, [sp, #16]
+ 174:Core/Src/Hw/Flash.c **** 	EraseInit.VoltageRange = FLASH_VOLTAGE_RANGE_3;	//!< Device operating range: 2.7V to 3.6V
+ 482              		.loc 1 174 2 is_stmt 1 view .LVU116
+ 483              		.loc 1 174 25 is_stmt 0 view .LVU117
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 13
+
+
+ 484 0014 0222     		movs	r2, #2
+ 485 0016 0592     		str	r2, [sp, #20]
+ 175:Core/Src/Hw/Flash.c **** 
+ 176:Core/Src/Hw/Flash.c **** 	uint32_t PageError = 0;
+ 486              		.loc 1 176 2 is_stmt 1 view .LVU118
+ 487              		.loc 1 176 11 is_stmt 0 view .LVU119
+ 488 0018 0093     		str	r3, [sp]
+ 177:Core/Src/Hw/Flash.c **** 	HAL_FLASHEx_Erase(&EraseInit, &PageError);
+ 489              		.loc 1 177 2 is_stmt 1 view .LVU120
+ 490 001a 6946     		mov	r1, sp
+ 491 001c 01A8     		add	r0, sp, #4
+ 492 001e FFF7FEFF 		bl	HAL_FLASHEx_Erase
+ 493              	.LVL12:
+ 178:Core/Src/Hw/Flash.c **** 	HAL_FLASH_Lock();
+ 494              		.loc 1 178 2 view .LVU121
+ 495 0022 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 496              	.LVL13:
+ 179:Core/Src/Hw/Flash.c **** }
+ 497              		.loc 1 179 1 is_stmt 0 view .LVU122
+ 498 0026 06B0     		add	sp, sp, #24
+ 499              	.LCFI7:
+ 500              		.cfi_def_cfa_offset 8
+ 501              		@ sp needed
+ 502 0028 10BD     		pop	{r4, pc}
+ 503              		.cfi_endproc
+ 504              	.LFE246:
+ 506              		.section	.text.FLASH_Write_HalfWord,"ax",%progbits
+ 507              		.align	1
+ 508              		.global	FLASH_Write_HalfWord
+ 509              		.syntax unified
+ 510              		.thumb
+ 511              		.thumb_func
+ 512              		.fpu fpv4-sp-d16
+ 514              	FLASH_Write_HalfWord:
+ 515              	.LVL14:
+ 516              	.LFB247:
+ 180:Core/Src/Hw/Flash.c **** 
+ 181:Core/Src/Hw/Flash.c **** void FLASH_Write_HalfWord(uint32_t address, uint16_t data)
+ 182:Core/Src/Hw/Flash.c **** {
+ 517              		.loc 1 182 1 is_stmt 1 view -0
+ 518              		.cfi_startproc
+ 519              		@ args = 0, pretend = 0, frame = 0
+ 520              		@ frame_needed = 0, uses_anonymous_args = 0
+ 521              		.loc 1 182 1 is_stmt 0 view .LVU124
+ 522 0000 70B5     		push	{r4, r5, r6, lr}
+ 523              	.LCFI8:
+ 524              		.cfi_def_cfa_offset 16
+ 525              		.cfi_offset 4, -16
+ 526              		.cfi_offset 5, -12
+ 527              		.cfi_offset 6, -8
+ 528              		.cfi_offset 14, -4
+ 529 0002 0546     		mov	r5, r0
+ 530 0004 0E46     		mov	r6, r1
+ 183:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 531              		.loc 1 183 2 is_stmt 1 view .LVU125
+ 532              	.LBB70:
+ 533              	.LBI70:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 14
+
+
+  41:Core/Src/Hw/Flash.c **** {
+ 534              		.loc 1 41 20 view .LVU126
+ 535              	.LBB71:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 536              		.loc 1 43 2 view .LVU127
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 537              		.loc 1 43 14 is_stmt 0 view .LVU128
+ 538 0006 0E4C     		ldr	r4, .L29
+ 539 0008 0E4B     		ldr	r3, .L29+4
+ 540 000a 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 541              		.loc 1 44 2 is_stmt 1 view .LVU129
+  44:Core/Src/Hw/Flash.c **** }
+ 542              		.loc 1 44 14 is_stmt 0 view .LVU130
+ 543 000c 03F18833 		add	r3, r3, #-2004318072
+ 544 0010 6360     		str	r3, [r4, #4]
+ 545              	.LBE71:
+ 546              	.LBE70:
+ 184:Core/Src/Hw/Flash.c **** 
+ 185:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 547              		.loc 1 185 2 is_stmt 1 view .LVU131
+ 548 0012 FFF7FEFF 		bl	FLASH_WaitBusy
+ 549              	.LVL15:
+ 186:Core/Src/Hw/Flash.c **** 
+ 187:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_HALF_WORD;
+ 550              		.loc 1 187 2 view .LVU132
+ 551              		.loc 1 187 12 is_stmt 0 view .LVU133
+ 552 0016 2369     		ldr	r3, [r4, #16]
+ 553 0018 43F48073 		orr	r3, r3, #256
+ 554 001c 2361     		str	r3, [r4, #16]
+ 188:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 555              		.loc 1 188 2 is_stmt 1 view .LVU134
+ 556              		.loc 1 188 12 is_stmt 0 view .LVU135
+ 557 001e 2369     		ldr	r3, [r4, #16]
+ 558 0020 43F00103 		orr	r3, r3, #1
+ 559 0024 2361     		str	r3, [r4, #16]
+ 189:Core/Src/Hw/Flash.c **** 
+ 190:Core/Src/Hw/Flash.c **** 	*(__IO uint16_t*)address = data;
+ 560              		.loc 1 190 2 is_stmt 1 view .LVU136
+ 561              		.loc 1 190 27 is_stmt 0 view .LVU137
+ 562 0026 2E80     		strh	r6, [r5]	@ movhi
+ 191:Core/Src/Hw/Flash.c **** 
+ 192:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 563              		.loc 1 192 2 is_stmt 1 view .LVU138
+ 564 0028 FFF7FEFF 		bl	FLASH_WaitBusy
+ 565              	.LVL16:
+ 193:Core/Src/Hw/Flash.c **** 
+ 194:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 566              		.loc 1 194 2 view .LVU139
+ 567              		.loc 1 194 12 is_stmt 0 view .LVU140
+ 568 002c 2369     		ldr	r3, [r4, #16]
+ 569 002e 23F00103 		bic	r3, r3, #1
+ 570 0032 2361     		str	r3, [r4, #16]
+ 195:Core/Src/Hw/Flash.c **** 
+ 196:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 571              		.loc 1 196 2 is_stmt 1 view .LVU141
+ 572              	.LBB72:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 15
+
+
+ 573              	.LBI72:
+  47:Core/Src/Hw/Flash.c **** {
+ 574              		.loc 1 47 20 view .LVU142
+ 575              	.LBB73:
+  49:Core/Src/Hw/Flash.c **** 
+ 576              		.loc 1 49 2 view .LVU143
+  49:Core/Src/Hw/Flash.c **** 
+ 577              		.loc 1 49 12 is_stmt 0 view .LVU144
+ 578 0034 2369     		ldr	r3, [r4, #16]
+ 579 0036 43F00043 		orr	r3, r3, #-2147483648
+ 580 003a 2361     		str	r3, [r4, #16]
+ 581              	.LBE73:
+ 582              	.LBE72:
+ 197:Core/Src/Hw/Flash.c **** }
+ 583              		.loc 1 197 1 view .LVU145
+ 584 003c 70BD     		pop	{r4, r5, r6, pc}
+ 585              	.LVL17:
+ 586              	.L30:
+ 587              		.loc 1 197 1 view .LVU146
+ 588 003e 00BF     		.align	2
+ 589              	.L29:
+ 590 0040 003C0240 		.word	1073888256
+ 591 0044 23016745 		.word	1164378403
+ 592              		.cfi_endproc
+ 593              	.LFE247:
+ 595              		.section	.text.FLASH_Write_Word,"ax",%progbits
+ 596              		.align	1
+ 597              		.global	FLASH_Write_Word
+ 598              		.syntax unified
+ 599              		.thumb
+ 600              		.thumb_func
+ 601              		.fpu fpv4-sp-d16
+ 603              	FLASH_Write_Word:
+ 604              	.LVL18:
+ 605              	.LFB248:
+ 198:Core/Src/Hw/Flash.c **** 
+ 199:Core/Src/Hw/Flash.c **** void FLASH_Write_Word(uint32_t address, uint32_t data)
+ 200:Core/Src/Hw/Flash.c **** {
+ 606              		.loc 1 200 1 is_stmt 1 view -0
+ 607              		.cfi_startproc
+ 608              		@ args = 0, pretend = 0, frame = 0
+ 609              		@ frame_needed = 0, uses_anonymous_args = 0
+ 610              		.loc 1 200 1 is_stmt 0 view .LVU148
+ 611 0000 70B5     		push	{r4, r5, r6, lr}
+ 612              	.LCFI9:
+ 613              		.cfi_def_cfa_offset 16
+ 614              		.cfi_offset 4, -16
+ 615              		.cfi_offset 5, -12
+ 616              		.cfi_offset 6, -8
+ 617              		.cfi_offset 14, -4
+ 618 0002 0546     		mov	r5, r0
+ 619 0004 0E46     		mov	r6, r1
+ 201:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 620              		.loc 1 201 2 is_stmt 1 view .LVU149
+ 621              	.LBB74:
+ 622              	.LBI74:
+  41:Core/Src/Hw/Flash.c **** {
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 16
+
+
+ 623              		.loc 1 41 20 view .LVU150
+ 624              	.LBB75:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 625              		.loc 1 43 2 view .LVU151
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 626              		.loc 1 43 14 is_stmt 0 view .LVU152
+ 627 0006 0E4C     		ldr	r4, .L33
+ 628 0008 0E4B     		ldr	r3, .L33+4
+ 629 000a 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 630              		.loc 1 44 2 is_stmt 1 view .LVU153
+  44:Core/Src/Hw/Flash.c **** }
+ 631              		.loc 1 44 14 is_stmt 0 view .LVU154
+ 632 000c 03F18833 		add	r3, r3, #-2004318072
+ 633 0010 6360     		str	r3, [r4, #4]
+ 634              	.LBE75:
+ 635              	.LBE74:
+ 202:Core/Src/Hw/Flash.c **** 
+ 203:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 636              		.loc 1 203 2 is_stmt 1 view .LVU155
+ 637 0012 FFF7FEFF 		bl	FLASH_WaitBusy
+ 638              	.LVL19:
+ 204:Core/Src/Hw/Flash.c **** 
+ 205:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_WORD;
+ 639              		.loc 1 205 2 view .LVU156
+ 640              		.loc 1 205 12 is_stmt 0 view .LVU157
+ 641 0016 2369     		ldr	r3, [r4, #16]
+ 642 0018 43F40073 		orr	r3, r3, #512
+ 643 001c 2361     		str	r3, [r4, #16]
+ 206:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 644              		.loc 1 206 2 is_stmt 1 view .LVU158
+ 645              		.loc 1 206 12 is_stmt 0 view .LVU159
+ 646 001e 2369     		ldr	r3, [r4, #16]
+ 647 0020 43F00103 		orr	r3, r3, #1
+ 648 0024 2361     		str	r3, [r4, #16]
+ 207:Core/Src/Hw/Flash.c **** 
+ 208:Core/Src/Hw/Flash.c **** 	*(__IO uint32_t*)address = data;
+ 649              		.loc 1 208 2 is_stmt 1 view .LVU160
+ 650              		.loc 1 208 27 is_stmt 0 view .LVU161
+ 651 0026 2E60     		str	r6, [r5]
+ 209:Core/Src/Hw/Flash.c **** 
+ 210:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 652              		.loc 1 210 2 is_stmt 1 view .LVU162
+ 653 0028 FFF7FEFF 		bl	FLASH_WaitBusy
+ 654              	.LVL20:
+ 211:Core/Src/Hw/Flash.c **** 
+ 212:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 655              		.loc 1 212 2 view .LVU163
+ 656              		.loc 1 212 12 is_stmt 0 view .LVU164
+ 657 002c 2369     		ldr	r3, [r4, #16]
+ 658 002e 23F00103 		bic	r3, r3, #1
+ 659 0032 2361     		str	r3, [r4, #16]
+ 213:Core/Src/Hw/Flash.c **** 
+ 214:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 660              		.loc 1 214 2 is_stmt 1 view .LVU165
+ 661              	.LBB76:
+ 662              	.LBI76:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 17
+
+
+  47:Core/Src/Hw/Flash.c **** {
+ 663              		.loc 1 47 20 view .LVU166
+ 664              	.LBB77:
+  49:Core/Src/Hw/Flash.c **** 
+ 665              		.loc 1 49 2 view .LVU167
+  49:Core/Src/Hw/Flash.c **** 
+ 666              		.loc 1 49 12 is_stmt 0 view .LVU168
+ 667 0034 2369     		ldr	r3, [r4, #16]
+ 668 0036 43F00043 		orr	r3, r3, #-2147483648
+ 669 003a 2361     		str	r3, [r4, #16]
+ 670              	.LBE77:
+ 671              	.LBE76:
+ 215:Core/Src/Hw/Flash.c **** }
+ 672              		.loc 1 215 1 view .LVU169
+ 673 003c 70BD     		pop	{r4, r5, r6, pc}
+ 674              	.LVL21:
+ 675              	.L34:
+ 676              		.loc 1 215 1 view .LVU170
+ 677 003e 00BF     		.align	2
+ 678              	.L33:
+ 679 0040 003C0240 		.word	1073888256
+ 680 0044 23016745 		.word	1164378403
+ 681              		.cfi_endproc
+ 682              	.LFE248:
+ 684              		.section	.text.FLASH_Read_Word,"ax",%progbits
+ 685              		.align	1
+ 686              		.global	FLASH_Read_Word
+ 687              		.syntax unified
+ 688              		.thumb
+ 689              		.thumb_func
+ 690              		.fpu fpv4-sp-d16
+ 692              	FLASH_Read_Word:
+ 693              	.LVL22:
+ 694              	.LFB249:
+ 216:Core/Src/Hw/Flash.c **** void FLASH_Read_Word(uint32_t address, uint32_t * data)
+ 217:Core/Src/Hw/Flash.c **** {
+ 695              		.loc 1 217 1 is_stmt 1 view -0
+ 696              		.cfi_startproc
+ 697              		@ args = 0, pretend = 0, frame = 0
+ 698              		@ frame_needed = 0, uses_anonymous_args = 0
+ 699              		.loc 1 217 1 is_stmt 0 view .LVU172
+ 700 0000 70B5     		push	{r4, r5, r6, lr}
+ 701              	.LCFI10:
+ 702              		.cfi_def_cfa_offset 16
+ 703              		.cfi_offset 4, -16
+ 704              		.cfi_offset 5, -12
+ 705              		.cfi_offset 6, -8
+ 706              		.cfi_offset 14, -4
+ 707 0002 0646     		mov	r6, r0
+ 708 0004 0D46     		mov	r5, r1
+ 218:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 709              		.loc 1 218 2 is_stmt 1 view .LVU173
+ 710              	.LBB78:
+ 711              	.LBI78:
+  41:Core/Src/Hw/Flash.c **** {
+ 712              		.loc 1 41 20 view .LVU174
+ 713              	.LBB79:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 18
+
+
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 714              		.loc 1 43 2 view .LVU175
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 715              		.loc 1 43 14 is_stmt 0 view .LVU176
+ 716 0006 0E4C     		ldr	r4, .L37
+ 717 0008 0E4B     		ldr	r3, .L37+4
+ 718 000a 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 719              		.loc 1 44 2 is_stmt 1 view .LVU177
+  44:Core/Src/Hw/Flash.c **** }
+ 720              		.loc 1 44 14 is_stmt 0 view .LVU178
+ 721 000c 03F18833 		add	r3, r3, #-2004318072
+ 722 0010 6360     		str	r3, [r4, #4]
+ 723              	.LBE79:
+ 724              	.LBE78:
+ 219:Core/Src/Hw/Flash.c **** 
+ 220:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 725              		.loc 1 220 2 is_stmt 1 view .LVU179
+ 726 0012 FFF7FEFF 		bl	FLASH_WaitBusy
+ 727              	.LVL23:
+ 221:Core/Src/Hw/Flash.c **** 
+ 222:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_WORD;
+ 728              		.loc 1 222 2 view .LVU180
+ 729              		.loc 1 222 12 is_stmt 0 view .LVU181
+ 730 0016 2369     		ldr	r3, [r4, #16]
+ 731 0018 43F40073 		orr	r3, r3, #512
+ 732 001c 2361     		str	r3, [r4, #16]
+ 223:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 733              		.loc 1 223 2 is_stmt 1 view .LVU182
+ 734              		.loc 1 223 12 is_stmt 0 view .LVU183
+ 735 001e 2369     		ldr	r3, [r4, #16]
+ 736 0020 43F00103 		orr	r3, r3, #1
+ 737 0024 2361     		str	r3, [r4, #16]
+ 224:Core/Src/Hw/Flash.c **** 
+ 225:Core/Src/Hw/Flash.c **** 	* data = *(__IO uint32_t*)address;
+ 738              		.loc 1 225 2 is_stmt 1 view .LVU184
+ 739              		.loc 1 225 11 is_stmt 0 view .LVU185
+ 740 0026 3368     		ldr	r3, [r6]
+ 741              		.loc 1 225 9 view .LVU186
+ 742 0028 2B60     		str	r3, [r5]
+ 226:Core/Src/Hw/Flash.c **** 
+ 227:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 743              		.loc 1 227 2 is_stmt 1 view .LVU187
+ 744 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 745              	.LVL24:
+ 228:Core/Src/Hw/Flash.c **** 
+ 229:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 746              		.loc 1 229 2 view .LVU188
+ 747              		.loc 1 229 12 is_stmt 0 view .LVU189
+ 748 002e 2369     		ldr	r3, [r4, #16]
+ 749 0030 23F00103 		bic	r3, r3, #1
+ 750 0034 2361     		str	r3, [r4, #16]
+ 230:Core/Src/Hw/Flash.c **** 
+ 231:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 751              		.loc 1 231 2 is_stmt 1 view .LVU190
+ 752              	.LBB80:
+ 753              	.LBI80:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 19
+
+
+  47:Core/Src/Hw/Flash.c **** {
+ 754              		.loc 1 47 20 view .LVU191
+ 755              	.LBB81:
+  49:Core/Src/Hw/Flash.c **** 
+ 756              		.loc 1 49 2 view .LVU192
+  49:Core/Src/Hw/Flash.c **** 
+ 757              		.loc 1 49 12 is_stmt 0 view .LVU193
+ 758 0036 2369     		ldr	r3, [r4, #16]
+ 759 0038 43F00043 		orr	r3, r3, #-2147483648
+ 760 003c 2361     		str	r3, [r4, #16]
+ 761              	.LBE81:
+ 762              	.LBE80:
+ 232:Core/Src/Hw/Flash.c **** }
+ 763              		.loc 1 232 1 view .LVU194
+ 764 003e 70BD     		pop	{r4, r5, r6, pc}
+ 765              	.LVL25:
+ 766              	.L38:
+ 767              		.loc 1 232 1 view .LVU195
+ 768              		.align	2
+ 769              	.L37:
+ 770 0040 003C0240 		.word	1073888256
+ 771 0044 23016745 		.word	1164378403
+ 772              		.cfi_endproc
+ 773              	.LFE249:
+ 775              		.section	.text.FLASH_Write_Word_S,"ax",%progbits
+ 776              		.align	1
+ 777              		.global	FLASH_Write_Word_S
+ 778              		.syntax unified
+ 779              		.thumb
+ 780              		.thumb_func
+ 781              		.fpu fpv4-sp-d16
+ 783              	FLASH_Write_Word_S:
+ 784              	.LVL26:
+ 785              	.LFB250:
+ 233:Core/Src/Hw/Flash.c **** void FLASH_Write_Word_S(uint32_t address, int32_t data)
+ 234:Core/Src/Hw/Flash.c **** {
+ 786              		.loc 1 234 1 is_stmt 1 view -0
+ 787              		.cfi_startproc
+ 788              		@ args = 0, pretend = 0, frame = 0
+ 789              		@ frame_needed = 0, uses_anonymous_args = 0
+ 790              		.loc 1 234 1 is_stmt 0 view .LVU197
+ 791 0000 70B5     		push	{r4, r5, r6, lr}
+ 792              	.LCFI11:
+ 793              		.cfi_def_cfa_offset 16
+ 794              		.cfi_offset 4, -16
+ 795              		.cfi_offset 5, -12
+ 796              		.cfi_offset 6, -8
+ 797              		.cfi_offset 14, -4
+ 798 0002 0546     		mov	r5, r0
+ 799 0004 0E46     		mov	r6, r1
+ 235:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 800              		.loc 1 235 2 is_stmt 1 view .LVU198
+ 801              	.LBB82:
+ 802              	.LBI82:
+  41:Core/Src/Hw/Flash.c **** {
+ 803              		.loc 1 41 20 view .LVU199
+ 804              	.LBB83:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 20
+
+
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 805              		.loc 1 43 2 view .LVU200
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 806              		.loc 1 43 14 is_stmt 0 view .LVU201
+ 807 0006 0E4C     		ldr	r4, .L41
+ 808 0008 0E4B     		ldr	r3, .L41+4
+ 809 000a 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 810              		.loc 1 44 2 is_stmt 1 view .LVU202
+  44:Core/Src/Hw/Flash.c **** }
+ 811              		.loc 1 44 14 is_stmt 0 view .LVU203
+ 812 000c 03F18833 		add	r3, r3, #-2004318072
+ 813 0010 6360     		str	r3, [r4, #4]
+ 814              	.LBE83:
+ 815              	.LBE82:
+ 236:Core/Src/Hw/Flash.c **** 
+ 237:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 816              		.loc 1 237 2 is_stmt 1 view .LVU204
+ 817 0012 FFF7FEFF 		bl	FLASH_WaitBusy
+ 818              	.LVL27:
+ 238:Core/Src/Hw/Flash.c **** 
+ 239:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_WORD;
+ 819              		.loc 1 239 2 view .LVU205
+ 820              		.loc 1 239 12 is_stmt 0 view .LVU206
+ 821 0016 2369     		ldr	r3, [r4, #16]
+ 822 0018 43F40073 		orr	r3, r3, #512
+ 823 001c 2361     		str	r3, [r4, #16]
+ 240:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 824              		.loc 1 240 2 is_stmt 1 view .LVU207
+ 825              		.loc 1 240 12 is_stmt 0 view .LVU208
+ 826 001e 2369     		ldr	r3, [r4, #16]
+ 827 0020 43F00103 		orr	r3, r3, #1
+ 828 0024 2361     		str	r3, [r4, #16]
+ 241:Core/Src/Hw/Flash.c **** 
+ 242:Core/Src/Hw/Flash.c **** 	*(__IO int32_t*)address = data;
+ 829              		.loc 1 242 2 is_stmt 1 view .LVU209
+ 830              		.loc 1 242 26 is_stmt 0 view .LVU210
+ 831 0026 2E60     		str	r6, [r5]
+ 243:Core/Src/Hw/Flash.c **** 
+ 244:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 832              		.loc 1 244 2 is_stmt 1 view .LVU211
+ 833 0028 FFF7FEFF 		bl	FLASH_WaitBusy
+ 834              	.LVL28:
+ 245:Core/Src/Hw/Flash.c **** 
+ 246:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 835              		.loc 1 246 2 view .LVU212
+ 836              		.loc 1 246 12 is_stmt 0 view .LVU213
+ 837 002c 2369     		ldr	r3, [r4, #16]
+ 838 002e 23F00103 		bic	r3, r3, #1
+ 839 0032 2361     		str	r3, [r4, #16]
+ 247:Core/Src/Hw/Flash.c **** 
+ 248:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 840              		.loc 1 248 2 is_stmt 1 view .LVU214
+ 841              	.LBB84:
+ 842              	.LBI84:
+  47:Core/Src/Hw/Flash.c **** {
+ 843              		.loc 1 47 20 view .LVU215
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 21
+
+
+ 844              	.LBB85:
+  49:Core/Src/Hw/Flash.c **** 
+ 845              		.loc 1 49 2 view .LVU216
+  49:Core/Src/Hw/Flash.c **** 
+ 846              		.loc 1 49 12 is_stmt 0 view .LVU217
+ 847 0034 2369     		ldr	r3, [r4, #16]
+ 848 0036 43F00043 		orr	r3, r3, #-2147483648
+ 849 003a 2361     		str	r3, [r4, #16]
+ 850              	.LBE85:
+ 851              	.LBE84:
+ 249:Core/Src/Hw/Flash.c **** }
+ 852              		.loc 1 249 1 view .LVU218
+ 853 003c 70BD     		pop	{r4, r5, r6, pc}
+ 854              	.LVL29:
+ 855              	.L42:
+ 856              		.loc 1 249 1 view .LVU219
+ 857 003e 00BF     		.align	2
+ 858              	.L41:
+ 859 0040 003C0240 		.word	1073888256
+ 860 0044 23016745 		.word	1164378403
+ 861              		.cfi_endproc
+ 862              	.LFE250:
+ 864              		.section	.text.FLASH_Write_Word_F,"ax",%progbits
+ 865              		.align	1
+ 866              		.global	FLASH_Write_Word_F
+ 867              		.syntax unified
+ 868              		.thumb
+ 869              		.thumb_func
+ 870              		.fpu fpv4-sp-d16
+ 872              	FLASH_Write_Word_F:
+ 873              	.LVL30:
+ 874              	.LFB251:
+ 250:Core/Src/Hw/Flash.c **** 
+ 251:Core/Src/Hw/Flash.c **** void FLASH_Write_Word_F(uint32_t address, float data)
+ 252:Core/Src/Hw/Flash.c **** {
+ 875              		.loc 1 252 1 is_stmt 1 view -0
+ 876              		.cfi_startproc
+ 877              		@ args = 0, pretend = 0, frame = 0
+ 878              		@ frame_needed = 0, uses_anonymous_args = 0
+ 879              		.loc 1 252 1 is_stmt 0 view .LVU221
+ 880 0000 70B5     		push	{r4, r5, r6, lr}
+ 881              	.LCFI12:
+ 882              		.cfi_def_cfa_offset 16
+ 883              		.cfi_offset 4, -16
+ 884              		.cfi_offset 5, -12
+ 885              		.cfi_offset 6, -8
+ 886              		.cfi_offset 14, -4
+ 887 0002 0546     		mov	r5, r0
+ 888 0004 10EE106A 		vmov	r6, s0
+ 253:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 889              		.loc 1 253 2 is_stmt 1 view .LVU222
+ 890              	.LBB86:
+ 891              	.LBI86:
+  41:Core/Src/Hw/Flash.c **** {
+ 892              		.loc 1 41 20 view .LVU223
+ 893              	.LBB87:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 22
+
+
+ 894              		.loc 1 43 2 view .LVU224
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 895              		.loc 1 43 14 is_stmt 0 view .LVU225
+ 896 0008 0D4C     		ldr	r4, .L45
+ 897 000a 0E4B     		ldr	r3, .L45+4
+ 898 000c 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 899              		.loc 1 44 2 is_stmt 1 view .LVU226
+  44:Core/Src/Hw/Flash.c **** }
+ 900              		.loc 1 44 14 is_stmt 0 view .LVU227
+ 901 000e 03F18833 		add	r3, r3, #-2004318072
+ 902 0012 6360     		str	r3, [r4, #4]
+ 903              	.LBE87:
+ 904              	.LBE86:
+ 254:Core/Src/Hw/Flash.c **** 
+ 255:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 905              		.loc 1 255 2 is_stmt 1 view .LVU228
+ 906 0014 FFF7FEFF 		bl	FLASH_WaitBusy
+ 907              	.LVL31:
+ 256:Core/Src/Hw/Flash.c **** 
+ 257:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_WORD;
+ 908              		.loc 1 257 2 view .LVU229
+ 909              		.loc 1 257 12 is_stmt 0 view .LVU230
+ 910 0018 2369     		ldr	r3, [r4, #16]
+ 911 001a 43F40073 		orr	r3, r3, #512
+ 912 001e 2361     		str	r3, [r4, #16]
+ 258:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 913              		.loc 1 258 2 is_stmt 1 view .LVU231
+ 914              		.loc 1 258 12 is_stmt 0 view .LVU232
+ 915 0020 2369     		ldr	r3, [r4, #16]
+ 916 0022 43F00103 		orr	r3, r3, #1
+ 917 0026 2361     		str	r3, [r4, #16]
+ 259:Core/Src/Hw/Flash.c **** 
+ 260:Core/Src/Hw/Flash.c **** 	*(__IO float*)address = data;
+ 918              		.loc 1 260 2 is_stmt 1 view .LVU233
+ 919              		.loc 1 260 24 is_stmt 0 view .LVU234
+ 920 0028 2E60     		str	r6, [r5]	@ float
+ 261:Core/Src/Hw/Flash.c **** 
+ 262:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 921              		.loc 1 262 2 is_stmt 1 view .LVU235
+ 922 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 923              	.LVL32:
+ 263:Core/Src/Hw/Flash.c **** 
+ 264:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 924              		.loc 1 264 2 view .LVU236
+ 925              		.loc 1 264 12 is_stmt 0 view .LVU237
+ 926 002e 2369     		ldr	r3, [r4, #16]
+ 927 0030 23F00103 		bic	r3, r3, #1
+ 928 0034 2361     		str	r3, [r4, #16]
+ 265:Core/Src/Hw/Flash.c **** 
+ 266:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 929              		.loc 1 266 2 is_stmt 1 view .LVU238
+ 930              	.LBB88:
+ 931              	.LBI88:
+  47:Core/Src/Hw/Flash.c **** {
+ 932              		.loc 1 47 20 view .LVU239
+ 933              	.LBB89:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 23
+
+
+  49:Core/Src/Hw/Flash.c **** 
+ 934              		.loc 1 49 2 view .LVU240
+  49:Core/Src/Hw/Flash.c **** 
+ 935              		.loc 1 49 12 is_stmt 0 view .LVU241
+ 936 0036 2369     		ldr	r3, [r4, #16]
+ 937 0038 43F00043 		orr	r3, r3, #-2147483648
+ 938 003c 2361     		str	r3, [r4, #16]
+ 939              	.LBE89:
+ 940              	.LBE88:
+ 267:Core/Src/Hw/Flash.c **** }
+ 941              		.loc 1 267 1 view .LVU242
+ 942 003e 70BD     		pop	{r4, r5, r6, pc}
+ 943              	.LVL33:
+ 944              	.L46:
+ 945              		.loc 1 267 1 view .LVU243
+ 946              		.align	2
+ 947              	.L45:
+ 948 0040 003C0240 		.word	1073888256
+ 949 0044 23016745 		.word	1164378403
+ 950              		.cfi_endproc
+ 951              	.LFE251:
+ 953              		.section	.text.FLASH_Read_Word_F,"ax",%progbits
+ 954              		.align	1
+ 955              		.global	FLASH_Read_Word_F
+ 956              		.syntax unified
+ 957              		.thumb
+ 958              		.thumb_func
+ 959              		.fpu fpv4-sp-d16
+ 961              	FLASH_Read_Word_F:
+ 962              	.LVL34:
+ 963              	.LFB252:
+ 268:Core/Src/Hw/Flash.c **** void FLASH_Read_Word_F(uint32_t address, float * data)
+ 269:Core/Src/Hw/Flash.c **** {
+ 964              		.loc 1 269 1 is_stmt 1 view -0
+ 965              		.cfi_startproc
+ 966              		@ args = 0, pretend = 0, frame = 0
+ 967              		@ frame_needed = 0, uses_anonymous_args = 0
+ 968              		.loc 1 269 1 is_stmt 0 view .LVU245
+ 969 0000 70B5     		push	{r4, r5, r6, lr}
+ 970              	.LCFI13:
+ 971              		.cfi_def_cfa_offset 16
+ 972              		.cfi_offset 4, -16
+ 973              		.cfi_offset 5, -12
+ 974              		.cfi_offset 6, -8
+ 975              		.cfi_offset 14, -4
+ 976 0002 0646     		mov	r6, r0
+ 977 0004 0D46     		mov	r5, r1
+ 270:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 978              		.loc 1 270 2 is_stmt 1 view .LVU246
+ 979              	.LBB90:
+ 980              	.LBI90:
+  41:Core/Src/Hw/Flash.c **** {
+ 981              		.loc 1 41 20 view .LVU247
+ 982              	.LBB91:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 983              		.loc 1 43 2 view .LVU248
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 24
+
+
+ 984              		.loc 1 43 14 is_stmt 0 view .LVU249
+ 985 0006 0E4C     		ldr	r4, .L49
+ 986 0008 0E4B     		ldr	r3, .L49+4
+ 987 000a 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 988              		.loc 1 44 2 is_stmt 1 view .LVU250
+  44:Core/Src/Hw/Flash.c **** }
+ 989              		.loc 1 44 14 is_stmt 0 view .LVU251
+ 990 000c 03F18833 		add	r3, r3, #-2004318072
+ 991 0010 6360     		str	r3, [r4, #4]
+ 992              	.LBE91:
+ 993              	.LBE90:
+ 271:Core/Src/Hw/Flash.c **** 
+ 272:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 994              		.loc 1 272 2 is_stmt 1 view .LVU252
+ 995 0012 FFF7FEFF 		bl	FLASH_WaitBusy
+ 996              	.LVL35:
+ 273:Core/Src/Hw/Flash.c **** 
+ 274:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_WORD;
+ 997              		.loc 1 274 2 view .LVU253
+ 998              		.loc 1 274 12 is_stmt 0 view .LVU254
+ 999 0016 2369     		ldr	r3, [r4, #16]
+ 1000 0018 43F40073 		orr	r3, r3, #512
+ 1001 001c 2361     		str	r3, [r4, #16]
+ 275:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 1002              		.loc 1 275 2 is_stmt 1 view .LVU255
+ 1003              		.loc 1 275 12 is_stmt 0 view .LVU256
+ 1004 001e 2369     		ldr	r3, [r4, #16]
+ 1005 0020 43F00103 		orr	r3, r3, #1
+ 1006 0024 2361     		str	r3, [r4, #16]
+ 276:Core/Src/Hw/Flash.c **** 
+ 277:Core/Src/Hw/Flash.c **** 	* data = *(__IO float*)address;
+ 1007              		.loc 1 277 2 is_stmt 1 view .LVU257
+ 1008              		.loc 1 277 11 is_stmt 0 view .LVU258
+ 1009 0026 3368     		ldr	r3, [r6]	@ float
+ 1010              		.loc 1 277 9 view .LVU259
+ 1011 0028 2B60     		str	r3, [r5]	@ float
+ 278:Core/Src/Hw/Flash.c **** 
+ 279:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 1012              		.loc 1 279 2 is_stmt 1 view .LVU260
+ 1013 002a FFF7FEFF 		bl	FLASH_WaitBusy
+ 1014              	.LVL36:
+ 280:Core/Src/Hw/Flash.c **** 
+ 281:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 1015              		.loc 1 281 2 view .LVU261
+ 1016              		.loc 1 281 12 is_stmt 0 view .LVU262
+ 1017 002e 2369     		ldr	r3, [r4, #16]
+ 1018 0030 23F00103 		bic	r3, r3, #1
+ 1019 0034 2361     		str	r3, [r4, #16]
+ 282:Core/Src/Hw/Flash.c **** 
+ 283:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 1020              		.loc 1 283 2 is_stmt 1 view .LVU263
+ 1021              	.LBB92:
+ 1022              	.LBI92:
+  47:Core/Src/Hw/Flash.c **** {
+ 1023              		.loc 1 47 20 view .LVU264
+ 1024              	.LBB93:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 25
+
+
+  49:Core/Src/Hw/Flash.c **** 
+ 1025              		.loc 1 49 2 view .LVU265
+  49:Core/Src/Hw/Flash.c **** 
+ 1026              		.loc 1 49 12 is_stmt 0 view .LVU266
+ 1027 0036 2369     		ldr	r3, [r4, #16]
+ 1028 0038 43F00043 		orr	r3, r3, #-2147483648
+ 1029 003c 2361     		str	r3, [r4, #16]
+ 1030              	.LBE93:
+ 1031              	.LBE92:
+ 284:Core/Src/Hw/Flash.c **** }
+ 1032              		.loc 1 284 1 view .LVU267
+ 1033 003e 70BD     		pop	{r4, r5, r6, pc}
+ 1034              	.LVL37:
+ 1035              	.L50:
+ 1036              		.loc 1 284 1 view .LVU268
+ 1037              		.align	2
+ 1038              	.L49:
+ 1039 0040 003C0240 		.word	1073888256
+ 1040 0044 23016745 		.word	1164378403
+ 1041              		.cfi_endproc
+ 1042              	.LFE252:
+ 1044              		.section	.text.FLASH_Write_DoubleWord,"ax",%progbits
+ 1045              		.align	1
+ 1046              		.global	FLASH_Write_DoubleWord
+ 1047              		.syntax unified
+ 1048              		.thumb
+ 1049              		.thumb_func
+ 1050              		.fpu fpv4-sp-d16
+ 1052              	FLASH_Write_DoubleWord:
+ 1053              	.LVL38:
+ 1054              	.LFB253:
+ 285:Core/Src/Hw/Flash.c **** //4byteごとのアクセスっぽい
+ 286:Core/Src/Hw/Flash.c **** void FLASH_Write_DoubleWord(uint32_t address, int64_t data)
+ 287:Core/Src/Hw/Flash.c **** {
+ 1055              		.loc 1 287 1 is_stmt 1 view -0
+ 1056              		.cfi_startproc
+ 1057              		@ args = 0, pretend = 0, frame = 0
+ 1058              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1059              		.loc 1 287 1 is_stmt 0 view .LVU270
+ 1060 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1061              	.LCFI14:
+ 1062              		.cfi_def_cfa_offset 24
+ 1063              		.cfi_offset 3, -24
+ 1064              		.cfi_offset 4, -20
+ 1065              		.cfi_offset 5, -16
+ 1066              		.cfi_offset 6, -12
+ 1067              		.cfi_offset 7, -8
+ 1068              		.cfi_offset 14, -4
+ 1069 0002 0546     		mov	r5, r0
+ 1070 0004 1746     		mov	r7, r2
+ 1071 0006 1E46     		mov	r6, r3
+ 288:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 1072              		.loc 1 288 2 is_stmt 1 view .LVU271
+ 1073              	.LBB94:
+ 1074              	.LBI94:
+  41:Core/Src/Hw/Flash.c **** {
+ 1075              		.loc 1 41 20 view .LVU272
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 26
+
+
+ 1076              	.LBB95:
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 1077              		.loc 1 43 2 view .LVU273
+  43:Core/Src/Hw/Flash.c **** 	FLASH->KEYR =  0xCDEF89AB;
+ 1078              		.loc 1 43 14 is_stmt 0 view .LVU274
+ 1079 0008 0E4C     		ldr	r4, .L53
+ 1080 000a 0F4B     		ldr	r3, .L53+4
+ 1081 000c 6360     		str	r3, [r4, #4]
+  44:Core/Src/Hw/Flash.c **** }
+ 1082              		.loc 1 44 2 is_stmt 1 view .LVU275
+  44:Core/Src/Hw/Flash.c **** }
+ 1083              		.loc 1 44 14 is_stmt 0 view .LVU276
+ 1084 000e 03F18833 		add	r3, r3, #-2004318072
+ 1085 0012 6360     		str	r3, [r4, #4]
+ 1086              	.LBE95:
+ 1087              	.LBE94:
+ 289:Core/Src/Hw/Flash.c **** 
+ 290:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 1088              		.loc 1 290 2 is_stmt 1 view .LVU277
+ 1089 0014 FFF7FEFF 		bl	FLASH_WaitBusy
+ 1090              	.LVL39:
+ 291:Core/Src/Hw/Flash.c **** 
+ 292:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_PSIZE_DOUBLE_WORD;
+ 1091              		.loc 1 292 2 view .LVU278
+ 1092              		.loc 1 292 12 is_stmt 0 view .LVU279
+ 1093 0018 2369     		ldr	r3, [r4, #16]
+ 1094 001a 43F44073 		orr	r3, r3, #768
+ 1095 001e 2361     		str	r3, [r4, #16]
+ 293:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 1096              		.loc 1 293 2 is_stmt 1 view .LVU280
+ 1097              		.loc 1 293 12 is_stmt 0 view .LVU281
+ 1098 0020 2369     		ldr	r3, [r4, #16]
+ 1099 0022 43F00103 		orr	r3, r3, #1
+ 1100 0026 2361     		str	r3, [r4, #16]
+ 294:Core/Src/Hw/Flash.c **** 
+ 295:Core/Src/Hw/Flash.c **** 	//*(__IO int64_t*)address = data;
+ 296:Core/Src/Hw/Flash.c **** 
+ 297:Core/Src/Hw/Flash.c **** 	*(__IO int32_t*)address = (int32_t)data;
+ 1101              		.loc 1 297 2 is_stmt 1 view .LVU282
+ 1102              		.loc 1 297 26 is_stmt 0 view .LVU283
+ 1103 0028 2F60     		str	r7, [r5]
+ 298:Core/Src/Hw/Flash.c **** 	*(__IO int32_t*)(address + 0x04) = (int32_t)(data >> 32);
+ 1104              		.loc 1 298 2 is_stmt 1 view .LVU284
+ 1105              		.loc 1 298 35 is_stmt 0 view .LVU285
+ 1106 002a 6E60     		str	r6, [r5, #4]
+ 299:Core/Src/Hw/Flash.c **** 
+ 300:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 1107              		.loc 1 300 2 is_stmt 1 view .LVU286
+ 1108 002c FFF7FEFF 		bl	FLASH_WaitBusy
+ 1109              	.LVL40:
+ 301:Core/Src/Hw/Flash.c **** 
+ 302:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~FLASH_CR_PG;
+ 1110              		.loc 1 302 2 view .LVU287
+ 1111              		.loc 1 302 12 is_stmt 0 view .LVU288
+ 1112 0030 2369     		ldr	r3, [r4, #16]
+ 1113 0032 23F00103 		bic	r3, r3, #1
+ 1114 0036 2361     		str	r3, [r4, #16]
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 27
+
+
+ 303:Core/Src/Hw/Flash.c **** 
+ 304:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 1115              		.loc 1 304 2 is_stmt 1 view .LVU289
+ 1116              	.LBB96:
+ 1117              	.LBI96:
+  47:Core/Src/Hw/Flash.c **** {
+ 1118              		.loc 1 47 20 view .LVU290
+ 1119              	.LBB97:
+  49:Core/Src/Hw/Flash.c **** 
+ 1120              		.loc 1 49 2 view .LVU291
+  49:Core/Src/Hw/Flash.c **** 
+ 1121              		.loc 1 49 12 is_stmt 0 view .LVU292
+ 1122 0038 2369     		ldr	r3, [r4, #16]
+ 1123 003a 43F00043 		orr	r3, r3, #-2147483648
+ 1124 003e 2361     		str	r3, [r4, #16]
+ 1125              	.LBE97:
+ 1126              	.LBE96:
+ 305:Core/Src/Hw/Flash.c **** }
+ 1127              		.loc 1 305 1 view .LVU293
+ 1128 0040 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1129              	.LVL41:
+ 1130              	.L54:
+ 1131              		.loc 1 305 1 view .LVU294
+ 1132 0042 00BF     		.align	2
+ 1133              	.L53:
+ 1134 0044 003C0240 		.word	1073888256
+ 1135 0048 23016745 		.word	1164378403
+ 1136              		.cfi_endproc
+ 1137              	.LFE253:
+ 1139              		.section	.text.FLASH_ReadData,"ax",%progbits
+ 1140              		.align	1
+ 1141              		.global	FLASH_ReadData
+ 1142              		.syntax unified
+ 1143              		.thumb
+ 1144              		.thumb_func
+ 1145              		.fpu fpv4-sp-d16
+ 1147              	FLASH_ReadData:
+ 1148              	.LVL42:
+ 1149              	.LFB254:
+ 306:Core/Src/Hw/Flash.c **** 
+ 307:Core/Src/Hw/Flash.c **** /*void FLASH_Write_Byte(uint32_t address, uint8_t data)
+ 308:Core/Src/Hw/Flash.c **** {
+ 309:Core/Src/Hw/Flash.c **** 
+ 310:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~(FLASH_CR_PSIZE);
+ 311:Core/Src/Hw/Flash.c **** 
+ 312:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_TYPEPROGRAM_BYTE;
+ 313:Core/Src/Hw/Flash.c **** 	FLASH->CR |= FLASH_CR_PG;
+ 314:Core/Src/Hw/Flash.c **** 
+ 315:Core/Src/Hw/Flash.c **** 	*(__IO uint8_t*)address = data;
+ 316:Core/Src/Hw/Flash.c **** 
+ 317:Core/Src/Hw/Flash.c **** 	FLASH_WaitBusy();
+ 318:Core/Src/Hw/Flash.c **** 
+ 319:Core/Src/Hw/Flash.c **** 	FLASH->CR &= ~(FLASH_CR_PG);
+ 320:Core/Src/Hw/Flash.c **** }
+ 321:Core/Src/Hw/Flash.c **** 
+ 322:Core/Src/Hw/Flash.c **** void FLASH_WriteData(uint32_t address, uint8_t* data, uint32_t size)
+ 323:Core/Src/Hw/Flash.c **** {
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 28
+
+
+ 324:Core/Src/Hw/Flash.c **** 	FLASH_Unlock();
+ 325:Core/Src/Hw/Flash.c **** 
+ 326:Core/Src/Hw/Flash.c **** 	FLASH_Erase();
+ 327:Core/Src/Hw/Flash.c **** 
+ 328:Core/Src/Hw/Flash.c **** 	do {
+ 329:Core/Src/Hw/Flash.c **** 		FLASH_WriteByte(address, *data);
+ 330:Core/Src/Hw/Flash.c **** 	}while(++address, ++data, --size);
+ 331:Core/Src/Hw/Flash.c **** 
+ 332:Core/Src/Hw/Flash.c **** 	FLASH_Lock();
+ 333:Core/Src/Hw/Flash.c **** }*/
+ 334:Core/Src/Hw/Flash.c **** 
+ 335:Core/Src/Hw/Flash.c **** void FLASH_ReadData(uint32_t address, uint32_t* data, uint32_t size)
+ 336:Core/Src/Hw/Flash.c **** {
+ 1150              		.loc 1 336 1 is_stmt 1 view -0
+ 1151              		.cfi_startproc
+ 1152              		@ args = 0, pretend = 0, frame = 0
+ 1153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1154              		.loc 1 336 1 is_stmt 0 view .LVU296
+ 1155 0000 08B5     		push	{r3, lr}
+ 1156              	.LCFI15:
+ 1157              		.cfi_def_cfa_offset 8
+ 1158              		.cfi_offset 3, -8
+ 1159              		.cfi_offset 14, -4
+ 1160 0002 0B46     		mov	r3, r1
+ 337:Core/Src/Hw/Flash.c ****   memcpy(data, (uint32_t*)address, size);
+ 1161              		.loc 1 337 3 is_stmt 1 view .LVU297
+ 1162 0004 0146     		mov	r1, r0
+ 1163              	.LVL43:
+ 1164              		.loc 1 337 3 is_stmt 0 view .LVU298
+ 1165 0006 1846     		mov	r0, r3
+ 1166              	.LVL44:
+ 1167              		.loc 1 337 3 view .LVU299
+ 1168 0008 FFF7FEFF 		bl	memcpy
+ 1169              	.LVL45:
+ 338:Core/Src/Hw/Flash.c ****   //memcpy(コピー先のメモリブロック、コピー元のメモリブロック、コピー�
+ 339:Core/Src/Hw/Flash.c **** }
+ 1170              		.loc 1 339 1 view .LVU300
+ 1171 000c 08BD     		pop	{r3, pc}
+ 1172              		.cfi_endproc
+ 1173              	.LFE254:
+ 1175              		.section	.text.Flash_clear_sector1,"ax",%progbits
+ 1176              		.align	1
+ 1177              		.global	Flash_clear_sector1
+ 1178              		.syntax unified
+ 1179              		.thumb
+ 1180              		.thumb_func
+ 1181              		.fpu fpv4-sp-d16
+ 1183              	Flash_clear_sector1:
+ 1184              	.LFB255:
+ 340:Core/Src/Hw/Flash.c **** 
+ 341:Core/Src/Hw/Flash.c **** 
+ 342:Core/Src/Hw/Flash.c **** 
+ 343:Core/Src/Hw/Flash.c **** 
+ 344:Core/Src/Hw/Flash.c **** //セクター消去だけ使う。 引数で消去セクタを選択できるようにする。
+ 345:Core/Src/Hw/Flash.c **** 
+ 346:Core/Src/Hw/Flash.c **** /*
+ 347:Core/Src/Hw/Flash.c ****  * flash.c
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 29
+
+
+ 348:Core/Src/Hw/Flash.c ****  *
+ 349:Core/Src/Hw/Flash.c ****  *  Created on: 2021/12/02
+ 350:Core/Src/Hw/Flash.c ****  *      Author: leopi
+ 351:Core/Src/Hw/Flash.c ****  */
+ 352:Core/Src/Hw/Flash.c **** 
+ 353:Core/Src/Hw/Flash.c **** /*---ROM保存用関数---*/
+ 354:Core/Src/Hw/Flash.c **** // 4byte毎
+ 355:Core/Src/Hw/Flash.c **** //static
+ 356:Core/Src/Hw/Flash.c **** uint8_t work_ram[BACKUP_FLASH_SECTOR_SIZE_1] __attribute__ ((aligned(4)));
+ 357:Core/Src/Hw/Flash.c **** //uint8_t
+ 358:Core/Src/Hw/Flash.c **** float sector8[BACKUP_FLASH_SECTOR_SIZE_8] __attribute__ ((aligned(4)));
+ 359:Core/Src/Hw/Flash.c **** ///float sector3[BACKUP_FLASH_SECTOR_SIZE_3] __attribute__ ((aligned(4)));
+ 360:Core/Src/Hw/Flash.c **** //double data_log[BACKUP_FLASH_SECTOR_SIZE_11] __attribute__ ((aligned(4)));
+ 361:Core/Src/Hw/Flash.c **** 
+ 362:Core/Src/Hw/Flash.c **** char _backup_flash_start_1;
+ 363:Core/Src/Hw/Flash.c **** char _backup_flash_start_8;
+ 364:Core/Src/Hw/Flash.c **** //char _backup_flash_start_3;
+ 365:Core/Src/Hw/Flash.c **** //char _backup_flash_start_11;
+ 366:Core/Src/Hw/Flash.c **** // 配置と定義はリンカスクリプトで行う
+ 367:Core/Src/Hw/Flash.c **** 
+ 368:Core/Src/Hw/Flash.c **** bool Flash_clear_sector1()// Flashのsectoe1を消去
+ 369:Core/Src/Hw/Flash.c **** {
+ 1185              		.loc 1 369 1 is_stmt 1 view -0
+ 1186              		.cfi_startproc
+ 1187              		@ args = 0, pretend = 0, frame = 24
+ 1188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1189 0000 10B5     		push	{r4, lr}
+ 1190              	.LCFI16:
+ 1191              		.cfi_def_cfa_offset 8
+ 1192              		.cfi_offset 4, -8
+ 1193              		.cfi_offset 14, -4
+ 1194 0002 86B0     		sub	sp, sp, #24
+ 1195              	.LCFI17:
+ 1196              		.cfi_def_cfa_offset 32
+ 370:Core/Src/Hw/Flash.c ****     HAL_FLASH_Unlock();
+ 1197              		.loc 1 370 5 view .LVU302
+ 1198 0004 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 1199              	.LVL46:
+ 371:Core/Src/Hw/Flash.c **** 
+ 372:Core/Src/Hw/Flash.c ****     FLASH_EraseInitTypeDef EraseInitStruct;
+ 1200              		.loc 1 372 5 view .LVU303
+ 373:Core/Src/Hw/Flash.c ****     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+ 1201              		.loc 1 373 5 view .LVU304
+ 1202              		.loc 1 373 31 is_stmt 0 view .LVU305
+ 1203 0008 0023     		movs	r3, #0
+ 1204 000a 0193     		str	r3, [sp, #4]
+ 374:Core/Src/Hw/Flash.c ****     EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_1;
+ 1205              		.loc 1 374 5 is_stmt 1 view .LVU306
+ 1206              		.loc 1 374 28 is_stmt 0 view .LVU307
+ 1207 000c 0123     		movs	r3, #1
+ 1208 000e 0393     		str	r3, [sp, #12]
+ 375:Core/Src/Hw/Flash.c ****     EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+ 1209              		.loc 1 375 5 is_stmt 1 view .LVU308
+ 1210              		.loc 1 375 34 is_stmt 0 view .LVU309
+ 1211 0010 0222     		movs	r2, #2
+ 1212 0012 0592     		str	r2, [sp, #20]
+ 376:Core/Src/Hw/Flash.c ****     EraseInitStruct.NbSectors = 1;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 30
+
+
+ 1213              		.loc 1 376 5 is_stmt 1 view .LVU310
+ 1214              		.loc 1 376 31 is_stmt 0 view .LVU311
+ 1215 0014 0493     		str	r3, [sp, #16]
+ 377:Core/Src/Hw/Flash.c **** 
+ 378:Core/Src/Hw/Flash.c ****     // Eraseに失敗したsector番号がerror_sectorに入
+ 379:Core/Src/Hw/Flash.c ****     // 正常にEraseができたと??��?��?
+ 380:Core/Src/Hw/Flash.c ****     uint32_t error_sector;
+ 1216              		.loc 1 380 5 is_stmt 1 view .LVU312
+ 381:Core/Src/Hw/Flash.c ****     HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+ 1217              		.loc 1 381 5 view .LVU313
+ 1218              		.loc 1 381 32 is_stmt 0 view .LVU314
+ 1219 0016 6946     		mov	r1, sp
+ 1220 0018 01A8     		add	r0, sp, #4
+ 1221 001a FFF7FEFF 		bl	HAL_FLASHEx_Erase
+ 1222              	.LVL47:
+ 1223 001e 0446     		mov	r4, r0
+ 1224              	.LVL48:
+ 382:Core/Src/Hw/Flash.c **** 
+ 383:Core/Src/Hw/Flash.c ****     HAL_FLASH_Lock();
+ 1225              		.loc 1 383 5 is_stmt 1 view .LVU315
+ 1226 0020 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 1227              	.LVL49:
+ 384:Core/Src/Hw/Flash.c **** 
+ 385:Core/Src/Hw/Flash.c ****     return result == HAL_OK && error_sector == 0xFFFFFFFF;
+ 1228              		.loc 1 385 5 view .LVU316
+ 1229              		.loc 1 385 29 is_stmt 0 view .LVU317
+ 1230 0024 2CB9     		cbnz	r4, .L59
+ 1231              		.loc 1 385 45 discriminator 1 view .LVU318
+ 1232 0026 009B     		ldr	r3, [sp]
+ 1233              		.loc 1 385 29 discriminator 1 view .LVU319
+ 1234 0028 B3F1FF3F 		cmp	r3, #-1
+ 1235 002c 04D0     		beq	.L60
+ 1236              		.loc 1 385 29 view .LVU320
+ 1237 002e 0020     		movs	r0, #0
+ 1238 0030 00E0     		b	.L58
+ 1239              	.L59:
+ 1240 0032 0020     		movs	r0, #0
+ 1241              	.L58:
+ 386:Core/Src/Hw/Flash.c **** }
+ 1242              		.loc 1 386 1 discriminator 6 view .LVU321
+ 1243 0034 06B0     		add	sp, sp, #24
+ 1244              	.LCFI18:
+ 1245              		.cfi_remember_state
+ 1246              		.cfi_def_cfa_offset 8
+ 1247              		@ sp needed
+ 1248 0036 10BD     		pop	{r4, pc}
+ 1249              	.LVL50:
+ 1250              	.L60:
+ 1251              	.LCFI19:
+ 1252              		.cfi_restore_state
+ 385:Core/Src/Hw/Flash.c **** }
+ 1253              		.loc 1 385 29 view .LVU322
+ 1254 0038 0120     		movs	r0, #1
+ 1255 003a FBE7     		b	.L58
+ 1256              		.cfi_endproc
+ 1257              	.LFE255:
+ 1259              		.section	.text.Flash_load_sector1,"ax",%progbits
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 31
+
+
+ 1260              		.align	1
+ 1261              		.global	Flash_load_sector1
+ 1262              		.syntax unified
+ 1263              		.thumb
+ 1264              		.thumb_func
+ 1265              		.fpu fpv4-sp-d16
+ 1267              	Flash_load_sector1:
+ 1268              	.LFB256:
+ 387:Core/Src/Hw/Flash.c **** uint8_t* Flash_load_sector1() // work_ramの先アドレスを返す // Flashのsector1のデータ
+ 388:Core/Src/Hw/Flash.c **** {
+ 1269              		.loc 1 388 1 is_stmt 1 view -0
+ 1270              		.cfi_startproc
+ 1271              		@ args = 0, pretend = 0, frame = 0
+ 1272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1273 0000 10B5     		push	{r4, lr}
+ 1274              	.LCFI20:
+ 1275              		.cfi_def_cfa_offset 8
+ 1276              		.cfi_offset 4, -8
+ 1277              		.cfi_offset 14, -4
+ 389:Core/Src/Hw/Flash.c ****     memcpy(work_ram, &_backup_flash_start_1, BACKUP_FLASH_SECTOR_SIZE_1);//BACKUP_FLASH_SECTOR_SIZE
+ 1278              		.loc 1 389 5 view .LVU324
+ 1279 0002 044C     		ldr	r4, .L64
+ 1280 0004 4FF4C052 		mov	r2, #6144
+ 1281 0008 0349     		ldr	r1, .L64+4
+ 1282 000a 2046     		mov	r0, r4
+ 1283 000c FFF7FEFF 		bl	memcpy
+ 1284              	.LVL51:
+ 390:Core/Src/Hw/Flash.c ****     return work_ram;
+ 1285              		.loc 1 390 5 view .LVU325
+ 391:Core/Src/Hw/Flash.c **** }
+ 1286              		.loc 1 391 1 is_stmt 0 view .LVU326
+ 1287 0010 2046     		mov	r0, r4
+ 1288 0012 10BD     		pop	{r4, pc}
+ 1289              	.L65:
+ 1290              		.align	2
+ 1291              	.L64:
+ 1292 0014 00000000 		.word	work_ram
+ 1293 0018 00000000 		.word	.LANCHOR0
+ 1294              		.cfi_endproc
+ 1295              	.LFE256:
+ 1297              		.section	.text.Flash_store_sector1,"ax",%progbits
+ 1298              		.align	1
+ 1299              		.global	Flash_store_sector1
+ 1300              		.syntax unified
+ 1301              		.thumb
+ 1302              		.thumb_func
+ 1303              		.fpu fpv4-sp-d16
+ 1305              	Flash_store_sector1:
+ 1306              	.LFB257:
+ 392:Core/Src/Hw/Flash.c **** bool Flash_store_sector1()// Flashのsector1を消去
+ 393:Core/Src/Hw/Flash.c **** {
+ 1307              		.loc 1 393 1 is_stmt 1 view -0
+ 1308              		.cfi_startproc
+ 1309              		@ args = 0, pretend = 0, frame = 0
+ 1310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1311 0000 38B5     		push	{r3, r4, r5, lr}
+ 1312              	.LCFI21:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 32
+
+
+ 1313              		.cfi_def_cfa_offset 16
+ 1314              		.cfi_offset 3, -16
+ 1315              		.cfi_offset 4, -12
+ 1316              		.cfi_offset 5, -8
+ 1317              		.cfi_offset 14, -4
+ 394:Core/Src/Hw/Flash.c ****     // Flashをclear
+ 395:Core/Src/Hw/Flash.c ****     if (!Flash_clear_sector1()) return false;
+ 1318              		.loc 1 395 5 view .LVU328
+ 1319              		.loc 1 395 10 is_stmt 0 view .LVU329
+ 1320 0002 FFF7FEFF 		bl	Flash_clear_sector1
+ 1321              	.LVL52:
+ 1322              		.loc 1 395 8 view .LVU330
+ 1323 0006 0346     		mov	r3, r0
+ 1324 0008 08B9     		cbnz	r0, .L72
+ 1325              	.L67:
+ 396:Core/Src/Hw/Flash.c **** 
+ 397:Core/Src/Hw/Flash.c ****     uint32_t *p_work_ram = (uint32_t*)work_ram;
+ 398:Core/Src/Hw/Flash.c **** 
+ 399:Core/Src/Hw/Flash.c ****     HAL_FLASH_Unlock();
+ 400:Core/Src/Hw/Flash.c **** 
+ 401:Core/Src/Hw/Flash.c ****     // work_ramにある4バイトごとまとめて書き込
+ 402:Core/Src/Hw/Flash.c ****     HAL_StatusTypeDef result_1;
+ 403:Core/Src/Hw/Flash.c ****     const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE_1 / sizeof(uint32_t);
+ 404:Core/Src/Hw/Flash.c **** 
+ 405:Core/Src/Hw/Flash.c ****     for (size_t i=0; i<write_cnt; i++)
+ 406:Core/Src/Hw/Flash.c ****     {
+ 407:Core/Src/Hw/Flash.c ****         result_1 = HAL_FLASH_Program(
+ 408:Core/Src/Hw/Flash.c ****                     FLASH_TYPEPROGRAM_WORD,
+ 409:Core/Src/Hw/Flash.c ****                     (uint32_t)(&_backup_flash_start_1) + sizeof(uint32_t) * i,
+ 410:Core/Src/Hw/Flash.c ****                     p_work_ram[i]
+ 411:Core/Src/Hw/Flash.c ****                 );
+ 412:Core/Src/Hw/Flash.c ****         if (result_1 != HAL_OK) break;
+ 413:Core/Src/Hw/Flash.c ****     }
+ 414:Core/Src/Hw/Flash.c **** 
+ 415:Core/Src/Hw/Flash.c ****     HAL_FLASH_Lock();
+ 416:Core/Src/Hw/Flash.c **** 
+ 417:Core/Src/Hw/Flash.c ****     return result_1 == HAL_OK;
+ 418:Core/Src/Hw/Flash.c **** }
+ 1326              		.loc 1 418 1 view .LVU331
+ 1327 000a 1846     		mov	r0, r3
+ 1328 000c 38BD     		pop	{r3, r4, r5, pc}
+ 1329              	.L72:
+ 1330 000e 0025     		movs	r5, #0
+ 397:Core/Src/Hw/Flash.c **** 
+ 1331              		.loc 1 397 5 is_stmt 1 view .LVU332
+ 1332              	.LVL53:
+ 399:Core/Src/Hw/Flash.c **** 
+ 1333              		.loc 1 399 5 view .LVU333
+ 1334 0010 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 1335              	.LVL54:
+ 402:Core/Src/Hw/Flash.c ****     const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE_1 / sizeof(uint32_t);
+ 1336              		.loc 1 402 5 view .LVU334
+ 403:Core/Src/Hw/Flash.c **** 
+ 1337              		.loc 1 403 5 view .LVU335
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1338              		.loc 1 405 5 view .LVU336
+ 1339              	.LBB98:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 33
+
+
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1340              		.loc 1 405 10 view .LVU337
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1341              		.loc 1 405 17 is_stmt 0 view .LVU338
+ 1342 0014 2C46     		mov	r4, r5
+ 1343              	.LVL55:
+ 1344              	.L68:
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1345              		.loc 1 405 22 is_stmt 1 discriminator 1 view .LVU339
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1346              		.loc 1 405 5 is_stmt 0 discriminator 1 view .LVU340
+ 1347 0016 B4F5C06F 		cmp	r4, #1536
+ 1348 001a 0DD2     		bcs	.L69
+ 407:Core/Src/Hw/Flash.c ****                     FLASH_TYPEPROGRAM_WORD,
+ 1349              		.loc 1 407 9 is_stmt 1 view .LVU341
+ 407:Core/Src/Hw/Flash.c ****                     FLASH_TYPEPROGRAM_WORD,
+ 1350              		.loc 1 407 20 is_stmt 0 view .LVU342
+ 1351 001c 094B     		ldr	r3, .L73
+ 1352 001e 53F82420 		ldr	r2, [r3, r4, lsl #2]
+ 1353 0022 0023     		movs	r3, #0
+ 1354 0024 0849     		ldr	r1, .L73+4
+ 1355 0026 01EB8401 		add	r1, r1, r4, lsl #2
+ 1356 002a 0220     		movs	r0, #2
+ 1357 002c FFF7FEFF 		bl	HAL_FLASH_Program
+ 1358              	.LVL56:
+ 412:Core/Src/Hw/Flash.c ****     }
+ 1359              		.loc 1 412 9 is_stmt 1 view .LVU343
+ 412:Core/Src/Hw/Flash.c ****     }
+ 1360              		.loc 1 412 12 is_stmt 0 view .LVU344
+ 1361 0030 0546     		mov	r5, r0
+ 1362 0032 08B9     		cbnz	r0, .L69
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1363              		.loc 1 405 35 is_stmt 1 discriminator 2 view .LVU345
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1364              		.loc 1 405 36 is_stmt 0 discriminator 2 view .LVU346
+ 1365 0034 0134     		adds	r4, r4, #1
+ 1366              	.LVL57:
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1367              		.loc 1 405 36 discriminator 2 view .LVU347
+ 1368 0036 EEE7     		b	.L68
+ 1369              	.LVL58:
+ 1370              	.L69:
+ 405:Core/Src/Hw/Flash.c ****     {
+ 1371              		.loc 1 405 36 discriminator 2 view .LVU348
+ 1372              	.LBE98:
+ 415:Core/Src/Hw/Flash.c **** 
+ 1373              		.loc 1 415 5 is_stmt 1 view .LVU349
+ 1374 0038 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 1375              	.LVL59:
+ 417:Core/Src/Hw/Flash.c **** }
+ 1376              		.loc 1 417 5 view .LVU350
+ 417:Core/Src/Hw/Flash.c **** }
+ 1377              		.loc 1 417 21 is_stmt 0 view .LVU351
+ 1378 003c B5FA85F3 		clz	r3, r5
+ 1379 0040 5B09     		lsrs	r3, r3, #5
+ 1380 0042 E2E7     		b	.L67
+ 1381              	.L74:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 34
+
+
+ 1382              		.align	2
+ 1383              	.L73:
+ 1384 0044 00000000 		.word	work_ram
+ 1385 0048 00000000 		.word	.LANCHOR0
+ 1386              		.cfi_endproc
+ 1387              	.LFE257:
+ 1389              		.section	.text.Flash_clear_sector8,"ax",%progbits
+ 1390              		.align	1
+ 1391              		.global	Flash_clear_sector8
+ 1392              		.syntax unified
+ 1393              		.thumb
+ 1394              		.thumb_func
+ 1395              		.fpu fpv4-sp-d16
+ 1397              	Flash_clear_sector8:
+ 1398              	.LFB258:
+ 419:Core/Src/Hw/Flash.c **** 
+ 420:Core/Src/Hw/Flash.c **** 
+ 421:Core/Src/Hw/Flash.c **** bool Flash_clear_sector8()// Flashのsectoe1を消去
+ 422:Core/Src/Hw/Flash.c **** {
+ 1399              		.loc 1 422 1 is_stmt 1 view -0
+ 1400              		.cfi_startproc
+ 1401              		@ args = 0, pretend = 0, frame = 24
+ 1402              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1403 0000 10B5     		push	{r4, lr}
+ 1404              	.LCFI22:
+ 1405              		.cfi_def_cfa_offset 8
+ 1406              		.cfi_offset 4, -8
+ 1407              		.cfi_offset 14, -4
+ 1408 0002 86B0     		sub	sp, sp, #24
+ 1409              	.LCFI23:
+ 1410              		.cfi_def_cfa_offset 32
+ 423:Core/Src/Hw/Flash.c ****     HAL_FLASH_Unlock();
+ 1411              		.loc 1 423 5 view .LVU353
+ 1412 0004 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 1413              	.LVL60:
+ 424:Core/Src/Hw/Flash.c **** 
+ 425:Core/Src/Hw/Flash.c ****     //printf("\r\nはか1?\r\n");
+ 426:Core/Src/Hw/Flash.c ****     FLASH_EraseInitTypeDef EraseInitStruct;
+ 1414              		.loc 1 426 5 view .LVU354
+ 427:Core/Src/Hw/Flash.c ****     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+ 1415              		.loc 1 427 5 view .LVU355
+ 1416              		.loc 1 427 31 is_stmt 0 view .LVU356
+ 1417 0008 0023     		movs	r3, #0
+ 1418 000a 0193     		str	r3, [sp, #4]
+ 428:Core/Src/Hw/Flash.c ****     EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_8;
+ 1419              		.loc 1 428 5 is_stmt 1 view .LVU357
+ 1420              		.loc 1 428 28 is_stmt 0 view .LVU358
+ 1421 000c 0823     		movs	r3, #8
+ 1422 000e 0393     		str	r3, [sp, #12]
+ 429:Core/Src/Hw/Flash.c ****     EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+ 1423              		.loc 1 429 5 is_stmt 1 view .LVU359
+ 1424              		.loc 1 429 34 is_stmt 0 view .LVU360
+ 1425 0010 0223     		movs	r3, #2
+ 1426 0012 0593     		str	r3, [sp, #20]
+ 430:Core/Src/Hw/Flash.c ****     EraseInitStruct.NbSectors = 1;
+ 1427              		.loc 1 430 5 is_stmt 1 view .LVU361
+ 1428              		.loc 1 430 31 is_stmt 0 view .LVU362
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 35
+
+
+ 1429 0014 0123     		movs	r3, #1
+ 1430 0016 0493     		str	r3, [sp, #16]
+ 431:Core/Src/Hw/Flash.c **** 
+ 432:Core/Src/Hw/Flash.c ****    // printf("\r\nはか12?\r\n");
+ 433:Core/Src/Hw/Flash.c ****     // Eraseに失敗したsector番号がerror_sectorに入
+ 434:Core/Src/Hw/Flash.c ****     // 正常にEraseができたと??��?��?
+ 435:Core/Src/Hw/Flash.c ****     uint32_t error_sector;
+ 1431              		.loc 1 435 5 is_stmt 1 view .LVU363
+ 436:Core/Src/Hw/Flash.c ****     HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+ 1432              		.loc 1 436 5 view .LVU364
+ 1433              		.loc 1 436 32 is_stmt 0 view .LVU365
+ 1434 0018 6946     		mov	r1, sp
+ 1435 001a 01A8     		add	r0, sp, #4
+ 1436 001c FFF7FEFF 		bl	HAL_FLASHEx_Erase
+ 1437              	.LVL61:
+ 1438 0020 0446     		mov	r4, r0
+ 1439              	.LVL62:
+ 437:Core/Src/Hw/Flash.c **** 
+ 438:Core/Src/Hw/Flash.c ****    /// printf("\r\nはか3?\r\n");
+ 439:Core/Src/Hw/Flash.c ****     HAL_FLASH_Lock();
+ 1440              		.loc 1 439 5 is_stmt 1 view .LVU366
+ 1441 0022 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 1442              	.LVL63:
+ 440:Core/Src/Hw/Flash.c **** 
+ 441:Core/Src/Hw/Flash.c ****     return result == HAL_OK && error_sector == 0xFFFFFFFF;
+ 1443              		.loc 1 441 5 view .LVU367
+ 1444              		.loc 1 441 29 is_stmt 0 view .LVU368
+ 1445 0026 2CB9     		cbnz	r4, .L77
+ 1446              		.loc 1 441 45 discriminator 1 view .LVU369
+ 1447 0028 009B     		ldr	r3, [sp]
+ 1448              		.loc 1 441 29 discriminator 1 view .LVU370
+ 1449 002a B3F1FF3F 		cmp	r3, #-1
+ 1450 002e 04D0     		beq	.L78
+ 1451              		.loc 1 441 29 view .LVU371
+ 1452 0030 0020     		movs	r0, #0
+ 1453 0032 00E0     		b	.L76
+ 1454              	.L77:
+ 1455 0034 0020     		movs	r0, #0
+ 1456              	.L76:
+ 442:Core/Src/Hw/Flash.c **** }
+ 1457              		.loc 1 442 1 discriminator 6 view .LVU372
+ 1458 0036 06B0     		add	sp, sp, #24
+ 1459              	.LCFI24:
+ 1460              		.cfi_remember_state
+ 1461              		.cfi_def_cfa_offset 8
+ 1462              		@ sp needed
+ 1463 0038 10BD     		pop	{r4, pc}
+ 1464              	.LVL64:
+ 1465              	.L78:
+ 1466              	.LCFI25:
+ 1467              		.cfi_restore_state
+ 441:Core/Src/Hw/Flash.c **** }
+ 1468              		.loc 1 441 29 view .LVU373
+ 1469 003a 0120     		movs	r0, #1
+ 1470 003c FBE7     		b	.L76
+ 1471              		.cfi_endproc
+ 1472              	.LFE258:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 36
+
+
+ 1474              		.section	.text.Flash_load_sector8,"ax",%progbits
+ 1475              		.align	1
+ 1476              		.global	Flash_load_sector8
+ 1477              		.syntax unified
+ 1478              		.thumb
+ 1479              		.thumb_func
+ 1480              		.fpu fpv4-sp-d16
+ 1482              	Flash_load_sector8:
+ 1483              	.LFB259:
+ 443:Core/Src/Hw/Flash.c **** //uint8_t
+ 444:Core/Src/Hw/Flash.c **** float* Flash_load_sector8() // sector2の先アドレスを返す // Flashのsector1のデータを
+ 445:Core/Src/Hw/Flash.c **** {
+ 1484              		.loc 1 445 1 is_stmt 1 view -0
+ 1485              		.cfi_startproc
+ 1486              		@ args = 0, pretend = 0, frame = 0
+ 1487              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1488 0000 10B5     		push	{r4, lr}
+ 1489              	.LCFI26:
+ 1490              		.cfi_def_cfa_offset 8
+ 1491              		.cfi_offset 4, -8
+ 1492              		.cfi_offset 14, -4
+ 446:Core/Src/Hw/Flash.c ****     memcpy(sector8, &_backup_flash_start_8, BACKUP_FLASH_SECTOR_SIZE_8);//BACKUP_FLASH_SECTOR_SIZE
+ 1493              		.loc 1 446 5 view .LVU375
+ 1494 0002 044C     		ldr	r4, .L82
+ 1495 0004 4FF40042 		mov	r2, #32768
+ 1496 0008 0349     		ldr	r1, .L82+4
+ 1497 000a 2046     		mov	r0, r4
+ 1498 000c FFF7FEFF 		bl	memcpy
+ 1499              	.LVL65:
+ 447:Core/Src/Hw/Flash.c ****     return sector8;
+ 1500              		.loc 1 447 5 view .LVU376
+ 448:Core/Src/Hw/Flash.c **** }
+ 1501              		.loc 1 448 1 is_stmt 0 view .LVU377
+ 1502 0010 2046     		mov	r0, r4
+ 1503 0012 10BD     		pop	{r4, pc}
+ 1504              	.L83:
+ 1505              		.align	2
+ 1506              	.L82:
+ 1507 0014 00000000 		.word	sector8
+ 1508 0018 00000000 		.word	.LANCHOR1
+ 1509              		.cfi_endproc
+ 1510              	.LFE259:
+ 1512              		.section	.text.Flash_store_sector8,"ax",%progbits
+ 1513              		.align	1
+ 1514              		.global	Flash_store_sector8
+ 1515              		.syntax unified
+ 1516              		.thumb
+ 1517              		.thumb_func
+ 1518              		.fpu fpv4-sp-d16
+ 1520              	Flash_store_sector8:
+ 1521              	.LFB260:
+ 449:Core/Src/Hw/Flash.c **** bool Flash_store_sector8()// Flashのsector1を消去
+ 450:Core/Src/Hw/Flash.c **** {
+ 1522              		.loc 1 450 1 is_stmt 1 view -0
+ 1523              		.cfi_startproc
+ 1524              		@ args = 0, pretend = 0, frame = 0
+ 1525              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 37
+
+
+ 1526 0000 38B5     		push	{r3, r4, r5, lr}
+ 1527              	.LCFI27:
+ 1528              		.cfi_def_cfa_offset 16
+ 1529              		.cfi_offset 3, -16
+ 1530              		.cfi_offset 4, -12
+ 1531              		.cfi_offset 5, -8
+ 1532              		.cfi_offset 14, -4
+ 451:Core/Src/Hw/Flash.c ****     // Flashをclear
+ 452:Core/Src/Hw/Flash.c ****     if (!Flash_clear_sector8()) return false;
+ 1533              		.loc 1 452 5 view .LVU379
+ 1534              		.loc 1 452 10 is_stmt 0 view .LVU380
+ 1535 0002 FFF7FEFF 		bl	Flash_clear_sector8
+ 1536              	.LVL66:
+ 1537              		.loc 1 452 8 view .LVU381
+ 1538 0006 0346     		mov	r3, r0
+ 1539 0008 08B9     		cbnz	r0, .L90
+ 1540              	.L85:
+ 453:Core/Src/Hw/Flash.c **** 
+ 454:Core/Src/Hw/Flash.c ****     uint32_t *p_sector8 = (uint32_t*)sector8;
+ 455:Core/Src/Hw/Flash.c **** 
+ 456:Core/Src/Hw/Flash.c ****     HAL_FLASH_Unlock();
+ 457:Core/Src/Hw/Flash.c **** 
+ 458:Core/Src/Hw/Flash.c ****     // sector2にある4バイトごとまとめて書き込
+ 459:Core/Src/Hw/Flash.c ****     HAL_StatusTypeDef result;
+ 460:Core/Src/Hw/Flash.c ****     const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE_8/ sizeof(uint32_t);
+ 461:Core/Src/Hw/Flash.c **** 
+ 462:Core/Src/Hw/Flash.c ****     for (size_t i=0; i<write_cnt; i++)
+ 463:Core/Src/Hw/Flash.c ****     {
+ 464:Core/Src/Hw/Flash.c ****         result = HAL_FLASH_Program(
+ 465:Core/Src/Hw/Flash.c ****                     FLASH_TYPEPROGRAM_WORD,
+ 466:Core/Src/Hw/Flash.c ****                     (uint32_t)(&_backup_flash_start_8) + sizeof(uint32_t) * i,
+ 467:Core/Src/Hw/Flash.c ****                     p_sector8[i]
+ 468:Core/Src/Hw/Flash.c ****                 );
+ 469:Core/Src/Hw/Flash.c ****         if (result != HAL_OK) break;
+ 470:Core/Src/Hw/Flash.c ****     }
+ 471:Core/Src/Hw/Flash.c **** 
+ 472:Core/Src/Hw/Flash.c ****     HAL_FLASH_Lock();
+ 473:Core/Src/Hw/Flash.c **** 
+ 474:Core/Src/Hw/Flash.c ****     return result == HAL_OK;
+ 475:Core/Src/Hw/Flash.c **** }
+ 1541              		.loc 1 475 1 view .LVU382
+ 1542 000a 1846     		mov	r0, r3
+ 1543 000c 38BD     		pop	{r3, r4, r5, pc}
+ 1544              	.L90:
+ 1545 000e 0025     		movs	r5, #0
+ 454:Core/Src/Hw/Flash.c **** 
+ 1546              		.loc 1 454 5 is_stmt 1 view .LVU383
+ 1547              	.LVL67:
+ 456:Core/Src/Hw/Flash.c **** 
+ 1548              		.loc 1 456 5 view .LVU384
+ 1549 0010 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 1550              	.LVL68:
+ 459:Core/Src/Hw/Flash.c ****     const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE_8/ sizeof(uint32_t);
+ 1551              		.loc 1 459 5 view .LVU385
+ 460:Core/Src/Hw/Flash.c **** 
+ 1552              		.loc 1 460 5 view .LVU386
+ 462:Core/Src/Hw/Flash.c ****     {
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 38
+
+
+ 1553              		.loc 1 462 5 view .LVU387
+ 1554              	.LBB99:
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1555              		.loc 1 462 10 view .LVU388
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1556              		.loc 1 462 17 is_stmt 0 view .LVU389
+ 1557 0014 2C46     		mov	r4, r5
+ 1558              	.LVL69:
+ 1559              	.L86:
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1560              		.loc 1 462 22 is_stmt 1 discriminator 1 view .LVU390
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1561              		.loc 1 462 5 is_stmt 0 discriminator 1 view .LVU391
+ 1562 0016 B4F5005F 		cmp	r4, #8192
+ 1563 001a 0DD2     		bcs	.L87
+ 464:Core/Src/Hw/Flash.c ****                     FLASH_TYPEPROGRAM_WORD,
+ 1564              		.loc 1 464 9 is_stmt 1 view .LVU392
+ 464:Core/Src/Hw/Flash.c ****                     FLASH_TYPEPROGRAM_WORD,
+ 1565              		.loc 1 464 18 is_stmt 0 view .LVU393
+ 1566 001c 094B     		ldr	r3, .L91
+ 1567 001e 53F82420 		ldr	r2, [r3, r4, lsl #2]
+ 1568 0022 0023     		movs	r3, #0
+ 1569 0024 0849     		ldr	r1, .L91+4
+ 1570 0026 01EB8401 		add	r1, r1, r4, lsl #2
+ 1571 002a 0220     		movs	r0, #2
+ 1572 002c FFF7FEFF 		bl	HAL_FLASH_Program
+ 1573              	.LVL70:
+ 469:Core/Src/Hw/Flash.c ****     }
+ 1574              		.loc 1 469 9 is_stmt 1 view .LVU394
+ 469:Core/Src/Hw/Flash.c ****     }
+ 1575              		.loc 1 469 12 is_stmt 0 view .LVU395
+ 1576 0030 0546     		mov	r5, r0
+ 1577 0032 08B9     		cbnz	r0, .L87
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1578              		.loc 1 462 35 is_stmt 1 discriminator 2 view .LVU396
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1579              		.loc 1 462 36 is_stmt 0 discriminator 2 view .LVU397
+ 1580 0034 0134     		adds	r4, r4, #1
+ 1581              	.LVL71:
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1582              		.loc 1 462 36 discriminator 2 view .LVU398
+ 1583 0036 EEE7     		b	.L86
+ 1584              	.LVL72:
+ 1585              	.L87:
+ 462:Core/Src/Hw/Flash.c ****     {
+ 1586              		.loc 1 462 36 discriminator 2 view .LVU399
+ 1587              	.LBE99:
+ 472:Core/Src/Hw/Flash.c **** 
+ 1588              		.loc 1 472 5 is_stmt 1 view .LVU400
+ 1589 0038 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 1590              	.LVL73:
+ 474:Core/Src/Hw/Flash.c **** }
+ 1591              		.loc 1 474 5 view .LVU401
+ 474:Core/Src/Hw/Flash.c **** }
+ 1592              		.loc 1 474 19 is_stmt 0 view .LVU402
+ 1593 003c B5FA85F3 		clz	r3, r5
+ 1594 0040 5B09     		lsrs	r3, r3, #5
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 39
+
+
+ 1595 0042 E2E7     		b	.L85
+ 1596              	.L92:
+ 1597              		.align	2
+ 1598              	.L91:
+ 1599 0044 00000000 		.word	sector8
+ 1600 0048 00000000 		.word	.LANCHOR1
+ 1601              		.cfi_endproc
+ 1602              	.LFE260:
+ 1604              		.section	.text.Flash_clear_sector9,"ax",%progbits
+ 1605              		.align	1
+ 1606              		.global	Flash_clear_sector9
+ 1607              		.syntax unified
+ 1608              		.thumb
+ 1609              		.thumb_func
+ 1610              		.fpu fpv4-sp-d16
+ 1612              	Flash_clear_sector9:
+ 1613              	.LFB261:
+ 476:Core/Src/Hw/Flash.c **** 
+ 477:Core/Src/Hw/Flash.c **** 
+ 478:Core/Src/Hw/Flash.c **** //bool Flash_clear_sector3()// Flashのsector3を消去
+ 479:Core/Src/Hw/Flash.c **** //{
+ 480:Core/Src/Hw/Flash.c **** //	printf("\r\nはか1?\r\n");
+ 481:Core/Src/Hw/Flash.c **** //    HAL_FLASH_Unlock();
+ 482:Core/Src/Hw/Flash.c **** //
+ 483:Core/Src/Hw/Flash.c **** //    printf("\r\nはか2?\r\n");
+ 484:Core/Src/Hw/Flash.c **** //    FLASH_EraseInitTypeDef EraseInitStruct;
+ 485:Core/Src/Hw/Flash.c **** //    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+ 486:Core/Src/Hw/Flash.c **** //    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_3;
+ 487:Core/Src/Hw/Flash.c **** //    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+ 488:Core/Src/Hw/Flash.c **** //    EraseInitStruct.NbSectors = 3;
+ 489:Core/Src/Hw/Flash.c **** //
+ 490:Core/Src/Hw/Flash.c **** //    printf("\r\nはか3?\r\n");
+ 491:Core/Src/Hw/Flash.c **** //    // Eraseに失敗したsector番号がerror_sectorに入
+ 492:Core/Src/Hw/Flash.c **** //    // 正常にEraseができたと??��?��?
+ 493:Core/Src/Hw/Flash.c **** //    uint32_t error_sector;
+ 494:Core/Src/Hw/Flash.c **** //    HAL_StatusTypeDef result_3 = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+ 495:Core/Src/Hw/Flash.c **** //    printf("\r\nはか4?\r\n");
+ 496:Core/Src/Hw/Flash.c **** //    HAL_FLASH_Lock();
+ 497:Core/Src/Hw/Flash.c **** //    printf("\r\n%d, %lu\r\n",result_3,error_sector);
+ 498:Core/Src/Hw/Flash.c **** //    return result_3 == HAL_OK && error_sector == 0xFFFFFFFF;
+ 499:Core/Src/Hw/Flash.c **** //}
+ 500:Core/Src/Hw/Flash.c **** //float* Flash_load_sector3() // work_ramの先アドレスを返す // Flashのsector1のデータ
+ 501:Core/Src/Hw/Flash.c **** //{
+ 502:Core/Src/Hw/Flash.c **** //    memcpy(sector3, &_backup_flash_start_3, BACKUP_FLASH_SECTOR_SIZE_3);//BACKUP_FLASH_SECTOR_SIZ
+ 503:Core/Src/Hw/Flash.c **** //    return sector3;
+ 504:Core/Src/Hw/Flash.c **** //}
+ 505:Core/Src/Hw/Flash.c **** //bool Flash_store_sector3()// Flashのsector1を消去
+ 506:Core/Src/Hw/Flash.c **** //{
+ 507:Core/Src/Hw/Flash.c **** //    // Flashをclear
+ 508:Core/Src/Hw/Flash.c **** //	printf("\r\nはか?\r\n");
+ 509:Core/Src/Hw/Flash.c **** //    if (!Flash_clear_sector3()) return false;
+ 510:Core/Src/Hw/Flash.c **** //    printf("\r\n息してる？\r\n");
+ 511:Core/Src/Hw/Flash.c **** //
+ 512:Core/Src/Hw/Flash.c **** //    uint32_t *p_sector3 = (uint32_t*)sector3;
+ 513:Core/Src/Hw/Flash.c **** //
+ 514:Core/Src/Hw/Flash.c **** //    HAL_FLASH_Unlock();
+ 515:Core/Src/Hw/Flash.c **** //
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 40
+
+
+ 516:Core/Src/Hw/Flash.c **** //    printf("\r\n大丈夫？\r\n");
+ 517:Core/Src/Hw/Flash.c **** //    // sector3にある4バイトごとまとめて書き込
+ 518:Core/Src/Hw/Flash.c **** //    HAL_StatusTypeDef result_3;
+ 519:Core/Src/Hw/Flash.c **** //    const size_t write_cnt = BACKUP_FLASH_SECTOR_SIZE_3 / sizeof(uint32_t);
+ 520:Core/Src/Hw/Flash.c **** //
+ 521:Core/Src/Hw/Flash.c **** //    for (size_t i=0; i<write_cnt; i++)
+ 522:Core/Src/Hw/Flash.c **** //    {
+ 523:Core/Src/Hw/Flash.c **** //        result_3 = HAL_FLASH_Program(
+ 524:Core/Src/Hw/Flash.c **** //                    FLASH_TYPEPROGRAM_WORD,
+ 525:Core/Src/Hw/Flash.c **** //                    (uint32_t)(&_backup_flash_start_3) + sizeof(uint32_t) * i,
+ 526:Core/Src/Hw/Flash.c **** //                    p_sector3[i]
+ 527:Core/Src/Hw/Flash.c **** //                );
+ 528:Core/Src/Hw/Flash.c **** //        printf("\r\n大丈夫そうだねえ\r\n");
+ 529:Core/Src/Hw/Flash.c **** //        if (result_3 != HAL_OK) break;
+ 530:Core/Src/Hw/Flash.c **** //    }
+ 531:Core/Src/Hw/Flash.c **** //
+ 532:Core/Src/Hw/Flash.c **** //    HAL_FLASH_Lock();
+ 533:Core/Src/Hw/Flash.c **** //
+ 534:Core/Src/Hw/Flash.c **** //    return result_3 == HAL_OK;
+ 535:Core/Src/Hw/Flash.c **** //}
+ 536:Core/Src/Hw/Flash.c **** bool Flash_clear_sector9()// Flashのsectoe1を消去
+ 537:Core/Src/Hw/Flash.c **** {
+ 1614              		.loc 1 537 1 is_stmt 1 view -0
+ 1615              		.cfi_startproc
+ 1616              		@ args = 0, pretend = 0, frame = 24
+ 1617              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1618 0000 10B5     		push	{r4, lr}
+ 1619              	.LCFI28:
+ 1620              		.cfi_def_cfa_offset 8
+ 1621              		.cfi_offset 4, -8
+ 1622              		.cfi_offset 14, -4
+ 1623 0002 86B0     		sub	sp, sp, #24
+ 1624              	.LCFI29:
+ 1625              		.cfi_def_cfa_offset 32
+ 538:Core/Src/Hw/Flash.c ****     HAL_FLASH_Unlock();
+ 1626              		.loc 1 538 5 view .LVU404
+ 1627 0004 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 1628              	.LVL74:
+ 539:Core/Src/Hw/Flash.c **** 
+ 540:Core/Src/Hw/Flash.c ****     //printf("\r\nはか1?\r\n");
+ 541:Core/Src/Hw/Flash.c ****     FLASH_EraseInitTypeDef EraseInitStruct;
+ 1629              		.loc 1 541 5 view .LVU405
+ 542:Core/Src/Hw/Flash.c ****     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+ 1630              		.loc 1 542 5 view .LVU406
+ 1631              		.loc 1 542 31 is_stmt 0 view .LVU407
+ 1632 0008 0023     		movs	r3, #0
+ 1633 000a 0193     		str	r3, [sp, #4]
+ 543:Core/Src/Hw/Flash.c ****     EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_9;
+ 1634              		.loc 1 543 5 is_stmt 1 view .LVU408
+ 1635              		.loc 1 543 28 is_stmt 0 view .LVU409
+ 1636 000c 0923     		movs	r3, #9
+ 1637 000e 0393     		str	r3, [sp, #12]
+ 544:Core/Src/Hw/Flash.c ****     EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+ 1638              		.loc 1 544 5 is_stmt 1 view .LVU410
+ 1639              		.loc 1 544 34 is_stmt 0 view .LVU411
+ 1640 0010 0223     		movs	r3, #2
+ 1641 0012 0593     		str	r3, [sp, #20]
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 41
+
+
+ 545:Core/Src/Hw/Flash.c ****     EraseInitStruct.NbSectors = 1;
+ 1642              		.loc 1 545 5 is_stmt 1 view .LVU412
+ 1643              		.loc 1 545 31 is_stmt 0 view .LVU413
+ 1644 0014 0123     		movs	r3, #1
+ 1645 0016 0493     		str	r3, [sp, #16]
+ 546:Core/Src/Hw/Flash.c **** 
+ 547:Core/Src/Hw/Flash.c ****     //printf("\r\nはか12?\r\n");
+ 548:Core/Src/Hw/Flash.c ****     // Eraseに失敗したsector番号がerror_sectorに入
+ 549:Core/Src/Hw/Flash.c ****     // 正常にEraseができたと??��?��?
+ 550:Core/Src/Hw/Flash.c ****     uint32_t error_sector;
+ 1646              		.loc 1 550 5 is_stmt 1 view .LVU414
+ 551:Core/Src/Hw/Flash.c ****     HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+ 1647              		.loc 1 551 5 view .LVU415
+ 1648              		.loc 1 551 32 is_stmt 0 view .LVU416
+ 1649 0018 6946     		mov	r1, sp
+ 1650 001a 01A8     		add	r0, sp, #4
+ 1651 001c FFF7FEFF 		bl	HAL_FLASHEx_Erase
+ 1652              	.LVL75:
+ 1653 0020 0446     		mov	r4, r0
+ 1654              	.LVL76:
+ 552:Core/Src/Hw/Flash.c **** 
+ 553:Core/Src/Hw/Flash.c ****     //printf("\r\nはか3?\r\n");
+ 554:Core/Src/Hw/Flash.c ****     HAL_FLASH_Lock();
+ 1655              		.loc 1 554 5 is_stmt 1 view .LVU417
+ 1656 0022 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 1657              	.LVL77:
+ 555:Core/Src/Hw/Flash.c **** 
+ 556:Core/Src/Hw/Flash.c ****     return result == HAL_OK && error_sector == 0xFFFFFFFF;
+ 1658              		.loc 1 556 5 view .LVU418
+ 1659              		.loc 1 556 29 is_stmt 0 view .LVU419
+ 1660 0026 2CB9     		cbnz	r4, .L95
+ 1661              		.loc 1 556 45 discriminator 1 view .LVU420
+ 1662 0028 009B     		ldr	r3, [sp]
+ 1663              		.loc 1 556 29 discriminator 1 view .LVU421
+ 1664 002a B3F1FF3F 		cmp	r3, #-1
+ 1665 002e 04D0     		beq	.L96
+ 1666              		.loc 1 556 29 view .LVU422
+ 1667 0030 0020     		movs	r0, #0
+ 1668 0032 00E0     		b	.L94
+ 1669              	.L95:
+ 1670 0034 0020     		movs	r0, #0
+ 1671              	.L94:
+ 557:Core/Src/Hw/Flash.c **** }
+ 1672              		.loc 1 557 1 discriminator 6 view .LVU423
+ 1673 0036 06B0     		add	sp, sp, #24
+ 1674              	.LCFI30:
+ 1675              		.cfi_remember_state
+ 1676              		.cfi_def_cfa_offset 8
+ 1677              		@ sp needed
+ 1678 0038 10BD     		pop	{r4, pc}
+ 1679              	.LVL78:
+ 1680              	.L96:
+ 1681              	.LCFI31:
+ 1682              		.cfi_restore_state
+ 556:Core/Src/Hw/Flash.c **** }
+ 1683              		.loc 1 556 29 view .LVU424
+ 1684 003a 0120     		movs	r0, #1
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 42
+
+
+ 1685 003c FBE7     		b	.L94
+ 1686              		.cfi_endproc
+ 1687              	.LFE261:
+ 1689              		.global	_backup_flash_start_8
+ 1690              		.global	_backup_flash_start_1
+ 1691              		.global	sector8
+ 1692              		.global	work_ram
+ 1693              		.global	run_log_address
+ 1694              		.global	end_adress_sector11
+ 1695              		.global	start_adress_sector11
+ 1696              		.global	end_adress_sector10
+ 1697              		.global	start_adress_sector10
+ 1698              		.global	end_adress_sector9
+ 1699              		.global	start_adress_sector9
+ 1700              		.global	end_adress_sector8
+ 1701              		.global	start_adress_sector8
+ 1702              		.global	end_adress_sector1
+ 1703              		.global	start_adress_sector1
+ 1704              		.section	.bss._backup_flash_start_1,"aw",%nobits
+ 1705              		.set	.LANCHOR0,. + 0
+ 1708              	_backup_flash_start_1:
+ 1709 0000 00       		.space	1
+ 1710              		.section	.bss._backup_flash_start_8,"aw",%nobits
+ 1711              		.set	.LANCHOR1,. + 0
+ 1714              	_backup_flash_start_8:
+ 1715 0000 00       		.space	1
+ 1716              		.section	.bss.run_log_address,"aw",%nobits
+ 1717              		.align	2
+ 1720              	run_log_address:
+ 1721 0000 00000000 		.space	4
+ 1722              		.section	.bss.sector8,"aw",%nobits
+ 1723              		.align	2
+ 1726              	sector8:
+ 1727 0000 00000000 		.space	131072
+ 1727      00000000 
+ 1727      00000000 
+ 1727      00000000 
+ 1727      00000000 
+ 1728              		.section	.bss.work_ram,"aw",%nobits
+ 1729              		.align	2
+ 1732              	work_ram:
+ 1733 0000 00000000 		.space	6144
+ 1733      00000000 
+ 1733      00000000 
+ 1733      00000000 
+ 1733      00000000 
+ 1734              		.section	.rodata.end_adress_sector1,"a"
+ 1735              		.align	2
+ 1738              	end_adress_sector1:
+ 1739 0000 FF7F0008 		.word	134250495
+ 1740              		.section	.rodata.end_adress_sector10,"a"
+ 1741              		.align	2
+ 1744              	end_adress_sector10:
+ 1745 0000 FFFF0D08 		.word	135135231
+ 1746              		.section	.rodata.end_adress_sector11,"a"
+ 1747              		.align	2
+ 1750              	end_adress_sector11:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 43
+
+
+ 1751 0000 FFFF0F08 		.word	135266303
+ 1752              		.section	.rodata.end_adress_sector8,"a"
+ 1753              		.align	2
+ 1756              	end_adress_sector8:
+ 1757 0000 FFFF0908 		.word	134873087
+ 1758              		.section	.rodata.end_adress_sector9,"a"
+ 1759              		.align	2
+ 1762              	end_adress_sector9:
+ 1763 0000 FFFF0B08 		.word	135004159
+ 1764              		.section	.rodata.start_adress_sector1,"a"
+ 1765              		.align	2
+ 1768              	start_adress_sector1:
+ 1769 0000 00400008 		.word	134234112
+ 1770              		.section	.rodata.start_adress_sector10,"a"
+ 1771              		.align	2
+ 1774              	start_adress_sector10:
+ 1775 0000 00000C08 		.word	135004160
+ 1776              		.section	.rodata.start_adress_sector11,"a"
+ 1777              		.align	2
+ 1780              	start_adress_sector11:
+ 1781 0000 00000E08 		.word	135135232
+ 1782              		.section	.rodata.start_adress_sector8,"a"
+ 1783              		.align	2
+ 1786              	start_adress_sector8:
+ 1787 0000 00000808 		.word	134742016
+ 1788              		.section	.rodata.start_adress_sector9,"a"
+ 1789              		.align	2
+ 1792              	start_adress_sector9:
+ 1793 0000 00000A08 		.word	134873088
+ 1794              		.text
+ 1795              	.Letext0:
+ 1796              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
+ 1797              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
+ 1798              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1799              		.file 5 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include
+ 1800              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1801              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h"
+ 1802              		.file 8 "Core/Inc/Flash.h"
+ 1803              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h"
+ 1804              		.file 10 "<built-in>"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 44
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Flash.c
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:18     .text.FLASH_WaitBusy:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:26     .text.FLASH_WaitBusy:0000000000000000 FLASH_WaitBusy
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:48     .text.FLASH_WaitBusy:000000000000000c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:53     .text.FLASH_Erase1:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:60     .text.FLASH_Erase1:0000000000000000 FLASH_Erase1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:125    .text.FLASH_Erase1:0000000000000038 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:131    .text.FLASH_Erase8:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:138    .text.FLASH_Erase8:0000000000000000 FLASH_Erase8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:203    .text.FLASH_Erase8:0000000000000038 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:209    .text.FLASH_Erase9:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:216    .text.FLASH_Erase9:0000000000000000 FLASH_Erase9
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:281    .text.FLASH_Erase9:0000000000000038 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:287    .text.FLASH_Erase10:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:294    .text.FLASH_Erase10:0000000000000000 FLASH_Erase10
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:359    .text.FLASH_Erase10:0000000000000038 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:365    .text.FLASH_Erase11:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:372    .text.FLASH_Erase11:0000000000000000 FLASH_Erase11
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:437    .text.FLASH_Erase11:0000000000000038 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:443    .text.FLASH_EraseSector:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:450    .text.FLASH_EraseSector:0000000000000000 FLASH_EraseSector
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:507    .text.FLASH_Write_HalfWord:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:514    .text.FLASH_Write_HalfWord:0000000000000000 FLASH_Write_HalfWord
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:590    .text.FLASH_Write_HalfWord:0000000000000040 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:596    .text.FLASH_Write_Word:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:603    .text.FLASH_Write_Word:0000000000000000 FLASH_Write_Word
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:679    .text.FLASH_Write_Word:0000000000000040 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:685    .text.FLASH_Read_Word:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:692    .text.FLASH_Read_Word:0000000000000000 FLASH_Read_Word
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:770    .text.FLASH_Read_Word:0000000000000040 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:776    .text.FLASH_Write_Word_S:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:783    .text.FLASH_Write_Word_S:0000000000000000 FLASH_Write_Word_S
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:859    .text.FLASH_Write_Word_S:0000000000000040 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:865    .text.FLASH_Write_Word_F:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:872    .text.FLASH_Write_Word_F:0000000000000000 FLASH_Write_Word_F
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:948    .text.FLASH_Write_Word_F:0000000000000040 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:954    .text.FLASH_Read_Word_F:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:961    .text.FLASH_Read_Word_F:0000000000000000 FLASH_Read_Word_F
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1039   .text.FLASH_Read_Word_F:0000000000000040 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1045   .text.FLASH_Write_DoubleWord:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1052   .text.FLASH_Write_DoubleWord:0000000000000000 FLASH_Write_DoubleWord
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1134   .text.FLASH_Write_DoubleWord:0000000000000044 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1140   .text.FLASH_ReadData:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1147   .text.FLASH_ReadData:0000000000000000 FLASH_ReadData
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1176   .text.Flash_clear_sector1:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1183   .text.Flash_clear_sector1:0000000000000000 Flash_clear_sector1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1260   .text.Flash_load_sector1:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1267   .text.Flash_load_sector1:0000000000000000 Flash_load_sector1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1292   .text.Flash_load_sector1:0000000000000014 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1732   .bss.work_ram:0000000000000000 work_ram
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1298   .text.Flash_store_sector1:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1305   .text.Flash_store_sector1:0000000000000000 Flash_store_sector1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1384   .text.Flash_store_sector1:0000000000000044 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1390   .text.Flash_clear_sector8:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1397   .text.Flash_clear_sector8:0000000000000000 Flash_clear_sector8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1475   .text.Flash_load_sector8:0000000000000000 $t
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s 			page 45
+
+
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1482   .text.Flash_load_sector8:0000000000000000 Flash_load_sector8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1507   .text.Flash_load_sector8:0000000000000014 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1726   .bss.sector8:0000000000000000 sector8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1513   .text.Flash_store_sector8:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1520   .text.Flash_store_sector8:0000000000000000 Flash_store_sector8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1599   .text.Flash_store_sector8:0000000000000044 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1605   .text.Flash_clear_sector9:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1612   .text.Flash_clear_sector9:0000000000000000 Flash_clear_sector9
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1714   .bss._backup_flash_start_8:0000000000000000 _backup_flash_start_8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1708   .bss._backup_flash_start_1:0000000000000000 _backup_flash_start_1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1720   .bss.run_log_address:0000000000000000 run_log_address
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1750   .rodata.end_adress_sector11:0000000000000000 end_adress_sector11
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1780   .rodata.start_adress_sector11:0000000000000000 start_adress_sector11
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1744   .rodata.end_adress_sector10:0000000000000000 end_adress_sector10
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1774   .rodata.start_adress_sector10:0000000000000000 start_adress_sector10
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1762   .rodata.end_adress_sector9:0000000000000000 end_adress_sector9
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1792   .rodata.start_adress_sector9:0000000000000000 start_adress_sector9
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1756   .rodata.end_adress_sector8:0000000000000000 end_adress_sector8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1786   .rodata.start_adress_sector8:0000000000000000 start_adress_sector8
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1738   .rodata.end_adress_sector1:0000000000000000 end_adress_sector1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1768   .rodata.start_adress_sector1:0000000000000000 start_adress_sector1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1709   .bss._backup_flash_start_1:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1715   .bss._backup_flash_start_8:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1717   .bss.run_log_address:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1723   .bss.sector8:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1729   .bss.work_ram:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1735   .rodata.end_adress_sector1:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1741   .rodata.end_adress_sector10:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1747   .rodata.end_adress_sector11:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1753   .rodata.end_adress_sector8:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1759   .rodata.end_adress_sector9:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1765   .rodata.start_adress_sector1:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1771   .rodata.start_adress_sector10:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1777   .rodata.start_adress_sector11:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1783   .rodata.start_adress_sector8:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccQFKTBw.s:1789   .rodata.start_adress_sector9:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_FLASH_Unlock
+HAL_FLASHEx_Erase
+HAL_FLASH_Lock
+memcpy
+HAL_FLASH_Program

@@ -1,0 +1,1263 @@
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MazeSimulation.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.convert16ValueToNode,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	convert16ValueToNode:
+  26              	.LVL0:
+  27              	.LFB4:
+  28              		.file 1 "Core/Src/MazeSimulation.c"
+   1:Core/Src/MazeSimulation.c **** #include "MazeSimulation.h"
+   2:Core/Src/MazeSimulation.c **** #include <string.h>
+   3:Core/Src/MazeSimulation.c **** //#include "MazeLib.h"
+   4:Core/Src/MazeSimulation.c **** char FILE_NAME[200] = "/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2021MS.txt";
+   5:Core/Src/MazeSimulation.c **** //0~15の値使ってない、名前おかしい
+   6:Core/Src/MazeSimulation.c **** _Bool convert16ValueToWallDirection_Simulation(simulation *simu, state *st, wall_state *wall_st)
+   7:Core/Src/MazeSimulation.c **** {
+   8:Core/Src/MazeSimulation.c ****     //4方角の壁があるか無いかを返す
+   9:Core/Src/MazeSimulation.c ****     switch (st->car)
+  10:Core/Src/MazeSimulation.c ****     {
+  11:Core/Src/MazeSimulation.c ****     case north:
+  12:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][(st->pos.y)+1].existence;    //北
+  13:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+  14:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+  15:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+  16:Core/Src/MazeSimulation.c ****         break;
+  17:Core/Src/MazeSimulation.c ****     case east:
+  18:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.RawNode[st->pos.x][(st->pos.y)+1].existence;    //北
+  19:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+  20:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+  21:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
+  22:Core/Src/MazeSimulation.c ****         break;
+  23:Core/Src/MazeSimulation.c ****     case south:
+  24:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //北
+  25:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+  26:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+  27:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+  28:Core/Src/MazeSimulation.c ****         break;
+  29:Core/Src/MazeSimulation.c ****     case west:
+  30:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][(st->pos.y)+1].existence;    //北
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 2
+
+
+  31:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+  32:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+  33:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+  34:Core/Src/MazeSimulation.c ****         break;
+  35:Core/Src/MazeSimulation.c ****     default:
+  36:Core/Src/MazeSimulation.c ****         //万が一斜めの方角を向いているときに呼び出してしまったら、
+  37:Core/Src/MazeSimulation.c ****         return false;
+  38:Core/Src/MazeSimulation.c ****         break;
+  39:Core/Src/MazeSimulation.c ****     }
+  40:Core/Src/MazeSimulation.c ****     return true;
+  41:Core/Src/MazeSimulation.c **** 
+  42:Core/Src/MazeSimulation.c **** }
+  43:Core/Src/MazeSimulation.c **** 
+  44:Core/Src/MazeSimulation.c **** //16進数を壁情報に.simulation?
+  45:Core/Src/MazeSimulation.c **** static _Bool convert16ValueToNode(simulation *simu,uint8_t x, uint8_t y)
+  46:Core/Src/MazeSimulation.c **** {
+  29              		.loc 1 46 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 46 1 is_stmt 0 view .LVU1
+  34 0000 00B5     		push	{lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 4
+  37              		.cfi_offset 14, -4
+  47:Core/Src/MazeSimulation.c ****     //16進数を入れて、4方角の壁があるか無いかを返す
+  48:Core/Src/MazeSimulation.c ****     uint8_t value = simu->value_16[x][y];
+  38              		.loc 1 48 5 is_stmt 1 view .LVU2
+  39              		.loc 1 48 13 is_stmt 0 view .LVU3
+  40 0002 00EB0113 		add	r3, r0, r1, lsl #4
+  41 0006 1344     		add	r3, r3, r2
+  42 0008 03F58853 		add	r3, r3, #4352
+  43 000c 93F800E0 		ldrb	lr, [r3]	@ zero_extendqisi2
+  44              	.LVL1:
+  49:Core/Src/MazeSimulation.c ****     if( (value / 8) == 1)
+  45              		.loc 1 49 5 is_stmt 1 view .LVU4
+  46              		.loc 1 49 21 is_stmt 0 view .LVU5
+  47 0010 AEF1080C 		sub	ip, lr, #8
+  48 0014 5FFA8CFC 		uxtb	ip, ip
+  49              		.loc 1 49 7 view .LVU6
+  50 0018 BCF1070F 		cmp	ip, #7
+  51 001c 41D8     		bhi	.L2
+  50:Core/Src/MazeSimulation.c ****     {
+  51:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].existence = true;
+  52              		.loc 1 51 9 is_stmt 1 view .LVU7
+  53              		.loc 1 51 55 is_stmt 0 view .LVU8
+  54 001e 02EB0113 		add	r3, r2, r1, lsl #4
+  55 0022 03F58873 		add	r3, r3, #272
+  56 0026 4FF0010E 		mov	lr, #1
+  57              	.LVL2:
+  58              		.loc 1 51 55 view .LVU9
+  59 002a 00F833E0 		strb	lr, [r0, r3, lsl #3]
+  60              	.LVL3:
+  52:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = true;
+  61              		.loc 1 52 9 is_stmt 1 view .LVU10
+  62              		.loc 1 52 50 is_stmt 0 view .LVU11
+  63 002e 00EBC303 		add	r3, r0, r3, lsl #3
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 3
+
+
+  64 0032 83F804E0 		strb	lr, [r3, #4]
+  53:Core/Src/MazeSimulation.c ****         value -= 8;
+  65              		.loc 1 53 9 is_stmt 1 view .LVU12
+  66              	.LVL4:
+  67              	.L3:
+  54:Core/Src/MazeSimulation.c ****     }
+  55:Core/Src/MazeSimulation.c ****     else
+  56:Core/Src/MazeSimulation.c ****     {
+  57:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].existence = false;
+  58:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = false;
+  59:Core/Src/MazeSimulation.c ****     }
+  60:Core/Src/MazeSimulation.c **** 
+  61:Core/Src/MazeSimulation.c ****     if( (value / 4) == 1)
+  68              		.loc 1 61 5 view .LVU13
+  69              		.loc 1 61 21 is_stmt 0 view .LVU14
+  70 0036 ACF10403 		sub	r3, ip, #4
+  71 003a DBB2     		uxtb	r3, r3
+  72              		.loc 1 61 7 view .LVU15
+  73 003c 032B     		cmp	r3, #3
+  74 003e 3ED8     		bhi	.L4
+  62:Core/Src/MazeSimulation.c ****     {
+  63:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].existence = true;
+  75              		.loc 1 63 9 is_stmt 1 view .LVU16
+  76              		.loc 1 63 52 is_stmt 0 view .LVU17
+  77 0040 01EB011C 		add	ip, r1, r1, lsl #4
+  78              	.LVL5:
+  79              		.loc 1 63 52 view .LVU18
+  80 0044 9444     		add	ip, ip, r2
+  81 0046 4FF0010E 		mov	lr, #1
+  82 004a 00F83CE0 		strb	lr, [r0, ip, lsl #3]
+  64:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = true;
+  83              		.loc 1 64 9 is_stmt 1 view .LVU19
+  84              		.loc 1 64 47 is_stmt 0 view .LVU20
+  85 004e 00EBCC0C 		add	ip, r0, ip, lsl #3
+  86 0052 8CF804E0 		strb	lr, [ip, #4]
+  65:Core/Src/MazeSimulation.c ****         value -= 4;
+  87              		.loc 1 65 9 is_stmt 1 view .LVU21
+  88              	.LVL6:
+  89              	.L5:
+  66:Core/Src/MazeSimulation.c ****     }
+  67:Core/Src/MazeSimulation.c ****     else
+  68:Core/Src/MazeSimulation.c ****     {
+  69:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].existence = false;
+  70:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = false;
+  71:Core/Src/MazeSimulation.c ****     }
+  72:Core/Src/MazeSimulation.c **** 
+  73:Core/Src/MazeSimulation.c ****     if( (value / 2) == 1)
+  90              		.loc 1 73 5 view .LVU22
+  91              		.loc 1 73 21 is_stmt 0 view .LVU23
+  92 0056 A3F1020C 		sub	ip, r3, #2
+  93 005a 5FFA8CFC 		uxtb	ip, ip
+  94              		.loc 1 73 7 view .LVU24
+  95 005e BCF1010F 		cmp	ip, #1
+  96 0062 39D9     		bls	.L11
+  74:Core/Src/MazeSimulation.c ****     {
+  75:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].existence = true;
+  76:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 4
+
+
+  77:Core/Src/MazeSimulation.c ****         value -= 2;
+  78:Core/Src/MazeSimulation.c ****     }
+  79:Core/Src/MazeSimulation.c ****     else
+  80:Core/Src/MazeSimulation.c ****     {
+  81:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].existence = false;
+  97              		.loc 1 81 9 is_stmt 1 view .LVU25
+  98              		.loc 1 81 40 is_stmt 0 view .LVU26
+  99 0064 01F1010C 		add	ip, r1, #1
+ 100              		.loc 1 81 57 view .LVU27
+ 101 0068 02EB0C1C 		add	ip, r2, ip, lsl #4
+ 102 006c 0CF5887C 		add	ip, ip, #272
+ 103 0070 4FF0000E 		mov	lr, #0
+ 104 0074 00F83CE0 		strb	lr, [r0, ip, lsl #3]
+  82:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = false;
+ 105              		.loc 1 82 9 is_stmt 1 view .LVU28
+ 106              		.loc 1 82 52 is_stmt 0 view .LVU29
+ 107 0078 00EBCC0C 		add	ip, r0, ip, lsl #3
+ 108 007c 8CF804E0 		strb	lr, [ip, #4]
+ 109              	.LVL7:
+ 110              	.L7:
+  83:Core/Src/MazeSimulation.c ****     }
+  84:Core/Src/MazeSimulation.c **** 
+  85:Core/Src/MazeSimulation.c ****     if( (value / 1) == 1)
+ 111              		.loc 1 85 5 is_stmt 1 view .LVU30
+ 112              		.loc 1 85 7 is_stmt 0 view .LVU31
+ 113 0080 012B     		cmp	r3, #1
+ 114 0082 38D0     		beq	.L12
+  86:Core/Src/MazeSimulation.c ****     {
+  87:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].existence = true;
+  88:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
+  89:Core/Src/MazeSimulation.c ****         value -= 1;
+  90:Core/Src/MazeSimulation.c ****     }
+  91:Core/Src/MazeSimulation.c ****     else
+  92:Core/Src/MazeSimulation.c ****     {
+  93:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].existence = false;
+ 115              		.loc 1 93 9 is_stmt 1 view .LVU32
+ 116              		.loc 1 93 40 is_stmt 0 view .LVU33
+ 117 0084 0132     		adds	r2, r2, #1
+ 118              	.LVL8:
+ 119              		.loc 1 93 54 view .LVU34
+ 120 0086 01EB0111 		add	r1, r1, r1, lsl #4
+ 121              	.LVL9:
+ 122              		.loc 1 93 54 view .LVU35
+ 123 008a 1144     		add	r1, r1, r2
+ 124 008c 0022     		movs	r2, #0
+ 125 008e 00F83120 		strb	r2, [r0, r1, lsl #3]
+  94:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = false;
+ 126              		.loc 1 94 9 is_stmt 1 view .LVU36
+ 127              		.loc 1 94 49 is_stmt 0 view .LVU37
+ 128 0092 00EBC101 		add	r1, r0, r1, lsl #3
+ 129 0096 0A71     		strb	r2, [r1, #4]
+ 130              	.L9:
+  95:Core/Src/MazeSimulation.c ****     }
+  96:Core/Src/MazeSimulation.c **** 
+  97:Core/Src/MazeSimulation.c ****     //最終的にvalue_16が0ならOk
+  98:Core/Src/MazeSimulation.c ****     return (value == 0) ? true : false;
+ 131              		.loc 1 98 5 is_stmt 1 view .LVU38
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 5
+
+
+  99:Core/Src/MazeSimulation.c **** }
+ 132              		.loc 1 99 1 is_stmt 0 view .LVU39
+ 133 0098 B3FA83F0 		clz	r0, r3
+ 134              	.LVL10:
+ 135              		.loc 1 99 1 view .LVU40
+ 136 009c 4009     		lsrs	r0, r0, #5
+ 137 009e 5DF804FB 		ldr	pc, [sp], #4
+ 138              	.LVL11:
+ 139              	.L2:
+  57:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = false;
+ 140              		.loc 1 57 9 is_stmt 1 view .LVU41
+  57:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = false;
+ 141              		.loc 1 57 55 is_stmt 0 view .LVU42
+ 142 00a2 02EB0113 		add	r3, r2, r1, lsl #4
+ 143 00a6 03F58873 		add	r3, r3, #272
+ 144 00aa 4FF0000C 		mov	ip, #0
+ 145 00ae 00F833C0 		strb	ip, [r0, r3, lsl #3]
+  58:Core/Src/MazeSimulation.c ****     }
+ 146              		.loc 1 58 9 is_stmt 1 view .LVU43
+  58:Core/Src/MazeSimulation.c ****     }
+ 147              		.loc 1 58 50 is_stmt 0 view .LVU44
+ 148 00b2 00EBC303 		add	r3, r0, r3, lsl #3
+ 149 00b6 83F804C0 		strb	ip, [r3, #4]
+  48:Core/Src/MazeSimulation.c ****     if( (value / 8) == 1)
+ 150              		.loc 1 48 13 view .LVU45
+ 151 00ba F446     		mov	ip, lr
+ 152 00bc BBE7     		b	.L3
+ 153              	.LVL12:
+ 154              	.L4:
+  69:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = false;
+ 155              		.loc 1 69 9 is_stmt 1 view .LVU46
+  69:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = false;
+ 156              		.loc 1 69 52 is_stmt 0 view .LVU47
+ 157 00be 01EB0113 		add	r3, r1, r1, lsl #4
+ 158 00c2 1344     		add	r3, r3, r2
+ 159 00c4 4FF0000E 		mov	lr, #0
+ 160 00c8 00F833E0 		strb	lr, [r0, r3, lsl #3]
+  70:Core/Src/MazeSimulation.c ****     }
+ 161              		.loc 1 70 9 is_stmt 1 view .LVU48
+  70:Core/Src/MazeSimulation.c ****     }
+ 162              		.loc 1 70 47 is_stmt 0 view .LVU49
+ 163 00cc 00EBC303 		add	r3, r0, r3, lsl #3
+ 164 00d0 83F804E0 		strb	lr, [r3, #4]
+ 165 00d4 6346     		mov	r3, ip
+ 166 00d6 BEE7     		b	.L5
+ 167              	.LVL13:
+ 168              	.L11:
+  75:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
+ 169              		.loc 1 75 9 is_stmt 1 view .LVU50
+  75:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
+ 170              		.loc 1 75 40 is_stmt 0 view .LVU51
+ 171 00d8 4B1C     		adds	r3, r1, #1
+ 172              	.LVL14:
+  75:Core/Src/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
+ 173              		.loc 1 75 57 view .LVU52
+ 174 00da 02EB0313 		add	r3, r2, r3, lsl #4
+ 175 00de 03F58873 		add	r3, r3, #272
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 6
+
+
+ 176 00e2 4FF0010E 		mov	lr, #1
+ 177 00e6 00F833E0 		strb	lr, [r0, r3, lsl #3]
+  76:Core/Src/MazeSimulation.c ****         value -= 2;
+ 178              		.loc 1 76 9 is_stmt 1 view .LVU53
+  76:Core/Src/MazeSimulation.c ****         value -= 2;
+ 179              		.loc 1 76 52 is_stmt 0 view .LVU54
+ 180 00ea 00EBC303 		add	r3, r0, r3, lsl #3
+ 181 00ee 83F804E0 		strb	lr, [r3, #4]
+  77:Core/Src/MazeSimulation.c ****     }
+ 182              		.loc 1 77 9 is_stmt 1 view .LVU55
+ 183              	.LVL15:
+  77:Core/Src/MazeSimulation.c ****     }
+ 184              		.loc 1 77 15 is_stmt 0 view .LVU56
+ 185 00f2 6346     		mov	r3, ip
+ 186 00f4 C4E7     		b	.L7
+ 187              	.LVL16:
+ 188              	.L12:
+  87:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
+ 189              		.loc 1 87 9 is_stmt 1 view .LVU57
+  87:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
+ 190              		.loc 1 87 40 is_stmt 0 view .LVU58
+ 191 00f6 0132     		adds	r2, r2, #1
+ 192              	.LVL17:
+  87:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
+ 193              		.loc 1 87 54 view .LVU59
+ 194 00f8 01EB0111 		add	r1, r1, r1, lsl #4
+ 195              	.LVL18:
+  87:Core/Src/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
+ 196              		.loc 1 87 54 view .LVU60
+ 197 00fc 1144     		add	r1, r1, r2
+ 198 00fe 0122     		movs	r2, #1
+ 199 0100 00F83120 		strb	r2, [r0, r1, lsl #3]
+  88:Core/Src/MazeSimulation.c ****         value -= 1;
+ 200              		.loc 1 88 9 is_stmt 1 view .LVU61
+  88:Core/Src/MazeSimulation.c ****         value -= 1;
+ 201              		.loc 1 88 49 is_stmt 0 view .LVU62
+ 202 0104 00EBC101 		add	r1, r0, r1, lsl #3
+ 203 0108 0A71     		strb	r2, [r1, #4]
+  89:Core/Src/MazeSimulation.c ****     }
+ 204              		.loc 1 89 9 is_stmt 1 view .LVU63
+  89:Core/Src/MazeSimulation.c ****     }
+ 205              		.loc 1 89 15 is_stmt 0 view .LVU64
+ 206 010a 013B     		subs	r3, r3, #1
+ 207              	.LVL19:
+  89:Core/Src/MazeSimulation.c ****     }
+ 208              		.loc 1 89 15 view .LVU65
+ 209 010c DBB2     		uxtb	r3, r3
+ 210              	.LVL20:
+  89:Core/Src/MazeSimulation.c ****     }
+ 211              		.loc 1 89 15 view .LVU66
+ 212 010e C3E7     		b	.L9
+ 213              		.cfi_endproc
+ 214              	.LFE4:
+ 216              		.section	.text.convert16ValueToWallDirection_Simulation,"ax",%progbits
+ 217              		.align	1
+ 218              		.global	convert16ValueToWallDirection_Simulation
+ 219              		.syntax unified
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 7
+
+
+ 220              		.thumb
+ 221              		.thumb_func
+ 222              		.fpu fpv4-sp-d16
+ 224              	convert16ValueToWallDirection_Simulation:
+ 225              	.LVL21:
+ 226              	.LFB3:
+   7:Core/Src/MazeSimulation.c ****     //4方角の壁があるか無いかを返す
+ 227              		.loc 1 7 1 is_stmt 1 view -0
+ 228              		.cfi_startproc
+ 229              		@ args = 0, pretend = 0, frame = 0
+ 230              		@ frame_needed = 0, uses_anonymous_args = 0
+ 231              		@ link register save eliminated.
+   9:Core/Src/MazeSimulation.c ****     {
+ 232              		.loc 1 9 5 view .LVU68
+   9:Core/Src/MazeSimulation.c ****     {
+ 233              		.loc 1 9 15 is_stmt 0 view .LVU69
+ 234 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
+   9:Core/Src/MazeSimulation.c ****     {
+ 235              		.loc 1 9 5 view .LVU70
+ 236 0002 062B     		cmp	r3, #6
+ 237 0004 00F29080 		bhi	.L20
+ 238 0008 DFE803F0 		tbb	[pc, r3]
+ 239              	.L16:
+ 240 000c 04       		.byte	(.L19-.L16)/2
+ 241 000d 8E       		.byte	(.L20-.L16)/2
+ 242 000e 28       		.byte	(.L18-.L16)/2
+ 243 000f 8E       		.byte	(.L20-.L16)/2
+ 244 0010 4A       		.byte	(.L17-.L16)/2
+ 245 0011 8E       		.byte	(.L20-.L16)/2
+ 246 0012 6C       		.byte	(.L15-.L16)/2
+ 247 0013 00       		.p2align 1
+ 248              	.L19:
+  12:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 249              		.loc 1 12 9 is_stmt 1 view .LVU71
+  12:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 250              		.loc 1 12 56 is_stmt 0 view .LVU72
+ 251 0014 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  12:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 252              		.loc 1 12 68 view .LVU73
+ 253 0016 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+  12:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 254              		.loc 1 12 71 view .LVU74
+ 255 001a 0CF1010C 		add	ip, ip, #1
+  12:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 256              		.loc 1 12 74 view .LVU75
+ 257 001e 03EB0313 		add	r3, r3, r3, lsl #4
+ 258 0022 6344     		add	r3, r3, ip
+ 259 0024 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  12:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 260              		.loc 1 12 20 view .LVU76
+ 261 0028 1370     		strb	r3, [r2]
+  13:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+ 262              		.loc 1 13 9 is_stmt 1 view .LVU77
+  13:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+ 263              		.loc 1 13 60 is_stmt 0 view .LVU78
+ 264 002a 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  13:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 8
+
+
+ 265              		.loc 1 13 63 view .LVU79
+ 266 002c 03F1010C 		add	ip, r3, #1
+  13:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+ 267              		.loc 1 13 74 view .LVU80
+ 268 0030 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  13:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+ 269              		.loc 1 13 77 view .LVU81
+ 270 0032 03EB0C13 		add	r3, r3, ip, lsl #4
+ 271 0036 03F58873 		add	r3, r3, #272
+ 272 003a 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  13:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
+ 273              		.loc 1 13 20 view .LVU82
+ 274 003e 5370     		strb	r3, [r2, #1]
+  14:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 275              		.loc 1 14 9 is_stmt 1 view .LVU83
+  14:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 276              		.loc 1 14 20 is_stmt 0 view .LVU84
+ 277 0040 0023     		movs	r3, #0
+ 278 0042 9370     		strb	r3, [r2, #2]
+  15:Core/Src/MazeSimulation.c ****         break;
+ 279              		.loc 1 15 9 is_stmt 1 view .LVU85
+  15:Core/Src/MazeSimulation.c ****         break;
+ 280              		.loc 1 15 59 is_stmt 0 view .LVU86
+ 281 0044 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+  15:Core/Src/MazeSimulation.c ****         break;
+ 282              		.loc 1 15 70 view .LVU87
+ 283 0048 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  15:Core/Src/MazeSimulation.c ****         break;
+ 284              		.loc 1 15 73 view .LVU88
+ 285 004a 03EB0C13 		add	r3, r3, ip, lsl #4
+ 286 004e 03F58873 		add	r3, r3, #272
+ 287 0052 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  15:Core/Src/MazeSimulation.c ****         break;
+ 288              		.loc 1 15 20 view .LVU89
+ 289 0056 D370     		strb	r3, [r2, #3]
+  16:Core/Src/MazeSimulation.c ****     case east:
+ 290              		.loc 1 16 9 is_stmt 1 view .LVU90
+  40:Core/Src/MazeSimulation.c **** 
+ 291              		.loc 1 40 12 is_stmt 0 view .LVU91
+ 292 0058 0120     		movs	r0, #1
+ 293              	.LVL22:
+  16:Core/Src/MazeSimulation.c ****     case east:
+ 294              		.loc 1 16 9 view .LVU92
+ 295 005a 7047     		bx	lr
+ 296              	.LVL23:
+ 297              	.L18:
+  18:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 298              		.loc 1 18 9 is_stmt 1 view .LVU93
+  18:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 299              		.loc 1 18 56 is_stmt 0 view .LVU94
+ 300 005c 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  18:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 301              		.loc 1 18 68 view .LVU95
+ 302 005e 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+  18:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 303              		.loc 1 18 71 view .LVU96
+ 304 0062 0CF1010C 		add	ip, ip, #1
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 9
+
+
+  18:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 305              		.loc 1 18 74 view .LVU97
+ 306 0066 03EB0313 		add	r3, r3, r3, lsl #4
+ 307 006a 6344     		add	r3, r3, ip
+ 308 006c 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  18:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 309              		.loc 1 18 20 view .LVU98
+ 310 0070 D370     		strb	r3, [r2, #3]
+  19:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 311              		.loc 1 19 9 is_stmt 1 view .LVU99
+  19:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 312              		.loc 1 19 60 is_stmt 0 view .LVU100
+ 313 0072 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  19:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 314              		.loc 1 19 63 view .LVU101
+ 315 0074 03F1010C 		add	ip, r3, #1
+  19:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 316              		.loc 1 19 74 view .LVU102
+ 317 0078 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  19:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 318              		.loc 1 19 77 view .LVU103
+ 319 007a 03EB0C13 		add	r3, r3, ip, lsl #4
+ 320 007e 03F58873 		add	r3, r3, #272
+ 321 0082 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  19:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 322              		.loc 1 19 20 view .LVU104
+ 323 0086 1370     		strb	r3, [r2]
+  20:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
+ 324              		.loc 1 20 9 is_stmt 1 view .LVU105
+  20:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
+ 325              		.loc 1 20 56 is_stmt 0 view .LVU106
+ 326 0088 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  20:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
+ 327              		.loc 1 20 67 view .LVU107
+ 328 008a 4978     		ldrb	r1, [r1, #1]	@ zero_extendqisi2
+ 329              	.LVL24:
+  20:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
+ 330              		.loc 1 20 70 view .LVU108
+ 331 008c 03EB0313 		add	r3, r3, r3, lsl #4
+ 332 0090 0B44     		add	r3, r3, r1
+ 333 0092 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  20:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
+ 334              		.loc 1 20 20 view .LVU109
+ 335 0096 5370     		strb	r3, [r2, #1]
+  21:Core/Src/MazeSimulation.c ****         break;
+ 336              		.loc 1 21 9 is_stmt 1 view .LVU110
+  21:Core/Src/MazeSimulation.c ****         break;
+ 337              		.loc 1 21 20 is_stmt 0 view .LVU111
+ 338 0098 0023     		movs	r3, #0
+ 339 009a 9370     		strb	r3, [r2, #2]
+  22:Core/Src/MazeSimulation.c ****     case south:
+ 340              		.loc 1 22 9 is_stmt 1 view .LVU112
+  40:Core/Src/MazeSimulation.c **** 
+ 341              		.loc 1 40 12 is_stmt 0 view .LVU113
+ 342 009c 0120     		movs	r0, #1
+ 343              	.LVL25:
+  22:Core/Src/MazeSimulation.c ****     case south:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 10
+
+
+ 344              		.loc 1 22 9 view .LVU114
+ 345 009e 7047     		bx	lr
+ 346              	.LVL26:
+ 347              	.L17:
+  24:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 348              		.loc 1 24 9 is_stmt 1 view .LVU115
+  24:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
+ 349              		.loc 1 24 20 is_stmt 0 view .LVU116
+ 350 00a0 0023     		movs	r3, #0
+ 351 00a2 9370     		strb	r3, [r2, #2]
+  25:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 352              		.loc 1 25 9 is_stmt 1 view .LVU117
+  25:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 353              		.loc 1 25 60 is_stmt 0 view .LVU118
+ 354 00a4 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  25:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 355              		.loc 1 25 63 view .LVU119
+ 356 00a6 03F1010C 		add	ip, r3, #1
+  25:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 357              		.loc 1 25 74 view .LVU120
+ 358 00aa 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  25:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 359              		.loc 1 25 77 view .LVU121
+ 360 00ac 03EB0C13 		add	r3, r3, ip, lsl #4
+ 361 00b0 03F58873 		add	r3, r3, #272
+ 362 00b4 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  25:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 363              		.loc 1 25 20 view .LVU122
+ 364 00b8 D370     		strb	r3, [r2, #3]
+  26:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 365              		.loc 1 26 9 is_stmt 1 view .LVU123
+  26:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 366              		.loc 1 26 56 is_stmt 0 view .LVU124
+ 367 00ba 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  26:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 368              		.loc 1 26 67 view .LVU125
+ 369 00bc 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+  26:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 370              		.loc 1 26 70 view .LVU126
+ 371 00c0 03EB0313 		add	r3, r3, r3, lsl #4
+ 372 00c4 6344     		add	r3, r3, ip
+ 373 00c6 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  26:Core/Src/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 374              		.loc 1 26 20 view .LVU127
+ 375 00ca 1370     		strb	r3, [r2]
+  27:Core/Src/MazeSimulation.c ****         break;
+ 376              		.loc 1 27 9 is_stmt 1 view .LVU128
+  27:Core/Src/MazeSimulation.c ****         break;
+ 377              		.loc 1 27 59 is_stmt 0 view .LVU129
+ 378 00cc 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+  27:Core/Src/MazeSimulation.c ****         break;
+ 379              		.loc 1 27 70 view .LVU130
+ 380 00d0 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  27:Core/Src/MazeSimulation.c ****         break;
+ 381              		.loc 1 27 73 view .LVU131
+ 382 00d2 03EB0C13 		add	r3, r3, ip, lsl #4
+ 383 00d6 03F58873 		add	r3, r3, #272
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 11
+
+
+ 384 00da 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  27:Core/Src/MazeSimulation.c ****         break;
+ 385              		.loc 1 27 20 view .LVU132
+ 386 00de 5370     		strb	r3, [r2, #1]
+  28:Core/Src/MazeSimulation.c ****     case west:
+ 387              		.loc 1 28 9 is_stmt 1 view .LVU133
+  40:Core/Src/MazeSimulation.c **** 
+ 388              		.loc 1 40 12 is_stmt 0 view .LVU134
+ 389 00e0 0120     		movs	r0, #1
+ 390              	.LVL27:
+  28:Core/Src/MazeSimulation.c ****     case west:
+ 391              		.loc 1 28 9 view .LVU135
+ 392 00e2 7047     		bx	lr
+ 393              	.LVL28:
+ 394              	.L15:
+  30:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+ 395              		.loc 1 30 9 is_stmt 1 view .LVU136
+  30:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+ 396              		.loc 1 30 56 is_stmt 0 view .LVU137
+ 397 00e4 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  30:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+ 398              		.loc 1 30 68 view .LVU138
+ 399 00e6 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+  30:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+ 400              		.loc 1 30 71 view .LVU139
+ 401 00ea 0CF1010C 		add	ip, ip, #1
+  30:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+ 402              		.loc 1 30 74 view .LVU140
+ 403 00ee 03EB0313 		add	r3, r3, r3, lsl #4
+ 404 00f2 6344     		add	r3, r3, ip
+ 405 00f4 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  30:Core/Src/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
+ 406              		.loc 1 30 20 view .LVU141
+ 407 00f8 5370     		strb	r3, [r2, #1]
+  31:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 408              		.loc 1 31 9 is_stmt 1 view .LVU142
+  31:Core/Src/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
+ 409              		.loc 1 31 20 is_stmt 0 view .LVU143
+ 410 00fa 0023     		movs	r3, #0
+ 411 00fc 9370     		strb	r3, [r2, #2]
+  32:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 412              		.loc 1 32 9 is_stmt 1 view .LVU144
+  32:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 413              		.loc 1 32 56 is_stmt 0 view .LVU145
+ 414 00fe 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  32:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 415              		.loc 1 32 67 view .LVU146
+ 416 0100 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+  32:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 417              		.loc 1 32 70 view .LVU147
+ 418 0104 03EB0313 		add	r3, r3, r3, lsl #4
+ 419 0108 6344     		add	r3, r3, ip
+ 420 010a 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  32:Core/Src/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
+ 421              		.loc 1 32 20 view .LVU148
+ 422 010e D370     		strb	r3, [r2, #3]
+  33:Core/Src/MazeSimulation.c ****         break;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 12
+
+
+ 423              		.loc 1 33 9 is_stmt 1 view .LVU149
+  33:Core/Src/MazeSimulation.c ****         break;
+ 424              		.loc 1 33 59 is_stmt 0 view .LVU150
+ 425 0110 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+  33:Core/Src/MazeSimulation.c ****         break;
+ 426              		.loc 1 33 70 view .LVU151
+ 427 0114 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  33:Core/Src/MazeSimulation.c ****         break;
+ 428              		.loc 1 33 73 view .LVU152
+ 429 0116 03EB0C13 		add	r3, r3, ip, lsl #4
+ 430 011a 03F58873 		add	r3, r3, #272
+ 431 011e 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  33:Core/Src/MazeSimulation.c ****         break;
+ 432              		.loc 1 33 20 view .LVU153
+ 433 0122 1370     		strb	r3, [r2]
+  34:Core/Src/MazeSimulation.c ****     default:
+ 434              		.loc 1 34 9 is_stmt 1 view .LVU154
+  40:Core/Src/MazeSimulation.c **** 
+ 435              		.loc 1 40 12 is_stmt 0 view .LVU155
+ 436 0124 0120     		movs	r0, #1
+ 437              	.LVL29:
+  34:Core/Src/MazeSimulation.c ****     default:
+ 438              		.loc 1 34 9 view .LVU156
+ 439 0126 7047     		bx	lr
+ 440              	.LVL30:
+ 441              	.L20:
+   9:Core/Src/MazeSimulation.c ****     {
+ 442              		.loc 1 9 5 view .LVU157
+ 443 0128 0020     		movs	r0, #0
+ 444              	.LVL31:
+  42:Core/Src/MazeSimulation.c **** 
+ 445              		.loc 1 42 1 view .LVU158
+ 446 012a 7047     		bx	lr
+ 447              		.cfi_endproc
+ 448              	.LFE3:
+ 450              		.section	.rodata.getNodeFrom16Value_Simulation.str1.4,"aMS",%progbits,1
+ 451              		.align	2
+ 452              	.LC0:
+ 453 0000 E382B7E3 		.ascii	"\343\202\267\343\203\237\343\203\245\343\203\254\343"
+ 453      839FE383 
+ 453      A5E383AC 
+ 453      E3
+ 454 000d 83BCE382 		.ascii	"\203\274\343\202\267\343\203\247\343\203\263\347\224"
+ 454      B7E383A7 
+ 454      E383B3E7 
+ 454      94
+ 455 001a A8E381AE 		.ascii	"\250\343\201\25616\351\200\262\346\225\260\343\203\236"
+ 455      3136E980 
+ 455      B2E695B0 
+ 455      E3839E
+ 456 0029 E38383E3 		.ascii	"\343\203\203\343\203\227\343\201\213\343\202\211\345"
+ 456      8397E381 
+ 456      8BE38289 
+ 456      E5
+ 457 0036 A381E683 		.ascii	"\243\201\346\203\205\345\240\261\343\201\270\343\201"
+ 457      85E5A0B1 
+ 457      E381B8E3 
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 13
+
+
+ 457      81
+ 458 0043 AEE5A489 		.ascii	"\256\345\244\211\346\217\233\343\201\256\346\210\220"
+ 458      E68F9BE3 
+ 458      81AEE688 
+ 458      90
+ 459 0050 E590A60D 		.ascii	"\345\220\246\015\000"
+ 459      00
+ 460 0055 000000   		.align	2
+ 461              	.LC1:
+ 462 0058 256400   		.ascii	"%d\000"
+ 463 005b 00       		.align	2
+ 464              	.LC2:
+ 465 005c 0D00     		.ascii	"\015\000"
+ 466              		.section	.text.getNodeFrom16Value_Simulation,"ax",%progbits
+ 467              		.align	1
+ 468              		.global	getNodeFrom16Value_Simulation
+ 469              		.syntax unified
+ 470              		.thumb
+ 471              		.thumb_func
+ 472              		.fpu fpv4-sp-d16
+ 474              	getNodeFrom16Value_Simulation:
+ 475              	.LVL32:
+ 476              	.LFB5:
+ 100:Core/Src/MazeSimulation.c **** //MATLABから読み取った16マップを探索に使用する壁情報に変換
+ 101:Core/Src/MazeSimulation.c **** 
+ 102:Core/Src/MazeSimulation.c **** void getNodeFrom16Value_Simulation(simulation *simu)
+ 103:Core/Src/MazeSimulation.c **** {
+ 477              		.loc 1 103 1 is_stmt 1 view -0
+ 478              		.cfi_startproc
+ 479              		@ args = 0, pretend = 0, frame = 0
+ 480              		@ frame_needed = 0, uses_anonymous_args = 0
+ 481              		.loc 1 103 1 is_stmt 0 view .LVU160
+ 482 0000 70B5     		push	{r4, r5, r6, lr}
+ 483              	.LCFI1:
+ 484              		.cfi_def_cfa_offset 16
+ 485              		.cfi_offset 4, -16
+ 486              		.cfi_offset 5, -12
+ 487              		.cfi_offset 6, -8
+ 488              		.cfi_offset 14, -4
+ 489 0002 0646     		mov	r6, r0
+ 104:Core/Src/MazeSimulation.c ****     _Bool error_check;
+ 490              		.loc 1 104 5 is_stmt 1 view .LVU161
+ 105:Core/Src/MazeSimulation.c ****     printf("シミュレーション用の16進数マップから壁情報への変換の成否\r\n
+ 491              		.loc 1 105 5 view .LVU162
+ 492 0004 1148     		ldr	r0, .L30
+ 493              	.LVL33:
+ 494              		.loc 1 105 5 is_stmt 0 view .LVU163
+ 495 0006 FFF7FEFF 		bl	puts
+ 496              	.LVL34:
+ 106:Core/Src/MazeSimulation.c ****     for(int j=NUMBER_OF_SQUARES_Y-1; j >= 0; j--)
+ 497              		.loc 1 106 5 is_stmt 1 view .LVU164
+ 498              	.LBB2:
+ 499              		.loc 1 106 9 view .LVU165
+ 500              		.loc 1 106 13 is_stmt 0 view .LVU166
+ 501 000a 0F25     		movs	r5, #15
+ 502              		.loc 1 106 5 view .LVU167
+ 503 000c 15E0     		b	.L22
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 14
+
+
+ 504              	.LVL35:
+ 505              	.L23:
+ 506              	.LBB3:
+ 107:Core/Src/MazeSimulation.c ****     {
+ 108:Core/Src/MazeSimulation.c ****         for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+ 507              		.loc 1 108 47 is_stmt 1 discriminator 2 view .LVU168
+ 508              		.loc 1 108 48 is_stmt 0 discriminator 2 view .LVU169
+ 509 000e 0134     		adds	r4, r4, #1
+ 510              	.LVL36:
+ 511              	.L25:
+ 512              		.loc 1 108 22 is_stmt 1 discriminator 1 view .LVU170
+ 513              		.loc 1 108 9 is_stmt 0 discriminator 1 view .LVU171
+ 514 0010 0F2C     		cmp	r4, #15
+ 515 0012 0EDC     		bgt	.L28
+ 109:Core/Src/MazeSimulation.c ****         {
+ 110:Core/Src/MazeSimulation.c ****             error_check = convert16ValueToNode(simu, i, j);
+ 516              		.loc 1 110 13 is_stmt 1 view .LVU172
+ 517              		.loc 1 110 27 is_stmt 0 view .LVU173
+ 518 0014 EAB2     		uxtb	r2, r5
+ 519 0016 E1B2     		uxtb	r1, r4
+ 520 0018 3046     		mov	r0, r6
+ 521 001a FFF7FEFF 		bl	convert16ValueToNode
+ 522              	.LVL37:
+ 523 001e 0146     		mov	r1, r0
+ 524              	.LVL38:
+ 111:Core/Src/MazeSimulation.c ****             
+ 112:Core/Src/MazeSimulation.c ****             printf("%d",error_check);
+ 525              		.loc 1 112 13 is_stmt 1 view .LVU174
+ 526 0020 0B48     		ldr	r0, .L30+4
+ 527 0022 FFF7FEFF 		bl	printf
+ 528              	.LVL39:
+ 113:Core/Src/MazeSimulation.c ****             if(i < NUMBER_OF_SQUARES_X-1)
+ 529              		.loc 1 113 13 view .LVU175
+ 530              		.loc 1 113 15 is_stmt 0 view .LVU176
+ 531 0026 0E2C     		cmp	r4, #14
+ 532 0028 F1DC     		bgt	.L23
+ 114:Core/Src/MazeSimulation.c ****                 printf(",");
+ 533              		.loc 1 114 17 is_stmt 1 view .LVU177
+ 534 002a 2C20     		movs	r0, #44
+ 535 002c FFF7FEFF 		bl	putchar
+ 536              	.LVL40:
+ 537 0030 EDE7     		b	.L23
+ 538              	.L28:
+ 539              		.loc 1 114 17 is_stmt 0 view .LVU178
+ 540              	.LBE3:
+ 115:Core/Src/MazeSimulation.c ****         }
+ 116:Core/Src/MazeSimulation.c ****         printf("\r\n");
+ 541              		.loc 1 116 9 is_stmt 1 discriminator 2 view .LVU179
+ 542 0032 0848     		ldr	r0, .L30+8
+ 543 0034 FFF7FEFF 		bl	puts
+ 544              	.LVL41:
+ 106:Core/Src/MazeSimulation.c ****     {
+ 545              		.loc 1 106 46 discriminator 2 view .LVU180
+ 106:Core/Src/MazeSimulation.c ****     {
+ 546              		.loc 1 106 47 is_stmt 0 discriminator 2 view .LVU181
+ 547 0038 013D     		subs	r5, r5, #1
+ 548              	.LVL42:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 15
+
+
+ 549              	.L22:
+ 106:Core/Src/MazeSimulation.c ****     {
+ 550              		.loc 1 106 38 is_stmt 1 discriminator 1 view .LVU182
+ 106:Core/Src/MazeSimulation.c ****     {
+ 551              		.loc 1 106 5 is_stmt 0 discriminator 1 view .LVU183
+ 552 003a 002D     		cmp	r5, #0
+ 553 003c 01DB     		blt	.L29
+ 554              	.LBB4:
+ 108:Core/Src/MazeSimulation.c ****         {
+ 555              		.loc 1 108 17 view .LVU184
+ 556 003e 0024     		movs	r4, #0
+ 557 0040 E6E7     		b	.L25
+ 558              	.L29:
+ 559              	.LBE4:
+ 560              	.LBE2:
+ 117:Core/Src/MazeSimulation.c ****     }
+ 118:Core/Src/MazeSimulation.c ****     printf("\r\n");
+ 561              		.loc 1 118 5 is_stmt 1 view .LVU185
+ 562 0042 0448     		ldr	r0, .L30+8
+ 563 0044 FFF7FEFF 		bl	puts
+ 564              	.LVL43:
+ 119:Core/Src/MazeSimulation.c **** }
+ 565              		.loc 1 119 1 is_stmt 0 view .LVU186
+ 566 0048 70BD     		pop	{r4, r5, r6, pc}
+ 567              	.LVL44:
+ 568              	.L31:
+ 569              		.loc 1 119 1 view .LVU187
+ 570 004a 00BF     		.align	2
+ 571              	.L30:
+ 572 004c 00000000 		.word	.LC0
+ 573 0050 58000000 		.word	.LC1
+ 574 0054 5C000000 		.word	.LC2
+ 575              		.cfi_endproc
+ 576              	.LFE5:
+ 578              		.section	.rodata.getFileData.str1.4,"aMS",%progbits,1
+ 579              		.align	2
+ 580              	.LC3:
+ 581 0000 25730A25 		.ascii	"%s\012%s\012\000"
+ 581      730A00
+ 582 0007 00       		.align	2
+ 583              	.LC4:
+ 584 0008 7200     		.ascii	"r\000"
+ 585 000a 0000     		.align	2
+ 586              	.LC5:
+ 587 000c 25732066 		.ascii	"%s file not open!\012\000"
+ 587      696C6520 
+ 587      6E6F7420 
+ 587      6F70656E 
+ 587      210A00
+ 588 001f 00       		.align	2
+ 589              	.LC6:
+ 590 0020 25732066 		.ascii	"%s file opened!\012\000"
+ 590      696C6520 
+ 590      6F70656E 
+ 590      6564210A 
+ 590      00
+ 591 0031 000000   		.align	2
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 16
+
+
+ 592              	.LC7:
+ 593 0034 25686875 		.ascii	"%hhu,\000"
+ 593      2C00
+ 594 003a 0000     		.align	2
+ 595              	.LC8:
+ 596 003c 257500   		.ascii	"%u\000"
+ 597              		.section	.text.getFileData,"ax",%progbits
+ 598              		.align	1
+ 599              		.global	getFileData
+ 600              		.syntax unified
+ 601              		.thumb
+ 602              		.thumb_func
+ 603              		.fpu fpv4-sp-d16
+ 605              	getFileData:
+ 606              	.LVL45:
+ 607              	.LFB6:
+ 120:Core/Src/MazeSimulation.c **** _Bool getFileData(simulation *simu)
+ 121:Core/Src/MazeSimulation.c **** {
+ 608              		.loc 1 121 1 is_stmt 1 view -0
+ 609              		.cfi_startproc
+ 610              		@ args = 0, pretend = 0, frame = 0
+ 611              		@ frame_needed = 0, uses_anonymous_args = 0
+ 612              		.loc 1 121 1 is_stmt 0 view .LVU189
+ 613 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 614              	.LCFI2:
+ 615              		.cfi_def_cfa_offset 24
+ 616              		.cfi_offset 3, -24
+ 617              		.cfi_offset 4, -20
+ 618              		.cfi_offset 5, -16
+ 619              		.cfi_offset 6, -12
+ 620              		.cfi_offset 7, -8
+ 621              		.cfi_offset 14, -4
+ 622 0002 0646     		mov	r6, r0
+ 122:Core/Src/MazeSimulation.c ****     //ファイルの絶対パスを入力
+ 123:Core/Src/MazeSimulation.c ****     //printf("迷路テキストファイル名 : "); scanf("%s", (char *)(simu->filename) );
+ 124:Core/Src/MazeSimulation.c ****     
+ 125:Core/Src/MazeSimulation.c ****     strcpy(simu->filename, FILE_NAME);
+ 623              		.loc 1 125 5 is_stmt 1 view .LVU190
+ 624              		.loc 1 125 16 is_stmt 0 view .LVU191
+ 625 0004 00F59054 		add	r4, r0, #4608
+ 626              		.loc 1 125 5 view .LVU192
+ 627 0008 244D     		ldr	r5, .L44
+ 628 000a 2946     		mov	r1, r5
+ 629 000c 2046     		mov	r0, r4
+ 630              	.LVL46:
+ 631              		.loc 1 125 5 view .LVU193
+ 632 000e FFF7FEFF 		bl	strcpy
+ 633              	.LVL47:
+ 126:Core/Src/MazeSimulation.c ****     printf("%s\n%s\n", simu->filename, FILE_NAME);
+ 634              		.loc 1 126 5 is_stmt 1 view .LVU194
+ 635 0012 2A46     		mov	r2, r5
+ 636 0014 2146     		mov	r1, r4
+ 637 0016 2248     		ldr	r0, .L44+4
+ 638 0018 FFF7FEFF 		bl	printf
+ 639              	.LVL48:
+ 127:Core/Src/MazeSimulation.c ****     simu->fp = fopen(simu->filename, "r"); // ファイルを開く。失敗するとNULLを返す�
+ 640              		.loc 1 127 5 view .LVU195
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 17
+
+
+ 641              		.loc 1 127 16 is_stmt 0 view .LVU196
+ 642 001c 2149     		ldr	r1, .L44+8
+ 643 001e 2046     		mov	r0, r4
+ 644 0020 FFF7FEFF 		bl	fopen
+ 645              	.LVL49:
+ 646              		.loc 1 127 14 view .LVU197
+ 647 0024 06F58053 		add	r3, r6, #4096
+ 648 0028 C3F8C802 		str	r0, [r3, #712]
+ 128:Core/Src/MazeSimulation.c **** 	if(simu->fp == NULL) {
+ 649              		.loc 1 128 2 is_stmt 1 view .LVU198
+ 650              		.loc 1 128 4 is_stmt 0 view .LVU199
+ 651 002c 28B1     		cbz	r0, .L41
+ 129:Core/Src/MazeSimulation.c **** 		printf("%s file not open!\n", simu->filename);
+ 130:Core/Src/MazeSimulation.c **** 		return false;
+ 131:Core/Src/MazeSimulation.c **** 	} else {
+ 132:Core/Src/MazeSimulation.c **** 		printf("%s file opened!\n", simu->filename);
+ 652              		.loc 1 132 3 is_stmt 1 view .LVU200
+ 653 002e 2146     		mov	r1, r4
+ 654 0030 1D48     		ldr	r0, .L44+12
+ 655 0032 FFF7FEFF 		bl	printf
+ 656              	.LVL50:
+ 133:Core/Src/MazeSimulation.c **** 	}
+ 134:Core/Src/MazeSimulation.c **** 
+ 135:Core/Src/MazeSimulation.c ****     for(int j=NUMBER_OF_SQUARES_Y-1; j >= 0; j--)
+ 657              		.loc 1 135 5 view .LVU201
+ 658              	.LBB5:
+ 659              		.loc 1 135 9 view .LVU202
+ 660              		.loc 1 135 13 is_stmt 0 view .LVU203
+ 661 0036 0F27     		movs	r7, #15
+ 662              		.loc 1 135 5 view .LVU204
+ 663 0038 27E0     		b	.L35
+ 664              	.LVL51:
+ 665              	.L41:
+ 666              		.loc 1 135 5 view .LVU205
+ 667              	.LBE5:
+ 129:Core/Src/MazeSimulation.c **** 		printf("%s file not open!\n", simu->filename);
+ 668              		.loc 1 129 3 is_stmt 1 view .LVU206
+ 669 003a 2146     		mov	r1, r4
+ 670 003c 1B48     		ldr	r0, .L44+16
+ 671 003e FFF7FEFF 		bl	printf
+ 672              	.LVL52:
+ 130:Core/Src/MazeSimulation.c **** 	} else {
+ 673              		.loc 1 130 3 view .LVU207
+ 130:Core/Src/MazeSimulation.c **** 	} else {
+ 674              		.loc 1 130 10 is_stmt 0 view .LVU208
+ 675 0042 0020     		movs	r0, #0
+ 676 0044 29E0     		b	.L34
+ 677              	.LVL53:
+ 678              	.L36:
+ 679              	.LBB8:
+ 680              	.LBB6:
+ 136:Core/Src/MazeSimulation.c ****     {
+ 137:Core/Src/MazeSimulation.c ****         for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+ 681              		.loc 1 137 47 is_stmt 1 discriminator 2 view .LVU209
+ 682              		.loc 1 137 48 is_stmt 0 discriminator 2 view .LVU210
+ 683 0046 0135     		adds	r5, r5, #1
+ 684              	.LVL54:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 18
+
+
+ 685              	.L38:
+ 686              		.loc 1 137 22 is_stmt 1 discriminator 1 view .LVU211
+ 687              		.loc 1 137 9 is_stmt 0 discriminator 1 view .LVU212
+ 688 0048 0F2D     		cmp	r5, #15
+ 689 004a 1ADC     		bgt	.L42
+ 138:Core/Src/MazeSimulation.c ****         {
+ 139:Core/Src/MazeSimulation.c ****             fscanf(simu->fp, "%hhu,", &(simu->value_16[i][j]));
+ 690              		.loc 1 139 13 is_stmt 1 view .LVU213
+ 691 004c 2C01     		lsls	r4, r5, #4
+ 692 004e 07EB0512 		add	r2, r7, r5, lsl #4
+ 693 0052 02F58852 		add	r2, r2, #4352
+ 694 0056 06F58053 		add	r3, r6, #4096
+ 695 005a 3244     		add	r2, r2, r6
+ 696 005c 1449     		ldr	r1, .L44+20
+ 697 005e D3F8C802 		ldr	r0, [r3, #712]
+ 698 0062 FFF7FEFF 		bl	fscanf
+ 699              	.LVL55:
+ 140:Core/Src/MazeSimulation.c ****             printf("%u",simu->value_16[i][j]);
+ 700              		.loc 1 140 13 view .LVU214
+ 701              		.loc 1 140 42 is_stmt 0 view .LVU215
+ 702 0066 3444     		add	r4, r4, r6
+ 703 0068 3C44     		add	r4, r4, r7
+ 704 006a 04F58854 		add	r4, r4, #4352
+ 705              		.loc 1 140 13 view .LVU216
+ 706 006e 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 707 0070 1048     		ldr	r0, .L44+24
+ 708 0072 FFF7FEFF 		bl	printf
+ 709              	.LVL56:
+ 141:Core/Src/MazeSimulation.c ****             if(i < NUMBER_OF_SQUARES_X -1)
+ 710              		.loc 1 141 13 is_stmt 1 view .LVU217
+ 711              		.loc 1 141 15 is_stmt 0 view .LVU218
+ 712 0076 0E2D     		cmp	r5, #14
+ 713 0078 E5DC     		bgt	.L36
+ 142:Core/Src/MazeSimulation.c ****                 printf(",");
+ 714              		.loc 1 142 17 is_stmt 1 view .LVU219
+ 715 007a 2C20     		movs	r0, #44
+ 716 007c FFF7FEFF 		bl	putchar
+ 717              	.LVL57:
+ 718 0080 E1E7     		b	.L36
+ 719              	.L42:
+ 720              		.loc 1 142 17 is_stmt 0 view .LVU220
+ 721              	.LBE6:
+ 143:Core/Src/MazeSimulation.c ****         }
+ 144:Core/Src/MazeSimulation.c ****         printf("\r\n");
+ 722              		.loc 1 144 9 is_stmt 1 discriminator 2 view .LVU221
+ 723 0082 0D48     		ldr	r0, .L44+28
+ 724 0084 FFF7FEFF 		bl	puts
+ 725              	.LVL58:
+ 135:Core/Src/MazeSimulation.c ****     {
+ 726              		.loc 1 135 46 discriminator 2 view .LVU222
+ 135:Core/Src/MazeSimulation.c ****     {
+ 727              		.loc 1 135 47 is_stmt 0 discriminator 2 view .LVU223
+ 728 0088 013F     		subs	r7, r7, #1
+ 729              	.LVL59:
+ 730              	.L35:
+ 135:Core/Src/MazeSimulation.c ****     {
+ 731              		.loc 1 135 38 is_stmt 1 discriminator 1 view .LVU224
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 19
+
+
+ 135:Core/Src/MazeSimulation.c ****     {
+ 732              		.loc 1 135 5 is_stmt 0 discriminator 1 view .LVU225
+ 733 008a 002F     		cmp	r7, #0
+ 734 008c 01DB     		blt	.L43
+ 735              	.LBB7:
+ 137:Core/Src/MazeSimulation.c ****         {
+ 736              		.loc 1 137 17 view .LVU226
+ 737 008e 0025     		movs	r5, #0
+ 738 0090 DAE7     		b	.L38
+ 739              	.L43:
+ 740              	.LBE7:
+ 741              	.LBE8:
+ 145:Core/Src/MazeSimulation.c ****     }
+ 146:Core/Src/MazeSimulation.c ****     printf("\r\n");
+ 742              		.loc 1 146 5 is_stmt 1 view .LVU227
+ 743 0092 0948     		ldr	r0, .L44+28
+ 744 0094 FFF7FEFF 		bl	puts
+ 745              	.LVL60:
+ 147:Core/Src/MazeSimulation.c ****     return true;
+ 746              		.loc 1 147 5 view .LVU228
+ 747              		.loc 1 147 12 is_stmt 0 view .LVU229
+ 748 0098 0120     		movs	r0, #1
+ 749              	.LVL61:
+ 750              	.L34:
+ 148:Core/Src/MazeSimulation.c **** }
+ 751              		.loc 1 148 1 view .LVU230
+ 752 009a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 753              	.LVL62:
+ 754              	.L45:
+ 755              		.loc 1 148 1 view .LVU231
+ 756              		.align	2
+ 757              	.L44:
+ 758 009c 00000000 		.word	.LANCHOR0
+ 759 00a0 00000000 		.word	.LC3
+ 760 00a4 08000000 		.word	.LC4
+ 761 00a8 20000000 		.word	.LC6
+ 762 00ac 0C000000 		.word	.LC5
+ 763 00b0 34000000 		.word	.LC7
+ 764 00b4 3C000000 		.word	.LC8
+ 765 00b8 5C000000 		.word	.LC2
+ 766              		.cfi_endproc
+ 767              	.LFE6:
+ 769              		.section	.text.getWallDirection,"ax",%progbits
+ 770              		.align	1
+ 771              		.global	getWallDirection
+ 772              		.syntax unified
+ 773              		.thumb
+ 774              		.thumb_func
+ 775              		.fpu fpv4-sp-d16
+ 777              	getWallDirection:
+ 778              	.LVL63:
+ 779              	.LFB7:
+ 149:Core/Src/MazeSimulation.c **** 
+ 150:Core/Src/MazeSimulation.c **** //走行シミュレーションに必要な処理
+ 151:Core/Src/MazeSimulation.c **** //向いている方角に合わせて前右左の取得
+ 152:Core/Src/MazeSimulation.c **** void getWallDirection(simulation *simu, state *st, uint8_t *wall)
+ 153:Core/Src/MazeSimulation.c **** {
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 20
+
+
+ 780              		.loc 1 153 1 is_stmt 1 view -0
+ 781              		.cfi_startproc
+ 782              		@ args = 0, pretend = 0, frame = 0
+ 783              		@ frame_needed = 0, uses_anonymous_args = 0
+ 784              		@ link register save eliminated.
+ 154:Core/Src/MazeSimulation.c ****     switch (st->car)
+ 785              		.loc 1 154 5 view .LVU233
+ 786              		.loc 1 154 15 is_stmt 0 view .LVU234
+ 787 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
+ 788              		.loc 1 154 5 view .LVU235
+ 789 0002 6BB9     		cbnz	r3, .L46
+ 155:Core/Src/MazeSimulation.c ****     {
+ 156:Core/Src/MazeSimulation.c ****     case north:
+ 157:Core/Src/MazeSimulation.c ****         wall[0] = simu->value_16[st->pos.x][st->pos.y];
+ 790              		.loc 1 157 9 is_stmt 1 view .LVU236
+ 791              		.loc 1 157 41 is_stmt 0 view .LVU237
+ 792 0004 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+ 793              		.loc 1 157 52 view .LVU238
+ 794 0008 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 795              		.loc 1 157 44 view .LVU239
+ 796 000a 00EB0C10 		add	r0, r0, ip, lsl #4
+ 797              	.LVL64:
+ 798              		.loc 1 157 44 view .LVU240
+ 799 000e 1844     		add	r0, r0, r3
+ 800 0010 00F58850 		add	r0, r0, #4352
+ 801 0014 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 802              		.loc 1 157 17 view .LVU241
+ 803 0016 1370     		strb	r3, [r2]
+ 158:Core/Src/MazeSimulation.c ****         wall[1] = 0;
+ 804              		.loc 1 158 9 is_stmt 1 view .LVU242
+ 805              		.loc 1 158 17 is_stmt 0 view .LVU243
+ 806 0018 0023     		movs	r3, #0
+ 807 001a 5370     		strb	r3, [r2, #1]
+ 159:Core/Src/MazeSimulation.c ****         wall[2] = 0;
+ 808              		.loc 1 159 9 is_stmt 1 view .LVU244
+ 809              		.loc 1 159 17 is_stmt 0 view .LVU245
+ 810 001c 9370     		strb	r3, [r2, #2]
+ 160:Core/Src/MazeSimulation.c ****         wall[3] = 0;
+ 811              		.loc 1 160 9 is_stmt 1 view .LVU246
+ 812              		.loc 1 160 17 is_stmt 0 view .LVU247
+ 813 001e D370     		strb	r3, [r2, #3]
+ 161:Core/Src/MazeSimulation.c ****         break;
+ 814              		.loc 1 161 9 is_stmt 1 view .LVU248
+ 815              	.L46:
+ 162:Core/Src/MazeSimulation.c ****     
+ 163:Core/Src/MazeSimulation.c ****     default:
+ 164:Core/Src/MazeSimulation.c ****         break;
+ 165:Core/Src/MazeSimulation.c ****     }
+ 166:Core/Src/MazeSimulation.c **** 
+ 167:Core/Src/MazeSimulation.c **** 
+ 168:Core/Src/MazeSimulation.c **** }
+ 816              		.loc 1 168 1 is_stmt 0 view .LVU249
+ 817 0020 7047     		bx	lr
+ 818              		.cfi_endproc
+ 819              	.LFE7:
+ 821              		.global	FILE_NAME
+ 822              		.section	.data.FILE_NAME,"aw"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 21
+
+
+ 823              		.align	2
+ 824              		.set	.LANCHOR0,. + 0
+ 827              	FILE_NAME:
+ 828 0000 2F6D6E74 		.ascii	"/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2"
+ 828      2F632F55 
+ 828      73657273 
+ 828      2F6C656F 
+ 828      70692F4D 
+ 829 0033 3032314D 		.ascii	"021MS.txt\000"
+ 829      532E7478 
+ 829      7400
+ 830 003d 00000000 		.space	139
+ 830      00000000 
+ 830      00000000 
+ 830      00000000 
+ 830      00000000 
+ 831              		.text
+ 832              	.Letext0:
+ 833              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include
+ 834              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include
+ 835              		.file 4 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_types.h"
+ 836              		.file 5 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/reent.h"
+ 837              		.file 6 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/lock.h"
+ 838              		.file 7 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/stdio.h"
+ 839              		.file 8 "Core/Inc/MazeLib.h"
+ 840              		.file 9 "Core/Inc/MazeSimulation.h"
+ 841              		.file 10 "<built-in>"
+ 842              		.file 11 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/string.h"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 MazeSimulation.c
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:18     .text.convert16ValueToNode:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:25     .text.convert16ValueToNode:0000000000000000 convert16ValueToNode
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:217    .text.convert16ValueToWallDirection_Simulation:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:224    .text.convert16ValueToWallDirection_Simulation:0000000000000000 convert16ValueToWallDirection_Simulation
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:240    .text.convert16ValueToWallDirection_Simulation:000000000000000c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:451    .rodata.getNodeFrom16Value_Simulation.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:467    .text.getNodeFrom16Value_Simulation:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:474    .text.getNodeFrom16Value_Simulation:0000000000000000 getNodeFrom16Value_Simulation
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:572    .text.getNodeFrom16Value_Simulation:000000000000004c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:579    .rodata.getFileData.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:598    .text.getFileData:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:605    .text.getFileData:0000000000000000 getFileData
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:758    .text.getFileData:000000000000009c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:770    .text.getWallDirection:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:777    .text.getWallDirection:0000000000000000 getWallDirection
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:827    .data.FILE_NAME:0000000000000000 FILE_NAME
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:823    .data.FILE_NAME:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:247    .text.convert16ValueToWallDirection_Simulation:0000000000000013 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccgTQaUT.s:247    .text.convert16ValueToWallDirection_Simulation:0000000000000014 $t
+
+UNDEFINED SYMBOLS
+puts
+printf
+putchar
+strcpy
+fopen
+fscanf

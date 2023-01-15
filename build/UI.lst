@@ -1,0 +1,758 @@
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"UI.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.HAL_GPIO_EXTI_Callback,"ax",%progbits
+  18              		.align	1
+  19              		.global	HAL_GPIO_EXTI_Callback
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	HAL_GPIO_EXTI_Callback:
+  27              	.LVL0:
+  28              	.LFB238:
+  29              		.file 1 "Core/Src/Tools/UI.c"
+   1:Core/Src/Tools/UI.c **** /*
+   2:Core/Src/Tools/UI.c ****  * UI.c
+   3:Core/Src/Tools/UI.c ****  *
+   4:Core/Src/Tools/UI.c ****  *  Created on: Feb 12, 2022
+   5:Core/Src/Tools/UI.c ****  *      Author: leopi
+   6:Core/Src/Tools/UI.c ****  */
+   7:Core/Src/Tools/UI.c **** 
+   8:Core/Src/Tools/UI.c **** //このファイルを別のマウスで使うときにどこを変えることになるのかと�
+   9:Core/Src/Tools/UI.c **** #include <MicroMouse.h>
+  10:Core/Src/Tools/UI.c **** #include "UI.h"
+  11:Core/Src/Tools/UI.c **** 
+  12:Core/Src/Tools/UI.c **** //ハードウェアを操作する処理からユーザインタフェースを組み立てる
+  13:Core/Src/Tools/UI.c **** #include "Convert.h"
+  14:Core/Src/Tools/UI.c **** 
+  15:Core/Src/Tools/UI.c **** 
+  16:Core/Src/Tools/UI.c **** #include "IEH2_4096.h"		//エンコーダ
+  17:Core/Src/Tools/UI.c **** #include "mouse_ADC.h"
+  18:Core/Src/Tools/UI.c **** #include "LED_Driver.h"
+  19:Core/Src/Tools/UI.c **** #include "IR_Emitter.h"	//発光側の処理。タイマスタートだけかなー。
+  20:Core/Src/Tools/UI.c **** #include "Motor_Driver.h"//モータの設定ヘッダ
+  21:Core/Src/Tools/UI.c **** 
+  22:Core/Src/Tools/UI.c **** #include <stdio.h>
+  23:Core/Src/Tools/UI.c **** #include <math.h>
+  24:Core/Src/Tools/UI.c **** //中間モジュール。
+  25:Core/Src/Tools/UI.c **** int gpio_callback_count=0;
+  26:Core/Src/Tools/UI.c **** void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+  30              		.loc 1 26 47 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 2
+
+
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  27:Core/Src/Tools/UI.c **** 	if(GPIO_Pin == GPIO_PIN_12)
+  35              		.loc 1 27 2 view .LVU1
+  36              		.loc 1 27 4 is_stmt 0 view .LVU2
+  37 0000 B0F5805F 		cmp	r0, #4096
+  38 0004 00D0     		beq	.L3
+  39              	.L1:
+  28:Core/Src/Tools/UI.c **** 	{
+  29:Core/Src/Tools/UI.c **** 	  gpio_callback_count++;
+  30:Core/Src/Tools/UI.c **** 	  //ChangeLED(gpio_callback_count);
+  31:Core/Src/Tools/UI.c **** 
+  32:Core/Src/Tools/UI.c **** 	  if(gpio_callback_count > 1) gpio_callback_count=0;
+  33:Core/Src/Tools/UI.c **** 	}
+  34:Core/Src/Tools/UI.c **** }
+  40              		.loc 1 34 1 view .LVU3
+  41 0006 7047     		bx	lr
+  42              	.L3:
+  29:Core/Src/Tools/UI.c **** 	  //ChangeLED(gpio_callback_count);
+  43              		.loc 1 29 4 is_stmt 1 view .LVU4
+  29:Core/Src/Tools/UI.c **** 	  //ChangeLED(gpio_callback_count);
+  44              		.loc 1 29 23 is_stmt 0 view .LVU5
+  45 0008 044A     		ldr	r2, .L4
+  46 000a 1368     		ldr	r3, [r2]
+  47 000c 0133     		adds	r3, r3, #1
+  48 000e 1360     		str	r3, [r2]
+  32:Core/Src/Tools/UI.c **** 	}
+  49              		.loc 1 32 4 is_stmt 1 view .LVU6
+  32:Core/Src/Tools/UI.c **** 	}
+  50              		.loc 1 32 6 is_stmt 0 view .LVU7
+  51 0010 012B     		cmp	r3, #1
+  52 0012 F8DD     		ble	.L1
+  32:Core/Src/Tools/UI.c **** 	}
+  53              		.loc 1 32 32 is_stmt 1 discriminator 1 view .LVU8
+  32:Core/Src/Tools/UI.c **** 	}
+  54              		.loc 1 32 51 is_stmt 0 discriminator 1 view .LVU9
+  55 0014 1346     		mov	r3, r2
+  56 0016 0022     		movs	r2, #0
+  57 0018 1A60     		str	r2, [r3]
+  58              		.loc 1 34 1 discriminator 1 view .LVU10
+  59 001a F4E7     		b	.L1
+  60              	.L5:
+  61              		.align	2
+  62              	.L4:
+  63 001c 00000000 		.word	.LANCHOR0
+  64              		.cfi_endproc
+  65              	.LFE238:
+  67              		.section	.text.Signal,"ax",%progbits
+  68              		.align	1
+  69              		.global	Signal
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  73              		.fpu fpv4-sp-d16
+  75              	Signal:
+  76              	.LVL1:
+  77              	.LFB239:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 3
+
+
+  35:Core/Src/Tools/UI.c **** //エンコーダはモード選択時には直で取得しちゃってよいので引数にしな�
+  36:Core/Src/Tools/UI.c **** //float Photo[4];
+  37:Core/Src/Tools/UI.c **** 
+  38:Core/Src/Tools/UI.c **** //led_driver
+  39:Core/Src/Tools/UI.c **** void Signal(int8_t mode)
+  40:Core/Src/Tools/UI.c **** {
+  78              		.loc 1 40 1 is_stmt 1 view -0
+  79              		.cfi_startproc
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82              		.loc 1 40 1 is_stmt 0 view .LVU12
+  83 0000 38B5     		push	{r3, r4, r5, lr}
+  84              	.LCFI0:
+  85              		.cfi_def_cfa_offset 16
+  86              		.cfi_offset 3, -16
+  87              		.cfi_offset 4, -12
+  88              		.cfi_offset 5, -8
+  89              		.cfi_offset 14, -4
+  90 0002 0546     		mov	r5, r0
+  41:Core/Src/Tools/UI.c **** 	for(int i=0; i < 5; i++)
+  91              		.loc 1 41 2 is_stmt 1 view .LVU13
+  92              	.LBB2:
+  93              		.loc 1 41 6 view .LVU14
+  94              	.LVL2:
+  95              		.loc 1 41 10 is_stmt 0 view .LVU15
+  96 0004 0024     		movs	r4, #0
+  97              		.loc 1 41 2 view .LVU16
+  98 0006 0CE0     		b	.L7
+  99              	.LVL3:
+ 100              	.L8:
+  42:Core/Src/Tools/UI.c **** 	{
+  43:Core/Src/Tools/UI.c **** 		ChangeLED(mode);
+ 101              		.loc 1 43 3 is_stmt 1 discriminator 3 view .LVU17
+ 102 0008 2846     		mov	r0, r5
+ 103 000a FFF7FEFF 		bl	ChangeLED
+ 104              	.LVL4:
+  44:Core/Src/Tools/UI.c **** 		HAL_Delay(100);
+ 105              		.loc 1 44 3 discriminator 3 view .LVU18
+ 106 000e 6420     		movs	r0, #100
+ 107 0010 FFF7FEFF 		bl	HAL_Delay
+ 108              	.LVL5:
+  45:Core/Src/Tools/UI.c **** 		ChangeLED(0);
+ 109              		.loc 1 45 3 discriminator 3 view .LVU19
+ 110 0014 0020     		movs	r0, #0
+ 111 0016 FFF7FEFF 		bl	ChangeLED
+ 112              	.LVL6:
+  46:Core/Src/Tools/UI.c **** 		HAL_Delay(100);
+ 113              		.loc 1 46 3 discriminator 3 view .LVU20
+ 114 001a 6420     		movs	r0, #100
+ 115 001c FFF7FEFF 		bl	HAL_Delay
+ 116              	.LVL7:
+  41:Core/Src/Tools/UI.c **** 	{
+ 117              		.loc 1 41 22 discriminator 3 view .LVU21
+  41:Core/Src/Tools/UI.c **** 	{
+ 118              		.loc 1 41 23 is_stmt 0 discriminator 3 view .LVU22
+ 119 0020 0134     		adds	r4, r4, #1
+ 120              	.LVL8:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 4
+
+
+ 121              	.L7:
+  41:Core/Src/Tools/UI.c **** 	{
+ 122              		.loc 1 41 15 is_stmt 1 discriminator 1 view .LVU23
+  41:Core/Src/Tools/UI.c **** 	{
+ 123              		.loc 1 41 2 is_stmt 0 discriminator 1 view .LVU24
+ 124 0022 042C     		cmp	r4, #4
+ 125 0024 F0DD     		ble	.L8
+ 126              	.LBE2:
+  47:Core/Src/Tools/UI.c **** 	}
+  48:Core/Src/Tools/UI.c **** }
+ 127              		.loc 1 48 1 view .LVU25
+ 128 0026 38BD     		pop	{r3, r4, r5, pc}
+ 129              		.loc 1 48 1 view .LVU26
+ 130              		.cfi_endproc
+ 131              	.LFE239:
+ 133              		.section	.rodata.BatteryCheck.str1.4,"aMS",%progbits,1
+ 134              		.align	2
+ 135              	.LC0:
+ 136 0000 25640D0A 		.ascii	"%d\015\012\000"
+ 136      00
+ 137              		.section	.text.BatteryCheck,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	BatteryCheck
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.fpu fpv4-sp-d16
+ 145              	BatteryCheck:
+ 146              	.LVL9:
+ 147              	.LFB240:
+  49:Core/Src/Tools/UI.c **** 
+  50:Core/Src/Tools/UI.c **** //battery_adc
+  51:Core/Src/Tools/UI.c **** void BatteryCheck(int adc_data)
+  52:Core/Src/Tools/UI.c **** {
+ 148              		.loc 1 52 1 is_stmt 1 view -0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 0
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152              		.loc 1 52 1 is_stmt 0 view .LVU28
+ 153 0000 10B5     		push	{r4, lr}
+ 154              	.LCFI1:
+ 155              		.cfi_def_cfa_offset 8
+ 156              		.cfi_offset 4, -8
+ 157              		.cfi_offset 14, -4
+ 158 0002 2DED028B 		vpush.64	{d8}
+ 159              	.LCFI2:
+ 160              		.cfi_def_cfa_offset 16
+ 161              		.cfi_offset 80, -16
+ 162              		.cfi_offset 81, -12
+  53:Core/Src/Tools/UI.c **** 
+  54:Core/Src/Tools/UI.c **** 	//このあたりのハードウェア情報を一括で書いてしまう。
+  55:Core/Src/Tools/UI.c **** 	float battery_voltage;//adc1[2] グローバルな値はどこか一か所で呼び出す
+ 163              		.loc 1 55 2 is_stmt 1 view .LVU29
+  56:Core/Src/Tools/UI.c **** 	battery_voltage = ADCToBatteryVoltage( adc_data, V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 164              		.loc 1 56 2 view .LVU30
+ 165              		.loc 1 56 20 is_stmt 0 view .LVU31
+ 166 0006 9FED101A 		vldr.32	s2, .L12
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 5
+
+
+ 167 000a DFED100A 		vldr.32	s1, .L12+4
+ 168 000e B0EE080A 		vmov.f32	s0, #3.0e+0
+ 169 0012 FFF7FEFF 		bl	ADCToBatteryVoltage
+ 170              	.LVL10:
+ 171              		.loc 1 56 20 view .LVU32
+ 172 0016 B0EE408A 		vmov.f32	s16, s0
+ 173              	.LVL11:
+  57:Core/Src/Tools/UI.c **** 
+  58:Core/Src/Tools/UI.c **** 	int led_pattern_num = IntegerPower(2, LED_NUM); //led
+ 174              		.loc 1 58 2 is_stmt 1 view .LVU33
+ 175              		.loc 1 58 24 is_stmt 0 view .LVU34
+ 176 001a 0321     		movs	r1, #3
+ 177 001c 0220     		movs	r0, #2
+ 178 001e FFF7FEFF 		bl	IntegerPower
+ 179              	.LVL12:
+  59:Core/Src/Tools/UI.c **** 
+  60:Core/Src/Tools/UI.c **** 	int battery_level = GetBatteryLevel( battery_voltage, BATTERY_MIN, BATTERY_MAX, led_pattern_num);
+ 180              		.loc 1 60 2 is_stmt 1 view .LVU35
+ 181              		.loc 1 60 22 is_stmt 0 view .LVU36
+ 182 0022 9FED0B1A 		vldr.32	s2, .L12+8
+ 183 0026 DFED0B0A 		vldr.32	s1, .L12+12
+ 184 002a B0EE480A 		vmov.f32	s0, s16
+ 185 002e FFF7FEFF 		bl	GetBatteryLevel
+ 186              	.LVL13:
+ 187              		.loc 1 60 22 view .LVU37
+ 188 0032 0446     		mov	r4, r0
+ 189              	.LVL14:
+  61:Core/Src/Tools/UI.c **** 
+  62:Core/Src/Tools/UI.c **** 	printf("%d\r\n", battery_level);
+ 190              		.loc 1 62 2 is_stmt 1 view .LVU38
+ 191 0034 0146     		mov	r1, r0
+ 192 0036 0848     		ldr	r0, .L12+16
+ 193              	.LVL15:
+ 194              		.loc 1 62 2 is_stmt 0 view .LVU39
+ 195 0038 FFF7FEFF 		bl	printf
+ 196              	.LVL16:
+  63:Core/Src/Tools/UI.c **** 	Signal( battery_level );
+ 197              		.loc 1 63 2 is_stmt 1 view .LVU40
+ 198 003c 60B2     		sxtb	r0, r4
+ 199 003e FFF7FEFF 		bl	Signal
+ 200              	.LVL17:
+  64:Core/Src/Tools/UI.c **** }
+ 201              		.loc 1 64 1 is_stmt 0 view .LVU41
+ 202 0042 BDEC028B 		vldm	sp!, {d8}
+ 203              	.LCFI3:
+ 204              		.cfi_restore 80
+ 205              		.cfi_restore 81
+ 206              		.cfi_def_cfa_offset 8
+ 207              	.LVL18:
+ 208              		.loc 1 64 1 view .LVU42
+ 209 0046 10BD     		pop	{r4, pc}
+ 210              	.LVL19:
+ 211              	.L13:
+ 212              		.loc 1 64 1 view .LVU43
+ 213              		.align	2
+ 214              	.L12:
+ 215 0048 00008045 		.word	1166016512
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 6
+
+
+ 216 004c 33335340 		.word	1079194419
+ 217 0050 66660641 		.word	1090938470
+ 218 0054 6666E640 		.word	1088841318
+ 219 0058 00000000 		.word	.LC0
+ 220              		.cfi_endproc
+ 221              	.LFE240:
+ 223              		.section	.rodata.PhotoSwitch.str1.4,"aMS",%progbits,1
+ 224              		.align	2
+ 225              	.LC1:
+ 226 0000 61646332 		.ascii	"adc2[1] : %lu\015\012\000"
+ 226      5B315D20 
+ 226      3A20256C 
+ 226      750D0A00 
+ 227              		.section	.text.PhotoSwitch,"ax",%progbits
+ 228              		.align	1
+ 229              		.global	PhotoSwitch
+ 230              		.syntax unified
+ 231              		.thumb
+ 232              		.thumb_func
+ 233              		.fpu fpv4-sp-d16
+ 235              	PhotoSwitch:
+ 236              	.LFB241:
+  65:Core/Src/Tools/UI.c **** 
+  66:Core/Src/Tools/UI.c **** //ここ書いたら大事な処理を書き始められる
+  67:Core/Src/Tools/UI.c **** //enc, emitter,receiver
+  68:Core/Src/Tools/UI.c **** //壁センサのデータをどうやってもってくるか。構造体にしておいてアロ�
+  69:Core/Src/Tools/UI.c **** void PhotoSwitch()
+  70:Core/Src/Tools/UI.c **** {
+ 237              		.loc 1 70 1 is_stmt 1 view -0
+ 238              		.cfi_startproc
+ 239              		@ args = 0, pretend = 0, frame = 0
+ 240              		@ frame_needed = 0, uses_anonymous_args = 0
+ 241 0000 08B5     		push	{r3, lr}
+ 242              	.LCFI4:
+ 243              		.cfi_def_cfa_offset 8
+ 244              		.cfi_offset 3, -8
+ 245              		.cfi_offset 14, -4
+  71:Core/Src/Tools/UI.c **** 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *) adc2, 2);
+ 246              		.loc 1 71 2 view .LVU45
+ 247 0002 0222     		movs	r2, #2
+ 248 0004 0D49     		ldr	r1, .L18
+ 249 0006 0E48     		ldr	r0, .L18+4
+ 250 0008 FFF7FEFF 		bl	HAL_ADC_Start_DMA
+ 251              	.LVL20:
+  72:Core/Src/Tools/UI.c **** 	//tim8のduty比を下げて電流消費を削減
+  73:Core/Src/Tools/UI.c **** 	HAL_TIMEx_OCN_Start_IT(&htim8, TIM_CHANNEL_1);
+ 252              		.loc 1 73 2 view .LVU46
+ 253 000c 0021     		movs	r1, #0
+ 254 000e 0D48     		ldr	r0, .L18+8
+ 255 0010 FFF7FEFF 		bl	HAL_TIMEx_OCN_Start_IT
+ 256              	.LVL21:
+  74:Core/Src/Tools/UI.c **** 
+  75:Core/Src/Tools/UI.c **** 	while(adc2[1] < 200)
+ 257              		.loc 1 75 2 view .LVU47
+ 258              		.loc 1 75 7 is_stmt 0 view .LVU48
+ 259 0014 02E0     		b	.L15
+ 260              	.L16:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 7
+
+
+  76:Core/Src/Tools/UI.c **** 	{
+  77:Core/Src/Tools/UI.c **** 		printf("adc2[1] : %lu\r\n", adc2[1]);
+ 261              		.loc 1 77 3 is_stmt 1 view .LVU49
+ 262 0016 0C48     		ldr	r0, .L18+12
+ 263 0018 FFF7FEFF 		bl	printf
+ 264              	.LVL22:
+ 265              	.L15:
+  75:Core/Src/Tools/UI.c **** 	{
+ 266              		.loc 1 75 7 view .LVU50
+  75:Core/Src/Tools/UI.c **** 	{
+ 267              		.loc 1 75 12 is_stmt 0 view .LVU51
+ 268 001c 074B     		ldr	r3, .L18
+ 269 001e 5968     		ldr	r1, [r3, #4]
+  75:Core/Src/Tools/UI.c **** 	{
+ 270              		.loc 1 75 7 view .LVU52
+ 271 0020 C729     		cmp	r1, #199
+ 272 0022 F8D9     		bls	.L16
+  78:Core/Src/Tools/UI.c **** 
+  79:Core/Src/Tools/UI.c **** 	}
+  80:Core/Src/Tools/UI.c **** 	HAL_ADC_Stop_DMA(&hadc2);
+ 273              		.loc 1 80 2 is_stmt 1 view .LVU53
+ 274 0024 0648     		ldr	r0, .L18+4
+ 275 0026 FFF7FEFF 		bl	HAL_ADC_Stop_DMA
+ 276              	.LVL23:
+  81:Core/Src/Tools/UI.c **** 	HAL_TIMEx_OCN_Stop_IT(&htim8, TIM_CHANNEL_1);
+ 277              		.loc 1 81 2 view .LVU54
+ 278 002a 0021     		movs	r1, #0
+ 279 002c 0548     		ldr	r0, .L18+8
+ 280 002e FFF7FEFF 		bl	HAL_TIMEx_OCN_Stop_IT
+ 281              	.LVL24:
+  82:Core/Src/Tools/UI.c **** 	Signal( 7 );
+ 282              		.loc 1 82 2 view .LVU55
+ 283 0032 0720     		movs	r0, #7
+ 284 0034 FFF7FEFF 		bl	Signal
+ 285              	.LVL25:
+  83:Core/Src/Tools/UI.c **** }
+ 286              		.loc 1 83 1 is_stmt 0 view .LVU56
+ 287 0038 08BD     		pop	{r3, pc}
+ 288              	.L19:
+ 289 003a 00BF     		.align	2
+ 290              	.L18:
+ 291 003c 00000000 		.word	adc2
+ 292 0040 00000000 		.word	hadc2
+ 293 0044 00000000 		.word	htim8
+ 294 0048 00000000 		.word	.LC1
+ 295              		.cfi_endproc
+ 296              	.LFE241:
+ 298              		.section	.text.ModeSelect,"ax",%progbits
+ 299              		.align	1
+ 300              		.global	ModeSelect
+ 301              		.syntax unified
+ 302              		.thumb
+ 303              		.thumb_func
+ 304              		.fpu fpv4-sp-d16
+ 306              	ModeSelect:
+ 307              	.LVL26:
+ 308              	.LFB242:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 8
+
+
+  84:Core/Src/Tools/UI.c **** 
+  85:Core/Src/Tools/UI.c **** void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
+  86:Core/Src/Tools/UI.c **** {
+ 309              		.loc 1 86 1 is_stmt 1 view -0
+ 310              		.cfi_startproc
+ 311              		@ args = 0, pretend = 0, frame = 0
+ 312              		@ frame_needed = 0, uses_anonymous_args = 0
+ 313              		.loc 1 86 1 is_stmt 0 view .LVU58
+ 314 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 315              	.LCFI5:
+ 316              		.cfi_def_cfa_offset 24
+ 317              		.cfi_offset 3, -24
+ 318              		.cfi_offset 4, -20
+ 319              		.cfi_offset 5, -16
+ 320              		.cfi_offset 6, -12
+ 321              		.cfi_offset 7, -8
+ 322              		.cfi_offset 14, -4
+ 323 0002 2DED028B 		vpush.64	{d8}
+ 324              	.LCFI6:
+ 325              		.cfi_def_cfa_offset 32
+ 326              		.cfi_offset 80, -32
+ 327              		.cfi_offset 81, -28
+ 328 0006 0646     		mov	r6, r0
+ 329 0008 0D46     		mov	r5, r1
+ 330 000a 1446     		mov	r4, r2
+  87:Core/Src/Tools/UI.c **** 	//メインフローで呼び出す
+  88:Core/Src/Tools/UI.c **** 	//0-7番で設定
+  89:Core/Src/Tools/UI.c **** 	//起動時に呼ぶ
+  90:Core/Src/Tools/UI.c **** 
+  91:Core/Src/Tools/UI.c **** 	//エンコーダ開始。初期値セット込み
+  92:Core/Src/Tools/UI.c **** 	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_1);
+ 331              		.loc 1 92 2 is_stmt 1 view .LVU59
+ 332 000c 2A4F     		ldr	r7, .L34
+ 333 000e 0021     		movs	r1, #0
+ 334              	.LVL27:
+ 335              		.loc 1 92 2 is_stmt 0 view .LVU60
+ 336 0010 3846     		mov	r0, r7
+ 337              	.LVL28:
+ 338              		.loc 1 92 2 view .LVU61
+ 339 0012 FFF7FEFF 		bl	HAL_TIM_Encoder_Start
+ 340              	.LVL29:
+  93:Core/Src/Tools/UI.c **** 	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_2);
+ 341              		.loc 1 93 2 is_stmt 1 view .LVU62
+ 342 0016 0421     		movs	r1, #4
+ 343 0018 3846     		mov	r0, r7
+ 344 001a FFF7FEFF 		bl	HAL_TIM_Encoder_Start
+ 345              	.LVL30:
+  94:Core/Src/Tools/UI.c **** 	//while中で選択
+  95:Core/Src/Tools/UI.c **** 	*pMode=min;
+ 346              		.loc 1 95 2 view .LVU63
+ 347              		.loc 1 95 8 is_stmt 0 view .LVU64
+ 348 001e 2670     		strb	r6, [r4]
+  96:Core/Src/Tools/UI.c **** 
+  97:Core/Src/Tools/UI.c **** 	//壁センサデータをどうもってくるか。adcの生値を入れ、均して使う。関
+  98:Core/Src/Tools/UI.c **** 
+  99:Core/Src/Tools/UI.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 349              		.loc 1 99 2 is_stmt 1 view .LVU65
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 9
+
+
+ 350              		.loc 1 99 12 is_stmt 0 view .LVU66
+ 351 0020 264B     		ldr	r3, .L34+4
+ 352 0022 47F22F52 		movw	r2, #29999
+ 353 0026 5A62     		str	r2, [r3, #36]
+ 100:Core/Src/Tools/UI.c **** 	gpio_callback_count = 0;
+ 354              		.loc 1 100 2 is_stmt 1 view .LVU67
+ 355              		.loc 1 100 22 is_stmt 0 view .LVU68
+ 356 0028 254B     		ldr	r3, .L34+8
+ 357 002a 0022     		movs	r2, #0
+ 358 002c 1A60     		str	r2, [r3]
+ 101:Core/Src/Tools/UI.c **** 	int ENC3_LEFT;
+ 359              		.loc 1 101 2 is_stmt 1 view .LVU69
+ 102:Core/Src/Tools/UI.c **** 	while(gpio_callback_count == 0/**/) //前向きの
+ 360              		.loc 1 102 2 view .LVU70
+ 361              		.loc 1 102 7 is_stmt 0 view .LVU71
+ 362 002e 0EE0     		b	.L25
+ 363              	.LVL31:
+ 364              	.L24:
+ 103:Core/Src/Tools/UI.c **** 	{
+ 104:Core/Src/Tools/UI.c **** 		//printf("Photo[FR] : %f, ENC3 : %d\r\n", Photo[FR], ENC3_LEFT);
+ 105:Core/Src/Tools/UI.c **** 		//センサデータを一個取得して戻り値で返す関数を使う。
+ 106:Core/Src/Tools/UI.c **** 		  ENC3_LEFT = TIM3 -> CNT;	//このアローがすでにグローバル的な値なので、セ�
+ 107:Core/Src/Tools/UI.c **** 
+ 108:Core/Src/Tools/UI.c **** 		  if(INITIAL_PULSE + (ENCODER_PULSE * REDUCATION_RATIO) /4 <= ENC3_LEFT )
+ 109:Core/Src/Tools/UI.c **** 		  {
+ 110:Core/Src/Tools/UI.c **** 		  	  *pMode += 1;
+ 111:Core/Src/Tools/UI.c **** 		  	  if(*pMode > max)
+ 112:Core/Src/Tools/UI.c **** 		  	  {
+ 113:Core/Src/Tools/UI.c **** 		  		  *pMode = min;
+ 114:Core/Src/Tools/UI.c **** 		  	  }
+ 115:Core/Src/Tools/UI.c **** 		  	  ChangeLED(*pMode);
+ 365              		.loc 1 115 8 is_stmt 1 view .LVU72
+ 366 0030 94F90000 		ldrsb	r0, [r4]
+ 367 0034 FFF7FEFF 		bl	ChangeLED
+ 368              	.LVL32:
+ 116:Core/Src/Tools/UI.c **** 		  	  TIM3->CNT = INITIAL_PULSE;
+ 369              		.loc 1 116 8 view .LVU73
+ 370              		.loc 1 116 18 is_stmt 0 view .LVU74
+ 371 0038 204B     		ldr	r3, .L34+4
+ 372 003a 47F22F52 		movw	r2, #29999
+ 373 003e 5A62     		str	r2, [r3, #36]
+ 374              	.L22:
+ 117:Core/Src/Tools/UI.c **** 
+ 118:Core/Src/Tools/UI.c **** 		  }
+ 119:Core/Src/Tools/UI.c **** 		  if(INITIAL_PULSE - (ENCODER_PULSE * REDUCATION_RATIO) /4 >= ENC3_LEFT)
+ 375              		.loc 1 119 5 is_stmt 1 view .LVU75
+ 376              		.loc 1 119 7 is_stmt 0 view .LVU76
+ 377 0040 DFED207A 		vldr.32	s15, .L34+12
+ 378 0044 B4EEE78A 		vcmpe.f32	s16, s15
+ 379 0048 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 380 004c 16D9     		bls	.L32
+ 381              	.L25:
+ 102:Core/Src/Tools/UI.c **** 	{
+ 382              		.loc 1 102 7 is_stmt 1 view .LVU77
+ 102:Core/Src/Tools/UI.c **** 	{
+ 383              		.loc 1 102 28 is_stmt 0 view .LVU78
+ 384 004e 1C4B     		ldr	r3, .L34+8
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 10
+
+
+ 385 0050 1B68     		ldr	r3, [r3]
+ 102:Core/Src/Tools/UI.c **** 	{
+ 386              		.loc 1 102 7 view .LVU79
+ 387 0052 1BBB     		cbnz	r3, .L33
+ 106:Core/Src/Tools/UI.c **** 
+ 388              		.loc 1 106 5 is_stmt 1 view .LVU80
+ 106:Core/Src/Tools/UI.c **** 
+ 389              		.loc 1 106 22 is_stmt 0 view .LVU81
+ 390 0054 194B     		ldr	r3, .L34+4
+ 391 0056 93ED098A 		vldr.32	s16, [r3, #36]	@ int
+ 392              	.LVL33:
+ 108:Core/Src/Tools/UI.c **** 		  {
+ 393              		.loc 1 108 5 is_stmt 1 view .LVU82
+ 108:Core/Src/Tools/UI.c **** 		  {
+ 394              		.loc 1 108 62 is_stmt 0 view .LVU83
+ 395 005a B8EEC88A 		vcvt.f32.s32	s16, s16
+ 396              	.LVL34:
+ 108:Core/Src/Tools/UI.c **** 		  {
+ 397              		.loc 1 108 7 view .LVU84
+ 398 005e DFED1A7A 		vldr.32	s15, .L34+16
+ 399 0062 B4EEE78A 		vcmpe.f32	s16, s15
+ 400 0066 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 401 006a E9DB     		blt	.L22
+ 110:Core/Src/Tools/UI.c **** 		  	  if(*pMode > max)
+ 402              		.loc 1 110 8 is_stmt 1 view .LVU85
+ 110:Core/Src/Tools/UI.c **** 		  	  if(*pMode > max)
+ 403              		.loc 1 110 15 is_stmt 0 view .LVU86
+ 404 006c 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 405 006e 0133     		adds	r3, r3, #1
+ 406 0070 5BB2     		sxtb	r3, r3
+ 407 0072 2370     		strb	r3, [r4]
+ 111:Core/Src/Tools/UI.c **** 		  	  {
+ 408              		.loc 1 111 8 is_stmt 1 view .LVU87
+ 111:Core/Src/Tools/UI.c **** 		  	  {
+ 409              		.loc 1 111 10 is_stmt 0 view .LVU88
+ 410 0074 AB42     		cmp	r3, r5
+ 411 0076 DBDD     		ble	.L24
+ 113:Core/Src/Tools/UI.c **** 		  	  }
+ 412              		.loc 1 113 9 is_stmt 1 view .LVU89
+ 113:Core/Src/Tools/UI.c **** 		  	  }
+ 413              		.loc 1 113 16 is_stmt 0 view .LVU90
+ 414 0078 2670     		strb	r6, [r4]
+ 415 007a D9E7     		b	.L24
+ 416              	.L32:
+ 120:Core/Src/Tools/UI.c **** 		  {
+ 121:Core/Src/Tools/UI.c **** 		  	  *pMode -= 1;
+ 417              		.loc 1 121 8 is_stmt 1 view .LVU91
+ 418              		.loc 1 121 15 is_stmt 0 view .LVU92
+ 419 007c 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 420 007e 013B     		subs	r3, r3, #1
+ 421 0080 5BB2     		sxtb	r3, r3
+ 422 0082 2370     		strb	r3, [r4]
+ 122:Core/Src/Tools/UI.c **** 		  	  if(*pMode < min)
+ 423              		.loc 1 122 8 is_stmt 1 view .LVU93
+ 424              		.loc 1 122 10 is_stmt 0 view .LVU94
+ 425 0084 B342     		cmp	r3, r6
+ 426 0086 00DA     		bge	.L27
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 11
+
+
+ 123:Core/Src/Tools/UI.c **** 		  	  {
+ 124:Core/Src/Tools/UI.c **** 		  	  		  *pMode = max;
+ 427              		.loc 1 124 12 is_stmt 1 view .LVU95
+ 428              		.loc 1 124 19 is_stmt 0 view .LVU96
+ 429 0088 2570     		strb	r5, [r4]
+ 430              	.L27:
+ 125:Core/Src/Tools/UI.c **** 		  	  }
+ 126:Core/Src/Tools/UI.c **** 		  	  ChangeLED(*pMode);
+ 431              		.loc 1 126 8 is_stmt 1 view .LVU97
+ 432 008a 94F90000 		ldrsb	r0, [r4]
+ 433 008e FFF7FEFF 		bl	ChangeLED
+ 434              	.LVL35:
+ 127:Core/Src/Tools/UI.c **** 		  	  TIM3->CNT = INITIAL_PULSE;
+ 435              		.loc 1 127 8 view .LVU98
+ 436              		.loc 1 127 18 is_stmt 0 view .LVU99
+ 437 0092 0A4B     		ldr	r3, .L34+4
+ 438 0094 47F22F52 		movw	r2, #29999
+ 439 0098 5A62     		str	r2, [r3, #36]
+ 440 009a D8E7     		b	.L25
+ 441              	.L33:
+ 128:Core/Src/Tools/UI.c **** 		  }
+ 129:Core/Src/Tools/UI.c **** 	}
+ 130:Core/Src/Tools/UI.c **** 	gpio_callback_count = 0;
+ 442              		.loc 1 130 2 is_stmt 1 view .LVU100
+ 443              		.loc 1 130 22 is_stmt 0 view .LVU101
+ 444 009c 0021     		movs	r1, #0
+ 445 009e 084B     		ldr	r3, .L34+8
+ 446 00a0 1960     		str	r1, [r3]
+ 131:Core/Src/Tools/UI.c **** 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_1);
+ 447              		.loc 1 131 2 is_stmt 1 view .LVU102
+ 448 00a2 054C     		ldr	r4, .L34
+ 449              	.LVL36:
+ 450              		.loc 1 131 2 is_stmt 0 view .LVU103
+ 451 00a4 2046     		mov	r0, r4
+ 452 00a6 FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
+ 453              	.LVL37:
+ 132:Core/Src/Tools/UI.c **** 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_2);
+ 454              		.loc 1 132 2 is_stmt 1 view .LVU104
+ 455 00aa 0421     		movs	r1, #4
+ 456 00ac 2046     		mov	r0, r4
+ 457 00ae FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
+ 458              	.LVL38:
+ 133:Core/Src/Tools/UI.c **** }
+ 459              		.loc 1 133 1 is_stmt 0 view .LVU105
+ 460 00b2 BDEC028B 		vldm	sp!, {d8}
+ 461              	.LCFI7:
+ 462              		.cfi_restore 80
+ 463              		.cfi_restore 81
+ 464              		.cfi_def_cfa_offset 24
+ 465 00b6 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 466              	.L35:
+ 467              		.align	2
+ 468              	.L34:
+ 469 00b8 00000000 		.word	htim3
+ 470 00bc 00040040 		.word	1073742848
+ 471 00c0 00000000 		.word	.LANCHOR0
+ 472 00c4 00BC5446 		.word	1179958272
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 12
+
+
+ 473 00c8 002F3547 		.word	1194667776
+ 474              		.cfi_endproc
+ 475              	.LFE242:
+ 477              		.section	.text.EmergencyStop,"ax",%progbits
+ 478              		.align	1
+ 479              		.global	EmergencyStop
+ 480              		.syntax unified
+ 481              		.thumb
+ 482              		.thumb_func
+ 483              		.fpu fpv4-sp-d16
+ 485              	EmergencyStop:
+ 486              	.LFB243:
+ 134:Core/Src/Tools/UI.c **** 
+ 135:Core/Src/Tools/UI.c **** void EmergencyStop()
+ 136:Core/Src/Tools/UI.c **** {
+ 487              		.loc 1 136 1 is_stmt 1 view -0
+ 488              		.cfi_startproc
+ 489              		@ args = 0, pretend = 0, frame = 0
+ 490              		@ frame_needed = 0, uses_anonymous_args = 0
+ 491              		@ link register save eliminated.
+ 137:Core/Src/Tools/UI.c **** 	//モータ出力の停止
+ 138:Core/Src/Tools/UI.c **** 	//
+ 139:Core/Src/Tools/UI.c **** }
+ 492              		.loc 1 139 1 view .LVU107
+ 493 0000 7047     		bx	lr
+ 494              		.cfi_endproc
+ 495              	.LFE243:
+ 497              		.global	gpio_callback_count
+ 498              		.section	.bss.gpio_callback_count,"aw",%nobits
+ 499              		.align	2
+ 500              		.set	.LANCHOR0,. + 0
+ 503              	gpio_callback_count:
+ 504 0000 00000000 		.space	4
+ 505              		.text
+ 506              	.Letext0:
+ 507              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
+ 508              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
+ 509              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 510              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 511              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 512              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 513              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h"
+ 514              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 515              		.file 10 "Core/Inc/UI.h"
+ 516              		.file 11 "Core/Inc/IEH2_4096.h"
+ 517              		.file 12 "Core/Inc/mouse_ADC.h"
+ 518              		.file 13 "Core/Inc/IR_Emitter.h"
+ 519              		.file 14 "Core/Inc/LED_Driver.h"
+ 520              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h"
+ 521              		.file 16 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/stdio.h"
+ 522              		.file 17 "Core/Inc/Convert.h"
+ 523              		.file 18 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 UI.c
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:18     .text.HAL_GPIO_EXTI_Callback:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:26     .text.HAL_GPIO_EXTI_Callback:0000000000000000 HAL_GPIO_EXTI_Callback
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:63     .text.HAL_GPIO_EXTI_Callback:000000000000001c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:68     .text.Signal:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:75     .text.Signal:0000000000000000 Signal
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:134    .rodata.BatteryCheck.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:138    .text.BatteryCheck:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:145    .text.BatteryCheck:0000000000000000 BatteryCheck
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:215    .text.BatteryCheck:0000000000000048 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:224    .rodata.PhotoSwitch.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:228    .text.PhotoSwitch:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:235    .text.PhotoSwitch:0000000000000000 PhotoSwitch
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:291    .text.PhotoSwitch:000000000000003c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:299    .text.ModeSelect:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:306    .text.ModeSelect:0000000000000000 ModeSelect
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:469    .text.ModeSelect:00000000000000b8 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:478    .text.EmergencyStop:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:485    .text.EmergencyStop:0000000000000000 EmergencyStop
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:503    .bss.gpio_callback_count:0000000000000000 gpio_callback_count
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc6dDCyg.s:499    .bss.gpio_callback_count:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+ChangeLED
+HAL_Delay
+ADCToBatteryVoltage
+IntegerPower
+GetBatteryLevel
+printf
+HAL_ADC_Start_DMA
+HAL_TIMEx_OCN_Start_IT
+HAL_ADC_Stop_DMA
+HAL_TIMEx_OCN_Stop_IT
+adc2
+hadc2
+htim8
+HAL_TIM_Encoder_Start
+HAL_TIM_Encoder_Stop
+htim3

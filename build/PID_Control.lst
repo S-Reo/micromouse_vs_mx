@@ -1,0 +1,477 @@
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"PID_Control.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.PIDSetGain,"ax",%progbits
+  18              		.align	1
+  19              		.global	PIDSetGain
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	PIDSetGain:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/Src/Tools/PID_Control.c"
+   1:Core/Src/Tools/PID_Control.c **** /*
+   2:Core/Src/Tools/PID_Control.c ****  * PID_Control.c
+   3:Core/Src/Tools/PID_Control.c ****  *
+   4:Core/Src/Tools/PID_Control.c ****  *  Created on: 2022/02/15
+   5:Core/Src/Tools/PID_Control.c ****  *      Author: leopi
+   6:Core/Src/Tools/PID_Control.c ****  */
+   7:Core/Src/Tools/PID_Control.c **** 
+   8:Core/Src/Tools/PID_Control.c **** #include "PID_Control.h"
+   9:Core/Src/Tools/PID_Control.c **** #include "math.h"
+  10:Core/Src/Tools/PID_Control.c **** //motor_control Pid;//[ PID_TARGET_NUM ] = {0};
+  11:Core/Src/Tools/PID_Control.c **** motor_control Pid[ 11 ] = {0};
+  12:Core/Src/Tools/PID_Control.c **** 
+  13:Core/Src/Tools/PID_Control.c **** const float pid_T = 0.001f;
+  14:Core/Src/Tools/PID_Control.c **** const float pid_DT = 1.0f/0.001f;
+  15:Core/Src/Tools/PID_Control.c **** void PIDSetGain(int n, float kp, float ki, float kd)	//同じデータ構造体をシステム同�
+  16:Core/Src/Tools/PID_Control.c **** {
+  30              		.loc 1 16 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  17:Core/Src/Tools/PID_Control.c **** 	Pid[n].KP = kp;
+  35              		.loc 1 17 2 view .LVU1
+  36              		.loc 1 17 12 is_stmt 0 view .LVU2
+  37 0000 054B     		ldr	r3, .L2
+  38 0002 2C22     		movs	r2, #44
+  39 0004 02FB0030 		mla	r0, r2, r0, r3
+  40              	.LVL1:
+  41              		.loc 1 17 12 view .LVU3
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 2
+
+
+  42 0008 80ED000A 		vstr.32	s0, [r0]
+  18:Core/Src/Tools/PID_Control.c **** 	Pid[n].KI = ki;
+  43              		.loc 1 18 2 is_stmt 1 view .LVU4
+  44              		.loc 1 18 12 is_stmt 0 view .LVU5
+  45 000c C0ED010A 		vstr.32	s1, [r0, #4]
+  19:Core/Src/Tools/PID_Control.c **** 	Pid[n].KD = kd;
+  46              		.loc 1 19 2 is_stmt 1 view .LVU6
+  47              		.loc 1 19 12 is_stmt 0 view .LVU7
+  48 0010 80ED021A 		vstr.32	s2, [r0, #8]
+  20:Core/Src/Tools/PID_Control.c **** 
+  21:Core/Src/Tools/PID_Control.c **** }
+  49              		.loc 1 21 1 view .LVU8
+  50 0014 7047     		bx	lr
+  51              	.L3:
+  52 0016 00BF     		.align	2
+  53              	.L2:
+  54 0018 00000000 		.word	.LANCHOR0
+  55              		.cfi_endproc
+  56              	.LFE0:
+  58              		.section	.text.PIDChangeFlag,"ax",%progbits
+  59              		.align	1
+  60              		.global	PIDChangeFlag
+  61              		.syntax unified
+  62              		.thumb
+  63              		.thumb_func
+  64              		.fpu fpv4-sp-d16
+  66              	PIDChangeFlag:
+  67              	.LVL2:
+  68              	.LFB1:
+  22:Core/Src/Tools/PID_Control.c **** 
+  23:Core/Src/Tools/PID_Control.c **** void PIDChangeFlag(int n, int on_or_off)
+  24:Core/Src/Tools/PID_Control.c **** {
+  69              		.loc 1 24 1 is_stmt 1 view -0
+  70              		.cfi_startproc
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
+  73              		@ link register save eliminated.
+  25:Core/Src/Tools/PID_Control.c **** 	Pid[n].flag = on_or_off;
+  74              		.loc 1 25 2 view .LVU10
+  75              		.loc 1 25 14 is_stmt 0 view .LVU11
+  76 0000 024B     		ldr	r3, .L5
+  77 0002 2C22     		movs	r2, #44
+  78 0004 02FB0033 		mla	r3, r2, r0, r3
+  79 0008 9962     		str	r1, [r3, #40]
+  26:Core/Src/Tools/PID_Control.c **** }
+  80              		.loc 1 26 1 view .LVU12
+  81 000a 7047     		bx	lr
+  82              	.L6:
+  83              		.align	2
+  84              	.L5:
+  85 000c 00000000 		.word	.LANCHOR0
+  86              		.cfi_endproc
+  87              	.LFE1:
+  89              		.section	.text.PIDGetFlag,"ax",%progbits
+  90              		.align	1
+  91              		.global	PIDGetFlag
+  92              		.syntax unified
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 3
+
+
+  93              		.thumb
+  94              		.thumb_func
+  95              		.fpu fpv4-sp-d16
+  97              	PIDGetFlag:
+  98              	.LVL3:
+  99              	.LFB2:
+  27:Core/Src/Tools/PID_Control.c **** int PIDGetFlag(int n)
+  28:Core/Src/Tools/PID_Control.c **** {
+ 100              		.loc 1 28 1 is_stmt 1 view -0
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104              		@ link register save eliminated.
+  29:Core/Src/Tools/PID_Control.c **** 	return Pid[n].flag;
+ 105              		.loc 1 29 2 view .LVU14
+ 106              		.loc 1 29 15 is_stmt 0 view .LVU15
+ 107 0000 024B     		ldr	r3, .L8
+ 108 0002 2C22     		movs	r2, #44
+ 109 0004 02FB0033 		mla	r3, r2, r0, r3
+  30:Core/Src/Tools/PID_Control.c **** }
+ 110              		.loc 1 30 1 view .LVU16
+ 111 0008 986A     		ldr	r0, [r3, #40]
+ 112              	.LVL4:
+ 113              		.loc 1 30 1 view .LVU17
+ 114 000a 7047     		bx	lr
+ 115              	.L9:
+ 116              		.align	2
+ 117              	.L8:
+ 118 000c 00000000 		.word	.LANCHOR0
+ 119              		.cfi_endproc
+ 120              	.LFE2:
+ 122              		.section	.text.PIDReset,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	PIDReset
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.fpu fpv4-sp-d16
+ 130              	PIDReset:
+ 131              	.LVL5:
+ 132              	.LFB3:
+  31:Core/Src/Tools/PID_Control.c **** void PIDReset(int n)
+  32:Core/Src/Tools/PID_Control.c **** {
+ 133              		.loc 1 32 1 is_stmt 1 view -0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137              		@ link register save eliminated.
+  33:Core/Src/Tools/PID_Control.c **** 	//速度に限らずやればよいのでは
+  34:Core/Src/Tools/PID_Control.c **** 	Pid[n].e = 0;
+ 138              		.loc 1 34 2 view .LVU19
+ 139              		.loc 1 34 11 is_stmt 0 view .LVU20
+ 140 0000 054B     		ldr	r3, .L11
+ 141 0002 2C22     		movs	r2, #44
+ 142 0004 02FB0030 		mla	r0, r2, r0, r3
+ 143              	.LVL6:
+ 144              		.loc 1 34 11 view .LVU21
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 4
+
+
+ 145 0008 0023     		movs	r3, #0
+ 146 000a C360     		str	r3, [r0, #12]	@ float
+  35:Core/Src/Tools/PID_Control.c **** 	Pid[n].ei = 0;
+ 147              		.loc 1 35 2 is_stmt 1 view .LVU22
+ 148              		.loc 1 35 12 is_stmt 0 view .LVU23
+ 149 000c 0361     		str	r3, [r0, #16]	@ float
+  36:Core/Src/Tools/PID_Control.c **** 	Pid[n].ed = 0;
+ 150              		.loc 1 36 2 is_stmt 1 view .LVU24
+ 151              		.loc 1 36 12 is_stmt 0 view .LVU25
+ 152 000e 4361     		str	r3, [r0, #20]	@ float
+  37:Core/Src/Tools/PID_Control.c **** 	Pid[n].elast = 0;
+ 153              		.loc 1 37 2 is_stmt 1 view .LVU26
+ 154              		.loc 1 37 15 is_stmt 0 view .LVU27
+ 155 0010 8361     		str	r3, [r0, #24]	@ float
+  38:Core/Src/Tools/PID_Control.c **** 	Pid[n].out = 0;
+ 156              		.loc 1 38 2 is_stmt 1 view .LVU28
+ 157              		.loc 1 38 13 is_stmt 0 view .LVU29
+ 158 0012 0023     		movs	r3, #0
+ 159 0014 4362     		str	r3, [r0, #36]
+  39:Core/Src/Tools/PID_Control.c **** }
+ 160              		.loc 1 39 1 view .LVU30
+ 161 0016 7047     		bx	lr
+ 162              	.L12:
+ 163              		.align	2
+ 164              	.L11:
+ 165 0018 00000000 		.word	.LANCHOR0
+ 166              		.cfi_endproc
+ 167              	.LFE3:
+ 169              		.global	__aeabi_f2d
+ 170              		.global	__aeabi_d2iz
+ 171              		.section	.text.PIDControl,"ax",%progbits
+ 172              		.align	1
+ 173              		.global	PIDControl
+ 174              		.syntax unified
+ 175              		.thumb
+ 176              		.thumb_func
+ 177              		.fpu fpv4-sp-d16
+ 179              	PIDControl:
+ 180              	.LVL7:
+ 181              	.LFB4:
+  40:Core/Src/Tools/PID_Control.c **** 
+  41:Core/Src/Tools/PID_Control.c **** inline int PIDControl(int n, float target, float current)
+  42:Core/Src/Tools/PID_Control.c **** {
+ 182              		.loc 1 42 1 is_stmt 1 view -0
+ 183              		.cfi_startproc
+ 184              		@ args = 0, pretend = 0, frame = 0
+ 185              		@ frame_needed = 0, uses_anonymous_args = 0
+ 186              		.loc 1 42 1 is_stmt 0 view .LVU32
+ 187 0000 10B5     		push	{r4, lr}
+ 188              	.LCFI0:
+ 189              		.cfi_def_cfa_offset 8
+ 190              		.cfi_offset 4, -8
+ 191              		.cfi_offset 14, -4
+ 192 0002 0446     		mov	r4, r0
+  43:Core/Src/Tools/PID_Control.c **** 	//PIDInput( n, target, current);
+  44:Core/Src/Tools/PID_Control.c **** 	//PIDCalculate( n, T );
+  45:Core/Src/Tools/PID_Control.c **** 	//出力の前に全部0にする処理をフラグで
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 5
+
+
+  46:Core/Src/Tools/PID_Control.c **** 	if(Pid[n].flag == 0)
+ 193              		.loc 1 46 2 is_stmt 1 view .LVU33
+ 194              		.loc 1 46 11 is_stmt 0 view .LVU34
+ 195 0004 284B     		ldr	r3, .L17
+ 196 0006 2C22     		movs	r2, #44
+ 197 0008 02FB0033 		mla	r3, r2, r0, r3
+ 198 000c 986A     		ldr	r0, [r3, #40]
+ 199              	.LVL8:
+ 200              		.loc 1 46 4 view .LVU35
+ 201 000e 50B9     		cbnz	r0, .L14
+  47:Core/Src/Tools/PID_Control.c **** 	{
+  48:Core/Src/Tools/PID_Control.c **** 		Pid[n].e = 0.0f;
+ 202              		.loc 1 48 3 is_stmt 1 view .LVU36
+ 203              		.loc 1 48 12 is_stmt 0 view .LVU37
+ 204 0010 254B     		ldr	r3, .L17
+ 205 0012 02FB0434 		mla	r4, r2, r4, r3
+ 206              	.LVL9:
+ 207              		.loc 1 48 12 view .LVU38
+ 208 0016 0023     		movs	r3, #0
+ 209 0018 E360     		str	r3, [r4, #12]	@ float
+  49:Core/Src/Tools/PID_Control.c **** 		Pid[n].ei = 0.0f;
+ 210              		.loc 1 49 3 is_stmt 1 view .LVU39
+ 211              		.loc 1 49 13 is_stmt 0 view .LVU40
+ 212 001a 2361     		str	r3, [r4, #16]	@ float
+  50:Core/Src/Tools/PID_Control.c **** 		Pid[n].ed = 0.0f;
+ 213              		.loc 1 50 3 is_stmt 1 view .LVU41
+ 214              		.loc 1 50 13 is_stmt 0 view .LVU42
+ 215 001c 6361     		str	r3, [r4, #20]	@ float
+  51:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = 0.0f;
+ 216              		.loc 1 51 3 is_stmt 1 view .LVU43
+ 217              		.loc 1 51 16 is_stmt 0 view .LVU44
+ 218 001e A361     		str	r3, [r4, #24]	@ float
+  52:Core/Src/Tools/PID_Control.c **** 		Pid[n].out = 0;
+ 219              		.loc 1 52 3 is_stmt 1 view .LVU45
+ 220              		.loc 1 52 14 is_stmt 0 view .LVU46
+ 221 0020 0023     		movs	r3, #0
+ 222 0022 6362     		str	r3, [r4, #36]
+  53:Core/Src/Tools/PID_Control.c **** 		return 0;
+ 223              		.loc 1 53 3 is_stmt 1 view .LVU47
+ 224              	.LVL10:
+ 225              	.L13:
+  54:Core/Src/Tools/PID_Control.c **** 		//PIDReset(n);
+  55:Core/Src/Tools/PID_Control.c **** 	}
+  56:Core/Src/Tools/PID_Control.c **** 	else
+  57:Core/Src/Tools/PID_Control.c **** 	{
+  58:Core/Src/Tools/PID_Control.c **** 		Pid[n].target = target;
+  59:Core/Src/Tools/PID_Control.c **** 		Pid[n].current = current;
+  60:Core/Src/Tools/PID_Control.c **** 
+  61:Core/Src/Tools/PID_Control.c **** 		Pid[n].e = Pid[n].target - Pid[n].current;
+  62:Core/Src/Tools/PID_Control.c **** 		Pid[n].ei += Pid[n].e * pid_T;
+  63:Core/Src/Tools/PID_Control.c **** 		Pid[n].ed = ( Pid[n].e - Pid[n].elast ) * pid_DT;
+  64:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = Pid[n].e;
+  65:Core/Src/Tools/PID_Control.c **** 		Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
+  66:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+  67:Core/Src/Tools/PID_Control.c **** 	}
+  68:Core/Src/Tools/PID_Control.c **** }
+ 226              		.loc 1 68 1 is_stmt 0 view .LVU48
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 6
+
+
+ 227 0024 10BD     		pop	{r4, pc}
+ 228              	.LVL11:
+ 229              	.L14:
+  58:Core/Src/Tools/PID_Control.c **** 		Pid[n].current = current;
+ 230              		.loc 1 58 3 is_stmt 1 view .LVU49
+  58:Core/Src/Tools/PID_Control.c **** 		Pid[n].current = current;
+ 231              		.loc 1 58 17 is_stmt 0 view .LVU50
+ 232 0026 204B     		ldr	r3, .L17
+ 233 0028 2C20     		movs	r0, #44
+ 234 002a 00FB0434 		mla	r4, r0, r4, r3
+ 235              	.LVL12:
+  58:Core/Src/Tools/PID_Control.c **** 		Pid[n].current = current;
+ 236              		.loc 1 58 17 view .LVU51
+ 237 002e 84ED080A 		vstr.32	s0, [r4, #32]
+  59:Core/Src/Tools/PID_Control.c **** 
+ 238              		.loc 1 59 3 is_stmt 1 view .LVU52
+  59:Core/Src/Tools/PID_Control.c **** 
+ 239              		.loc 1 59 18 is_stmt 0 view .LVU53
+ 240 0032 C4ED070A 		vstr.32	s1, [r4, #28]
+  61:Core/Src/Tools/PID_Control.c **** 		Pid[n].ei += Pid[n].e * pid_T;
+ 241              		.loc 1 61 3 is_stmt 1 view .LVU54
+  61:Core/Src/Tools/PID_Control.c **** 		Pid[n].ei += Pid[n].e * pid_T;
+ 242              		.loc 1 61 28 is_stmt 0 view .LVU55
+ 243 0036 70EE600A 		vsub.f32	s1, s0, s1
+ 244              	.LVL13:
+  61:Core/Src/Tools/PID_Control.c **** 		Pid[n].ei += Pid[n].e * pid_T;
+ 245              		.loc 1 61 12 view .LVU56
+ 246 003a C4ED030A 		vstr.32	s1, [r4, #12]
+  62:Core/Src/Tools/PID_Control.c **** 		Pid[n].ed = ( Pid[n].e - Pid[n].elast ) * pid_DT;
+ 247              		.loc 1 62 3 is_stmt 1 view .LVU57
+  62:Core/Src/Tools/PID_Control.c **** 		Pid[n].ed = ( Pid[n].e - Pid[n].elast ) * pid_DT;
+ 248              		.loc 1 62 25 is_stmt 0 view .LVU58
+ 249 003e 9FED1B7A 		vldr.32	s14, .L17+4
+ 250 0042 20EE877A 		vmul.f32	s14, s1, s14
+  62:Core/Src/Tools/PID_Control.c **** 		Pid[n].ed = ( Pid[n].e - Pid[n].elast ) * pid_DT;
+ 251              		.loc 1 62 13 view .LVU59
+ 252 0046 D4ED047A 		vldr.32	s15, [r4, #16]
+ 253 004a 37EE277A 		vadd.f32	s14, s14, s15
+ 254 004e 84ED047A 		vstr.32	s14, [r4, #16]
+  63:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = Pid[n].e;
+ 255              		.loc 1 63 3 is_stmt 1 view .LVU60
+  63:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = Pid[n].e;
+ 256              		.loc 1 63 34 is_stmt 0 view .LVU61
+ 257 0052 D4ED067A 		vldr.32	s15, [r4, #24]
+  63:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = Pid[n].e;
+ 258              		.loc 1 63 26 view .LVU62
+ 259 0056 70EEE77A 		vsub.f32	s15, s1, s15
+  63:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = Pid[n].e;
+ 260              		.loc 1 63 43 view .LVU63
+ 261 005a DFED156A 		vldr.32	s13, .L17+8
+ 262 005e 67EEA67A 		vmul.f32	s15, s15, s13
+  63:Core/Src/Tools/PID_Control.c **** 		Pid[n].elast = Pid[n].e;
+ 263              		.loc 1 63 13 view .LVU64
+ 264 0062 C4ED057A 		vstr.32	s15, [r4, #20]
+  64:Core/Src/Tools/PID_Control.c **** 		Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
+ 265              		.loc 1 64 3 is_stmt 1 view .LVU65
+  64:Core/Src/Tools/PID_Control.c **** 		Pid[n].out = round(Pid[n].KP*Pid[n].e + Pid[n].KI*Pid[n].ei + Pid[n].KD*Pid[n].ed);
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 7
+
+
+ 266              		.loc 1 64 16 is_stmt 0 view .LVU66
+ 267 0066 C4ED060A 		vstr.32	s1, [r4, #24]
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 268              		.loc 1 65 3 is_stmt 1 view .LVU67
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 269              		.loc 1 65 28 is_stmt 0 view .LVU68
+ 270 006a 94ED000A 		vldr.32	s0, [r4]
+ 271              	.LVL14:
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 272              		.loc 1 65 31 view .LVU69
+ 273 006e 60EE800A 		vmul.f32	s1, s1, s0
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 274              		.loc 1 65 49 view .LVU70
+ 275 0072 D4ED016A 		vldr.32	s13, [r4, #4]
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 276              		.loc 1 65 52 view .LVU71
+ 277 0076 27EE267A 		vmul.f32	s14, s14, s13
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 278              		.loc 1 65 41 view .LVU72
+ 279 007a 70EE870A 		vadd.f32	s1, s1, s14
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 280              		.loc 1 65 71 view .LVU73
+ 281 007e 94ED027A 		vldr.32	s14, [r4, #8]
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 282              		.loc 1 65 74 view .LVU74
+ 283 0082 67EE877A 		vmul.f32	s15, s15, s14
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 284              		.loc 1 65 16 view .LVU75
+ 285 0086 70EEA77A 		vadd.f32	s15, s1, s15
+ 286 008a 17EE900A 		vmov	r0, s15
+ 287 008e FFF7FEFF 		bl	__aeabi_f2d
+ 288              	.LVL15:
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 289              		.loc 1 65 16 view .LVU76
+ 290 0092 41EC100B 		vmov	d0, r0, r1
+ 291 0096 FFF7FEFF 		bl	round
+ 292              	.LVL16:
+ 293 009a 51EC100B 		vmov	r0, r1, d0
+  65:Core/Src/Tools/PID_Control.c **** 		return Pid[n].out;
+ 294              		.loc 1 65 14 view .LVU77
+ 295 009e FFF7FEFF 		bl	__aeabi_d2iz
+ 296              	.LVL17:
+ 297 00a2 6062     		str	r0, [r4, #36]
+  66:Core/Src/Tools/PID_Control.c **** 	}
+ 298              		.loc 1 66 3 is_stmt 1 view .LVU78
+  66:Core/Src/Tools/PID_Control.c **** 	}
+ 299              		.loc 1 66 16 is_stmt 0 view .LVU79
+ 300 00a4 BEE7     		b	.L13
+ 301              	.L18:
+ 302 00a6 00BF     		.align	2
+ 303              	.L17:
+ 304 00a8 00000000 		.word	.LANCHOR0
+ 305 00ac 6F12833A 		.word	981668463
+ 306 00b0 FFFF7944 		.word	1148846079
+ 307              		.cfi_endproc
+ 308              	.LFE4:
+ 310              		.global	pid_DT
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 8
+
+
+ 311              		.global	pid_T
+ 312              		.global	Pid
+ 313              		.section	.bss.Pid,"aw",%nobits
+ 314              		.align	2
+ 315              		.set	.LANCHOR0,. + 0
+ 318              	Pid:
+ 319 0000 00000000 		.space	484
+ 319      00000000 
+ 319      00000000 
+ 319      00000000 
+ 319      00000000 
+ 320              		.section	.rodata.pid_DT,"a"
+ 321              		.align	2
+ 324              	pid_DT:
+ 325 0000 FFFF7944 		.word	1148846079
+ 326              		.section	.rodata.pid_T,"a"
+ 327              		.align	2
+ 330              	pid_T:
+ 331 0000 6F12833A 		.word	981668463
+ 332              		.text
+ 333              	.Letext0:
+ 334              		.file 2 "Core/Inc/PID_Control.h"
+ 335              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/math.h"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 PID_Control.c
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:18     .text.PIDSetGain:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:26     .text.PIDSetGain:0000000000000000 PIDSetGain
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:54     .text.PIDSetGain:0000000000000018 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:59     .text.PIDChangeFlag:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:66     .text.PIDChangeFlag:0000000000000000 PIDChangeFlag
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:85     .text.PIDChangeFlag:000000000000000c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:90     .text.PIDGetFlag:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:97     .text.PIDGetFlag:0000000000000000 PIDGetFlag
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:118    .text.PIDGetFlag:000000000000000c $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:123    .text.PIDReset:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:130    .text.PIDReset:0000000000000000 PIDReset
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:165    .text.PIDReset:0000000000000018 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:172    .text.PIDControl:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:179    .text.PIDControl:0000000000000000 PIDControl
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:304    .text.PIDControl:00000000000000a8 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:324    .rodata.pid_DT:0000000000000000 pid_DT
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:330    .rodata.pid_T:0000000000000000 pid_T
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:318    .bss.Pid:0000000000000000 Pid
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:314    .bss.Pid:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:321    .rodata.pid_DT:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccDsWSJ1.s:327    .rodata.pid_T:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_d2iz
+round

@@ -1,0 +1,283 @@
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"ADC.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.ADCStart,"ax",%progbits
+  18              		.align	1
+  19              		.global	ADCStart
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	ADCStart:
+  27              	.LFB238:
+  28              		.file 1 "Core/Src/Hw/ADC.c"
+   1:Core/Src/Hw/ADC.c **** /*
+   2:Core/Src/Hw/ADC.c ****  * ADC.c
+   3:Core/Src/Hw/ADC.c ****  *
+   4:Core/Src/Hw/ADC.c ****  *  Created on: 2022/02/16
+   5:Core/Src/Hw/ADC.c ****  *      Author: leopi
+   6:Core/Src/Hw/ADC.c ****  */
+   7:Core/Src/Hw/ADC.c **** 
+   8:Core/Src/Hw/ADC.c **** #include "mouse_ADC.h"
+   9:Core/Src/Hw/ADC.c **** 
+  10:Core/Src/Hw/ADC.c **** #include <stdio.h>
+  11:Core/Src/Hw/ADC.c **** uint32_t adc1[3]={0};
+  12:Core/Src/Hw/ADC.c **** uint32_t adc2[2]={0};
+  13:Core/Src/Hw/ADC.c **** 
+  14:Core/Src/Hw/ADC.c **** void ADCStart()
+  15:Core/Src/Hw/ADC.c **** {  //AD値のDMA
+  29              		.loc 1 15 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  16:Core/Src/Hw/ADC.c **** 	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) adc1, 3) != HAL_OK)
+  38              		.loc 1 16 2 view .LVU1
+  39              		.loc 1 16 6 is_stmt 0 view .LVU2
+  40 0002 0322     		movs	r2, #3
+  41 0004 0849     		ldr	r1, .L7
+  42 0006 0948     		ldr	r0, .L7+4
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s 			page 2
+
+
+  43 0008 FFF7FEFF 		bl	HAL_ADC_Start_DMA
+  44              	.LVL0:
+  45              		.loc 1 16 5 view .LVU3
+  46 000c 30B9     		cbnz	r0, .L5
+  47              	.L2:
+  17:Core/Src/Hw/ADC.c **** 	{
+  18:Core/Src/Hw/ADC.c **** 		Error_Handler();
+  19:Core/Src/Hw/ADC.c **** 	}
+  20:Core/Src/Hw/ADC.c **** 	if (HAL_ADC_Start_DMA(&hadc2, (uint32_t *) adc2, 2) != HAL_OK)
+  48              		.loc 1 20 2 is_stmt 1 view .LVU4
+  49              		.loc 1 20 6 is_stmt 0 view .LVU5
+  50 000e 0222     		movs	r2, #2
+  51 0010 0749     		ldr	r1, .L7+8
+  52 0012 0848     		ldr	r0, .L7+12
+  53 0014 FFF7FEFF 		bl	HAL_ADC_Start_DMA
+  54              	.LVL1:
+  55              		.loc 1 20 5 view .LVU6
+  56 0018 18B9     		cbnz	r0, .L6
+  57              	.L1:
+  21:Core/Src/Hw/ADC.c **** 	{
+  22:Core/Src/Hw/ADC.c **** 		Error_Handler();
+  23:Core/Src/Hw/ADC.c **** 	}
+  24:Core/Src/Hw/ADC.c **** 
+  25:Core/Src/Hw/ADC.c **** }
+  58              		.loc 1 25 1 view .LVU7
+  59 001a 08BD     		pop	{r3, pc}
+  60              	.L5:
+  18:Core/Src/Hw/ADC.c **** 	}
+  61              		.loc 1 18 3 is_stmt 1 view .LVU8
+  62 001c FFF7FEFF 		bl	Error_Handler
+  63              	.LVL2:
+  64 0020 F5E7     		b	.L2
+  65              	.L6:
+  22:Core/Src/Hw/ADC.c **** 	}
+  66              		.loc 1 22 3 view .LVU9
+  67 0022 FFF7FEFF 		bl	Error_Handler
+  68              	.LVL3:
+  69              		.loc 1 25 1 is_stmt 0 view .LVU10
+  70 0026 F8E7     		b	.L1
+  71              	.L8:
+  72              		.align	2
+  73              	.L7:
+  74 0028 00000000 		.word	.LANCHOR0
+  75 002c 00000000 		.word	hadc1
+  76 0030 00000000 		.word	.LANCHOR1
+  77 0034 00000000 		.word	hadc2
+  78              		.cfi_endproc
+  79              	.LFE238:
+  81              		.section	.rodata.ADCStop.str1.4,"aMS",%progbits,1
+  82              		.align	2
+  83              	.LC0:
+  84 0000 E381AA0D 		.ascii	"\343\201\252\015\000"
+  84      00
+  85 0005 000000   		.align	2
+  86              	.LC1:
+  87 0008 E381AB0D 		.ascii	"\343\201\253\015\000"
+  87      00
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s 			page 3
+
+
+  88 000d 000000   		.align	2
+  89              	.LC2:
+  90 0010 E381AC0D 		.ascii	"\343\201\254\015\000"
+  90      00
+  91 0015 000000   		.align	2
+  92              	.LC3:
+  93 0018 E381AD0D 		.ascii	"\343\201\255\015\000"
+  93      00
+  94              		.section	.text.ADCStop,"ax",%progbits
+  95              		.align	1
+  96              		.global	ADCStop
+  97              		.syntax unified
+  98              		.thumb
+  99              		.thumb_func
+ 100              		.fpu fpv4-sp-d16
+ 102              	ADCStop:
+ 103              	.LFB239:
+  26:Core/Src/Hw/ADC.c **** void ADCStop()
+  27:Core/Src/Hw/ADC.c **** {
+ 104              		.loc 1 27 1 is_stmt 1 view -0
+ 105              		.cfi_startproc
+ 106              		@ args = 0, pretend = 0, frame = 0
+ 107              		@ frame_needed = 0, uses_anonymous_args = 0
+ 108 0000 08B5     		push	{r3, lr}
+ 109              	.LCFI1:
+ 110              		.cfi_def_cfa_offset 8
+ 111              		.cfi_offset 3, -8
+ 112              		.cfi_offset 14, -4
+  28:Core/Src/Hw/ADC.c **** 	if (HAL_ADC_Stop_DMA(&hadc1) != HAL_OK)
+ 113              		.loc 1 28 2 view .LVU12
+ 114              		.loc 1 28 6 is_stmt 0 view .LVU13
+ 115 0002 0D48     		ldr	r0, .L15
+ 116 0004 FFF7FEFF 		bl	HAL_ADC_Stop_DMA
+ 117              	.LVL4:
+ 118              		.loc 1 28 5 view .LVU14
+ 119 0008 20B9     		cbnz	r0, .L13
+ 120              	.L10:
+  29:Core/Src/Hw/ADC.c **** 	{
+  30:Core/Src/Hw/ADC.c **** 		printf("な\r\n");
+  31:Core/Src/Hw/ADC.c **** 		Error_Handler();
+  32:Core/Src/Hw/ADC.c **** 		printf("に\r\n");
+  33:Core/Src/Hw/ADC.c **** 	}
+  34:Core/Src/Hw/ADC.c **** 	if (HAL_ADC_Stop_DMA(&hadc2) != HAL_OK)
+ 121              		.loc 1 34 2 is_stmt 1 view .LVU15
+ 122              		.loc 1 34 6 is_stmt 0 view .LVU16
+ 123 000a 0C48     		ldr	r0, .L15+4
+ 124 000c FFF7FEFF 		bl	HAL_ADC_Stop_DMA
+ 125              	.LVL5:
+ 126              		.loc 1 34 5 view .LVU17
+ 127 0010 48B9     		cbnz	r0, .L14
+ 128              	.L9:
+  35:Core/Src/Hw/ADC.c **** 	{
+  36:Core/Src/Hw/ADC.c **** 		printf("ぬ\r\n");
+  37:Core/Src/Hw/ADC.c **** 		Error_Handler();
+  38:Core/Src/Hw/ADC.c **** 		printf("ね\r\n");
+  39:Core/Src/Hw/ADC.c **** 	}
+  40:Core/Src/Hw/ADC.c **** }
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s 			page 4
+
+
+ 129              		.loc 1 40 1 view .LVU18
+ 130 0012 08BD     		pop	{r3, pc}
+ 131              	.L13:
+  30:Core/Src/Hw/ADC.c **** 		Error_Handler();
+ 132              		.loc 1 30 3 is_stmt 1 view .LVU19
+ 133 0014 0A48     		ldr	r0, .L15+8
+ 134 0016 FFF7FEFF 		bl	puts
+ 135              	.LVL6:
+  31:Core/Src/Hw/ADC.c **** 		printf("に\r\n");
+ 136              		.loc 1 31 3 view .LVU20
+ 137 001a FFF7FEFF 		bl	Error_Handler
+ 138              	.LVL7:
+  32:Core/Src/Hw/ADC.c **** 	}
+ 139              		.loc 1 32 3 view .LVU21
+ 140 001e 0948     		ldr	r0, .L15+12
+ 141 0020 FFF7FEFF 		bl	puts
+ 142              	.LVL8:
+ 143 0024 F1E7     		b	.L10
+ 144              	.L14:
+  36:Core/Src/Hw/ADC.c **** 		Error_Handler();
+ 145              		.loc 1 36 3 view .LVU22
+ 146 0026 0848     		ldr	r0, .L15+16
+ 147 0028 FFF7FEFF 		bl	puts
+ 148              	.LVL9:
+  37:Core/Src/Hw/ADC.c **** 		printf("ね\r\n");
+ 149              		.loc 1 37 3 view .LVU23
+ 150 002c FFF7FEFF 		bl	Error_Handler
+ 151              	.LVL10:
+  38:Core/Src/Hw/ADC.c **** 	}
+ 152              		.loc 1 38 3 view .LVU24
+ 153 0030 0648     		ldr	r0, .L15+20
+ 154 0032 FFF7FEFF 		bl	puts
+ 155              	.LVL11:
+ 156              		.loc 1 40 1 is_stmt 0 view .LVU25
+ 157 0036 ECE7     		b	.L9
+ 158              	.L16:
+ 159              		.align	2
+ 160              	.L15:
+ 161 0038 00000000 		.word	hadc1
+ 162 003c 00000000 		.word	hadc2
+ 163 0040 00000000 		.word	.LC0
+ 164 0044 08000000 		.word	.LC1
+ 165 0048 10000000 		.word	.LC2
+ 166 004c 18000000 		.word	.LC3
+ 167              		.cfi_endproc
+ 168              	.LFE239:
+ 170              		.global	adc2
+ 171              		.global	adc1
+ 172              		.section	.bss.adc1,"aw",%nobits
+ 173              		.align	2
+ 174              		.set	.LANCHOR0,. + 0
+ 177              	adc1:
+ 178 0000 00000000 		.space	12
+ 178      00000000 
+ 178      00000000 
+ 179              		.section	.bss.adc2,"aw",%nobits
+ 180              		.align	2
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s 			page 5
+
+
+ 181              		.set	.LANCHOR1,. + 0
+ 184              	adc2:
+ 185 0000 00000000 		.space	8
+ 185      00000000 
+ 186              		.text
+ 187              	.Letext0:
+ 188              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
+ 189              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
+ 190              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 191              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 192              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 193              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 194              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h"
+ 195              		.file 9 "Core/Inc/mouse_ADC.h"
+ 196              		.file 10 "Core/Inc/main.h"
+ 197              		.file 11 "<built-in>"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ADC.c
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:18     .text.ADCStart:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:26     .text.ADCStart:0000000000000000 ADCStart
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:74     .text.ADCStart:0000000000000028 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:82     .rodata.ADCStop.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:95     .text.ADCStop:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:102    .text.ADCStop:0000000000000000 ADCStop
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:161    .text.ADCStop:0000000000000038 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:184    .bss.adc2:0000000000000000 adc2
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:177    .bss.adc1:0000000000000000 adc1
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:173    .bss.adc1:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccc3FzD8.s:180    .bss.adc2:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_ADC_Start_DMA
+Error_Handler
+hadc1
+hadc2
+HAL_ADC_Stop_DMA
+puts

@@ -1,0 +1,1154 @@
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"tim_info.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.getTIMnumber,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	getTIMnumber:
+  26              	.LVL0:
+  27              	.LFB238:
+  28              		.file 1 "Core/Src/Tools/tim_info.c"
+   1:Core/Src/Tools/tim_info.c **** /*
+   2:Core/Src/Tools/tim_info.c ****  * tim_info.c
+   3:Core/Src/Tools/tim_info.c ****  *
+   4:Core/Src/Tools/tim_info.c ****  *  Created on: Nov 19, 2022
+   5:Core/Src/Tools/tim_info.c ****  *      Author: leopi
+   6:Core/Src/Tools/tim_info.c ****  */
+   7:Core/Src/Tools/tim_info.c **** 
+   8:Core/Src/Tools/tim_info.c **** #include "tim_info.h"
+   9:Core/Src/Tools/tim_info.c **** #include <stdio.h>
+  10:Core/Src/Tools/tim_info.c **** static int getTIMnumber(TIM_HandleTypeDef *htim){
+  29              		.loc 1 10 49 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  11:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM1)
+  34              		.loc 1 11 2 view .LVU1
+  35              		.loc 1 11 9 is_stmt 0 view .LVU2
+  36 0000 0368     		ldr	r3, [r0]
+  37              		.loc 1 11 4 view .LVU3
+  38 0002 244A     		ldr	r2, .L15
+  39 0004 9342     		cmp	r3, r2
+  40 0006 2CD0     		beq	.L3
+  12:Core/Src/Tools/tim_info.c **** 		return 1;
+  13:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM2)
+  41              		.loc 1 13 2 is_stmt 1 view .LVU4
+  42              		.loc 1 13 4 is_stmt 0 view .LVU5
+  43 0008 B3F1804F 		cmp	r3, #1073741824
+  44 000c 2BD0     		beq	.L4
+  14:Core/Src/Tools/tim_info.c **** 		return 2;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 2
+
+
+  15:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM3)
+  45              		.loc 1 15 2 is_stmt 1 view .LVU6
+  46              		.loc 1 15 4 is_stmt 0 view .LVU7
+  47 000e A2F57C42 		sub	r2, r2, #64512
+  48 0012 9342     		cmp	r3, r2
+  49 0014 29D0     		beq	.L5
+  16:Core/Src/Tools/tim_info.c **** 		return 3;
+  17:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM4)
+  50              		.loc 1 17 2 is_stmt 1 view .LVU8
+  51              		.loc 1 17 4 is_stmt 0 view .LVU9
+  52 0016 02F58062 		add	r2, r2, #1024
+  53 001a 9342     		cmp	r3, r2
+  54 001c 27D0     		beq	.L6
+  18:Core/Src/Tools/tim_info.c **** 		return 4;
+  19:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM5)
+  55              		.loc 1 19 2 is_stmt 1 view .LVU10
+  56              		.loc 1 19 4 is_stmt 0 view .LVU11
+  57 001e 02F58062 		add	r2, r2, #1024
+  58 0022 9342     		cmp	r3, r2
+  59 0024 25D0     		beq	.L7
+  20:Core/Src/Tools/tim_info.c **** 		return 5;
+  21:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM6)
+  60              		.loc 1 21 2 is_stmt 1 view .LVU12
+  61              		.loc 1 21 4 is_stmt 0 view .LVU13
+  62 0026 02F58062 		add	r2, r2, #1024
+  63 002a 9342     		cmp	r3, r2
+  64 002c 23D0     		beq	.L8
+  22:Core/Src/Tools/tim_info.c **** 		return 6;
+  23:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM7)
+  65              		.loc 1 23 2 is_stmt 1 view .LVU14
+  66              		.loc 1 23 4 is_stmt 0 view .LVU15
+  67 002e 02F58062 		add	r2, r2, #1024
+  68 0032 9342     		cmp	r3, r2
+  69 0034 21D0     		beq	.L9
+  24:Core/Src/Tools/tim_info.c **** 		return 7;
+  25:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM8)
+  70              		.loc 1 25 2 is_stmt 1 view .LVU16
+  71              		.loc 1 25 4 is_stmt 0 view .LVU17
+  72 0036 02F57042 		add	r2, r2, #61440
+  73 003a 9342     		cmp	r3, r2
+  74 003c 1FD0     		beq	.L10
+  26:Core/Src/Tools/tim_info.c **** 		return 8;
+  27:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM9)
+  75              		.loc 1 27 2 is_stmt 1 view .LVU18
+  76              		.loc 1 27 4 is_stmt 0 view .LVU19
+  77 003e 02F57052 		add	r2, r2, #15360
+  78 0042 9342     		cmp	r3, r2
+  79 0044 1DD0     		beq	.L11
+  28:Core/Src/Tools/tim_info.c **** 		return 9;
+  29:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM10)
+  80              		.loc 1 29 2 is_stmt 1 view .LVU20
+  81              		.loc 1 29 4 is_stmt 0 view .LVU21
+  82 0046 02F58062 		add	r2, r2, #1024
+  83 004a 9342     		cmp	r3, r2
+  84 004c 1BD0     		beq	.L12
+  30:Core/Src/Tools/tim_info.c **** 		return 10;
+  31:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM11)
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 3
+
+
+  85              		.loc 1 31 2 is_stmt 1 view .LVU22
+  86              		.loc 1 31 4 is_stmt 0 view .LVU23
+  87 004e 02F58062 		add	r2, r2, #1024
+  88 0052 9342     		cmp	r3, r2
+  89 0054 19D0     		beq	.L13
+  32:Core/Src/Tools/tim_info.c **** 		return 11;
+  33:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM12)
+  90              		.loc 1 33 2 is_stmt 1 view .LVU24
+  91              		.loc 1 33 4 is_stmt 0 view .LVU25
+  92 0056 A2F59832 		sub	r2, r2, #77824
+  93 005a 9342     		cmp	r3, r2
+  94 005c 17D0     		beq	.L14
+  34:Core/Src/Tools/tim_info.c **** 		return 12;
+  35:Core/Src/Tools/tim_info.c **** 
+  36:Core/Src/Tools/tim_info.c **** 	return 0;
+  95              		.loc 1 36 9 view .LVU26
+  96 005e 0020     		movs	r0, #0
+  97              	.LVL1:
+  98              		.loc 1 36 9 view .LVU27
+  99 0060 7047     		bx	lr
+ 100              	.LVL2:
+ 101              	.L3:
+  12:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM2)
+ 102              		.loc 1 12 10 view .LVU28
+ 103 0062 0120     		movs	r0, #1
+ 104              	.LVL3:
+  12:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM2)
+ 105              		.loc 1 12 10 view .LVU29
+ 106 0064 7047     		bx	lr
+ 107              	.LVL4:
+ 108              	.L4:
+  14:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM3)
+ 109              		.loc 1 14 10 view .LVU30
+ 110 0066 0220     		movs	r0, #2
+ 111              	.LVL5:
+  14:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM3)
+ 112              		.loc 1 14 10 view .LVU31
+ 113 0068 7047     		bx	lr
+ 114              	.LVL6:
+ 115              	.L5:
+  16:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM4)
+ 116              		.loc 1 16 10 view .LVU32
+ 117 006a 0320     		movs	r0, #3
+ 118              	.LVL7:
+  16:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM4)
+ 119              		.loc 1 16 10 view .LVU33
+ 120 006c 7047     		bx	lr
+ 121              	.LVL8:
+ 122              	.L6:
+  18:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM5)
+ 123              		.loc 1 18 10 view .LVU34
+ 124 006e 0420     		movs	r0, #4
+ 125              	.LVL9:
+  18:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM5)
+ 126              		.loc 1 18 10 view .LVU35
+ 127 0070 7047     		bx	lr
+ 128              	.LVL10:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 4
+
+
+ 129              	.L7:
+  20:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM6)
+ 130              		.loc 1 20 10 view .LVU36
+ 131 0072 0520     		movs	r0, #5
+ 132              	.LVL11:
+  20:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM6)
+ 133              		.loc 1 20 10 view .LVU37
+ 134 0074 7047     		bx	lr
+ 135              	.LVL12:
+ 136              	.L8:
+  22:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM7)
+ 137              		.loc 1 22 10 view .LVU38
+ 138 0076 0620     		movs	r0, #6
+ 139              	.LVL13:
+  22:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM7)
+ 140              		.loc 1 22 10 view .LVU39
+ 141 0078 7047     		bx	lr
+ 142              	.LVL14:
+ 143              	.L9:
+  24:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM8)
+ 144              		.loc 1 24 10 view .LVU40
+ 145 007a 0720     		movs	r0, #7
+ 146              	.LVL15:
+  24:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM8)
+ 147              		.loc 1 24 10 view .LVU41
+ 148 007c 7047     		bx	lr
+ 149              	.LVL16:
+ 150              	.L10:
+  26:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM9)
+ 151              		.loc 1 26 10 view .LVU42
+ 152 007e 0820     		movs	r0, #8
+ 153              	.LVL17:
+  26:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM9)
+ 154              		.loc 1 26 10 view .LVU43
+ 155 0080 7047     		bx	lr
+ 156              	.LVL18:
+ 157              	.L11:
+  28:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM10)
+ 158              		.loc 1 28 10 view .LVU44
+ 159 0082 0920     		movs	r0, #9
+ 160              	.LVL19:
+  28:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM10)
+ 161              		.loc 1 28 10 view .LVU45
+ 162 0084 7047     		bx	lr
+ 163              	.LVL20:
+ 164              	.L12:
+  30:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM11)
+ 165              		.loc 1 30 10 view .LVU46
+ 166 0086 0A20     		movs	r0, #10
+ 167              	.LVL21:
+  30:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM11)
+ 168              		.loc 1 30 10 view .LVU47
+ 169 0088 7047     		bx	lr
+ 170              	.LVL22:
+ 171              	.L13:
+  32:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM12)
+ 172              		.loc 1 32 10 view .LVU48
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 5
+
+
+ 173 008a 0B20     		movs	r0, #11
+ 174              	.LVL23:
+  32:Core/Src/Tools/tim_info.c **** 	if(htim->Instance == TIM12)
+ 175              		.loc 1 32 10 view .LVU49
+ 176 008c 7047     		bx	lr
+ 177              	.LVL24:
+ 178              	.L14:
+  34:Core/Src/Tools/tim_info.c **** 
+ 179              		.loc 1 34 10 view .LVU50
+ 180 008e 0C20     		movs	r0, #12
+ 181              	.LVL25:
+  37:Core/Src/Tools/tim_info.c **** }
+ 182              		.loc 1 37 1 view .LVU51
+ 183 0090 7047     		bx	lr
+ 184              	.L16:
+ 185 0092 00BF     		.align	2
+ 186              	.L15:
+ 187 0094 00000140 		.word	1073807360
+ 188              		.cfi_endproc
+ 189              	.LFE238:
+ 191              		.section	.rodata.getAHB_CLK_DIVIDER.str1.4,"aMS",%progbits,1
+ 192              		.align	2
+ 193              	.LC0:
+ 194 0000 41484220 		.ascii	"AHB CLK Divider is Error!!\015\000"
+ 194      434C4B20 
+ 194      44697669 
+ 194      64657220 
+ 194      69732045 
+ 195              		.section	.text.getAHB_CLK_DIVIDER,"ax",%progbits
+ 196              		.align	1
+ 197              		.syntax unified
+ 198              		.thumb
+ 199              		.thumb_func
+ 200              		.fpu fpv4-sp-d16
+ 202              	getAHB_CLK_DIVIDER:
+ 203              	.LFB239:
+  38:Core/Src/Tools/tim_info.c **** static uint32_t getAHB_CLK_DIVIDER(){
+ 204              		.loc 1 38 37 is_stmt 1 view -0
+ 205              		.cfi_startproc
+ 206              		@ args = 0, pretend = 0, frame = 0
+ 207              		@ frame_needed = 0, uses_anonymous_args = 0
+ 208 0000 08B5     		push	{r3, lr}
+ 209              	.LCFI0:
+ 210              		.cfi_def_cfa_offset 8
+ 211              		.cfi_offset 3, -8
+ 212              		.cfi_offset 14, -4
+  39:Core/Src/Tools/tim_info.c **** 
+  40:Core/Src/Tools/tim_info.c **** 	uint32_t rcc_config = RCC->CFGR;
+ 213              		.loc 1 40 2 view .LVU53
+ 214              		.loc 1 40 11 is_stmt 0 view .LVU54
+ 215 0002 184B     		ldr	r3, .L36
+ 216 0004 9B68     		ldr	r3, [r3, #8]
+ 217              	.LVL26:
+  41:Core/Src/Tools/tim_info.c **** 
+  42:Core/Src/Tools/tim_info.c **** 	uint32_t AHB_CLK_Divider = READ_BIT(rcc_config, RCC_CFGR_HPRE);
+ 218              		.loc 1 42 2 is_stmt 1 view .LVU55
+ 219              		.loc 1 42 11 is_stmt 0 view .LVU56
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 6
+
+
+ 220 0006 03F0F003 		and	r3, r3, #240
+ 221              	.LVL27:
+  43:Core/Src/Tools/tim_info.c **** 
+  44:Core/Src/Tools/tim_info.c **** 	switch(AHB_CLK_Divider){
+ 222              		.loc 1 44 2 is_stmt 1 view .LVU57
+ 223 000a B02B     		cmp	r3, #176
+ 224 000c 1FD0     		beq	.L23
+ 225 000e 07D9     		bls	.L33
+ 226 0010 E02B     		cmp	r3, #224
+ 227 0012 22D0     		beq	.L28
+ 228 0014 10D9     		bls	.L34
+ 229 0016 F02B     		cmp	r3, #240
+ 230 0018 14D1     		bne	.L21
+  45:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV1:
+  46:Core/Src/Tools/tim_info.c **** 		return 1;
+  47:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV2:
+  48:Core/Src/Tools/tim_info.c **** 		return 2;
+  49:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV4:
+  50:Core/Src/Tools/tim_info.c **** 		return 4;
+  51:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV8:
+  52:Core/Src/Tools/tim_info.c **** 		return 8;
+  53:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV16:
+  54:Core/Src/Tools/tim_info.c **** 		return 16;
+  55:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV64:
+  56:Core/Src/Tools/tim_info.c **** 		return 64;
+  57:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV128:
+  58:Core/Src/Tools/tim_info.c **** 		return 128;
+  59:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV256:
+  60:Core/Src/Tools/tim_info.c **** 		return 256;
+  61:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV512:
+  62:Core/Src/Tools/tim_info.c **** 		return 512;
+ 231              		.loc 1 62 10 is_stmt 0 view .LVU58
+ 232 001a 4FF40070 		mov	r0, #512
+ 233 001e 0AE0     		b	.L17
+ 234              	.L33:
+  44:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV1:
+ 235              		.loc 1 44 2 view .LVU59
+ 236 0020 902B     		cmp	r3, #144
+ 237 0022 16D0     		beq	.L24
+ 238 0024 03D9     		bls	.L35
+ 239 0026 A02B     		cmp	r3, #160
+ 240 0028 0CD1     		bne	.L21
+  52:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV16:
+ 241              		.loc 1 52 10 view .LVU60
+ 242 002a 0820     		movs	r0, #8
+ 243 002c 03E0     		b	.L17
+ 244              	.L35:
+  44:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV1:
+ 245              		.loc 1 44 2 view .LVU61
+ 246 002e 93B1     		cbz	r3, .L25
+ 247 0030 802B     		cmp	r3, #128
+ 248 0032 07D1     		bne	.L21
+  48:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV4:
+ 249              		.loc 1 48 10 view .LVU62
+ 250 0034 0220     		movs	r0, #2
+ 251              	.LVL28:
+ 252              	.L17:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 7
+
+
+  63:Core/Src/Tools/tim_info.c **** 	default :
+  64:Core/Src/Tools/tim_info.c **** 		printf("AHB CLK Divider is Error!!\r\n");
+  65:Core/Src/Tools/tim_info.c **** 		return 0;
+  66:Core/Src/Tools/tim_info.c **** 	}
+  67:Core/Src/Tools/tim_info.c **** }
+ 253              		.loc 1 67 1 view .LVU63
+ 254 0036 08BD     		pop	{r3, pc}
+ 255              	.LVL29:
+ 256              	.L34:
+  44:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV1:
+ 257              		.loc 1 44 2 view .LVU64
+ 258 0038 C02B     		cmp	r3, #192
+ 259 003a 11D0     		beq	.L29
+ 260 003c D02B     		cmp	r3, #208
+ 261 003e 01D1     		bne	.L21
+  58:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV256:
+ 262              		.loc 1 58 10 view .LVU65
+ 263 0040 8020     		movs	r0, #128
+ 264 0042 F8E7     		b	.L17
+ 265              	.L21:
+  64:Core/Src/Tools/tim_info.c **** 		return 0;
+ 266              		.loc 1 64 3 is_stmt 1 view .LVU66
+ 267 0044 0848     		ldr	r0, .L36+4
+ 268 0046 FFF7FEFF 		bl	puts
+ 269              	.LVL30:
+  65:Core/Src/Tools/tim_info.c **** 	}
+ 270              		.loc 1 65 3 view .LVU67
+  65:Core/Src/Tools/tim_info.c **** 	}
+ 271              		.loc 1 65 10 is_stmt 0 view .LVU68
+ 272 004a 0020     		movs	r0, #0
+ 273 004c F3E7     		b	.L17
+ 274              	.LVL31:
+ 275              	.L23:
+  54:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV64:
+ 276              		.loc 1 54 10 view .LVU69
+ 277 004e 1020     		movs	r0, #16
+ 278 0050 F1E7     		b	.L17
+ 279              	.L24:
+  50:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV8:
+ 280              		.loc 1 50 10 view .LVU70
+ 281 0052 0420     		movs	r0, #4
+ 282 0054 EFE7     		b	.L17
+ 283              	.L25:
+  44:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV1:
+ 284              		.loc 1 44 2 view .LVU71
+ 285 0056 0120     		movs	r0, #1
+ 286 0058 EDE7     		b	.L17
+ 287              	.L28:
+  60:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV512:
+ 288              		.loc 1 60 10 view .LVU72
+ 289 005a 4FF48070 		mov	r0, #256
+ 290 005e EAE7     		b	.L17
+ 291              	.L29:
+  56:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_HPRE_DIV128:
+ 292              		.loc 1 56 10 view .LVU73
+ 293 0060 4020     		movs	r0, #64
+ 294 0062 E8E7     		b	.L17
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 8
+
+
+ 295              	.L37:
+ 296              		.align	2
+ 297              	.L36:
+ 298 0064 00380240 		.word	1073887232
+ 299 0068 00000000 		.word	.LC0
+ 300              		.cfi_endproc
+ 301              	.LFE239:
+ 303              		.section	.rodata.getAPB2_CLK_DIVIDER.str1.4,"aMS",%progbits,1
+ 304              		.align	2
+ 305              	.LC1:
+ 306 0000 41504232 		.ascii	"APB2 CLK Divider is Error!!\015\000"
+ 306      20434C4B 
+ 306      20446976 
+ 306      69646572 
+ 306      20697320 
+ 307              		.section	.text.getAPB2_CLK_DIVIDER,"ax",%progbits
+ 308              		.align	1
+ 309              		.syntax unified
+ 310              		.thumb
+ 311              		.thumb_func
+ 312              		.fpu fpv4-sp-d16
+ 314              	getAPB2_CLK_DIVIDER:
+ 315              	.LFB241:
+  68:Core/Src/Tools/tim_info.c **** static uint32_t getAPB1_CLK_DIVIDER(){
+  69:Core/Src/Tools/tim_info.c **** 
+  70:Core/Src/Tools/tim_info.c **** 	uint32_t rcc_config = RCC->CFGR;
+  71:Core/Src/Tools/tim_info.c **** 
+  72:Core/Src/Tools/tim_info.c **** 	uint32_t APB1_CLK_Divider = READ_BIT(rcc_config, RCC_CFGR_PPRE1);
+  73:Core/Src/Tools/tim_info.c **** 
+  74:Core/Src/Tools/tim_info.c **** 	switch(APB1_CLK_Divider){
+  75:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV1:
+  76:Core/Src/Tools/tim_info.c **** 		return 1;
+  77:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV2:
+  78:Core/Src/Tools/tim_info.c **** 		return 2;
+  79:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV4:
+  80:Core/Src/Tools/tim_info.c **** 		return 4;
+  81:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV8:
+  82:Core/Src/Tools/tim_info.c **** 		return 8;
+  83:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV16:
+  84:Core/Src/Tools/tim_info.c **** 		return 16;
+  85:Core/Src/Tools/tim_info.c **** 	default :
+  86:Core/Src/Tools/tim_info.c **** 		printf("APB1 CLK Divider is Error!!\r\n");
+  87:Core/Src/Tools/tim_info.c **** 		return 0;
+  88:Core/Src/Tools/tim_info.c **** 	}
+  89:Core/Src/Tools/tim_info.c **** }
+  90:Core/Src/Tools/tim_info.c **** static uint32_t getAPB2_CLK_DIVIDER(){
+ 316              		.loc 1 90 38 is_stmt 1 view -0
+ 317              		.cfi_startproc
+ 318              		@ args = 0, pretend = 0, frame = 0
+ 319              		@ frame_needed = 0, uses_anonymous_args = 0
+ 320 0000 08B5     		push	{r3, lr}
+ 321              	.LCFI1:
+ 322              		.cfi_def_cfa_offset 8
+ 323              		.cfi_offset 3, -8
+ 324              		.cfi_offset 14, -4
+  91:Core/Src/Tools/tim_info.c **** 
+  92:Core/Src/Tools/tim_info.c **** 	uint32_t rcc_config = RCC->CFGR;
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 9
+
+
+ 325              		.loc 1 92 2 view .LVU75
+ 326              		.loc 1 92 11 is_stmt 0 view .LVU76
+ 327 0002 104B     		ldr	r3, .L49
+ 328 0004 9B68     		ldr	r3, [r3, #8]
+ 329              	.LVL32:
+  93:Core/Src/Tools/tim_info.c **** 
+  94:Core/Src/Tools/tim_info.c **** 	uint32_t APB2_CLK_Divider = READ_BIT(rcc_config, RCC_CFGR_PPRE2);
+ 330              		.loc 1 94 2 is_stmt 1 view .LVU77
+ 331              		.loc 1 94 11 is_stmt 0 view .LVU78
+ 332 0006 03F46043 		and	r3, r3, #57344
+ 333              	.LVL33:
+  95:Core/Src/Tools/tim_info.c **** 
+  96:Core/Src/Tools/tim_info.c **** 	switch(APB2_CLK_Divider){
+ 334              		.loc 1 96 2 is_stmt 1 view .LVU79
+ 335 000a B3F5204F 		cmp	r3, #40960
+ 336 000e 13D0     		beq	.L42
+ 337 0010 07D9     		bls	.L48
+ 338 0012 B3F5404F 		cmp	r3, #49152
+ 339 0016 13D0     		beq	.L45
+ 340 0018 B3F5604F 		cmp	r3, #57344
+ 341 001c 07D1     		bne	.L41
+  97:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV1:
+  98:Core/Src/Tools/tim_info.c **** 		return 1;
+  99:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV2:
+ 100:Core/Src/Tools/tim_info.c **** 		return 2;
+ 101:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV4:
+ 102:Core/Src/Tools/tim_info.c **** 		return 4;
+ 103:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV8:
+ 104:Core/Src/Tools/tim_info.c **** 		return 8;
+ 105:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV16:
+ 106:Core/Src/Tools/tim_info.c **** 		return 16;
+ 342              		.loc 1 106 10 is_stmt 0 view .LVU80
+ 343 001e 1020     		movs	r0, #16
+ 344 0020 04E0     		b	.L38
+ 345              	.L48:
+  96:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV1:
+ 346              		.loc 1 96 2 view .LVU81
+ 347 0022 5BB1     		cbz	r3, .L43
+ 348 0024 B3F5004F 		cmp	r3, #32768
+ 349 0028 01D1     		bne	.L41
+ 100:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV4:
+ 350              		.loc 1 100 10 view .LVU82
+ 351 002a 0220     		movs	r0, #2
+ 352              	.LVL34:
+ 353              	.L38:
+ 107:Core/Src/Tools/tim_info.c **** 	default :
+ 108:Core/Src/Tools/tim_info.c **** 		printf("APB2 CLK Divider is Error!!\r\n");
+ 109:Core/Src/Tools/tim_info.c **** 		return 0;
+ 110:Core/Src/Tools/tim_info.c **** 	}
+ 111:Core/Src/Tools/tim_info.c **** }
+ 354              		.loc 1 111 1 view .LVU83
+ 355 002c 08BD     		pop	{r3, pc}
+ 356              	.LVL35:
+ 357              	.L41:
+ 108:Core/Src/Tools/tim_info.c **** 		return 0;
+ 358              		.loc 1 108 3 is_stmt 1 view .LVU84
+ 359 002e 0648     		ldr	r0, .L49+4
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 10
+
+
+ 360 0030 FFF7FEFF 		bl	puts
+ 361              	.LVL36:
+ 109:Core/Src/Tools/tim_info.c **** 	}
+ 362              		.loc 1 109 3 view .LVU85
+ 109:Core/Src/Tools/tim_info.c **** 	}
+ 363              		.loc 1 109 10 is_stmt 0 view .LVU86
+ 364 0034 0020     		movs	r0, #0
+ 365 0036 F9E7     		b	.L38
+ 366              	.LVL37:
+ 367              	.L42:
+ 102:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV8:
+ 368              		.loc 1 102 10 view .LVU87
+ 369 0038 0420     		movs	r0, #4
+ 370 003a F7E7     		b	.L38
+ 371              	.L43:
+  96:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV1:
+ 372              		.loc 1 96 2 view .LVU88
+ 373 003c 0120     		movs	r0, #1
+ 374 003e F5E7     		b	.L38
+ 375              	.L45:
+ 104:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE2_DIV16:
+ 376              		.loc 1 104 10 view .LVU89
+ 377 0040 0820     		movs	r0, #8
+ 378 0042 F3E7     		b	.L38
+ 379              	.L50:
+ 380              		.align	2
+ 381              	.L49:
+ 382 0044 00380240 		.word	1073887232
+ 383 0048 00000000 		.word	.LC1
+ 384              		.cfi_endproc
+ 385              	.LFE241:
+ 387              		.section	.rodata.getAPB1_CLK_DIVIDER.str1.4,"aMS",%progbits,1
+ 388              		.align	2
+ 389              	.LC2:
+ 390 0000 41504231 		.ascii	"APB1 CLK Divider is Error!!\015\000"
+ 390      20434C4B 
+ 390      20446976 
+ 390      69646572 
+ 390      20697320 
+ 391              		.section	.text.getAPB1_CLK_DIVIDER,"ax",%progbits
+ 392              		.align	1
+ 393              		.syntax unified
+ 394              		.thumb
+ 395              		.thumb_func
+ 396              		.fpu fpv4-sp-d16
+ 398              	getAPB1_CLK_DIVIDER:
+ 399              	.LFB240:
+  68:Core/Src/Tools/tim_info.c **** 
+ 400              		.loc 1 68 38 is_stmt 1 view -0
+ 401              		.cfi_startproc
+ 402              		@ args = 0, pretend = 0, frame = 0
+ 403              		@ frame_needed = 0, uses_anonymous_args = 0
+ 404 0000 08B5     		push	{r3, lr}
+ 405              	.LCFI2:
+ 406              		.cfi_def_cfa_offset 8
+ 407              		.cfi_offset 3, -8
+ 408              		.cfi_offset 14, -4
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 11
+
+
+  70:Core/Src/Tools/tim_info.c **** 
+ 409              		.loc 1 70 2 view .LVU91
+  70:Core/Src/Tools/tim_info.c **** 
+ 410              		.loc 1 70 11 is_stmt 0 view .LVU92
+ 411 0002 104B     		ldr	r3, .L62
+ 412 0004 9B68     		ldr	r3, [r3, #8]
+ 413              	.LVL38:
+  72:Core/Src/Tools/tim_info.c **** 
+ 414              		.loc 1 72 2 is_stmt 1 view .LVU93
+  72:Core/Src/Tools/tim_info.c **** 
+ 415              		.loc 1 72 11 is_stmt 0 view .LVU94
+ 416 0006 03F4E053 		and	r3, r3, #7168
+ 417              	.LVL39:
+  74:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV1:
+ 418              		.loc 1 74 2 is_stmt 1 view .LVU95
+ 419 000a B3F5A05F 		cmp	r3, #5120
+ 420 000e 13D0     		beq	.L55
+ 421 0010 07D9     		bls	.L61
+ 422 0012 B3F5C05F 		cmp	r3, #6144
+ 423 0016 13D0     		beq	.L58
+ 424 0018 B3F5E05F 		cmp	r3, #7168
+ 425 001c 07D1     		bne	.L54
+  84:Core/Src/Tools/tim_info.c **** 	default :
+ 426              		.loc 1 84 10 is_stmt 0 view .LVU96
+ 427 001e 1020     		movs	r0, #16
+ 428 0020 04E0     		b	.L51
+ 429              	.L61:
+  74:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV1:
+ 430              		.loc 1 74 2 view .LVU97
+ 431 0022 5BB1     		cbz	r3, .L56
+ 432 0024 B3F5805F 		cmp	r3, #4096
+ 433 0028 01D1     		bne	.L54
+  78:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV4:
+ 434              		.loc 1 78 10 view .LVU98
+ 435 002a 0220     		movs	r0, #2
+ 436              	.LVL40:
+ 437              	.L51:
+  89:Core/Src/Tools/tim_info.c **** static uint32_t getAPB2_CLK_DIVIDER(){
+ 438              		.loc 1 89 1 view .LVU99
+ 439 002c 08BD     		pop	{r3, pc}
+ 440              	.LVL41:
+ 441              	.L54:
+  86:Core/Src/Tools/tim_info.c **** 		return 0;
+ 442              		.loc 1 86 3 is_stmt 1 view .LVU100
+ 443 002e 0648     		ldr	r0, .L62+4
+ 444 0030 FFF7FEFF 		bl	puts
+ 445              	.LVL42:
+  87:Core/Src/Tools/tim_info.c **** 	}
+ 446              		.loc 1 87 3 view .LVU101
+  87:Core/Src/Tools/tim_info.c **** 	}
+ 447              		.loc 1 87 10 is_stmt 0 view .LVU102
+ 448 0034 0020     		movs	r0, #0
+ 449 0036 F9E7     		b	.L51
+ 450              	.LVL43:
+ 451              	.L55:
+  80:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV8:
+ 452              		.loc 1 80 10 view .LVU103
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 12
+
+
+ 453 0038 0420     		movs	r0, #4
+ 454 003a F7E7     		b	.L51
+ 455              	.L56:
+  74:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV1:
+ 456              		.loc 1 74 2 view .LVU104
+ 457 003c 0120     		movs	r0, #1
+ 458 003e F5E7     		b	.L51
+ 459              	.L58:
+  82:Core/Src/Tools/tim_info.c **** 	case RCC_CFGR_PPRE1_DIV16:
+ 460              		.loc 1 82 10 view .LVU105
+ 461 0040 0820     		movs	r0, #8
+ 462 0042 F3E7     		b	.L51
+ 463              	.L63:
+ 464              		.align	2
+ 465              	.L62:
+ 466 0044 00380240 		.word	1073887232
+ 467 0048 00000000 		.word	.LC2
+ 468              		.cfi_endproc
+ 469              	.LFE240:
+ 471              		.section	.rodata.printTIMclock.str1.4,"aMS",%progbits,1
+ 472              		.align	2
+ 473              	.LC3:
+ 474 0000 54494D20 		.ascii	"TIM %d\015\012\000"
+ 474      25640D0A 
+ 474      00
+ 475 0009 000000   		.align	2
+ 476              	.LC4:
+ 477 000c 0948434C 		.ascii	"\011HCLK : %lu Hz\015\012  \011AHBDivider : %lu\015"
+ 477      4B203A20 
+ 477      256C7520 
+ 477      487A0D0A 
+ 477      20200941 
+ 478 0030 0A00     		.ascii	"\012\000"
+ 479 0032 0000     		.align	2
+ 480              	.LC5:
+ 481 0034 09415042 		.ascii	"\011APB2Divider : %lu\015\012\000"
+ 481      32446976 
+ 481      69646572 
+ 481      203A2025 
+ 481      6C750D0A 
+ 482 0049 000000   		.align	2
+ 483              	.LC6:
+ 484 004c 09415042 		.ascii	"\011APB1Divider : %lu\015\012\000"
+ 484      31446976 
+ 484      69646572 
+ 484      203A2025 
+ 484      6C750D0A 
+ 485 0061 000000   		.align	2
+ 486              	.LC7:
+ 487 0064 0954494D 		.ascii	"\011TIM %d Clock Source is : %lu Hz\015\012\000"
+ 487      20256420 
+ 487      436C6F63 
+ 487      6B20536F 
+ 487      75726365 
+ 488              		.section	.text.printTIMclock,"ax",%progbits
+ 489              		.align	1
+ 490              		.syntax unified
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 13
+
+
+ 491              		.thumb
+ 492              		.thumb_func
+ 493              		.fpu fpv4-sp-d16
+ 495              	printTIMclock:
+ 496              	.LVL44:
+ 497              	.LFB242:
+ 112:Core/Src/Tools/tim_info.c **** static uint32_t printTIMclock(TIM_HandleTypeDef *htim){
+ 498              		.loc 1 112 55 is_stmt 1 view -0
+ 499              		.cfi_startproc
+ 500              		@ args = 0, pretend = 0, frame = 24
+ 501              		@ frame_needed = 0, uses_anonymous_args = 0
+ 502              		.loc 1 112 55 is_stmt 0 view .LVU107
+ 503 0000 70B5     		push	{r4, r5, r6, lr}
+ 504              	.LCFI3:
+ 505              		.cfi_def_cfa_offset 16
+ 506              		.cfi_offset 4, -16
+ 507              		.cfi_offset 5, -12
+ 508              		.cfi_offset 6, -8
+ 509              		.cfi_offset 14, -4
+ 510 0002 86B0     		sub	sp, sp, #24
+ 511              	.LCFI4:
+ 512              		.cfi_def_cfa_offset 40
+ 513 0004 0546     		mov	r5, r0
+ 113:Core/Src/Tools/tim_info.c **** 
+ 114:Core/Src/Tools/tim_info.c **** 
+ 115:Core/Src/Tools/tim_info.c **** 	RCC_ClkInitTypeDef clk = {0};
+ 514              		.loc 1 115 2 is_stmt 1 view .LVU108
+ 515              		.loc 1 115 21 is_stmt 0 view .LVU109
+ 516 0006 0023     		movs	r3, #0
+ 517 0008 0193     		str	r3, [sp, #4]
+ 518 000a 0293     		str	r3, [sp, #8]
+ 519 000c 0393     		str	r3, [sp, #12]
+ 520 000e 0493     		str	r3, [sp, #16]
+ 521 0010 0593     		str	r3, [sp, #20]
+ 116:Core/Src/Tools/tim_info.c **** 	uint32_t HCLK;
+ 522              		.loc 1 116 2 is_stmt 1 view .LVU110
+ 117:Core/Src/Tools/tim_info.c **** 	clk.AHBCLKDivider= getAHB_CLK_DIVIDER();
+ 523              		.loc 1 117 2 view .LVU111
+ 524              		.loc 1 117 21 is_stmt 0 view .LVU112
+ 525 0012 FFF7FEFF 		bl	getAHB_CLK_DIVIDER
+ 526              	.LVL45:
+ 527              		.loc 1 117 21 view .LVU113
+ 528 0016 0446     		mov	r4, r0
+ 529              		.loc 1 117 19 view .LVU114
+ 530 0018 0390     		str	r0, [sp, #12]
+ 118:Core/Src/Tools/tim_info.c **** 	if(clk.AHBCLKDivider == 0) return 0;
+ 531              		.loc 1 118 2 is_stmt 1 view .LVU115
+ 532              		.loc 1 118 4 is_stmt 0 view .LVU116
+ 533 001a 10B9     		cbnz	r0, .L72
+ 534              	.LVL46:
+ 535              	.L64:
+ 119:Core/Src/Tools/tim_info.c **** 	else HCLK = SystemCoreClock / (clk.AHBCLKDivider);
+ 120:Core/Src/Tools/tim_info.c **** 
+ 121:Core/Src/Tools/tim_info.c **** 	int tim_number = getTIMnumber(htim);
+ 122:Core/Src/Tools/tim_info.c **** 	printf("TIM %d\r\n", tim_number);
+ 123:Core/Src/Tools/tim_info.c **** 	printf("	HCLK : %lu Hz\r\n  	AHBDivider : %lu\r\n", HCLK, clk.AHBCLKDivider);
+ 124:Core/Src/Tools/tim_info.c **** 
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 14
+
+
+ 125:Core/Src/Tools/tim_info.c **** 	//	//TIMによってAPB1かAPB2
+ 126:Core/Src/Tools/tim_info.c **** 	uint32_t MyTIMCLK;
+ 127:Core/Src/Tools/tim_info.c **** 	switch(tim_number){
+ 128:Core/Src/Tools/tim_info.c **** 	case 1: //High Speed
+ 129:Core/Src/Tools/tim_info.c **** 	case 8:
+ 130:Core/Src/Tools/tim_info.c **** 		clk.APB2CLKDivider = getAPB2_CLK_DIVIDER();
+ 131:Core/Src/Tools/tim_info.c **** 		if(clk.APB2CLKDivider == 0) return 0;
+ 132:Core/Src/Tools/tim_info.c **** 		else MyTIMCLK = (HCLK/(clk.APB2CLKDivider))*1;
+ 133:Core/Src/Tools/tim_info.c **** 		printf("	APB2Divider : %lu\r\n", clk.APB2CLKDivider);
+ 134:Core/Src/Tools/tim_info.c **** 		break;
+ 135:Core/Src/Tools/tim_info.c **** 	case 2: //Low Speed
+ 136:Core/Src/Tools/tim_info.c **** 	case 3:
+ 137:Core/Src/Tools/tim_info.c **** 	case 4:
+ 138:Core/Src/Tools/tim_info.c **** 	case 5:
+ 139:Core/Src/Tools/tim_info.c **** 	case 6:
+ 140:Core/Src/Tools/tim_info.c **** 	case 7:
+ 141:Core/Src/Tools/tim_info.c **** 		clk.APB1CLKDivider = getAPB1_CLK_DIVIDER();
+ 142:Core/Src/Tools/tim_info.c **** 		if(clk.APB1CLKDivider == 0) return 0;
+ 143:Core/Src/Tools/tim_info.c **** 		else MyTIMCLK = (HCLK/(clk.APB1CLKDivider))*2;
+ 144:Core/Src/Tools/tim_info.c **** 		printf("	APB1Divider : %lu\r\n", clk.APB1CLKDivider);
+ 145:Core/Src/Tools/tim_info.c **** 		break;
+ 146:Core/Src/Tools/tim_info.c **** 	default:
+ 147:Core/Src/Tools/tim_info.c **** 		return 0;
+ 148:Core/Src/Tools/tim_info.c **** 		break;
+ 149:Core/Src/Tools/tim_info.c **** 	}
+ 150:Core/Src/Tools/tim_info.c **** 
+ 151:Core/Src/Tools/tim_info.c **** 	printf("	TIM %d Clock Source is : %lu Hz\r\n",tim_number, MyTIMCLK);
+ 152:Core/Src/Tools/tim_info.c **** 	return MyTIMCLK;
+ 153:Core/Src/Tools/tim_info.c **** }
+ 536              		.loc 1 153 1 view .LVU117
+ 537 001c 2046     		mov	r0, r4
+ 538 001e 06B0     		add	sp, sp, #24
+ 539              	.LCFI5:
+ 540              		.cfi_remember_state
+ 541              		.cfi_def_cfa_offset 16
+ 542              		@ sp needed
+ 543 0020 70BD     		pop	{r4, r5, r6, pc}
+ 544              	.LVL47:
+ 545              	.L72:
+ 546              	.LCFI6:
+ 547              		.cfi_restore_state
+ 119:Core/Src/Tools/tim_info.c **** 	else HCLK = SystemCoreClock / (clk.AHBCLKDivider);
+ 548              		.loc 1 119 7 is_stmt 1 view .LVU118
+ 119:Core/Src/Tools/tim_info.c **** 	else HCLK = SystemCoreClock / (clk.AHBCLKDivider);
+ 549              		.loc 1 119 30 is_stmt 0 view .LVU119
+ 550 0022 1F4B     		ldr	r3, .L73
+ 551 0024 1E68     		ldr	r6, [r3]
+ 119:Core/Src/Tools/tim_info.c **** 	else HCLK = SystemCoreClock / (clk.AHBCLKDivider);
+ 552              		.loc 1 119 12 view .LVU120
+ 553 0026 B6FBF0F6 		udiv	r6, r6, r0
+ 554              	.LVL48:
+ 121:Core/Src/Tools/tim_info.c **** 	printf("TIM %d\r\n", tim_number);
+ 555              		.loc 1 121 2 is_stmt 1 view .LVU121
+ 121:Core/Src/Tools/tim_info.c **** 	printf("TIM %d\r\n", tim_number);
+ 556              		.loc 1 121 19 is_stmt 0 view .LVU122
+ 557 002a 2846     		mov	r0, r5
+ 558 002c FFF7FEFF 		bl	getTIMnumber
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 15
+
+
+ 559              	.LVL49:
+ 560 0030 0546     		mov	r5, r0
+ 561              	.LVL50:
+ 122:Core/Src/Tools/tim_info.c **** 	printf("	HCLK : %lu Hz\r\n  	AHBDivider : %lu\r\n", HCLK, clk.AHBCLKDivider);
+ 562              		.loc 1 122 2 is_stmt 1 view .LVU123
+ 563 0032 0146     		mov	r1, r0
+ 564 0034 1B48     		ldr	r0, .L73+4
+ 565              	.LVL51:
+ 122:Core/Src/Tools/tim_info.c **** 	printf("	HCLK : %lu Hz\r\n  	AHBDivider : %lu\r\n", HCLK, clk.AHBCLKDivider);
+ 566              		.loc 1 122 2 is_stmt 0 view .LVU124
+ 567 0036 FFF7FEFF 		bl	printf
+ 568              	.LVL52:
+ 123:Core/Src/Tools/tim_info.c **** 
+ 569              		.loc 1 123 2 is_stmt 1 view .LVU125
+ 570 003a 2246     		mov	r2, r4
+ 571 003c 3146     		mov	r1, r6
+ 572 003e 1A48     		ldr	r0, .L73+8
+ 573 0040 FFF7FEFF 		bl	printf
+ 574              	.LVL53:
+ 126:Core/Src/Tools/tim_info.c **** 	switch(tim_number){
+ 575              		.loc 1 126 2 view .LVU126
+ 127:Core/Src/Tools/tim_info.c **** 	case 1: //High Speed
+ 576              		.loc 1 127 2 view .LVU127
+ 577 0044 072D     		cmp	r5, #7
+ 578 0046 05DC     		bgt	.L66
+ 579 0048 022D     		cmp	r5, #2
+ 580 004a 18DA     		bge	.L67
+ 581 004c 012D     		cmp	r5, #1
+ 582 004e 03D0     		beq	.L68
+ 583 0050 0024     		movs	r4, #0
+ 584 0052 E3E7     		b	.L64
+ 585              	.L66:
+ 586 0054 082D     		cmp	r5, #8
+ 587 0056 21D1     		bne	.L70
+ 588              	.L68:
+ 130:Core/Src/Tools/tim_info.c **** 		if(clk.APB2CLKDivider == 0) return 0;
+ 589              		.loc 1 130 3 view .LVU128
+ 130:Core/Src/Tools/tim_info.c **** 		if(clk.APB2CLKDivider == 0) return 0;
+ 590              		.loc 1 130 24 is_stmt 0 view .LVU129
+ 591 0058 FFF7FEFF 		bl	getAPB2_CLK_DIVIDER
+ 592              	.LVL54:
+ 593 005c 0446     		mov	r4, r0
+ 130:Core/Src/Tools/tim_info.c **** 		if(clk.APB2CLKDivider == 0) return 0;
+ 594              		.loc 1 130 22 view .LVU130
+ 595 005e 0590     		str	r0, [sp, #20]
+ 131:Core/Src/Tools/tim_info.c **** 		else MyTIMCLK = (HCLK/(clk.APB2CLKDivider))*1;
+ 596              		.loc 1 131 3 is_stmt 1 view .LVU131
+ 131:Core/Src/Tools/tim_info.c **** 		else MyTIMCLK = (HCLK/(clk.APB2CLKDivider))*1;
+ 597              		.loc 1 131 5 is_stmt 0 view .LVU132
+ 598 0060 0028     		cmp	r0, #0
+ 599 0062 DBD0     		beq	.L64
+ 132:Core/Src/Tools/tim_info.c **** 		printf("	APB2Divider : %lu\r\n", clk.APB2CLKDivider);
+ 600              		.loc 1 132 8 is_stmt 1 view .LVU133
+ 132:Core/Src/Tools/tim_info.c **** 		printf("	APB2Divider : %lu\r\n", clk.APB2CLKDivider);
+ 601              		.loc 1 132 17 is_stmt 0 view .LVU134
+ 602 0064 B6FBF0F6 		udiv	r6, r6, r0
+ 603              	.LVL55:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 16
+
+
+ 133:Core/Src/Tools/tim_info.c **** 		break;
+ 604              		.loc 1 133 3 is_stmt 1 view .LVU135
+ 605 0068 0146     		mov	r1, r0
+ 606 006a 1048     		ldr	r0, .L73+12
+ 607 006c FFF7FEFF 		bl	printf
+ 608              	.LVL56:
+ 134:Core/Src/Tools/tim_info.c **** 	case 2: //Low Speed
+ 609              		.loc 1 134 3 view .LVU136
+ 132:Core/Src/Tools/tim_info.c **** 		printf("	APB2Divider : %lu\r\n", clk.APB2CLKDivider);
+ 610              		.loc 1 132 17 is_stmt 0 view .LVU137
+ 611 0070 3446     		mov	r4, r6
+ 612              	.LVL57:
+ 613              	.L69:
+ 148:Core/Src/Tools/tim_info.c **** 	}
+ 614              		.loc 1 148 3 is_stmt 1 view .LVU138
+ 151:Core/Src/Tools/tim_info.c **** 	return MyTIMCLK;
+ 615              		.loc 1 151 2 view .LVU139
+ 616 0072 2246     		mov	r2, r4
+ 617 0074 2946     		mov	r1, r5
+ 618 0076 0E48     		ldr	r0, .L73+16
+ 619 0078 FFF7FEFF 		bl	printf
+ 620              	.LVL58:
+ 152:Core/Src/Tools/tim_info.c **** }
+ 621              		.loc 1 152 2 view .LVU140
+ 152:Core/Src/Tools/tim_info.c **** }
+ 622              		.loc 1 152 9 is_stmt 0 view .LVU141
+ 623 007c CEE7     		b	.L64
+ 624              	.LVL59:
+ 625              	.L67:
+ 141:Core/Src/Tools/tim_info.c **** 		if(clk.APB1CLKDivider == 0) return 0;
+ 626              		.loc 1 141 3 is_stmt 1 view .LVU142
+ 141:Core/Src/Tools/tim_info.c **** 		if(clk.APB1CLKDivider == 0) return 0;
+ 627              		.loc 1 141 24 is_stmt 0 view .LVU143
+ 628 007e FFF7FEFF 		bl	getAPB1_CLK_DIVIDER
+ 629              	.LVL60:
+ 630 0082 0446     		mov	r4, r0
+ 141:Core/Src/Tools/tim_info.c **** 		if(clk.APB1CLKDivider == 0) return 0;
+ 631              		.loc 1 141 22 view .LVU144
+ 632 0084 0490     		str	r0, [sp, #16]
+ 142:Core/Src/Tools/tim_info.c **** 		else MyTIMCLK = (HCLK/(clk.APB1CLKDivider))*2;
+ 633              		.loc 1 142 3 is_stmt 1 view .LVU145
+ 142:Core/Src/Tools/tim_info.c **** 		else MyTIMCLK = (HCLK/(clk.APB1CLKDivider))*2;
+ 634              		.loc 1 142 5 is_stmt 0 view .LVU146
+ 635 0086 0028     		cmp	r0, #0
+ 636 0088 C8D0     		beq	.L64
+ 143:Core/Src/Tools/tim_info.c **** 		printf("	APB1Divider : %lu\r\n", clk.APB1CLKDivider);
+ 637              		.loc 1 143 8 is_stmt 1 view .LVU147
+ 143:Core/Src/Tools/tim_info.c **** 		printf("	APB1Divider : %lu\r\n", clk.APB1CLKDivider);
+ 638              		.loc 1 143 24 is_stmt 0 view .LVU148
+ 639 008a B6FBF0F6 		udiv	r6, r6, r0
+ 640              	.LVL61:
+ 143:Core/Src/Tools/tim_info.c **** 		printf("	APB1Divider : %lu\r\n", clk.APB1CLKDivider);
+ 641              		.loc 1 143 17 view .LVU149
+ 642 008e 7600     		lsls	r6, r6, #1
+ 643              	.LVL62:
+ 144:Core/Src/Tools/tim_info.c **** 		break;
+ 644              		.loc 1 144 3 is_stmt 1 view .LVU150
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 17
+
+
+ 645 0090 0146     		mov	r1, r0
+ 646 0092 0848     		ldr	r0, .L73+20
+ 647 0094 FFF7FEFF 		bl	printf
+ 648              	.LVL63:
+ 145:Core/Src/Tools/tim_info.c **** 	default:
+ 649              		.loc 1 145 3 view .LVU151
+ 143:Core/Src/Tools/tim_info.c **** 		printf("	APB1Divider : %lu\r\n", clk.APB1CLKDivider);
+ 650              		.loc 1 143 17 is_stmt 0 view .LVU152
+ 651 0098 3446     		mov	r4, r6
+ 145:Core/Src/Tools/tim_info.c **** 	default:
+ 652              		.loc 1 145 3 view .LVU153
+ 653 009a EAE7     		b	.L69
+ 654              	.LVL64:
+ 655              	.L70:
+ 127:Core/Src/Tools/tim_info.c **** 	case 1: //High Speed
+ 656              		.loc 1 127 2 view .LVU154
+ 657 009c 0024     		movs	r4, #0
+ 658 009e BDE7     		b	.L64
+ 659              	.L74:
+ 660              		.align	2
+ 661              	.L73:
+ 662 00a0 00000000 		.word	SystemCoreClock
+ 663 00a4 00000000 		.word	.LC3
+ 664 00a8 0C000000 		.word	.LC4
+ 665 00ac 34000000 		.word	.LC5
+ 666 00b0 64000000 		.word	.LC7
+ 667 00b4 4C000000 		.word	.LC6
+ 668              		.cfi_endproc
+ 669              	.LFE242:
+ 671              		.section	.rodata.printTIMinfo.str1.4,"aMS",%progbits,1
+ 672              		.align	2
+ 673              	.LC8:
+ 674 0000 09507265 		.ascii	"\011Prescaler : %lu ( + 1)\015\012\011CounterPeriod"
+ 674      7363616C 
+ 674      6572203A 
+ 674      20256C75 
+ 674      2028202B 
+ 675 0027 203A2025 		.ascii	" : %lu ( + 1)\015\012\011T =  (ClockSource / (Presc"
+ 675      6C752028 
+ 675      202B2031 
+ 675      290D0A09 
+ 675      54203D20 
+ 676 0051 616C6572 		.ascii	"aler+1)) / (CounterPeriod+1) = %lu Hz\015\012\015\012"
+ 676      2B312929 
+ 676      202F2028 
+ 676      436F756E 
+ 676      74657250 
+ 677 007a 00       		.ascii	"\000"
+ 678              		.section	.text.printTIMinfo,"ax",%progbits
+ 679              		.align	1
+ 680              		.global	printTIMinfo
+ 681              		.syntax unified
+ 682              		.thumb
+ 683              		.thumb_func
+ 684              		.fpu fpv4-sp-d16
+ 686              	printTIMinfo:
+ 687              	.LVL65:
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 18
+
+
+ 688              	.LFB243:
+ 154:Core/Src/Tools/tim_info.c **** 
+ 155:Core/Src/Tools/tim_info.c **** 
+ 156:Core/Src/Tools/tim_info.c **** int printTIMinfo(TIM_HandleTypeDef *htim){
+ 689              		.loc 1 156 42 is_stmt 1 view -0
+ 690              		.cfi_startproc
+ 691              		@ args = 0, pretend = 0, frame = 0
+ 692              		@ frame_needed = 0, uses_anonymous_args = 0
+ 693              		.loc 1 156 42 is_stmt 0 view .LVU156
+ 694 0000 10B5     		push	{r4, lr}
+ 695              	.LCFI7:
+ 696              		.cfi_def_cfa_offset 8
+ 697              		.cfi_offset 4, -8
+ 698              		.cfi_offset 14, -4
+ 699 0002 0446     		mov	r4, r0
+ 157:Core/Src/Tools/tim_info.c **** 
+ 158:Core/Src/Tools/tim_info.c **** 	uint32_t tim_clk  = printTIMclock(htim);
+ 700              		.loc 1 158 2 is_stmt 1 view .LVU157
+ 701              		.loc 1 158 22 is_stmt 0 view .LVU158
+ 702 0004 FFF7FEFF 		bl	printTIMclock
+ 703              	.LVL66:
+ 159:Core/Src/Tools/tim_info.c **** 
+ 160:Core/Src/Tools/tim_info.c **** 	if(tim_clk == 0) return 0;
+ 704              		.loc 1 160 2 is_stmt 1 view .LVU159
+ 705              		.loc 1 160 4 is_stmt 0 view .LVU160
+ 706 0008 08B9     		cbnz	r0, .L79
+ 707              		.loc 1 160 26 view .LVU161
+ 708 000a 0020     		movs	r0, #0
+ 709              	.LVL67:
+ 710              	.L75:
+ 161:Core/Src/Tools/tim_info.c **** 	else {
+ 162:Core/Src/Tools/tim_info.c **** 
+ 163:Core/Src/Tools/tim_info.c **** 		printf("	Prescaler : %lu ( + 1)\r\n"
+ 164:Core/Src/Tools/tim_info.c **** 				   "	CounterPeriod : %lu ( + 1)\r\n"
+ 165:Core/Src/Tools/tim_info.c **** 				   "	T =  (ClockSource / (Prescaler+1)) / (CounterPeriod+1) = %lu Hz\r\n\r\n",
+ 166:Core/Src/Tools/tim_info.c **** 				htim->Init.Prescaler ,
+ 167:Core/Src/Tools/tim_info.c **** 				htim->Init.Period,
+ 168:Core/Src/Tools/tim_info.c **** 				(tim_clk/(htim->Init.Prescaler+1))/(htim->Init.Period+1)
+ 169:Core/Src/Tools/tim_info.c **** 				 //クロックソースも表示. 最終的に何Hzでカウントしているのかまで表�
+ 170:Core/Src/Tools/tim_info.c **** 				);
+ 171:Core/Src/Tools/tim_info.c **** 		return 1;
+ 172:Core/Src/Tools/tim_info.c **** 	}
+ 173:Core/Src/Tools/tim_info.c **** 
+ 174:Core/Src/Tools/tim_info.c **** }
+ 711              		.loc 1 174 1 view .LVU162
+ 712 000c 10BD     		pop	{r4, pc}
+ 713              	.LVL68:
+ 714              	.L79:
+ 715              		.loc 1 174 1 view .LVU163
+ 716 000e 0346     		mov	r3, r0
+ 163:Core/Src/Tools/tim_info.c **** 				   "	CounterPeriod : %lu ( + 1)\r\n"
+ 717              		.loc 1 163 3 is_stmt 1 view .LVU164
+ 718 0010 6168     		ldr	r1, [r4, #4]
+ 719 0012 E268     		ldr	r2, [r4, #12]
+ 168:Core/Src/Tools/tim_info.c **** 				 //クロックソースも表示. 最終的に何Hzでカウントしているのかまで表�
+ 720              		.loc 1 168 35 is_stmt 0 view .LVU165
+ 721 0014 481C     		adds	r0, r1, #1
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 19
+
+
+ 722              	.LVL69:
+ 168:Core/Src/Tools/tim_info.c **** 				 //クロックソースも表示. 最終的に何Hzでカウントしているのかまで表�
+ 723              		.loc 1 168 13 view .LVU166
+ 724 0016 B3FBF0F3 		udiv	r3, r3, r0
+ 725              	.LVL70:
+ 168:Core/Src/Tools/tim_info.c **** 				 //クロックソースも表示. 最終的に何Hzでカウントしているのかまで表�
+ 726              		.loc 1 168 58 view .LVU167
+ 727 001a 501C     		adds	r0, r2, #1
+ 163:Core/Src/Tools/tim_info.c **** 				   "	CounterPeriod : %lu ( + 1)\r\n"
+ 728              		.loc 1 163 3 view .LVU168
+ 729 001c B3FBF0F3 		udiv	r3, r3, r0
+ 730 0020 0248     		ldr	r0, .L80
+ 731 0022 FFF7FEFF 		bl	printf
+ 732              	.LVL71:
+ 171:Core/Src/Tools/tim_info.c **** 	}
+ 733              		.loc 1 171 3 is_stmt 1 view .LVU169
+ 171:Core/Src/Tools/tim_info.c **** 	}
+ 734              		.loc 1 171 10 is_stmt 0 view .LVU170
+ 735 0026 0120     		movs	r0, #1
+ 736 0028 F0E7     		b	.L75
+ 737              	.L81:
+ 738 002a 00BF     		.align	2
+ 739              	.L80:
+ 740 002c 00000000 		.word	.LC8
+ 741              		.cfi_endproc
+ 742              	.LFE243:
+ 744              		.text
+ 745              	.Letext0:
+ 746              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
+ 747              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
+ 748              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 749              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 750              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h"
+ 751              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 752              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 753              		.file 9 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 754              		.file 10 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/stdio.h"
+ 755              		.file 11 "<built-in>"
+ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 tim_info.c
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:18     .text.getTIMnumber:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:25     .text.getTIMnumber:0000000000000000 getTIMnumber
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:187    .text.getTIMnumber:0000000000000094 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:192    .rodata.getAHB_CLK_DIVIDER.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:196    .text.getAHB_CLK_DIVIDER:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:202    .text.getAHB_CLK_DIVIDER:0000000000000000 getAHB_CLK_DIVIDER
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:298    .text.getAHB_CLK_DIVIDER:0000000000000064 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:304    .rodata.getAPB2_CLK_DIVIDER.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:308    .text.getAPB2_CLK_DIVIDER:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:314    .text.getAPB2_CLK_DIVIDER:0000000000000000 getAPB2_CLK_DIVIDER
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:382    .text.getAPB2_CLK_DIVIDER:0000000000000044 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:388    .rodata.getAPB1_CLK_DIVIDER.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:392    .text.getAPB1_CLK_DIVIDER:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:398    .text.getAPB1_CLK_DIVIDER:0000000000000000 getAPB1_CLK_DIVIDER
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:466    .text.getAPB1_CLK_DIVIDER:0000000000000044 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:472    .rodata.printTIMclock.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:489    .text.printTIMclock:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:495    .text.printTIMclock:0000000000000000 printTIMclock
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:662    .text.printTIMclock:00000000000000a0 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:672    .rodata.printTIMinfo.str1.4:0000000000000000 $d
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:679    .text.printTIMinfo:0000000000000000 $t
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:686    .text.printTIMinfo:0000000000000000 printTIMinfo
+/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cchpZhOh.s:740    .text.printTIMinfo:000000000000002c $d
+
+UNDEFINED SYMBOLS
+puts
+printf
+SystemCoreClock

@@ -1,30 +1,55 @@
-/*
- * ADC.h
- *
- *  Created on: Feb 12, 2022
- *      Author: leopi
- */
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file    adc.h
+  * @brief   This file contains all the function prototypes for
+  *          the adc.c file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2023 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __ADC_H__
+#define __ADC_H__
 
-#ifndef INC_ADC_H_
-#define INC_ADC_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include <main.h>
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
 
-//adcの大元
+/* USER CODE BEGIN Includes */
 
-//壁センサデータ四つ、バッテリのADC一つ
+/* USER CODE END Includes */
+
 extern ADC_HandleTypeDef hadc1;
+
 extern ADC_HandleTypeDef hadc2;
 
-#define ADC1_CH_NUM		3
-#define ADC2_CH_NUM		2
+/* USER CODE BEGIN Private defines */
 
+/* USER CODE END Private defines */
 
-extern uint32_t adc1[ADC1_CH_NUM];
-extern uint32_t adc2[ADC2_CH_NUM];
+void MX_ADC1_Init(void);
+void MX_ADC2_Init(void);
 
+/* USER CODE BEGIN Prototypes */
 
-void ADCStart();  //AD値のDMA
+/* USER CODE END Prototypes */
 
-void ADCStop();
-#endif /* INC_ADC_H_ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __ADC_H__ */
+
