@@ -9,22 +9,38 @@
 			"label": "Build project",
 			"command": "make",
 			"args": [
-				"DEBUG=1",
-				"-j3",
-				"all"
-			],
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
+				"all",
+				"GCC_PATH=C:\\tools\\gcc-arm-none-eabi-10_2021.10\\bin"
+			],            
+			"options": {
+                "env": {
+                    "PATH": "C:\\Program Files (x86)\\GnuWin32\\bin"
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Clean project",
+            "command": "Remove-Item",
+            "args": [
+                "${workspaceFolder}\\build",
+                "-Recurse"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
 		{
 			"type": "shell",
 			"label": "Flash program",
-			"command": "./flash.zsh",
+			"command": "./flash.ps1",
 			"problemMatcher": [],
 			"group": "none",
 			

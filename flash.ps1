@@ -1,0 +1,1 @@
+STM32_Programmer_CLI -c port=COM3 br=115200 -w /Users/leopi/STM32CubeIDE/workspace_1.5.1/micromouse_vs_mx/build/MicroMouse_main2.bin 0x08000000

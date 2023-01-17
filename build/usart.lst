@@ -1,30 +1,30 @@
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 1
 
 
    1              		.cpu cortex-m4
-   2              		.eabi_attribute 27, 1
-   3              		.eabi_attribute 28, 1
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 1
-  11              		.eabi_attribute 34, 1
-  12              		.eabi_attribute 18, 4
-  13              		.file	"usart.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
-  18              		.align	1
-  19              		.global	MX_USART1_UART_Init
-  20              		.arch armv7e-m
-  21              		.syntax unified
-  22              		.thumb
-  23              		.thumb_func
-  24              		.fpu fpv4-sp-d16
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"usart.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_USART1_UART_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
   26              	MX_USART1_UART_Init:
   27              	.LFB235:
   28              		.file 1 "Core/Src/usart.c"
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 1
   28:Core/Src/usart.c **** 
   29:Core/Src/usart.c **** /* USART1 init function */
   30:Core/Src/usart.c **** 
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 2
 
 
   31:Core/Src/usart.c **** void MX_USART1_UART_Init(void)
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 1
   65              		.loc 1 48 28 is_stmt 0 view .LVU16
   66 001c C361     		str	r3, [r0, #28]
   49:Core/Src/usart.c ****   if (HAL_UART_Init(&huart1) != HAL_OK)
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 3
 
 
   67              		.loc 1 49 3 is_stmt 1 view .LVU17
@@ -158,49 +158,48 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 1
   93              		.syntax unified
   94              		.thumb
   95              		.thumb_func
-  96              		.fpu fpv4-sp-d16
-  98              	HAL_UART_MspInit:
-  99              	.LVL2:
- 100              	.LFB236:
+  97              	HAL_UART_MspInit:
+  98              	.LVL2:
+  99              	.LFB236:
   58:Core/Src/usart.c **** 
   59:Core/Src/usart.c **** void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   60:Core/Src/usart.c **** {
- 101              		.loc 1 60 1 is_stmt 1 view -0
- 102              		.cfi_startproc
- 103              		@ args = 0, pretend = 0, frame = 32
- 104              		@ frame_needed = 0, uses_anonymous_args = 0
- 105              		.loc 1 60 1 is_stmt 0 view .LVU24
- 106 0000 00B5     		push	{lr}
- 107              	.LCFI1:
- 108              		.cfi_def_cfa_offset 4
- 109              		.cfi_offset 14, -4
- 110 0002 89B0     		sub	sp, sp, #36
- 111              	.LCFI2:
- 112              		.cfi_def_cfa_offset 40
+ 100              		.loc 1 60 1 is_stmt 1 view -0
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 32
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104              		.loc 1 60 1 is_stmt 0 view .LVU24
+ 105 0000 00B5     		push	{lr}
+ 106              	.LCFI1:
+ 107              		.cfi_def_cfa_offset 4
+ 108              		.cfi_offset 14, -4
+ 109 0002 89B0     		sub	sp, sp, #36
+ 110              	.LCFI2:
+ 111              		.cfi_def_cfa_offset 40
   61:Core/Src/usart.c **** 
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 4
-
-
   62:Core/Src/usart.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
- 113              		.loc 1 62 3 is_stmt 1 view .LVU25
- 114              		.loc 1 62 20 is_stmt 0 view .LVU26
- 115 0004 0023     		movs	r3, #0
- 116 0006 0393     		str	r3, [sp, #12]
- 117 0008 0493     		str	r3, [sp, #16]
- 118 000a 0593     		str	r3, [sp, #20]
- 119 000c 0693     		str	r3, [sp, #24]
- 120 000e 0793     		str	r3, [sp, #28]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 4
+
+
+ 112              		.loc 1 62 3 is_stmt 1 view .LVU25
+ 113              		.loc 1 62 20 is_stmt 0 view .LVU26
+ 114 0004 0023     		movs	r3, #0
+ 115 0006 0393     		str	r3, [sp, #12]
+ 116 0008 0493     		str	r3, [sp, #16]
+ 117 000a 0593     		str	r3, [sp, #20]
+ 118 000c 0693     		str	r3, [sp, #24]
+ 119 000e 0793     		str	r3, [sp, #28]
   63:Core/Src/usart.c ****   if(uartHandle->Instance==USART1)
- 121              		.loc 1 63 3 is_stmt 1 view .LVU27
- 122              		.loc 1 63 16 is_stmt 0 view .LVU28
- 123 0010 0268     		ldr	r2, [r0]
- 124              		.loc 1 63 5 view .LVU29
- 125 0012 03F18043 		add	r3, r3, #1073741824
- 126 0016 03F58833 		add	r3, r3, #69632
- 127 001a 9A42     		cmp	r2, r3
- 128 001c 02D0     		beq	.L10
- 129              	.LVL3:
- 130              	.L7:
+ 120              		.loc 1 63 3 is_stmt 1 view .LVU27
+ 121              		.loc 1 63 16 is_stmt 0 view .LVU28
+ 122 0010 0268     		ldr	r2, [r0]
+ 123              		.loc 1 63 5 view .LVU29
+ 124 0012 03F18043 		add	r3, r3, #1073741824
+ 125 0016 03F58833 		add	r3, r3, #69632
+ 126 001a 9A42     		cmp	r2, r3
+ 127 001c 02D0     		beq	.L10
+ 128              	.LVL3:
+ 129              	.L7:
   64:Core/Src/usart.c ****   {
   65:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 0 */
   66:Core/Src/usart.c **** 
@@ -225,149 +224,148 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 1
   85:Core/Src/usart.c ****   /* USER CODE END USART1_MspInit 1 */
   86:Core/Src/usart.c ****   }
   87:Core/Src/usart.c **** }
- 131              		.loc 1 87 1 view .LVU30
- 132 001e 09B0     		add	sp, sp, #36
- 133              	.LCFI3:
- 134              		.cfi_remember_state
- 135              		.cfi_def_cfa_offset 4
- 136              		@ sp needed
- 137 0020 5DF804FB 		ldr	pc, [sp], #4
- 138              	.LVL4:
- 139              	.L10:
- 140              	.LCFI4:
- 141              		.cfi_restore_state
+ 130              		.loc 1 87 1 view .LVU30
+ 131 001e 09B0     		add	sp, sp, #36
+ 132              	.LCFI3:
+ 133              		.cfi_remember_state
+ 134              		.cfi_def_cfa_offset 4
+ 135              		@ sp needed
+ 136 0020 5DF804FB 		ldr	pc, [sp], #4
+ 137              	.LVL4:
+ 138              	.L10:
+ 139              	.LCFI4:
+ 140              		.cfi_restore_state
   69:Core/Src/usart.c **** 
- 142              		.loc 1 69 5 is_stmt 1 view .LVU31
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 5
+ 141              		.loc 1 69 5 is_stmt 1 view .LVU31
+ 142              	.LBB2:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 5
 
 
- 143              	.LBB2:
   69:Core/Src/usart.c **** 
- 144              		.loc 1 69 5 view .LVU32
- 145 0024 0021     		movs	r1, #0
- 146 0026 0191     		str	r1, [sp, #4]
+ 143              		.loc 1 69 5 view .LVU32
+ 144 0024 0021     		movs	r1, #0
+ 145 0026 0191     		str	r1, [sp, #4]
   69:Core/Src/usart.c **** 
- 147              		.loc 1 69 5 view .LVU33
- 148 0028 03F59433 		add	r3, r3, #75776
- 149 002c 5A6C     		ldr	r2, [r3, #68]
- 150 002e 42F01002 		orr	r2, r2, #16
- 151 0032 5A64     		str	r2, [r3, #68]
+ 146              		.loc 1 69 5 view .LVU33
+ 147 0028 03F59433 		add	r3, r3, #75776
+ 148 002c 5A6C     		ldr	r2, [r3, #68]
+ 149 002e 42F01002 		orr	r2, r2, #16
+ 150 0032 5A64     		str	r2, [r3, #68]
   69:Core/Src/usart.c **** 
- 152              		.loc 1 69 5 view .LVU34
- 153 0034 5A6C     		ldr	r2, [r3, #68]
- 154 0036 02F01002 		and	r2, r2, #16
- 155 003a 0192     		str	r2, [sp, #4]
+ 151              		.loc 1 69 5 view .LVU34
+ 152 0034 5A6C     		ldr	r2, [r3, #68]
+ 153 0036 02F01002 		and	r2, r2, #16
+ 154 003a 0192     		str	r2, [sp, #4]
   69:Core/Src/usart.c **** 
- 156              		.loc 1 69 5 view .LVU35
- 157 003c 019A     		ldr	r2, [sp, #4]
- 158              	.LBE2:
+ 155              		.loc 1 69 5 view .LVU35
+ 156 003c 019A     		ldr	r2, [sp, #4]
+ 157              	.LBE2:
   69:Core/Src/usart.c **** 
- 159              		.loc 1 69 5 view .LVU36
+ 158              		.loc 1 69 5 view .LVU36
   71:Core/Src/usart.c ****     /**USART1 GPIO Configuration
- 160              		.loc 1 71 5 view .LVU37
- 161              	.LBB3:
+ 159              		.loc 1 71 5 view .LVU37
+ 160              	.LBB3:
   71:Core/Src/usart.c ****     /**USART1 GPIO Configuration
- 162              		.loc 1 71 5 view .LVU38
- 163 003e 0291     		str	r1, [sp, #8]
+ 161              		.loc 1 71 5 view .LVU38
+ 162 003e 0291     		str	r1, [sp, #8]
   71:Core/Src/usart.c ****     /**USART1 GPIO Configuration
- 164              		.loc 1 71 5 view .LVU39
- 165 0040 1A6B     		ldr	r2, [r3, #48]
- 166 0042 42F00102 		orr	r2, r2, #1
- 167 0046 1A63     		str	r2, [r3, #48]
+ 163              		.loc 1 71 5 view .LVU39
+ 164 0040 1A6B     		ldr	r2, [r3, #48]
+ 165 0042 42F00102 		orr	r2, r2, #1
+ 166 0046 1A63     		str	r2, [r3, #48]
   71:Core/Src/usart.c ****     /**USART1 GPIO Configuration
- 168              		.loc 1 71 5 view .LVU40
- 169 0048 1B6B     		ldr	r3, [r3, #48]
- 170 004a 03F00103 		and	r3, r3, #1
- 171 004e 0293     		str	r3, [sp, #8]
+ 167              		.loc 1 71 5 view .LVU40
+ 168 0048 1B6B     		ldr	r3, [r3, #48]
+ 169 004a 03F00103 		and	r3, r3, #1
+ 170 004e 0293     		str	r3, [sp, #8]
   71:Core/Src/usart.c ****     /**USART1 GPIO Configuration
- 172              		.loc 1 71 5 view .LVU41
- 173 0050 029B     		ldr	r3, [sp, #8]
- 174              	.LBE3:
+ 171              		.loc 1 71 5 view .LVU41
+ 172 0050 029B     		ldr	r3, [sp, #8]
+ 173              	.LBE3:
   71:Core/Src/usart.c ****     /**USART1 GPIO Configuration
- 175              		.loc 1 71 5 view .LVU42
+ 174              		.loc 1 71 5 view .LVU42
   76:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 176              		.loc 1 76 5 view .LVU43
+ 175              		.loc 1 76 5 view .LVU43
   76:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 177              		.loc 1 76 25 is_stmt 0 view .LVU44
- 178 0052 4FF4C063 		mov	r3, #1536
- 179 0056 0393     		str	r3, [sp, #12]
+ 176              		.loc 1 76 25 is_stmt 0 view .LVU44
+ 177 0052 4FF4C063 		mov	r3, #1536
+ 178 0056 0393     		str	r3, [sp, #12]
   77:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
- 180              		.loc 1 77 5 is_stmt 1 view .LVU45
+ 179              		.loc 1 77 5 is_stmt 1 view .LVU45
   77:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
- 181              		.loc 1 77 26 is_stmt 0 view .LVU46
- 182 0058 0223     		movs	r3, #2
- 183 005a 0493     		str	r3, [sp, #16]
+ 180              		.loc 1 77 26 is_stmt 0 view .LVU46
+ 181 0058 0223     		movs	r3, #2
+ 182 005a 0493     		str	r3, [sp, #16]
   78:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 6
+ 183              		.loc 1 78 5 is_stmt 1 view .LVU47
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 6
 
 
- 184              		.loc 1 78 5 is_stmt 1 view .LVU47
   79:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
- 185              		.loc 1 79 5 view .LVU48
+ 184              		.loc 1 79 5 view .LVU48
   79:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
- 186              		.loc 1 79 27 is_stmt 0 view .LVU49
- 187 005c 0323     		movs	r3, #3
- 188 005e 0693     		str	r3, [sp, #24]
+ 185              		.loc 1 79 27 is_stmt 0 view .LVU49
+ 186 005c 0323     		movs	r3, #3
+ 187 005e 0693     		str	r3, [sp, #24]
   80:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 189              		.loc 1 80 5 is_stmt 1 view .LVU50
+ 188              		.loc 1 80 5 is_stmt 1 view .LVU50
   80:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 190              		.loc 1 80 31 is_stmt 0 view .LVU51
- 191 0060 0723     		movs	r3, #7
- 192 0062 0793     		str	r3, [sp, #28]
+ 189              		.loc 1 80 31 is_stmt 0 view .LVU51
+ 190 0060 0723     		movs	r3, #7
+ 191 0062 0793     		str	r3, [sp, #28]
   81:Core/Src/usart.c **** 
- 193              		.loc 1 81 5 is_stmt 1 view .LVU52
- 194 0064 03A9     		add	r1, sp, #12
- 195 0066 0248     		ldr	r0, .L11
- 196              	.LVL5:
+ 192              		.loc 1 81 5 is_stmt 1 view .LVU52
+ 193 0064 03A9     		add	r1, sp, #12
+ 194 0066 0248     		ldr	r0, .L11
+ 195              	.LVL5:
   81:Core/Src/usart.c **** 
- 197              		.loc 1 81 5 is_stmt 0 view .LVU53
- 198 0068 FFF7FEFF 		bl	HAL_GPIO_Init
- 199              	.LVL6:
- 200              		.loc 1 87 1 view .LVU54
- 201 006c D7E7     		b	.L7
- 202              	.L12:
- 203 006e 00BF     		.align	2
- 204              	.L11:
- 205 0070 00000240 		.word	1073872896
- 206              		.cfi_endproc
- 207              	.LFE236:
- 209              		.section	.text.HAL_UART_MspDeInit,"ax",%progbits
- 210              		.align	1
- 211              		.global	HAL_UART_MspDeInit
- 212              		.syntax unified
- 213              		.thumb
- 214              		.thumb_func
- 215              		.fpu fpv4-sp-d16
- 217              	HAL_UART_MspDeInit:
- 218              	.LVL7:
- 219              	.LFB237:
+ 196              		.loc 1 81 5 is_stmt 0 view .LVU53
+ 197 0068 FFF7FEFF 		bl	HAL_GPIO_Init
+ 198              	.LVL6:
+ 199              		.loc 1 87 1 view .LVU54
+ 200 006c D7E7     		b	.L7
+ 201              	.L12:
+ 202 006e 00BF     		.align	2
+ 203              	.L11:
+ 204 0070 00000240 		.word	1073872896
+ 205              		.cfi_endproc
+ 206              	.LFE236:
+ 208              		.section	.text.HAL_UART_MspDeInit,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	HAL_UART_MspDeInit
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	HAL_UART_MspDeInit:
+ 216              	.LVL7:
+ 217              	.LFB237:
   88:Core/Src/usart.c **** 
   89:Core/Src/usart.c **** void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
   90:Core/Src/usart.c **** {
- 220              		.loc 1 90 1 is_stmt 1 view -0
- 221              		.cfi_startproc
- 222              		@ args = 0, pretend = 0, frame = 0
- 223              		@ frame_needed = 0, uses_anonymous_args = 0
- 224              		.loc 1 90 1 is_stmt 0 view .LVU56
- 225 0000 08B5     		push	{r3, lr}
- 226              	.LCFI5:
- 227              		.cfi_def_cfa_offset 8
- 228              		.cfi_offset 3, -8
- 229              		.cfi_offset 14, -4
+ 218              		.loc 1 90 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222              		.loc 1 90 1 is_stmt 0 view .LVU56
+ 223 0000 08B5     		push	{r3, lr}
+ 224              	.LCFI5:
+ 225              		.cfi_def_cfa_offset 8
+ 226              		.cfi_offset 3, -8
+ 227              		.cfi_offset 14, -4
   91:Core/Src/usart.c **** 
   92:Core/Src/usart.c ****   if(uartHandle->Instance==USART1)
- 230              		.loc 1 92 3 is_stmt 1 view .LVU57
- 231              		.loc 1 92 16 is_stmt 0 view .LVU58
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 7
+ 228              		.loc 1 92 3 is_stmt 1 view .LVU57
+ 229              		.loc 1 92 16 is_stmt 0 view .LVU58
+ 230 0002 0268     		ldr	r2, [r0]
+ 231              		.loc 1 92 5 view .LVU59
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 7
 
 
- 232 0002 0268     		ldr	r2, [r0]
- 233              		.loc 1 92 5 view .LVU59
- 234 0004 074B     		ldr	r3, .L17
- 235 0006 9A42     		cmp	r2, r3
- 236 0008 00D0     		beq	.L16
- 237              	.LVL8:
- 238              	.L13:
+ 232 0004 074B     		ldr	r3, .L17
+ 233 0006 9A42     		cmp	r2, r3
+ 234 0008 00D0     		beq	.L16
+ 235              	.LVL8:
+ 236              	.L13:
   93:Core/Src/usart.c ****   {
   94:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 0 */
   95:Core/Src/usart.c **** 
@@ -386,75 +384,75 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 1
  108:Core/Src/usart.c ****   /* USER CODE END USART1_MspDeInit 1 */
  109:Core/Src/usart.c ****   }
  110:Core/Src/usart.c **** }
- 239              		.loc 1 110 1 view .LVU60
- 240 000a 08BD     		pop	{r3, pc}
- 241              	.LVL9:
- 242              	.L16:
+ 237              		.loc 1 110 1 view .LVU60
+ 238 000a 08BD     		pop	{r3, pc}
+ 239              	.LVL9:
+ 240              	.L16:
   98:Core/Src/usart.c **** 
- 243              		.loc 1 98 5 is_stmt 1 view .LVU61
- 244 000c 064A     		ldr	r2, .L17+4
- 245 000e 536C     		ldr	r3, [r2, #68]
- 246 0010 23F01003 		bic	r3, r3, #16
- 247 0014 5364     		str	r3, [r2, #68]
+ 241              		.loc 1 98 5 is_stmt 1 view .LVU61
+ 242 000c 064A     		ldr	r2, .L17+4
+ 243 000e 536C     		ldr	r3, [r2, #68]
+ 244 0010 23F01003 		bic	r3, r3, #16
+ 245 0014 5364     		str	r3, [r2, #68]
  104:Core/Src/usart.c **** 
- 248              		.loc 1 104 5 view .LVU62
- 249 0016 4FF4C061 		mov	r1, #1536
- 250 001a 0448     		ldr	r0, .L17+8
- 251              	.LVL10:
+ 246              		.loc 1 104 5 view .LVU62
+ 247 0016 4FF4C061 		mov	r1, #1536
+ 248 001a 0448     		ldr	r0, .L17+8
+ 249              	.LVL10:
  104:Core/Src/usart.c **** 
- 252              		.loc 1 104 5 is_stmt 0 view .LVU63
- 253 001c FFF7FEFF 		bl	HAL_GPIO_DeInit
- 254              	.LVL11:
- 255              		.loc 1 110 1 view .LVU64
- 256 0020 F3E7     		b	.L13
- 257              	.L18:
- 258 0022 00BF     		.align	2
- 259              	.L17:
- 260 0024 00100140 		.word	1073811456
- 261 0028 00380240 		.word	1073887232
- 262 002c 00000240 		.word	1073872896
- 263              		.cfi_endproc
- 264              	.LFE237:
- 266              		.global	huart1
- 267              		.section	.bss.huart1,"aw",%nobits
- 268              		.align	2
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 8
+ 250              		.loc 1 104 5 is_stmt 0 view .LVU63
+ 251 001c FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 252              	.LVL11:
+ 253              		.loc 1 110 1 view .LVU64
+ 254 0020 F3E7     		b	.L13
+ 255              	.L18:
+ 256 0022 00BF     		.align	2
+ 257              	.L17:
+ 258 0024 00100140 		.word	1073811456
+ 259 0028 00380240 		.word	1073887232
+ 260 002c 00000240 		.word	1073872896
+ 261              		.cfi_endproc
+ 262              	.LFE237:
+ 264              		.global	huart1
+ 265              		.section	.bss.huart1,"aw",%nobits
+ 266              		.align	2
+ 267              		.set	.LANCHOR0,. + 0
+ 270              	huart1:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 8
 
 
- 269              		.set	.LANCHOR0,. + 0
- 272              	huart1:
- 273 0000 00000000 		.space	68
- 273      00000000 
- 273      00000000 
- 273      00000000 
- 273      00000000 
- 274              		.text
- 275              	.Letext0:
- 276              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
- 277              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
- 278              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 279              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 280              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
- 281              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 282              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 283              		.file 9 "Core/Inc/main.h"
- 284              		.file 10 "Core/Inc/usart.h"
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s 			page 9
+ 271 0000 00000000 		.space	68
+ 271      00000000 
+ 271      00000000 
+ 271      00000000 
+ 271      00000000 
+ 272              		.text
+ 273              	.Letext0:
+ 274              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 275              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 276              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 277              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 278              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 279              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 280              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 281              		.file 9 "Core/Inc/main.h"
+ 282              		.file 10 "Core/Inc/usart.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s 			page 9
 
 
 DEFINED SYMBOLS
-                            *ABS*:0000000000000000 usart.c
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:18     .text.MX_USART1_UART_Init:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:26     .text.MX_USART1_UART_Init:0000000000000000 MX_USART1_UART_Init
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:85     .text.MX_USART1_UART_Init:000000000000002c $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:91     .text.HAL_UART_MspInit:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:98     .text.HAL_UART_MspInit:0000000000000000 HAL_UART_MspInit
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:205    .text.HAL_UART_MspInit:0000000000000070 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:210    .text.HAL_UART_MspDeInit:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:217    .text.HAL_UART_MspDeInit:0000000000000000 HAL_UART_MspDeInit
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:260    .text.HAL_UART_MspDeInit:0000000000000024 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:272    .bss.huart1:0000000000000000 huart1
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccaNTh8V.s:268    .bss.huart1:0000000000000000 $d
+                            *ABS*:00000000 usart.c
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:20     .text.MX_USART1_UART_Init:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:26     .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:85     .text.MX_USART1_UART_Init:0000002c $d
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:91     .text.HAL_UART_MspInit:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:97     .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:204    .text.HAL_UART_MspInit:00000070 $d
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:209    .text.HAL_UART_MspDeInit:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:215    .text.HAL_UART_MspDeInit:00000000 HAL_UART_MspDeInit
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:258    .text.HAL_UART_MspDeInit:00000024 $d
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:270    .bss.huart1:00000000 huart1
+C:\Users\leopi\AppData\Local\Temp\ccpUZjoG.s:266    .bss.huart1:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Init

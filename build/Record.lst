@@ -1,50 +1,50 @@
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 1
 
 
    1              		.cpu cortex-m4
-   2              		.eabi_attribute 27, 1
-   3              		.eabi_attribute 28, 1
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 1
-  11              		.eabi_attribute 34, 1
-  12              		.eabi_attribute 18, 4
-  13              		.file	"Record.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.section	.text.flashStoreNodes,"ax",%progbits
-  18              		.align	1
-  19              		.global	flashStoreNodes
-  20              		.arch armv7e-m
-  21              		.syntax unified
-  22              		.thumb
-  23              		.thumb_func
-  24              		.fpu fpv4-sp-d16
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Record.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.flashStoreNodes,"ax",%progbits
+  20              		.align	1
+  21              		.global	flashStoreNodes
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
   26              	flashStoreNodes:
   27              	.LVL0:
   28              	.LFB238:
-  29              		.file 1 "Core/Src/Record.c"
-   1:Core/Src/Record.c **** /*
-   2:Core/Src/Record.c ****  * Record.c
-   3:Core/Src/Record.c ****  *
-   4:Core/Src/Record.c ****  *  Created on: 2022/10/28
-   5:Core/Src/Record.c ****  *      Author: leopi
-   6:Core/Src/Record.c ****  */
-   7:Core/Src/Record.c **** 
-   8:Core/Src/Record.c **** #include "Record.h"
-   9:Core/Src/Record.c **** #include <stdio.h>
-  10:Core/Src/Record.c **** 
-  11:Core/Src/Record.c **** //#include "MicroMouse.h"
-  12:Core/Src/Record.c **** //マップデータをフラッシュに書き込む処理
-  13:Core/Src/Record.c **** #include "Flash.h"
-  14:Core/Src/Record.c **** #include "MazeLib.h"
-  15:Core/Src/Record.c **** void flashStoreNodes(maze_node *maze)
-  16:Core/Src/Record.c **** {
+  29              		.file 1 "Core/Src/Origin/Record.c"
+   1:Core/Src/Origin/Record.c **** /*
+   2:Core/Src/Origin/Record.c ****  * Record.c
+   3:Core/Src/Origin/Record.c ****  *
+   4:Core/Src/Origin/Record.c ****  *  Created on: 2022/10/28
+   5:Core/Src/Origin/Record.c ****  *      Author: leopi
+   6:Core/Src/Origin/Record.c ****  */
+   7:Core/Src/Origin/Record.c **** 
+   8:Core/Src/Origin/Record.c **** #include "Record.h"
+   9:Core/Src/Origin/Record.c **** #include <stdio.h>
+  10:Core/Src/Origin/Record.c **** 
+  11:Core/Src/Origin/Record.c **** //#include "MicroMouse.h"
+  12:Core/Src/Origin/Record.c **** //マップデータをフラッシュに書き込む処理
+  13:Core/Src/Origin/Record.c **** #include "Flash.h"
+  14:Core/Src/Origin/Record.c **** #include "MazeLib.h"
+  15:Core/Src/Origin/Record.c **** void flashStoreNodes(maze_node *maze)
+  16:Core/Src/Origin/Record.c **** {
   30              		.loc 1 16 1 view -0
   31              		.cfi_startproc
   32              		@ args = 0, pretend = 0, frame = 0
@@ -58,19 +58,19 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
   40              		.cfi_offset 5, -16
   41              		.cfi_offset 6, -12
   42              		.cfi_offset 7, -8
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 2
 
 
   43              		.cfi_offset 14, -4
   44 0002 0646     		mov	r6, r0
-  17:Core/Src/Record.c **** 	uint32_t address=start_adress_sector1;
+  17:Core/Src/Origin/Record.c **** 	uint32_t address=start_adress_sector1;
   45              		.loc 1 17 2 is_stmt 1 view .LVU2
   46              		.loc 1 17 11 is_stmt 0 view .LVU3
   47 0004 144B     		ldr	r3, .L13
   48 0006 1C68     		ldr	r4, [r3]
   49              	.LVL1:
-  18:Core/Src/Record.c **** 
-  19:Core/Src/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+  18:Core/Src/Origin/Record.c **** 
+  19:Core/Src/Origin/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
   50              		.loc 1 19 2 is_stmt 1 view .LVU4
   51              	.LBB2:
   52              		.loc 1 19 6 view .LVU5
@@ -81,10 +81,10 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
   57              	.LVL2:
   58              	.L3:
   59              	.LBB3:
-  20:Core/Src/Record.c **** 	{
-  21:Core/Src/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
-  22:Core/Src/Record.c **** 			{
-  23:Core/Src/Record.c **** 				FLASH_Write_Word(address+0, maze->RawNode[i][j].existence);
+  20:Core/Src/Origin/Record.c **** 	{
+  21:Core/Src/Origin/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+  22:Core/Src/Origin/Record.c **** 			{
+  23:Core/Src/Origin/Record.c **** 				FLASH_Write_Word(address+0, maze->RawNode[i][j].existence);
   60              		.loc 1 23 5 is_stmt 1 discriminator 3 view .LVU8
   61              		.loc 1 23 52 is_stmt 0 discriminator 3 view .LVU9
   62 000c 07EB0713 		add	r3, r7, r7, lsl #4
@@ -94,45 +94,45 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
   66 0016 2046     		mov	r0, r4
   67 0018 FFF7FEFF 		bl	FLASH_Write_Word
   68              	.LVL3:
-  24:Core/Src/Record.c **** 				address += 4;
+  24:Core/Src/Origin/Record.c **** 				address += 4;
   69              		.loc 1 24 5 is_stmt 1 discriminator 3 view .LVU11
   70              		.loc 1 24 13 is_stmt 0 discriminator 3 view .LVU12
   71 001c 0434     		adds	r4, r4, #4
   72              	.LVL4:
-  21:Core/Src/Record.c **** 			{
+  21:Core/Src/Origin/Record.c **** 			{
   73              		.loc 1 21 44 is_stmt 1 discriminator 3 view .LVU13
-  21:Core/Src/Record.c **** 			{
+  21:Core/Src/Origin/Record.c **** 			{
   74              		.loc 1 21 45 is_stmt 0 discriminator 3 view .LVU14
   75 001e 0135     		adds	r5, r5, #1
   76              	.LVL5:
   77              	.L4:
-  21:Core/Src/Record.c **** 			{
+  21:Core/Src/Origin/Record.c **** 			{
   78              		.loc 1 21 17 is_stmt 1 discriminator 1 view .LVU15
-  21:Core/Src/Record.c **** 			{
+  21:Core/Src/Origin/Record.c **** 			{
   79              		.loc 1 21 4 is_stmt 0 discriminator 1 view .LVU16
   80 0020 102D     		cmp	r5, #16
   81 0022 F3DD     		ble	.L3
-  21:Core/Src/Record.c **** 			{
+  21:Core/Src/Origin/Record.c **** 			{
   82              		.loc 1 21 4 discriminator 1 view .LVU17
   83              	.LBE3:
-  19:Core/Src/Record.c **** 	{
+  19:Core/Src/Origin/Record.c **** 	{
   84              		.loc 1 19 40 is_stmt 1 discriminator 2 view .LVU18
-  19:Core/Src/Record.c **** 	{
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 3
+  19:Core/Src/Origin/Record.c **** 	{
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 3
 
 
   85              		.loc 1 19 41 is_stmt 0 discriminator 2 view .LVU19
   86 0024 0137     		adds	r7, r7, #1
   87              	.LVL6:
   88              	.L2:
-  19:Core/Src/Record.c **** 	{
+  19:Core/Src/Origin/Record.c **** 	{
   89              		.loc 1 19 15 is_stmt 1 discriminator 1 view .LVU20
-  19:Core/Src/Record.c **** 	{
+  19:Core/Src/Origin/Record.c **** 	{
   90              		.loc 1 19 2 is_stmt 0 discriminator 1 view .LVU21
   91 0026 0F2F     		cmp	r7, #15
   92 0028 01DC     		bgt	.L11
   93              	.LBB4:
-  21:Core/Src/Record.c **** 			{
+  21:Core/Src/Origin/Record.c **** 			{
   94              		.loc 1 21 12 view .LVU22
   95 002a 0025     		movs	r5, #0
   96 002c F8E7     		b	.L4
@@ -140,10 +140,10 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
   98              	.LBE4:
   99              	.LBE2:
  100              	.LBB5:
-  25:Core/Src/Record.c **** 			}
-  26:Core/Src/Record.c **** 	}//2*N*(N+1)*4byte = 64*33*4byte
-  27:Core/Src/Record.c **** 	//列
-  28:Core/Src/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+  25:Core/Src/Origin/Record.c **** 			}
+  26:Core/Src/Origin/Record.c **** 	}//2*N*(N+1)*4byte = 64*33*4byte
+  27:Core/Src/Origin/Record.c **** 	//列
+  28:Core/Src/Origin/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
  101              		.loc 1 28 10 view .LVU23
  102 002e 0027     		movs	r7, #0
  103              	.LVL7:
@@ -152,10 +152,10 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
  106              	.LVL8:
  107              	.L6:
  108              	.LBB6:
-  29:Core/Src/Record.c **** 	{
-  30:Core/Src/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
-  31:Core/Src/Record.c **** 			{
-  32:Core/Src/Record.c **** 				FLASH_Write_Word(address+0, maze->ColumnNode[i][j].existence);
+  29:Core/Src/Origin/Record.c **** 	{
+  30:Core/Src/Origin/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+  31:Core/Src/Origin/Record.c **** 			{
+  32:Core/Src/Origin/Record.c **** 				FLASH_Write_Word(address+0, maze->ColumnNode[i][j].existence);
  109              		.loc 1 32 5 is_stmt 1 discriminator 3 view .LVU25
  110              		.loc 1 32 55 is_stmt 0 discriminator 3 view .LVU26
  111 0032 05EB0713 		add	r3, r5, r7, lsl #4
@@ -165,54 +165,54 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
  115 003e 2046     		mov	r0, r4
  116 0040 FFF7FEFF 		bl	FLASH_Write_Word
  117              	.LVL9:
-  33:Core/Src/Record.c **** 				address += 4;
+  33:Core/Src/Origin/Record.c **** 				address += 4;
  118              		.loc 1 33 5 is_stmt 1 discriminator 3 view .LVU28
  119              		.loc 1 33 13 is_stmt 0 discriminator 3 view .LVU29
  120 0044 0434     		adds	r4, r4, #4
  121              	.LVL10:
-  30:Core/Src/Record.c **** 			{
+  30:Core/Src/Origin/Record.c **** 			{
  122              		.loc 1 30 42 is_stmt 1 discriminator 3 view .LVU30
-  30:Core/Src/Record.c **** 			{
+  30:Core/Src/Origin/Record.c **** 			{
  123              		.loc 1 30 43 is_stmt 0 discriminator 3 view .LVU31
  124 0046 0135     		adds	r5, r5, #1
  125              	.LVL11:
  126              	.L7:
-  30:Core/Src/Record.c **** 			{
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 4
+  30:Core/Src/Origin/Record.c **** 			{
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 4
 
 
  127              		.loc 1 30 17 is_stmt 1 discriminator 1 view .LVU32
-  30:Core/Src/Record.c **** 			{
+  30:Core/Src/Origin/Record.c **** 			{
  128              		.loc 1 30 4 is_stmt 0 discriminator 1 view .LVU33
  129 0048 0F2D     		cmp	r5, #15
  130 004a F2DD     		ble	.L6
-  30:Core/Src/Record.c **** 			{
+  30:Core/Src/Origin/Record.c **** 			{
  131              		.loc 1 30 4 discriminator 1 view .LVU34
  132              	.LBE6:
-  28:Core/Src/Record.c **** 	{
+  28:Core/Src/Origin/Record.c **** 	{
  133              		.loc 1 28 42 is_stmt 1 discriminator 2 view .LVU35
-  28:Core/Src/Record.c **** 	{
+  28:Core/Src/Origin/Record.c **** 	{
  134              		.loc 1 28 43 is_stmt 0 discriminator 2 view .LVU36
  135 004c 0137     		adds	r7, r7, #1
  136              	.LVL12:
  137              	.L5:
-  28:Core/Src/Record.c **** 	{
+  28:Core/Src/Origin/Record.c **** 	{
  138              		.loc 1 28 15 is_stmt 1 discriminator 1 view .LVU37
-  28:Core/Src/Record.c **** 	{
+  28:Core/Src/Origin/Record.c **** 	{
  139              		.loc 1 28 2 is_stmt 0 discriminator 1 view .LVU38
  140 004e 102F     		cmp	r7, #16
  141 0050 01DC     		bgt	.L12
  142              	.LBB7:
-  30:Core/Src/Record.c **** 			{
+  30:Core/Src/Origin/Record.c **** 			{
  143              		.loc 1 30 12 view .LVU39
  144 0052 0025     		movs	r5, #0
  145 0054 F8E7     		b	.L7
  146              	.L12:
  147              	.LBE7:
  148              	.LBE5:
-  34:Core/Src/Record.c **** 			}
-  35:Core/Src/Record.c **** 	}
-  36:Core/Src/Record.c **** }
+  34:Core/Src/Origin/Record.c **** 			}
+  35:Core/Src/Origin/Record.c **** 	}
+  36:Core/Src/Origin/Record.c **** }
  149              		.loc 1 36 1 view .LVU40
  150 0056 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
  151              	.LVL13:
@@ -236,432 +236,430 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 1
  170              		.syntax unified
  171              		.thumb
  172              		.thumb_func
- 173              		.fpu fpv4-sp-d16
- 175              	wall_flash_print:
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 5
+ 174              	wall_flash_print:
+ 175              	.LFB239:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 5
 
 
- 176              	.LFB239:
-  37:Core/Src/Record.c **** 
-  38:Core/Src/Record.c **** void wall_flash_print()
-  39:Core/Src/Record.c **** {
- 177              		.loc 1 39 1 is_stmt 1 view -0
- 178              		.cfi_startproc
- 179              		@ args = 0, pretend = 0, frame = 8
- 180              		@ frame_needed = 0, uses_anonymous_args = 0
- 181 0000 70B5     		push	{r4, r5, r6, lr}
- 182              	.LCFI1:
- 183              		.cfi_def_cfa_offset 16
- 184              		.cfi_offset 4, -16
- 185              		.cfi_offset 5, -12
- 186              		.cfi_offset 6, -8
- 187              		.cfi_offset 14, -4
- 188 0002 82B0     		sub	sp, sp, #8
- 189              	.LCFI2:
- 190              		.cfi_def_cfa_offset 24
-  40:Core/Src/Record.c **** 	uint32_t address = start_adress_sector1;
- 191              		.loc 1 40 2 view .LVU43
- 192              		.loc 1 40 11 is_stmt 0 view .LVU44
- 193 0004 164B     		ldr	r3, .L24
- 194 0006 1D68     		ldr	r5, [r3]
- 195              	.LVL14:
-  41:Core/Src/Record.c **** 	address += (NUMBER_OF_SQUARES_X-1) * 16*NUMBER_OF_SQUARES_Y;
- 196              		.loc 1 41 2 is_stmt 1 view .LVU45
- 197              		.loc 1 41 10 is_stmt 0 view .LVU46
- 198 0008 05F57065 		add	r5, r5, #3840
- 199              	.LVL15:
-  42:Core/Src/Record.c **** 
-  43:Core/Src/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X ; i++)
- 200              		.loc 1 43 2 is_stmt 1 view .LVU47
- 201              	.LBB8:
- 202              		.loc 1 43 6 view .LVU48
- 203              		.loc 1 43 10 is_stmt 0 view .LVU49
- 204 000c 0026     		movs	r6, #0
- 205              		.loc 1 43 2 view .LVU50
- 206 000e 05E0     		b	.L16
- 207              	.LVL16:
- 208              	.L23:
-  44:Core/Src/Record.c **** 	{
-  45:Core/Src/Record.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y*4 ; j++)
-  46:Core/Src/Record.c **** 		{
-  47:Core/Src/Record.c **** 			uint32_t wall_data=0;
-  48:Core/Src/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
-  49:Core/Src/Record.c **** 			FLASH_Read_Word(address, &wall_data);
-  50:Core/Src/Record.c **** 			printf("%lu",wall_data);
-  51:Core/Src/Record.c **** 			address+= 0x04;
-  52:Core/Src/Record.c **** 			if( (j+1)%4 == 0)
-  53:Core/Src/Record.c **** 			{
-  54:Core/Src/Record.c **** 				printf(" ");
-  55:Core/Src/Record.c **** 			}
-  56:Core/Src/Record.c **** 		}
-  57:Core/Src/Record.c **** 		address -= 2*16*NUMBER_OF_SQUARES_X;
- 209              		.loc 1 57 3 is_stmt 1 discriminator 2 view .LVU51
- 210              		.loc 1 57 11 is_stmt 0 discriminator 2 view .LVU52
- 211 0010 A5F50075 		sub	r5, r5, #512
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 6
+  37:Core/Src/Origin/Record.c **** 
+  38:Core/Src/Origin/Record.c **** void wall_flash_print()
+  39:Core/Src/Origin/Record.c **** {
+ 176              		.loc 1 39 1 is_stmt 1 view -0
+ 177              		.cfi_startproc
+ 178              		@ args = 0, pretend = 0, frame = 8
+ 179              		@ frame_needed = 0, uses_anonymous_args = 0
+ 180 0000 70B5     		push	{r4, r5, r6, lr}
+ 181              	.LCFI1:
+ 182              		.cfi_def_cfa_offset 16
+ 183              		.cfi_offset 4, -16
+ 184              		.cfi_offset 5, -12
+ 185              		.cfi_offset 6, -8
+ 186              		.cfi_offset 14, -4
+ 187 0002 82B0     		sub	sp, sp, #8
+ 188              	.LCFI2:
+ 189              		.cfi_def_cfa_offset 24
+  40:Core/Src/Origin/Record.c **** 	uint32_t address = start_adress_sector1;
+ 190              		.loc 1 40 2 view .LVU43
+ 191              		.loc 1 40 11 is_stmt 0 view .LVU44
+ 192 0004 164B     		ldr	r3, .L24
+ 193 0006 1D68     		ldr	r5, [r3]
+ 194              	.LVL14:
+  41:Core/Src/Origin/Record.c **** 	address += (NUMBER_OF_SQUARES_X-1) * 16*NUMBER_OF_SQUARES_Y;
+ 195              		.loc 1 41 2 is_stmt 1 view .LVU45
+ 196              		.loc 1 41 10 is_stmt 0 view .LVU46
+ 197 0008 05F57065 		add	r5, r5, #3840
+ 198              	.LVL15:
+  42:Core/Src/Origin/Record.c **** 
+  43:Core/Src/Origin/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X ; i++)
+ 199              		.loc 1 43 2 is_stmt 1 view .LVU47
+ 200              	.LBB8:
+ 201              		.loc 1 43 6 view .LVU48
+ 202              		.loc 1 43 10 is_stmt 0 view .LVU49
+ 203 000c 0026     		movs	r6, #0
+ 204              		.loc 1 43 2 view .LVU50
+ 205 000e 05E0     		b	.L16
+ 206              	.LVL16:
+ 207              	.L23:
+  44:Core/Src/Origin/Record.c **** 	{
+  45:Core/Src/Origin/Record.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y*4 ; j++)
+  46:Core/Src/Origin/Record.c **** 		{
+  47:Core/Src/Origin/Record.c **** 			uint32_t wall_data=0;
+  48:Core/Src/Origin/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
+  49:Core/Src/Origin/Record.c **** 			FLASH_Read_Word(address, &wall_data);
+  50:Core/Src/Origin/Record.c **** 			printf("%lu",wall_data);
+  51:Core/Src/Origin/Record.c **** 			address+= 0x04;
+  52:Core/Src/Origin/Record.c **** 			if( (j+1)%4 == 0)
+  53:Core/Src/Origin/Record.c **** 			{
+  54:Core/Src/Origin/Record.c **** 				printf(" ");
+  55:Core/Src/Origin/Record.c **** 			}
+  56:Core/Src/Origin/Record.c **** 		}
+  57:Core/Src/Origin/Record.c **** 		address -= 2*16*NUMBER_OF_SQUARES_X;
+ 208              		.loc 1 57 3 is_stmt 1 discriminator 2 view .LVU51
+ 209              		.loc 1 57 11 is_stmt 0 discriminator 2 view .LVU52
+ 210 0010 A5F50075 		sub	r5, r5, #512
+ 211              	.LVL17:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 6
 
 
- 212              	.LVL17:
-  58:Core/Src/Record.c **** 		printf("\r\n");
- 213              		.loc 1 58 3 is_stmt 1 discriminator 2 view .LVU53
- 214 0014 1348     		ldr	r0, .L24+4
- 215 0016 FFF7FEFF 		bl	puts
- 216              	.LVL18:
-  43:Core/Src/Record.c **** 	{
- 217              		.loc 1 43 41 discriminator 2 view .LVU54
-  43:Core/Src/Record.c **** 	{
- 218              		.loc 1 43 42 is_stmt 0 discriminator 2 view .LVU55
- 219 001a 0136     		adds	r6, r6, #1
- 220              	.LVL19:
- 221              	.L16:
-  43:Core/Src/Record.c **** 	{
- 222              		.loc 1 43 15 is_stmt 1 discriminator 1 view .LVU56
-  43:Core/Src/Record.c **** 	{
- 223              		.loc 1 43 2 is_stmt 0 discriminator 1 view .LVU57
- 224 001c 0F2E     		cmp	r6, #15
- 225 001e 15DC     		bgt	.L22
- 226              	.LBB9:
-  45:Core/Src/Record.c **** 		{
- 227              		.loc 1 45 11 view .LVU58
- 228 0020 0024     		movs	r4, #0
- 229              	.L19:
- 230              	.LVL20:
-  45:Core/Src/Record.c **** 		{
- 231              		.loc 1 45 16 is_stmt 1 discriminator 1 view .LVU59
-  45:Core/Src/Record.c **** 		{
- 232              		.loc 1 45 3 is_stmt 0 discriminator 1 view .LVU60
- 233 0022 3F2C     		cmp	r4, #63
- 234 0024 F4DC     		bgt	.L23
- 235              	.LBB10:
-  47:Core/Src/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
- 236              		.loc 1 47 4 is_stmt 1 view .LVU61
-  47:Core/Src/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
- 237              		.loc 1 47 13 is_stmt 0 view .LVU62
- 238 0026 0023     		movs	r3, #0
- 239 0028 0193     		str	r3, [sp, #4]
-  49:Core/Src/Record.c **** 			printf("%lu",wall_data);
- 240              		.loc 1 49 4 is_stmt 1 view .LVU63
- 241 002a 01A9     		add	r1, sp, #4
- 242 002c 2846     		mov	r0, r5
- 243 002e FFF7FEFF 		bl	FLASH_Read_Word
- 244              	.LVL21:
-  50:Core/Src/Record.c **** 			address+= 0x04;
- 245              		.loc 1 50 4 view .LVU64
- 246 0032 0199     		ldr	r1, [sp, #4]
- 247 0034 0C48     		ldr	r0, .L24+8
- 248 0036 FFF7FEFF 		bl	printf
- 249              	.LVL22:
-  51:Core/Src/Record.c **** 			if( (j+1)%4 == 0)
- 250              		.loc 1 51 4 view .LVU65
-  51:Core/Src/Record.c **** 			if( (j+1)%4 == 0)
- 251              		.loc 1 51 11 is_stmt 0 view .LVU66
- 252 003a 0435     		adds	r5, r5, #4
- 253              	.LVL23:
-  52:Core/Src/Record.c **** 			{
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 7
+  58:Core/Src/Origin/Record.c **** 		printf("\r\n");
+ 212              		.loc 1 58 3 is_stmt 1 discriminator 2 view .LVU53
+ 213 0014 1348     		ldr	r0, .L24+4
+ 214 0016 FFF7FEFF 		bl	puts
+ 215              	.LVL18:
+  43:Core/Src/Origin/Record.c **** 	{
+ 216              		.loc 1 43 41 discriminator 2 view .LVU54
+  43:Core/Src/Origin/Record.c **** 	{
+ 217              		.loc 1 43 42 is_stmt 0 discriminator 2 view .LVU55
+ 218 001a 0136     		adds	r6, r6, #1
+ 219              	.LVL19:
+ 220              	.L16:
+  43:Core/Src/Origin/Record.c **** 	{
+ 221              		.loc 1 43 15 is_stmt 1 discriminator 1 view .LVU56
+  43:Core/Src/Origin/Record.c **** 	{
+ 222              		.loc 1 43 2 is_stmt 0 discriminator 1 view .LVU57
+ 223 001c 0F2E     		cmp	r6, #15
+ 224 001e 15DC     		bgt	.L22
+ 225              	.LBB9:
+  45:Core/Src/Origin/Record.c **** 		{
+ 226              		.loc 1 45 11 view .LVU58
+ 227 0020 0024     		movs	r4, #0
+ 228              	.L19:
+ 229              	.LVL20:
+  45:Core/Src/Origin/Record.c **** 		{
+ 230              		.loc 1 45 16 is_stmt 1 discriminator 1 view .LVU59
+  45:Core/Src/Origin/Record.c **** 		{
+ 231              		.loc 1 45 3 is_stmt 0 discriminator 1 view .LVU60
+ 232 0022 3F2C     		cmp	r4, #63
+ 233 0024 F4DC     		bgt	.L23
+ 234              	.LBB10:
+  47:Core/Src/Origin/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
+ 235              		.loc 1 47 4 is_stmt 1 view .LVU61
+  47:Core/Src/Origin/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
+ 236              		.loc 1 47 13 is_stmt 0 view .LVU62
+ 237 0026 0023     		movs	r3, #0
+ 238 0028 0193     		str	r3, [sp, #4]
+  49:Core/Src/Origin/Record.c **** 			printf("%lu",wall_data);
+ 239              		.loc 1 49 4 is_stmt 1 view .LVU63
+ 240 002a 01A9     		add	r1, sp, #4
+ 241 002c 2846     		mov	r0, r5
+ 242 002e FFF7FEFF 		bl	FLASH_Read_Word
+ 243              	.LVL21:
+  50:Core/Src/Origin/Record.c **** 			address+= 0x04;
+ 244              		.loc 1 50 4 view .LVU64
+ 245 0032 0199     		ldr	r1, [sp, #4]
+ 246 0034 0C48     		ldr	r0, .L24+8
+ 247 0036 FFF7FEFF 		bl	printf
+ 248              	.LVL22:
+  51:Core/Src/Origin/Record.c **** 			if( (j+1)%4 == 0)
+ 249              		.loc 1 51 4 view .LVU65
+  51:Core/Src/Origin/Record.c **** 			if( (j+1)%4 == 0)
+ 250              		.loc 1 51 11 is_stmt 0 view .LVU66
+ 251 003a 0435     		adds	r5, r5, #4
+ 252              	.LVL23:
+  52:Core/Src/Origin/Record.c **** 			{
+ 253              		.loc 1 52 4 is_stmt 1 view .LVU67
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 7
 
 
- 254              		.loc 1 52 4 is_stmt 1 view .LVU67
-  52:Core/Src/Record.c **** 			{
- 255              		.loc 1 52 10 is_stmt 0 view .LVU68
- 256 003c 0134     		adds	r4, r4, #1
- 257              	.LVL24:
-  52:Core/Src/Record.c **** 			{
- 258              		.loc 1 52 6 view .LVU69
- 259 003e 14F0030F 		tst	r4, #3
- 260 0042 EED1     		bne	.L19
-  54:Core/Src/Record.c **** 			}
- 261              		.loc 1 54 5 is_stmt 1 view .LVU70
- 262 0044 2020     		movs	r0, #32
- 263 0046 FFF7FEFF 		bl	putchar
- 264              	.LVL25:
- 265              	.LBE10:
-  45:Core/Src/Record.c **** 		{
- 266              		.loc 1 45 44 view .LVU71
-  45:Core/Src/Record.c **** 		{
- 267              		.loc 1 45 44 is_stmt 0 view .LVU72
- 268 004a EAE7     		b	.L19
- 269              	.LVL26:
- 270              	.L22:
-  45:Core/Src/Record.c **** 		{
- 271              		.loc 1 45 44 view .LVU73
- 272              	.LBE9:
- 273              	.LBE8:
-  59:Core/Src/Record.c **** 	}
-  60:Core/Src/Record.c **** 
-  61:Core/Src/Record.c **** 	printf("\r\n");
- 274              		.loc 1 61 2 is_stmt 1 view .LVU74
- 275 004c 054C     		ldr	r4, .L24+4
- 276 004e 2046     		mov	r0, r4
- 277 0050 FFF7FEFF 		bl	puts
- 278              	.LVL27:
-  62:Core/Src/Record.c **** 	printf("\r\n");
- 279              		.loc 1 62 2 view .LVU75
- 280 0054 2046     		mov	r0, r4
- 281 0056 FFF7FEFF 		bl	puts
- 282              	.LVL28:
-  63:Core/Src/Record.c **** 
-  64:Core/Src/Record.c **** }
- 283              		.loc 1 64 1 is_stmt 0 view .LVU76
- 284 005a 02B0     		add	sp, sp, #8
- 285              	.LCFI3:
- 286              		.cfi_def_cfa_offset 16
- 287              		@ sp needed
- 288 005c 70BD     		pop	{r4, r5, r6, pc}
- 289              	.LVL29:
- 290              	.L25:
- 291              		.loc 1 64 1 view .LVU77
- 292 005e 00BF     		.align	2
- 293              	.L24:
- 294 0060 00000000 		.word	start_adress_sector1
- 295 0064 04000000 		.word	.LC1
- 296 0068 00000000 		.word	.LC0
- 297              		.cfi_endproc
- 298              	.LFE239:
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 8
+  52:Core/Src/Origin/Record.c **** 			{
+ 254              		.loc 1 52 10 is_stmt 0 view .LVU68
+ 255 003c 0134     		adds	r4, r4, #1
+ 256              	.LVL24:
+  52:Core/Src/Origin/Record.c **** 			{
+ 257              		.loc 1 52 6 view .LVU69
+ 258 003e 14F0030F 		tst	r4, #3
+ 259 0042 EED1     		bne	.L19
+  54:Core/Src/Origin/Record.c **** 			}
+ 260              		.loc 1 54 5 is_stmt 1 view .LVU70
+ 261 0044 2020     		movs	r0, #32
+ 262 0046 FFF7FEFF 		bl	putchar
+ 263              	.LVL25:
+ 264              	.LBE10:
+  45:Core/Src/Origin/Record.c **** 		{
+ 265              		.loc 1 45 44 view .LVU71
+  45:Core/Src/Origin/Record.c **** 		{
+ 266              		.loc 1 45 44 is_stmt 0 view .LVU72
+ 267 004a EAE7     		b	.L19
+ 268              	.LVL26:
+ 269              	.L22:
+  45:Core/Src/Origin/Record.c **** 		{
+ 270              		.loc 1 45 44 view .LVU73
+ 271              	.LBE9:
+ 272              	.LBE8:
+  59:Core/Src/Origin/Record.c **** 	}
+  60:Core/Src/Origin/Record.c **** 
+  61:Core/Src/Origin/Record.c **** 	printf("\r\n");
+ 273              		.loc 1 61 2 is_stmt 1 view .LVU74
+ 274 004c 054C     		ldr	r4, .L24+4
+ 275 004e 2046     		mov	r0, r4
+ 276 0050 FFF7FEFF 		bl	puts
+ 277              	.LVL27:
+  62:Core/Src/Origin/Record.c **** 	printf("\r\n");
+ 278              		.loc 1 62 2 view .LVU75
+ 279 0054 2046     		mov	r0, r4
+ 280 0056 FFF7FEFF 		bl	puts
+ 281              	.LVL28:
+  63:Core/Src/Origin/Record.c **** 
+  64:Core/Src/Origin/Record.c **** }
+ 282              		.loc 1 64 1 is_stmt 0 view .LVU76
+ 283 005a 02B0     		add	sp, sp, #8
+ 284              	.LCFI3:
+ 285              		.cfi_def_cfa_offset 16
+ 286              		@ sp needed
+ 287 005c 70BD     		pop	{r4, r5, r6, pc}
+ 288              	.LVL29:
+ 289              	.L25:
+ 290              		.loc 1 64 1 view .LVU77
+ 291 005e 00BF     		.align	2
+ 292              	.L24:
+ 293 0060 00000000 		.word	start_adress_sector1
+ 294 0064 04000000 		.word	.LC1
+ 295 0068 00000000 		.word	.LC0
+ 296              		.cfi_endproc
+ 297              	.LFE239:
+ 299              		.section	.text.flashCopyNodesToRam,"ax",%progbits
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 8
 
 
- 300              		.section	.text.flashCopyNodesToRam,"ax",%progbits
- 301              		.align	1
- 302              		.global	flashCopyNodesToRam
- 303              		.syntax unified
- 304              		.thumb
- 305              		.thumb_func
- 306              		.fpu fpv4-sp-d16
- 308              	flashCopyNodesToRam:
- 309              	.LVL30:
- 310              	.LFB240:
-  65:Core/Src/Record.c **** //評価値マップ生成。
-  66:Core/Src/Record.c **** void flashCopyNodesToRam(maze_node *maze)
-  67:Core/Src/Record.c **** {
- 311              		.loc 1 67 1 is_stmt 1 view -0
- 312              		.cfi_startproc
- 313              		@ args = 0, pretend = 0, frame = 8
- 314              		@ frame_needed = 0, uses_anonymous_args = 0
- 315              		.loc 1 67 1 is_stmt 0 view .LVU79
- 316 0000 F0B5     		push	{r4, r5, r6, r7, lr}
- 317              	.LCFI4:
- 318              		.cfi_def_cfa_offset 20
- 319              		.cfi_offset 4, -20
- 320              		.cfi_offset 5, -16
- 321              		.cfi_offset 6, -12
- 322              		.cfi_offset 7, -8
- 323              		.cfi_offset 14, -4
- 324 0002 83B0     		sub	sp, sp, #12
- 325              	.LCFI5:
- 326              		.cfi_def_cfa_offset 32
- 327 0004 0646     		mov	r6, r0
-  68:Core/Src/Record.c **** 	uint32_t address=start_adress_sector1;
- 328              		.loc 1 68 2 is_stmt 1 view .LVU80
- 329              		.loc 1 68 11 is_stmt 0 view .LVU81
- 330 0006 194B     		ldr	r3, .L38
- 331 0008 1C68     		ldr	r4, [r3]
- 332              	.LVL31:
-  69:Core/Src/Record.c **** 
-  70:Core/Src/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
- 333              		.loc 1 70 2 is_stmt 1 view .LVU82
- 334              	.LBB11:
- 335              		.loc 1 70 6 view .LVU83
- 336              		.loc 1 70 10 is_stmt 0 view .LVU84
- 337 000a 0027     		movs	r7, #0
- 338              		.loc 1 70 2 view .LVU85
- 339 000c 10E0     		b	.L27
- 340              	.LVL32:
- 341              	.L28:
- 342              	.LBB12:
- 343              	.LBB13:
-  71:Core/Src/Record.c **** 	{
-  72:Core/Src/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
-  73:Core/Src/Record.c **** 			{
-  74:Core/Src/Record.c **** 				uint32_t wall_data=0;
- 344              		.loc 1 74 5 is_stmt 1 discriminator 3 view .LVU86
- 345              		.loc 1 74 14 is_stmt 0 discriminator 3 view .LVU87
- 346 000e 0023     		movs	r3, #0
- 347 0010 0193     		str	r3, [sp, #4]
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 9
+ 300              		.align	1
+ 301              		.global	flashCopyNodesToRam
+ 302              		.syntax unified
+ 303              		.thumb
+ 304              		.thumb_func
+ 306              	flashCopyNodesToRam:
+ 307              	.LVL30:
+ 308              	.LFB240:
+  65:Core/Src/Origin/Record.c **** //評価値マップ生成。
+  66:Core/Src/Origin/Record.c **** void flashCopyNodesToRam(maze_node *maze)
+  67:Core/Src/Origin/Record.c **** {
+ 309              		.loc 1 67 1 is_stmt 1 view -0
+ 310              		.cfi_startproc
+ 311              		@ args = 0, pretend = 0, frame = 8
+ 312              		@ frame_needed = 0, uses_anonymous_args = 0
+ 313              		.loc 1 67 1 is_stmt 0 view .LVU79
+ 314 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 315              	.LCFI4:
+ 316              		.cfi_def_cfa_offset 20
+ 317              		.cfi_offset 4, -20
+ 318              		.cfi_offset 5, -16
+ 319              		.cfi_offset 6, -12
+ 320              		.cfi_offset 7, -8
+ 321              		.cfi_offset 14, -4
+ 322 0002 83B0     		sub	sp, sp, #12
+ 323              	.LCFI5:
+ 324              		.cfi_def_cfa_offset 32
+ 325 0004 0646     		mov	r6, r0
+  68:Core/Src/Origin/Record.c **** 	uint32_t address=start_adress_sector1;
+ 326              		.loc 1 68 2 is_stmt 1 view .LVU80
+ 327              		.loc 1 68 11 is_stmt 0 view .LVU81
+ 328 0006 194B     		ldr	r3, .L38
+ 329 0008 1C68     		ldr	r4, [r3]
+ 330              	.LVL31:
+  69:Core/Src/Origin/Record.c **** 
+  70:Core/Src/Origin/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
+ 331              		.loc 1 70 2 is_stmt 1 view .LVU82
+ 332              	.LBB11:
+ 333              		.loc 1 70 6 view .LVU83
+ 334              		.loc 1 70 10 is_stmt 0 view .LVU84
+ 335 000a 0027     		movs	r7, #0
+ 336              		.loc 1 70 2 view .LVU85
+ 337 000c 10E0     		b	.L27
+ 338              	.LVL32:
+ 339              	.L28:
+ 340              	.LBB12:
+ 341              	.LBB13:
+  71:Core/Src/Origin/Record.c **** 	{
+  72:Core/Src/Origin/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
+  73:Core/Src/Origin/Record.c **** 			{
+  74:Core/Src/Origin/Record.c **** 				uint32_t wall_data=0;
+ 342              		.loc 1 74 5 is_stmt 1 discriminator 3 view .LVU86
+ 343              		.loc 1 74 14 is_stmt 0 discriminator 3 view .LVU87
+ 344 000e 0023     		movs	r3, #0
+ 345 0010 0193     		str	r3, [sp, #4]
+  75:Core/Src/Origin/Record.c **** 				FLASH_Read_Word(address, &wall_data);
+ 346              		.loc 1 75 5 is_stmt 1 discriminator 3 view .LVU88
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 9
 
 
-  75:Core/Src/Record.c **** 				FLASH_Read_Word(address, &wall_data);
- 348              		.loc 1 75 5 is_stmt 1 discriminator 3 view .LVU88
- 349 0012 01A9     		add	r1, sp, #4
- 350 0014 2046     		mov	r0, r4
- 351 0016 FFF7FEFF 		bl	FLASH_Read_Word
- 352              	.LVL33:
-  76:Core/Src/Record.c **** 				maze->RawNode[i][j].existence = wall_data;
- 353              		.loc 1 76 5 discriminator 3 view .LVU89
- 354              		.loc 1 76 35 is_stmt 0 discriminator 3 view .LVU90
- 355 001a 07EB0713 		add	r3, r7, r7, lsl #4
- 356 001e 2B44     		add	r3, r3, r5
- 357 0020 019A     		ldr	r2, [sp, #4]
- 358 0022 06F83320 		strb	r2, [r6, r3, lsl #3]
-  77:Core/Src/Record.c **** 				address += sizeof(wall_data);
- 359              		.loc 1 77 5 is_stmt 1 discriminator 3 view .LVU91
- 360              		.loc 1 77 13 is_stmt 0 discriminator 3 view .LVU92
- 361 0026 0434     		adds	r4, r4, #4
- 362              	.LVL34:
- 363              		.loc 1 77 13 discriminator 3 view .LVU93
- 364              	.LBE13:
-  72:Core/Src/Record.c **** 			{
- 365              		.loc 1 72 44 is_stmt 1 discriminator 3 view .LVU94
-  72:Core/Src/Record.c **** 			{
- 366              		.loc 1 72 45 is_stmt 0 discriminator 3 view .LVU95
- 367 0028 0135     		adds	r5, r5, #1
- 368              	.LVL35:
- 369              	.L29:
-  72:Core/Src/Record.c **** 			{
- 370              		.loc 1 72 17 is_stmt 1 discriminator 1 view .LVU96
-  72:Core/Src/Record.c **** 			{
- 371              		.loc 1 72 4 is_stmt 0 discriminator 1 view .LVU97
- 372 002a 102D     		cmp	r5, #16
- 373 002c EFDD     		ble	.L28
-  72:Core/Src/Record.c **** 			{
- 374              		.loc 1 72 4 discriminator 1 view .LVU98
- 375              	.LBE12:
-  70:Core/Src/Record.c **** 	{
- 376              		.loc 1 70 40 is_stmt 1 discriminator 2 view .LVU99
-  70:Core/Src/Record.c **** 	{
- 377              		.loc 1 70 41 is_stmt 0 discriminator 2 view .LVU100
- 378 002e 0137     		adds	r7, r7, #1
- 379              	.LVL36:
- 380              	.L27:
-  70:Core/Src/Record.c **** 	{
- 381              		.loc 1 70 15 is_stmt 1 discriminator 1 view .LVU101
-  70:Core/Src/Record.c **** 	{
- 382              		.loc 1 70 2 is_stmt 0 discriminator 1 view .LVU102
- 383 0030 0F2F     		cmp	r7, #15
- 384 0032 01DC     		bgt	.L36
- 385              	.LBB14:
-  72:Core/Src/Record.c **** 			{
- 386              		.loc 1 72 12 view .LVU103
- 387 0034 0025     		movs	r5, #0
- 388 0036 F8E7     		b	.L29
- 389              	.L36:
- 390              	.LBE14:
- 391              	.LBE11:
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 10
+ 347 0012 01A9     		add	r1, sp, #4
+ 348 0014 2046     		mov	r0, r4
+ 349 0016 FFF7FEFF 		bl	FLASH_Read_Word
+ 350              	.LVL33:
+  76:Core/Src/Origin/Record.c **** 				maze->RawNode[i][j].existence = wall_data;
+ 351              		.loc 1 76 5 discriminator 3 view .LVU89
+ 352              		.loc 1 76 35 is_stmt 0 discriminator 3 view .LVU90
+ 353 001a 07EB0713 		add	r3, r7, r7, lsl #4
+ 354 001e 2B44     		add	r3, r3, r5
+ 355 0020 019A     		ldr	r2, [sp, #4]
+ 356 0022 06F83320 		strb	r2, [r6, r3, lsl #3]
+  77:Core/Src/Origin/Record.c **** 				address += sizeof(wall_data);
+ 357              		.loc 1 77 5 is_stmt 1 discriminator 3 view .LVU91
+ 358              		.loc 1 77 13 is_stmt 0 discriminator 3 view .LVU92
+ 359 0026 0434     		adds	r4, r4, #4
+ 360              	.LVL34:
+ 361              		.loc 1 77 13 discriminator 3 view .LVU93
+ 362              	.LBE13:
+  72:Core/Src/Origin/Record.c **** 			{
+ 363              		.loc 1 72 44 is_stmt 1 discriminator 3 view .LVU94
+  72:Core/Src/Origin/Record.c **** 			{
+ 364              		.loc 1 72 45 is_stmt 0 discriminator 3 view .LVU95
+ 365 0028 0135     		adds	r5, r5, #1
+ 366              	.LVL35:
+ 367              	.L29:
+  72:Core/Src/Origin/Record.c **** 			{
+ 368              		.loc 1 72 17 is_stmt 1 discriminator 1 view .LVU96
+  72:Core/Src/Origin/Record.c **** 			{
+ 369              		.loc 1 72 4 is_stmt 0 discriminator 1 view .LVU97
+ 370 002a 102D     		cmp	r5, #16
+ 371 002c EFDD     		ble	.L28
+  72:Core/Src/Origin/Record.c **** 			{
+ 372              		.loc 1 72 4 discriminator 1 view .LVU98
+ 373              	.LBE12:
+  70:Core/Src/Origin/Record.c **** 	{
+ 374              		.loc 1 70 40 is_stmt 1 discriminator 2 view .LVU99
+  70:Core/Src/Origin/Record.c **** 	{
+ 375              		.loc 1 70 41 is_stmt 0 discriminator 2 view .LVU100
+ 376 002e 0137     		adds	r7, r7, #1
+ 377              	.LVL36:
+ 378              	.L27:
+  70:Core/Src/Origin/Record.c **** 	{
+ 379              		.loc 1 70 15 is_stmt 1 discriminator 1 view .LVU101
+  70:Core/Src/Origin/Record.c **** 	{
+ 380              		.loc 1 70 2 is_stmt 0 discriminator 1 view .LVU102
+ 381 0030 0F2F     		cmp	r7, #15
+ 382 0032 01DC     		bgt	.L36
+ 383              	.LBB14:
+  72:Core/Src/Origin/Record.c **** 			{
+ 384              		.loc 1 72 12 view .LVU103
+ 385 0034 0025     		movs	r5, #0
+ 386 0036 F8E7     		b	.L29
+ 387              	.L36:
+ 388              	.LBE14:
+ 389              	.LBE11:
+ 390              	.LBB15:
+  78:Core/Src/Origin/Record.c **** 			}
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 10
 
 
- 392              	.LBB15:
-  78:Core/Src/Record.c **** 			}
-  79:Core/Src/Record.c **** 	}
-  80:Core/Src/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
- 393              		.loc 1 80 10 view .LVU104
- 394 0038 0027     		movs	r7, #0
- 395              	.LVL37:
- 396              		.loc 1 80 10 view .LVU105
- 397 003a 11E0     		b	.L30
- 398              	.LVL38:
- 399              	.L31:
- 400              	.LBB16:
- 401              	.LBB17:
-  81:Core/Src/Record.c **** 	{
-  82:Core/Src/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
-  83:Core/Src/Record.c **** 			{
-  84:Core/Src/Record.c **** 				uint32_t wall_data=0;
- 402              		.loc 1 84 5 is_stmt 1 discriminator 3 view .LVU106
- 403              		.loc 1 84 14 is_stmt 0 discriminator 3 view .LVU107
- 404 003c 0023     		movs	r3, #0
- 405 003e 0193     		str	r3, [sp, #4]
-  85:Core/Src/Record.c **** 				FLASH_Read_Word(address, &wall_data);
- 406              		.loc 1 85 5 is_stmt 1 discriminator 3 view .LVU108
- 407 0040 01A9     		add	r1, sp, #4
- 408 0042 2046     		mov	r0, r4
- 409 0044 FFF7FEFF 		bl	FLASH_Read_Word
- 410              	.LVL39:
-  86:Core/Src/Record.c **** 				maze->ColumnNode[i][j].existence = wall_data;
- 411              		.loc 1 86 5 discriminator 3 view .LVU109
- 412              		.loc 1 86 38 is_stmt 0 discriminator 3 view .LVU110
- 413 0048 05EB0713 		add	r3, r5, r7, lsl #4
- 414 004c 03F58873 		add	r3, r3, #272
- 415 0050 019A     		ldr	r2, [sp, #4]
- 416 0052 06F83320 		strb	r2, [r6, r3, lsl #3]
-  87:Core/Src/Record.c **** 				address += sizeof(wall_data);
- 417              		.loc 1 87 5 is_stmt 1 discriminator 3 view .LVU111
- 418              		.loc 1 87 13 is_stmt 0 discriminator 3 view .LVU112
- 419 0056 0434     		adds	r4, r4, #4
- 420              	.LVL40:
- 421              		.loc 1 87 13 discriminator 3 view .LVU113
- 422              	.LBE17:
-  82:Core/Src/Record.c **** 			{
- 423              		.loc 1 82 42 is_stmt 1 discriminator 3 view .LVU114
-  82:Core/Src/Record.c **** 			{
- 424              		.loc 1 82 43 is_stmt 0 discriminator 3 view .LVU115
- 425 0058 0135     		adds	r5, r5, #1
- 426              	.LVL41:
- 427              	.L32:
-  82:Core/Src/Record.c **** 			{
- 428              		.loc 1 82 17 is_stmt 1 discriminator 1 view .LVU116
-  82:Core/Src/Record.c **** 			{
- 429              		.loc 1 82 4 is_stmt 0 discriminator 1 view .LVU117
- 430 005a 0F2D     		cmp	r5, #15
- 431 005c EEDD     		ble	.L31
-  82:Core/Src/Record.c **** 			{
- 432              		.loc 1 82 4 discriminator 1 view .LVU118
- 433              	.LBE16:
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 11
+  79:Core/Src/Origin/Record.c **** 	}
+  80:Core/Src/Origin/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
+ 391              		.loc 1 80 10 view .LVU104
+ 392 0038 0027     		movs	r7, #0
+ 393              	.LVL37:
+ 394              		.loc 1 80 10 view .LVU105
+ 395 003a 11E0     		b	.L30
+ 396              	.LVL38:
+ 397              	.L31:
+ 398              	.LBB16:
+ 399              	.LBB17:
+  81:Core/Src/Origin/Record.c **** 	{
+  82:Core/Src/Origin/Record.c **** 			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
+  83:Core/Src/Origin/Record.c **** 			{
+  84:Core/Src/Origin/Record.c **** 				uint32_t wall_data=0;
+ 400              		.loc 1 84 5 is_stmt 1 discriminator 3 view .LVU106
+ 401              		.loc 1 84 14 is_stmt 0 discriminator 3 view .LVU107
+ 402 003c 0023     		movs	r3, #0
+ 403 003e 0193     		str	r3, [sp, #4]
+  85:Core/Src/Origin/Record.c **** 				FLASH_Read_Word(address, &wall_data);
+ 404              		.loc 1 85 5 is_stmt 1 discriminator 3 view .LVU108
+ 405 0040 01A9     		add	r1, sp, #4
+ 406 0042 2046     		mov	r0, r4
+ 407 0044 FFF7FEFF 		bl	FLASH_Read_Word
+ 408              	.LVL39:
+  86:Core/Src/Origin/Record.c **** 				maze->ColumnNode[i][j].existence = wall_data;
+ 409              		.loc 1 86 5 discriminator 3 view .LVU109
+ 410              		.loc 1 86 38 is_stmt 0 discriminator 3 view .LVU110
+ 411 0048 05EB0713 		add	r3, r5, r7, lsl #4
+ 412 004c 03F58873 		add	r3, r3, #272
+ 413 0050 019A     		ldr	r2, [sp, #4]
+ 414 0052 06F83320 		strb	r2, [r6, r3, lsl #3]
+  87:Core/Src/Origin/Record.c **** 				address += sizeof(wall_data);
+ 415              		.loc 1 87 5 is_stmt 1 discriminator 3 view .LVU111
+ 416              		.loc 1 87 13 is_stmt 0 discriminator 3 view .LVU112
+ 417 0056 0434     		adds	r4, r4, #4
+ 418              	.LVL40:
+ 419              		.loc 1 87 13 discriminator 3 view .LVU113
+ 420              	.LBE17:
+  82:Core/Src/Origin/Record.c **** 			{
+ 421              		.loc 1 82 42 is_stmt 1 discriminator 3 view .LVU114
+  82:Core/Src/Origin/Record.c **** 			{
+ 422              		.loc 1 82 43 is_stmt 0 discriminator 3 view .LVU115
+ 423 0058 0135     		adds	r5, r5, #1
+ 424              	.LVL41:
+ 425              	.L32:
+  82:Core/Src/Origin/Record.c **** 			{
+ 426              		.loc 1 82 17 is_stmt 1 discriminator 1 view .LVU116
+  82:Core/Src/Origin/Record.c **** 			{
+ 427              		.loc 1 82 4 is_stmt 0 discriminator 1 view .LVU117
+ 428 005a 0F2D     		cmp	r5, #15
+ 429 005c EEDD     		ble	.L31
+  82:Core/Src/Origin/Record.c **** 			{
+ 430              		.loc 1 82 4 discriminator 1 view .LVU118
+ 431              	.LBE16:
+  80:Core/Src/Origin/Record.c **** 	{
+ 432              		.loc 1 80 42 is_stmt 1 discriminator 2 view .LVU119
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 11
 
 
-  80:Core/Src/Record.c **** 	{
- 434              		.loc 1 80 42 is_stmt 1 discriminator 2 view .LVU119
-  80:Core/Src/Record.c **** 	{
- 435              		.loc 1 80 43 is_stmt 0 discriminator 2 view .LVU120
- 436 005e 0137     		adds	r7, r7, #1
- 437              	.LVL42:
- 438              	.L30:
-  80:Core/Src/Record.c **** 	{
- 439              		.loc 1 80 15 is_stmt 1 discriminator 1 view .LVU121
-  80:Core/Src/Record.c **** 	{
- 440              		.loc 1 80 2 is_stmt 0 discriminator 1 view .LVU122
- 441 0060 102F     		cmp	r7, #16
- 442 0062 01DC     		bgt	.L37
- 443              	.LBB18:
-  82:Core/Src/Record.c **** 			{
- 444              		.loc 1 82 12 view .LVU123
- 445 0064 0025     		movs	r5, #0
- 446 0066 F8E7     		b	.L32
- 447              	.L37:
- 448              	.LBE18:
- 449              	.LBE15:
-  88:Core/Src/Record.c **** 			}
-  89:Core/Src/Record.c **** 	}
-  90:Core/Src/Record.c **** }
- 450              		.loc 1 90 1 view .LVU124
- 451 0068 03B0     		add	sp, sp, #12
- 452              	.LCFI6:
- 453              		.cfi_def_cfa_offset 20
- 454              		@ sp needed
- 455 006a F0BD     		pop	{r4, r5, r6, r7, pc}
- 456              	.LVL43:
- 457              	.L39:
- 458              		.loc 1 90 1 view .LVU125
- 459              		.align	2
- 460              	.L38:
- 461 006c 00000000 		.word	start_adress_sector1
- 462              		.cfi_endproc
- 463              	.LFE240:
- 465              		.text
- 466              	.Letext0:
- 467              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
- 468              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
- 469              		.file 4 "Core/Inc/MazeLib.h"
- 470              		.file 5 "Core/Inc/Flash.h"
- 471              		.file 6 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/stdio.h"
- 472              		.file 7 "<built-in>"
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s 			page 12
+  80:Core/Src/Origin/Record.c **** 	{
+ 433              		.loc 1 80 43 is_stmt 0 discriminator 2 view .LVU120
+ 434 005e 0137     		adds	r7, r7, #1
+ 435              	.LVL42:
+ 436              	.L30:
+  80:Core/Src/Origin/Record.c **** 	{
+ 437              		.loc 1 80 15 is_stmt 1 discriminator 1 view .LVU121
+  80:Core/Src/Origin/Record.c **** 	{
+ 438              		.loc 1 80 2 is_stmt 0 discriminator 1 view .LVU122
+ 439 0060 102F     		cmp	r7, #16
+ 440 0062 01DC     		bgt	.L37
+ 441              	.LBB18:
+  82:Core/Src/Origin/Record.c **** 			{
+ 442              		.loc 1 82 12 view .LVU123
+ 443 0064 0025     		movs	r5, #0
+ 444 0066 F8E7     		b	.L32
+ 445              	.L37:
+ 446              	.LBE18:
+ 447              	.LBE15:
+  88:Core/Src/Origin/Record.c **** 			}
+  89:Core/Src/Origin/Record.c **** 	}
+  90:Core/Src/Origin/Record.c **** }
+ 448              		.loc 1 90 1 view .LVU124
+ 449 0068 03B0     		add	sp, sp, #12
+ 450              	.LCFI6:
+ 451              		.cfi_def_cfa_offset 20
+ 452              		@ sp needed
+ 453 006a F0BD     		pop	{r4, r5, r6, r7, pc}
+ 454              	.LVL43:
+ 455              	.L39:
+ 456              		.loc 1 90 1 view .LVU125
+ 457              		.align	2
+ 458              	.L38:
+ 459 006c 00000000 		.word	start_adress_sector1
+ 460              		.cfi_endproc
+ 461              	.LFE240:
+ 463              		.text
+ 464              	.Letext0:
+ 465              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 466              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 467              		.file 4 "Core/Inc/MazeLib.h"
+ 468              		.file 5 "Core/Inc/Flash.h"
+ 469              		.file 6 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 470              		.file 7 "<built-in>"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s 			page 12
 
 
 DEFINED SYMBOLS
-                            *ABS*:0000000000000000 Record.c
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:18     .text.flashStoreNodes:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:26     .text.flashStoreNodes:0000000000000000 flashStoreNodes
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:156    .text.flashStoreNodes:0000000000000058 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:161    .rodata.wall_flash_print.str1.4:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:168    .text.wall_flash_print:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:175    .text.wall_flash_print:0000000000000000 wall_flash_print
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:294    .text.wall_flash_print:0000000000000060 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:301    .text.flashCopyNodesToRam:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:308    .text.flashCopyNodesToRam:0000000000000000 flashCopyNodesToRam
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//ccdIQ2Sq.s:461    .text.flashCopyNodesToRam:000000000000006c $d
+                            *ABS*:00000000 Record.c
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:20     .text.flashStoreNodes:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:26     .text.flashStoreNodes:00000000 flashStoreNodes
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:156    .text.flashStoreNodes:00000058 $d
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:161    .rodata.wall_flash_print.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:168    .text.wall_flash_print:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:174    .text.wall_flash_print:00000000 wall_flash_print
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:293    .text.wall_flash_print:00000060 $d
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:300    .text.flashCopyNodesToRam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:306    .text.flashCopyNodesToRam:00000000 flashCopyNodesToRam
+C:\Users\leopi\AppData\Local\Temp\ccmmG6ux.s:459    .text.flashCopyNodesToRam:0000006c $d
 
 UNDEFINED SYMBOLS
 FLASH_Write_Word

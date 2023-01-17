@@ -1,312 +1,314 @@
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s 			page 1
 
 
    1              		.cpu cortex-m4
-   2              		.eabi_attribute 27, 1
-   3              		.eabi_attribute 28, 1
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 1
-  11              		.eabi_attribute 34, 1
-  12              		.eabi_attribute 18, 4
-  13              		.file	"MicroMouse.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.global	Sla
-  18              		.global	goal_edge_num
-  19              		.global	R_motor
-  20              		.global	L_motor
-  21              		.global	WallLeftOut
-  22              		.global	WallRightOut
-  23              		.global	VelocityRightOut
-  24              		.global	VelocityLeftOut
-  25              		.global	ImuMileage
-  26              		.global	ImuVelocity
-  27              		.global	ImuAccel
-  28              		.global	ImuAngle
-  29              		.global	ImuAngV
-  30              		.global	TargetAngle
-  31              		.global	AngularLeapsity
-  32              		.global	AngularAcceleration
-  33              		.global	TargetAngularV
-  34              		.global	Acceleration
-  35              		.global	AddVelocity
-  36              		.global	ExploreVelocity
-  37              		.global	Angle
-  38              		.global	EncAngV
-  39              		.global	AngularV
-  40              		.global	TotalPulse
-  41              		.global	PulseDisplacement
-  42              		.global	KeepPulse
-  43              		.global	ControlTargetVelocity
-  44              		.global	TargetVelocity
-  45              		.global	CurrentVelocity
-  46              		.global	KeepCounter
-  47              		.global	PhotoDiff
-  48              		.global	TargetPhoto
-  49              		.global	Photo
-  50              		.global	SearchOrFast
-  51              		.global	Calc
-  52              		.global	VelocityMax
-  53              		.section	.bss.Acceleration,"aw",%nobits
-  54              		.align	2
-  57              	Acceleration:
-  58 0000 00000000 		.space	4
-  59              		.section	.bss.AddVelocity,"aw",%nobits
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s 			page 2
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"MicroMouse.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	Sla
+  20              		.global	goal_edge_num
+  21              		.global	R_motor
+  22              		.global	L_motor
+  23              		.global	WallLeftOut
+  24              		.global	WallRightOut
+  25              		.global	VelocityRightOut
+  26              		.global	VelocityLeftOut
+  27              		.global	ImuMileage
+  28              		.global	ImuVelocity
+  29              		.global	ImuAccel
+  30              		.global	ImuAngle
+  31              		.global	ImuAngV
+  32              		.global	TargetAngle
+  33              		.global	AngularLeapsity
+  34              		.global	AngularAcceleration
+  35              		.global	TargetAngularV
+  36              		.global	Acceleration
+  37              		.global	AddVelocity
+  38              		.global	ExploreVelocity
+  39              		.global	Angle
+  40              		.global	EncAngV
+  41              		.global	AngularV
+  42              		.global	TotalPulse
+  43              		.global	PulseDisplacement
+  44              		.global	KeepPulse
+  45              		.global	ControlTargetVelocity
+  46              		.global	TargetVelocity
+  47              		.global	CurrentVelocity
+  48              		.global	KeepCounter
+  49              		.global	PhotoDiff
+  50              		.global	TargetPhoto
+  51              		.global	Photo
+  52              		.global	SearchOrFast
+  53              		.global	Calc
+  54              		.global	VelocityMax
+  55              		.section	.bss.Acceleration,"aw",%nobits
+  56              		.align	2
+  59              	Acceleration:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s 			page 2
 
 
-  60              		.align	2
-  63              	AddVelocity:
-  64 0000 00000000 		.space	4
-  65              		.section	.bss.Angle,"aw",%nobits
-  66              		.align	2
-  69              	Angle:
-  70 0000 00000000 		.space	4
-  71              		.section	.bss.AngularAcceleration,"aw",%nobits
-  72              		.align	2
-  75              	AngularAcceleration:
-  76 0000 00000000 		.space	4
-  77              		.section	.bss.AngularLeapsity,"aw",%nobits
-  78              		.align	2
-  81              	AngularLeapsity:
-  82 0000 00000000 		.space	4
-  83              		.section	.bss.AngularV,"aw",%nobits
-  84              		.align	2
-  87              	AngularV:
-  88 0000 00000000 		.space	4
-  89              		.section	.bss.Calc,"aw",%nobits
-  90              		.align	2
-  93              	Calc:
-  94 0000 00000000 		.space	4
-  95              		.section	.bss.ControlTargetVelocity,"aw",%nobits
-  96              		.align	2
-  99              	ControlTargetVelocity:
- 100 0000 00000000 		.space	4
- 101              		.section	.bss.CurrentVelocity,"aw",%nobits
- 102              		.align	2
- 105              	CurrentVelocity:
- 106 0000 00000000 		.space	12
- 106      00000000 
- 106      00000000 
- 107              		.section	.bss.EncAngV,"aw",%nobits
- 108              		.align	2
- 111              	EncAngV:
- 112 0000 00000000 		.space	4
- 113              		.section	.bss.ExploreVelocity,"aw",%nobits
- 114              		.align	2
- 117              	ExploreVelocity:
- 118 0000 00000000 		.space	4
- 119              		.section	.bss.ImuAccel,"aw",%nobits
- 120              		.align	2
- 123              	ImuAccel:
- 124 0000 00000000 		.space	4
- 125              		.section	.bss.ImuAngV,"aw",%nobits
- 126              		.align	2
- 129              	ImuAngV:
- 130 0000 00000000 		.space	4
- 131              		.section	.bss.ImuAngle,"aw",%nobits
- 132              		.align	2
- 135              	ImuAngle:
- 136 0000 00000000 		.space	4
- 137              		.section	.bss.ImuMileage,"aw",%nobits
- 138              		.align	2
- 141              	ImuMileage:
- 142 0000 00000000 		.space	4
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s 			page 3
+  60 0000 00000000 		.space	4
+  61              		.section	.bss.AddVelocity,"aw",%nobits
+  62              		.align	2
+  65              	AddVelocity:
+  66 0000 00000000 		.space	4
+  67              		.section	.bss.Angle,"aw",%nobits
+  68              		.align	2
+  71              	Angle:
+  72 0000 00000000 		.space	4
+  73              		.section	.bss.AngularAcceleration,"aw",%nobits
+  74              		.align	2
+  77              	AngularAcceleration:
+  78 0000 00000000 		.space	4
+  79              		.section	.bss.AngularLeapsity,"aw",%nobits
+  80              		.align	2
+  83              	AngularLeapsity:
+  84 0000 00000000 		.space	4
+  85              		.section	.bss.AngularV,"aw",%nobits
+  86              		.align	2
+  89              	AngularV:
+  90 0000 00000000 		.space	4
+  91              		.section	.bss.Calc,"aw",%nobits
+  92              		.align	2
+  95              	Calc:
+  96 0000 00000000 		.space	4
+  97              		.section	.bss.ControlTargetVelocity,"aw",%nobits
+  98              		.align	2
+ 101              	ControlTargetVelocity:
+ 102 0000 00000000 		.space	4
+ 103              		.section	.bss.CurrentVelocity,"aw",%nobits
+ 104              		.align	2
+ 107              	CurrentVelocity:
+ 108 0000 00000000 		.space	12
+ 108      00000000 
+ 108      00000000 
+ 109              		.section	.bss.EncAngV,"aw",%nobits
+ 110              		.align	2
+ 113              	EncAngV:
+ 114 0000 00000000 		.space	4
+ 115              		.section	.bss.ExploreVelocity,"aw",%nobits
+ 116              		.align	2
+ 119              	ExploreVelocity:
+ 120 0000 00000000 		.space	4
+ 121              		.section	.bss.ImuAccel,"aw",%nobits
+ 122              		.align	2
+ 125              	ImuAccel:
+ 126 0000 00000000 		.space	4
+ 127              		.section	.bss.ImuAngV,"aw",%nobits
+ 128              		.align	2
+ 131              	ImuAngV:
+ 132 0000 00000000 		.space	4
+ 133              		.section	.bss.ImuAngle,"aw",%nobits
+ 134              		.align	2
+ 137              	ImuAngle:
+ 138 0000 00000000 		.space	4
+ 139              		.section	.bss.ImuMileage,"aw",%nobits
+ 140              		.align	2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s 			page 3
 
 
- 143              		.section	.bss.ImuVelocity,"aw",%nobits
- 144              		.align	2
- 147              	ImuVelocity:
- 148 0000 00000000 		.space	4
- 149              		.section	.bss.KeepCounter,"aw",%nobits
- 150              		.align	2
- 153              	KeepCounter:
- 154 0000 00000000 		.space	4
- 155              		.section	.bss.KeepPulse,"aw",%nobits
- 156              		.align	2
- 159              	KeepPulse:
- 160 0000 00000000 		.space	12
- 160      00000000 
- 160      00000000 
- 161              		.section	.bss.L_motor,"aw",%nobits
- 162              		.align	2
- 165              	L_motor:
- 166 0000 00000000 		.space	4
- 167              		.section	.bss.Photo,"aw",%nobits
- 168              		.align	2
- 171              	Photo:
- 172 0000 00000000 		.space	16
- 172      00000000 
- 172      00000000 
- 172      00000000 
- 173              		.section	.bss.PhotoDiff,"aw",%nobits
- 174              		.align	2
- 177              	PhotoDiff:
- 178 0000 00000000 		.space	4
- 179              		.section	.bss.PulseDisplacement,"aw",%nobits
- 180              		.align	2
- 183              	PulseDisplacement:
- 184 0000 00000000 		.space	12
- 184      00000000 
- 184      00000000 
- 185              		.section	.bss.R_motor,"aw",%nobits
- 186              		.align	2
- 189              	R_motor:
- 190 0000 00000000 		.space	4
- 191              		.section	.bss.SearchOrFast,"aw",%nobits
- 192              		.align	2
- 195              	SearchOrFast:
- 196 0000 00000000 		.space	4
- 197              		.section	.bss.Sla,"aw",%nobits
- 198              		.align	2
- 201              	Sla:
- 202 0000 00000000 		.space	28
- 202      00000000 
- 202      00000000 
- 202      00000000 
- 202      00000000 
- 203              		.section	.bss.TargetAngle,"aw",%nobits
- 204              		.align	2
- 207              	TargetAngle:
- 208 0000 00000000 		.space	4
- 209              		.section	.bss.TargetAngularV,"aw",%nobits
- 210              		.align	2
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s 			page 4
+ 143              	ImuMileage:
+ 144 0000 00000000 		.space	4
+ 145              		.section	.bss.ImuVelocity,"aw",%nobits
+ 146              		.align	2
+ 149              	ImuVelocity:
+ 150 0000 00000000 		.space	4
+ 151              		.section	.bss.KeepCounter,"aw",%nobits
+ 152              		.align	2
+ 155              	KeepCounter:
+ 156 0000 00000000 		.space	4
+ 157              		.section	.bss.KeepPulse,"aw",%nobits
+ 158              		.align	2
+ 161              	KeepPulse:
+ 162 0000 00000000 		.space	12
+ 162      00000000 
+ 162      00000000 
+ 163              		.section	.bss.L_motor,"aw",%nobits
+ 164              		.align	2
+ 167              	L_motor:
+ 168 0000 00000000 		.space	4
+ 169              		.section	.bss.Photo,"aw",%nobits
+ 170              		.align	2
+ 173              	Photo:
+ 174 0000 00000000 		.space	16
+ 174      00000000 
+ 174      00000000 
+ 174      00000000 
+ 175              		.section	.bss.PhotoDiff,"aw",%nobits
+ 176              		.align	2
+ 179              	PhotoDiff:
+ 180 0000 00000000 		.space	4
+ 181              		.section	.bss.PulseDisplacement,"aw",%nobits
+ 182              		.align	2
+ 185              	PulseDisplacement:
+ 186 0000 00000000 		.space	12
+ 186      00000000 
+ 186      00000000 
+ 187              		.section	.bss.R_motor,"aw",%nobits
+ 188              		.align	2
+ 191              	R_motor:
+ 192 0000 00000000 		.space	4
+ 193              		.section	.bss.SearchOrFast,"aw",%nobits
+ 194              		.align	2
+ 197              	SearchOrFast:
+ 198 0000 00000000 		.space	4
+ 199              		.section	.bss.Sla,"aw",%nobits
+ 200              		.align	2
+ 203              	Sla:
+ 204 0000 00000000 		.space	28
+ 204      00000000 
+ 204      00000000 
+ 204      00000000 
+ 204      00000000 
+ 205              		.section	.bss.TargetAngle,"aw",%nobits
+ 206              		.align	2
+ 209              	TargetAngle:
+ 210 0000 00000000 		.space	4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s 			page 4
 
 
- 213              	TargetAngularV:
- 214 0000 00000000 		.space	4
- 215              		.section	.bss.TargetPhoto,"aw",%nobits
- 216              		.align	2
- 219              	TargetPhoto:
- 220 0000 00000000 		.space	16
- 220      00000000 
- 220      00000000 
- 220      00000000 
- 221              		.section	.bss.TargetVelocity,"aw",%nobits
- 222              		.align	2
- 225              	TargetVelocity:
- 226 0000 00000000 		.space	12
- 226      00000000 
- 226      00000000 
- 227              		.section	.bss.TotalPulse,"aw",%nobits
- 228              		.align	2
- 231              	TotalPulse:
- 232 0000 00000000 		.space	12
- 232      00000000 
- 232      00000000 
- 233              		.section	.bss.VelocityLeftOut,"aw",%nobits
- 234              		.align	2
- 237              	VelocityLeftOut:
- 238 0000 00000000 		.space	4
- 239              		.section	.bss.VelocityMax,"aw",%nobits
- 242              	VelocityMax:
- 243 0000 00       		.space	1
- 244              		.section	.bss.VelocityRightOut,"aw",%nobits
- 245              		.align	2
- 248              	VelocityRightOut:
- 249 0000 00000000 		.space	4
- 250              		.section	.bss.WallLeftOut,"aw",%nobits
- 251              		.align	2
- 254              	WallLeftOut:
- 255 0000 00000000 		.space	4
- 256              		.section	.bss.WallRightOut,"aw",%nobits
- 257              		.align	2
- 260              	WallRightOut:
- 261 0000 00000000 		.space	4
- 262              		.section	.bss.goal_edge_num,"aw",%nobits
- 265              	goal_edge_num:
- 266 0000 00       		.space	1
- 267              		.text
- 268              	.Letext0:
- 269              		.file 1 "Core/Inc/MicroMouse.h"
- 270              		.file 2 "Core/Src/MicroMouse.c"
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s 			page 5
+ 211              		.section	.bss.TargetAngularV,"aw",%nobits
+ 212              		.align	2
+ 215              	TargetAngularV:
+ 216 0000 00000000 		.space	4
+ 217              		.section	.bss.TargetPhoto,"aw",%nobits
+ 218              		.align	2
+ 221              	TargetPhoto:
+ 222 0000 00000000 		.space	16
+ 222      00000000 
+ 222      00000000 
+ 222      00000000 
+ 223              		.section	.bss.TargetVelocity,"aw",%nobits
+ 224              		.align	2
+ 227              	TargetVelocity:
+ 228 0000 00000000 		.space	12
+ 228      00000000 
+ 228      00000000 
+ 229              		.section	.bss.TotalPulse,"aw",%nobits
+ 230              		.align	2
+ 233              	TotalPulse:
+ 234 0000 00000000 		.space	12
+ 234      00000000 
+ 234      00000000 
+ 235              		.section	.bss.VelocityLeftOut,"aw",%nobits
+ 236              		.align	2
+ 239              	VelocityLeftOut:
+ 240 0000 00000000 		.space	4
+ 241              		.section	.bss.VelocityMax,"aw",%nobits
+ 244              	VelocityMax:
+ 245 0000 00       		.space	1
+ 246              		.section	.bss.VelocityRightOut,"aw",%nobits
+ 247              		.align	2
+ 250              	VelocityRightOut:
+ 251 0000 00000000 		.space	4
+ 252              		.section	.bss.WallLeftOut,"aw",%nobits
+ 253              		.align	2
+ 256              	WallLeftOut:
+ 257 0000 00000000 		.space	4
+ 258              		.section	.bss.WallRightOut,"aw",%nobits
+ 259              		.align	2
+ 262              	WallRightOut:
+ 263 0000 00000000 		.space	4
+ 264              		.section	.bss.goal_edge_num,"aw",%nobits
+ 267              	goal_edge_num:
+ 268 0000 00       		.space	1
+ 269              		.text
+ 270              	.Letext0:
+ 271              		.file 1 "Core/Inc/MicroMouse.h"
+ 272              		.file 2 "Core/Src/Origin/MicroMouse.c"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s 			page 5
 
 
 DEFINED SYMBOLS
-                            *ABS*:0000000000000000 MicroMouse.c
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:201    .bss.Sla:0000000000000000 Sla
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:265    .bss.goal_edge_num:0000000000000000 goal_edge_num
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:189    .bss.R_motor:0000000000000000 R_motor
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:165    .bss.L_motor:0000000000000000 L_motor
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:254    .bss.WallLeftOut:0000000000000000 WallLeftOut
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:260    .bss.WallRightOut:0000000000000000 WallRightOut
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:248    .bss.VelocityRightOut:0000000000000000 VelocityRightOut
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:237    .bss.VelocityLeftOut:0000000000000000 VelocityLeftOut
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:141    .bss.ImuMileage:0000000000000000 ImuMileage
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:147    .bss.ImuVelocity:0000000000000000 ImuVelocity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:123    .bss.ImuAccel:0000000000000000 ImuAccel
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:135    .bss.ImuAngle:0000000000000000 ImuAngle
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:129    .bss.ImuAngV:0000000000000000 ImuAngV
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:207    .bss.TargetAngle:0000000000000000 TargetAngle
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:81     .bss.AngularLeapsity:0000000000000000 AngularLeapsity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:75     .bss.AngularAcceleration:0000000000000000 AngularAcceleration
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:213    .bss.TargetAngularV:0000000000000000 TargetAngularV
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:57     .bss.Acceleration:0000000000000000 Acceleration
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:63     .bss.AddVelocity:0000000000000000 AddVelocity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:117    .bss.ExploreVelocity:0000000000000000 ExploreVelocity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:69     .bss.Angle:0000000000000000 Angle
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:111    .bss.EncAngV:0000000000000000 EncAngV
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:87     .bss.AngularV:0000000000000000 AngularV
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:231    .bss.TotalPulse:0000000000000000 TotalPulse
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:183    .bss.PulseDisplacement:0000000000000000 PulseDisplacement
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:159    .bss.KeepPulse:0000000000000000 KeepPulse
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:99     .bss.ControlTargetVelocity:0000000000000000 ControlTargetVelocity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:225    .bss.TargetVelocity:0000000000000000 TargetVelocity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:105    .bss.CurrentVelocity:0000000000000000 CurrentVelocity
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:153    .bss.KeepCounter:0000000000000000 KeepCounter
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:177    .bss.PhotoDiff:0000000000000000 PhotoDiff
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:219    .bss.TargetPhoto:0000000000000000 TargetPhoto
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:171    .bss.Photo:0000000000000000 Photo
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:195    .bss.SearchOrFast:0000000000000000 SearchOrFast
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:93     .bss.Calc:0000000000000000 Calc
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:242    .bss.VelocityMax:0000000000000000 VelocityMax
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:54     .bss.Acceleration:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:60     .bss.AddVelocity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:66     .bss.Angle:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:72     .bss.AngularAcceleration:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:78     .bss.AngularLeapsity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:84     .bss.AngularV:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:90     .bss.Calc:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:96     .bss.ControlTargetVelocity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:102    .bss.CurrentVelocity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:108    .bss.EncAngV:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:114    .bss.ExploreVelocity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:120    .bss.ImuAccel:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:126    .bss.ImuAngV:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:132    .bss.ImuAngle:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:138    .bss.ImuMileage:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:144    .bss.ImuVelocity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:150    .bss.KeepCounter:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:156    .bss.KeepPulse:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:162    .bss.L_motor:0000000000000000 $d
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s 			page 6
+                            *ABS*:00000000 MicroMouse.c
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:203    .bss.Sla:00000000 Sla
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:267    .bss.goal_edge_num:00000000 goal_edge_num
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:191    .bss.R_motor:00000000 R_motor
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:167    .bss.L_motor:00000000 L_motor
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:256    .bss.WallLeftOut:00000000 WallLeftOut
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:262    .bss.WallRightOut:00000000 WallRightOut
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:250    .bss.VelocityRightOut:00000000 VelocityRightOut
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:239    .bss.VelocityLeftOut:00000000 VelocityLeftOut
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:143    .bss.ImuMileage:00000000 ImuMileage
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:149    .bss.ImuVelocity:00000000 ImuVelocity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:125    .bss.ImuAccel:00000000 ImuAccel
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:137    .bss.ImuAngle:00000000 ImuAngle
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:131    .bss.ImuAngV:00000000 ImuAngV
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:209    .bss.TargetAngle:00000000 TargetAngle
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:83     .bss.AngularLeapsity:00000000 AngularLeapsity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:77     .bss.AngularAcceleration:00000000 AngularAcceleration
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:215    .bss.TargetAngularV:00000000 TargetAngularV
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:59     .bss.Acceleration:00000000 Acceleration
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:65     .bss.AddVelocity:00000000 AddVelocity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:119    .bss.ExploreVelocity:00000000 ExploreVelocity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:71     .bss.Angle:00000000 Angle
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:113    .bss.EncAngV:00000000 EncAngV
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:89     .bss.AngularV:00000000 AngularV
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:233    .bss.TotalPulse:00000000 TotalPulse
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:185    .bss.PulseDisplacement:00000000 PulseDisplacement
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:161    .bss.KeepPulse:00000000 KeepPulse
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:101    .bss.ControlTargetVelocity:00000000 ControlTargetVelocity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:227    .bss.TargetVelocity:00000000 TargetVelocity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:107    .bss.CurrentVelocity:00000000 CurrentVelocity
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:155    .bss.KeepCounter:00000000 KeepCounter
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:179    .bss.PhotoDiff:00000000 PhotoDiff
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:221    .bss.TargetPhoto:00000000 TargetPhoto
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:173    .bss.Photo:00000000 Photo
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:197    .bss.SearchOrFast:00000000 SearchOrFast
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:95     .bss.Calc:00000000 Calc
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:244    .bss.VelocityMax:00000000 VelocityMax
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:56     .bss.Acceleration:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:62     .bss.AddVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:68     .bss.Angle:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:74     .bss.AngularAcceleration:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:80     .bss.AngularLeapsity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:86     .bss.AngularV:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:92     .bss.Calc:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:98     .bss.ControlTargetVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:104    .bss.CurrentVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:110    .bss.EncAngV:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:116    .bss.ExploreVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:122    .bss.ImuAccel:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:128    .bss.ImuAngV:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:134    .bss.ImuAngle:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:140    .bss.ImuMileage:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:146    .bss.ImuVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:152    .bss.KeepCounter:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:158    .bss.KeepPulse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:164    .bss.L_motor:00000000 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s 			page 6
 
 
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:168    .bss.Photo:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:174    .bss.PhotoDiff:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:180    .bss.PulseDisplacement:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:186    .bss.R_motor:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:192    .bss.SearchOrFast:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:198    .bss.Sla:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:204    .bss.TargetAngle:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:210    .bss.TargetAngularV:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:216    .bss.TargetPhoto:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:222    .bss.TargetVelocity:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:228    .bss.TotalPulse:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:234    .bss.VelocityLeftOut:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:243    .bss.VelocityMax:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:245    .bss.VelocityRightOut:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:251    .bss.WallLeftOut:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:257    .bss.WallRightOut:0000000000000000 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cccJn6uB.s:266    .bss.goal_edge_num:0000000000000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:170    .bss.Photo:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:176    .bss.PhotoDiff:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:182    .bss.PulseDisplacement:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:188    .bss.R_motor:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:194    .bss.SearchOrFast:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:200    .bss.Sla:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:206    .bss.TargetAngle:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:212    .bss.TargetAngularV:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:218    .bss.TargetPhoto:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:224    .bss.TargetVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:230    .bss.TotalPulse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:236    .bss.VelocityLeftOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:245    .bss.VelocityMax:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:247    .bss.VelocityRightOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:253    .bss.WallLeftOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:259    .bss.WallRightOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccZGpc5b.s:268    .bss.goal_edge_num:00000000 $d
 
 NO UNDEFINED SYMBOLS

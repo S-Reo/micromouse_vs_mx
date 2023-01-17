@@ -1,30 +1,30 @@
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s 			page 1
 
 
    1              		.cpu cortex-m4
-   2              		.eabi_attribute 27, 1
-   3              		.eabi_attribute 28, 1
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 1
-  11              		.eabi_attribute 34, 1
-  12              		.eabi_attribute 18, 4
-  13              		.file	"IEH2_4096.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.section	.text.EncoderStart,"ax",%progbits
-  18              		.align	1
-  19              		.global	EncoderStart
-  20              		.arch armv7e-m
-  21              		.syntax unified
-  22              		.thumb
-  23              		.thumb_func
-  24              		.fpu fpv4-sp-d16
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"IEH2_4096.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.EncoderStart,"ax",%progbits
+  20              		.align	1
+  21              		.global	EncoderStart
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
   26              	EncoderStart:
   27              	.LFB235:
   28              		.file 1 "Core/Src/Hw/IEH2_4096.c"
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s 			page 1
   42              	.LVL0:
   15:Core/Src/Hw/IEH2_4096.c **** 	  HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
   43              		.loc 1 15 4 view .LVU2
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s 			page 2
 
 
   44 000a 3C21     		movs	r1, #60
@@ -81,115 +81,113 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s 			page 1
   61              		.syntax unified
   62              		.thumb
   63              		.thumb_func
-  64              		.fpu fpv4-sp-d16
-  66              	EncoderStop:
-  67              	.LFB236:
+  65              	EncoderStop:
+  66              	.LFB236:
   17:Core/Src/Hw/IEH2_4096.c **** //PulseInit((int *) (&(TIM3->CNT) ), INITIAL_PULSE_L);
   18:Core/Src/Hw/IEH2_4096.c **** //PulseInit((int *) (&(TIM4->CNT) ), INITIAL_PUSEL_R );
   19:Core/Src/Hw/IEH2_4096.c **** void EncoderStop()
   20:Core/Src/Hw/IEH2_4096.c **** {
-  68              		.loc 1 20 1 is_stmt 1 view -0
-  69              		.cfi_startproc
-  70              		@ args = 0, pretend = 0, frame = 0
-  71              		@ frame_needed = 0, uses_anonymous_args = 0
-  72 0000 08B5     		push	{r3, lr}
-  73              	.LCFI1:
-  74              		.cfi_def_cfa_offset 8
-  75              		.cfi_offset 3, -8
-  76              		.cfi_offset 14, -4
+  67              		.loc 1 20 1 is_stmt 1 view -0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71 0000 08B5     		push	{r3, lr}
+  72              	.LCFI1:
+  73              		.cfi_def_cfa_offset 8
+  74              		.cfi_offset 3, -8
+  75              		.cfi_offset 14, -4
   21:Core/Src/Hw/IEH2_4096.c **** 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_ALL);
-  77              		.loc 1 21 2 view .LVU5
-  78 0002 3C21     		movs	r1, #60
-  79 0004 0348     		ldr	r0, .L7
-  80 0006 FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
-  81              	.LVL2:
+  76              		.loc 1 21 2 view .LVU5
+  77 0002 3C21     		movs	r1, #60
+  78 0004 0348     		ldr	r0, .L7
+  79 0006 FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
+  80              	.LVL2:
   22:Core/Src/Hw/IEH2_4096.c **** 	HAL_TIM_Encoder_Stop(&htim4,TIM_CHANNEL_ALL);
-  82              		.loc 1 22 2 view .LVU6
-  83 000a 3C21     		movs	r1, #60
-  84 000c 0248     		ldr	r0, .L7+4
-  85 000e FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
-  86              	.LVL3:
+  81              		.loc 1 22 2 view .LVU6
+  82 000a 3C21     		movs	r1, #60
+  83 000c 0248     		ldr	r0, .L7+4
+  84 000e FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
+  85              	.LVL3:
   23:Core/Src/Hw/IEH2_4096.c **** }
-  87              		.loc 1 23 1 is_stmt 0 view .LVU7
-  88 0012 08BD     		pop	{r3, pc}
-  89              	.L8:
-  90              		.align	2
-  91              	.L7:
-  92 0014 00000000 		.word	htim3
-  93 0018 00000000 		.word	htim4
-  94              		.cfi_endproc
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s 			page 3
+  86              		.loc 1 23 1 is_stmt 0 view .LVU7
+  87 0012 08BD     		pop	{r3, pc}
+  88              	.L8:
+  89              		.align	2
+  90              	.L7:
+  91 0014 00000000 		.word	htim3
+  92 0018 00000000 		.word	htim4
+  93              		.cfi_endproc
+  94              	.LFE236:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s 			page 3
 
 
-  95              	.LFE236:
-  97              		.section	.text.EncoderPrintInfo,"ax",%progbits
-  98              		.align	1
-  99              		.global	EncoderPrintInfo
- 100              		.syntax unified
- 101              		.thumb
- 102              		.thumb_func
- 103              		.fpu fpv4-sp-d16
- 105              	EncoderPrintInfo:
- 106              	.LFB237:
+  96              		.section	.text.EncoderPrintInfo,"ax",%progbits
+  97              		.align	1
+  98              		.global	EncoderPrintInfo
+  99              		.syntax unified
+ 100              		.thumb
+ 101              		.thumb_func
+ 103              	EncoderPrintInfo:
+ 104              	.LFB237:
   24:Core/Src/Hw/IEH2_4096.c **** 
   25:Core/Src/Hw/IEH2_4096.c **** void EncoderPrintInfo(){
- 107              		.loc 1 25 24 is_stmt 1 view -0
- 108              		.cfi_startproc
- 109              		@ args = 0, pretend = 0, frame = 0
- 110              		@ frame_needed = 0, uses_anonymous_args = 0
- 111 0000 08B5     		push	{r3, lr}
- 112              	.LCFI2:
- 113              		.cfi_def_cfa_offset 8
- 114              		.cfi_offset 3, -8
- 115              		.cfi_offset 14, -4
+ 105              		.loc 1 25 24 is_stmt 1 view -0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 0
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109 0000 08B5     		push	{r3, lr}
+ 110              	.LCFI2:
+ 111              		.cfi_def_cfa_offset 8
+ 112              		.cfi_offset 3, -8
+ 113              		.cfi_offset 14, -4
   26:Core/Src/Hw/IEH2_4096.c **** 	printTIMinfo(&htim3);
- 116              		.loc 1 26 2 view .LVU9
- 117 0002 0348     		ldr	r0, .L11
- 118 0004 FFF7FEFF 		bl	printTIMinfo
- 119              	.LVL4:
+ 114              		.loc 1 26 2 view .LVU9
+ 115 0002 0348     		ldr	r0, .L11
+ 116 0004 FFF7FEFF 		bl	printTIMinfo
+ 117              	.LVL4:
   27:Core/Src/Hw/IEH2_4096.c **** 	printTIMinfo(&htim4);
- 120              		.loc 1 27 2 view .LVU10
- 121 0008 0248     		ldr	r0, .L11+4
- 122 000a FFF7FEFF 		bl	printTIMinfo
- 123              	.LVL5:
+ 118              		.loc 1 27 2 view .LVU10
+ 119 0008 0248     		ldr	r0, .L11+4
+ 120 000a FFF7FEFF 		bl	printTIMinfo
+ 121              	.LVL5:
   28:Core/Src/Hw/IEH2_4096.c **** 	//パルス数なども表示したい
   29:Core/Src/Hw/IEH2_4096.c **** 
   30:Core/Src/Hw/IEH2_4096.c **** 	//動作確認もしたい
   31:Core/Src/Hw/IEH2_4096.c **** 
   32:Core/Src/Hw/IEH2_4096.c **** }
- 124              		.loc 1 32 1 is_stmt 0 view .LVU11
- 125 000e 08BD     		pop	{r3, pc}
- 126              	.L12:
- 127              		.align	2
- 128              	.L11:
- 129 0010 00000000 		.word	htim3
- 130 0014 00000000 		.word	htim4
- 131              		.cfi_endproc
- 132              	.LFE237:
- 134              		.text
- 135              	.Letext0:
- 136              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
- 137              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
- 138              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 139              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 140              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 141              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 142              		.file 8 "Core/Inc/IEH2_4096.h"
- 143              		.file 9 "Core/Inc/tim_info.h"
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s 			page 4
+ 122              		.loc 1 32 1 is_stmt 0 view .LVU11
+ 123 000e 08BD     		pop	{r3, pc}
+ 124              	.L12:
+ 125              		.align	2
+ 126              	.L11:
+ 127 0010 00000000 		.word	htim3
+ 128 0014 00000000 		.word	htim4
+ 129              		.cfi_endproc
+ 130              	.LFE237:
+ 132              		.text
+ 133              	.Letext0:
+ 134              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 135              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 136              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 137              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 138              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 139              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 140              		.file 8 "Core/Inc/IEH2_4096.h"
+ 141              		.file 9 "Core/Inc/tim_info.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s 			page 4
 
 
 DEFINED SYMBOLS
-                            *ABS*:0000000000000000 IEH2_4096.c
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:18     .text.EncoderStart:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:26     .text.EncoderStart:0000000000000000 EncoderStart
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:53     .text.EncoderStart:0000000000000014 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:59     .text.EncoderStop:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:66     .text.EncoderStop:0000000000000000 EncoderStop
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:92     .text.EncoderStop:0000000000000014 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:98     .text.EncoderPrintInfo:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:105    .text.EncoderPrintInfo:0000000000000000 EncoderPrintInfo
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cc5T21xT.s:129    .text.EncoderPrintInfo:0000000000000010 $d
+                            *ABS*:00000000 IEH2_4096.c
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:20     .text.EncoderStart:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:26     .text.EncoderStart:00000000 EncoderStart
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:53     .text.EncoderStart:00000014 $d
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:59     .text.EncoderStop:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:65     .text.EncoderStop:00000000 EncoderStop
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:91     .text.EncoderStop:00000014 $d
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:97     .text.EncoderPrintInfo:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:103    .text.EncoderPrintInfo:00000000 EncoderPrintInfo
+C:\Users\leopi\AppData\Local\Temp\ccgZHmaP.s:127    .text.EncoderPrintInfo:00000010 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_Encoder_Start

@@ -1,2 +1,0 @@
-export PATH="/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/MacOs/bin:$PATH"
-STM32_Programmer_CLI -c port=/dev/tty.usbserial-DM4FC776 br=115200 -w /Users/reosato/Documents/MicroMouse/micromouse/build/MicroMouse_main2.bin 0x08000000

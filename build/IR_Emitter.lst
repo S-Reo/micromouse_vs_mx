@@ -1,30 +1,30 @@
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s 			page 1
 
 
    1              		.cpu cortex-m4
-   2              		.eabi_attribute 27, 1
-   3              		.eabi_attribute 28, 1
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 1
-  11              		.eabi_attribute 34, 1
-  12              		.eabi_attribute 18, 4
-  13              		.file	"IR_Emitter.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.section	.text.EmitterON,"ax",%progbits
-  18              		.align	1
-  19              		.global	EmitterON
-  20              		.arch armv7e-m
-  21              		.syntax unified
-  22              		.thumb
-  23              		.thumb_func
-  24              		.fpu fpv4-sp-d16
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"IR_Emitter.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.EmitterON,"ax",%progbits
+  20              		.align	1
+  21              		.global	EmitterON
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
   26              	EmitterON:
   27              	.LFB235:
   28              		.file 1 "Core/Src/Hw/IR_Emitter.c"
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s 			page 1
   13:Core/Src/Hw/IR_Emitter.c **** 	  HAL_TIMEx_OCN_Start_IT(&htim8, TIM_CHANNEL_1); // 位相
   44              		.loc 1 13 4 view .LVU2
   45 000c 0021     		movs	r1, #0
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s 			page 2
 
 
   46 000e 2046     		mov	r0, r4
@@ -80,67 +80,66 @@ ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s 			page 1
   61              		.syntax unified
   62              		.thumb
   63              		.thumb_func
-  64              		.fpu fpv4-sp-d16
-  66              	EmitterOFF:
-  67              	.LFB236:
+  65              	EmitterOFF:
+  66              	.LFB236:
   16:Core/Src/Hw/IR_Emitter.c **** void EmitterOFF()
   17:Core/Src/Hw/IR_Emitter.c **** {
-  68              		.loc 1 17 1 is_stmt 1 view -0
-  69              		.cfi_startproc
-  70              		@ args = 0, pretend = 0, frame = 0
-  71              		@ frame_needed = 0, uses_anonymous_args = 0
-  72 0000 10B5     		push	{r4, lr}
-  73              	.LCFI1:
-  74              		.cfi_def_cfa_offset 8
-  75              		.cfi_offset 4, -8
-  76              		.cfi_offset 14, -4
+  67              		.loc 1 17 1 is_stmt 1 view -0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71 0000 10B5     		push	{r4, lr}
+  72              	.LCFI1:
+  73              		.cfi_def_cfa_offset 8
+  74              		.cfi_offset 4, -8
+  75              		.cfi_offset 14, -4
   18:Core/Src/Hw/IR_Emitter.c **** 	  HAL_TIM_OC_Stop_IT(&htim8,TIM_CHANNEL_1);
-  77              		.loc 1 18 4 view .LVU5
-  78 0002 054C     		ldr	r4, .L7
-  79 0004 0021     		movs	r1, #0
-  80 0006 2046     		mov	r0, r4
-  81 0008 FFF7FEFF 		bl	HAL_TIM_OC_Stop_IT
-  82              	.LVL2:
+  76              		.loc 1 18 4 view .LVU5
+  77 0002 054C     		ldr	r4, .L7
+  78 0004 0021     		movs	r1, #0
+  79 0006 2046     		mov	r0, r4
+  80 0008 FFF7FEFF 		bl	HAL_TIM_OC_Stop_IT
+  81              	.LVL2:
   19:Core/Src/Hw/IR_Emitter.c **** 	  HAL_TIMEx_OCN_Stop_IT(&htim8, TIM_CHANNEL_1); // 位相
-  83              		.loc 1 19 4 view .LVU6
-  84 000c 0021     		movs	r1, #0
-  85 000e 2046     		mov	r0, r4
-  86 0010 FFF7FEFF 		bl	HAL_TIMEx_OCN_Stop_IT
-  87              	.LVL3:
+  82              		.loc 1 19 4 view .LVU6
+  83 000c 0021     		movs	r1, #0
+  84 000e 2046     		mov	r0, r4
+  85 0010 FFF7FEFF 		bl	HAL_TIMEx_OCN_Stop_IT
+  86              	.LVL3:
   20:Core/Src/Hw/IR_Emitter.c **** 
   21:Core/Src/Hw/IR_Emitter.c **** }
-  88              		.loc 1 21 1 is_stmt 0 view .LVU7
-  89 0014 10BD     		pop	{r4, pc}
-  90              	.L8:
-  91 0016 00BF     		.align	2
-  92              	.L7:
-  93 0018 00000000 		.word	htim8
-  94              		.cfi_endproc
-  95              	.LFE236:
-  97              		.text
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s 			page 3
+  87              		.loc 1 21 1 is_stmt 0 view .LVU7
+  88 0014 10BD     		pop	{r4, pc}
+  89              	.L8:
+  90 0016 00BF     		.align	2
+  91              	.L7:
+  92 0018 00000000 		.word	htim8
+  93              		.cfi_endproc
+  94              	.LFE236:
+  96              		.text
+  97              	.Letext0:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s 			page 3
 
 
-  98              	.Letext0:
-  99              		.file 2 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_defau
- 100              		.file 3 "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h"
- 101              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 102              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 103              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 104              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 105              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h"
- 106              		.file 9 "Core/Inc/IR_Emitter.h"
-ARM GAS  /var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s 			page 4
+  98              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+  99              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 100              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 101              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 102              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 103              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 104              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h"
+ 105              		.file 9 "Core/Inc/IR_Emitter.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s 			page 4
 
 
 DEFINED SYMBOLS
-                            *ABS*:0000000000000000 IR_Emitter.c
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s:18     .text.EmitterON:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s:26     .text.EmitterON:0000000000000000 EmitterON
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s:54     .text.EmitterON:0000000000000018 $d
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s:59     .text.EmitterOFF:0000000000000000 $t
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s:66     .text.EmitterOFF:0000000000000000 EmitterOFF
-/var/folders/v_/kwz_t0cs68g1q1d733r227b80000gn/T//cczNORgS.s:93     .text.EmitterOFF:0000000000000018 $d
+                            *ABS*:00000000 IR_Emitter.c
+C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s:20     .text.EmitterON:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s:26     .text.EmitterON:00000000 EmitterON
+C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s:54     .text.EmitterON:00000018 $d
+C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s:59     .text.EmitterOFF:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s:65     .text.EmitterOFF:00000000 EmitterOFF
+C:\Users\leopi\AppData\Local\Temp\cc2hQ3Hc.s:92     .text.EmitterOFF:00000018 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_OC_Start_IT

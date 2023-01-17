@@ -28,12 +28,13 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Inc/IEH2_4096.h Core/Inc/mouse_ADC.h Core/Inc/LED_Driver.h \
- Core/Inc/IR_Emitter.h Core/Inc/Convert.h Core/Inc/UI.h \
- Core/Inc/Interrupt.h Core/Inc/Mode.h Core/Inc/ICM_20648.h \
- Core/Inc/PID_Control.h Core/Inc/Motor_Driver.h Core/Inc/MicroMouse.h \
- Core/Inc/MazeLib.h
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h Core/Inc/adc.h \
+ Core/Inc/main.h Core/Inc/dma.h Core/Inc/spi.h Core/Inc/tim.h \
+ Core/Inc/usart.h Core/Inc/gpio.h Core/Inc/IEH2_4096.h \
+ Core/Inc/mouse_ADC.h Core/Inc/LED_Driver.h Core/Inc/IR_Emitter.h \
+ Core/Inc/Convert.h Core/Inc/UI.h Core/Inc/Interrupt.h Core/Inc/Mode.h \
+ Core/Inc/ICM_20648.h Core/Inc/PID_Control.h Core/Inc/Motor_Driver.h \
+ Core/Inc/MicroMouse.h Core/Inc/MazeLib.h
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -67,6 +68,13 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+Core/Inc/adc.h:
+Core/Inc/main.h:
+Core/Inc/dma.h:
+Core/Inc/spi.h:
+Core/Inc/tim.h:
+Core/Inc/usart.h:
+Core/Inc/gpio.h:
 Core/Inc/IEH2_4096.h:
 Core/Inc/mouse_ADC.h:
 Core/Inc/LED_Driver.h:

@@ -4,18 +4,24 @@
             "name": "STM32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/**",
-                "/usr/local/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include/**"
+                "${workspaceFolder}/Core/Inc",
+                "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc",
+                "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+                "${workspaceFolder}/Drivers/CMSIS/include",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+                "C:/tools/gcc-arm-none-eabi-10_2021.10/lib/gcc/arm-none-eabi/10.3.1/include/**",
+                "C:/tools/gcc-arm-none-eabi-10_2021.10/arm-none-eabi/include/**"
             ],
             "defines": [
                 "USE_HAL_DRIVER",
                 "STM32F405xx",
                 "__weak=__attribute__((weak))"
             ],
-            "compilerPath": "/usr/local/bin/arm-none-eabi-gcc",
+            "compilerPath": "C:\\tools\\gcc-arm-none-eabi-10_2021.10\\bin\\arm-none-eabi-gcc",
+            // "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64",
+            // "intelliSenseMode": "gcc-arm",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
