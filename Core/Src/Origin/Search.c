@@ -441,6 +441,7 @@ void FastStraight(float cut, float num, float accel, float decel, float top_spee
 		KeepPulse[RIGHT] += target_pulse*0.5f;
 
 }
+//90度ターンと直進と加減速の繰り返しで最短走行
 void MaxParaRunTest(maze_node *maze, profile *mouse)
 {
 	int start_cnt=0;
@@ -512,3 +513,228 @@ void MaxParaRunTest(maze_node *maze, profile *mouse)
 	}
 }
 
+slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
+void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, float theta2, float theta3, float alpha){
+	param->Pre = pre *2/MM_PER_PULSE;
+	param->Fol = fol *2/MM_PER_PULSE;
+	param->Theta1 = theta1 *M_PI/180;
+	param->Theta2 = theta2 *M_PI/180;
+	param->Theta3 = theta3 *M_PI/180;
+	param->Alpha = alpha *T1*M_PI/180;
+}
+void setFastParam(int n){
+	switch(n)
+	{
+	case 1:
+		ExploreVelocity=90;
+		//未
+		Sla.Pre = 7;//9;
+		Sla.Fol = 11;//13;
+		Sla.Alpha = 0.014;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 2:
+		//完
+		ExploreVelocity=135;
+		Sla.Pre = 5;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.0273;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 3:
+		//未
+//		ExploreVelocity=180;
+//		Sla.Pre = 5;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.04478;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+		ExploreVelocity=180;
+		Sla.Pre = 5;
+		Sla.Fol = 3.5;
+		Sla.Alpha = 0.04;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 4:
+//		ExploreVelocity=300;
+//		Sla.Pre = 3;
+//		Sla.Fol = 5;
+//		Sla.Alpha = 0.117;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+
+		ExploreVelocity=240;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 12; //16
+		Sla.Alpha = 0.078;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+
+	}
+}
+void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
+	//300mm/sのパラメータ
+	switch(n){
+		case 0:
+			setTurnParam(&fast45, 			4, 22, 15,30,45,2750);
+			setTurnParam(&fast45reverse, 	22, 4, 15,30,45,2750);
+			setTurnParam(&fast90,  0, 3, 30,60,90,1485);
+			setTurnParam(&fast180, 0, 0, 60,120,180,1681.25);
+			setTurnParam(&fast135, 			15, 12, 65,70,135, 2700);
+			setTurnParam(&fast135reverse, 	12, 15, 65,70,135, 2700);
+			setTurnParam(&fast90diagonal, 	16, 16, 30,60,90, 5200);
+			break;
+		default:
+			break;
+	}
+}
+//
+void DiagonalRunTest()
+{
+	int start_cnt=0;
+	float straight_num = 0;
+	//ノードの数だけループ
+	int num_nodes = Num_Nodes;
+	ChangeLED(0);
+	for(int count=0; count <= num_nodes; count++)
+	{
+		switch(FastPath[count].path_action)
+		{
+		case START:
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(1, (61.5-45)/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			break;
+		case ACC_DEC_90:
+			//加減速が続く回数を数える
+
+//			ChangeLED(4);
+			start_cnt = count;
+			while(FastPath[count].path_action == ACC_DEC_90)
+			{
+				count ++;
+			}
+			straight_num = (float)(count - start_cnt);
+			if(start_cnt == 0){
+				straight_num += ((61.5-45)/90);
+			}
+//			ChangeLED(1);
+//			FastPath[start_cnt].path_state.pos.x
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			count--;
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			//countを飛ばす
+			break;
+		case ACC_DEC_45:
+			start_cnt = count;
+			while(FastPath[count].path_action == ACC_DEC_90)
+			{
+				count ++;
+			}
+			straight_num = (float)(count - start_cnt);
+			
+//			ChangeLED(1);
+//			FastPath[start_cnt].path_state.pos.x
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(0.5, straight_num*0.5*1.41421, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			count--;
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			break;
+		case L_90_FAST:
+//			ChangeLED(2);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast90);
+			break;
+		case R_90_FAST:
+//			ChangeLED(3);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast90);
+			break;
+
+		case L_90_FAST_DIAGONAL:
+			SlalomFastLeft(&fast90diagonal);
+			break;
+		case R_90_FAST_DIAGONAL:
+			SlalomFastRight(&fast90diagonal);
+			break;
+
+		case L_45_FAST:
+			SlalomFastLeft(&fast45);
+			break;
+		case L_45_FAST_REVERSE:
+			SlalomFastLeft(&fast45reverse);
+			break;
+		case R_45_FAST:
+			SlalomFastRight(&fast45);
+			break;
+		case R_45_FAST_REVERSE:
+			SlalomFastRight(&fast45reverse);
+			break;
+		case L_135_FAST:
+			SlalomFastLeft(&fast135);
+			break;
+		case L_135_FAST_REVERSE:
+			SlalomFastLeft(&fast135reverse);
+			break;
+		case R_135_FAST:
+			SlalomFastRight(&fast135);
+			break;
+		case R_135_FAST_REVERSE:
+			SlalomFastRight(&fast135reverse);
+			break;
+		default :
+			break;
+		}
+	}
+}
+
+//付随して必要な処理として、機体のパラメータ、ターン速度、などから所要時間を見積もる処理。ターンの距離を求める処理。ターンの安全性を決める処理。
+	// 理想的な軌道を事前に決め打ちしているが、代わりにその場のマシンの状態から随時修正を加える処理や、フィードフォワード制御を加えたりもしたい
+// 動作パターンのシンボル配列から、シンボルを順に読み出す関数（実際に走るときの関数）
+// 動作パターンのシンボル配列のうち、何かの事項を優先して配列を一つ選択する関数
+// 動作パターンのシンボル配列のもつ安全性、距離、時間などを算出する関数 //（中で優先事項に基づいて決める）（引数に、安全性、距離、時間などどれを優先するかを渡す）
+// 動作パターンのシンボル配列を決める関数（通るマスに基づいて、壁のパターンなどを使って決める）: 経路が一個出てるので、試しにこれを作ってみる
+// 経路を複数出す（同じ場所を二回通らずにゴールまでたどり着く経路をすべて出す）
+// 迷路データを得る
+
+// 動作パターンのシンボル配列を決める関数（通るマスに基づいて、壁のパターンなどを使って決める）: 経路が一個出てるので、試しにこれを作ってみる
+
+// アクションテスト
+void ActionTest(){
+	
+}

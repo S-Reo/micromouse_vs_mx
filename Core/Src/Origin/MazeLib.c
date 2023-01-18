@@ -1913,6 +1913,484 @@ void getPathNode(maze_node *maze, profile *mouse)
 
 }
 
+// 6パターンの旋回の組み合わせ
+void getPathActionDiagonal(profile *mouse){
+    // どうやって割り振るか考える
+    // 先々何マス進むかで決める
+    // 4マス先に進んだ時の姿勢と経路で決める
+    //FastPathは状態（ノードと壁の有無）の配列
+    //前右左でまず分ける
+    //直進が連続しているかどうか（ノード2つの傾きがずっと同じ）
+    //直進が続いていたのに、一個前の傾きから変わったら、まず45度を検討
+    //斜め方向にノードが続いていれば、更にもう一個見て、斜め90度か、135度（45度と左右逆）か. または45度か. 斜め直進か.
+    // 一回の動作決定で、最小2ペアで傾きを検出、傾きが来たら、もう一ペア傾きを求める。素の傾きによってはもう1ノード見て、最大5ペアの傾きを出す
+    
+    //注目ノードで
+    //東西南北向きのとき
+        //南北 : 2個先が行なら直進1追加し、 注目ノードを1進める.列ならターンなので、4つ先をみて両隣なら180度の左右どちらかに決定、3つ先をみて列ならfast90、行なら注目ノードにいるときとのyの差分が2なら45度、1なら135度。n個先を見たらn-1個先を注目ノードにして、次のループへ。
+        //東西 : 行と列を逆にして読み替える    
+    //間の方角のとき
+        // : 2個先が行列同じならxy1ずつずらしたノードなら45度直進を1追加し、注目ノードを1進める. 行列が異なれば45度ターン、3個先を見て行列が異なれば斜め90、xy1ずつずらしていれば135. n個先を見たら、n-1個足したノードから開始。
+    //現在の方角の変更は、初期方角に、選んだターン分足して余りを求めていくだけ。45なら1、135なら3、
+    //必要な変数を書き出してみる
+    int focus=0, action_num=0;
+    //mouseはゴールノードに使うだけ
+    //初手の前にやること
+    //終端速度の変数 0
+    //動いていなければ動かない
+#define _CHECK_AT_GOAL_(n) (mouse->goal_lesser.x <= FastPath[n].path_state.node->pos.x &&  FastPath[n].path_state.node->pos.x <= mouse->goal_larger.x) && (mouse->goal_lesser.y <= FastPath[n].path_state.node->pos.y &&  FastPath[n].path_state.node->pos.y <= mouse->goal_larger.y)
+
+    
+	if(_CHECK_AT_GOAL_(0)) {
+        //動かない
+    }
+    else if(_CHECK_AT_GOAL_(1)){
+        FastPath[action_num].path_action = ACC_DEC;//加減速一回で終わり
+        action_num++;
+        //[1]以降は停止で埋めるか？
+        //61.5+45mm
+    }
+    else {
+        //それ以外は同じアルゴリズムで回していく
+		if(FastPath[2].path_state.node->rc == 1){
+			FastPath[action_num].path_action = START;	 //初手ターン用の加速
+			// FastPath[1].path_action = R_90_SEARCH;
+            focus = 0;
+            action_num++;
+		}
+		else{
+			//1マスとちょっと直進
+			FastPath[action_num].path_action = ACC_DEC; //90+(61.5-45)
+			// FastPath[1].path_action = ACC_DEC;
+            focus = 1;
+            action_num++;
+		}
+        cardinal car = north;
+        #define _EQUAL_CHECK_RC_(n1,n2) (FastPath[focus+n1].path_state.node->rc == FastPath[focus+n2].path_state.node->rc)
+        while(!_CHECK_AT_GOAL_(focus)){
+            //4方角のとき
+            if(car == north || car == south || car == east || car == west){
+                if(_EQUAL_CHECK_RC_(0,2)){
+                    //行から行または列から列
+                    //actonに直線90を追加し、action_numを1進める
+                    FastPath[action_num].path_action = ACC_DEC_90;
+                    action_num++;
+                    focus += 1;
+                    continue;
+                }
+                else { //行から列または列から行
+                    //4つ先を見る
+                    if(_EQUAL_CHECK_RC_(0,4)){ //
+                        position focus_pos = FastPath[focus].path_state.node->pos;
+                        position plus4_pos = FastPath[focus+4].path_state.node->pos;
+                        //両隣（北向きなら、nodeのxが-1または1の差分、かつyが等しい）
+                        switch(car){
+                            case north:
+                                if(focus_pos.y == plus4_pos.y){
+                                   if (focus_pos.x == plus4_pos.x+1){
+                                    FastPath[action_num].path_action = L_180_FAST;
+                                   }
+                                   if (focus_pos.x+1 == plus4_pos.x){
+                                    FastPath[action_num].path_action = R_180_FAST;
+                                   }
+                                }
+                                else{
+                                   if (focus_pos.x == plus4_pos.x+1){
+                                    FastPath[action_num].path_action = L_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = R_45_FAST; //Rのリバース
+                                   }
+                                   if (focus_pos.x+1 == plus4_pos.x){
+                                    FastPath[action_num].path_action = R_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = L_45_FAST; //Lのリバース
+                                   }
+                                }
+                                break;
+                            case south:
+                                if(focus_pos.y == plus4_pos.y){
+                                   if (focus_pos.x == plus4_pos.x+1){
+                                    FastPath[action_num].path_action = R_180_FAST;
+                                   }
+                                   if (focus_pos.x+1 == plus4_pos.x){
+                                    FastPath[action_num].path_action = L_180_FAST;
+                                   }
+                                }
+                                else{
+                                   if (focus_pos.x == plus4_pos.x+1){
+                                    FastPath[action_num].path_action = R_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = L_45_FAST; //Lのリバース
+                                   }
+                                   if (focus_pos.x+1 == plus4_pos.x){
+                                    FastPath[action_num].path_action = L_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = R_45_FAST; //Rのリバース
+                                   }
+                                }                                
+                                break;                                
+                            case east:
+                                if(focus_pos.x == plus4_pos.x){
+                                    if (focus_pos.y == plus4_pos.y+1){
+                                    FastPath[action_num].path_action = R_180_FAST;
+                                   }
+                                   if (focus_pos.y+1 == plus4_pos.y){
+                                    FastPath[action_num].path_action = L_180_FAST;
+                                   }
+                                }
+                                else{
+                                   if (focus_pos.y == plus4_pos.y+1){
+                                    FastPath[action_num].path_action = R_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = L_45_FAST; //Lのリバース
+                                   }
+                                   if (focus_pos.y+1 == plus4_pos.y){
+                                    FastPath[action_num].path_action = L_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = R_45_FAST; //Rのリバース
+                                   }
+                                }
+                                break;
+                            case west:
+                                if(focus_pos.x == plus4_pos.x){
+                                    if (focus_pos.y == plus4_pos.y+1){
+                                    FastPath[action_num].path_action = L_180_FAST;
+                                   }
+                                   if (focus_pos.y+1 == plus4_pos.y){
+                                    FastPath[action_num].path_action = R_180_FAST;
+                                   }
+                                }
+                                else{
+                                   if (focus_pos.y == plus4_pos.y+1){
+                                    FastPath[action_num].path_action = L_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = R_45_FAST; //Rのリバース
+                                   }
+                                   if (focus_pos.y+1 == plus4_pos.y){
+                                    FastPath[action_num].path_action = R_45_FAST;
+                                    action_num += 1;
+                                    FastPath[action_num].path_action = L_45_FAST; //Lのリバース
+                                   }
+                                }
+                                break;
+                            default :
+                                break;
+                        }
+                        //4方角×左右の8通り
+                        Action selected_action = FastPath[action_num].path_action;
+                        if(selected_action == L_180_FAST){
+                            car = (car-4)%8;
+                            action_num++;
+                            focus += 4 - 1;
+                            continue;
+                        }
+                        else if(selected_action == R_180_FAST) {
+                            car = (car+4)%8; //180度分
+                            action_num++;
+                            focus += 4 - 1;
+                            continue;
+                        }
+                        else if(selected_action == L_45_FAST_REVERSE || selected_action == R_45_FAST_REVERSE){ //リバースで
+                            action_num++;
+                            focus += 4 - 1;
+                            continue;
+                            //45×2で元の向きに戻っているのでcarは変更なし
+                        } //180度ターンではない場合. R45+L45は方角変わらず
+                        //それ以外は無い、はず。
+                    }
+                    if(!_EQUAL_CHECK_RC_(0,3)){
+                    //3つ先
+                        //異なればfast90. 左右どちらか
+                        //北か南なら2,3のxを大小比較
+                        //東か西なら yを比較
+                        switch (car)
+                        {
+                        case north:
+                            if(FastPath[focus+2].path_state.node->pos.x > FastPath[focus+3].path_state.node->pos.x)
+                                FastPath[action_num].path_action = L_90_FAST;
+                            else
+                                FastPath[action_num].path_action = R_90_FAST;
+                            break;
+                        case south:
+                            if(FastPath[focus+2].path_state.node->pos.x > FastPath[focus+3].path_state.node->pos.x)
+                                FastPath[action_num].path_action = R_90_FAST;
+                            else
+                                FastPath[action_num].path_action = L_90_FAST;
+                        case east:
+                            if(FastPath[focus+2].path_state.node->pos.y > FastPath[focus+3].path_state.node->pos.y)
+                                FastPath[action_num].path_action = R_90_FAST;
+                            else
+                                FastPath[action_num].path_action = L_90_FAST;
+                        case west:
+                            if(FastPath[focus+2].path_state.node->pos.y > FastPath[focus+3].path_state.node->pos.y)
+                                FastPath[action_num].path_action = L_90_FAST;
+                            else
+                                FastPath[action_num].path_action = R_90_FAST;
+                        default: //一応例外はない予定
+                            break;
+                        }
+                        
+                        if(FastPath[action_num].path_action == L_90_FAST) car = (car-2)%8; //左回転90度分
+                        if(FastPath[action_num].path_action == R_90_FAST) car = (car+2)%8; //右回転90度分
+                        
+                        action_num++;
+                        focus += 3 - 1;
+                        continue;
+                    }else {
+                        //同じなら、xかyの差分を確認（180度の選択肢は既出でcontinueされるため考えない）
+                        //45か135
+                        position plus_1 = FastPath[focus+1].path_state.node->pos;
+                        position plus_3 = FastPath[focus+3].path_state.node->pos;
+                        switch (car)
+                        {
+                        case north:
+                            if(plus_1.y == plus_3.y){
+                                if(plus_1.x > plus_3.x)
+                                    FastPath[action_num].path_action = L_135_FAST;
+                                if(plus_1.x < plus_3.x)
+                                    FastPath[action_num].path_action = R_135_FAST;
+                            }
+                            if(plus_1.x+1 == plus_3.x && plus_1.y+1 == plus_3.y){
+                                FastPath[action_num].path_action = R_45_FAST;
+                            }
+                            if(plus_1.x == plus_3.x+1 && plus_1.y+1 == plus_3.y){
+                                FastPath[action_num].path_action = L_45_FAST;
+                            }
+                            break;
+                        case south:
+                            if(plus_1.y == plus_3.y){
+                                if(plus_1.x > plus_3.x)
+                                    FastPath[action_num].path_action = R_135_FAST;
+                                if(plus_1.x < plus_3.x)
+                                    FastPath[action_num].path_action = L_135_FAST;
+                            }
+                            if(plus_1.x+1 == plus_3.x && plus_1.y == plus_3.y+1){
+                                FastPath[action_num].path_action = L_45_FAST;
+                            }
+                            if(plus_1.x == plus_3.x+1 && plus_1.y == plus_3.y+1){
+                                FastPath[action_num].path_action = R_45_FAST;
+                            }
+                            break;
+                        case east:
+                            if(plus_1.x == plus_3.x){
+                                if(plus_1.y > plus_3.y)
+                                    FastPath[action_num].path_action = R_135_FAST;
+                                if(plus_1.y < plus_3.y)
+                                    FastPath[action_num].path_action = L_135_FAST;
+                            }
+                            if(plus_1.x+1 == plus_3.x && plus_1.y == plus_3.y+1){
+                                FastPath[action_num].path_action = R_45_FAST;
+                            }
+                            if(plus_1.x+1 == plus_3.x && plus_1.y+1 == plus_3.y){
+                                FastPath[action_num].path_action = L_45_FAST;
+                            }
+                            break;
+                        case west:
+                            if(plus_1.x == plus_3.x){
+                                if(plus_1.y > plus_3.y)
+                                    FastPath[action_num].path_action = L_135_FAST;
+                                if(plus_1.y < plus_3.y)
+                                    FastPath[action_num].path_action = R_135_FAST;
+                            }
+                            if(plus_1.x == plus_3.x+1 && plus_1.y == plus_3.y+1){
+                                FastPath[action_num].path_action = L_45_FAST;
+                            }
+                            if(plus_1.x == plus_3.x+1 && plus_1.y+1 == plus_3.y){
+                                FastPath[action_num].path_action = R_45_FAST;
+                            }
+                            break;
+                        
+                        default:
+                            break;
+                        }
+                        Action selected_action = FastPath[action_num].path_action;
+                        if(selected_action == L_45_FAST) car = (car-1)%8; //左回転45度分
+                        if(selected_action == R_45_FAST) car = (car+1)%8; //右回転45度分
+                        if(selected_action == L_135_FAST) car = (car-3)%8; //左回転135度分
+                        if(selected_action == R_135_FAST) car = (car+3)%8; //右回転135度分
+                        
+                        action_num++;
+                        focus += 3 - 1;
+                        continue;
+                    }
+                }
+            }
+            //間の方角 //135はリバース
+            else {
+                //2個先も行同士、列同士
+                if(_EQUAL_CHECK_RC_(0,2)){
+                    //45度直進の追加
+                    position focus_pos = FastPath[focus].path_state.pos;
+                    position focus_pos_2 = FastPath[focus+2].path_state.pos;
+                    
+                    //向き変わらずであれば
+                    if(focus_pos.x+1 == focus_pos_2.x && focus_pos.y+1 == focus_pos_2.y){
+                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進 //関数化したい
+                        action_num += 1;
+                        focus += 1;
+                        continue;
+                    }
+                    else if(focus_pos.x == focus_pos_2.x+1 && focus_pos.y == focus_pos_2.y+1){
+                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進
+                        action_num += 1;
+                        focus += 1;
+                        continue;
+                    }
+                    else if(focus_pos.x == focus_pos_2.x+1 && focus_pos.y+1 == focus_pos_2.y){
+                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進
+                        action_num += 1;
+                        focus += 1;
+                        continue;
+                    }
+                    else if(focus_pos.x+1 == focus_pos_2.x && focus_pos.y == focus_pos_2.y+1){
+                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進
+                        action_num += 1;
+                        focus += 1;
+                        continue;
+                    }
+                    //xが同じ、
+                    else {
+                        //方角毎に90度か135度に絞られる
+                        _Bool rc = FastPath[focus].path_state.node->rc;
+                        
+                        //行か列かで左右わかれる
+                        if(rc == 1){
+                            //90,135左
+                            //2,3で行か列か変われば90
+                            if(_EQUAL_CHECK_RC_(2,3)){
+                                switch (car){
+                                    case ne:
+                                    case sw:
+                                        FastPath[action_num].path_action = L_135_FAST;
+                                        car = (car-3)%8;
+                                        break;
+                                    case se:
+                                    case nw:
+                                        FastPath[action_num].path_action = R_135_FAST;
+                                        car = (car+3)%8;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                action_num += 1;
+                                focus += 3-1;
+                                continue;
+                            }
+                            else {
+                                switch (car){
+                                    case ne:
+                                    case sw:
+                                        FastPath[action_num].path_action = L_90_FAST_DIAGONAL;
+                                        car = (car-2)%8;
+                                        break;
+                                    case se:
+                                    case nw:
+                                        FastPath[action_num].path_action = R_90_FAST_DIAGONAL;
+                                        car = (car+2)%8;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                action_num += 1;
+                                focus += 3-1;
+                                continue;
+                            }
+                        }
+                        else{
+                            //行
+                            //90,135右
+                            if(_EQUAL_CHECK_RC_(2,3)){
+                                switch (car){
+                                    case ne:
+                                    case sw:
+                                        FastPath[action_num].path_action = R_135_FAST;
+                                        car = (car+3)%8;
+                                        break;
+                                    case se:
+                                    case nw:
+                                        FastPath[action_num].path_action = L_135_FAST;
+                                        car = (car-3)%8;
+                                        break;
+                                    default :
+                                        break;
+                                }
+                                action_num += 1;
+                                focus += 3-1;
+                                continue;
+                            }
+                            else {
+                                switch (car){
+                                    case ne:
+                                    case sw:
+                                        FastPath[action_num].path_action = R_90_FAST_DIAGONAL;
+                                        car = (car+2)%8;
+                                        break;
+                                    case se:
+                                    case nw:
+                                        FastPath[action_num].path_action = L_90_FAST_DIAGONAL;
+                                        car = (car-2)%8;
+                                        break;
+                                    default :
+                                        break;
+                                }
+                                action_num += 1;
+                                focus += 3-1;
+                                continue;
+                            }
+                        }
+                    }
+                    //当てはまらなかったらなにもしない
+                }
+                else {
+                    //45度
+                    _Bool rc = FastPath[focus].path_state.node->rc;
+                        
+                    //行か列かで左右わかれる
+                    if(rc == 1){
+                        switch (car){
+                            case ne:
+                            case sw:
+                                FastPath[action_num].path_action = L_45_FAST; //LRともにリバース
+                                car = (car-1)%8;
+                                break;
+                            case se:
+                            case nw:
+                                FastPath[action_num].path_action = R_45_FAST;
+                                car = (car+1)%8;
+                                break;
+                            default :
+                                break;
+                        }
+                    }
+                    else {
+                        switch (car){
+                            case ne:
+                            case sw:
+                                FastPath[action_num].path_action = R_45_FAST;
+                                car = (car+1)%8;
+                                break;
+                            case se:
+                            case nw:
+                                FastPath[action_num].path_action = L_45_FAST;
+                                car = (car-1)%8;
+                                break;
+                            default :
+                                break;
+                        }
+                    }
+                }
+                //2個先が行列同じならxy1ずつずらしたノードなら45度直進を1追加し、注目ノードを1進める. 
+                //行列が異なれば45度ターン、3個先を見て行列が異なれば斜め90、xy1ずつずらしていれば135. 
+                //n個先を見たら、n-1個足したノードから開始。
+
+            }
+
+        }
+        //最後のアクションはそのまま減速で良いのでここでは選ばない
+        
+    }
+}
+//90度と直進だけの組み合わせ
 void getPathAction(profile *mouse)
 {
 	//Pathからアクション計画を立てる

@@ -8,8 +8,9 @@
 #ifndef INC_ACTION_H_
 #define INC_ACTION_H_
 
-#include <main.h>
+//#include <main.h>
 #include "MazeLib.h"
+#include "MicroMouse.h"
 typedef struct {
 
 	float KP;
@@ -27,6 +28,8 @@ extern float alpha_turn;  //スラローム時の角加速度
 void WaitStopAndReset();
 void SlalomRight(maze_node *, profile *);
 void SlalomLeft(maze_node *, profile *);
+void SlalomFastRight(slalom_parameter *param);
+void SlalomFastLeft(slalom_parameter *param);
 float AjustCenter(profile *);
 void Rotate(float deg, float ang_accel);
 void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mouse);

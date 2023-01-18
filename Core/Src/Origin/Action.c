@@ -8,6 +8,7 @@
 //動作を定義する //割り込みで呼ぶ。
 #include "Action.h"
 #include <main.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "Convert.h"
@@ -18,7 +19,6 @@
 #include "Interrupt.h"
 #include "Motor_Driver.h"
 #include "IR_Emitter.h"
-
 #include "MazeLib.h"
 //#include "test.h"
 #include "Search.h"
@@ -296,7 +296,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
+	if (0)//getFrontWall(mouse) == WALL /*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
 	{
 		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
@@ -453,6 +453,109 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			}
 	}
 	TargetAngle += -0.5f*M_PI;//-90*M_PI/180;
+	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
+}
+void SlalomFastRight(slalom_parameter *param)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
+{
+	Pid[A_VELO_PID].flag = 1;
+	int now_pulse;
+
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
+	while( now_pulse + param->Pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+	{
+			//velocity_ctrl_flag = 1;
+			TargetAngularV = 0;
+			AngularLeapsity = 0;
+			AngularAcceleration = 0;
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	float start_angle = Angle;
+	Pid[A_VELO_PID].flag = 0;
+	while(start_angle + param->Theta1 > Angle)
+	{
+			AngularAcceleration = param->Alpha;
+			TargetVelocity[BODY] = ExploreVelocity;
+
+	}
+	AngularAcceleration = 0;
+	AngularLeapsity = 0;
+	while(start_angle + param->Theta2 > Angle)
+	{
+			TargetAngularV = TargetAngularV;
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	while( start_angle + param->Theta3 > Angle)
+	{
+			AngularAcceleration = -param->Alpha;
+			if(TargetAngularV < 0)
+			{
+				TargetAngularV = 0;
+				break;
+			}
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	AngularAcceleration = 0;
+	AngularLeapsity = 0;
+	TargetAngularV = 0;
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
+	while( now_pulse + param->Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
+	{
+			TargetAngularV = 0;
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	TargetAngle += param->Theta3;//90*M_PI/180; rad
+	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
+
+}
+void SlalomFastLeft(slalom_parameter *param)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
+{//leftがコピー元
+	Pid[A_VELO_PID].flag = 1;
+	//一旦前壁補正なしでかいてみよう
+	int now_pulse;
+
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
+		while( now_pulse + param->Pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
+		{
+				TargetAngularV = 0;
+				AngularAcceleration = 0;
+				TargetVelocity[BODY] = ExploreVelocity;
+		}
+	Pid[A_VELO_PID].flag = 0;
+	float start_angle = Angle;
+	while(start_angle - param->Theta1 < Angle)
+	{
+			AngularAcceleration = -param->Alpha;
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	AngularAcceleration = 0;
+	AngularLeapsity = 0;
+	while(start_angle - param->Theta2 < Angle)
+	{
+			TargetAngularV = TargetAngularV;
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+
+	while( start_angle - param->Theta3 < Angle)
+	{
+			AngularAcceleration = param->Alpha;
+			if(TargetAngularV > 0)
+			{
+				TargetAngularV = 0;
+				break;
+			}
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	AngularAcceleration = 0;
+	AngularLeapsity = 0;
+	TargetAngularV = 0;
+
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
+	while( now_pulse + param->Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
+	{
+			TargetAngularV = 0;
+			TargetVelocity[BODY] = ExploreVelocity;
+	}
+	TargetAngle += -param->Theta3;//-90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 }
 void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mouse)

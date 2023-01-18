@@ -1,5 +1,5 @@
 /*
- * MouseMode.c
+ * Mode.c
  *
  *  Created on: Feb 17, 2022
  *      Author: leopi
@@ -23,7 +23,7 @@
 #include "Debug.h"
 
 #include "Interrupt.h"
-#include "action.h"
+#include "Action.h"
 #include "MazeLib.h"
 //#include "test.h"
 #include "Search.h"
@@ -198,12 +198,23 @@ void Debug()
 	//IT_mode = WRITINGFREE;
 	IT_mode = EXPLORE;
 
-	//直線距離の計測
-	//加減速
-	FastStraight(0.5, (61.5+90*7)/90, 1.00, -1.00/*2.89, -2.89*/, 240, 0);
+	
+	// //直線距離の計測
+	// //加減速
+	// FastStraight(0.5, (61.5+90*7)/90, 1.00, -1.00/*2.89, -2.89*/, 240, 0);
+
+	// 45度ターンなど試す
+	ExploreVelocity=300;
+	setFastDiagonalParam(0);
+		Accel(61.5-45, ExploreVelocity, &my_map, &my_mouse);
+		// SlalomFastRight(&fast45);
+		SlalomFastRight(&fast90);
+		PIDChangeFlag(A_VELO_PID, 0);
+		// Decel(45, 0);
 	while(1){
 		PIDChangeFlag(L_VELO_PID, 0);
 		PIDChangeFlag(R_VELO_PID, 0);
+		PIDChangeFlag(A_VELO_PID, 0);
 	}
 }
 void ParameterSetting()
@@ -438,9 +449,9 @@ void initSlalomParam()
 {
 	Sla.Pre *=  2/MM_PER_PULSE;
 	Sla.Fol *=  2/MM_PER_PULSE;
-	Sla.Theta1 = 30*M_PI/180;
-	Sla.Theta2 = 60*M_PI/180;
-	Sla.Theta3 = 90*M_PI/180;
+	Sla.Theta1 *= M_PI/180;
+	Sla.Theta2 *= M_PI/180;
+	Sla.Theta3 *= M_PI/180;
 }
 void FastestRun()
 {
@@ -459,8 +470,6 @@ void FastestRun()
 
 		  PhotoSwitch();
 	InitFastest();
-
-
 
 //	wall_init();
 
@@ -489,65 +498,10 @@ void FastestRun()
 		turn_mode = 'S';
 	}
 
-	switch(mode2)
-	{
-	case 1:
-		ExploreVelocity=90;
-		//未
-		Sla.Pre = 7;//9;
-		Sla.Fol = 11;//13;
-		Sla.Alpha = 0.014;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 2:
-		//完
-		ExploreVelocity=135;
-		Sla.Pre = 5;
-		Sla.Fol = 5;
-		Sla.Alpha = 0.0273;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 3:
-		//未
-//		ExploreVelocity=180;
-//		Sla.Pre = 5;
-//		Sla.Fol = 10;
-//		Sla.Alpha = 0.04478;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
-		ExploreVelocity=180;
-		Sla.Pre = 5;
-		Sla.Fol = 3.5;
-		Sla.Alpha = 0.04;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 4:
-//		ExploreVelocity=300;
-//		Sla.Pre = 3;
-//		Sla.Fol = 5;
-//		Sla.Alpha = 0.117;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
-
-		ExploreVelocity=240;
-		Sla.Pre = 8;//2;
-		Sla.Fol = 12; //16
-		Sla.Alpha = 0.078;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-
-	}
-	initSlalomParam();
+	setFastDiagonalParam(mode2);
+	
+	// setFastParam(mode2);
+	// initSlalomParam();
 	ChangeLED(4);
 
 	VelocityMax = false;
@@ -579,7 +533,8 @@ void FastestRun()
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 
 	getPathNode(&my_map, &my_mouse);
-	getPathAction(&my_mouse);
+	// getPathAction(&my_mouse);
+	getPathActionDiagonal(&my_mouse);
 	HAL_Delay(200);
 
 	//リセット、再取得
@@ -593,8 +548,8 @@ void FastestRun()
 //		HAL_Delay(1000);
 //	}
 
-	MaxParaRunTest(&my_map, &my_mouse);
-
+	// MaxParaRunTest(&my_map, &my_mouse);
+	DiagonalRunTest(); //斜め有
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
 	//終了合図

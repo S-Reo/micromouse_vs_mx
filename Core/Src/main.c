@@ -164,11 +164,7 @@ int main(void)
 	BatteryCheck( (int)adc1[2] );
 	ADCStop();
 
-  while(1){
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-  }
+ 
 	int8_t startup_mode;
 	ModeSelect(0, 7, &startup_mode);
 	Signal( startup_mode );
@@ -275,8 +271,8 @@ int main(void)
 	  default :
 		  break;
 	  }
-	  //再�???��?��モード選??��?��?
-	  printf("トップ�???��?��モード選択\r\n");
+	  //再�???��?��モード選??��?��?
+	  printf("トップモード選択\r\n");
 		ModeSelect(0, 7, &startup_mode);
 		Signal( startup_mode );
     /* USER CODE END WHILE */
