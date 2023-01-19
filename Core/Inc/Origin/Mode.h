@@ -20,16 +20,11 @@
 
 void Debug();
 void ParameterSetting();
-void Explore();
-void WritingFree();
-void FastestRun();
 
+void WritingFree();
 
 int GainSetting(int n);
-void GainTestLWall();
-void GainTestRWall();
-void GainTestDWall();
-void GainTestAVelo();
+void GainTest();
 
 void Simu();
 void FlashWriteTest();

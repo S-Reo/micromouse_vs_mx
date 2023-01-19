@@ -1,0 +1,2230 @@
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Running.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_f2d
+  20              		.global	__aeabi_dmul
+  21              		.global	__aeabi_d2f
+  22              		.section	.text.initSlalomParam,"ax",%progbits
+  23              		.align	1
+  24              		.global	initSlalomParam
+  25              		.syntax unified
+  26              		.thumb
+  27              		.thumb_func
+  29              	initSlalomParam:
+  30              	.LFB238:
+  31              		.file 1 "Core/Src/Origin/Running.c"
+   1:Core/Src/Origin/Running.c **** // 探索、最短などを使った、最終的な走行全体の処理を記述する
+   2:Core/Src/Origin/Running.c **** 
+   3:Core/Src/Origin/Running.c **** #include "Searching.h"
+   4:Core/Src/Origin/Running.c **** 
+   5:Core/Src/Origin/Running.c **** #include "UI.h"
+   6:Core/Src/Origin/Running.c **** // #include "MicroMouse.h"
+   7:Core/Src/Origin/Running.c **** #include "Interrupt.h"
+   8:Core/Src/Origin/Running.c **** 
+   9:Core/Src/Origin/Running.c **** #include "PID_Control.h"
+  10:Core/Src/Origin/Running.c **** #include "ICM_20648.h"
+  11:Core/Src/Origin/Running.c **** #include "MicroMouse.h"
+  12:Core/Src/Origin/Running.c **** #include "Mode.h"
+  13:Core/Src/Origin/Running.c **** // #include "MazeLib.h"
+  14:Core/Src/Origin/Running.c **** 
+  15:Core/Src/Origin/Running.c **** // ハードウェアの関数をいちいち呼び出すのが面倒で見辛い
+  16:Core/Src/Origin/Running.c **** 
+  17:Core/Src/Origin/Running.c **** profile my_mouse;
+  18:Core/Src/Origin/Running.c **** maze_node my_map;
+  19:Core/Src/Origin/Running.c **** 
+  20:Core/Src/Origin/Running.c **** void initSlalomParam()
+  21:Core/Src/Origin/Running.c **** {
+  32              		.loc 1 21 1 view -0
+  33              		.cfi_startproc
+  34              		@ args = 0, pretend = 0, frame = 0
+  35              		@ frame_needed = 0, uses_anonymous_args = 0
+  36 0000 10B5     		push	{r4, lr}
+  37              	.LCFI0:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 2
+
+
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 4, -8
+  40              		.cfi_offset 14, -4
+  22:Core/Src/Origin/Running.c **** 	Sla.Pre *=  2/MM_PER_PULSE;
+  41              		.loc 1 22 2 view .LVU1
+  42              		.loc 1 22 10 is_stmt 0 view .LVU2
+  43 0002 214C     		ldr	r4, .L3+16
+  44 0004 2068     		ldr	r0, [r4]	@ float
+  45 0006 FFF7FEFF 		bl	__aeabi_f2d
+  46              	.LVL0:
+  47 000a 1BA3     		adr	r3, .L3
+  48 000c D3E90023 		ldrd	r2, [r3]
+  49 0010 FFF7FEFF 		bl	__aeabi_dmul
+  50              	.LVL1:
+  51 0014 FFF7FEFF 		bl	__aeabi_d2f
+  52              	.LVL2:
+  53 0018 2060     		str	r0, [r4]	@ float
+  23:Core/Src/Origin/Running.c **** 	Sla.Fol *=  2/MM_PER_PULSE;
+  54              		.loc 1 23 2 is_stmt 1 view .LVU3
+  55              		.loc 1 23 10 is_stmt 0 view .LVU4
+  56 001a 6068     		ldr	r0, [r4, #4]	@ float
+  57 001c FFF7FEFF 		bl	__aeabi_f2d
+  58              	.LVL3:
+  59 0020 15A3     		adr	r3, .L3
+  60 0022 D3E90023 		ldrd	r2, [r3]
+  61 0026 FFF7FEFF 		bl	__aeabi_dmul
+  62              	.LVL4:
+  63 002a FFF7FEFF 		bl	__aeabi_d2f
+  64              	.LVL5:
+  65 002e 6060     		str	r0, [r4, #4]	@ float
+  24:Core/Src/Origin/Running.c **** 	Sla.Theta1 *= M_PI/180;
+  66              		.loc 1 24 2 is_stmt 1 view .LVU5
+  67              		.loc 1 24 13 is_stmt 0 view .LVU6
+  68 0030 2069     		ldr	r0, [r4, #16]	@ float
+  69 0032 FFF7FEFF 		bl	__aeabi_f2d
+  70              	.LVL6:
+  71 0036 12A3     		adr	r3, .L3+8
+  72 0038 D3E90023 		ldrd	r2, [r3]
+  73 003c FFF7FEFF 		bl	__aeabi_dmul
+  74              	.LVL7:
+  75 0040 FFF7FEFF 		bl	__aeabi_d2f
+  76              	.LVL8:
+  77 0044 2061     		str	r0, [r4, #16]	@ float
+  25:Core/Src/Origin/Running.c **** 	Sla.Theta2 *= M_PI/180;
+  78              		.loc 1 25 2 is_stmt 1 view .LVU7
+  79              		.loc 1 25 13 is_stmt 0 view .LVU8
+  80 0046 6069     		ldr	r0, [r4, #20]	@ float
+  81 0048 FFF7FEFF 		bl	__aeabi_f2d
+  82              	.LVL9:
+  83 004c 0CA3     		adr	r3, .L3+8
+  84 004e D3E90023 		ldrd	r2, [r3]
+  85 0052 FFF7FEFF 		bl	__aeabi_dmul
+  86              	.LVL10:
+  87 0056 FFF7FEFF 		bl	__aeabi_d2f
+  88              	.LVL11:
+  89 005a 6061     		str	r0, [r4, #20]	@ float
+  26:Core/Src/Origin/Running.c **** 	Sla.Theta3 *= M_PI/180;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 3
+
+
+  90              		.loc 1 26 2 is_stmt 1 view .LVU9
+  91              		.loc 1 26 13 is_stmt 0 view .LVU10
+  92 005c A069     		ldr	r0, [r4, #24]	@ float
+  93 005e FFF7FEFF 		bl	__aeabi_f2d
+  94              	.LVL12:
+  95 0062 07A3     		adr	r3, .L3+8
+  96 0064 D3E90023 		ldrd	r2, [r3]
+  97 0068 FFF7FEFF 		bl	__aeabi_dmul
+  98              	.LVL13:
+  99 006c FFF7FEFF 		bl	__aeabi_d2f
+ 100              	.LVL14:
+ 101 0070 A061     		str	r0, [r4, #24]	@ float
+  27:Core/Src/Origin/Running.c **** }
+ 102              		.loc 1 27 1 view .LVU11
+ 103 0072 10BD     		pop	{r4, pc}
+ 104              	.L4:
+ 105 0074 AFF30080 		.align	3
+ 106              	.L3:
+ 107 0078 540D8F9F 		.word	-1618014892
+ 108 007c 4AE59E40 		.word	1084155210
+ 109 0080 399D52A2 		.word	-1571644103
+ 110 0084 46DF913F 		.word	1066524486
+ 111 0088 00000000 		.word	Sla
+ 112              		.cfi_endproc
+ 113              	.LFE238:
+ 115              		.section	.rodata.InitExplore.str1.4,"aMS",%progbits,1
+ 116              		.align	2
+ 117              	.LC0:
+ 118 0000 696D755F 		.ascii	"imu_check 1\343\201\252\343\202\211OK: %d\015\012\000"
+ 118      63686563 
+ 118      6B2031E3 
+ 118      81AAE382 
+ 118      894F4B3A 
+ 119 001a 0000     		.align	2
+ 120              	.LC1:
+ 121 001c 6779726F 		.ascii	"gyro : %f\015\012\000"
+ 121      203A2025 
+ 121      660D0A00 
+ 122              		.section	.text.InitExplore,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	InitExplore
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 129              	InitExplore:
+ 130              	.LFB239:
+  28:Core/Src/Origin/Running.c **** void InitExplore()
+  29:Core/Src/Origin/Running.c **** {
+ 131              		.loc 1 29 1 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135 0000 10B5     		push	{r4, lr}
+ 136              	.LCFI1:
+ 137              		.cfi_def_cfa_offset 8
+ 138              		.cfi_offset 4, -8
+ 139              		.cfi_offset 14, -4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 4
+
+
+  30:Core/Src/Origin/Running.c **** 	//PID制御準備
+  31:Core/Src/Origin/Running.c **** 	//PIDInit();
+  32:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_VELO_PID, 0);
+ 140              		.loc 1 32 2 view .LVU13
+ 141 0002 0021     		movs	r1, #0
+ 142 0004 0420     		movs	r0, #4
+ 143 0006 FFF7FEFF 		bl	PIDChangeFlag
+ 144              	.LVL15:
+  33:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_VELO_PID, 0);
+ 145              		.loc 1 33 2 view .LVU14
+ 146 000a 0021     		movs	r1, #0
+ 147 000c 0520     		movs	r0, #5
+ 148 000e FFF7FEFF 		bl	PIDChangeFlag
+ 149              	.LVL16:
+  34:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_WALL_PID, 0);
+ 150              		.loc 1 34 2 view .LVU15
+ 151 0012 0021     		movs	r1, #0
+ 152 0014 0220     		movs	r0, #2
+ 153 0016 FFF7FEFF 		bl	PIDChangeFlag
+ 154              	.LVL17:
+  35:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_WALL_PID, 0);
+ 155              		.loc 1 35 2 view .LVU16
+ 156 001a 0021     		movs	r1, #0
+ 157 001c 0320     		movs	r0, #3
+ 158 001e FFF7FEFF 		bl	PIDChangeFlag
+ 159              	.LVL18:
+  36:Core/Src/Origin/Running.c **** 	PIDChangeFlag(D_WALL_PID, 0);
+ 160              		.loc 1 36 2 view .LVU17
+ 161 0022 0021     		movs	r1, #0
+ 162 0024 0120     		movs	r0, #1
+ 163 0026 FFF7FEFF 		bl	PIDChangeFlag
+ 164              	.LVL19:
+  37:Core/Src/Origin/Running.c **** 	//PIDChangeFlag(B_VELO, 0);
+  38:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 165              		.loc 1 38 2 view .LVU18
+ 166 002a 0021     		movs	r1, #0
+ 167 002c 0846     		mov	r0, r1
+ 168 002e FFF7FEFF 		bl	PIDChangeFlag
+ 169              	.LVL20:
+  39:Core/Src/Origin/Running.c **** 
+  40:Core/Src/Origin/Running.c **** //	Load_Gain();
+  41:Core/Src/Origin/Running.c **** 
+  42:Core/Src/Origin/Running.c **** 	uint8_t imu_check;
+ 170              		.loc 1 42 2 view .LVU19
+  43:Core/Src/Origin/Running.c **** 	imu_check = IMU_init();
+ 171              		.loc 1 43 2 view .LVU20
+ 172              		.loc 1 43 14 is_stmt 0 view .LVU21
+ 173 0032 FFF7FEFF 		bl	IMU_init
+ 174              	.LVL21:
+ 175 0036 0146     		mov	r1, r0
+ 176              	.LVL22:
+  44:Core/Src/Origin/Running.c **** 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+ 177              		.loc 1 44 2 is_stmt 1 view .LVU22
+ 178 0038 2E4C     		ldr	r4, .L7
+ 179 003a 2046     		mov	r0, r4
+ 180 003c FFF7FEFF 		bl	printf
+ 181              	.LVL23:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 5
+
+
+  45:Core/Src/Origin/Running.c **** #if 1 //IMUから値が来なくなる現象の対策
+  46:Core/Src/Origin/Running.c **** 	imu_check =IMU_init();
+ 182              		.loc 1 46 2 view .LVU23
+ 183              		.loc 1 46 13 is_stmt 0 view .LVU24
+ 184 0040 FFF7FEFF 		bl	IMU_init
+ 185              	.LVL24:
+ 186 0044 0146     		mov	r1, r0
+ 187              	.LVL25:
+  47:Core/Src/Origin/Running.c **** 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+ 188              		.loc 1 47 2 is_stmt 1 view .LVU25
+ 189 0046 2046     		mov	r0, r4
+ 190 0048 FFF7FEFF 		bl	printf
+ 191              	.LVL26:
+  48:Core/Src/Origin/Running.c **** #endif
+  49:Core/Src/Origin/Running.c **** 	HAL_Delay(100);
+ 192              		.loc 1 49 2 view .LVU26
+ 193 004c 6420     		movs	r0, #100
+ 194 004e FFF7FEFF 		bl	HAL_Delay
+ 195              	.LVL27:
+  50:Core/Src/Origin/Running.c **** 
+  51:Core/Src/Origin/Running.c **** 	ZGyro = ReadIMU(0x37, 0x38);
+ 196              		.loc 1 51 2 view .LVU27
+ 197              		.loc 1 51 10 is_stmt 0 view .LVU28
+ 198 0052 3821     		movs	r1, #56
+ 199 0054 3720     		movs	r0, #55
+ 200 0056 FFF7FEFF 		bl	ReadIMU
+ 201              	.LVL28:
+ 202              		.loc 1 51 8 view .LVU29
+ 203 005a 274B     		ldr	r3, .L7+4
+ 204 005c 83ED000A 		vstr.32	s0, [r3]
+  52:Core/Src/Origin/Running.c **** 	printf("gyro : %f\r\n",ZGyro);
+ 205              		.loc 1 52 2 is_stmt 1 view .LVU30
+ 206 0060 1868     		ldr	r0, [r3]	@ float
+ 207 0062 FFF7FEFF 		bl	__aeabi_f2d
+ 208              	.LVL29:
+ 209 0066 0246     		mov	r2, r0
+ 210 0068 0B46     		mov	r3, r1
+ 211 006a 2448     		ldr	r0, .L7+8
+ 212 006c FFF7FEFF 		bl	printf
+ 213              	.LVL30:
+  53:Core/Src/Origin/Running.c **** 
+  54:Core/Src/Origin/Running.c **** 	//ペリフェラルの動作開始
+  55:Core/Src/Origin/Running.c **** 	Motor_PWM_Start();
+ 214              		.loc 1 55 2 view .LVU31
+ 215 0070 FFF7FEFF 		bl	Motor_PWM_Start
+ 216              	.LVL31:
+  56:Core/Src/Origin/Running.c **** 	EncoderStart(); //戻し忘れないように
+ 217              		.loc 1 56 2 view .LVU32
+ 218 0074 FFF7FEFF 		bl	EncoderStart
+ 219              	.LVL32:
+  57:Core/Src/Origin/Running.c **** 	EmitterON();
+ 220              		.loc 1 57 2 view .LVU33
+ 221 0078 FFF7FEFF 		bl	EmitterON
+ 222              	.LVL33:
+  58:Core/Src/Origin/Running.c **** 	ADCStart();
+ 223              		.loc 1 58 2 view .LVU34
+ 224 007c FFF7FEFF 		bl	ADCStart
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 6
+
+
+ 225              	.LVL34:
+  59:Core/Src/Origin/Running.c **** 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+ 226              		.loc 1 59 2 view .LVU35
+ 227 0080 47F22F51 		movw	r1, #29999
+ 228 0084 1E48     		ldr	r0, .L7+12
+ 229 0086 FFF7FEFF 		bl	InitPulse
+ 230              	.LVL35:
+  60:Core/Src/Origin/Running.c **** 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+ 231              		.loc 1 60 2 view .LVU36
+ 232 008a 47F22F51 		movw	r1, #29999
+ 233 008e 1D48     		ldr	r0, .L7+16
+ 234 0090 FFF7FEFF 		bl	InitPulse
+ 235              	.LVL36:
+  61:Core/Src/Origin/Running.c **** 
+  62:Core/Src/Origin/Running.c **** 
+  63:Core/Src/Origin/Running.c **** 
+  64:Core/Src/Origin/Running.c **** 	//割り込みを有効化
+  65:Core/Src/Origin/Running.c **** 	HAL_TIM_Base_Start_IT(&htim1);
+ 236              		.loc 1 65 2 view .LVU37
+ 237 0094 1C48     		ldr	r0, .L7+20
+ 238 0096 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 239              	.LVL37:
+  66:Core/Src/Origin/Running.c **** 	HAL_TIM_Base_Start_IT(&htim8);
+ 240              		.loc 1 66 2 view .LVU38
+ 241 009a 1C48     		ldr	r0, .L7+24
+ 242 009c FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 243              	.LVL38:
+  67:Core/Src/Origin/Running.c **** 	//ここまででハードの準備はできた。
+  68:Core/Src/Origin/Running.c **** 	//ここからはソフト的な準備
+  69:Core/Src/Origin/Running.c **** 
+  70:Core/Src/Origin/Running.c **** 	TargetVelocity[BODY] = 0;
+ 244              		.loc 1 70 2 view .LVU39
+ 245              		.loc 1 70 23 is_stmt 0 view .LVU40
+ 246 00a0 0023     		movs	r3, #0
+ 247 00a2 1B4A     		ldr	r2, .L7+28
+ 248 00a4 9360     		str	r3, [r2, #8]	@ float
+  71:Core/Src/Origin/Running.c **** 	TargetAngularV = 0;
+ 249              		.loc 1 71 2 is_stmt 1 view .LVU41
+ 250              		.loc 1 71 17 is_stmt 0 view .LVU42
+ 251 00a6 1B4A     		ldr	r2, .L7+32
+ 252 00a8 1360     		str	r3, [r2]	@ float
+  72:Core/Src/Origin/Running.c **** 	Acceleration = 0;
+ 253              		.loc 1 72 2 is_stmt 1 view .LVU43
+ 254              		.loc 1 72 15 is_stmt 0 view .LVU44
+ 255 00aa 1B4A     		ldr	r2, .L7+36
+ 256 00ac 1360     		str	r3, [r2]	@ float
+  73:Core/Src/Origin/Running.c **** 	AngularAcceleration = 0;
+ 257              		.loc 1 73 2 is_stmt 1 view .LVU45
+ 258              		.loc 1 73 22 is_stmt 0 view .LVU46
+ 259 00ae 1B4A     		ldr	r2, .L7+40
+ 260 00b0 1360     		str	r3, [r2]	@ float
+  74:Core/Src/Origin/Running.c **** 	TotalPulse[LEFT] = 0;
+ 261              		.loc 1 74 2 is_stmt 1 view .LVU47
+ 262              		.loc 1 74 19 is_stmt 0 view .LVU48
+ 263 00b2 1B4B     		ldr	r3, .L7+44
+ 264 00b4 0024     		movs	r4, #0
+ 265 00b6 1C60     		str	r4, [r3]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 7
+
+
+  75:Core/Src/Origin/Running.c **** 	TotalPulse[RIGHT] = 0;
+ 266              		.loc 1 75 2 is_stmt 1 view .LVU49
+ 267              		.loc 1 75 20 is_stmt 0 view .LVU50
+ 268 00b8 5C60     		str	r4, [r3, #4]
+  76:Core/Src/Origin/Running.c **** 	TotalPulse[BODY] = 0;
+ 269              		.loc 1 76 2 is_stmt 1 view .LVU51
+ 270              		.loc 1 76 19 is_stmt 0 view .LVU52
+ 271 00ba 9C60     		str	r4, [r3, #8]
+  77:Core/Src/Origin/Running.c **** 
+  78:Core/Src/Origin/Running.c **** 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+  79:Core/Src/Origin/Running.c **** //	TargetPhoto[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
+  80:Core/Src/Origin/Running.c **** //	TargetPhoto[SR] = Photo[SR];//294.299988;//THRESHOLD_SR;
+  81:Core/Src/Origin/Running.c **** //	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
+  82:Core/Src/Origin/Running.c **** 	TargetPhoto[SL] = 370;//439.600006;//THRESHOLD_SL;
+ 272              		.loc 1 82 2 is_stmt 1 view .LVU53
+ 273              		.loc 1 82 18 is_stmt 0 view .LVU54
+ 274 00bc 194B     		ldr	r3, .L7+48
+ 275 00be 1A4A     		ldr	r2, .L7+52
+ 276 00c0 9A60     		str	r2, [r3, #8]	@ float
+  83:Core/Src/Origin/Running.c **** 	TargetPhoto[SR] = 300;//294.299988;//THRESHOLD_SR;
+ 277              		.loc 1 83 2 is_stmt 1 view .LVU55
+ 278              		.loc 1 83 18 is_stmt 0 view .LVU56
+ 279 00c2 1A4A     		ldr	r2, .L7+56
+ 280 00c4 5A60     		str	r2, [r3, #4]	@ float
+  84:Core/Src/Origin/Running.c **** 	PhotoDiff = 70;
+ 281              		.loc 1 84 2 is_stmt 1 view .LVU57
+ 282              		.loc 1 84 12 is_stmt 0 view .LVU58
+ 283 00c6 1A4B     		ldr	r3, .L7+60
+ 284 00c8 1A4A     		ldr	r2, .L7+64
+ 285 00ca 1A60     		str	r2, [r3]	@ float
+  85:Core/Src/Origin/Running.c **** 
+  86:Core/Src/Origin/Running.c **** 	PIDReset(L_VELO_PID);
+ 286              		.loc 1 86 2 is_stmt 1 view .LVU59
+ 287 00cc 0420     		movs	r0, #4
+ 288 00ce FFF7FEFF 		bl	PIDReset
+ 289              	.LVL39:
+  87:Core/Src/Origin/Running.c **** 	PIDReset(R_VELO_PID);
+ 290              		.loc 1 87 2 view .LVU60
+ 291 00d2 0520     		movs	r0, #5
+ 292 00d4 FFF7FEFF 		bl	PIDReset
+ 293              	.LVL40:
+  88:Core/Src/Origin/Running.c **** 
+  89:Core/Src/Origin/Running.c **** 	PIDReset(A_VELO_PID);
+ 294              		.loc 1 89 2 view .LVU61
+ 295 00d8 2046     		mov	r0, r4
+ 296 00da FFF7FEFF 		bl	PIDReset
+ 297              	.LVL41:
+  90:Core/Src/Origin/Running.c **** 	PIDReset(L_WALL_PID);
+ 298              		.loc 1 90 2 view .LVU62
+ 299 00de 0220     		movs	r0, #2
+ 300 00e0 FFF7FEFF 		bl	PIDReset
+ 301              	.LVL42:
+  91:Core/Src/Origin/Running.c **** 	PIDReset(R_WALL_PID);
+ 302              		.loc 1 91 2 view .LVU63
+ 303 00e4 0320     		movs	r0, #3
+ 304 00e6 FFF7FEFF 		bl	PIDReset
+ 305              	.LVL43:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 8
+
+
+  92:Core/Src/Origin/Running.c **** 	PIDReset(D_WALL_PID);
+ 306              		.loc 1 92 2 view .LVU64
+ 307 00ea 0120     		movs	r0, #1
+ 308 00ec FFF7FEFF 		bl	PIDReset
+ 309              	.LVL44:
+  93:Core/Src/Origin/Running.c **** }
+ 310              		.loc 1 93 1 is_stmt 0 view .LVU65
+ 311 00f0 10BD     		pop	{r4, pc}
+ 312              	.L8:
+ 313 00f2 00BF     		.align	2
+ 314              	.L7:
+ 315 00f4 00000000 		.word	.LC0
+ 316 00f8 00000000 		.word	ZGyro
+ 317 00fc 1C000000 		.word	.LC1
+ 318 0100 24040040 		.word	1073742884
+ 319 0104 24080040 		.word	1073743908
+ 320 0108 00000000 		.word	htim1
+ 321 010c 00000000 		.word	htim8
+ 322 0110 00000000 		.word	TargetVelocity
+ 323 0114 00000000 		.word	TargetAngularV
+ 324 0118 00000000 		.word	Acceleration
+ 325 011c 00000000 		.word	AngularAcceleration
+ 326 0120 00000000 		.word	TotalPulse
+ 327 0124 00000000 		.word	TargetPhoto
+ 328 0128 0000B943 		.word	1136197632
+ 329 012c 00009643 		.word	1133903872
+ 330 0130 00000000 		.word	PhotoDiff
+ 331 0134 00008C42 		.word	1116471296
+ 332              		.cfi_endproc
+ 333              	.LFE239:
+ 335              		.section	.text.Explore,"ax",%progbits
+ 336              		.align	1
+ 337              		.global	Explore
+ 338              		.syntax unified
+ 339              		.thumb
+ 340              		.thumb_func
+ 342              	Explore:
+ 343              	.LFB240:
+  94:Core/Src/Origin/Running.c **** void Explore()
+  95:Core/Src/Origin/Running.c **** {
+ 344              		.loc 1 95 1 is_stmt 1 view -0
+ 345              		.cfi_startproc
+ 346              		@ args = 0, pretend = 0, frame = 8
+ 347              		@ frame_needed = 0, uses_anonymous_args = 0
+ 348 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 349              	.LCFI2:
+ 350              		.cfi_def_cfa_offset 24
+ 351              		.cfi_offset 4, -24
+ 352              		.cfi_offset 5, -20
+ 353              		.cfi_offset 6, -16
+ 354              		.cfi_offset 7, -12
+ 355              		.cfi_offset 8, -8
+ 356              		.cfi_offset 14, -4
+ 357 0004 82B0     		sub	sp, sp, #8
+ 358              	.LCFI3:
+ 359              		.cfi_def_cfa_offset 32
+  96:Core/Src/Origin/Running.c **** 	IT_mode = EXPLORE;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 9
+
+
+ 360              		.loc 1 96 2 view .LVU67
+ 361              		.loc 1 96 10 is_stmt 0 view .LVU68
+ 362 0006 944B     		ldr	r3, .L26
+ 363 0008 0622     		movs	r2, #6
+ 364 000a 1A60     		str	r2, [r3]
+  97:Core/Src/Origin/Running.c **** 	//IT_mode = WRITINGFREE;
+  98:Core/Src/Origin/Running.c **** 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マッ�
+  99:Core/Src/Origin/Running.c **** 	//一回目で失敗していたら、flash消してram初期化
+ 100:Core/Src/Origin/Running.c **** 	//一回目で成功したら、flashをramに移す
+ 101:Core/Src/Origin/Running.c **** 
+ 102:Core/Src/Origin/Running.c **** 	HAL_Delay(100);
+ 365              		.loc 1 102 2 is_stmt 1 view .LVU69
+ 366 000c 6420     		movs	r0, #100
+ 367 000e FFF7FEFF 		bl	HAL_Delay
+ 368              	.LVL45:
+ 103:Core/Src/Origin/Running.c **** 	int8_t mode=1;
+ 369              		.loc 1 103 2 view .LVU70
+ 370              		.loc 1 103 9 is_stmt 0 view .LVU71
+ 371 0012 0125     		movs	r5, #1
+ 372 0014 8DF80750 		strb	r5, [sp, #7]
+ 104:Core/Src/Origin/Running.c **** 	ModeSelect( 1, 2, &mode);
+ 373              		.loc 1 104 2 is_stmt 1 view .LVU72
+ 374 0018 0DF10702 		add	r2, sp, #7
+ 375 001c 0221     		movs	r1, #2
+ 376 001e 2846     		mov	r0, r5
+ 377 0020 FFF7FEFF 		bl	ModeSelect
+ 378              	.LVL46:
+ 105:Core/Src/Origin/Running.c **** 	Signal( mode );
+ 379              		.loc 1 105 2 view .LVU73
+ 380 0024 9DF90700 		ldrsb	r0, [sp, #7]
+ 381 0028 FFF7FEFF 		bl	Signal
+ 382              	.LVL47:
+ 106:Core/Src/Origin/Running.c **** 	HAL_Delay(100);
+ 383              		.loc 1 106 2 view .LVU74
+ 384 002c 6420     		movs	r0, #100
+ 385 002e FFF7FEFF 		bl	HAL_Delay
+ 386              	.LVL48:
+ 107:Core/Src/Origin/Running.c **** 
+ 108:Core/Src/Origin/Running.c **** 	int8_t mode2=1;
+ 387              		.loc 1 108 2 view .LVU75
+ 388              		.loc 1 108 9 is_stmt 0 view .LVU76
+ 389 0032 8DF80650 		strb	r5, [sp, #6]
+ 109:Core/Src/Origin/Running.c **** 	ModeSelect( 1, 4, &mode2);
+ 390              		.loc 1 109 2 is_stmt 1 view .LVU77
+ 391 0036 0DF10602 		add	r2, sp, #6
+ 392 003a 0421     		movs	r1, #4
+ 393 003c 2846     		mov	r0, r5
+ 394 003e FFF7FEFF 		bl	ModeSelect
+ 395              	.LVL49:
+ 110:Core/Src/Origin/Running.c **** 	Signal( mode2 );
+ 396              		.loc 1 110 2 view .LVU78
+ 397 0042 9DF90600 		ldrsb	r0, [sp, #6]
+ 398 0046 FFF7FEFF 		bl	Signal
+ 399              	.LVL50:
+ 111:Core/Src/Origin/Running.c **** 	PhotoSwitch();
+ 400              		.loc 1 111 2 view .LVU79
+ 401 004a FFF7FEFF 		bl	PhotoSwitch
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 10
+
+
+ 402              	.LVL51:
+ 112:Core/Src/Origin/Running.c **** 	//printf("test\r\n");
+ 113:Core/Src/Origin/Running.c **** 	//HAL_Delay(2000);
+ 114:Core/Src/Origin/Running.c **** 
+ 115:Core/Src/Origin/Running.c **** 	InitExplore();
+ 403              		.loc 1 115 2 view .LVU80
+ 404 004e FFF7FEFF 		bl	InitExplore
+ 405              	.LVL52:
+ 116:Core/Src/Origin/Running.c **** 
+ 117:Core/Src/Origin/Running.c **** 	TotalPulse[RIGHT] = 0;
+ 406              		.loc 1 117 2 view .LVU81
+ 407              		.loc 1 117 20 is_stmt 0 view .LVU82
+ 408 0052 824B     		ldr	r3, .L26+4
+ 409 0054 0024     		movs	r4, #0
+ 410 0056 5C60     		str	r4, [r3, #4]
+ 118:Core/Src/Origin/Running.c **** 	TotalPulse[LEFT] = 0;
+ 411              		.loc 1 118 2 is_stmt 1 view .LVU83
+ 412              		.loc 1 118 19 is_stmt 0 view .LVU84
+ 413 0058 1C60     		str	r4, [r3]
+ 119:Core/Src/Origin/Running.c **** 	TotalPulse[BODY] = 0;
+ 414              		.loc 1 119 2 is_stmt 1 view .LVU85
+ 415              		.loc 1 119 19 is_stmt 0 view .LVU86
+ 416 005a 9C60     		str	r4, [r3, #8]
+ 120:Core/Src/Origin/Running.c **** 
+ 121:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_VELO_PID, 1);
+ 417              		.loc 1 121 2 is_stmt 1 view .LVU87
+ 418 005c 2946     		mov	r1, r5
+ 419 005e 0420     		movs	r0, #4
+ 420 0060 FFF7FEFF 		bl	PIDChangeFlag
+ 421              	.LVL53:
+ 122:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_VELO_PID, 1);
+ 422              		.loc 1 122 2 view .LVU88
+ 423 0064 2946     		mov	r1, r5
+ 424 0066 0520     		movs	r0, #5
+ 425 0068 FFF7FEFF 		bl	PIDChangeFlag
+ 426              	.LVL54:
+ 123:Core/Src/Origin/Running.c **** 
+ 124:Core/Src/Origin/Running.c **** 	//PIDChangeFlagStraight(N_WALL_PID);
+ 125:Core/Src/Origin/Running.c **** 	PIDChangeFlag(D_WALL_PID, 0);
+ 427              		.loc 1 125 2 view .LVU89
+ 428 006c 2146     		mov	r1, r4
+ 429 006e 2846     		mov	r0, r5
+ 430 0070 FFF7FEFF 		bl	PIDChangeFlag
+ 431              	.LVL55:
+ 126:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_WALL_PID, 0);
+ 432              		.loc 1 126 2 view .LVU90
+ 433 0074 2146     		mov	r1, r4
+ 434 0076 0220     		movs	r0, #2
+ 435 0078 FFF7FEFF 		bl	PIDChangeFlag
+ 436              	.LVL56:
+ 127:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_WALL_PID, 0);
+ 437              		.loc 1 127 2 view .LVU91
+ 438 007c 2146     		mov	r1, r4
+ 439 007e 0320     		movs	r0, #3
+ 440 0080 FFF7FEFF 		bl	PIDChangeFlag
+ 441              	.LVL57:
+ 128:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 11
+
+
+ 442              		.loc 1 128 2 view .LVU92
+ 443 0084 2146     		mov	r1, r4
+ 444 0086 2046     		mov	r0, r4
+ 445 0088 FFF7FEFF 		bl	PIDChangeFlag
+ 446              	.LVL58:
+ 129:Core/Src/Origin/Running.c **** 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
+ 130:Core/Src/Origin/Running.c **** 
+ 131:Core/Src/Origin/Running.c **** 	//スラロームか、一区画ずつかを選ぶ。
+ 132:Core/Src/Origin/Running.c **** 	char turn_mode = 'T';
+ 447              		.loc 1 132 2 view .LVU93
+ 133:Core/Src/Origin/Running.c **** 	if(mode == 1)
+ 448              		.loc 1 133 2 view .LVU94
+ 449              		.loc 1 133 10 is_stmt 0 view .LVU95
+ 450 008c 9DF90730 		ldrsb	r3, [sp, #7]
+ 451              		.loc 1 133 4 view .LVU96
+ 452 0090 AB42     		cmp	r3, r5
+ 453 0092 0BD0     		beq	.L25
+ 134:Core/Src/Origin/Running.c **** 	{
+ 135:Core/Src/Origin/Running.c **** 		turn_mode = 'T';
+ 136:Core/Src/Origin/Running.c **** 		ExploreVelocity=300;
+ 137:Core/Src/Origin/Running.c **** 	}
+ 138:Core/Src/Origin/Running.c **** 	else if(mode == 2)
+ 454              		.loc 1 138 7 is_stmt 1 view .LVU97
+ 455              		.loc 1 138 9 is_stmt 0 view .LVU98
+ 456 0094 022B     		cmp	r3, #2
+ 457 0096 0ED0     		beq	.L23
+ 132:Core/Src/Origin/Running.c **** 	if(mode == 1)
+ 458              		.loc 1 132 7 view .LVU99
+ 459 0098 5424     		movs	r4, #84
+ 460              	.L11:
+ 461              	.LVL59:
+ 139:Core/Src/Origin/Running.c **** 	{
+ 140:Core/Src/Origin/Running.c **** 		turn_mode = 'S';
+ 141:Core/Src/Origin/Running.c **** 	}
+ 142:Core/Src/Origin/Running.c **** 
+ 143:Core/Src/Origin/Running.c **** 	switch(mode2)
+ 462              		.loc 1 143 2 is_stmt 1 view .LVU100
+ 463 009a 9DF90630 		ldrsb	r3, [sp, #6]
+ 464 009e 013B     		subs	r3, r3, #1
+ 465 00a0 032B     		cmp	r3, #3
+ 466 00a2 19D8     		bhi	.L12
+ 467 00a4 DFE803F0 		tbb	[pc, r3]
+ 468              	.L14:
+ 469 00a8 09       		.byte	(.L17-.L14)/2
+ 470 00a9 4F       		.byte	(.L16-.L14)/2
+ 471 00aa 61       		.byte	(.L15-.L14)/2
+ 472 00ab 73       		.byte	(.L13-.L14)/2
+ 473              	.LVL60:
+ 474              		.p2align 1
+ 475              	.L25:
+ 135:Core/Src/Origin/Running.c **** 		ExploreVelocity=300;
+ 476              		.loc 1 135 3 view .LVU101
+ 136:Core/Src/Origin/Running.c **** 	}
+ 477              		.loc 1 136 3 view .LVU102
+ 136:Core/Src/Origin/Running.c **** 	}
+ 478              		.loc 1 136 18 is_stmt 0 view .LVU103
+ 479 00ac 6C4B     		ldr	r3, .L26+8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 12
+
+
+ 480 00ae 6D4A     		ldr	r2, .L26+12
+ 481 00b0 1A60     		str	r2, [r3]	@ float
+ 135:Core/Src/Origin/Running.c **** 		ExploreVelocity=300;
+ 482              		.loc 1 135 13 view .LVU104
+ 483 00b2 5424     		movs	r4, #84
+ 484 00b4 F1E7     		b	.L11
+ 485              	.L23:
+ 140:Core/Src/Origin/Running.c **** 	}
+ 486              		.loc 1 140 13 view .LVU105
+ 487 00b6 5324     		movs	r4, #83
+ 488 00b8 EFE7     		b	.L11
+ 489              	.LVL61:
+ 490              	.L17:
+ 144:Core/Src/Origin/Running.c **** 	{
+ 145:Core/Src/Origin/Running.c **** 	case 1:
+ 146:Core/Src/Origin/Running.c **** 		ExploreVelocity=90;
+ 491              		.loc 1 146 3 is_stmt 1 view .LVU106
+ 492              		.loc 1 146 18 is_stmt 0 view .LVU107
+ 493 00ba 6B4A     		ldr	r2, .L26+16
+ 494 00bc 684B     		ldr	r3, .L26+8
+ 495 00be 1A60     		str	r2, [r3]	@ float
+ 147:Core/Src/Origin/Running.c **** 		//未
+ 148:Core/Src/Origin/Running.c **** 		Sla.Pre = 9;
+ 496              		.loc 1 148 3 is_stmt 1 view .LVU108
+ 497              		.loc 1 148 11 is_stmt 0 view .LVU109
+ 498 00c0 6A4B     		ldr	r3, .L26+20
+ 499 00c2 6B49     		ldr	r1, .L26+24
+ 500 00c4 1960     		str	r1, [r3]	@ float
+ 149:Core/Src/Origin/Running.c **** 		Sla.Fol = 20;
+ 501              		.loc 1 149 3 is_stmt 1 view .LVU110
+ 502              		.loc 1 149 11 is_stmt 0 view .LVU111
+ 503 00c6 6B49     		ldr	r1, .L26+28
+ 504 00c8 5960     		str	r1, [r3, #4]	@ float
+ 150:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.014;
+ 505              		.loc 1 150 3 is_stmt 1 view .LVU112
+ 506              		.loc 1 150 13 is_stmt 0 view .LVU113
+ 507 00ca 6B49     		ldr	r1, .L26+32
+ 508 00cc 9960     		str	r1, [r3, #8]	@ float
+ 151:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 509              		.loc 1 151 3 is_stmt 1 view .LVU114
+ 510              		.loc 1 151 14 is_stmt 0 view .LVU115
+ 511 00ce 6B49     		ldr	r1, .L26+36
+ 512 00d0 1961     		str	r1, [r3, #16]	@ float
+ 152:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 513              		.loc 1 152 3 is_stmt 1 view .LVU116
+ 514              		.loc 1 152 14 is_stmt 0 view .LVU117
+ 515 00d2 6B49     		ldr	r1, .L26+40
+ 516 00d4 5961     		str	r1, [r3, #20]	@ float
+ 153:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 517              		.loc 1 153 3 is_stmt 1 view .LVU118
+ 518              		.loc 1 153 14 is_stmt 0 view .LVU119
+ 519 00d6 9A61     		str	r2, [r3, #24]	@ float
+ 154:Core/Src/Origin/Running.c **** 
+ 155:Core/Src/Origin/Running.c **** //		ExploreVelocity=180;//*40/1000
+ 156:Core/Src/Origin/Running.c **** //		Sla.Pre = 5;
+ 157:Core/Src/Origin/Running.c **** //		Sla.Fol = 12;
+ 158:Core/Src/Origin/Running.c **** //		Sla.Alalpha = 0.0007;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 13
+
+
+ 159:Core/Src/Origin/Running.c **** //		Sla.Theta1 = 30;
+ 160:Core/Src/Origin/Running.c **** //		Sla.Theta2 = 60;
+ 161:Core/Src/Origin/Running.c **** //		Sla.Theta3 = 90;
+ 162:Core/Src/Origin/Running.c **** 		break;
+ 520              		.loc 1 162 3 is_stmt 1 view .LVU120
+ 521              	.L12:
+ 163:Core/Src/Origin/Running.c **** 	case 2:
+ 164:Core/Src/Origin/Running.c **** 		//完
+ 165:Core/Src/Origin/Running.c **** //		ExploreVelocity=135;//*40/1000
+ 166:Core/Src/Origin/Running.c **** //		Sla.Pre = 5;
+ 167:Core/Src/Origin/Running.c **** //		Sla.Fol = 10;
+ 168:Core/Src/Origin/Running.c **** //		Sla.Alpha = 0.0273;
+ 169:Core/Src/Origin/Running.c **** //		Sla.Theta1 = 30;
+ 170:Core/Src/Origin/Running.c **** //		Sla.Theta2 = 60;
+ 171:Core/Src/Origin/Running.c **** //		Sla.Theta3 = 90;
+ 172:Core/Src/Origin/Running.c **** 
+ 173:Core/Src/Origin/Running.c **** 		ExploreVelocity=180;
+ 174:Core/Src/Origin/Running.c **** 		Sla.Pre = 8;//2;
+ 175:Core/Src/Origin/Running.c **** 		Sla.Fol = 12;
+ 176:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.043;
+ 177:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 178:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 179:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 180:Core/Src/Origin/Running.c **** 		break;
+ 181:Core/Src/Origin/Running.c **** 	case 3:
+ 182:Core/Src/Origin/Running.c **** 		ExploreVelocity=240;
+ 183:Core/Src/Origin/Running.c **** 		Sla.Pre = 8;//2;
+ 184:Core/Src/Origin/Running.c **** 		Sla.Fol = 12; //16
+ 185:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.078;
+ 186:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 187:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 188:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 189:Core/Src/Origin/Running.c **** 		break;
+ 190:Core/Src/Origin/Running.c **** 	case 4:
+ 191:Core/Src/Origin/Running.c **** 		ExploreVelocity=300;
+ 192:Core/Src/Origin/Running.c **** 		Sla.Pre = 3;
+ 193:Core/Src/Origin/Running.c **** 		Sla.Fol = 5;
+ 194:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.117;
+ 195:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 196:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 197:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 198:Core/Src/Origin/Running.c **** 		//		//未
+ 199:Core/Src/Origin/Running.c **** 		break;
+ 200:Core/Src/Origin/Running.c **** 	}
+ 201:Core/Src/Origin/Running.c **** 	initSlalomParam();
+ 522              		.loc 1 201 2 view .LVU121
+ 523 00d8 FFF7FEFF 		bl	initSlalomParam
+ 524              	.LVL62:
+ 202:Core/Src/Origin/Running.c **** 	goal_edge_num = one;
+ 525              		.loc 1 202 2 view .LVU122
+ 526              		.loc 1 202 16 is_stmt 0 view .LVU123
+ 527 00dc DFF8F081 		ldr	r8, .L26+120
+ 528 00e0 0126     		movs	r6, #1
+ 529 00e2 88F80060 		strb	r6, [r8]
+ 203:Core/Src/Origin/Running.c **** 	VelocityMax = false;
+ 530              		.loc 1 203 2 is_stmt 1 view .LVU124
+ 531              		.loc 1 203 14 is_stmt 0 view .LVU125
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 14
+
+
+ 532 00e6 0023     		movs	r3, #0
+ 533 00e8 664A     		ldr	r2, .L26+44
+ 534 00ea 1370     		strb	r3, [r2]
+ 204:Core/Src/Origin/Running.c **** 	SearchOrFast = 0;
+ 535              		.loc 1 204 2 is_stmt 1 view .LVU126
+ 536              		.loc 1 204 15 is_stmt 0 view .LVU127
+ 537 00ec 664A     		ldr	r2, .L26+48
+ 538 00ee 1360     		str	r3, [r2]
+ 205:Core/Src/Origin/Running.c **** 	Calc = 0;
+ 539              		.loc 1 205 2 is_stmt 1 view .LVU128
+ 540              		.loc 1 205 7 is_stmt 0 view .LVU129
+ 541 00f0 664A     		ldr	r2, .L26+52
+ 542 00f2 1360     		str	r3, [r2]
+ 206:Core/Src/Origin/Running.c **** 	WALL_MASK = 0x01;
+ 543              		.loc 1 206 2 is_stmt 1 view .LVU130
+ 544              		.loc 1 206 12 is_stmt 0 view .LVU131
+ 545 00f4 664B     		ldr	r3, .L26+56
+ 546 00f6 1E60     		str	r6, [r3]
+ 207:Core/Src/Origin/Running.c **** 	LowDFSFlag();
+ 547              		.loc 1 207 2 is_stmt 1 view .LVU132
+ 548 00f8 FFF7FEFF 		bl	LowDFSFlag
+ 549              	.LVL63:
+ 208:Core/Src/Origin/Running.c **** 	LowStackFlag();
+ 550              		.loc 1 208 2 view .LVU133
+ 551 00fc FFF7FEFF 		bl	LowStackFlag
+ 552              	.LVL64:
+ 209:Core/Src/Origin/Running.c **** 	InitMassStack();
+ 553              		.loc 1 209 2 view .LVU134
+ 554 0100 FFF7FEFF 		bl	InitMassStack
+ 555              	.LVL65:
+ 210:Core/Src/Origin/Running.c **** //	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
+ 211:Core/Src/Origin/Running.c **** 	Pid[A_VELO_PID].flag = 1;
+ 556              		.loc 1 211 2 view .LVU135
+ 557              		.loc 1 211 23 is_stmt 0 view .LVU136
+ 558 0104 634B     		ldr	r3, .L26+60
+ 559 0106 9E62     		str	r6, [r3, #40]
+ 212:Core/Src/Origin/Running.c **** 	initSearchData(&my_map, &my_mouse);
+ 560              		.loc 1 212 2 is_stmt 1 view .LVU137
+ 561 0108 634D     		ldr	r5, .L26+64
+ 562 010a 644F     		ldr	r7, .L26+68
+ 563 010c 2946     		mov	r1, r5
+ 564 010e 3846     		mov	r0, r7
+ 565 0110 FFF7FEFF 		bl	initSearchData
+ 566              	.LVL66:
+ 213:Core/Src/Origin/Running.c **** 	InitVisit();
+ 567              		.loc 1 213 2 view .LVU138
+ 568 0114 FFF7FEFF 		bl	InitVisit
+ 569              	.LVL67:
+ 214:Core/Src/Origin/Running.c **** //	printGoal(&my_mouse);
+ 215:Core/Src/Origin/Running.c **** //	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合
+ 216:Core/Src/Origin/Running.c **** 	dbc = 1;
+ 570              		.loc 1 216 2 view .LVU139
+ 571              		.loc 1 216 6 is_stmt 0 view .LVU140
+ 572 0118 614B     		ldr	r3, .L26+72
+ 573 011a 1E60     		str	r6, [r3]
+ 217:Core/Src/Origin/Running.c **** #if 1
+ 218:Core/Src/Origin/Running.c **** 	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 15
+
+
+ 574              		.loc 1 218 2 is_stmt 1 view .LVU141
+ 575              		.loc 1 218 46 is_stmt 0 view .LVU142
+ 576 011c 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 577              		.loc 1 218 24 view .LVU143
+ 578 011e 85F82030 		strb	r3, [r5, #32]
+ 219:Core/Src/Origin/Running.c **** 	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
+ 579              		.loc 1 219 2 is_stmt 1 view .LVU144
+ 580              		.loc 1 219 46 is_stmt 0 view .LVU145
+ 581 0122 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+ 582              		.loc 1 219 24 view .LVU146
+ 583 0124 85F82130 		strb	r3, [r5, #33]
+ 220:Core/Src/Origin/Running.c **** #else
+ 221:Core/Src/Origin/Running.c **** 	my_mouse.target.pos.x = 0;
+ 222:Core/Src/Origin/Running.c **** 	my_mouse.target.pos.y = 1;
+ 223:Core/Src/Origin/Running.c **** #endif
+ 224:Core/Src/Origin/Running.c **** 	my_mouse.target_size = goal_edge_num;
+ 584              		.loc 1 224 2 is_stmt 1 view .LVU147
+ 585              		.loc 1 224 23 is_stmt 0 view .LVU148
+ 586 0128 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
+ 587 012c 2B71     		strb	r3, [r5, #4]
+ 225:Core/Src/Origin/Running.c **** 
+ 226:Core/Src/Origin/Running.c **** 	//0,0をゴールとして深さ優先探索すればいい
+ 227:Core/Src/Origin/Running.c **** 	InitStackNum();
+ 588              		.loc 1 227 2 is_stmt 1 view .LVU149
+ 589 012e FFF7FEFF 		bl	InitStackNum
+ 590              	.LVL68:
+ 228:Core/Src/Origin/Running.c **** #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= 
+ 229:Core/Src/Origin/Running.c **** 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
+ 591              		.loc 1 229 2 view .LVU150
+ 592 0132 2946     		mov	r1, r5
+ 593 0134 3846     		mov	r0, r7
+ 594 0136 4A4B     		ldr	r3, .L26+8
+ 595 0138 D3ED000A 		vldr.32	s1, [r3]
+ 596 013c 9FED590A 		vldr.32	s0, .L26+76
+ 597 0140 FFF7FEFF 		bl	Accel
+ 598              	.LVL69:
+ 230:Core/Src/Origin/Running.c **** 	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.g
+ 599              		.loc 1 230 2 view .LVU151
+ 600              		.loc 1 230 7 is_stmt 0 view .LVU152
+ 601 0144 3BE0     		b	.L18
+ 602              	.L16:
+ 173:Core/Src/Origin/Running.c **** 		Sla.Pre = 8;//2;
+ 603              		.loc 1 173 3 is_stmt 1 view .LVU153
+ 173:Core/Src/Origin/Running.c **** 		Sla.Pre = 8;//2;
+ 604              		.loc 1 173 18 is_stmt 0 view .LVU154
+ 605 0146 464B     		ldr	r3, .L26+8
+ 606 0148 574A     		ldr	r2, .L26+80
+ 607 014a 1A60     		str	r2, [r3]	@ float
+ 174:Core/Src/Origin/Running.c **** 		Sla.Fol = 12;
+ 608              		.loc 1 174 3 is_stmt 1 view .LVU155
+ 174:Core/Src/Origin/Running.c **** 		Sla.Fol = 12;
+ 609              		.loc 1 174 11 is_stmt 0 view .LVU156
+ 610 014c 474B     		ldr	r3, .L26+20
+ 611 014e 4FF08242 		mov	r2, #1090519040
+ 612 0152 1A60     		str	r2, [r3]	@ float
+ 175:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.043;
+ 613              		.loc 1 175 3 is_stmt 1 view .LVU157
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 16
+
+
+ 175:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.043;
+ 614              		.loc 1 175 11 is_stmt 0 view .LVU158
+ 615 0154 554A     		ldr	r2, .L26+84
+ 616 0156 5A60     		str	r2, [r3, #4]	@ float
+ 176:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 617              		.loc 1 176 3 is_stmt 1 view .LVU159
+ 176:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 618              		.loc 1 176 13 is_stmt 0 view .LVU160
+ 619 0158 554A     		ldr	r2, .L26+88
+ 620 015a 9A60     		str	r2, [r3, #8]	@ float
+ 177:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 621              		.loc 1 177 3 is_stmt 1 view .LVU161
+ 177:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 622              		.loc 1 177 14 is_stmt 0 view .LVU162
+ 623 015c 474A     		ldr	r2, .L26+36
+ 624 015e 1A61     		str	r2, [r3, #16]	@ float
+ 178:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 625              		.loc 1 178 3 is_stmt 1 view .LVU163
+ 178:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 626              		.loc 1 178 14 is_stmt 0 view .LVU164
+ 627 0160 474A     		ldr	r2, .L26+40
+ 628 0162 5A61     		str	r2, [r3, #20]	@ float
+ 179:Core/Src/Origin/Running.c **** 		break;
+ 629              		.loc 1 179 3 is_stmt 1 view .LVU165
+ 179:Core/Src/Origin/Running.c **** 		break;
+ 630              		.loc 1 179 14 is_stmt 0 view .LVU166
+ 631 0164 404A     		ldr	r2, .L26+16
+ 632 0166 9A61     		str	r2, [r3, #24]	@ float
+ 180:Core/Src/Origin/Running.c **** 	case 3:
+ 633              		.loc 1 180 3 is_stmt 1 view .LVU167
+ 634 0168 B6E7     		b	.L12
+ 635              	.L15:
+ 182:Core/Src/Origin/Running.c **** 		Sla.Pre = 8;//2;
+ 636              		.loc 1 182 3 view .LVU168
+ 182:Core/Src/Origin/Running.c **** 		Sla.Pre = 8;//2;
+ 637              		.loc 1 182 18 is_stmt 0 view .LVU169
+ 638 016a 3D4B     		ldr	r3, .L26+8
+ 639 016c 514A     		ldr	r2, .L26+92
+ 640 016e 1A60     		str	r2, [r3]	@ float
+ 183:Core/Src/Origin/Running.c **** 		Sla.Fol = 12; //16
+ 641              		.loc 1 183 3 is_stmt 1 view .LVU170
+ 183:Core/Src/Origin/Running.c **** 		Sla.Fol = 12; //16
+ 642              		.loc 1 183 11 is_stmt 0 view .LVU171
+ 643 0170 3E4B     		ldr	r3, .L26+20
+ 644 0172 4FF08242 		mov	r2, #1090519040
+ 645 0176 1A60     		str	r2, [r3]	@ float
+ 184:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.078;
+ 646              		.loc 1 184 3 is_stmt 1 view .LVU172
+ 184:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.078;
+ 647              		.loc 1 184 11 is_stmt 0 view .LVU173
+ 648 0178 4C4A     		ldr	r2, .L26+84
+ 649 017a 5A60     		str	r2, [r3, #4]	@ float
+ 185:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 650              		.loc 1 185 3 is_stmt 1 view .LVU174
+ 185:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 651              		.loc 1 185 13 is_stmt 0 view .LVU175
+ 652 017c 4E4A     		ldr	r2, .L26+96
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 17
+
+
+ 653 017e 9A60     		str	r2, [r3, #8]	@ float
+ 186:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 654              		.loc 1 186 3 is_stmt 1 view .LVU176
+ 186:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 655              		.loc 1 186 14 is_stmt 0 view .LVU177
+ 656 0180 3E4A     		ldr	r2, .L26+36
+ 657 0182 1A61     		str	r2, [r3, #16]	@ float
+ 187:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 658              		.loc 1 187 3 is_stmt 1 view .LVU178
+ 187:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 659              		.loc 1 187 14 is_stmt 0 view .LVU179
+ 660 0184 3E4A     		ldr	r2, .L26+40
+ 661 0186 5A61     		str	r2, [r3, #20]	@ float
+ 188:Core/Src/Origin/Running.c **** 		break;
+ 662              		.loc 1 188 3 is_stmt 1 view .LVU180
+ 188:Core/Src/Origin/Running.c **** 		break;
+ 663              		.loc 1 188 14 is_stmt 0 view .LVU181
+ 664 0188 374A     		ldr	r2, .L26+16
+ 665 018a 9A61     		str	r2, [r3, #24]	@ float
+ 189:Core/Src/Origin/Running.c **** 	case 4:
+ 666              		.loc 1 189 3 is_stmt 1 view .LVU182
+ 667 018c A4E7     		b	.L12
+ 668              	.L13:
+ 191:Core/Src/Origin/Running.c **** 		Sla.Pre = 3;
+ 669              		.loc 1 191 3 view .LVU183
+ 191:Core/Src/Origin/Running.c **** 		Sla.Pre = 3;
+ 670              		.loc 1 191 18 is_stmt 0 view .LVU184
+ 671 018e 344B     		ldr	r3, .L26+8
+ 672 0190 344A     		ldr	r2, .L26+12
+ 673 0192 1A60     		str	r2, [r3]	@ float
+ 192:Core/Src/Origin/Running.c **** 		Sla.Fol = 5;
+ 674              		.loc 1 192 3 is_stmt 1 view .LVU185
+ 192:Core/Src/Origin/Running.c **** 		Sla.Fol = 5;
+ 675              		.loc 1 192 11 is_stmt 0 view .LVU186
+ 676 0194 354B     		ldr	r3, .L26+20
+ 677 0196 494A     		ldr	r2, .L26+100
+ 678 0198 1A60     		str	r2, [r3]	@ float
+ 193:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.117;
+ 679              		.loc 1 193 3 is_stmt 1 view .LVU187
+ 193:Core/Src/Origin/Running.c **** 		Sla.Alpha = 0.117;
+ 680              		.loc 1 193 11 is_stmt 0 view .LVU188
+ 681 019a 494A     		ldr	r2, .L26+104
+ 682 019c 5A60     		str	r2, [r3, #4]	@ float
+ 194:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 683              		.loc 1 194 3 is_stmt 1 view .LVU189
+ 194:Core/Src/Origin/Running.c **** 		Sla.Theta1 = 30;
+ 684              		.loc 1 194 13 is_stmt 0 view .LVU190
+ 685 019e 494A     		ldr	r2, .L26+108
+ 686 01a0 9A60     		str	r2, [r3, #8]	@ float
+ 195:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 687              		.loc 1 195 3 is_stmt 1 view .LVU191
+ 195:Core/Src/Origin/Running.c **** 		Sla.Theta2 = 60;
+ 688              		.loc 1 195 14 is_stmt 0 view .LVU192
+ 689 01a2 364A     		ldr	r2, .L26+36
+ 690 01a4 1A61     		str	r2, [r3, #16]	@ float
+ 196:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 691              		.loc 1 196 3 is_stmt 1 view .LVU193
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 18
+
+
+ 196:Core/Src/Origin/Running.c **** 		Sla.Theta3 = 90;
+ 692              		.loc 1 196 14 is_stmt 0 view .LVU194
+ 693 01a6 364A     		ldr	r2, .L26+40
+ 694 01a8 5A61     		str	r2, [r3, #20]	@ float
+ 197:Core/Src/Origin/Running.c **** 		//		//未
+ 695              		.loc 1 197 3 is_stmt 1 view .LVU195
+ 197:Core/Src/Origin/Running.c **** 		//		//未
+ 696              		.loc 1 197 14 is_stmt 0 view .LVU196
+ 697 01aa 2F4A     		ldr	r2, .L26+16
+ 698 01ac 9A61     		str	r2, [r3, #24]	@ float
+ 199:Core/Src/Origin/Running.c **** 	}
+ 699              		.loc 1 199 3 is_stmt 1 view .LVU197
+ 700 01ae 93E7     		b	.L12
+ 701              	.L19:
+ 231:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 702              		.loc 1 231 3 view .LVU198
+ 703 01b0 374B     		ldr	r3, .L26+56
+ 704 01b2 1B68     		ldr	r3, [r3]
+ 705 01b4 2246     		mov	r2, r4
+ 706 01b6 3849     		ldr	r1, .L26+64
+ 707 01b8 3848     		ldr	r0, .L26+68
+ 708 01ba FFF7FEFF 		bl	getNextDirection
+ 709              	.LVL70:
+ 710              	.L18:
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 711              		.loc 1 230 7 view .LVU199
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 712              		.loc 1 230 10 is_stmt 0 view .LVU200
+ 713 01be 364B     		ldr	r3, .L26+64
+ 714 01c0 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 715 01c2 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 716              		.loc 1 230 7 view .LVU201
+ 717 01c4 9A42     		cmp	r2, r3
+ 718 01c6 F3D8     		bhi	.L19
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 719              		.loc 1 230 10 discriminator 1 view .LVU202
+ 720 01c8 334A     		ldr	r2, .L26+64
+ 721 01ca 9278     		ldrb	r2, [r2, #2]	@ zero_extendqisi2
+ 722 01cc 9342     		cmp	r3, r2
+ 723 01ce EFD8     		bhi	.L19
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 724              		.loc 1 230 10 discriminator 2 view .LVU203
+ 725 01d0 314B     		ldr	r3, .L26+64
+ 726 01d2 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 727 01d4 5B7A     		ldrb	r3, [r3, #9]	@ zero_extendqisi2
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 728              		.loc 1 230 9 discriminator 2 view .LVU204
+ 729 01d6 9A42     		cmp	r2, r3
+ 730 01d8 EAD8     		bhi	.L19
+ 230:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 731              		.loc 1 230 10 discriminator 3 view .LVU205
+ 732 01da 2F4A     		ldr	r2, .L26+64
+ 733 01dc D278     		ldrb	r2, [r2, #3]	@ zero_extendqisi2
+ 734 01de 9342     		cmp	r3, r2
+ 735 01e0 E6D8     		bhi	.L19
+ 232:Core/Src/Origin/Running.c **** 	}
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 19
+
+
+ 233:Core/Src/Origin/Running.c **** 	HighStackFlag();
+ 736              		.loc 1 233 2 is_stmt 1 view .LVU206
+ 737 01e2 FFF7FEFF 		bl	HighStackFlag
+ 738              	.LVL71:
+ 234:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 739              		.loc 1 234 2 view .LVU207
+ 740              		.loc 1 234 7 is_stmt 0 view .LVU208
+ 741 01e6 06E0     		b	.L20
+ 742              	.L21:
+ 235:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 743              		.loc 1 235 3 is_stmt 1 view .LVU209
+ 744 01e8 294B     		ldr	r3, .L26+56
+ 745 01ea 1B68     		ldr	r3, [r3]
+ 746 01ec 2246     		mov	r2, r4
+ 747 01ee 2A49     		ldr	r1, .L26+64
+ 748 01f0 2A48     		ldr	r0, .L26+68
+ 749 01f2 FFF7FEFF 		bl	getNextDirection
+ 750              	.LVL72:
+ 751              	.L20:
+ 234:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 752              		.loc 1 234 7 view .LVU210
+ 234:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 753              		.loc 1 234 40 is_stmt 0 view .LVU211
+ 754 01f6 284B     		ldr	r3, .L26+64
+ 755 01f8 1B8C     		ldrh	r3, [r3, #32]
+ 234:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 756              		.loc 1 234 7 view .LVU212
+ 757 01fa 002B     		cmp	r3, #0
+ 758 01fc F4D1     		bne	.L21
+ 234:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 759              		.loc 1 234 99 discriminator 1 view .LVU213
+ 760 01fe 264B     		ldr	r3, .L26+64
+ 761 0200 1B89     		ldrh	r3, [r3, #8]
+ 234:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 762              		.loc 1 234 9 discriminator 1 view .LVU214
+ 763 0202 002B     		cmp	r3, #0
+ 764 0204 F0D1     		bne	.L21
+ 236:Core/Src/Origin/Running.c **** 	}
+ 237:Core/Src/Origin/Running.c **** 	Decel(45, 0);
+ 765              		.loc 1 237 2 is_stmt 1 view .LVU215
+ 766 0206 DFED300A 		vldr.32	s1, .L26+112
+ 767 020a 9FED300A 		vldr.32	s0, .L26+116
+ 768 020e FFF7FEFF 		bl	Decel
+ 769              	.LVL73:
+ 238:Core/Src/Origin/Running.c **** 	WaitStopAndReset();//これがないとガクンとなる.
+ 770              		.loc 1 238 2 view .LVU216
+ 771 0212 FFF7FEFF 		bl	WaitStopAndReset
+ 772              	.LVL74:
+ 239:Core/Src/Origin/Running.c **** 	shiftState(&my_mouse);
+ 773              		.loc 1 239 2 view .LVU217
+ 774 0216 204C     		ldr	r4, .L26+64
+ 775              	.LVL75:
+ 776              		.loc 1 239 2 is_stmt 0 view .LVU218
+ 777 0218 2046     		mov	r0, r4
+ 778 021a FFF7FEFF 		bl	shiftState
+ 779              	.LVL76:
+ 240:Core/Src/Origin/Running.c **** 	VisitedMass(my_mouse.now.pos);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 20
+
+
+ 780              		.loc 1 240 2 is_stmt 1 view .LVU219
+ 781 021e A068     		ldr	r0, [r4, #8]
+ 782 0220 FFF7FEFF 		bl	VisitedMass
+ 783              	.LVL77:
+ 241:Core/Src/Origin/Running.c **** 
+ 242:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 784              		.loc 1 242 2 view .LVU220
+ 785 0224 0021     		movs	r1, #0
+ 786 0226 0846     		mov	r0, r1
+ 787 0228 FFF7FEFF 		bl	PIDChangeFlag
+ 788              	.LVL78:
+ 243:Core/Src/Origin/Running.c **** 	//flashのクリア。
+ 244:Core/Src/Origin/Running.c **** 	Flash_clear_sector1();
+ 789              		.loc 1 244 2 view .LVU221
+ 790 022c FFF7FEFF 		bl	Flash_clear_sector1
+ 791              	.LVL79:
+ 245:Core/Src/Origin/Running.c **** 	//マップ書き込み
+ 246:Core/Src/Origin/Running.c **** 	flashStoreNodes(&my_map);
+ 792              		.loc 1 246 2 view .LVU222
+ 793 0230 1A48     		ldr	r0, .L26+68
+ 794 0232 FFF7FEFF 		bl	flashStoreNodes
+ 795              	.LVL80:
+ 247:Core/Src/Origin/Running.c **** 	//完了の合図
+ 248:Core/Src/Origin/Running.c **** 	Signal(7);
+ 796              		.loc 1 248 2 view .LVU223
+ 797 0236 0720     		movs	r0, #7
+ 798 0238 FFF7FEFF 		bl	Signal
+ 799              	.LVL81:
+ 800              	.L22:
+ 249:Core/Src/Origin/Running.c **** #if 0
+ 250:Core/Src/Origin/Running.c **** 	while( ! IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.
+ 251:Core/Src/Origin/Running.c **** 	{
+ 252:Core/Src/Origin/Running.c **** 		//shiftState(&my_mouse); //アクションの中で呼舞踊に変更
+ 253:Core/Src/Origin/Running.c **** 
+ 254:Core/Src/Origin/Running.c **** //		//ChangeLED(Pos.Car);
+ 255:Core/Src/Origin/Running.c **** //		KyushinJudge();
+ 256:Core/Src/Origin/Running.c **** //		SelectAction(turn_mode);
+ 257:Core/Src/Origin/Running.c **** //		shiftPos();
+ 258:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 259:Core/Src/Origin/Running.c **** #if 0
+ 260:Core/Src/Origin/Running.c **** 		static int cc =0;
+ 261:Core/Src/Origin/Running.c **** 		cc ++;
+ 262:Core/Src/Origin/Running.c **** 		if(cc == 1)
+ 263:Core/Src/Origin/Running.c **** 		{
+ 264:Core/Src/Origin/Running.c **** 			break;
+ 265:Core/Src/Origin/Running.c **** 		}
+ 266:Core/Src/Origin/Running.c **** #else
+ 267:Core/Src/Origin/Running.c **** 		//break;
+ 268:Core/Src/Origin/Running.c **** #endif
+ 269:Core/Src/Origin/Running.c **** 	}
+ 270:Core/Src/Origin/Running.c **** 	Decel(45, 0);
+ 271:Core/Src/Origin/Running.c **** 	WaitStopAndReset();//これがないとガクンとなる.
+ 272:Core/Src/Origin/Running.c **** 	shiftState(&my_mouse);
+ 273:Core/Src/Origin/Running.c **** 	VisitedMass(my_mouse.now.pos);
+ 274:Core/Src/Origin/Running.c **** 
+ 275:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 276:Core/Src/Origin/Running.c **** 	//flashのクリア。
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 21
+
+
+ 277:Core/Src/Origin/Running.c **** 	Flash_clear_sector1();
+ 278:Core/Src/Origin/Running.c **** 	//マップ書き込み
+ 279:Core/Src/Origin/Running.c **** 	flashStoreNodes(&my_map);
+ 280:Core/Src/Origin/Running.c **** 	//完了の合図
+ 281:Core/Src/Origin/Running.c **** 	Signal(7);
+ 282:Core/Src/Origin/Running.c **** 
+ 283:Core/Src/Origin/Running.c **** 
+ 284:Core/Src/Origin/Running.c **** 	//スタートへ
+ 285:Core/Src/Origin/Running.c **** 	//最短走行で帰る
+ 286:Core/Src/Origin/Running.c **** #if 0
+ 287:Core/Src/Origin/Running.c **** 	updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
+ 288:Core/Src/Origin/Running.c **** 
+ 289:Core/Src/Origin/Running.c **** 		getPathNode(&my_map, &my_mouse);
+ 290:Core/Src/Origin/Running.c **** 		getPathAction(&my_mouse);
+ 291:Core/Src/Origin/Running.c **** 		HAL_Delay(200);
+ 292:Core/Src/Origin/Running.c **** 
+ 293:Core/Src/Origin/Running.c **** 		//リセット、再取得
+ 294:Core/Src/Origin/Running.c **** 		initSearchData(&my_map, &my_mouse);
+ 295:Core/Src/Origin/Running.c **** 		flashCopyNodesToRam(&my_map); //existenceだけ
+ 296:Core/Src/Origin/Running.c **** 		updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
+ 297:Core/Src/Origin/Running.c **** 
+ 298:Core/Src/Origin/Running.c **** 		MaxParaRunTest(&my_map, &my_mouse);
+ 299:Core/Src/Origin/Running.c **** #else
+ 300:Core/Src/Origin/Running.c **** 		//ゴールエリアの制覇が必要？
+ 301:Core/Src/Origin/Running.c **** 		HighDFSFlag();
+ 302:Core/Src/Origin/Running.c **** 		HighStackFlag();
+ 303:Core/Src/Origin/Running.c **** 		DFS_Running(turn_mode);
+ 304:Core/Src/Origin/Running.c **** 		LowDFSFlag();
+ 305:Core/Src/Origin/Running.c **** 		LowStackFlag();
+ 306:Core/Src/Origin/Running.c **** 		//停止状態から帰還までの処理
+ 307:Core/Src/Origin/Running.c **** 		//探索関数で、マップのアップデートしないとどうなるか. 既存のマップ
+ 308:Core/Src/Origin/Running.c **** 
+ 309:Core/Src/Origin/Running.c **** 
+ 310:Core/Src/Origin/Running.c **** 
+ 311:Core/Src/Origin/Running.c **** 		VelocityMax = false;
+ 312:Core/Src/Origin/Running.c **** 		goal_edge_num = GOAL_SIZE_X;
+ 313:Core/Src/Origin/Running.c **** 		SearchOrFast = 0;
+ 314:Core/Src/Origin/Running.c **** 		Calc = SearchOrFast;
+ 315:Core/Src/Origin/Running.c **** 		WALL_MASK = 0x03;
+ 316:Core/Src/Origin/Running.c **** 		restart(turn_mode);
+ 317:Core/Src/Origin/Running.c **** //		shiftState(&my_mouse);
+ 318:Core/Src/Origin/Running.c **** 		while( ! IS_GOAL(0,0,0,0, my_mouse.now.pos.x, my_mouse.now.pos.y)  ){
+ 319:Core/Src/Origin/Running.c **** 				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 320:Core/Src/Origin/Running.c **** //				shiftState(&my_mouse);
+ 321:Core/Src/Origin/Running.c **** 		}
+ 322:Core/Src/Origin/Running.c **** #endif
+ 323:Core/Src/Origin/Running.c **** 		//ゴールしたら減速して、停止。
+ 324:Core/Src/Origin/Running.c **** 		Decel(45,0);
+ 325:Core/Src/Origin/Running.c **** 		shiftState(&my_mouse);
+ 326:Core/Src/Origin/Running.c **** 		VisitedMass(my_mouse.now.pos);
+ 327:Core/Src/Origin/Running.c **** 
+ 328:Core/Src/Origin/Running.c **** 		//終了合図
+ 329:Core/Src/Origin/Running.c **** 		Signal(7);
+ 330:Core/Src/Origin/Running.c **** #endif
+ 331:Core/Src/Origin/Running.c **** while(1)
+ 801              		.loc 1 331 1 discriminator 1 view .LVU224
+ 802              	.LBB2:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 22
+
+
+ 332:Core/Src/Origin/Running.c **** {
+ 333:Core/Src/Origin/Running.c **** 	//迷路データの出力
+ 334:Core/Src/Origin/Running.c **** 	printAllNodeExistence(&my_map);
+ 803              		.loc 1 334 2 discriminator 1 view .LVU225
+ 804 023c 174C     		ldr	r4, .L26+68
+ 805 023e 2046     		mov	r0, r4
+ 806 0240 FFF7FEFF 		bl	printAllNodeExistence
+ 807              	.LVL82:
+ 335:Core/Src/Origin/Running.c **** 	//printAllNode(&my_map); //drawを読み出す
+ 336:Core/Src/Origin/Running.c **** 	printMatrix16ValueFromNode(&my_map);
+ 808              		.loc 1 336 2 discriminator 1 view .LVU226
+ 809 0244 2046     		mov	r0, r4
+ 810 0246 FFF7FEFF 		bl	printMatrix16ValueFromNode
+ 811              	.LVL83:
+ 337:Core/Src/Origin/Running.c **** 	printAllWeight(&my_map, &(my_mouse.goal_lesser) );
+ 812              		.loc 1 337 2 discriminator 1 view .LVU227
+ 813 024a 1349     		ldr	r1, .L26+64
+ 814 024c 2046     		mov	r0, r4
+ 815 024e FFF7FEFF 		bl	printAllWeight
+ 816              	.LVL84:
+ 338:Core/Src/Origin/Running.c **** 	printVisited();
+ 817              		.loc 1 338 2 discriminator 1 view .LVU228
+ 818 0252 FFF7FEFF 		bl	printVisited
+ 819              	.LVL85:
+ 820              	.LBE2:
+ 331:Core/Src/Origin/Running.c **** {
+ 821              		.loc 1 331 6 discriminator 1 view .LVU229
+ 822 0256 F1E7     		b	.L22
+ 823              	.L27:
+ 824              		.align	2
+ 825              	.L26:
+ 826 0258 00000000 		.word	IT_mode
+ 827 025c 00000000 		.word	TotalPulse
+ 828 0260 00000000 		.word	ExploreVelocity
+ 829 0264 00009643 		.word	1133903872
+ 830 0268 0000B442 		.word	1119092736
+ 831 026c 00000000 		.word	Sla
+ 832 0270 00001041 		.word	1091567616
+ 833 0274 0000A041 		.word	1101004800
+ 834 0278 4260653C 		.word	1013276738
+ 835 027c 0000F041 		.word	1106247680
+ 836 0280 00007042 		.word	1114636288
+ 837 0284 00000000 		.word	VelocityMax
+ 838 0288 00000000 		.word	SearchOrFast
+ 839 028c 00000000 		.word	Calc
+ 840 0290 00000000 		.word	WALL_MASK
+ 841 0294 00000000 		.word	Pid
+ 842 0298 00000000 		.word	.LANCHOR0
+ 843 029c 00000000 		.word	my_map
+ 844 02a0 00000000 		.word	dbc
+ 845 02a4 00007642 		.word	1115029504
+ 846 02a8 00003443 		.word	1127481344
+ 847 02ac 00004041 		.word	1094713344
+ 848 02b0 C520303D 		.word	1026564293
+ 849 02b4 00007043 		.word	1131413504
+ 850 02b8 77BE9F3D 		.word	1033879159
+ 851 02bc 00004040 		.word	1077936128
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 23
+
+
+ 852 02c0 0000A040 		.word	1084227584
+ 853 02c4 B29DEF3D 		.word	1039113650
+ 854 02c8 00000000 		.word	0
+ 855 02cc 00003442 		.word	1110704128
+ 856 02d0 00000000 		.word	goal_edge_num
+ 857              		.cfi_endproc
+ 858              	.LFE240:
+ 860              		.section	.text.InitFastest,"ax",%progbits
+ 861              		.align	1
+ 862              		.global	InitFastest
+ 863              		.syntax unified
+ 864              		.thumb
+ 865              		.thumb_func
+ 867              	InitFastest:
+ 868              	.LFB241:
+ 339:Core/Src/Origin/Running.c **** 
+ 340:Core/Src/Origin/Running.c **** }
+ 341:Core/Src/Origin/Running.c **** }
+ 342:Core/Src/Origin/Running.c **** 
+ 343:Core/Src/Origin/Running.c **** void InitFastest()
+ 344:Core/Src/Origin/Running.c **** {
+ 869              		.loc 1 344 1 view -0
+ 870              		.cfi_startproc
+ 871              		@ args = 0, pretend = 0, frame = 0
+ 872              		@ frame_needed = 0, uses_anonymous_args = 0
+ 873 0000 10B5     		push	{r4, lr}
+ 874              	.LCFI4:
+ 875              		.cfi_def_cfa_offset 8
+ 876              		.cfi_offset 4, -8
+ 877              		.cfi_offset 14, -4
+ 345:Core/Src/Origin/Running.c **** 	Motor_PWM_Start();
+ 878              		.loc 1 345 2 view .LVU231
+ 879 0002 FFF7FEFF 		bl	Motor_PWM_Start
+ 880              	.LVL86:
+ 346:Core/Src/Origin/Running.c **** 	EncoderStart(); //戻し忘れないように
+ 881              		.loc 1 346 2 view .LVU232
+ 882 0006 FFF7FEFF 		bl	EncoderStart
+ 883              	.LVL87:
+ 347:Core/Src/Origin/Running.c **** 	EmitterON();
+ 884              		.loc 1 347 2 view .LVU233
+ 885 000a FFF7FEFF 		bl	EmitterON
+ 886              	.LVL88:
+ 348:Core/Src/Origin/Running.c **** 	ADCStart();
+ 887              		.loc 1 348 2 view .LVU234
+ 888 000e FFF7FEFF 		bl	ADCStart
+ 889              	.LVL89:
+ 349:Core/Src/Origin/Running.c **** 
+ 350:Core/Src/Origin/Running.c **** 	uint8_t imu_check;
+ 890              		.loc 1 350 2 view .LVU235
+ 351:Core/Src/Origin/Running.c **** 	imu_check = IMU_init();
+ 891              		.loc 1 351 2 view .LVU236
+ 892              		.loc 1 351 14 is_stmt 0 view .LVU237
+ 893 0012 FFF7FEFF 		bl	IMU_init
+ 894              	.LVL90:
+ 895 0016 0146     		mov	r1, r0
+ 896              	.LVL91:
+ 352:Core/Src/Origin/Running.c **** 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 24
+
+
+ 897              		.loc 1 352 2 is_stmt 1 view .LVU238
+ 898 0018 394C     		ldr	r4, .L30
+ 899 001a 2046     		mov	r0, r4
+ 900 001c FFF7FEFF 		bl	printf
+ 901              	.LVL92:
+ 353:Core/Src/Origin/Running.c **** #if 1 //IMUから値が来なくなる現象の対策
+ 354:Core/Src/Origin/Running.c **** 	imu_check =IMU_init();
+ 902              		.loc 1 354 2 view .LVU239
+ 903              		.loc 1 354 13 is_stmt 0 view .LVU240
+ 904 0020 FFF7FEFF 		bl	IMU_init
+ 905              	.LVL93:
+ 906 0024 0146     		mov	r1, r0
+ 907              	.LVL94:
+ 355:Core/Src/Origin/Running.c **** 	printf("imu_check 1ならOK: %d\r\n",imu_check);
+ 908              		.loc 1 355 2 is_stmt 1 view .LVU241
+ 909 0026 2046     		mov	r0, r4
+ 910 0028 FFF7FEFF 		bl	printf
+ 911              	.LVL95:
+ 356:Core/Src/Origin/Running.c **** #endif
+ 357:Core/Src/Origin/Running.c **** 	HAL_Delay(100);
+ 912              		.loc 1 357 2 view .LVU242
+ 913 002c 6420     		movs	r0, #100
+ 914 002e FFF7FEFF 		bl	HAL_Delay
+ 915              	.LVL96:
+ 358:Core/Src/Origin/Running.c **** 
+ 359:Core/Src/Origin/Running.c **** 	ZGyro = ReadIMU(0x37, 0x38);
+ 916              		.loc 1 359 2 view .LVU243
+ 917              		.loc 1 359 10 is_stmt 0 view .LVU244
+ 918 0032 3821     		movs	r1, #56
+ 919 0034 3720     		movs	r0, #55
+ 920 0036 FFF7FEFF 		bl	ReadIMU
+ 921              	.LVL97:
+ 922              		.loc 1 359 8 view .LVU245
+ 923 003a 324B     		ldr	r3, .L30+4
+ 924 003c 83ED000A 		vstr.32	s0, [r3]
+ 360:Core/Src/Origin/Running.c **** 	printf("gyro : %f\r\n",ZGyro);
+ 925              		.loc 1 360 2 is_stmt 1 view .LVU246
+ 926 0040 1868     		ldr	r0, [r3]	@ float
+ 927 0042 FFF7FEFF 		bl	__aeabi_f2d
+ 928              	.LVL98:
+ 929 0046 0246     		mov	r2, r0
+ 930 0048 0B46     		mov	r3, r1
+ 931 004a 2F48     		ldr	r0, .L30+8
+ 932 004c FFF7FEFF 		bl	printf
+ 933              	.LVL99:
+ 361:Core/Src/Origin/Running.c **** 
+ 362:Core/Src/Origin/Running.c **** 	//PID制御準備
+ 363:Core/Src/Origin/Running.c **** 	//PIDInit();
+ 364:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_VELO_PID, 0);
+ 934              		.loc 1 364 2 view .LVU247
+ 935 0050 0021     		movs	r1, #0
+ 936 0052 0420     		movs	r0, #4
+ 937 0054 FFF7FEFF 		bl	PIDChangeFlag
+ 938              	.LVL100:
+ 365:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_VELO_PID, 0);
+ 939              		.loc 1 365 2 view .LVU248
+ 940 0058 0021     		movs	r1, #0
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 25
+
+
+ 941 005a 0520     		movs	r0, #5
+ 942 005c FFF7FEFF 		bl	PIDChangeFlag
+ 943              	.LVL101:
+ 366:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_WALL_PID, 0);
+ 944              		.loc 1 366 2 view .LVU249
+ 945 0060 0021     		movs	r1, #0
+ 946 0062 0220     		movs	r0, #2
+ 947 0064 FFF7FEFF 		bl	PIDChangeFlag
+ 948              	.LVL102:
+ 367:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_WALL_PID, 0);
+ 949              		.loc 1 367 2 view .LVU250
+ 950 0068 0021     		movs	r1, #0
+ 951 006a 0320     		movs	r0, #3
+ 952 006c FFF7FEFF 		bl	PIDChangeFlag
+ 953              	.LVL103:
+ 368:Core/Src/Origin/Running.c **** 	PIDChangeFlag(D_WALL_PID, 0);
+ 954              		.loc 1 368 2 view .LVU251
+ 955 0070 0021     		movs	r1, #0
+ 956 0072 0120     		movs	r0, #1
+ 957 0074 FFF7FEFF 		bl	PIDChangeFlag
+ 958              	.LVL104:
+ 369:Core/Src/Origin/Running.c **** 	//PIDChangeFlag(B_VELO, 0);
+ 370:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 959              		.loc 1 370 2 view .LVU252
+ 960 0078 0021     		movs	r1, #0
+ 961 007a 0846     		mov	r0, r1
+ 962 007c FFF7FEFF 		bl	PIDChangeFlag
+ 963              	.LVL105:
+ 371:Core/Src/Origin/Running.c **** 
+ 372:Core/Src/Origin/Running.c **** 
+ 373:Core/Src/Origin/Running.c **** //	Load_Gain();
+ 374:Core/Src/Origin/Running.c **** 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+ 964              		.loc 1 374 2 view .LVU253
+ 965 0080 47F22F51 		movw	r1, #29999
+ 966 0084 2148     		ldr	r0, .L30+12
+ 967 0086 FFF7FEFF 		bl	InitPulse
+ 968              	.LVL106:
+ 375:Core/Src/Origin/Running.c **** 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+ 969              		.loc 1 375 2 view .LVU254
+ 970 008a 47F22F51 		movw	r1, #29999
+ 971 008e 2048     		ldr	r0, .L30+16
+ 972 0090 FFF7FEFF 		bl	InitPulse
+ 973              	.LVL107:
+ 376:Core/Src/Origin/Running.c **** 
+ 377:Core/Src/Origin/Running.c **** 	//割り込みを有効化
+ 378:Core/Src/Origin/Running.c **** 	HAL_TIM_Base_Start_IT(&htim1);
+ 974              		.loc 1 378 2 view .LVU255
+ 975 0094 1F48     		ldr	r0, .L30+20
+ 976 0096 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 977              	.LVL108:
+ 379:Core/Src/Origin/Running.c **** 	HAL_TIM_Base_Start_IT(&htim8);
+ 978              		.loc 1 379 2 view .LVU256
+ 979 009a 1F48     		ldr	r0, .L30+24
+ 980 009c FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 981              	.LVL109:
+ 380:Core/Src/Origin/Running.c **** 
+ 381:Core/Src/Origin/Running.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 26
+
+
+ 382:Core/Src/Origin/Running.c **** 	//ここまででハードの準備はできた。
+ 383:Core/Src/Origin/Running.c **** 	//ここからはソフト的な準備
+ 384:Core/Src/Origin/Running.c **** 
+ 385:Core/Src/Origin/Running.c **** 	TargetVelocity[BODY] = 0;
+ 982              		.loc 1 385 2 view .LVU257
+ 983              		.loc 1 385 23 is_stmt 0 view .LVU258
+ 984 00a0 0023     		movs	r3, #0
+ 985 00a2 1E4A     		ldr	r2, .L30+28
+ 986 00a4 9360     		str	r3, [r2, #8]	@ float
+ 386:Core/Src/Origin/Running.c **** 	TargetAngularV = 0;
+ 987              		.loc 1 386 2 is_stmt 1 view .LVU259
+ 988              		.loc 1 386 17 is_stmt 0 view .LVU260
+ 989 00a6 1E4A     		ldr	r2, .L30+32
+ 990 00a8 1360     		str	r3, [r2]	@ float
+ 387:Core/Src/Origin/Running.c **** 	Acceleration = 0;
+ 991              		.loc 1 387 2 is_stmt 1 view .LVU261
+ 992              		.loc 1 387 15 is_stmt 0 view .LVU262
+ 993 00aa 1E4A     		ldr	r2, .L30+36
+ 994 00ac 1360     		str	r3, [r2]	@ float
+ 388:Core/Src/Origin/Running.c **** 	AngularAcceleration = 0;
+ 995              		.loc 1 388 2 is_stmt 1 view .LVU263
+ 996              		.loc 1 388 22 is_stmt 0 view .LVU264
+ 997 00ae 1E4A     		ldr	r2, .L30+40
+ 998 00b0 1360     		str	r3, [r2]	@ float
+ 389:Core/Src/Origin/Running.c **** 	TotalPulse[LEFT] = 0;
+ 999              		.loc 1 389 2 is_stmt 1 view .LVU265
+ 1000              		.loc 1 389 19 is_stmt 0 view .LVU266
+ 1001 00b2 1E4B     		ldr	r3, .L30+44
+ 1002 00b4 0024     		movs	r4, #0
+ 1003 00b6 1C60     		str	r4, [r3]
+ 390:Core/Src/Origin/Running.c **** 	TotalPulse[RIGHT] = 0;
+ 1004              		.loc 1 390 2 is_stmt 1 view .LVU267
+ 1005              		.loc 1 390 20 is_stmt 0 view .LVU268
+ 1006 00b8 5C60     		str	r4, [r3, #4]
+ 391:Core/Src/Origin/Running.c **** 	TotalPulse[BODY] = 0;
+ 1007              		.loc 1 391 2 is_stmt 1 view .LVU269
+ 1008              		.loc 1 391 19 is_stmt 0 view .LVU270
+ 1009 00ba 9C60     		str	r4, [r3, #8]
+ 392:Core/Src/Origin/Running.c **** 
+ 393:Core/Src/Origin/Running.c **** 	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+ 394:Core/Src/Origin/Running.c **** 	TargetPhoto[SL] = 370;//Photo[SL];
+ 1010              		.loc 1 394 2 is_stmt 1 view .LVU271
+ 1011              		.loc 1 394 18 is_stmt 0 view .LVU272
+ 1012 00bc 1C4B     		ldr	r3, .L30+48
+ 1013 00be 1D4A     		ldr	r2, .L30+52
+ 1014 00c0 9A60     		str	r2, [r3, #8]	@ float
+ 395:Core/Src/Origin/Running.c **** 	TargetPhoto[SR] = 300;//Photo[SR];
+ 1015              		.loc 1 395 2 is_stmt 1 view .LVU273
+ 1016              		.loc 1 395 18 is_stmt 0 view .LVU274
+ 1017 00c2 1D4A     		ldr	r2, .L30+56
+ 1018 00c4 5A60     		str	r2, [r3, #4]	@ float
+ 396:Core/Src/Origin/Running.c **** 	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
+ 1019              		.loc 1 396 2 is_stmt 1 view .LVU275
+ 1020              		.loc 1 396 25 is_stmt 0 view .LVU276
+ 1021 00c6 D3ED027A 		vldr.32	s15, [r3, #8]
+ 1022              		.loc 1 396 43 view .LVU277
+ 1023 00ca 93ED017A 		vldr.32	s14, [r3, #4]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 27
+
+
+ 1024              		.loc 1 396 30 view .LVU278
+ 1025 00ce 77EEC77A 		vsub.f32	s15, s15, s14
+ 1026              		.loc 1 396 12 view .LVU279
+ 1027 00d2 1A4B     		ldr	r3, .L30+60
+ 1028 00d4 C3ED007A 		vstr.32	s15, [r3]
+ 397:Core/Src/Origin/Running.c **** 
+ 398:Core/Src/Origin/Running.c **** 	PIDReset(L_VELO_PID);
+ 1029              		.loc 1 398 2 is_stmt 1 view .LVU280
+ 1030 00d8 0420     		movs	r0, #4
+ 1031 00da FFF7FEFF 		bl	PIDReset
+ 1032              	.LVL110:
+ 399:Core/Src/Origin/Running.c **** 	PIDReset(R_VELO_PID);
+ 1033              		.loc 1 399 2 view .LVU281
+ 1034 00de 0520     		movs	r0, #5
+ 1035 00e0 FFF7FEFF 		bl	PIDReset
+ 1036              	.LVL111:
+ 400:Core/Src/Origin/Running.c **** 	PIDReset(A_VELO_PID);
+ 1037              		.loc 1 400 2 view .LVU282
+ 1038 00e4 2046     		mov	r0, r4
+ 1039 00e6 FFF7FEFF 		bl	PIDReset
+ 1040              	.LVL112:
+ 401:Core/Src/Origin/Running.c **** 	PIDReset(L_WALL_PID);
+ 1041              		.loc 1 401 2 view .LVU283
+ 1042 00ea 0220     		movs	r0, #2
+ 1043 00ec FFF7FEFF 		bl	PIDReset
+ 1044              	.LVL113:
+ 402:Core/Src/Origin/Running.c **** 	PIDReset(R_WALL_PID);
+ 1045              		.loc 1 402 2 view .LVU284
+ 1046 00f0 0320     		movs	r0, #3
+ 1047 00f2 FFF7FEFF 		bl	PIDReset
+ 1048              	.LVL114:
+ 403:Core/Src/Origin/Running.c **** 	PIDReset(D_WALL_PID);
+ 1049              		.loc 1 403 2 view .LVU285
+ 1050 00f6 0120     		movs	r0, #1
+ 1051 00f8 FFF7FEFF 		bl	PIDReset
+ 1052              	.LVL115:
+ 404:Core/Src/Origin/Running.c **** }
+ 1053              		.loc 1 404 1 is_stmt 0 view .LVU286
+ 1054 00fc 10BD     		pop	{r4, pc}
+ 1055              	.L31:
+ 1056 00fe 00BF     		.align	2
+ 1057              	.L30:
+ 1058 0100 00000000 		.word	.LC0
+ 1059 0104 00000000 		.word	ZGyro
+ 1060 0108 1C000000 		.word	.LC1
+ 1061 010c 24040040 		.word	1073742884
+ 1062 0110 24080040 		.word	1073743908
+ 1063 0114 00000000 		.word	htim1
+ 1064 0118 00000000 		.word	htim8
+ 1065 011c 00000000 		.word	TargetVelocity
+ 1066 0120 00000000 		.word	TargetAngularV
+ 1067 0124 00000000 		.word	Acceleration
+ 1068 0128 00000000 		.word	AngularAcceleration
+ 1069 012c 00000000 		.word	TotalPulse
+ 1070 0130 00000000 		.word	TargetPhoto
+ 1071 0134 0000B943 		.word	1136197632
+ 1072 0138 00009643 		.word	1133903872
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 28
+
+
+ 1073 013c 00000000 		.word	PhotoDiff
+ 1074              		.cfi_endproc
+ 1075              	.LFE241:
+ 1077              		.section	.rodata.FastestRun.str1.4,"aMS",%progbits,1
+ 1078              		.align	2
+ 1079              	.LC2:
+ 1080 0000 E38391E3 		.ascii	"\343\203\221\343\203\253\343\202\271\343\203\201\343"
+ 1080      83ABE382 
+ 1080      B9E38381 
+ 1080      E3
+ 1081 000d 82A7E383 		.ascii	"\202\247\343\203\203\343\202\257: BODY %d, LEFT %d,"
+ 1081      83E382AF 
+ 1081      3A20424F 
+ 1081      44592025 
+ 1081      642C204C 
+ 1082 0028 20524947 		.ascii	" RIGHT %d\015\012\000"
+ 1082      48542025 
+ 1082      640D0A00 
+ 1083              		.section	.text.FastestRun,"ax",%progbits
+ 1084              		.align	1
+ 1085              		.global	FastestRun
+ 1086              		.syntax unified
+ 1087              		.thumb
+ 1088              		.thumb_func
+ 1090              	FastestRun:
+ 1091              	.LFB242:
+ 405:Core/Src/Origin/Running.c **** 
+ 406:Core/Src/Origin/Running.c **** void FastestRun()
+ 407:Core/Src/Origin/Running.c **** {
+ 1092              		.loc 1 407 1 is_stmt 1 view -0
+ 1093              		.cfi_startproc
+ 1094              		@ args = 0, pretend = 0, frame = 8
+ 1095              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1096 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 1097              	.LCFI5:
+ 1098              		.cfi_def_cfa_offset 20
+ 1099              		.cfi_offset 4, -20
+ 1100              		.cfi_offset 5, -16
+ 1101              		.cfi_offset 6, -12
+ 1102              		.cfi_offset 7, -8
+ 1103              		.cfi_offset 14, -4
+ 1104 0002 2DED028B 		vpush.64	{d8}
+ 1105              	.LCFI6:
+ 1106              		.cfi_def_cfa_offset 28
+ 1107              		.cfi_offset 80, -28
+ 1108              		.cfi_offset 81, -24
+ 1109 0006 85B0     		sub	sp, sp, #20
+ 1110              	.LCFI7:
+ 1111              		.cfi_def_cfa_offset 48
+ 408:Core/Src/Origin/Running.c **** 	IT_mode = EXPLORE;
+ 1112              		.loc 1 408 2 view .LVU288
+ 1113              		.loc 1 408 10 is_stmt 0 view .LVU289
+ 1114 0008 624B     		ldr	r3, .L37
+ 1115 000a 0622     		movs	r2, #6
+ 1116 000c 1A60     		str	r2, [r3]
+ 409:Core/Src/Origin/Running.c **** 	//IT_mode = WRITINGFREE;
+ 410:Core/Src/Origin/Running.c **** 	//諸々の初期化
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 29
+
+
+ 411:Core/Src/Origin/Running.c **** 	HAL_Delay(100);
+ 1117              		.loc 1 411 2 is_stmt 1 view .LVU290
+ 1118 000e 6420     		movs	r0, #100
+ 1119 0010 FFF7FEFF 		bl	HAL_Delay
+ 1120              	.LVL116:
+ 412:Core/Src/Origin/Running.c **** 	int8_t mode=1;
+ 1121              		.loc 1 412 2 view .LVU291
+ 1122              		.loc 1 412 9 is_stmt 0 view .LVU292
+ 1123 0014 0125     		movs	r5, #1
+ 1124 0016 8DF80F50 		strb	r5, [sp, #15]
+ 413:Core/Src/Origin/Running.c **** 	  ModeSelect( 1, 2, &mode);
+ 1125              		.loc 1 413 4 is_stmt 1 view .LVU293
+ 1126 001a 0DF10F02 		add	r2, sp, #15
+ 1127 001e 0221     		movs	r1, #2
+ 1128 0020 2846     		mov	r0, r5
+ 1129 0022 FFF7FEFF 		bl	ModeSelect
+ 1130              	.LVL117:
+ 414:Core/Src/Origin/Running.c **** 	  Signal( mode );
+ 1131              		.loc 1 414 4 view .LVU294
+ 1132 0026 9DF90F00 		ldrsb	r0, [sp, #15]
+ 1133 002a FFF7FEFF 		bl	Signal
+ 1134              	.LVL118:
+ 415:Core/Src/Origin/Running.c **** 
+ 416:Core/Src/Origin/Running.c **** 		HAL_Delay(100);
+ 1135              		.loc 1 416 3 view .LVU295
+ 1136 002e 6420     		movs	r0, #100
+ 1137 0030 FFF7FEFF 		bl	HAL_Delay
+ 1138              	.LVL119:
+ 417:Core/Src/Origin/Running.c **** 		  int8_t mode2=1;
+ 1139              		.loc 1 417 5 view .LVU296
+ 1140              		.loc 1 417 12 is_stmt 0 view .LVU297
+ 1141 0034 8DF80E50 		strb	r5, [sp, #14]
+ 418:Core/Src/Origin/Running.c **** 		  ModeSelect( 1, 4, &mode2);
+ 1142              		.loc 1 418 5 is_stmt 1 view .LVU298
+ 1143 0038 0DF10E02 		add	r2, sp, #14
+ 1144 003c 0421     		movs	r1, #4
+ 1145 003e 2846     		mov	r0, r5
+ 1146 0040 FFF7FEFF 		bl	ModeSelect
+ 1147              	.LVL120:
+ 419:Core/Src/Origin/Running.c **** 		  Signal( mode2 );
+ 1148              		.loc 1 419 5 view .LVU299
+ 1149 0044 9DF90E00 		ldrsb	r0, [sp, #14]
+ 1150 0048 FFF7FEFF 		bl	Signal
+ 1151              	.LVL121:
+ 420:Core/Src/Origin/Running.c **** 
+ 421:Core/Src/Origin/Running.c **** 		  PhotoSwitch();
+ 1152              		.loc 1 421 5 view .LVU300
+ 1153 004c FFF7FEFF 		bl	PhotoSwitch
+ 1154              	.LVL122:
+ 422:Core/Src/Origin/Running.c **** 	InitFastest();
+ 1155              		.loc 1 422 2 view .LVU301
+ 1156 0050 FFF7FEFF 		bl	InitFastest
+ 1157              	.LVL123:
+ 423:Core/Src/Origin/Running.c **** 
+ 424:Core/Src/Origin/Running.c **** //	wall_init();
+ 425:Core/Src/Origin/Running.c **** 
+ 426:Core/Src/Origin/Running.c **** 	TotalPulse[RIGHT] = 0;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 30
+
+
+ 1158              		.loc 1 426 2 view .LVU302
+ 1159              		.loc 1 426 20 is_stmt 0 view .LVU303
+ 1160 0054 504E     		ldr	r6, .L37+4
+ 1161 0056 0024     		movs	r4, #0
+ 1162 0058 7460     		str	r4, [r6, #4]
+ 427:Core/Src/Origin/Running.c **** 	TotalPulse[LEFT] = 0;
+ 1163              		.loc 1 427 2 is_stmt 1 view .LVU304
+ 1164              		.loc 1 427 19 is_stmt 0 view .LVU305
+ 1165 005a 3460     		str	r4, [r6]
+ 428:Core/Src/Origin/Running.c **** 	TotalPulse[BODY] = 0;
+ 1166              		.loc 1 428 2 is_stmt 1 view .LVU306
+ 1167              		.loc 1 428 19 is_stmt 0 view .LVU307
+ 1168 005c B460     		str	r4, [r6, #8]
+ 429:Core/Src/Origin/Running.c **** 
+ 430:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_VELO_PID, 1);
+ 1169              		.loc 1 430 2 is_stmt 1 view .LVU308
+ 1170 005e 2946     		mov	r1, r5
+ 1171 0060 0420     		movs	r0, #4
+ 1172 0062 FFF7FEFF 		bl	PIDChangeFlag
+ 1173              	.LVL124:
+ 431:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_VELO_PID, 1);
+ 1174              		.loc 1 431 2 view .LVU309
+ 1175 0066 2946     		mov	r1, r5
+ 1176 0068 0520     		movs	r0, #5
+ 1177 006a FFF7FEFF 		bl	PIDChangeFlag
+ 1178              	.LVL125:
+ 432:Core/Src/Origin/Running.c **** 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],T
+ 1179              		.loc 1 432 2 view .LVU310
+ 1180 006e B168     		ldr	r1, [r6, #8]
+ 1181 0070 3268     		ldr	r2, [r6]
+ 1182 0072 7368     		ldr	r3, [r6, #4]
+ 1183 0074 4948     		ldr	r0, .L37+8
+ 1184 0076 FFF7FEFF 		bl	printf
+ 1185              	.LVL126:
+ 433:Core/Src/Origin/Running.c **** 	//PIDChangeFlagStraight(N_WALL_PID);
+ 434:Core/Src/Origin/Running.c **** 	PIDChangeFlag(D_WALL_PID, 0);
+ 1186              		.loc 1 434 2 view .LVU311
+ 1187 007a 2146     		mov	r1, r4
+ 1188 007c 2846     		mov	r0, r5
+ 1189 007e FFF7FEFF 		bl	PIDChangeFlag
+ 1190              	.LVL127:
+ 435:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_WALL_PID, 0);
+ 1191              		.loc 1 435 2 view .LVU312
+ 1192 0082 2146     		mov	r1, r4
+ 1193 0084 0220     		movs	r0, #2
+ 1194 0086 FFF7FEFF 		bl	PIDChangeFlag
+ 1195              	.LVL128:
+ 436:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_WALL_PID, 0);
+ 1196              		.loc 1 436 2 view .LVU313
+ 1197 008a 2146     		mov	r1, r4
+ 1198 008c 0320     		movs	r0, #3
+ 1199 008e FFF7FEFF 		bl	PIDChangeFlag
+ 1200              	.LVL129:
+ 437:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 1201              		.loc 1 437 2 view .LVU314
+ 1202 0092 2146     		mov	r1, r4
+ 1203 0094 2046     		mov	r0, r4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 31
+
+
+ 1204 0096 FFF7FEFF 		bl	PIDChangeFlag
+ 1205              	.LVL130:
+ 438:Core/Src/Origin/Running.c **** 	//PIDSetGain(D_WALL_PID, 10, 0, 0);
+ 439:Core/Src/Origin/Running.c **** 
+ 440:Core/Src/Origin/Running.c **** 	char turn_mode = 'T';
+ 1206              		.loc 1 440 2 view .LVU315
+ 441:Core/Src/Origin/Running.c **** 	if(mode == 1)
+ 1207              		.loc 1 441 2 view .LVU316
+ 1208              		.loc 1 441 10 is_stmt 0 view .LVU317
+ 1209 009a 9DF90F30 		ldrsb	r3, [sp, #15]
+ 1210              		.loc 1 441 4 view .LVU318
+ 1211 009e AB42     		cmp	r3, r5
+ 1212 00a0 73D0     		beq	.L36
+ 1213              	.L33:
+ 1214              	.LVL131:
+ 442:Core/Src/Origin/Running.c **** 	{
+ 443:Core/Src/Origin/Running.c **** 		ExploreVelocity = 400;
+ 444:Core/Src/Origin/Running.c **** 		turn_mode = 'T';
+ 445:Core/Src/Origin/Running.c **** 	}
+ 446:Core/Src/Origin/Running.c **** 	else if(mode == 2)
+ 447:Core/Src/Origin/Running.c **** 	{
+ 448:Core/Src/Origin/Running.c **** 		turn_mode = 'S';
+ 449:Core/Src/Origin/Running.c **** 	}
+ 450:Core/Src/Origin/Running.c **** 
+ 451:Core/Src/Origin/Running.c **** 	setFastDiagonalParam(mode2);
+ 1215              		.loc 1 451 2 is_stmt 1 view .LVU319
+ 1216 00a2 9DF90E00 		ldrsb	r0, [sp, #14]
+ 1217 00a6 FFF7FEFF 		bl	setFastDiagonalParam
+ 1218              	.LVL132:
+ 452:Core/Src/Origin/Running.c **** 	
+ 453:Core/Src/Origin/Running.c **** 	// setFastParam(mode2);
+ 454:Core/Src/Origin/Running.c **** 	// initSlalomParam();
+ 455:Core/Src/Origin/Running.c **** 	ChangeLED(4);
+ 1219              		.loc 1 455 2 view .LVU320
+ 1220 00aa 0420     		movs	r0, #4
+ 1221 00ac FFF7FEFF 		bl	ChangeLED
+ 1222              	.LVL133:
+ 456:Core/Src/Origin/Running.c **** 
+ 457:Core/Src/Origin/Running.c **** 	VelocityMax = false;
+ 1223              		.loc 1 457 2 view .LVU321
+ 1224              		.loc 1 457 14 is_stmt 0 view .LVU322
+ 1225 00b0 0027     		movs	r7, #0
+ 1226 00b2 3B4B     		ldr	r3, .L37+12
+ 1227 00b4 1F70     		strb	r7, [r3]
+ 458:Core/Src/Origin/Running.c **** 
+ 459:Core/Src/Origin/Running.c **** 	SearchOrFast = 1;
+ 1228              		.loc 1 459 2 is_stmt 1 view .LVU323
+ 1229              		.loc 1 459 15 is_stmt 0 view .LVU324
+ 1230 00b6 3B4B     		ldr	r3, .L37+16
+ 1231 00b8 0124     		movs	r4, #1
+ 1232 00ba 1C60     		str	r4, [r3]
+ 460:Core/Src/Origin/Running.c **** 	Calc = SearchOrFast;
+ 1233              		.loc 1 460 2 is_stmt 1 view .LVU325
+ 1234              		.loc 1 460 7 is_stmt 0 view .LVU326
+ 1235 00bc 1A68     		ldr	r2, [r3]
+ 1236 00be 3A4B     		ldr	r3, .L37+20
+ 1237 00c0 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 32
+
+
+ 461:Core/Src/Origin/Running.c **** 	//走る
+ 462:Core/Src/Origin/Running.c **** 	goal_edge_num = GOAL_SIZE_X;
+ 1238              		.loc 1 462 2 is_stmt 1 view .LVU327
+ 1239              		.loc 1 462 16 is_stmt 0 view .LVU328
+ 1240 00c2 0225     		movs	r5, #2
+ 1241 00c4 394B     		ldr	r3, .L37+24
+ 1242 00c6 1D70     		strb	r5, [r3]
+ 463:Core/Src/Origin/Running.c **** 	my_mouse.target_size = goal_edge_num;
+ 1243              		.loc 1 463 2 is_stmt 1 view .LVU329
+ 1244              		.loc 1 463 23 is_stmt 0 view .LVU330
+ 1245 00c8 394E     		ldr	r6, .L37+28
+ 1246 00ca 3571     		strb	r5, [r6, #4]
+ 464:Core/Src/Origin/Running.c **** 
+ 465:Core/Src/Origin/Running.c **** 	TargetVelocity[BODY] = 0;
+ 1247              		.loc 1 465 2 is_stmt 1 view .LVU331
+ 1248              		.loc 1 465 23 is_stmt 0 view .LVU332
+ 1249 00cc 9FED398A 		vldr.32	s16, .L37+32
+ 1250 00d0 394B     		ldr	r3, .L37+36
+ 1251 00d2 83ED028A 		vstr.32	s16, [r3, #8]
+ 466:Core/Src/Origin/Running.c **** 	Acceleration = 0;
+ 1252              		.loc 1 466 2 is_stmt 1 view .LVU333
+ 1253              		.loc 1 466 15 is_stmt 0 view .LVU334
+ 1254 00d6 394B     		ldr	r3, .L37+40
+ 1255 00d8 83ED008A 		vstr.32	s16, [r3]
+ 467:Core/Src/Origin/Running.c **** 	TargetAngularV = 0;
+ 1256              		.loc 1 467 2 is_stmt 1 view .LVU335
+ 1257              		.loc 1 467 17 is_stmt 0 view .LVU336
+ 1258 00dc 384B     		ldr	r3, .L37+44
+ 1259 00de 83ED008A 		vstr.32	s16, [r3]
+ 468:Core/Src/Origin/Running.c **** 	TargetAngle = 0;
+ 1260              		.loc 1 468 2 is_stmt 1 view .LVU337
+ 1261              		.loc 1 468 14 is_stmt 0 view .LVU338
+ 1262 00e2 384B     		ldr	r3, .L37+48
+ 1263 00e4 83ED008A 		vstr.32	s16, [r3]
+ 469:Core/Src/Origin/Running.c **** 	Angle = 0;
+ 1264              		.loc 1 469 2 is_stmt 1 view .LVU339
+ 1265              		.loc 1 469 8 is_stmt 0 view .LVU340
+ 1266 00e8 374B     		ldr	r3, .L37+52
+ 1267 00ea 83ED008A 		vstr.32	s16, [r3]
+ 470:Core/Src/Origin/Running.c **** 	PIDReset(L_VELO_PID);
+ 1268              		.loc 1 470 2 is_stmt 1 view .LVU341
+ 1269 00ee 0420     		movs	r0, #4
+ 1270 00f0 FFF7FEFF 		bl	PIDReset
+ 1271              	.LVL134:
+ 471:Core/Src/Origin/Running.c **** 	PIDReset(R_VELO_PID);
+ 1272              		.loc 1 471 2 view .LVU342
+ 1273 00f4 0520     		movs	r0, #5
+ 1274 00f6 FFF7FEFF 		bl	PIDReset
+ 1275              	.LVL135:
+ 472:Core/Src/Origin/Running.c **** 	PIDReset(A_VELO_PID);
+ 1276              		.loc 1 472 2 view .LVU343
+ 1277 00fa 3846     		mov	r0, r7
+ 1278 00fc FFF7FEFF 		bl	PIDReset
+ 1279              	.LVL136:
+ 473:Core/Src/Origin/Running.c **** 
+ 474:Core/Src/Origin/Running.c **** 	PIDReset(L_WALL_PID);
+ 1280              		.loc 1 474 2 view .LVU344
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 33
+
+
+ 1281 0100 2846     		mov	r0, r5
+ 1282 0102 FFF7FEFF 		bl	PIDReset
+ 1283              	.LVL137:
+ 475:Core/Src/Origin/Running.c **** 	PIDReset(R_WALL_PID);
+ 1284              		.loc 1 475 2 view .LVU345
+ 1285 0106 0320     		movs	r0, #3
+ 1286 0108 FFF7FEFF 		bl	PIDReset
+ 1287              	.LVL138:
+ 476:Core/Src/Origin/Running.c **** 	PIDReset(D_WALL_PID);
+ 1288              		.loc 1 476 2 view .LVU346
+ 1289 010c 2046     		mov	r0, r4
+ 1290 010e FFF7FEFF 		bl	PIDReset
+ 1291              	.LVL139:
+ 477:Core/Src/Origin/Running.c **** 	//迷路データ
+ 478:Core/Src/Origin/Running.c **** 	initSearchData(&my_map, &my_mouse);
+ 1292              		.loc 1 478 2 view .LVU347
+ 1293 0112 2E4C     		ldr	r4, .L37+56
+ 1294 0114 3146     		mov	r1, r6
+ 1295 0116 2046     		mov	r0, r4
+ 1296 0118 FFF7FEFF 		bl	initSearchData
+ 1297              	.LVL140:
+ 479:Core/Src/Origin/Running.c **** 	InitVisit();
+ 1298              		.loc 1 479 2 view .LVU348
+ 1299 011c FFF7FEFF 		bl	InitVisit
+ 1300              	.LVL141:
+ 480:Core/Src/Origin/Running.c **** //	printAllNodeExistence(&my_map);
+ 481:Core/Src/Origin/Running.c **** 	flashCopyNodesToRam(&my_map); //existenceだけ
+ 1301              		.loc 1 481 2 view .LVU349
+ 1302 0120 2046     		mov	r0, r4
+ 1303 0122 FFF7FEFF 		bl	flashCopyNodesToRam
+ 1304              	.LVL142:
+ 482:Core/Src/Origin/Running.c **** //	printAllNodeExistence(&my_map);
+ 483:Core/Src/Origin/Running.c **** 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
+ 1305              		.loc 1 483 2 view .LVU350
+ 1306 0126 0327     		movs	r7, #3
+ 1307 0128 0197     		str	r7, [sp, #4]
+ 1308 012a 0095     		str	r5, [sp]
+ 1309 012c 2B46     		mov	r3, r5
+ 1310 012e 0922     		movs	r2, #9
+ 1311 0130 1146     		mov	r1, r2
+ 1312 0132 2046     		mov	r0, r4
+ 1313 0134 FFF7FEFF 		bl	updateAllNodeWeight
+ 1314              	.LVL143:
+ 484:Core/Src/Origin/Running.c **** 
+ 485:Core/Src/Origin/Running.c **** 	getPathNode(&my_map, &my_mouse);
+ 1315              		.loc 1 485 2 view .LVU351
+ 1316 0138 3146     		mov	r1, r6
+ 1317 013a 2046     		mov	r0, r4
+ 1318 013c FFF7FEFF 		bl	getPathNode
+ 1319              	.LVL144:
+ 486:Core/Src/Origin/Running.c **** 	// getPathAction(&my_mouse);
+ 487:Core/Src/Origin/Running.c **** 	getPathActionDiagonal(&my_mouse);
+ 1320              		.loc 1 487 2 view .LVU352
+ 1321 0140 3046     		mov	r0, r6
+ 1322 0142 FFF7FEFF 		bl	getPathActionDiagonal
+ 1323              	.LVL145:
+ 488:Core/Src/Origin/Running.c **** 	HAL_Delay(200);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 34
+
+
+ 1324              		.loc 1 488 2 view .LVU353
+ 1325 0146 C820     		movs	r0, #200
+ 1326 0148 FFF7FEFF 		bl	HAL_Delay
+ 1327              	.LVL146:
+ 489:Core/Src/Origin/Running.c **** 
+ 490:Core/Src/Origin/Running.c **** 	//リセット、再取得
+ 491:Core/Src/Origin/Running.c **** 	initSearchData(&my_map, &my_mouse);
+ 1328              		.loc 1 491 2 view .LVU354
+ 1329 014c 3146     		mov	r1, r6
+ 1330 014e 2046     		mov	r0, r4
+ 1331 0150 FFF7FEFF 		bl	initSearchData
+ 1332              	.LVL147:
+ 492:Core/Src/Origin/Running.c **** 	flashCopyNodesToRam(&my_map); //existenceだけ
+ 1333              		.loc 1 492 2 view .LVU355
+ 1334 0154 2046     		mov	r0, r4
+ 1335 0156 FFF7FEFF 		bl	flashCopyNodesToRam
+ 1336              	.LVL148:
+ 493:Core/Src/Origin/Running.c **** 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
+ 1337              		.loc 1 493 2 view .LVU356
+ 1338 015a 0197     		str	r7, [sp, #4]
+ 1339 015c 0095     		str	r5, [sp]
+ 1340 015e 2B46     		mov	r3, r5
+ 1341 0160 0922     		movs	r2, #9
+ 1342 0162 1146     		mov	r1, r2
+ 1343 0164 2046     		mov	r0, r4
+ 1344 0166 FFF7FEFF 		bl	updateAllNodeWeight
+ 1345              	.LVL149:
+ 494:Core/Src/Origin/Running.c **** 	//壁のあるなしと重みをprintしてチェック
+ 495:Core/Src/Origin/Running.c **** //	printAllNodeExistence(&my_map);
+ 496:Core/Src/Origin/Running.c **** //	while(1){
+ 497:Core/Src/Origin/Running.c **** //		printAllWeight(&my_map, &(my_mouse.goal_lesser));
+ 498:Core/Src/Origin/Running.c **** //		HAL_Delay(1000);
+ 499:Core/Src/Origin/Running.c **** //	}
+ 500:Core/Src/Origin/Running.c **** 
+ 501:Core/Src/Origin/Running.c **** 	// MaxParaRunTest(&my_map, &my_mouse);
+ 502:Core/Src/Origin/Running.c **** 	DiagonalRunTest(); //斜め有
+ 1346              		.loc 1 502 2 view .LVU357
+ 1347 016a FFF7FEFF 		bl	DiagonalRunTest
+ 1348              	.LVL150:
+ 503:Core/Src/Origin/Running.c **** 	//ゴールしたら減速して、停止。
+ 504:Core/Src/Origin/Running.c **** 	Decel(45,0);
+ 1349              		.loc 1 504 2 view .LVU358
+ 1350 016e F0EE480A 		vmov.f32	s1, s16
+ 1351 0172 9FED170A 		vldr.32	s0, .L37+60
+ 1352 0176 FFF7FEFF 		bl	Decel
+ 1353              	.LVL151:
+ 505:Core/Src/Origin/Running.c **** 	//終了合図
+ 506:Core/Src/Origin/Running.c **** 	Signal(7);
+ 1354              		.loc 1 506 2 view .LVU359
+ 1355 017a 0720     		movs	r0, #7
+ 1356 017c FFF7FEFF 		bl	Signal
+ 1357              	.LVL152:
+ 1358              	.L34:
+ 507:Core/Src/Origin/Running.c **** 
+ 508:Core/Src/Origin/Running.c **** 	while(1)
+ 1359              		.loc 1 508 2 discriminator 1 view .LVU360
+ 509:Core/Src/Origin/Running.c **** 	{
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 35
+
+
+ 510:Core/Src/Origin/Running.c **** 		// printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",Nu
+ 511:Core/Src/Origin/Running.c **** 		printAllWeight(&my_map, &(my_mouse.now.pos));
+ 1360              		.loc 1 511 3 discriminator 1 view .LVU361
+ 1361 0180 1449     		ldr	r1, .L37+64
+ 1362 0182 1248     		ldr	r0, .L37+56
+ 1363 0184 FFF7FEFF 		bl	printAllWeight
+ 1364              	.LVL153:
+ 508:Core/Src/Origin/Running.c **** 	{
+ 1365              		.loc 1 508 7 discriminator 1 view .LVU362
+ 1366 0188 FAE7     		b	.L34
+ 1367              	.LVL154:
+ 1368              	.L36:
+ 443:Core/Src/Origin/Running.c **** 		turn_mode = 'T';
+ 1369              		.loc 1 443 3 view .LVU363
+ 443:Core/Src/Origin/Running.c **** 		turn_mode = 'T';
+ 1370              		.loc 1 443 19 is_stmt 0 view .LVU364
+ 1371 018a 134B     		ldr	r3, .L37+68
+ 1372 018c 134A     		ldr	r2, .L37+72
+ 1373 018e 1A60     		str	r2, [r3]	@ float
+ 444:Core/Src/Origin/Running.c **** 	}
+ 1374              		.loc 1 444 3 is_stmt 1 view .LVU365
+ 444:Core/Src/Origin/Running.c **** 	}
+ 1375              		.loc 1 444 3 is_stmt 0 view .LVU366
+ 1376 0190 87E7     		b	.L33
+ 1377              	.L38:
+ 1378 0192 00BF     		.align	2
+ 1379              	.L37:
+ 1380 0194 00000000 		.word	IT_mode
+ 1381 0198 00000000 		.word	TotalPulse
+ 1382 019c 00000000 		.word	.LC2
+ 1383 01a0 00000000 		.word	VelocityMax
+ 1384 01a4 00000000 		.word	SearchOrFast
+ 1385 01a8 00000000 		.word	Calc
+ 1386 01ac 00000000 		.word	goal_edge_num
+ 1387 01b0 00000000 		.word	.LANCHOR0
+ 1388 01b4 00000000 		.word	0
+ 1389 01b8 00000000 		.word	TargetVelocity
+ 1390 01bc 00000000 		.word	Acceleration
+ 1391 01c0 00000000 		.word	TargetAngularV
+ 1392 01c4 00000000 		.word	TargetAngle
+ 1393 01c8 00000000 		.word	Angle
+ 1394 01cc 00000000 		.word	my_map
+ 1395 01d0 00003442 		.word	1110704128
+ 1396 01d4 08000000 		.word	.LANCHOR0+8
+ 1397 01d8 00000000 		.word	ExploreVelocity
+ 1398 01dc 0000C843 		.word	1137180672
+ 1399              		.cfi_endproc
+ 1400              	.LFE242:
+ 1402              		.global	my_map
+ 1403              		.global	my_mouse
+ 1404              		.section	.bss.my_map,"aw",%nobits
+ 1405              		.align	2
+ 1408              	my_map:
+ 1409 0000 00000000 		.space	4352
+ 1409      00000000 
+ 1409      00000000 
+ 1409      00000000 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 36
+
+
+ 1409      00000000 
+ 1410              		.section	.bss.my_mouse,"aw",%nobits
+ 1411              		.align	2
+ 1412              		.set	.LANCHOR0,. + 0
+ 1415              	my_mouse:
+ 1416 0000 00000000 		.space	428
+ 1416      00000000 
+ 1416      00000000 
+ 1416      00000000 
+ 1416      00000000 
+ 1417              		.text
+ 1418              	.Letext0:
+ 1419              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 1420              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1421              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1422              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1423              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1424              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 1425              		.file 8 "Core/Inc/Origin/MazeLib.h"
+ 1426              		.file 9 "Core/Inc/Origin/MicroMouse.h"
+ 1427              		.file 10 "Core/Inc/Origin/Interrupt.h"
+ 1428              		.file 11 "Core/Inc/Tools/PID_Control.h"
+ 1429              		.file 12 "Core/Inc/Hw/ICM_20648.h"
+ 1430              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 1431              		.file 14 "Core/Inc/Tools/UI.h"
+ 1432              		.file 15 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 1433              		.file 16 "Core/Inc/Origin/Searching.h"
+ 1434              		.file 17 "Core/Inc/Origin/Action.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 37
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Running.c
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:23     .text.initSlalomParam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:29     .text.initSlalomParam:00000000 initSlalomParam
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:107    .text.initSlalomParam:00000078 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:116    .rodata.InitExplore.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:123    .text.InitExplore:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:129    .text.InitExplore:00000000 InitExplore
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:315    .text.InitExplore:000000f4 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:336    .text.Explore:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:342    .text.Explore:00000000 Explore
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:469    .text.Explore:000000a8 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:474    .text.Explore:000000ac $t
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:826    .text.Explore:00000258 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1408   .bss.my_map:00000000 my_map
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:861    .text.InitFastest:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:867    .text.InitFastest:00000000 InitFastest
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1058   .text.InitFastest:00000100 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1078   .rodata.FastestRun.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1084   .text.FastestRun:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1090   .text.FastestRun:00000000 FastestRun
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1380   .text.FastestRun:00000194 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1415   .bss.my_mouse:00000000 my_mouse
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1405   .bss.my_map:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s:1411   .bss.my_mouse:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f
+Sla
+PIDChangeFlag
+IMU_init
+printf
+HAL_Delay
+ReadIMU
+Motor_PWM_Start
+EncoderStart
+EmitterON
+ADCStart
+InitPulse
+HAL_TIM_Base_Start_IT
+PIDReset
+ZGyro
+htim1
+htim8
+TargetVelocity
+TargetAngularV
+Acceleration
+AngularAcceleration
+TotalPulse
+TargetPhoto
+PhotoDiff
+ModeSelect
+Signal
+PhotoSwitch
+LowDFSFlag
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccxq8y5I.s 			page 38
+
+
+LowStackFlag
+InitMassStack
+initSearchData
+InitVisit
+InitStackNum
+Accel
+getNextDirection
+HighStackFlag
+Decel
+WaitStopAndReset
+shiftState
+VisitedMass
+Flash_clear_sector1
+flashStoreNodes
+printAllNodeExistence
+printMatrix16ValueFromNode
+printAllWeight
+printVisited
+IT_mode
+ExploreVelocity
+VelocityMax
+SearchOrFast
+Calc
+WALL_MASK
+Pid
+dbc
+goal_edge_num
+setFastDiagonalParam
+ChangeLED
+flashCopyNodesToRam
+updateAllNodeWeight
+getPathNode
+getPathActionDiagonal
+DiagonalRunTest
+TargetAngle
+Angle

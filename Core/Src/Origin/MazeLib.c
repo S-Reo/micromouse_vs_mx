@@ -692,7 +692,6 @@ void printMatrix16ValueFromNode(maze_node *maze)
 }
 
 
-
 /* ----- 探索者データ管理 ここから----- */
 void setNextPosition(state *st)
 {

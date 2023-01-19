@@ -38,27 +38,22 @@
 #include "stdbool.h"
 #include "string.h"
 #include "stdint.h"
-
 #include "stm32f4xx_hal_tim.h"
 
-//#include "ICM_20648.h"
-//
-#include "IEH2_4096.h"		//エンコー
 #include "mouse_ADC.h"
-#include "LED_Driver.h"
-#include "IR_Emitter.h"	//発
-#include "Convert.h"
-
 #include "UI.h"
-#include "Interrupt.h"
 #include "Mode.h"
-
-#include "ICM_20648.h"
 #include "PID_Control.h"
-#include "Motor_Driver.h"
-
 #include "MicroMouse.h"
+#include "Running.h"
 
+// #include "LED_Driver.h"
+// #include "IR_Emitter.h"
+// #include "Motor_Driver.h"
+// #include "ICM_20648.h"
+// #include "IEH2_4096.h"
+// #include "Convert.h"
+// #include "Interrupt.h"
 //#include <HPP/wrapper.hpp>
 /* USER CODE END Includes */
 
@@ -69,15 +64,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
-
-
-/*  ---ms---  制御周     */
-//#define _GNU_SOURCE
-//#define PI 3.14159265358979323846
-
-/*--調整パラメータ--*/
-
 
 /* USER CODE END PD */
 
@@ -96,43 +82,14 @@
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 extern void TIM5Init();
-
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#ifdef __GNUC__
-	#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-	#define GETCHAR_PROTOTYPE int __io_getchar(void)
-#else
-	#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-	#define GETCHAR_PROTOTYPE int f getc(FILE* f)
-#endif /*__GNUC__*/
-PUTCHAR_PROTOTYPE {
-	HAL_UART_Transmit(&huart1, (uint8_t*)&ch, 1, 0xFFFF);
-	return ch;
-}
-int __io_getchar(void) {
-HAL_StatusTypeDef Status = HAL_BUSY;
-uint8_t Data;
 
-while(Status != HAL_OK)
-{
-Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
-//if(Status == HAL_ERROR)
-//{
-//	return 0;
-//	break;
-//}
-}
-return(Data);
-}
 /*---- DEFINING FUNCTION ----*/
 
-
 /*---- DEFINING FUNCTION END----*/
-
 
 /* USER CODE END 0 */
 
@@ -170,8 +127,6 @@ int main(void)
 	Signal( startup_mode );
   //printf("adc1[2] : %lu\r\n ",adc1[2]);
 
-  //モード選
-  //MAX45mAでモード選択できる
 
   /* USER CODE END Init */
 
@@ -202,10 +157,8 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  //cpploop();
 //  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001); //今まで
 //  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
-  //16.35 or 15.3 or 25.5
   PIDSetGain(L_VELO_PID, 16.35,5000,0);
   PIDSetGain(R_VELO_PID, 16.35,5000,0);
 
@@ -223,49 +176,25 @@ int main(void)
 		  break;
 	  case 1:
 		  GainSetting(1);
-//		  GainTestRWall();
 		  break;
 	  case GAINTEST:
-//		  PIDSetGain(L_VELO_PID, 16.35, 3000,0);
-//		  PIDSetGain(R_VELO_PID, 16.35, 3000,0);
-//		  GainTestAVelo();
-
-		  GainTestDWall();
+		  GainTest();
 		  break;
 	  case DEBUGGER:
-
 		  Debug();
 		  break;
 	  case FASTEST_RUN:
-
-		  //GainTestLWall();
 //		  FlashReadTest();
-//		  printf("読み込み終�?\r\n");
-//		  while(1){
-//
-//		  		  }
 		  FastestRun();
 		  break;
 	  case IMU_TEST:
 //		  TestIMU();
-//		  PIDSetGain(L_VELO_PID, 16.35, 5,0);
-//		  PIDSetGain(R_VELO_PID, 16.35, 5,0);
-//		  WritingFree();
-
-		  GainTestAVelo();
 		  break;
 	  case EXPLORE:
-
 //		  FlashWriteTest();
-//		  printf("書き込み終�?\r\n");
-//		  while(1){
-//
-//		  }
 		  Explore();
 		  break;
 	  case WRITINGFREE:
-//		  PIDSetGain(L_VELO_PID, 16.35, 50,0);
-//		  PIDSetGain(R_VELO_PID, 16.35, 50,0);
 		  WritingFree();
 		  break;
 	  default :
@@ -327,7 +256,32 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+#ifdef __GNUC__
+	#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+	#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+	#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+	#define GETCHAR_PROTOTYPE int f getc(FILE* f)
+#endif /*__GNUC__*/
+PUTCHAR_PROTOTYPE {
+	HAL_UART_Transmit(&huart1, (uint8_t*)&ch, 1, 0xFFFF);
+	return ch;
+}
+int __io_getchar(void) {
+HAL_StatusTypeDef Status = HAL_BUSY;
+uint8_t Data;
 
+while(Status != HAL_OK)
+{
+Status = HAL_UART_Receive(&huart1, &Data, sizeof(Data), 10);
+//if(Status == HAL_ERROR)
+//{
+//	return 0;
+//	break;
+//}
+}
+return(Data);
+}
 /* USER CODE END 4 */
 
 /**

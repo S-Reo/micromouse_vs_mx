@@ -11,6 +11,10 @@
 //#include <main.h>
 #include "MazeLib.h"
 #include "MicroMouse.h"
+
+// 基本動作の関数
+// 途中に補正を入れるにはどうすればいいか（ロジックテーブルを作って差し込む)
+
 typedef struct {
 
 	float KP;

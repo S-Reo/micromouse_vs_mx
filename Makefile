@@ -55,12 +55,14 @@ Core/Src/Tools/tim_info.c \
 Core/Src/Tools/UI.c \
 Core/Src/Origin/Action.c \
 Core/Src/Origin/dfs.c \
+Core/Src/Origin/FastRun.c \
 Core/Src/Origin/Interrupt.c \
 Core/Src/Origin/MazeLib.c \
 Core/Src/Origin/MazeSimulation.c \
 Core/Src/Origin/MicroMouse.c \
 Core/Src/Origin/Mode.c \
 Core/Src/Origin/Record.c \
+Core/Src/Origin/Running.c \
 Core/Src/Origin/Searching.c \
 Core/Src/Origin/test.c \
 Core/Src/gpio.c \

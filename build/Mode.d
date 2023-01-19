@@ -37,7 +37,9 @@ build/Mode.o: Core/Src/Origin/Mode.c Core/Inc/Origin/MicroMouse.h \
  Core/Inc/Tools/Debug.h Core/Inc/Origin/Interrupt.h \
  Core/Inc/Origin/Action.h Core/Inc/Origin/MicroMouse.h \
  Core/Inc/Origin/MazeLib.h Core/Inc/Origin/Searching.h \
- Core/Inc/Origin/Action.h Core/Inc/Origin/Record.h Core/Inc/dfs.h
+ Core/Inc/Origin/Searching.h Core/Inc/Origin/Action.h \
+ Core/Inc/Origin/Record.h Core/Inc/dfs.h Core/Inc/Origin/FastRun.h \
+ Core/Inc/Origin/Running.h
 Core/Inc/Origin/MicroMouse.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -90,6 +92,9 @@ Core/Inc/Origin/Action.h:
 Core/Inc/Origin/MicroMouse.h:
 Core/Inc/Origin/MazeLib.h:
 Core/Inc/Origin/Searching.h:
+Core/Inc/Origin/Searching.h:
 Core/Inc/Origin/Action.h:
 Core/Inc/Origin/Record.h:
 Core/Inc/dfs.h:
+Core/Inc/Origin/FastRun.h:
+Core/Inc/Origin/Running.h:

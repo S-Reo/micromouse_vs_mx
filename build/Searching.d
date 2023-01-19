@@ -1,5 +1,6 @@
 build/Searching.o: Core/Src/Origin/Searching.c \
- Core/Inc/Origin/Searching.h Core/Inc/Origin/MicroMouse.h Core/Inc/main.h \
+ Core/Inc/Origin/Searching.h Core/Inc/Origin/Searching.h \
+ Core/Inc/Origin/MicroMouse.h Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -31,9 +32,10 @@ build/Searching.o: Core/Src/Origin/Searching.c \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  Core/Inc/Origin/MazeLib.h Core/Inc/Origin/Action.h \
- Core/Inc/Origin/MicroMouse.h Core/Inc/Origin/MazeLib.h \
+ Core/Inc/Origin/MazeLib.h Core/Inc/Origin/MicroMouse.h \
  Core/Inc/Origin/Action.h Core/Inc/Tools/PID_Control.h \
  Core/Inc/Hw/LED_Driver.h Core/Inc/dfs.h
+Core/Inc/Origin/Searching.h:
 Core/Inc/Origin/Searching.h:
 Core/Inc/Origin/MicroMouse.h:
 Core/Inc/main.h:
@@ -71,8 +73,8 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 Core/Inc/Origin/MazeLib.h:
 Core/Inc/Origin/Action.h:
-Core/Inc/Origin/MicroMouse.h:
 Core/Inc/Origin/MazeLib.h:
+Core/Inc/Origin/MicroMouse.h:
 Core/Inc/Origin/Action.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/Hw/LED_Driver.h:

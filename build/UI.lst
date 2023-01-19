@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
   30              		.loc 1 26 47 view -0
   31              		.cfi_startproc
   32              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 2
 
 
   33              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
   75              	.LVL1:
   76              	.LFB239:
   35:Core/Src/Tools/UI.c **** //エンコーダはモード選択時には直で取得しちゃってよいので引数にしな�
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 3
 
 
   36:Core/Src/Tools/UI.c **** //float Photo[4];
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  118 0020 0134     		adds	r4, r4, #1
  119              	.LVL8:
  120              	.L7:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 4
 
 
   41:Core/Src/Tools/UI.c **** 	{
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  164 0006 9FED101A 		vldr.32	s2, .L12
  165 000a DFED100A 		vldr.32	s1, .L12+4
  166 000e B0EE080A 		vmov.f32	s0, #3.0e+0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 5
 
 
  167 0012 FFF7FEFF 		bl	ADCToBatteryVoltage
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  213 0048 00008045 		.word	1166016512
  214 004c 33335340 		.word	1079194419
  215 0050 66660641 		.word	1090938470
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 6
 
 
  216 0054 6666E640 		.word	1088841318
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
   76:Core/Src/Tools/UI.c **** 	{
   77:Core/Src/Tools/UI.c **** 		printf("adc2[1] : %lu\r\n", adc2[1]);
  258              		.loc 1 77 3 is_stmt 1 view .LVU49
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 7
 
 
  259 0016 0C48     		ldr	r0, .L18+12
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
   85:Core/Src/Tools/UI.c **** void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
   86:Core/Src/Tools/UI.c **** {
  305              		.loc 1 86 1 is_stmt 1 view -0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 8
 
 
  306              		.cfi_startproc
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  347 0020 264B     		ldr	r3, .L34+4
  348 0022 47F22F52 		movw	r2, #29999
  349 0026 5A62     		str	r2, [r3, #36]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 9
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 9
 
 
  100:Core/Src/Tools/UI.c **** 	gpio_callback_count = 0;
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  102:Core/Src/Tools/UI.c **** 	{
  382              		.loc 1 102 7 view .LVU79
  383 0052 1BBB     		cbnz	r3, .L33
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 10
 
 
  106:Core/Src/Tools/UI.c **** 
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  124:Core/Src/Tools/UI.c **** 		  	  		  *pMode = max;
  423              		.loc 1 124 12 is_stmt 1 view .LVU95
  424              		.loc 1 124 19 is_stmt 0 view .LVU96
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 11
 
 
  425 0088 2570     		strb	r5, [r4]
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  470              		.cfi_endproc
  471              	.LFE242:
  473              		.section	.text.EmergencyStop,"ax",%progbits
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 12
 
 
  474              		.align	1
@@ -708,31 +708,31 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 1
  516              		.file 16 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
  517              		.file 17 "Core/Inc/Tools/Convert.h"
  518              		.file 18 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s 			page 13
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 UI.c
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:20     .text.HAL_GPIO_EXTI_Callback:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:26     .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:63     .text.HAL_GPIO_EXTI_Callback:0000001c $d
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:68     .text.Signal:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:74     .text.Signal:00000000 Signal
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:133    .rodata.BatteryCheck.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:137    .text.BatteryCheck:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:143    .text.BatteryCheck:00000000 BatteryCheck
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:213    .text.BatteryCheck:00000048 $d
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:222    .rodata.PhotoSwitch.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:226    .text.PhotoSwitch:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:232    .text.PhotoSwitch:00000000 PhotoSwitch
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:288    .text.PhotoSwitch:0000003c $d
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:296    .text.ModeSelect:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:302    .text.ModeSelect:00000000 ModeSelect
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:465    .text.ModeSelect:000000b8 $d
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:474    .text.EmergencyStop:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:480    .text.EmergencyStop:00000000 EmergencyStop
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:498    .bss.gpio_callback_count:00000000 gpio_callback_count
-C:\Users\leopi\AppData\Local\Temp\ccRqgc3M.s:494    .bss.gpio_callback_count:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:20     .text.HAL_GPIO_EXTI_Callback:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:26     .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:63     .text.HAL_GPIO_EXTI_Callback:0000001c $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:68     .text.Signal:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:74     .text.Signal:00000000 Signal
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:133    .rodata.BatteryCheck.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:137    .text.BatteryCheck:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:143    .text.BatteryCheck:00000000 BatteryCheck
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:213    .text.BatteryCheck:00000048 $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:222    .rodata.PhotoSwitch.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:226    .text.PhotoSwitch:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:232    .text.PhotoSwitch:00000000 PhotoSwitch
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:288    .text.PhotoSwitch:0000003c $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:296    .text.ModeSelect:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:302    .text.ModeSelect:00000000 ModeSelect
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:465    .text.ModeSelect:000000b8 $d
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:474    .text.EmergencyStop:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:480    .text.EmergencyStop:00000000 EmergencyStop
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:498    .bss.gpio_callback_count:00000000 gpio_callback_count
+C:\Users\leopi\AppData\Local\Temp\ccdJ9iyo.s:494    .bss.gpio_callback_count:00000000 $d
 
 UNDEFINED SYMBOLS
 ChangeLED
