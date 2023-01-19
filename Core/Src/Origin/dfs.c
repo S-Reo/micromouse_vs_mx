@@ -10,6 +10,9 @@
 
 #include "dfs.h"
 #include "stdbool.h"
+// DFS深さ優先探索は、行き止まり、既存のマス、につくまで周囲のマスを積み上げながら進む。止まったら、上に積んであるマスに向かう
+// スタックを積む、取り出す機能の提供
+// 積むときは、周囲のノードを順番に。重複を避けて積むか、取り出しで弾くか
 
 //node *nd_stack[STACK_NUM]={0};
 position mass_stack[STACK_NUM]={0};

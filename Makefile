@@ -61,7 +61,7 @@ Core/Src/Origin/MazeSimulation.c \
 Core/Src/Origin/MicroMouse.c \
 Core/Src/Origin/Mode.c \
 Core/Src/Origin/Record.c \
-Core/Src/Origin/Search.c \
+Core/Src/Origin/Searching.c \
 Core/Src/Origin/test.c \
 Core/Src/gpio.c \
 Core/Src/adc.c \
@@ -148,6 +148,9 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/Inc/Origin \
+-ICore/Inc/Hw \
+-ICore/Inc/Tools \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \

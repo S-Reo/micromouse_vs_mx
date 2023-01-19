@@ -271,7 +271,6 @@ int main(void)
 	  default :
 		  break;
 	  }
-	  //再�???��?��モード選??��?��?
 	  printf("トップモード選択\r\n");
 		ModeSelect(0, 7, &startup_mode);
 		Signal( startup_mode );

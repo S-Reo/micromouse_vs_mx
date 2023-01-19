@@ -6,6 +6,10 @@
  */
 
 #include <MicroMouse.h>
+// ハードウェアと機体の状態の橋渡し。ハードウェア構成に依存するので、MicroMouseとしている
+// センサ値、センサから得る今の状態
+// Flashにログを残す処理は担うか否か
+// パラメータテーブル
 
 #include "IEH2_4096.h"
 #include "mouse_ADC.h"

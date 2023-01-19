@@ -1,3 +1,4 @@
-build/dfs.o: Core/Src/Origin/dfs.c Core/Inc/dfs.h Core/Inc/MazeLib.h
+build/dfs.o: Core/Src/Origin/dfs.c Core/Inc/dfs.h \
+ Core/Inc/Origin/MazeLib.h
 Core/Inc/dfs.h:
-Core/Inc/MazeLib.h:
+Core/Inc/Origin/MazeLib.h:

@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
   28:Core/Src/Origin/MazeSimulation.c ****         break;
   29:Core/Src/Origin/MazeSimulation.c ****     case west:
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][(st->pos.y)+1].existence;    //北
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 2
 
 
   31:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
   61              		.loc 1 52 9 is_stmt 1 view .LVU10
   62              		.loc 1 52 50 is_stmt 0 view .LVU11
   63 002e 00EBC303 		add	r3, r0, r3, lsl #3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 3
 
 
   64 0032 83F804E0 		strb	lr, [r3, #4]
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
   74:Core/Src/Origin/MazeSimulation.c ****     {
   75:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].existence = true;
   76:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 4
 
 
   77:Core/Src/Origin/MazeSimulation.c ****         value -= 2;
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
   97:Core/Src/Origin/MazeSimulation.c ****     //最終的にvalue_16が0ならOk
   98:Core/Src/Origin/MazeSimulation.c ****     return (value == 0) ? true : false;
  131              		.loc 1 98 5 is_stmt 1 view .LVU38
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 5
 
 
   99:Core/Src/Origin/MazeSimulation.c **** }
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  173              		.loc 1 75 57 view .LVU52
  174 00da 02EB0313 		add	r3, r2, r3, lsl #4
  175 00de 03F58873 		add	r3, r3, #272
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 6
 
 
  176 00e2 4FF0010E 		mov	lr, #1
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  217              		.align	1
  218              		.global	convert16ValueToWallDirection_Simulation
  219              		.syntax unified
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 7
 
 
  220              		.thumb
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  263 002a 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
  264              		.loc 1 13 63 view .LVU79
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 8
 
 
  265 002c 03F1010C 		add	ip, r3, #1
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  302              		.loc 1 18 71 view .LVU96
  303 0062 0CF1010C 		add	ip, ip, #1
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 9
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 9
 
 
  304              		.loc 1 18 74 view .LVU97
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  342              	.LVL25:
   22:Core/Src/Origin/MazeSimulation.c ****     case south:
  343              		.loc 1 22 9 view .LVU114
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 10
 
 
  344 009e 7047     		bx	lr
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  381 00d2 03EB0C13 		add	r3, r3, ip, lsl #4
  382 00d6 03F58873 		add	r3, r3, #272
  383 00da 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 11
 
 
   27:Core/Src/Origin/MazeSimulation.c ****         break;
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  421 010e D370     		strb	r3, [r2, #3]
   33:Core/Src/Origin/MazeSimulation.c ****         break;
  422              		.loc 1 33 9 is_stmt 1 view .LVU149
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 12
 
 
   33:Core/Src/Origin/MazeSimulation.c ****         break;
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  456      85E5A0B1 
  456      E381B8E3 
  456      81
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 13
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 13
 
 
  457 0043 AEE5A489 		.ascii	"\256\345\244\211\346\217\233\343\201\256\346\210\220"
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  501 000c 15E0     		b	.L22
  502              	.LVL35:
  503              	.L23:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 14
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 14
 
 
  504              	.LBB3:
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  546              	.LVL42:
  547              	.L22:
  106:Core/Src/Origin/MazeSimulation.c ****     {
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 15
 
 
  548              		.loc 1 106 38 is_stmt 1 discriminator 1 view .LVU182
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  589 0031 000000   		.align	2
  590              	.LC7:
  591 0034 25686875 		.ascii	"%hhu,\000"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 16
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 16
 
 
  591      2C00
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  638              		.loc 1 127 16 is_stmt 0 view .LVU196
  639 001c 2149     		ldr	r1, .L44+8
  640 001e 2046     		mov	r0, r4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 17
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 17
 
 
  641 0020 FFF7FEFF 		bl	fopen
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  682              	.L38:
  683              		.loc 1 137 22 is_stmt 1 discriminator 1 view .LVU211
  684              		.loc 1 137 9 is_stmt 0 discriminator 1 view .LVU212
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 18
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 18
 
 
  685 0048 0F2D     		cmp	r5, #15
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  135:Core/Src/Origin/MazeSimulation.c ****     {
  729              		.loc 1 135 5 is_stmt 0 discriminator 1 view .LVU225
  730 008a 002F     		cmp	r7, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 19
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 19
 
 
  731 008c 01DB     		blt	.L43
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  777              		.cfi_startproc
  778              		@ args = 0, pretend = 0, frame = 0
  779              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 20
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 20
 
 
  780              		@ link register save eliminated.
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  820              		.set	.LANCHOR0,. + 0
  823              	FILE_NAME:
  824 0000 2F6D6E74 		.ascii	"/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 21
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 21
 
 
  824      2F632F55 
@@ -1221,34 +1221,34 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 1
  832              		.file 5 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\reent.h"
  833              		.file 6 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\lock.h"
  834              		.file 7 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
- 835              		.file 8 "Core/Inc/MazeLib.h"
- 836              		.file 9 "Core/Inc/MazeSimulation.h"
+ 835              		.file 8 "Core/Inc/Origin/MazeLib.h"
+ 836              		.file 9 "Core/Inc/Origin/MazeSimulation.h"
  837              		.file 10 "<built-in>"
  838              		.file 11 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\string.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s 			page 22
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s 			page 22
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 MazeSimulation.c
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:20     .text.convert16ValueToNode:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:25     .text.convert16ValueToNode:00000000 convert16ValueToNode
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:217    .text.convert16ValueToWallDirection_Simulation:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:223    .text.convert16ValueToWallDirection_Simulation:00000000 convert16ValueToWallDirection_Simulation
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:239    .text.convert16ValueToWallDirection_Simulation:0000000c $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:450    .rodata.getNodeFrom16Value_Simulation.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:466    .text.getNodeFrom16Value_Simulation:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:472    .text.getNodeFrom16Value_Simulation:00000000 getNodeFrom16Value_Simulation
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:570    .text.getNodeFrom16Value_Simulation:0000004c $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:577    .rodata.getFileData.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:596    .text.getFileData:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:602    .text.getFileData:00000000 getFileData
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:755    .text.getFileData:0000009c $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:767    .text.getWallDirection:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:773    .text.getWallDirection:00000000 getWallDirection
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:823    .data.FILE_NAME:00000000 FILE_NAME
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:819    .data.FILE_NAME:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:246    .text.convert16ValueToWallDirection_Simulation:00000013 $d
-C:\Users\leopi\AppData\Local\Temp\cchuYdO6.s:246    .text.convert16ValueToWallDirection_Simulation:00000014 $t
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:20     .text.convert16ValueToNode:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:25     .text.convert16ValueToNode:00000000 convert16ValueToNode
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:217    .text.convert16ValueToWallDirection_Simulation:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:223    .text.convert16ValueToWallDirection_Simulation:00000000 convert16ValueToWallDirection_Simulation
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:239    .text.convert16ValueToWallDirection_Simulation:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:450    .rodata.getNodeFrom16Value_Simulation.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:466    .text.getNodeFrom16Value_Simulation:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:472    .text.getNodeFrom16Value_Simulation:00000000 getNodeFrom16Value_Simulation
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:570    .text.getNodeFrom16Value_Simulation:0000004c $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:577    .rodata.getFileData.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:596    .text.getFileData:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:602    .text.getFileData:00000000 getFileData
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:755    .text.getFileData:0000009c $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:767    .text.getWallDirection:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:773    .text.getWallDirection:00000000 getWallDirection
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:823    .data.FILE_NAME:00000000 FILE_NAME
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:819    .data.FILE_NAME:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:246    .text.convert16ValueToWallDirection_Simulation:00000013 $d
+C:\Users\leopi\AppData\Local\Temp\ccv3HNsk.s:246    .text.convert16ValueToWallDirection_Simulation:00000014 $t
 
 UNDEFINED SYMBOLS
 puts

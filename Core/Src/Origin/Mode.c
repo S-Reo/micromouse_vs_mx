@@ -26,7 +26,7 @@
 #include "Action.h"
 #include "MazeLib.h"
 //#include "test.h"
-#include "Search.h"
+#include "Searching.h"
 #include "Record.h"
 #include "dfs.h"
 #include <main.h>

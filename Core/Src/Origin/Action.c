@@ -21,7 +21,7 @@
 #include "IR_Emitter.h"
 #include "MazeLib.h"
 //#include "test.h"
-#include "Search.h"
+#include "Searching.h"
 #include <stdbool.h>
 const float TO_PULSE = 2/MM_PER_PULSE;
 #define WALL_CUT_VAL 34

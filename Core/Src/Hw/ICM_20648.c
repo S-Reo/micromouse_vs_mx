@@ -67,25 +67,17 @@ inline float ReadIMU(uint8_t a, uint8_t b) {
 	float res;
 	ret1 = ret[0] | 0x80;
 	ret2 = ret[1] | 0x80;
-//	reg[0] = 0x37;
-//	reg[1] = 0x38;
-//
-//	ret = reg[0] | 0x80;
 	CS_RESET;
 	HAL_SPI_Transmit(&hspi3,&ret1,1,100);
 	HAL_SPI_Receive(&hspi3,&val1,1,100);
 	CS_SET;
 
-//	ret = reg[1] | 0x80;
 	CS_RESET;
 	HAL_SPI_Transmit(&hspi3,&ret2,1,100);
 	HAL_SPI_Receive(&hspi3,&val2,1,100);
 	CS_SET;
 	law_data = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );//何で8bitシフトかというと、ローバイトとハイバイトにわかれているものを一つにしたいから。16bitADCで得た値を二つに分けて出力しているのを元に戻す。
 	res = (float)law_data;
-	//1回の取得は0.2msだった
-	//値の更新は4回分で0.8ms = 1.25kHz . 656250Bit/s 1回で131.25bit, 4回で525Bit=65.625byte
-	//値の取得は1msが妥当。2台目のエンコーダではどれくらいがいいか。as5047Pは4.5MHz
 	return res;
 }
 
@@ -130,8 +122,6 @@ int16_t median_filter(int16_t *new_data) //中身変更しないが、値のコ�
 //	sorted[3] = filter[3];
 //	sorted[4] = filter[4];
 #endif
-
-
 	//ソートする
 	qsort(sorted, sizeof(sorted) / sizeof(sorted[0]), sizeof(int16_t),compare_num);
 	//qsort(sorted, sizeof(sorted) / sizeof(sorted[0]), sizeof(int),compare_num);
@@ -141,7 +131,6 @@ int16_t median_filter(int16_t *new_data) //中身変更しないが、値のコ�
 //割込み内で呼ぶセット
 void Update_IMU(float *angv, float *angle )
 {
-#if 1
 	uint8_t ret1, ret2,val1,val2;
 		uint8_t ret[2] = {
 				0x37,
@@ -169,19 +158,6 @@ void Update_IMU(float *angv, float *angle )
 		ZGFilterd = zg_median;
 		ZGyro = (float)zg_median * convert_to_imu_angv;
 
-		//2000回目で0.17 どちらも同じオフセット
-//		ZGFilterd = law_data;
-//		ZGyro = (float)law_data * convert_to_imu_angv;
-
-		//ZGyro = (float)law_data * convert_to_imu_angv;
-
-//		//ローパス
-//		float filterd=0;
-//		static float zg_last=0;
-//		filterd = ((0.01*ZGyro) + (0.99)* (zg_last));
-//		zg_last = filterd;
-//		*angv = -filterd;
-//		*angle += *angv * 0.001 - 0.000001600600000;
 #if 0
 		*angv = -((0.01*ZGyro) + (0.99)* (zg_last));
 		zg_last = ZGyro;
@@ -192,53 +168,6 @@ void Update_IMU(float *angv, float *angle )
 
 		//Angle;
 		*angle += *angv * 0.001  - 0.000001784;//- 0.0000018432; //角度 rad
-#endif
-#else
-	uint8_t ret1, ret2,val1,val2;
-		uint8_t ret[2] = {
-				0x37,
-				0x38,
-		};
-		int16_t law_data;
-		float res;
-		ret1 = ret[0] | 0x80;
-		ret2 = ret[1] | 0x80;
-		CS_RESET;
-		HAL_SPI_Transmit(&hspi3,&ret1,1,100);
-		HAL_SPI_Receive(&hspi3,&val1,1,100);
-		CS_SET;
-
-		CS_RESET;
-		HAL_SPI_Transmit(&hspi3,&ret2,1,100);
-		HAL_SPI_Receive(&hspi3,&val2,1,100);
-		CS_SET;
-		law_data = ( ((uint16_t)val1 << 8) | ((uint16_t)val2) );
-#if 0
-		static int cnt =1;
-		if(cnt  == 10)
-		{
-			plot_angle += (int)law_data + 20;//完全停止状態で、30sで-50000ズレる. 1msあたり1.7
-			cnt = 0;
-		}
-		else plot_angle += (int)law_data;
-		cnt ++;
-#else
-		plot_angle += (int)law_data;
-
-#endif
-	static int16_t zg_last=0;
-	int16_t zg_law;
-	//uint8_t zgb,zgf;
-//	ZGyro = ReadIMU(0x37, 0x38);
-	//zg_law = law_data*convert_to_imu_angv;
-	//zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
-	//AngularV ;
-	zg_law = law_data;
-	*angv = (float)-((1*zg_law) + (99)* (zg_last));
-	//*angv = -((0.01*zg_law) + (0.99)* (zg_last));
-	zg_last = zg_law;
-	//Angle;
-	*angle += *angv *0.001;
 #endif
 }
 

@@ -1,2 +1,2 @@
-build/MazeLib.o: Core/Src/Origin/MazeLib.c Core/Inc/MazeLib.h
-Core/Inc/MazeLib.h:
+build/MazeLib.o: Core/Src/Origin/MazeLib.c Core/Inc/Origin/MazeLib.h
+Core/Inc/Origin/MazeLib.h:

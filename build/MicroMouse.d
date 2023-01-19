@@ -1,5 +1,6 @@
-build/MicroMouse.o: Core/Src/Origin/MicroMouse.c Core/Inc/MicroMouse.h \
- Core/Inc/main.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+build/MicroMouse.o: Core/Src/Origin/MicroMouse.c \
+ Core/Inc/Origin/MicroMouse.h Core/Inc/main.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -28,11 +29,12 @@ build/MicroMouse.o: Core/Src/Origin/MicroMouse.c Core/Inc/MicroMouse.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h Core/Inc/MazeLib.h \
- Core/Inc/IEH2_4096.h Core/Inc/mouse_ADC.h Core/Inc/LED_Driver.h \
- Core/Inc/IR_Emitter.h Core/Inc/Motor_Driver.h Core/Inc/PID_Control.h \
- Core/Inc/Convert.h
-Core/Inc/MicroMouse.h:
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Core/Inc/Origin/MazeLib.h Core/Inc/Hw/IEH2_4096.h \
+ Core/Inc/Hw/mouse_ADC.h Core/Inc/Hw/LED_Driver.h \
+ Core/Inc/Hw/IR_Emitter.h Core/Inc/Hw/Motor_Driver.h \
+ Core/Inc/Tools/PID_Control.h Core/Inc/Tools/Convert.h
+Core/Inc/Origin/MicroMouse.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -66,11 +68,11 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-Core/Inc/MazeLib.h:
-Core/Inc/IEH2_4096.h:
-Core/Inc/mouse_ADC.h:
-Core/Inc/LED_Driver.h:
-Core/Inc/IR_Emitter.h:
-Core/Inc/Motor_Driver.h:
-Core/Inc/PID_Control.h:
-Core/Inc/Convert.h:
+Core/Inc/Origin/MazeLib.h:
+Core/Inc/Hw/IEH2_4096.h:
+Core/Inc/Hw/mouse_ADC.h:
+Core/Inc/Hw/LED_Driver.h:
+Core/Inc/Hw/IR_Emitter.h:
+Core/Inc/Hw/Motor_Driver.h:
+Core/Inc/Tools/PID_Control.h:
+Core/Inc/Tools/Convert.h:

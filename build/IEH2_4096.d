@@ -1,4 +1,4 @@
-build/IEH2_4096.o: Core/Src/Hw/IEH2_4096.c Core/Inc/IEH2_4096.h \
+build/IEH2_4096.o: Core/Src/Hw/IEH2_4096.c Core/Inc/Hw/IEH2_4096.h \
  Core/Inc/main.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -29,8 +29,8 @@ build/IEH2_4096.o: Core/Src/Hw/IEH2_4096.c Core/Inc/IEH2_4096.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Inc/tim_info.h
-Core/Inc/IEH2_4096.h:
+ Core/Inc/Tools/tim_info.h
+Core/Inc/Hw/IEH2_4096.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -64,4 +64,4 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-Core/Inc/tim_info.h:
+Core/Inc/Tools/tim_info.h:

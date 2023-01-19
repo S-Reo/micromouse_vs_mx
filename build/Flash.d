@@ -1,4 +1,4 @@
-build/Flash.o: Core/Src/Hw/Flash.c Core/Inc/Flash.h Core/Inc/main.h \
+build/Flash.o: Core/Src/Hw/Flash.c Core/Inc/Hw/Flash.h Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -29,7 +29,7 @@ build/Flash.o: Core/Src/Hw/Flash.c Core/Inc/Flash.h Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-Core/Inc/Flash.h:
+Core/Inc/Hw/Flash.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
