@@ -8,7 +8,7 @@
 #ifndef INC_UI_H_
 #define INC_UI_H_
 
-#include <main.h>
+// #include <main.h>
 
 //led gpio設定
 //enc timer設定

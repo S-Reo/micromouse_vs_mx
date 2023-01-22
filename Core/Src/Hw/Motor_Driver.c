@@ -58,8 +58,8 @@ inline void Motor_Switch(int left, int right){
 	}
 
 	//上限はマクロで設定
-	if(left > 4200*0.6) left = 4200*0.6;
-	if(right > 4200*0.6) right = 4200*0.6;
+	if(left > OUTPUT_MAX) left = OUTPUT_MAX;
+	if(right > OUTPUT_MAX) right = OUTPUT_MAX;
 
 
 	  __HAL_TIM_SET_COMPARE(&htim5, TIM_CHANNEL_2, right); //tim5ch2が右

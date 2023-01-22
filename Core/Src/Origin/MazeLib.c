@@ -1,4 +1,4 @@
-#include "MazeLib.h"
+#include "../../Inc/Origin/MazeLib.h"
 //迷路データを管理する機能を担う(探索者ファイルと分ける必要がある)
 // 初期化
 // 表示
@@ -1845,4 +1845,20 @@ void getNextWallVirtual(maze_node *maze, profile *mouse, uint8_t next_x, uint8_t
 	mouse->next.wall.east = maze->ColumnNode[next_x+1][next_y].existence;//東
 	mouse->next.wall.south = maze->RawNode[next_x][next_y].existence;//南
 	mouse->next.wall.west = maze->ColumnNode[next_x][next_y].existence;//西
+}
+
+
+void initSearchData(maze_node *my_maze, profile *Mouse)
+{
+    initMaze(my_maze);
+    initWeight(my_maze); //3/20ms
+    //状態の初期化
+    initProfile(Mouse, my_maze);
+
+    Mouse->now.node = &(my_maze->RawNode[0][0]);
+    Mouse->next.node = &(my_maze->RawNode[0][1]);
+
+    //スタート座標にいる状態で、現在の重みを更新
+     updateAllNodeWeight(my_maze, Mouse->goal_lesser.x, Mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
+//     updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
 }

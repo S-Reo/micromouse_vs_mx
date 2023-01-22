@@ -21,6 +21,7 @@
 #include "PID_Control.h"
 #include "Convert.h"
 #include "Debug.h"
+#include "Sampling.h"
 
 #include "Interrupt.h"
 #include "Action.h"
@@ -41,54 +42,22 @@ void Debug()
 	//モード選択でデバッグ対象を選択（個別デバッグは各ソースで記述？）
 	int8_t mode=0;
 	ModeSelect(0,7,&mode);
+	Signal(mode);
 	switch (mode)
 	{
 	case 0:
 		//ターンのデバッグ. デバッグというかテストと同じ概念な気がする
 		break;
-	
+	case 1:
+		HAL_Delay(2000);
+		ChangeLED(mode);		
+		printPhotoSampleValue();
+		ChangeLED(0);
+		break;
 	default:
 		break;
 	}
-	//テストする
-	InitExplore();
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[BODY] = 0;
 
-	PIDChangeFlag(L_VELO_PID, 1);
-	PIDChangeFlag(R_VELO_PID, 1);
-	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
-	//PIDChangeFlagStraight(N_WALL_PID);
-	PIDChangeFlag(D_WALL_PID, 0);
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(A_VELO_PID, 1);
-	ExploreVelocity=0;
-	ChangeLED(3);
-	//HAL_Delay(500);
-
-	//IT_mode = WRITINGFREE;
-	IT_mode = EXPLORE;
-
-	
-	// //直線距離の計測
-	// //加減速
-	// FastStraight(0.5, (61.5+90*7)/90, 1.00, -1.00/*2.89, -2.89*/, 240, 0);
-
-	// 45度ターンなど試す
-	ExploreVelocity=300;
-	setFastDiagonalParam(0);
-		Accel(61.5-45, ExploreVelocity, &my_map, &my_mouse);
-		// SlalomFastRight(&fast45);
-		SlalomFastRight(&fast90);
-		PIDChangeFlag(A_VELO_PID, 0);
-		// Decel(45, 0);
-	while(1){
-		PIDChangeFlag(L_VELO_PID, 0);
-		PIDChangeFlag(R_VELO_PID, 0);
-		PIDChangeFlag(A_VELO_PID, 0);
-	}
 }
 void ParameterSetting()
 {
@@ -179,10 +148,8 @@ void GainTest(){
 	// モード選択
 	// 共通部分の実行
 	IT_mode = EXPLORE;
-	InitExplore();
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[BODY] = 0;
+	MouseInit();
+
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	// モード毎の処理
@@ -196,8 +163,9 @@ void GainTest(){
 	while(1)
 	{
 		TargetVelocity[BODY] = 0;
+		float a=10.56;
 		//printf("%f, %f\r\n", AngularV, Angle);
-		// printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SR]);
+		printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f, a: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SIDE_R], a);
 	}
 }
 
@@ -206,7 +174,7 @@ void WritingFree()
 	IT_mode = WRITINGFREE;
 
 	dbc = 0;
-	InitExplore();
+	MouseInit();
 
 	printf("3\r\n");
 

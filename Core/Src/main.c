@@ -88,7 +88,14 @@ extern void TIM5Init();
 /* USER CODE BEGIN 0 */
 
 /*---- DEFINING FUNCTION ----*/
-
+uint8_t buf[1]={0};
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+  HAL_UART_Transmit_IT(&huart1, (uint8_t*)buf, sizeof(buf)/sizeof(buf[0]));
+	HAL_UART_Receive_IT(&huart1, (uint8_t*)buf, sizeof(buf)/sizeof(buf[0]));
+  //受信したらマップの配列にうまく変換する処理をすればいい
+  
+  buf[0] += 1;
+}
 /*---- DEFINING FUNCTION END----*/
 
 /* USER CODE END 0 */
@@ -151,7 +158,7 @@ int main(void)
   MX_TIM8_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Receive_IT(&huart1, (uint8_t*)buf, sizeof(buf)/sizeof(buf[0]));
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -159,6 +166,8 @@ int main(void)
 
 //  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001); //今まで
 //  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+  
+  // 20kHzのゲイン
   PIDSetGain(L_VELO_PID, 16.35,5000,0);
   PIDSetGain(R_VELO_PID, 16.35,5000,0);
 
@@ -167,6 +176,20 @@ int main(void)
   PIDSetGain(D_WALL_PID, 6,1,0);//8,2,0);//8, 4,0);//6, 0,0);
   PIDSetGain(L_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
   PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
+
+  //100kHzのゲイン??��?��カウンタ840
+  // PIDSetGain(L_VELO_PID, 3.3,1000,0);
+  // PIDSetGain(R_VELO_PID, 3.3,1000,0);
+
+  // PIDSetGain(A_VELO_PID, 7.7, 18, 0); //42 //P=14.6
+  // PIDSetGain(F_WALL_PID, 14.6*2.5,0, 0);
+  // PIDSetGain(D_WALL_PID, 6,1,0);//8,2,0);//8, 4,0);//6, 0,0);
+  // PIDSetGain(L_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  // PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  // while(1){
+  //   printf("ok! buf: %u\r\n", buf[0]);
+  //   HAL_Delay(1000);
+  // }
   while (1)
   {
 	  switch( startup_mode )
@@ -188,10 +211,10 @@ int main(void)
 		  FastestRun();
 		  break;
 	  case IMU_TEST:
-//		  TestIMU();
+		  TestIMU();
 		  break;
 	  case EXPLORE:
-//		  FlashWriteTest();
+//		  FlashWriteTe87y st();
 		  Explore();
 		  break;
 	  case WRITINGFREE:

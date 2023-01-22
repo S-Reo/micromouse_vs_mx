@@ -34,8 +34,7 @@ build/Action.o: Core/Src/Origin/Action.c Core/Inc/Origin/Action.h \
  Core/Inc/Origin/MicroMouse.h Core/Inc/Hw/ICM_20648.h Core/Inc/Tools/UI.h \
  Core/Inc/Origin/Interrupt.h Core/Inc/Hw/Motor_Driver.h \
  Core/Inc/Hw/IR_Emitter.h Core/Inc/Origin/MazeLib.h \
- Core/Inc/Origin/Searching.h Core/Inc/Origin/Searching.h \
- Core/Inc/Origin/Action.h
+ Core/Inc/Origin/Searching.h
 Core/Inc/Origin/Action.h:
 Core/Inc/Origin/MazeLib.h:
 Core/Inc/Origin/MicroMouse.h:
@@ -82,5 +81,3 @@ Core/Inc/Hw/Motor_Driver.h:
 Core/Inc/Hw/IR_Emitter.h:
 Core/Inc/Origin/MazeLib.h:
 Core/Inc/Origin/Searching.h:
-Core/Inc/Origin/Searching.h:
-Core/Inc/Origin/Action.h:

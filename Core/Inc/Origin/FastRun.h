@@ -13,15 +13,14 @@ typedef struct {
 extern Path FastPath[16*16];
 extern int Num_Nodes;
 
-void setFastParam(int n);
+// void setFastParam(int n);
 void setFastDiagonalParam(int n);
-void MaxParaRunTest(maze_node *, profile *);
-void DiagonalRunTest();
+
 extern slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
-void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed);
 
 void FindUnwantedSquares(maze_node *maze);
 
 void getPathNode(maze_node *maze, profile *mouse);
 void getPathAction(profile *mouse);
+void printPathAction();
 void getPathActionDiagonal(profile *mouse);

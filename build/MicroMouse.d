@@ -33,6 +33,7 @@ build/MicroMouse.o: Core/Src/Origin/MicroMouse.c \
  Core/Inc/Origin/MazeLib.h Core/Inc/Hw/IEH2_4096.h \
  Core/Inc/Hw/mouse_ADC.h Core/Inc/Hw/LED_Driver.h \
  Core/Inc/Hw/IR_Emitter.h Core/Inc/Hw/Motor_Driver.h \
+ Core/Inc/Hw/ICM_20648.h Core/Inc/Origin/Interrupt.h \
  Core/Inc/Tools/PID_Control.h Core/Inc/Tools/Convert.h
 Core/Inc/Origin/MicroMouse.h:
 Core/Inc/main.h:
@@ -74,5 +75,7 @@ Core/Inc/Hw/mouse_ADC.h:
 Core/Inc/Hw/LED_Driver.h:
 Core/Inc/Hw/IR_Emitter.h:
 Core/Inc/Hw/Motor_Driver.h:
+Core/Inc/Hw/ICM_20648.h:
+Core/Inc/Origin/Interrupt.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/Tools/Convert.h:

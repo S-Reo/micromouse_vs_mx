@@ -61,9 +61,15 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
+/*RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
 CCMRAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 64K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 1024K
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 1024K */
+  CCMRAM    (xrw)    : ORIGIN = 0x10000000,   LENGTH = 64K
+  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
+  FLASH_SECTOR0 (rx) : ORIGIN = 0x08000000, LENGTH = 16K
+  MAP_MEMORY    (rx) : ORIGIN = 0x08004000, LENGTH = 16K	/*1*/
+  FLASH (rx)         : ORIGIN = 0x08008000, LENGTH = 224K	/*2~5*/
+  RUN_LOG (rx)       : ORIGIN = 0x08040000,  LENGTH = 768K	/*6~11*/ 
 }
 
 /* Define output sections */
@@ -75,8 +81,17 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
-
+  } >FLASH_SECTOR0
+  .backup_flash :
+  {
+      _backup_flash_start = .;
+      . = . + LENGTH(MAP_MEMORY);
+  } >MAP_MEMORY
+  .backup_flash_run :
+  {
+      _backup_flash_start_run = .;
+      . = . + LENGTH(RUN_LOG);
+  } >RUN_LOG
   /* The program code and other data goes into FLASH */
   .text :
   {

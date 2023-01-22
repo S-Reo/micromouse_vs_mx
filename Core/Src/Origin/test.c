@@ -3,9 +3,11 @@
 #include <stdint-gcc.h>
 
 
-#include "test.h"
-#include "MazeLib.h"
-#include "PID_Control.h"
+#include "../../Inc/Origin/test.h"
+#include "../../Inc/Origin/MazeLib.h"
+// #include "../../Inc/Origin/Searching.h"
+#include "../../Inc/Origin/FastRun.h"
+// #include "../../Inc/Tools/PID_Control.h"
 // シミュレーションしたいロジックが増えたら、適宜ファイルに追加
 // ベースとなるロジックはMazeLibで記述
 // test内で探索として組み、テスト
@@ -20,7 +22,7 @@
 #define SIMULATION  0
 
 #if SIMULATION
-    #include "MazeSimulation.h"
+    #include "../../Inc/Origin/MazeSimulation.h"
 simulation test;
 #endif
 
@@ -42,7 +44,7 @@ simulation test;
 //肝心の全面探索と、斜め最短が浮かばない...
 
 #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= large_x) && (less_y <= next_y && next_y <= large_y) )
-
+#if 0
 void Search(maze_node *maze, profile *mouse){   
     initSearchData(maze, mouse);//名前良くない
 //        printf("自分の迷路の初期化の確認");
@@ -210,6 +212,10 @@ void Search(maze_node *maze, profile *mouse){
     //break;
     //return true;
 }
+#endif
+
+
+#if 0
 void Fastest_Run(maze_node *maze, profile *mouse, state *route_log)
 {
     
@@ -259,8 +265,11 @@ void Fastest_Run(maze_node *maze, profile *mouse, state *route_log)
     printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",cnt, maze->RawNode[0][1].weight);
 
 }
+#endif
+
 #if SIMULATION
 //全面探索のシミュレーション
+    #if 0
 void AutoAllSearch(maze_node *maze, profile *mouse){
     //外から迷路を取得
 
@@ -350,6 +359,7 @@ void AutoAllSearch(maze_node *maze, profile *mouse){
     }
     //終了
 }
+    #endif
 
 
 static _Bool Simulation()
@@ -376,18 +386,23 @@ static _Bool Simulation()
     getNodeFrom16Value_Simulation(&test);
 
     //確認 : フォーマットOK
-    #if DEBUG_ON
+    #if DEBUG_ON == 0
         printf("仮想迷路の");
         printAllNode(&(test.virtual_maze));
         printf("仮想迷路の");
         printMatrix16ValueFromNode(&(test.virtual_maze));
         printf("仮想迷路の");
-    printAllWeight(&(test.virtual_maze));
+        position a ={1,1};
+    printAllWeight(&(test.virtual_maze),&a);
     #endif
 
 //探索開始
 profile mouse;
-#if SEARCH == 1
+maze_node maze;
+
+initSearchData(&maze, &mouse);
+updateAllNodeWeight(&maze,GOAL_X,GOAL_Y,GOAL_SIZE_X,GOAL_SIZE_Y,0x03);
+#if SEARCH == 0
    /* ここでアルゴリズムを試し書きする */
    printf("探索関数\r\n");
    maze_node maze;
@@ -406,6 +421,19 @@ profile mouse;
 
 #elif VIRTUALMAP_RUN == 0
    // //最短走行
+    // マップから経路を求める
+    printf("getPathNode実行\r\n");
+	getPathNode(&(test.virtual_maze), &mouse);
+    printf("パスノード作成\r\n");
+	// getPathAction(&my_mouse);
+	getPathActionDiagonal(&mouse);
+      printf("パスアクション作成\r\n");
+	printPathAction();
+	while(1){
+		
+		// HAL_Delay(30000);
+	}
+#if 0
 #define LOG_SIZE 300
    state route_log[LOG_SIZE]={0}; //要素。メモリが足りてない?
    printf("最短走行: 確保済みログデータサイズ: %ld\r\n", sizeof(route_log));
@@ -413,6 +441,7 @@ profile mouse;
    Fastest_Run(&test.virtual_maze,&mouse, &route_log[0]);
 
        printRoute(&route_log[0], LOG_SIZE);
+#endif
 #endif
    return true;
 

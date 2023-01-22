@@ -1,0 +1,661 @@
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Sampling.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.rodata.printAllValue_uint32.str1.4,"aMS",%progbits,1
+  20              		.align	2
+  21              	.LC0:
+  22 0000 25642C20 		.ascii	"%d, \000"
+  22      00
+  23 0005 000000   		.align	2
+  24              	.LC1:
+  25 0008 256C752C 		.ascii	"%lu, \000"
+  25      2000
+  26 000e 0000     		.align	2
+  27              	.LC2:
+  28 0010 0D00     		.ascii	"\015\000"
+  29              		.section	.text.printAllValue_uint32,"ax",%progbits
+  30              		.align	1
+  31              		.syntax unified
+  32              		.thumb
+  33              		.thumb_func
+  35              	printAllValue_uint32:
+  36              	.LFB238:
+  37              		.file 1 "Core/Src/Tools/Sampling.c"
+   1:Core/Src/Tools/Sampling.c **** 
+   2:Core/Src/Tools/Sampling.c **** 
+   3:Core/Src/Tools/Sampling.c **** #include "Sampling.h"
+   4:Core/Src/Tools/Sampling.c **** 
+   5:Core/Src/Tools/Sampling.c **** #include <stdio.h>
+   6:Core/Src/Tools/Sampling.c **** #include <stdbool.h>
+   7:Core/Src/Tools/Sampling.c **** 
+   8:Core/Src/Tools/Sampling.c **** #include "IR_Emitter.h"
+   9:Core/Src/Tools/Sampling.c **** #include "mouse_ADC.h"
+  10:Core/Src/Tools/Sampling.c **** #include "MicroMouse.h"
+  11:Core/Src/Tools/Sampling.c **** 
+  12:Core/Src/Tools/Sampling.c **** // #include "Interrupt.h"
+  13:Core/Src/Tools/Sampling.c **** /* フォトセンサの元値を数個出力=サンプリング */
+  14:Core/Src/Tools/Sampling.c **** typedef struct PhotoSample{
+  15:Core/Src/Tools/Sampling.c **** 	_Bool flag;
+  16:Core/Src/Tools/Sampling.c **** 	int count;
+  17:Core/Src/Tools/Sampling.c **** 	uint32_t val[PHOTO_NUM][SAMPLE_NUM];
+  18:Core/Src/Tools/Sampling.c **** 	float fval[PHOTO_NUM][SAMPLE_NUM];
+  19:Core/Src/Tools/Sampling.c **** }photo_sample;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 2
+
+
+  20:Core/Src/Tools/Sampling.c **** static photo_sample ps={
+  21:Core/Src/Tools/Sampling.c **** 	false,
+  22:Core/Src/Tools/Sampling.c **** 	0,
+  23:Core/Src/Tools/Sampling.c **** 	{{0}}
+  24:Core/Src/Tools/Sampling.c **** };
+  25:Core/Src/Tools/Sampling.c **** static void printAllValue_uint32(){
+  38              		.loc 1 25 35 view -0
+  39              		.cfi_startproc
+  40              		@ args = 0, pretend = 0, frame = 0
+  41              		@ frame_needed = 0, uses_anonymous_args = 0
+  42 0000 38B5     		push	{r3, r4, r5, lr}
+  43              	.LCFI0:
+  44              		.cfi_def_cfa_offset 16
+  45              		.cfi_offset 3, -16
+  46              		.cfi_offset 4, -12
+  47              		.cfi_offset 5, -8
+  48              		.cfi_offset 14, -4
+  26:Core/Src/Tools/Sampling.c **** 	for(int i=0; i < SAMPLE_NUM; i++){
+  49              		.loc 1 26 2 view .LVU1
+  50              	.LBB2:
+  51              		.loc 1 26 6 view .LVU2
+  52              	.LVL0:
+  53              		.loc 1 26 10 is_stmt 0 view .LVU3
+  54 0002 0025     		movs	r5, #0
+  55              		.loc 1 26 2 view .LVU4
+  56 0004 10E0     		b	.L2
+  57              	.LVL1:
+  58              	.L4:
+  59              	.LBB3:
+  27:Core/Src/Tools/Sampling.c **** 		printf("%d, ",i);
+  28:Core/Src/Tools/Sampling.c **** 		for(int j=0; j < PHOTO_NUM; j++){
+  29:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  60              		.loc 1 29 4 is_stmt 1 discriminator 3 view .LVU5
+  61 0006 6423     		movs	r3, #100
+  62 0008 03FB0453 		mla	r3, r3, r4, r5
+  63 000c 0233     		adds	r3, r3, #2
+  64 000e 0B4A     		ldr	r2, .L8
+  65 0010 52F82310 		ldr	r1, [r2, r3, lsl #2]
+  66 0014 0A48     		ldr	r0, .L8+4
+  67 0016 FFF7FEFF 		bl	printf
+  68              	.LVL2:
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  69              		.loc 1 28 31 discriminator 3 view .LVU6
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  70              		.loc 1 28 32 is_stmt 0 discriminator 3 view .LVU7
+  71 001a 0134     		adds	r4, r4, #1
+  72              	.LVL3:
+  73              	.L3:
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  74              		.loc 1 28 16 is_stmt 1 discriminator 1 view .LVU8
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  75              		.loc 1 28 3 is_stmt 0 discriminator 1 view .LVU9
+  76 001c 032C     		cmp	r4, #3
+  77 001e F2DD     		ble	.L4
+  78              	.LBE3:
+  30:Core/Src/Tools/Sampling.c **** 		}
+  31:Core/Src/Tools/Sampling.c **** 		printf("\r\n");
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 3
+
+
+  79              		.loc 1 31 3 is_stmt 1 discriminator 2 view .LVU10
+  80 0020 0848     		ldr	r0, .L8+8
+  81 0022 FFF7FEFF 		bl	puts
+  82              	.LVL4:
+  26:Core/Src/Tools/Sampling.c **** 		printf("%d, ",i);
+  83              		.loc 1 26 31 discriminator 2 view .LVU11
+  26:Core/Src/Tools/Sampling.c **** 		printf("%d, ",i);
+  84              		.loc 1 26 32 is_stmt 0 discriminator 2 view .LVU12
+  85 0026 0135     		adds	r5, r5, #1
+  86              	.LVL5:
+  87              	.L2:
+  26:Core/Src/Tools/Sampling.c **** 		printf("%d, ",i);
+  88              		.loc 1 26 15 is_stmt 1 discriminator 1 view .LVU13
+  26:Core/Src/Tools/Sampling.c **** 		printf("%d, ",i);
+  89              		.loc 1 26 2 is_stmt 0 discriminator 1 view .LVU14
+  90 0028 632D     		cmp	r5, #99
+  91 002a 05DC     		bgt	.L7
+  27:Core/Src/Tools/Sampling.c **** 		for(int j=0; j < PHOTO_NUM; j++){
+  92              		.loc 1 27 3 is_stmt 1 view .LVU15
+  93 002c 2946     		mov	r1, r5
+  94 002e 0648     		ldr	r0, .L8+12
+  95 0030 FFF7FEFF 		bl	printf
+  96              	.LVL6:
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  97              		.loc 1 28 3 view .LVU16
+  98              	.LBB4:
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  99              		.loc 1 28 7 view .LVU17
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+ 100              		.loc 1 28 11 is_stmt 0 view .LVU18
+ 101 0034 0024     		movs	r4, #0
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+ 102              		.loc 1 28 3 view .LVU19
+ 103 0036 F1E7     		b	.L3
+ 104              	.LVL7:
+ 105              	.L7:
+  28:Core/Src/Tools/Sampling.c **** 			printf("%lu, ",ps.val[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+ 106              		.loc 1 28 3 view .LVU20
+ 107              	.LBE4:
+ 108              	.LBE2:
+  32:Core/Src/Tools/Sampling.c **** 	}
+  33:Core/Src/Tools/Sampling.c **** }
+ 109              		.loc 1 33 1 view .LVU21
+ 110 0038 38BD     		pop	{r3, r4, r5, pc}
+ 111              	.LVL8:
+ 112              	.L9:
+ 113              		.loc 1 33 1 view .LVU22
+ 114 003a 00BF     		.align	2
+ 115              	.L8:
+ 116 003c 00000000 		.word	.LANCHOR0
+ 117 0040 08000000 		.word	.LC1
+ 118 0044 10000000 		.word	.LC2
+ 119 0048 00000000 		.word	.LC0
+ 120              		.cfi_endproc
+ 121              	.LFE238:
+ 123              		.section	.text.getPhotoSampleValue_uint32,"ax",%progbits
+ 124              		.align	1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 4
+
+
+ 125              		.global	getPhotoSampleValue_uint32
+ 126              		.syntax unified
+ 127              		.thumb
+ 128              		.thumb_func
+ 130              	getPhotoSampleValue_uint32:
+ 131              	.LVL9:
+ 132              	.LFB240:
+  34:Core/Src/Tools/Sampling.c **** static void printAllValue_float(){
+  35:Core/Src/Tools/Sampling.c **** 	for(int i=0; i < SAMPLE_NUM; i++){
+  36:Core/Src/Tools/Sampling.c **** 		printf("%d, ",i);
+  37:Core/Src/Tools/Sampling.c **** 		for(int j=0; j < PHOTO_NUM; j++){
+  38:Core/Src/Tools/Sampling.c **** 			printf("%f, ",ps.fval[j][i]); // アクセス順序が悪いが、速度の遅さは許容する
+  39:Core/Src/Tools/Sampling.c **** 		}
+  40:Core/Src/Tools/Sampling.c **** 		printf("\r\n");
+  41:Core/Src/Tools/Sampling.c **** 	}
+  42:Core/Src/Tools/Sampling.c **** }
+  43:Core/Src/Tools/Sampling.c **** //割込み内で呼ぶ関数
+  44:Core/Src/Tools/Sampling.c **** void getPhotoSampleValue_uint32(uint32_t *photo_value)
+  45:Core/Src/Tools/Sampling.c **** {
+ 133              		.loc 1 45 1 is_stmt 1 view -0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137              		@ link register save eliminated.
+  46:Core/Src/Tools/Sampling.c **** 	if(ps.flag == false){
+ 138              		.loc 1 46 2 view .LVU24
+ 139              		.loc 1 46 7 is_stmt 0 view .LVU25
+ 140 0000 124B     		ldr	r3, .L19
+ 141 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 142              		.loc 1 46 4 view .LVU26
+ 143 0004 D3B9     		cbnz	r3, .L14
+  47:Core/Src/Tools/Sampling.c **** 		ps.count = 0;
+ 144              		.loc 1 47 3 is_stmt 1 view .LVU27
+ 145              		.loc 1 47 12 is_stmt 0 view .LVU28
+ 146 0006 114B     		ldr	r3, .L19
+ 147 0008 0022     		movs	r2, #0
+ 148 000a 5A60     		str	r2, [r3, #4]
+ 149 000c 7047     		bx	lr
+ 150              	.LVL10:
+ 151              	.L13:
+ 152              	.LCFI1:
+ 153              		.cfi_def_cfa_offset 4
+ 154              		.cfi_offset 4, -4
+ 155              	.LBB5:
+  48:Core/Src/Tools/Sampling.c **** 	}
+  49:Core/Src/Tools/Sampling.c **** 	else {
+  50:Core/Src/Tools/Sampling.c **** 		for(int i=0; i < PHOTO_NUM; i++){
+  51:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 156              		.loc 1 51 4 is_stmt 1 discriminator 3 view .LVU29
+ 157              		.loc 1 51 16 is_stmt 0 discriminator 3 view .LVU30
+ 158 000e 0F49     		ldr	r1, .L19
+ 159 0010 4B68     		ldr	r3, [r1, #4]
+ 160              		.loc 1 51 24 discriminator 3 view .LVU31
+ 161 0012 4FF0640C 		mov	ip, #100
+ 162 0016 0CFB0233 		mla	r3, ip, r2, r3
+ 163 001a 0233     		adds	r3, r3, #2
+ 164 001c 50F82240 		ldr	r4, [r0, r2, lsl #2]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 5
+
+
+ 165 0020 41F82340 		str	r4, [r1, r3, lsl #2]
+  50:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 166              		.loc 1 50 31 is_stmt 1 discriminator 3 view .LVU32
+  50:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 167              		.loc 1 50 32 is_stmt 0 discriminator 3 view .LVU33
+ 168 0024 0132     		adds	r2, r2, #1
+ 169              	.LVL11:
+ 170              	.L11:
+  50:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 171              		.loc 1 50 16 is_stmt 1 discriminator 1 view .LVU34
+  50:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 172              		.loc 1 50 3 is_stmt 0 discriminator 1 view .LVU35
+ 173 0026 032A     		cmp	r2, #3
+ 174 0028 F1DD     		ble	.L13
+ 175              	.LBE5:
+  52:Core/Src/Tools/Sampling.c **** 		}
+  53:Core/Src/Tools/Sampling.c **** 
+  54:Core/Src/Tools/Sampling.c **** 		ps.count ++;
+ 176              		.loc 1 54 3 is_stmt 1 view .LVU36
+ 177              		.loc 1 54 5 is_stmt 0 view .LVU37
+ 178 002a 084A     		ldr	r2, .L19
+ 179              	.LVL12:
+ 180              		.loc 1 54 5 view .LVU38
+ 181 002c 5368     		ldr	r3, [r2, #4]
+ 182              		.loc 1 54 12 view .LVU39
+ 183 002e 0133     		adds	r3, r3, #1
+ 184 0030 5360     		str	r3, [r2, #4]
+  55:Core/Src/Tools/Sampling.c **** 
+  56:Core/Src/Tools/Sampling.c **** 		if(ps.count == SAMPLE_NUM){
+ 185              		.loc 1 56 3 is_stmt 1 view .LVU40
+ 186              		.loc 1 56 5 is_stmt 0 view .LVU41
+ 187 0032 642B     		cmp	r3, #100
+ 188 0034 05D0     		beq	.L18
+ 189              	.L10:
+  57:Core/Src/Tools/Sampling.c **** 			ps.flag = false;
+  58:Core/Src/Tools/Sampling.c **** 		}
+  59:Core/Src/Tools/Sampling.c **** 	}
+  60:Core/Src/Tools/Sampling.c **** }
+ 190              		.loc 1 60 1 view .LVU42
+ 191 0036 5DF8044B 		ldr	r4, [sp], #4
+ 192              	.LCFI2:
+ 193              		.cfi_restore 4
+ 194              		.cfi_def_cfa_offset 0
+ 195 003a 7047     		bx	lr
+ 196              	.L14:
+  45:Core/Src/Tools/Sampling.c **** 	if(ps.flag == false){
+ 197              		.loc 1 45 1 view .LVU43
+ 198 003c 10B4     		push	{r4}
+ 199              	.LCFI3:
+ 200              		.cfi_def_cfa_offset 4
+ 201              		.cfi_offset 4, -4
+ 202              	.LBB6:
+  50:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 203              		.loc 1 50 11 view .LVU44
+ 204 003e 0022     		movs	r2, #0
+ 205 0040 F1E7     		b	.L11
+ 206              	.L18:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 6
+
+
+  50:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
+ 207              		.loc 1 50 11 view .LVU45
+ 208              	.LBE6:
+  57:Core/Src/Tools/Sampling.c **** 			ps.flag = false;
+ 209              		.loc 1 57 4 is_stmt 1 view .LVU46
+  57:Core/Src/Tools/Sampling.c **** 			ps.flag = false;
+ 210              		.loc 1 57 12 is_stmt 0 view .LVU47
+ 211 0042 1346     		mov	r3, r2
+ 212 0044 0022     		movs	r2, #0
+ 213 0046 1A70     		strb	r2, [r3]
+ 214              		.loc 1 60 1 view .LVU48
+ 215 0048 F5E7     		b	.L10
+ 216              	.L20:
+ 217 004a 00BF     		.align	2
+ 218              	.L19:
+ 219 004c 00000000 		.word	.LANCHOR0
+ 220              		.cfi_endproc
+ 221              	.LFE240:
+ 223              		.section	.text.getPhotoSampleValue_float,"ax",%progbits
+ 224              		.align	1
+ 225              		.global	getPhotoSampleValue_float
+ 226              		.syntax unified
+ 227              		.thumb
+ 228              		.thumb_func
+ 230              	getPhotoSampleValue_float:
+ 231              	.LVL13:
+ 232              	.LFB241:
+  61:Core/Src/Tools/Sampling.c **** void getPhotoSampleValue_float(float *photo_value)
+  62:Core/Src/Tools/Sampling.c **** {
+ 233              		.loc 1 62 1 is_stmt 1 view -0
+ 234              		.cfi_startproc
+ 235              		@ args = 0, pretend = 0, frame = 0
+ 236              		@ frame_needed = 0, uses_anonymous_args = 0
+  63:Core/Src/Tools/Sampling.c **** 	if(ps.flag == false){
+ 237              		.loc 1 63 2 view .LVU50
+ 238              		.loc 1 63 7 is_stmt 0 view .LVU51
+ 239 0000 144B     		ldr	r3, .L30
+ 240 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 241              		.loc 1 63 4 view .LVU52
+ 242 0004 F3B9     		cbnz	r3, .L25
+  64:Core/Src/Tools/Sampling.c **** 		ps.count = 0;
+ 243              		.loc 1 64 3 is_stmt 1 view .LVU53
+ 244              		.loc 1 64 12 is_stmt 0 view .LVU54
+ 245 0006 134B     		ldr	r3, .L30
+ 246 0008 0022     		movs	r2, #0
+ 247 000a 5A60     		str	r2, [r3, #4]
+ 248 000c 7047     		bx	lr
+ 249              	.LVL14:
+ 250              	.L24:
+ 251              	.LCFI4:
+ 252              		.cfi_def_cfa_offset 4
+ 253              		.cfi_offset 14, -4
+ 254              	.LBB7:
+  65:Core/Src/Tools/Sampling.c **** 	}
+  66:Core/Src/Tools/Sampling.c **** 	else {
+  67:Core/Src/Tools/Sampling.c **** 		for(int i=0; i < PHOTO_NUM; i++){
+  68:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 7
+
+
+ 255              		.loc 1 68 4 is_stmt 1 discriminator 3 view .LVU55
+ 256              		.loc 1 68 17 is_stmt 0 discriminator 3 view .LVU56
+ 257 000e 1149     		ldr	r1, .L30
+ 258 0010 4B68     		ldr	r3, [r1, #4]
+ 259              		.loc 1 68 38 discriminator 3 view .LVU57
+ 260 0012 00EB820C 		add	ip, r0, r2, lsl #2
+ 261 0016 DCF800C0 		ldr	ip, [ip]	@ float
+ 262              		.loc 1 68 25 discriminator 3 view .LVU58
+ 263 001a 4FF0640E 		mov	lr, #100
+ 264 001e 0EFB0233 		mla	r3, lr, r2, r3
+ 265 0022 03F5C973 		add	r3, r3, #402
+ 266 0026 01EB8303 		add	r3, r1, r3, lsl #2
+ 267 002a C3F800C0 		str	ip, [r3]	@ float
+  67:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ 268              		.loc 1 67 31 is_stmt 1 discriminator 3 view .LVU59
+  67:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ 269              		.loc 1 67 32 is_stmt 0 discriminator 3 view .LVU60
+ 270 002e 0132     		adds	r2, r2, #1
+ 271              	.LVL15:
+ 272              	.L22:
+  67:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ 273              		.loc 1 67 16 is_stmt 1 discriminator 1 view .LVU61
+  67:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ 274              		.loc 1 67 3 is_stmt 0 discriminator 1 view .LVU62
+ 275 0030 032A     		cmp	r2, #3
+ 276 0032 ECDD     		ble	.L24
+ 277              	.LBE7:
+  69:Core/Src/Tools/Sampling.c **** 		}
+  70:Core/Src/Tools/Sampling.c **** 
+  71:Core/Src/Tools/Sampling.c **** 		ps.count ++;
+ 278              		.loc 1 71 3 is_stmt 1 view .LVU63
+ 279              		.loc 1 71 5 is_stmt 0 view .LVU64
+ 280 0034 074A     		ldr	r2, .L30
+ 281              	.LVL16:
+ 282              		.loc 1 71 5 view .LVU65
+ 283 0036 5368     		ldr	r3, [r2, #4]
+ 284              		.loc 1 71 12 view .LVU66
+ 285 0038 0133     		adds	r3, r3, #1
+ 286 003a 5360     		str	r3, [r2, #4]
+  72:Core/Src/Tools/Sampling.c **** 
+  73:Core/Src/Tools/Sampling.c **** 		if(ps.count == SAMPLE_NUM){
+ 287              		.loc 1 73 3 is_stmt 1 view .LVU67
+ 288              		.loc 1 73 5 is_stmt 0 view .LVU68
+ 289 003c 642B     		cmp	r3, #100
+ 290 003e 04D0     		beq	.L29
+ 291              	.L21:
+  74:Core/Src/Tools/Sampling.c **** 			ps.flag = false;
+  75:Core/Src/Tools/Sampling.c **** 		}
+  76:Core/Src/Tools/Sampling.c **** 	}
+  77:Core/Src/Tools/Sampling.c **** }
+ 292              		.loc 1 77 1 view .LVU69
+ 293 0040 5DF804FB 		ldr	pc, [sp], #4
+ 294              	.L25:
+ 295              	.LCFI5:
+ 296              		.cfi_def_cfa_offset 0
+ 297              		.cfi_restore 14
+  62:Core/Src/Tools/Sampling.c **** 	if(ps.flag == false){
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 8
+
+
+ 298              		.loc 1 62 1 view .LVU70
+ 299 0044 00B5     		push	{lr}
+ 300              	.LCFI6:
+ 301              		.cfi_def_cfa_offset 4
+ 302              		.cfi_offset 14, -4
+ 303              	.LBB8:
+  67:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ 304              		.loc 1 67 11 view .LVU71
+ 305 0046 0022     		movs	r2, #0
+ 306 0048 F2E7     		b	.L22
+ 307              	.L29:
+  67:Core/Src/Tools/Sampling.c **** 			ps.fval[i][ps.count] = photo_value[i];
+ 308              		.loc 1 67 11 view .LVU72
+ 309              	.LBE8:
+  74:Core/Src/Tools/Sampling.c **** 			ps.flag = false;
+ 310              		.loc 1 74 4 is_stmt 1 view .LVU73
+  74:Core/Src/Tools/Sampling.c **** 			ps.flag = false;
+ 311              		.loc 1 74 12 is_stmt 0 view .LVU74
+ 312 004a 1346     		mov	r3, r2
+ 313 004c 0022     		movs	r2, #0
+ 314 004e 1A70     		strb	r2, [r3]
+ 315              		.loc 1 77 1 view .LVU75
+ 316 0050 F6E7     		b	.L21
+ 317              	.L31:
+ 318 0052 00BF     		.align	2
+ 319              	.L30:
+ 320 0054 00000000 		.word	.LANCHOR0
+ 321              		.cfi_endproc
+ 322              	.LFE241:
+ 324              		.section	.rodata.printPhotoSampleValue.str1.4,"aMS",%progbits,1
+ 325              		.align	2
+ 326              	.LC3:
+ 327 0000 E382B5E3 		.ascii	"\343\202\265\343\203\263\343\203\227\343\203\253\351"
+ 327      83B3E383 
+ 327      97E383AB 
+ 327      E9
+ 328 000d 968BE5A7 		.ascii	"\226\213\345\247\213\015\000"
+ 328      8B0D00
+ 329              		.align	2
+ 330              	.LC4:
+ 331 0014 636F756E 		.ascii	"count: %d, flag: %d\015\012\000"
+ 331      743A2025 
+ 331      642C2066 
+ 331      6C61673A 
+ 331      2025640D 
+ 332 002a 0000     		.align	2
+ 333              	.LC5:
+ 334 002c E382B5E3 		.ascii	"\343\202\265\343\203\263\343\203\227\343\203\253\347"
+ 334      83B3E383 
+ 334      97E383AB 
+ 334      E7
+ 335 0039 B582E4BA 		.ascii	"\265\202\344\272\206\015\000"
+ 335      860D00
+ 336              		.section	.text.printPhotoSampleValue,"ax",%progbits
+ 337              		.align	1
+ 338              		.global	printPhotoSampleValue
+ 339              		.syntax unified
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 9
+
+
+ 340              		.thumb
+ 341              		.thumb_func
+ 343              	printPhotoSampleValue:
+ 344              	.LFB242:
+  78:Core/Src/Tools/Sampling.c **** 
+  79:Core/Src/Tools/Sampling.c **** 
+  80:Core/Src/Tools/Sampling.c **** // フロントエンドで呼ぶ関数（ハードウェア依存）
+  81:Core/Src/Tools/Sampling.c **** void printPhotoSampleValue(){
+ 345              		.loc 1 81 29 is_stmt 1 view -0
+ 346              		.cfi_startproc
+ 347              		@ args = 0, pretend = 0, frame = 0
+ 348              		@ frame_needed = 0, uses_anonymous_args = 0
+ 349 0000 08B5     		push	{r3, lr}
+ 350              	.LCFI7:
+ 351              		.cfi_def_cfa_offset 8
+ 352              		.cfi_offset 3, -8
+ 353              		.cfi_offset 14, -4
+  82:Core/Src/Tools/Sampling.c **** 	// 発光と受光、割込みの準備（各ペリフェラルは初期化はされている前�
+  83:Core/Src/Tools/Sampling.c **** 	EmitterON();
+ 354              		.loc 1 83 2 view .LVU77
+ 355 0002 FFF7FEFF 		bl	EmitterON
+ 356              	.LVL17:
+  84:Core/Src/Tools/Sampling.c **** 	ADCStart();
+ 357              		.loc 1 84 2 view .LVU78
+ 358 0006 FFF7FEFF 		bl	ADCStart
+ 359              	.LVL18:
+  85:Core/Src/Tools/Sampling.c **** 	HAL_TIM_Base_Start_IT(&htim8);
+ 360              		.loc 1 85 2 view .LVU79
+ 361 000a 1348     		ldr	r0, .L36
+ 362 000c FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 363              	.LVL19:
+  86:Core/Src/Tools/Sampling.c **** 	HAL_TIM_Base_Start_IT(&htim1); //割込みの干渉を起こす
+ 364              		.loc 1 86 2 view .LVU80
+ 365 0010 1248     		ldr	r0, .L36+4
+ 366 0012 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 367              	.LVL20:
+  87:Core/Src/Tools/Sampling.c **** 	// initPhotoSample(); 
+  88:Core/Src/Tools/Sampling.c **** 	// サンプル開始
+  89:Core/Src/Tools/Sampling.c **** 	printf("サンプル開始\r\n");
+ 368              		.loc 1 89 2 view .LVU81
+ 369 0016 1248     		ldr	r0, .L36+8
+ 370 0018 FFF7FEFF 		bl	puts
+ 371              	.LVL21:
+  90:Core/Src/Tools/Sampling.c **** 	ps.flag = true;
+ 372              		.loc 1 90 2 view .LVU82
+ 373              		.loc 1 90 10 is_stmt 0 view .LVU83
+ 374 001c 114B     		ldr	r3, .L36+12
+ 375 001e 0122     		movs	r2, #1
+ 376 0020 1A70     		strb	r2, [r3]
+  91:Core/Src/Tools/Sampling.c **** 	// tim8のコールバック内でPhotoの値をもらう
+  92:Core/Src/Tools/Sampling.c **** 	while(ps.flag == true){
+ 377              		.loc 1 92 2 is_stmt 1 view .LVU84
+ 378              		.loc 1 92 7 is_stmt 0 view .LVU85
+ 379 0022 04E0     		b	.L33
+ 380              	.L34:
+  93:Core/Src/Tools/Sampling.c **** 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからな�
+  94:Core/Src/Tools/Sampling.c **** 		printf("count: %d, flag: %d\r\n", ps.count,ps.flag);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 10
+
+
+ 381              		.loc 1 94 3 is_stmt 1 view .LVU86
+ 382 0024 0F4B     		ldr	r3, .L36+12
+ 383 0026 5968     		ldr	r1, [r3, #4]
+ 384 0028 0F48     		ldr	r0, .L36+16
+ 385 002a FFF7FEFF 		bl	printf
+ 386              	.LVL22:
+ 387              	.L33:
+  92:Core/Src/Tools/Sampling.c **** 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからな�
+ 388              		.loc 1 92 7 view .LVU87
+  92:Core/Src/Tools/Sampling.c **** 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからな�
+ 389              		.loc 1 92 10 is_stmt 0 view .LVU88
+ 390 002e 0D4B     		ldr	r3, .L36+12
+ 391 0030 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+  92:Core/Src/Tools/Sampling.c **** 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからな�
+ 392              		.loc 1 92 7 view .LVU89
+ 393 0032 002A     		cmp	r2, #0
+ 394 0034 F6D1     		bne	.L34
+  95:Core/Src/Tools/Sampling.c **** 	}
+  96:Core/Src/Tools/Sampling.c **** 	HAL_TIM_Base_Stop_IT(&htim8);
+ 395              		.loc 1 96 2 is_stmt 1 view .LVU90
+ 396 0036 0848     		ldr	r0, .L36
+ 397 0038 FFF7FEFF 		bl	HAL_TIM_Base_Stop_IT
+ 398              	.LVL23:
+  97:Core/Src/Tools/Sampling.c **** 	HAL_TIM_Base_Stop_IT(&htim1);
+ 399              		.loc 1 97 2 view .LVU91
+ 400 003c 0748     		ldr	r0, .L36+4
+ 401 003e FFF7FEFF 		bl	HAL_TIM_Base_Stop_IT
+ 402              	.LVL24:
+  98:Core/Src/Tools/Sampling.c **** 	EmitterOFF();
+ 403              		.loc 1 98 2 view .LVU92
+ 404 0042 FFF7FEFF 		bl	EmitterOFF
+ 405              	.LVL25:
+  99:Core/Src/Tools/Sampling.c **** 	ADCStop();
+ 406              		.loc 1 99 2 view .LVU93
+ 407 0046 FFF7FEFF 		bl	ADCStop
+ 408              	.LVL26:
+ 100:Core/Src/Tools/Sampling.c **** 	printf("サンプル終了\r\n");
+ 409              		.loc 1 100 2 view .LVU94
+ 410 004a 0848     		ldr	r0, .L36+20
+ 411 004c FFF7FEFF 		bl	puts
+ 412              	.LVL27:
+ 101:Core/Src/Tools/Sampling.c **** 	printAllValue_uint32();
+ 413              		.loc 1 101 2 view .LVU95
+ 414 0050 FFF7FEFF 		bl	printAllValue_uint32
+ 415              	.LVL28:
+ 102:Core/Src/Tools/Sampling.c **** 	// printAllValue_float();
+ 103:Core/Src/Tools/Sampling.c **** }
+ 416              		.loc 1 103 1 is_stmt 0 view .LVU96
+ 417 0054 08BD     		pop	{r3, pc}
+ 418              	.L37:
+ 419 0056 00BF     		.align	2
+ 420              	.L36:
+ 421 0058 00000000 		.word	htim8
+ 422 005c 00000000 		.word	htim1
+ 423 0060 00000000 		.word	.LC3
+ 424 0064 00000000 		.word	.LANCHOR0
+ 425 0068 14000000 		.word	.LC4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 11
+
+
+ 426 006c 2C000000 		.word	.LC5
+ 427              		.cfi_endproc
+ 428              	.LFE242:
+ 430              		.section	.bss.ps,"aw",%nobits
+ 431              		.align	2
+ 432              		.set	.LANCHOR0,. + 0
+ 435              	ps:
+ 436 0000 00000000 		.space	3208
+ 436      00000000 
+ 436      00000000 
+ 436      00000000 
+ 436      00000000 
+ 437              		.text
+ 438              	.Letext0:
+ 439              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 440              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 441              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 442              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 443              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 444              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 445              		.file 8 "Core/Inc/Hw/IR_Emitter.h"
+ 446              		.file 9 "Core/Inc/Origin/MicroMouse.h"
+ 447              		.file 10 "Core/Inc/Hw/mouse_ADC.h"
+ 448              		.file 11 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 449              		.file 12 "<built-in>"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Sampling.c
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:20     .rodata.printAllValue_uint32.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:30     .text.printAllValue_uint32:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:35     .text.printAllValue_uint32:00000000 printAllValue_uint32
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:116    .text.printAllValue_uint32:0000003c $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:124    .text.getPhotoSampleValue_uint32:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:130    .text.getPhotoSampleValue_uint32:00000000 getPhotoSampleValue_uint32
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:219    .text.getPhotoSampleValue_uint32:0000004c $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:224    .text.getPhotoSampleValue_float:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:230    .text.getPhotoSampleValue_float:00000000 getPhotoSampleValue_float
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:320    .text.getPhotoSampleValue_float:00000054 $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:325    .rodata.printPhotoSampleValue.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:337    .text.printPhotoSampleValue:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:343    .text.printPhotoSampleValue:00000000 printPhotoSampleValue
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:421    .text.printPhotoSampleValue:00000058 $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:431    .bss.ps:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccDGjYDM.s:435    .bss.ps:00000000 ps
+
+UNDEFINED SYMBOLS
+printf
+puts
+EmitterON
+ADCStart
+HAL_TIM_Base_Start_IT
+HAL_TIM_Base_Stop_IT
+EmitterOFF
+ADCStop
+htim8
+htim1

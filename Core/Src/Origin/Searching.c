@@ -15,26 +15,11 @@
  #include "Action.h"
 #include "PID_Control.h"
  #include "LED_Driver.h"
-
 #include "dfs.h"
 
 // 探索に必要な迷路データ、プロフィールの処理
 // 迷路データ、プロフィールの更新用の関数など
 
-void initSearchData(maze_node *my_maze, profile *Mouse)
-{
-    initMaze(my_maze);
-    initWeight(my_maze); //3/20ms
-    //状態の初期化
-    initProfile(Mouse, my_maze);
-
-    Mouse->now.node = &(my_maze->RawNode[0][0]);
-    Mouse->next.node = &(my_maze->RawNode[0][1]);
-
-    //スタート座標にいる状態で、現在の重みを更新
-     updateAllNodeWeight(my_maze, Mouse->goal_lesser.x, Mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
-//     updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01);
-}
 void FindUnwantedSquares(maze_node *maze){
 	//未訪問のマスをピックアップ
 	//それぞれの四方のノードを確認
@@ -68,6 +53,72 @@ void FindUnwantedSquares(maze_node *maze){
 //後ろの方にはActionを含めた処理も. MazeSimulationでActionっぽい処理が書ければそれを入れてtestへ
 
 
+void setSearchTurnParam(int8_t mode){
+	
+	switch(mode)
+	{
+	case 1:
+		ExploreVelocity=90;
+		//未
+		Sla.Pre = 9;
+		Sla.Fol = 20;
+		Sla.Alpha = 0.014;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+
+//		ExploreVelocity=180;//*40/1000
+//		Sla.Pre = 5;
+//		Sla.Fol = 12;
+//		Sla.Alalpha = 0.0007;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+		break;
+	case 2:
+		//完
+//		ExploreVelocity=135;//*40/1000
+//		Sla.Pre = 5;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.0273;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+
+		ExploreVelocity=180;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 12;
+		Sla.Alpha = 0.043;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 3:
+		ExploreVelocity=240;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 12; //16
+		Sla.Alpha = 0.078;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 4:
+		ExploreVelocity=300;
+		Sla.Pre = 3;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.117;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		//		//未
+		break;
+	}
+	Sla.Pre *=  2/MM_PER_PULSE;
+	Sla.Fol *=  2/MM_PER_PULSE;
+	Sla.Theta1 *= M_PI/180;
+	Sla.Theta2 *= M_PI/180;
+	Sla.Theta3 *= M_PI/180;
+}
 void updateRealSearch(maze_node *maze, profile *mouse)
 {
 	//壁情報は
@@ -85,13 +136,13 @@ void updateRealSearch(maze_node *maze, profile *mouse)
     {
     case north:
     	wall_dir[0] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
-    	wall_dir[1] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir[1] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[2] = NOWALL;
     	wall_dir[3] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case east:
     	wall_dir[1] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
-    	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[3] = NOWALL;
     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
 //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどうかも気になる
@@ -104,13 +155,13 @@ void updateRealSearch(maze_node *maze, profile *mouse)
         break;
     case south:
     	wall_dir[2] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
-    	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[0] = NOWALL;
     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case west:
     	wall_dir[3] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
-    	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir[1] = NOWALL;
     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;

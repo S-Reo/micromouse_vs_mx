@@ -1,181 +1,10 @@
-#include "FastRun.h"
-
-#include "Action.h"
+#include "../../Inc/Origin/FastRun.h"
+// #include "../../Inc/Origin/MicroMouse.h"
+// #include "../../Inc/Origin/Action.h"
+// #include "LED_Driver.h"
+// #include "../../Inc/Tools/UI.h"
 int Num_Nodes = 0;
-const float conv_pul = 2/MM_PER_PULSE;
-void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed)//加減速を切り替える割合と、マス数の指定
-{
-		float add_distance = cut*90*num;//スタート時の加速では61.5になるようにnumをかける
-		TargetAngularV = 0;
-		int target_pulse = (int)(add_distance*conv_pul);
-//		dbc = 1;
-		static int section_num=0;
-		while( ( TotalPulse[BODY] )  < ( KeepPulse[BODY] + target_pulse) )
-		{
-			if(TargetVelocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
-			{
-				Acceleration = 0;
-			}
-			else
-			{
-				Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
-			}
-			//壁の値を見て一瞬だけ制御オン
-				//90mm毎に左右を見る
 
-			if(  ( (TotalPulse[BODY] ) >= ( KeepPulse[BODY] + (int)(0.95f*90.0f*conv_pul)*section_num)) && (( TotalPulse[BODY] ) <= ( KeepPulse[BODY] + (int)(1.05*90.0f*conv_pul)*section_num) ) ){ //90 mm毎に一回だけ壁を見る
-				if(Photo[SL] >= LEFT_WALL && Photo[SR] >= RIGHT_WALL){
-					PIDChangeFlag(D_WALL_PID, 1);
-					PIDChangeFlag(A_VELO_PID, 0);
-					PIDChangeFlag(R_WALL_PID, 0);
-					PIDChangeFlag(L_WALL_PID, 0);
-					ChangeLED(5);
-				}
-				else if(Photo[SL] >= LEFT_WALL ){
-					PIDChangeFlag(L_WALL_PID, 1);
-					PIDChangeFlag(A_VELO_PID, 0);
-					PIDChangeFlag(R_WALL_PID, 0);
-					PIDChangeFlag(D_WALL_PID, 0);
-					ChangeLED(4);
-
-				}
-				else if(Photo[SR] >= RIGHT_WALL){
-					PIDChangeFlag(R_WALL_PID, 1);
-					PIDChangeFlag(A_VELO_PID,0);
-					PIDChangeFlag(D_WALL_PID, 0);
-					PIDChangeFlag(L_WALL_PID, 0);
-					ChangeLED(1);
-				}
-				else {
-					PIDChangeFlag(A_VELO_PID, 1);
-					PIDChangeFlag(R_WALL_PID, 0);
-					PIDChangeFlag(L_WALL_PID, 0);
-					PIDChangeFlag(D_WALL_PID, 0);
-					ChangeLED(2);
-				}
-//				ChangeLED(section_num);
-			}
-			else {
-				section_num++;
-				PIDChangeFlag(D_WALL_PID, 0);
-				PIDChangeFlag(R_WALL_PID, 0);
-				PIDChangeFlag(L_WALL_PID, 0);
-				PIDChangeFlag(A_VELO_PID, 1);
-				ChangeLED(0);
-			}
-				//壁の存在を閾値で確認
-				//3パターンに該当すれば壁制御を一瞬だけ入れる
-				//割込みのタイマを使ってタイミングを決める. （また複雑に...）
-
-
-		}
-		PIDChangeFlag(D_WALL_PID, 0);
-		PIDChangeFlag(R_WALL_PID, 0);
-		PIDChangeFlag(L_WALL_PID, 0);
-		PIDChangeFlag(A_VELO_PID, 1);
-		ChangeLED(0);
-		section_num = 0;
-		Acceleration = 0;
-		KeepPulse[BODY] += target_pulse;
-		KeepPulse[LEFT] += target_pulse*0.5f;
-		KeepPulse[RIGHT] += target_pulse*0.5f;
-
-		float dec_distance = (1-cut)*90*num;
-		target_pulse = (int)(dec_distance *conv_pul);
-
-		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
-		{
-			if(TargetVelocity[BODY] <= end_speed) //
-			{
-				Acceleration = 0;
-//				TargetVelocity[BODY] = end_speed;
-			}
-			else
-			{
-				Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
-			}
-			//Acceleration = decel;//-2.89;//1.0000f;//
-//			if(TargetVelocity[BODY] <= 240)
-//				Acceleration = 0;
-		}
-		Acceleration = 0;
-//		TargetVelocity[BODY] = end_speed;
-		KeepPulse[BODY] += target_pulse;
-		KeepPulse[LEFT] += target_pulse*0.5f;
-		KeepPulse[RIGHT] += target_pulse*0.5f;
-
-}
-//90度ターンと直進と加減速の繰り返しで最短走行
-void MaxParaRunTest(maze_node *maze, profile *mouse)
-{
-	int start_cnt=0;
-	float straight_num = 0;
-	//ノードの数だけループ
-	int num_nodes = Num_Nodes;
-	ChangeLED(0);
-	for(int count=0; count <= num_nodes; count++)
-	{
-		switch(FastPath[count].path_action)
-		{
-		case START:
-			PIDChangeFlag(A_VELO_PID, 1);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(1, 61.5/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			break;
-		case ACC_DEC:
-			//加減速が続く回数を数える
-
-//			ChangeLED(4);
-			start_cnt = count;
-			while(FastPath[count].path_action == ACC_DEC)
-			{
-				count ++;
-			}
-			straight_num = (float)(count - start_cnt);
-			if(start_cnt == 0){
-				straight_num -= ((90-61.5)/90);
-			}
-//			ChangeLED(1);
-//			FastPath[start_cnt].path_state.pos.x
-			PIDChangeFlag(A_VELO_PID, 1);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
-			count--;
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			//countを飛ばす
-			break;
-		case L_90_SEARCH:
-//			ChangeLED(2);
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			SlalomLeft(maze, mouse);
-			break;
-		case R_90_SEARCH:
-//			ChangeLED(3);
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			SlalomRight(maze, mouse);
-			break;
-		default :
-			break;
-		}
-	}
-}
 
 slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
 void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, float theta2, float theta3, float alpha){
@@ -186,66 +15,66 @@ void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, f
 	param->Theta3 = theta3 *M_PI/180;
 	param->Alpha = alpha *T1*M_PI/180;
 }
-void setFastParam(int n){
-	switch(n)
-	{
-	case 1:
-		ExploreVelocity=90;
-		//未
-		Sla.Pre = 7;//9;
-		Sla.Fol = 11;//13;
-		Sla.Alpha = 0.014;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 2:
-		//完
-		ExploreVelocity=135;
-		Sla.Pre = 5;
-		Sla.Fol = 5;
-		Sla.Alpha = 0.0273;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 3:
-		//未
-//		ExploreVelocity=180;
-//		Sla.Pre = 5;
-//		Sla.Fol = 10;
-//		Sla.Alpha = 0.04478;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
-		ExploreVelocity=180;
-		Sla.Pre = 5;
-		Sla.Fol = 3.5;
-		Sla.Alpha = 0.04;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 4:
-//		ExploreVelocity=300;
-//		Sla.Pre = 3;
-//		Sla.Fol = 5;
-//		Sla.Alpha = 0.117;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
+// void setFastParam(int n){
+// 	switch(n)
+// 	{
+// 	case 1:
+// 		ExploreVelocity=90;
+// 		//未
+// 		Sla.Pre = 7;//9;
+// 		Sla.Fol = 11;//13;
+// 		Sla.Alpha = 0.014;
+// 		Sla.Theta1 = 30;
+// 		Sla.Theta2 = 60;
+// 		Sla.Theta3 = 90;
+// 		break;
+// 	case 2:
+// 		//完
+// 		ExploreVelocity=135;
+// 		Sla.Pre = 5;
+// 		Sla.Fol = 5;
+// 		Sla.Alpha = 0.0273;
+// 		Sla.Theta1 = 30;
+// 		Sla.Theta2 = 60;
+// 		Sla.Theta3 = 90;
+// 		break;
+// 	case 3:
+// 		//未
+// //		ExploreVelocity=180;
+// //		Sla.Pre = 5;
+// //		Sla.Fol = 10;
+// //		Sla.Alpha = 0.04478;
+// //		Sla.Theta1 = 30;
+// //		Sla.Theta2 = 60;
+// //		Sla.Theta3 = 90;
+// 		ExploreVelocity=180;
+// 		Sla.Pre = 5;
+// 		Sla.Fol = 3.5;
+// 		Sla.Alpha = 0.04;
+// 		Sla.Theta1 = 30;
+// 		Sla.Theta2 = 60;
+// 		Sla.Theta3 = 90;
+// 		break;
+// 	case 4:
+// //		ExploreVelocity=300;
+// //		Sla.Pre = 3;
+// //		Sla.Fol = 5;
+// //		Sla.Alpha = 0.117;
+// //		Sla.Theta1 = 30;
+// //		Sla.Theta2 = 60;
+// //		Sla.Theta3 = 90;
 
-		ExploreVelocity=240;
-		Sla.Pre = 8;//2;
-		Sla.Fol = 12; //16
-		Sla.Alpha = 0.078;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
+// 		ExploreVelocity=240;
+// 		Sla.Pre = 8;//2;
+// 		Sla.Fol = 12; //16
+// 		Sla.Alpha = 0.078;
+// 		Sla.Theta1 = 30;
+// 		Sla.Theta2 = 60;
+// 		Sla.Theta3 = 90;
+// 		break;
 
-	}
-}
+// 	}
+// }
 void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
 	//300mm/sのパラメータ
 	switch(n){
@@ -263,129 +92,6 @@ void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータ�
 	}
 }
 //
-void DiagonalRunTest()
-{
-	int start_cnt=0;
-	float straight_num = 0;
-	//ノードの数だけループ
-	int num_nodes = Num_Nodes;
-	ChangeLED(0);
-	for(int count=0; count <= num_nodes; count++)
-	{
-		switch(FastPath[count].path_action)
-		{
-		case START:
-			PIDChangeFlag(A_VELO_PID, 1);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(1, (61.5-45)/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			break;
-		case ACC_DEC_90:
-			//加減速が続く回数を数える
-
-//			ChangeLED(4);
-			start_cnt = count;
-			while(FastPath[count].path_action == ACC_DEC_90)
-			{
-				count ++;
-			}
-			straight_num = (float)(count - start_cnt);
-			if(start_cnt == 0){
-				straight_num += ((61.5-45)/90);
-			}
-//			ChangeLED(1);
-//			FastPath[start_cnt].path_state.pos.x
-			PIDChangeFlag(A_VELO_PID, 1);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
-			count--;
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			//countを飛ばす
-			break;
-		case ACC_DEC_45:
-			start_cnt = count;
-			while(FastPath[count].path_action == ACC_DEC_90)
-			{
-				count ++;
-			}
-			straight_num = (float)(count - start_cnt);
-			
-//			ChangeLED(1);
-//			FastPath[start_cnt].path_state.pos.x
-			PIDChangeFlag(A_VELO_PID, 1);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num*0.5*1.41421, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
-			count--;
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			break;
-		case L_90_FAST:
-//			ChangeLED(2);
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			SlalomFastLeft(&fast90);
-			break;
-		case R_90_FAST:
-//			ChangeLED(3);
-			PIDChangeFlag(A_VELO_PID, 0);
-			PIDChangeFlag(R_WALL_PID, 0);
-			PIDChangeFlag(L_WALL_PID, 0);
-			PIDChangeFlag(D_WALL_PID, 0);
-			SlalomFastRight(&fast90);
-			break;
-
-		case L_90_FAST_DIAGONAL:
-			SlalomFastLeft(&fast90diagonal);
-			break;
-		case R_90_FAST_DIAGONAL:
-			SlalomFastRight(&fast90diagonal);
-			break;
-
-		case L_45_FAST:
-			SlalomFastLeft(&fast45);
-			break;
-		case L_45_FAST_REVERSE:
-			SlalomFastLeft(&fast45reverse);
-			break;
-		case R_45_FAST:
-			SlalomFastRight(&fast45);
-			break;
-		case R_45_FAST_REVERSE:
-			SlalomFastRight(&fast45reverse);
-			break;
-		case L_135_FAST:
-			SlalomFastLeft(&fast135);
-			break;
-		case L_135_FAST_REVERSE:
-			SlalomFastLeft(&fast135reverse);
-			break;
-		case R_135_FAST:
-			SlalomFastRight(&fast135);
-			break;
-		case R_135_FAST_REVERSE:
-			SlalomFastRight(&fast135reverse);
-			break;
-		default :
-			break;
-		}
-	}
-}
 
 //付随して必要な処理として、機体のパラメータ、ターン速度、などから所要時間を見積もる処理。ターンの距離を求める処理。ターンの安全性を決める処理。
 	// 理想的な軌道を事前に決め打ちしているが、代わりにその場のマシンの状態から随時修正を加える処理や、フィードフォワード制御を加えたりもしたい
@@ -405,7 +111,10 @@ void ActionTest(){
 
 
 Path FastPath[16*16]={0};
-
+void printPathAction(){
+	for(int i=0; i < 50; i++)
+		printf("%d : %d\r\n",i ,FastPath[i].path_action);
+}
 //最短走行用の経路配列作成
 void getPathNode(maze_node *maze, profile *mouse)
 {
@@ -413,11 +122,11 @@ void getPathNode(maze_node *maze, profile *mouse)
 	//ノード情報は既にある前提
 	for(int i=0; i < 16*16; i++)
 		FastPath[i].path_ahead = false;
-
 	static int path_num=0;
 	//最初の次ノードは既に入っているので格納
 	getNowWallVirtual(maze, mouse, mouse->now.pos.x, mouse->now.pos.y);//0,1の壁がうまく更新できてない
-	getNextWallVirtual(maze, mouse, mouse->next.pos.x, mouse->next.pos.y);
+	
+    getNextWallVirtual(maze, mouse, mouse->next.pos.x, mouse->next.pos.y);
 	FastPath[path_num].path_state = mouse->now;
 	FastPath[path_num].path_ahead = true;
 //		printState(&(my_mouse.now));
@@ -425,6 +134,7 @@ void getPathNode(maze_node *maze, profile *mouse)
 //		printState(&(my_mouse.next));
 	//一度データ上で最短走行する
 	//ゴールなら減速.　なのでwhile文
+    printf("ここまでOK\r\n");
 	while(! ((mouse->goal_lesser.x <= mouse->now.pos.x && mouse->now.pos.x <= mouse->goal_larger.x) && (mouse->goal_lesser.y <= mouse->now.pos.y && mouse->now.pos.y <= mouse->goal_larger.y))  ) //nextがゴール到達するまでループ
 	{
 		//0,1。前方。
@@ -432,8 +142,8 @@ void getPathNode(maze_node *maze, profile *mouse)
 		mouse->next.node = getNextNode(maze, mouse->now.car, mouse->now.node, 0x03);
 		getNextState(&(mouse->now),&(mouse->next), mouse->next.node);
 		getNextWallVirtual(maze, mouse, mouse->next.pos.x, mouse->next.pos.y);
-//			printf("now\r\n");
-//			printState(&(my_mouse.now));
+			printf("now\r\n");
+			printState(&(mouse->now));
 		path_num ++;
 		//次の方向はこの時点で入れる.nextstateがわかった時点で入れたい
 		FastPath[path_num].path_state = mouse->now; //next.dir
@@ -441,8 +151,10 @@ void getPathNode(maze_node *maze, profile *mouse)
 //			printf("next\r\n");
 //			printState(&(my_mouse.next));
 
-			printf("\r\n");
+			// printf("\r\n");
+            // break;
 	}
+    printf("完了?\r\n");
 	path_num ++;
 	FastPath[path_num].path_state = mouse->next;
 	Num_Nodes = path_num;
@@ -487,7 +199,7 @@ void getPathActionDiagonal(profile *mouse){
         //動かない
     }
     else if(_CHECK_AT_GOAL_(1)){
-        FastPath[action_num].path_action = ACC_DEC;//加減速一回で終わり
+        FastPath[action_num].path_action = ACC_DEC_90;//加減速一回で終わり
         action_num++;
         //[1]以降は停止で埋めるか？
         //61.5+45mm
@@ -502,7 +214,7 @@ void getPathActionDiagonal(profile *mouse){
 		}
 		else{
 			//1マスとちょっと直進
-			FastPath[action_num].path_action = ACC_DEC; //90+(61.5-45)
+			FastPath[action_num].path_action = ACC_DEC_90; //90+(61.5-45)
 			// FastPath[1].path_action = ACC_DEC;
             focus = 1;
             action_num++;
@@ -511,6 +223,7 @@ void getPathActionDiagonal(profile *mouse){
         #define _EQUAL_CHECK_RC_(n1,n2) (FastPath[focus+n1].path_state.node->rc == FastPath[focus+n2].path_state.node->rc)
         while(!_CHECK_AT_GOAL_(focus)){
             //4方角のとき
+			// printf("car: %d, focus: %d, action_num: %d, action: %d", car, focus);
             if(car == north || car == south || car == east || car == west){
                 if(_EQUAL_CHECK_RC_(0,2)){
                     //行から行または列から列
@@ -522,6 +235,7 @@ void getPathActionDiagonal(profile *mouse){
                 }
                 else { //行から列または列から行
                     //4つ先を見る
+					// Signal(1);
                     if(_EQUAL_CHECK_RC_(0,4)){ //
                         position focus_pos = FastPath[focus].path_state.node->pos;
                         position plus4_pos = FastPath[focus+4].path_state.node->pos;
@@ -536,7 +250,7 @@ void getPathActionDiagonal(profile *mouse){
                                     FastPath[action_num].path_action = R_180_FAST;
                                    }
                                 }
-                                else{
+                                else {
                                    if (focus_pos.x == plus4_pos.x+1){
                                     FastPath[action_num].path_action = L_45_FAST;
                                     action_num += 1;
@@ -548,6 +262,7 @@ void getPathActionDiagonal(profile *mouse){
                                     FastPath[action_num].path_action = L_45_FAST; //Lのリバース
                                    }
                                 }
+								// else printf("4つ先、行列同じ、エラー\r\n");
                                 break;
                             case south:
                                 if(focus_pos.y == plus4_pos.y){
@@ -652,6 +367,8 @@ void getPathActionDiagonal(profile *mouse){
                                 FastPath[action_num].path_action = L_90_FAST;
                             else
                                 FastPath[action_num].path_action = R_90_FAST;
+
+							printf("3つ先、行列異なる、エラー\r\n");
                             break;
                         case south:
                             if(FastPath[focus+2].path_state.node->pos.x > FastPath[focus+3].path_state.node->pos.x)
@@ -669,6 +386,7 @@ void getPathActionDiagonal(profile *mouse){
                             else
                                 FastPath[action_num].path_action = R_90_FAST;
                         default: //一応例外はない予定
+							
                             break;
                         }
                         
@@ -681,16 +399,21 @@ void getPathActionDiagonal(profile *mouse){
                     }else {
                         //同じなら、xかyの差分を確認（180度の選択肢は既出でcontinueされるため考えない）
                         //45か135
-                        position plus_1 = FastPath[focus+1].path_state.node->pos;
+                        
+						position plus_1 = FastPath[focus+1].path_state.node->pos;
                         position plus_3 = FastPath[focus+3].path_state.node->pos;
-                        switch (car)
+                        //ここのいずれかが呼ばれてない可能性
+						switch (car)
                         {
                         case north:
                             if(plus_1.y == plus_3.y){
                                 if(plus_1.x > plus_3.x)
                                     FastPath[action_num].path_action = L_135_FAST;
-                                if(plus_1.x < plus_3.x)
-                                    FastPath[action_num].path_action = R_135_FAST;
+                                if(plus_1.x < plus_3.x){
+									FastPath[action_num].path_action = R_135_FAST;
+									// Signal(1);
+								}
+                                    
                             }
                             if(plus_1.x+1 == plus_3.x && plus_1.y+1 == plus_3.y){
                                 FastPath[action_num].path_action = R_45_FAST;
@@ -698,11 +421,14 @@ void getPathActionDiagonal(profile *mouse){
                             if(plus_1.x == plus_3.x+1 && plus_1.y+1 == plus_3.y){
                                 FastPath[action_num].path_action = L_45_FAST;
                             }
+							printf("3つ先、行列同じ、エラー\r\n");
                             break;
                         case south:
                             if(plus_1.y == plus_3.y){
-                                if(plus_1.x > plus_3.x)
+                                if(plus_1.x > plus_3.x){
                                     FastPath[action_num].path_action = R_135_FAST;
+									// Signal(2);
+								}
                                 if(plus_1.x < plus_3.x)
                                     FastPath[action_num].path_action = L_135_FAST;
                             }
@@ -715,8 +441,10 @@ void getPathActionDiagonal(profile *mouse){
                             break;
                         case east:
                             if(plus_1.x == plus_3.x){
-                                if(plus_1.y > plus_3.y)
+                                if(plus_1.y > plus_3.y){
                                     FastPath[action_num].path_action = R_135_FAST;
+									// Signal(3);
+								}
                                 if(plus_1.y < plus_3.y)
                                     FastPath[action_num].path_action = L_135_FAST;
                             }
@@ -731,8 +459,10 @@ void getPathActionDiagonal(profile *mouse){
                             if(plus_1.x == plus_3.x){
                                 if(plus_1.y > plus_3.y)
                                     FastPath[action_num].path_action = L_135_FAST;
-                                if(plus_1.y < plus_3.y)
+                                if(plus_1.y < plus_3.y){
                                     FastPath[action_num].path_action = R_135_FAST;
+									// Signal(4);
+								}
                             }
                             if(plus_1.x == plus_3.x+1 && plus_1.y == plus_3.y+1){
                                 FastPath[action_num].path_action = L_45_FAST;
@@ -743,6 +473,7 @@ void getPathActionDiagonal(profile *mouse){
                             break;
                         
                         default:
+							// printf("東西南北: 3つ先チェック, 行列同じ\r\n");
                             break;
                         }
                         Action selected_action = FastPath[action_num].path_action;
@@ -750,7 +481,7 @@ void getPathActionDiagonal(profile *mouse){
                         if(selected_action == R_45_FAST) car = (car+1)%8; //右回転45度分
                         if(selected_action == L_135_FAST) car = (car-3)%8; //左回転135度分
                         if(selected_action == R_135_FAST) car = (car+3)%8; //右回転135度分
-                        
+                        // Signal(5);
                         action_num++;
                         focus += 3 - 1;
                         continue;
@@ -767,25 +498,25 @@ void getPathActionDiagonal(profile *mouse){
                     
                     //向き変わらずであれば
                     if(focus_pos.x+1 == focus_pos_2.x && focus_pos.y+1 == focus_pos_2.y){
-                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進 //関数化したい
+                        FastPath[action_num].path_action = ACC_DEC_45; //以後45度方向の直進 //関数化したい
                         action_num += 1;
                         focus += 1;
                         continue;
                     }
                     else if(focus_pos.x == focus_pos_2.x+1 && focus_pos.y == focus_pos_2.y+1){
-                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進
+                        FastPath[action_num].path_action = ACC_DEC_45; //以後45度方向の直進
                         action_num += 1;
                         focus += 1;
                         continue;
                     }
                     else if(focus_pos.x == focus_pos_2.x+1 && focus_pos.y+1 == focus_pos_2.y){
-                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進
+                        FastPath[action_num].path_action = ACC_DEC_45; //以後45度方向の直進
                         action_num += 1;
                         focus += 1;
                         continue;
                     }
                     else if(focus_pos.x+1 == focus_pos_2.x && focus_pos.y == focus_pos_2.y+1){
-                        FastPath[action_num].path_action = ACC_DEC; //以後45度方向の直進
+                        FastPath[action_num].path_action = ACC_DEC_45; //以後45度方向の直進
                         action_num += 1;
                         focus += 1;
                         continue;

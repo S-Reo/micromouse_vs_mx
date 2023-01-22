@@ -4,9 +4,11 @@
  *  Created on: 2022/02/15
  *      Author: leopi
  */
-#include <action.h>
-#include <MicroMouse.h>
 #include "Interrupt.h"
+
+#include "Action.h"
+#include "MicroMouse.h"
+
 #include <math.h>
 #include "Convert.h"
 #include "PID_Control.h"
@@ -17,6 +19,7 @@
 #include "Motor_Driver.h"
 #include "ICM_20648.h"
 #include "Mode.h"
+#include "Sampling.h"
 
 int timer1,timer8, t;
 int IT_mode;
@@ -135,7 +138,7 @@ static void Explore_IT()
 				}
 				else if( Pid[D_WALL_PID].flag == 1 )
 				{
-					wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+					wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SIDE_R]+PhotoDiff);	//左に寄ってたら+→角速度は+
 					TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 //					ChangeLED(5);
 				}
@@ -147,7 +150,7 @@ static void Explore_IT()
 				}
 				else if( Pid[R_WALL_PID].flag == 1 )
 				{
-					wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+					wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SIDE_R], Photo[SIDE_R]);			//右に寄ってたら-
 					TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 //					ChangeLED(1);
 				}
@@ -169,7 +172,7 @@ static void Explore_IT()
 		ChangeLED(7);
 		break;
 	case D_WALL_PID:
-		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SIDE_R]+PhotoDiff);	//左に寄ってたら+→角速度は+
 		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		ChangeLED(5);
 		break;
@@ -179,7 +182,7 @@ static void Explore_IT()
 		ChangeLED(4);
 		break;
 	case R_WALL_PID :
-		wall_r = PIDControl( Control_Mode,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+		wall_r = PIDControl( Control_Mode,  TargetPhoto[SIDE_R], Photo[SIDE_R]);			//右に寄ってたら-
 		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 		ChangeLED(1);
 		break;
@@ -204,7 +207,7 @@ static void Explore_IT()
 //			}
 //			else if( Pid[D_WALL_PID].flag == 1 )
 //			{
-//				wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+//				wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SIDE_R]+PhotoDiff);	//左に寄ってたら+→角速度は+
 //				TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 //			}
 //			else if( Pid[L_WALL_PID].flag == 1 )
@@ -215,7 +218,7 @@ static void Explore_IT()
 //			}
 //			else if( Pid[R_WALL_PID].flag == 1 )
 //			{
-//				wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+//				wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SIDE_R], Photo[SIDE_R]);			//右に寄ってたら-
 //				TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 //			}
 //			else if( Pid[F_WALL_PID].flag == 1)
@@ -315,7 +318,7 @@ static void WritingFree_IT()
 			}
 			else if( Pid[D_WALL_PID].flag == 1 )
 			{
-				wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SR]+PhotoDiff);	//左に寄ってたら+→角速度は+
+				wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SIDE_R]+PhotoDiff);	//左に寄ってたら+→角速度は+
 				TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 			}
 			else if( Pid[L_WALL_PID].flag == 1 )
@@ -326,7 +329,7 @@ static void WritingFree_IT()
 			}
 			else if( Pid[R_WALL_PID].flag == 1 )
 			{
-				wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SR], Photo[SR]);			//右に寄ってたら-
+				wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SIDE_R], Photo[SIDE_R]);			//右に寄ってたら-
 				TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが足りないかも。
 			}
 		}
@@ -381,9 +384,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		//壁センサデータの更新
 		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
-		Photo[SR] = GetWallDataAverage(10, adc1[1], SR);	//adc1_IN14
+		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+		#if 1
+			uint32_t sample[4]={
+				adc2[0],
+				adc1[0],
+				adc2[1],
+				adc1[1]
+			};
+			getPhotoSampleValue_uint32(&sample[0]);
+		#else
+			getPhotoSampleValue_float(&Photo[0]);
+		#endif
 	}
 }
 

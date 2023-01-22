@@ -1,15 +1,21 @@
 // 探索、最短などを使った、最終的な走行全体の処理を記述する
 
 #include "Searching.h"
+#include "FastRun.h"
 
 #include "UI.h"
-// #include "MicroMouse.h"
 #include "Interrupt.h"
+#include "dfs.h"
+
+#include "MicroMouse.h"
+#include "Mode.h"
+
 
 #include "PID_Control.h"
 #include "ICM_20648.h"
-#include "MicroMouse.h"
-#include "Mode.h"
+#include "Flash.h"
+#include "Record.h"
+
 // #include "MazeLib.h"
 
 // ハードウェアの関数をいちいち呼び出すのが面倒で見辛い
@@ -17,80 +23,346 @@
 profile my_mouse;
 maze_node my_map;
 
-void initSlalomParam()
+// Actionを含めた処理はここ
+const float conv_pul = 2/MM_PER_PULSE;
+void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed)//加減速を切り替える割合と、マス数の指定
 {
-	Sla.Pre *=  2/MM_PER_PULSE;
-	Sla.Fol *=  2/MM_PER_PULSE;
-	Sla.Theta1 *= M_PI/180;
-	Sla.Theta2 *= M_PI/180;
-	Sla.Theta3 *= M_PI/180;
+		float add_distance = cut*90*num;//スタート時の加速では61.5になるようにnumをかける
+		TargetAngularV = 0;
+		int target_pulse = (int)(add_distance*conv_pul);
+//		dbc = 1;
+		static int section_num=0;
+		while( ( TotalPulse[BODY] )  < ( KeepPulse[BODY] + target_pulse) )
+		{
+			if(TargetVelocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
+			{
+				Acceleration = 0;
+			}
+			else
+			{
+				Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
+			}
+			//壁の値を見て一瞬だけ制御オン
+				//90mm毎に左右を見る
+
+			if(  ( (TotalPulse[BODY] ) >= ( KeepPulse[BODY] + (int)(0.95f*90.0f*conv_pul)*section_num)) && (( TotalPulse[BODY] ) <= ( KeepPulse[BODY] + (int)(1.05*90.0f*conv_pul)*section_num) ) ){ //90 mm毎に一回だけ壁を見る
+				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+					PIDChangeFlag(D_WALL_PID, 1);
+					PIDChangeFlag(A_VELO_PID, 0);
+					PIDChangeFlag(R_WALL_PID, 0);
+					PIDChangeFlag(L_WALL_PID, 0);
+					ChangeLED(5);
+				}
+				else if(Photo[SL] >= LEFT_WALL ){
+					PIDChangeFlag(L_WALL_PID, 1);
+					PIDChangeFlag(A_VELO_PID, 0);
+					PIDChangeFlag(R_WALL_PID, 0);
+					PIDChangeFlag(D_WALL_PID, 0);
+					ChangeLED(4);
+
+				}
+				else if(Photo[SIDE_R] >= RIGHT_WALL){
+					PIDChangeFlag(R_WALL_PID, 1);
+					PIDChangeFlag(A_VELO_PID,0);
+					PIDChangeFlag(D_WALL_PID, 0);
+					PIDChangeFlag(L_WALL_PID, 0);
+					ChangeLED(1);
+				}
+				else {
+					PIDChangeFlag(A_VELO_PID, 1);
+					PIDChangeFlag(R_WALL_PID, 0);
+					PIDChangeFlag(L_WALL_PID, 0);
+					PIDChangeFlag(D_WALL_PID, 0);
+					ChangeLED(2);
+				}
+//				ChangeLED(section_num);
+			}
+			else {
+				section_num++;
+				PIDChangeFlag(D_WALL_PID, 0);
+				PIDChangeFlag(R_WALL_PID, 0);
+				PIDChangeFlag(L_WALL_PID, 0);
+				PIDChangeFlag(A_VELO_PID, 1);
+				ChangeLED(0);
+			}
+				//壁の存在を閾値で確認
+				//3パターンに該当すれば壁制御を一瞬だけ入れる
+				//割込みのタイマを使ってタイミングを決める. （また複雑に...）
+
+
+		}
+		PIDChangeFlag(D_WALL_PID, 0);
+		PIDChangeFlag(R_WALL_PID, 0);
+		PIDChangeFlag(L_WALL_PID, 0);
+		PIDChangeFlag(A_VELO_PID, 1);
+		ChangeLED(0);
+		section_num = 0;
+		Acceleration = 0;
+		KeepPulse[BODY] += target_pulse;
+		KeepPulse[LEFT] += target_pulse*0.5f;
+		KeepPulse[RIGHT] += target_pulse*0.5f;
+
+		float dec_distance = (1-cut)*90*num;
+		target_pulse = (int)(dec_distance *conv_pul);
+
+		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+		{
+			if(TargetVelocity[BODY] <= end_speed) //
+			{
+				Acceleration = 0;
+//				TargetVelocity[BODY] = end_speed;
+			}
+			else
+			{
+				Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
+			}
+			//Acceleration = decel;//-2.89;//1.0000f;//
+//			if(TargetVelocity[BODY] <= 240)
+//				Acceleration = 0;
+		}
+		Acceleration = 0;
+//		TargetVelocity[BODY] = end_speed;
+		KeepPulse[BODY] += target_pulse;
+		KeepPulse[LEFT] += target_pulse*0.5f;
+		KeepPulse[RIGHT] += target_pulse*0.5f;
+
 }
-void InitExplore()
+//90度ターンと直進と加減速の繰り返しで最短走行
+void MaxParaRunTest(maze_node *maze, profile *mouse)
 {
-	//PID制御準備
-	//PIDInit();
-	PIDChangeFlag(L_VELO_PID, 0);
-	PIDChangeFlag(R_VELO_PID, 0);
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(D_WALL_PID, 0);
-	//PIDChangeFlag(B_VELO, 0);
-	PIDChangeFlag(A_VELO_PID, 0);
+	int start_cnt=0;
+	float straight_num = 0;
+	//ノードの数だけループ
+	int num_nodes = Num_Nodes;
+	ChangeLED(0);
+	for(int count=0; count <= num_nodes; count++)
+	{
+		switch(FastPath[count].path_action)
+		{
+		case START:
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(1, 61.5/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			break;
+		case ACC_DEC:
+			//加減速が続く回数を数える
 
-//	Load_Gain();
-
-	uint8_t imu_check;
-	imu_check = IMU_init();
-	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#if 1 //IMUから値が来なくなる現象の対策
-	imu_check =IMU_init();
-	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#endif
-	HAL_Delay(100);
-
-	ZGyro = ReadIMU(0x37, 0x38);
-	printf("gyro : %f\r\n",ZGyro);
-
-	//ペリフェラルの動作開始
-	Motor_PWM_Start();
-	EncoderStart(); //戻し忘れないように
-	EmitterON();
-	ADCStart();
-	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
-
-
-
-	//割り込みを有効化
-	HAL_TIM_Base_Start_IT(&htim1);
-	HAL_TIM_Base_Start_IT(&htim8);
-	//ここまででハードの準備はできた。
-	//ここからはソフト的な準備
-
-	TargetVelocity[BODY] = 0;
-	TargetAngularV = 0;
-	Acceleration = 0;
-	AngularAcceleration = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[BODY] = 0;
-
-	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-//	TargetPhoto[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
-//	TargetPhoto[SR] = Photo[SR];//294.299988;//THRESHOLD_SR;
-//	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
-	TargetPhoto[SL] = 370;//439.600006;//THRESHOLD_SL;
-	TargetPhoto[SR] = 300;//294.299988;//THRESHOLD_SR;
-	PhotoDiff = 70;
-
-	PIDReset(L_VELO_PID);
-	PIDReset(R_VELO_PID);
-
-	PIDReset(A_VELO_PID);
-	PIDReset(L_WALL_PID);
-	PIDReset(R_WALL_PID);
-	PIDReset(D_WALL_PID);
+//			ChangeLED(4);
+			start_cnt = count;
+			while(FastPath[count].path_action == ACC_DEC)
+			{
+				count ++;
+			}
+			straight_num = (float)(count - start_cnt);
+			if(start_cnt == 0){
+				straight_num -= ((90-61.5)/90);
+			}
+//			ChangeLED(1);
+//			FastPath[start_cnt].path_state.pos.x
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			count--;
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			//countを飛ばす
+			break;
+		case L_90_SEARCH:
+//			ChangeLED(2);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomLeft(maze, mouse);
+			break;
+		case R_90_SEARCH:
+//			ChangeLED(3);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomRight(maze, mouse);
+			break;
+		default :
+			break;
+		}
+	}
 }
+
+void DiagonalRunTest()
+{
+	int start_cnt=0;
+	float straight_num = 0;
+	//ノードの数だけループ
+	int num_nodes = Num_Nodes;
+	ChangeLED(0);
+	for(int count=0; count <= num_nodes; count++)
+	{
+		switch(FastPath[count].path_action)
+		{
+		case START:
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(1, (61.5-45)/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			break;
+		case ACC_DEC_90:
+			//加減速が続く回数を数える
+
+//			ChangeLED(4);
+			start_cnt = count;
+			while(FastPath[count].path_action == ACC_DEC_90)
+			{
+				count ++;
+			}
+			straight_num = (float)(count - start_cnt);
+			if(start_cnt == 0){
+				straight_num += ((61.5-45)/90);
+			}
+//			ChangeLED(1);
+//			FastPath[start_cnt].path_state.pos.x
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			count--;
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			//countを飛ばす
+			break;
+		case ACC_DEC_45:
+			start_cnt = count;
+			while(FastPath[count].path_action == ACC_DEC_45)
+			{
+				count ++;
+			}
+			straight_num = (float)(count - start_cnt);
+			
+//			ChangeLED(1);
+//			FastPath[start_cnt].path_state.pos.x
+			PIDChangeFlag(A_VELO_PID, 1);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			FastStraight(0.5, straight_num*0.5*1.41421, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			count--;
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			break;
+		case L_90_FAST:
+//			ChangeLED(2);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast90);
+			break;
+		case R_90_FAST:
+//			ChangeLED(3);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast90);
+			break;
+
+		case L_90_FAST_DIAGONAL:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast90diagonal);
+			break;
+		case R_90_FAST_DIAGONAL:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast90diagonal);
+			break;
+
+		case L_45_FAST:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast45);
+			break;
+		case L_45_FAST_REVERSE:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast45reverse);
+			break;
+		case R_45_FAST:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast45);
+			break;
+		case R_45_FAST_REVERSE:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast45reverse);
+			break;
+		case L_135_FAST:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast135);
+			break;
+		case L_135_FAST_REVERSE:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast135reverse);
+			break;
+		case R_135_FAST:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast135);
+			break;
+		case R_135_FAST_REVERSE:
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast135reverse);
+			break;
+		default :
+			break;
+		}
+	}
+}
+
 void Explore()
 {
 	IT_mode = EXPLORE;
@@ -99,106 +371,38 @@ void Explore()
 	//一回目で失敗していたら、flash消してram初期化
 	//一回目で成功したら、flashをramに移す
 
-	HAL_Delay(100);
 	int8_t mode=1;
 	ModeSelect( 1, 2, &mode);
 	Signal( mode );
-	HAL_Delay(100);
+
+	char turn_mode = 'T';
+	if(mode == 1)
+	{
+		turn_mode = 'T';
+	}
+	else if(mode == 2)
+	{
+		turn_mode = 'S';
+		
+	}
 
 	int8_t mode2=1;
 	ModeSelect( 1, 4, &mode2);
 	Signal( mode2 );
 	PhotoSwitch();
-	//printf("test\r\n");
-	//HAL_Delay(2000);
 
-	InitExplore();
+	setSearchTurnParam(mode2);
+	
+	MouseInit(); // マイクロマウス走行用のハードウェア、パラメータなど諸々の初期化
 
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[BODY] = 0;
-
+	
+	//制御の初期化
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
-
-	//PIDChangeFlagStraight(N_WALL_PID);
-	PIDChangeFlag(D_WALL_PID, 0);
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(A_VELO_PID, 0);
-	//PIDSetGain(D_WALL_PID, 10, 0, 0);
-
-	//スラロームか、一区画ずつかを選ぶ。
-	char turn_mode = 'T';
-	if(mode == 1)
-	{
-		turn_mode = 'T';
-		ExploreVelocity=300;
-	}
-	else if(mode == 2)
-	{
-		turn_mode = 'S';
-	}
-
-	switch(mode2)
-	{
-	case 1:
-		ExploreVelocity=90;
-		//未
-		Sla.Pre = 9;
-		Sla.Fol = 20;
-		Sla.Alpha = 0.014;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-
-//		ExploreVelocity=180;//*40/1000
-//		Sla.Pre = 5;
-//		Sla.Fol = 12;
-//		Sla.Alalpha = 0.0007;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
-		break;
-	case 2:
-		//完
-//		ExploreVelocity=135;//*40/1000
-//		Sla.Pre = 5;
-//		Sla.Fol = 10;
-//		Sla.Alpha = 0.0273;
-//		Sla.Theta1 = 30;
-//		Sla.Theta2 = 60;
-//		Sla.Theta3 = 90;
-
-		ExploreVelocity=180;
-		Sla.Pre = 8;//2;
-		Sla.Fol = 12;
-		Sla.Alpha = 0.043;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 3:
-		ExploreVelocity=240;
-		Sla.Pre = 8;//2;
-		Sla.Fol = 12; //16
-		Sla.Alpha = 0.078;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		break;
-	case 4:
-		ExploreVelocity=300;
-		Sla.Pre = 3;
-		Sla.Fol = 5;
-		Sla.Alpha = 0.117;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
-		Sla.Theta3 = 90;
-		//		//未
-		break;
-	}
-	initSlalomParam();
+	PIDChangeFlag(A_VELO_PID, 1);
+	
+	// InitExplore(); // 探索用の初期化
+	// 探索手法に応じた初期化（深さ優先のみ、全探索、一回だけ、、ゴールサイズ..）
 	goal_edge_num = one;
 	VelocityMax = false;
 	SearchOrFast = 0;
@@ -207,23 +411,17 @@ void Explore()
 	LowDFSFlag();
 	LowStackFlag();
 	InitMassStack();
-//	Control_Mode=A_VELO_PID; //初期値が0. 減速時に
-	Pid[A_VELO_PID].flag = 1;
+	
 	initSearchData(&my_map, &my_mouse);
 	InitVisit();
-//	printGoal(&my_mouse);
-//	printAllWeight(&my_map, &(my_mouse.goal_lesser)); //この時点で右上が0スタート.　合ってる
 	dbc = 1;
-#if 1
-	my_mouse.target.pos.x = my_mouse.goal_lesser.x;
-	my_mouse.target.pos.y = my_mouse.goal_lesser.y;
-#else
-	my_mouse.target.pos.x = 0;
-	my_mouse.target.pos.y = 1;
-#endif
+
+// position first_target = {0,1};
+	position first_target = my_mouse.goal_lesser;;
+	my_mouse.target.pos = first_target;
 	my_mouse.target_size = goal_edge_num;
 
-	//0,0をゴールとして深さ優先探索すればいい
+	//まず足立法でゴールに向かい、その後深さ優先探索をし、0,0に戻ってくる
 	InitStackNum();
 #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= large_x) && (less_y <= next_y && next_y <= large_y) )
 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
@@ -240,12 +438,16 @@ void Explore()
 	VisitedMass(my_mouse.now.pos);
 
 	PIDChangeFlag(A_VELO_PID, 0);
+
 	//flashのクリア。
 	Flash_clear_sector1();
+		//完了の合図
+	Signal(7);
 	//マップ書き込み
 	flashStoreNodes(&my_map);
-	//完了の合図
-	Signal(7);
+		//完了の合図
+	Signal(1);
+	
 #if 0
 	while( ! IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.goal_larger.y, my_mouse.now.pos.x, my_mouse.now.pos.y)  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
 	{
@@ -340,157 +542,77 @@ while(1)
 }
 }
 
-void InitFastest()
-{
-	Motor_PWM_Start();
-	EncoderStart(); //戻し忘れないように
-	EmitterON();
-	ADCStart();
 
-	uint8_t imu_check;
-	imu_check = IMU_init();
-	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#if 1 //IMUから値が来なくなる現象の対策
-	imu_check =IMU_init();
-	printf("imu_check 1ならOK: %d\r\n",imu_check);
-#endif
-	HAL_Delay(100);
-
-	ZGyro = ReadIMU(0x37, 0x38);
-	printf("gyro : %f\r\n",ZGyro);
-
-	//PID制御準備
-	//PIDInit();
-	PIDChangeFlag(L_VELO_PID, 0);
-	PIDChangeFlag(R_VELO_PID, 0);
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(D_WALL_PID, 0);
-	//PIDChangeFlag(B_VELO, 0);
-	PIDChangeFlag(A_VELO_PID, 0);
-
-
-//	Load_Gain();
-	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
-	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
-
-	//割り込みを有効化
-	HAL_TIM_Base_Start_IT(&htim1);
-	HAL_TIM_Base_Start_IT(&htim8);
-
-
-	//ここまででハードの準備はできた。
-	//ここからはソフト的な準備
-
-	TargetVelocity[BODY] = 0;
-	TargetAngularV = 0;
-	Acceleration = 0;
-	AngularAcceleration = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[BODY] = 0;
-
-	//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-	TargetPhoto[SL] = 370;//Photo[SL];
-	TargetPhoto[SR] = 300;//Photo[SR];
-	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SR];
-
-	PIDReset(L_VELO_PID);
-	PIDReset(R_VELO_PID);
-	PIDReset(A_VELO_PID);
-	PIDReset(L_WALL_PID);
-	PIDReset(R_WALL_PID);
-	PIDReset(D_WALL_PID);
-}
 
 void FastestRun()
 {
 	IT_mode = EXPLORE;
 	//IT_mode = WRITINGFREE;
 	//諸々の初期化
-	HAL_Delay(100);
 	int8_t mode=1;
-	  ModeSelect( 1, 2, &mode);
-	  Signal( mode );
+	ModeSelect( 1, 4, &mode);
+	Signal( mode );
 
-		HAL_Delay(100);
-		  int8_t mode2=1;
-		  ModeSelect( 1, 4, &mode2);
-		  Signal( mode2 );
+	PhotoSwitch();
 
-		  PhotoSwitch();
-	InitFastest();
 
-//	wall_init();
-
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[BODY] = 0;
+	MouseInit();
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
-	//PIDChangeFlagStraight(N_WALL_PID);
-	PIDChangeFlag(D_WALL_PID, 0);
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(A_VELO_PID, 0);
-	//PIDSetGain(D_WALL_PID, 10, 0, 0);
 
-	char turn_mode = 'T';
-	if(mode == 1)
-	{
-		ExploreVelocity = 400;
-		turn_mode = 'T';
-	}
-	else if(mode == 2)
-	{
-		turn_mode = 'S';
-	}
 
-	setFastDiagonalParam(mode2);
+
+	setFastDiagonalParam(0);
+	switch (mode)
+	{
+	case 1:
+		ExploreVelocity = 300;
+		break;
 	
+	default:
+		break;
+	}
 	// setFastParam(mode2);
 	// initSlalomParam();
-	ChangeLED(4);
+	// Signal(4);
 
 	VelocityMax = false;
 
 	SearchOrFast = 1;
 	Calc = SearchOrFast;
-	//走る
 	goal_edge_num = GOAL_SIZE_X;
 	my_mouse.target_size = goal_edge_num;
 
-	TargetVelocity[BODY] = 0;
-	Acceleration = 0;
-	TargetAngularV = 0;
-	TargetAngle = 0;
-	Angle = 0;
-	PIDReset(L_VELO_PID);
-	PIDReset(R_VELO_PID);
-	PIDReset(A_VELO_PID);
 
-	PIDReset(L_WALL_PID);
-	PIDReset(R_WALL_PID);
-	PIDReset(D_WALL_PID);
-	//迷路データ
+	//迷路データの準備
 	initSearchData(&my_map, &my_mouse);
 	InitVisit();
 //	printAllNodeExistence(&my_map);
+
+	// Flashから探索したマップをロード
 	flashCopyNodesToRam(&my_map); //existenceだけ
 //	printAllNodeExistence(&my_map);
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
 
+	// マップから経路を求める
 	getPathNode(&my_map, &my_mouse);
 	// getPathAction(&my_mouse);
 	getPathActionDiagonal(&my_mouse);
-	HAL_Delay(200);
+	
+	// while(1){
+	// 	printPathAction();
+	// 	HAL_Delay(30000);
+	// }
+	
 
-	//リセット、再取得
+	//リセット、再取得（naze)
 	initSearchData(&my_map, &my_mouse);
 	flashCopyNodesToRam(&my_map); //existenceだけ
 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
+
+
 	//壁のあるなしと重みをprintしてチェック
 //	printAllNodeExistence(&my_map);
 //	while(1){
@@ -498,8 +620,16 @@ void FastestRun()
 //		HAL_Delay(1000);
 //	}
 
+	Signal(7);
+	// 走る
 	// MaxParaRunTest(&my_map, &my_mouse);
+	FastPath[0].path_action = START;
+	FastPath[1].path_action = R_90_FAST;
+	FastPath[2].path_action = ACC_DEC_90;
+	FastPath[3].path_action = ACC_DEC_90;
+
 	DiagonalRunTest(); //斜め有
+
 	//ゴールしたら減速して、停止。
 	Decel(45,0);
 	//終了合図

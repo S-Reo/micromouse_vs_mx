@@ -34,11 +34,11 @@ build/Mode.o: Core/Src/Origin/Mode.c Core/Inc/Origin/MicroMouse.h \
  Core/Inc/Hw/IR_Emitter.h Core/Inc/Hw/Motor_Driver.h \
  Core/Inc/Hw/ICM_20648.h Core/Inc/Hw/Flash.h Core/Inc/Tools/UI.h \
  Core/Inc/Tools/PID_Control.h Core/Inc/Tools/Convert.h \
- Core/Inc/Tools/Debug.h Core/Inc/Origin/Interrupt.h \
- Core/Inc/Origin/Action.h Core/Inc/Origin/MicroMouse.h \
- Core/Inc/Origin/MazeLib.h Core/Inc/Origin/Searching.h \
- Core/Inc/Origin/Searching.h Core/Inc/Origin/Action.h \
- Core/Inc/Origin/Record.h Core/Inc/dfs.h Core/Inc/Origin/FastRun.h \
+ Core/Inc/Tools/Debug.h Core/Inc/Tools/Sampling.h \
+ Core/Inc/Origin/Interrupt.h Core/Inc/Origin/Action.h \
+ Core/Inc/Origin/MicroMouse.h Core/Inc/Origin/MazeLib.h \
+ Core/Inc/Origin/Searching.h Core/Inc/Origin/Record.h Core/Inc/dfs.h \
+ Core/Inc/Origin/FastRun.h Core/Inc/Origin/Action.h \
  Core/Inc/Origin/Running.h
 Core/Inc/Origin/MicroMouse.h:
 Core/Inc/main.h:
@@ -87,14 +87,14 @@ Core/Inc/Tools/UI.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/Tools/Convert.h:
 Core/Inc/Tools/Debug.h:
+Core/Inc/Tools/Sampling.h:
 Core/Inc/Origin/Interrupt.h:
 Core/Inc/Origin/Action.h:
 Core/Inc/Origin/MicroMouse.h:
 Core/Inc/Origin/MazeLib.h:
 Core/Inc/Origin/Searching.h:
-Core/Inc/Origin/Searching.h:
-Core/Inc/Origin/Action.h:
 Core/Inc/Origin/Record.h:
 Core/Inc/dfs.h:
 Core/Inc/Origin/FastRun.h:
+Core/Inc/Origin/Action.h:
 Core/Inc/Origin/Running.h:

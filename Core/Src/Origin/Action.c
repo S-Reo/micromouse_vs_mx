@@ -619,7 +619,7 @@ void Decel(float dec_distance, float end_speed)
 	//ここより下を分けて書くべきかはあとで考える
 	int target_pulse = (int)(dec_distance*TO_PULSE);
 
-	while( (	(Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+	while( (	(Photo[FR]+Photo[FL]) < 2500) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] ) //距離で制御を切り替えるなら、別のwhileを用意すればいいのでは
 		{

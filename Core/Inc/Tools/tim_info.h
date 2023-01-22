@@ -9,6 +9,7 @@
 #define INC_TIM_INFO_H_
 
 #include <main.h>
+
 int printTIMinfo(TIM_HandleTypeDef *htim);
 
 #endif /* INC_TIM_INFO_H_ */

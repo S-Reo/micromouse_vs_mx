@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -28,7 +28,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
   26              	.LVL0:
   27              	.LFB4:
   28              		.file 1 "Core/Src/Origin/MazeSimulation.c"
-   1:Core/Src/Origin/MazeSimulation.c **** #include "MazeSimulation.h"
+   1:Core/Src/Origin/MazeSimulation.c **** #include "../../Inc/Origin/MazeSimulation.h"
    2:Core/Src/Origin/MazeSimulation.c **** #include <string.h>
    3:Core/Src/Origin/MazeSimulation.c **** //#include "MazeLib.h"
    4:Core/Src/Origin/MazeSimulation.c **** char FILE_NAME[200] = "/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2021MS.txt";
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
   28:Core/Src/Origin/MazeSimulation.c ****         break;
   29:Core/Src/Origin/MazeSimulation.c ****     case west:
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][(st->pos.y)+1].existence;    //北
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 2
 
 
   31:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
@@ -90,42 +90,41 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
   48:Core/Src/Origin/MazeSimulation.c ****     uint8_t value = simu->value_16[x][y];
   38              		.loc 1 48 5 is_stmt 1 view .LVU2
   39              		.loc 1 48 13 is_stmt 0 view .LVU3
-  40 0002 00EB0113 		add	r3, r0, r1, lsl #4
+  40 0002 00EB8103 		add	r3, r0, r1, lsl #2
   41 0006 1344     		add	r3, r3, r2
-  42 0008 03F58853 		add	r3, r3, #4352
-  43 000c 93F800E0 		ldrb	lr, [r3]	@ zero_extendqisi2
-  44              	.LVL1:
+  42 0008 93F840E1 		ldrb	lr, [r3, #320]	@ zero_extendqisi2
+  43              	.LVL1:
   49:Core/Src/Origin/MazeSimulation.c ****     if( (value / 8) == 1)
-  45              		.loc 1 49 5 is_stmt 1 view .LVU4
-  46              		.loc 1 49 21 is_stmt 0 view .LVU5
-  47 0010 AEF1080C 		sub	ip, lr, #8
-  48 0014 5FFA8CFC 		uxtb	ip, ip
-  49              		.loc 1 49 7 view .LVU6
-  50 0018 BCF1070F 		cmp	ip, #7
-  51 001c 41D8     		bhi	.L2
+  44              		.loc 1 49 5 is_stmt 1 view .LVU4
+  45              		.loc 1 49 21 is_stmt 0 view .LVU5
+  46 000c AEF1080C 		sub	ip, lr, #8
+  47 0010 5FFA8CFC 		uxtb	ip, ip
+  48              		.loc 1 49 7 view .LVU6
+  49 0014 BCF1070F 		cmp	ip, #7
+  50 0018 40D8     		bhi	.L2
   50:Core/Src/Origin/MazeSimulation.c ****     {
   51:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].existence = true;
-  52              		.loc 1 51 9 is_stmt 1 view .LVU7
-  53              		.loc 1 51 55 is_stmt 0 view .LVU8
-  54 001e 02EB0113 		add	r3, r2, r1, lsl #4
-  55 0022 03F58873 		add	r3, r3, #272
-  56 0026 4FF0010E 		mov	lr, #1
-  57              	.LVL2:
-  58              		.loc 1 51 55 view .LVU9
-  59 002a 00F833E0 		strb	lr, [r0, r3, lsl #3]
-  60              	.LVL3:
+  51              		.loc 1 51 9 is_stmt 1 view .LVU7
+  52              		.loc 1 51 55 is_stmt 0 view .LVU8
+  53 001a 02EB8103 		add	r3, r2, r1, lsl #2
+  54 001e 1433     		adds	r3, r3, #20
+  55 0020 4FF0010E 		mov	lr, #1
+  56              	.LVL2:
+  57              		.loc 1 51 55 view .LVU9
+  58 0024 00F833E0 		strb	lr, [r0, r3, lsl #3]
+  59              	.LVL3:
   52:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = true;
-  61              		.loc 1 52 9 is_stmt 1 view .LVU10
-  62              		.loc 1 52 50 is_stmt 0 view .LVU11
-  63 002e 00EBC303 		add	r3, r0, r3, lsl #3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 3
+  60              		.loc 1 52 9 is_stmt 1 view .LVU10
+  61              		.loc 1 52 50 is_stmt 0 view .LVU11
+  62 0028 00EBC303 		add	r3, r0, r3, lsl #3
+  63 002c 83F804E0 		strb	lr, [r3, #4]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 3
 
 
-  64 0032 83F804E0 		strb	lr, [r3, #4]
   53:Core/Src/Origin/MazeSimulation.c ****         value -= 8;
-  65              		.loc 1 53 9 is_stmt 1 view .LVU12
-  66              	.LVL4:
-  67              	.L3:
+  64              		.loc 1 53 9 is_stmt 1 view .LVU12
+  65              	.LVL4:
+  66              	.L3:
   54:Core/Src/Origin/MazeSimulation.c ****     }
   55:Core/Src/Origin/MazeSimulation.c ****     else
   56:Core/Src/Origin/MazeSimulation.c ****     {
@@ -134,32 +133,32 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
   59:Core/Src/Origin/MazeSimulation.c ****     }
   60:Core/Src/Origin/MazeSimulation.c **** 
   61:Core/Src/Origin/MazeSimulation.c ****     if( (value / 4) == 1)
-  68              		.loc 1 61 5 view .LVU13
-  69              		.loc 1 61 21 is_stmt 0 view .LVU14
-  70 0036 ACF10403 		sub	r3, ip, #4
-  71 003a DBB2     		uxtb	r3, r3
-  72              		.loc 1 61 7 view .LVU15
-  73 003c 032B     		cmp	r3, #3
-  74 003e 3ED8     		bhi	.L4
+  67              		.loc 1 61 5 view .LVU13
+  68              		.loc 1 61 21 is_stmt 0 view .LVU14
+  69 0030 ACF10403 		sub	r3, ip, #4
+  70 0034 DBB2     		uxtb	r3, r3
+  71              		.loc 1 61 7 view .LVU15
+  72 0036 032B     		cmp	r3, #3
+  73 0038 3DD8     		bhi	.L4
   62:Core/Src/Origin/MazeSimulation.c ****     {
   63:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].existence = true;
-  75              		.loc 1 63 9 is_stmt 1 view .LVU16
-  76              		.loc 1 63 52 is_stmt 0 view .LVU17
-  77 0040 01EB011C 		add	ip, r1, r1, lsl #4
-  78              	.LVL5:
-  79              		.loc 1 63 52 view .LVU18
-  80 0044 9444     		add	ip, ip, r2
-  81 0046 4FF0010E 		mov	lr, #1
-  82 004a 00F83CE0 		strb	lr, [r0, ip, lsl #3]
+  74              		.loc 1 63 9 is_stmt 1 view .LVU16
+  75              		.loc 1 63 52 is_stmt 0 view .LVU17
+  76 003a 01EB810C 		add	ip, r1, r1, lsl #2
+  77              	.LVL5:
+  78              		.loc 1 63 52 view .LVU18
+  79 003e 9444     		add	ip, ip, r2
+  80 0040 4FF0010E 		mov	lr, #1
+  81 0044 00F83CE0 		strb	lr, [r0, ip, lsl #3]
   64:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = true;
-  83              		.loc 1 64 9 is_stmt 1 view .LVU19
-  84              		.loc 1 64 47 is_stmt 0 view .LVU20
-  85 004e 00EBCC0C 		add	ip, r0, ip, lsl #3
-  86 0052 8CF804E0 		strb	lr, [ip, #4]
+  82              		.loc 1 64 9 is_stmt 1 view .LVU19
+  83              		.loc 1 64 47 is_stmt 0 view .LVU20
+  84 0048 00EBCC0C 		add	ip, r0, ip, lsl #3
+  85 004c 8CF804E0 		strb	lr, [ip, #4]
   65:Core/Src/Origin/MazeSimulation.c ****         value -= 4;
-  87              		.loc 1 65 9 is_stmt 1 view .LVU21
-  88              	.LVL6:
-  89              	.L5:
+  86              		.loc 1 65 9 is_stmt 1 view .LVU21
+  87              	.LVL6:
+  88              	.L5:
   66:Core/Src/Origin/MazeSimulation.c ****     }
   67:Core/Src/Origin/MazeSimulation.c ****     else
   68:Core/Src/Origin/MazeSimulation.c ****     {
@@ -168,46 +167,46 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
   71:Core/Src/Origin/MazeSimulation.c ****     }
   72:Core/Src/Origin/MazeSimulation.c **** 
   73:Core/Src/Origin/MazeSimulation.c ****     if( (value / 2) == 1)
-  90              		.loc 1 73 5 view .LVU22
-  91              		.loc 1 73 21 is_stmt 0 view .LVU23
-  92 0056 A3F1020C 		sub	ip, r3, #2
-  93 005a 5FFA8CFC 		uxtb	ip, ip
-  94              		.loc 1 73 7 view .LVU24
-  95 005e BCF1010F 		cmp	ip, #1
-  96 0062 39D9     		bls	.L11
+  89              		.loc 1 73 5 view .LVU22
+  90              		.loc 1 73 21 is_stmt 0 view .LVU23
+  91 0050 A3F1020C 		sub	ip, r3, #2
+  92 0054 5FFA8CFC 		uxtb	ip, ip
+  93              		.loc 1 73 7 view .LVU24
+  94 0058 BCF1010F 		cmp	ip, #1
+  95 005c 38D9     		bls	.L11
   74:Core/Src/Origin/MazeSimulation.c ****     {
   75:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].existence = true;
   76:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 4
-
-
   77:Core/Src/Origin/MazeSimulation.c ****         value -= 2;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 4
+
+
   78:Core/Src/Origin/MazeSimulation.c ****     }
   79:Core/Src/Origin/MazeSimulation.c ****     else
   80:Core/Src/Origin/MazeSimulation.c ****     {
   81:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].existence = false;
-  97              		.loc 1 81 9 is_stmt 1 view .LVU25
-  98              		.loc 1 81 40 is_stmt 0 view .LVU26
-  99 0064 01F1010C 		add	ip, r1, #1
- 100              		.loc 1 81 57 view .LVU27
- 101 0068 02EB0C1C 		add	ip, r2, ip, lsl #4
- 102 006c 0CF5887C 		add	ip, ip, #272
- 103 0070 4FF0000E 		mov	lr, #0
- 104 0074 00F83CE0 		strb	lr, [r0, ip, lsl #3]
+  96              		.loc 1 81 9 is_stmt 1 view .LVU25
+  97              		.loc 1 81 40 is_stmt 0 view .LVU26
+  98 005e 01F1010C 		add	ip, r1, #1
+  99              		.loc 1 81 57 view .LVU27
+ 100 0062 02EB8C0C 		add	ip, r2, ip, lsl #2
+ 101 0066 0CF1140C 		add	ip, ip, #20
+ 102 006a 4FF0000E 		mov	lr, #0
+ 103 006e 00F83CE0 		strb	lr, [r0, ip, lsl #3]
   82:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = false;
- 105              		.loc 1 82 9 is_stmt 1 view .LVU28
- 106              		.loc 1 82 52 is_stmt 0 view .LVU29
- 107 0078 00EBCC0C 		add	ip, r0, ip, lsl #3
- 108 007c 8CF804E0 		strb	lr, [ip, #4]
- 109              	.LVL7:
- 110              	.L7:
+ 104              		.loc 1 82 9 is_stmt 1 view .LVU28
+ 105              		.loc 1 82 52 is_stmt 0 view .LVU29
+ 106 0072 00EBCC0C 		add	ip, r0, ip, lsl #3
+ 107 0076 8CF804E0 		strb	lr, [ip, #4]
+ 108              	.LVL7:
+ 109              	.L7:
   83:Core/Src/Origin/MazeSimulation.c ****     }
   84:Core/Src/Origin/MazeSimulation.c **** 
   85:Core/Src/Origin/MazeSimulation.c ****     if( (value / 1) == 1)
- 111              		.loc 1 85 5 is_stmt 1 view .LVU30
- 112              		.loc 1 85 7 is_stmt 0 view .LVU31
- 113 0080 012B     		cmp	r3, #1
- 114 0082 38D0     		beq	.L12
+ 110              		.loc 1 85 5 is_stmt 1 view .LVU30
+ 111              		.loc 1 85 7 is_stmt 0 view .LVU31
+ 112 007a 012B     		cmp	r3, #1
+ 113 007c 36D0     		beq	.L12
   86:Core/Src/Origin/MazeSimulation.c ****     {
   87:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].existence = true;
   88:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
@@ -216,971 +215,967 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
   91:Core/Src/Origin/MazeSimulation.c ****     else
   92:Core/Src/Origin/MazeSimulation.c ****     {
   93:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].existence = false;
- 115              		.loc 1 93 9 is_stmt 1 view .LVU32
- 116              		.loc 1 93 40 is_stmt 0 view .LVU33
- 117 0084 0132     		adds	r2, r2, #1
- 118              	.LVL8:
- 119              		.loc 1 93 54 view .LVU34
- 120 0086 01EB0111 		add	r1, r1, r1, lsl #4
- 121              	.LVL9:
- 122              		.loc 1 93 54 view .LVU35
- 123 008a 1144     		add	r1, r1, r2
- 124 008c 0022     		movs	r2, #0
- 125 008e 00F83120 		strb	r2, [r0, r1, lsl #3]
+ 114              		.loc 1 93 9 is_stmt 1 view .LVU32
+ 115              		.loc 1 93 40 is_stmt 0 view .LVU33
+ 116 007e 0132     		adds	r2, r2, #1
+ 117              	.LVL8:
+ 118              		.loc 1 93 54 view .LVU34
+ 119 0080 01EB8101 		add	r1, r1, r1, lsl #2
+ 120              	.LVL9:
+ 121              		.loc 1 93 54 view .LVU35
+ 122 0084 1144     		add	r1, r1, r2
+ 123 0086 0022     		movs	r2, #0
+ 124 0088 00F83120 		strb	r2, [r0, r1, lsl #3]
   94:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = false;
- 126              		.loc 1 94 9 is_stmt 1 view .LVU36
- 127              		.loc 1 94 49 is_stmt 0 view .LVU37
- 128 0092 00EBC101 		add	r1, r0, r1, lsl #3
- 129 0096 0A71     		strb	r2, [r1, #4]
- 130              	.L9:
+ 125              		.loc 1 94 9 is_stmt 1 view .LVU36
+ 126              		.loc 1 94 49 is_stmt 0 view .LVU37
+ 127 008c 00EBC101 		add	r1, r0, r1, lsl #3
+ 128 0090 0A71     		strb	r2, [r1, #4]
+ 129              	.L9:
   95:Core/Src/Origin/MazeSimulation.c ****     }
   96:Core/Src/Origin/MazeSimulation.c **** 
   97:Core/Src/Origin/MazeSimulation.c ****     //最終的にvalue_16が0ならOk
   98:Core/Src/Origin/MazeSimulation.c ****     return (value == 0) ? true : false;
- 131              		.loc 1 98 5 is_stmt 1 view .LVU38
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 5
-
-
+ 130              		.loc 1 98 5 is_stmt 1 view .LVU38
   99:Core/Src/Origin/MazeSimulation.c **** }
- 132              		.loc 1 99 1 is_stmt 0 view .LVU39
- 133 0098 B3FA83F0 		clz	r0, r3
- 134              	.LVL10:
- 135              		.loc 1 99 1 view .LVU40
- 136 009c 4009     		lsrs	r0, r0, #5
- 137 009e 5DF804FB 		ldr	pc, [sp], #4
- 138              	.LVL11:
- 139              	.L2:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 5
+
+
+ 131              		.loc 1 99 1 is_stmt 0 view .LVU39
+ 132 0092 B3FA83F0 		clz	r0, r3
+ 133              	.LVL10:
+ 134              		.loc 1 99 1 view .LVU40
+ 135 0096 4009     		lsrs	r0, r0, #5
+ 136 0098 5DF804FB 		ldr	pc, [sp], #4
+ 137              	.LVL11:
+ 138              	.L2:
   57:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = false;
- 140              		.loc 1 57 9 is_stmt 1 view .LVU41
+ 139              		.loc 1 57 9 is_stmt 1 view .LVU41
   57:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x][y].draw = false;
- 141              		.loc 1 57 55 is_stmt 0 view .LVU42
- 142 00a2 02EB0113 		add	r3, r2, r1, lsl #4
- 143 00a6 03F58873 		add	r3, r3, #272
- 144 00aa 4FF0000C 		mov	ip, #0
- 145 00ae 00F833C0 		strb	ip, [r0, r3, lsl #3]
+ 140              		.loc 1 57 55 is_stmt 0 view .LVU42
+ 141 009c 02EB8103 		add	r3, r2, r1, lsl #2
+ 142 00a0 1433     		adds	r3, r3, #20
+ 143 00a2 4FF0000C 		mov	ip, #0
+ 144 00a6 00F833C0 		strb	ip, [r0, r3, lsl #3]
   58:Core/Src/Origin/MazeSimulation.c ****     }
- 146              		.loc 1 58 9 is_stmt 1 view .LVU43
+ 145              		.loc 1 58 9 is_stmt 1 view .LVU43
   58:Core/Src/Origin/MazeSimulation.c ****     }
- 147              		.loc 1 58 50 is_stmt 0 view .LVU44
- 148 00b2 00EBC303 		add	r3, r0, r3, lsl #3
- 149 00b6 83F804C0 		strb	ip, [r3, #4]
+ 146              		.loc 1 58 50 is_stmt 0 view .LVU44
+ 147 00aa 00EBC303 		add	r3, r0, r3, lsl #3
+ 148 00ae 83F804C0 		strb	ip, [r3, #4]
   48:Core/Src/Origin/MazeSimulation.c ****     if( (value / 8) == 1)
- 150              		.loc 1 48 13 view .LVU45
- 151 00ba F446     		mov	ip, lr
- 152 00bc BBE7     		b	.L3
- 153              	.LVL12:
- 154              	.L4:
+ 149              		.loc 1 48 13 view .LVU45
+ 150 00b2 F446     		mov	ip, lr
+ 151 00b4 BCE7     		b	.L3
+ 152              	.LVL12:
+ 153              	.L4:
   69:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = false;
- 155              		.loc 1 69 9 is_stmt 1 view .LVU46
+ 154              		.loc 1 69 9 is_stmt 1 view .LVU46
   69:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y].draw = false;
- 156              		.loc 1 69 52 is_stmt 0 view .LVU47
- 157 00be 01EB0113 		add	r3, r1, r1, lsl #4
- 158 00c2 1344     		add	r3, r3, r2
- 159 00c4 4FF0000E 		mov	lr, #0
- 160 00c8 00F833E0 		strb	lr, [r0, r3, lsl #3]
+ 155              		.loc 1 69 52 is_stmt 0 view .LVU47
+ 156 00b6 01EB8103 		add	r3, r1, r1, lsl #2
+ 157 00ba 1344     		add	r3, r3, r2
+ 158 00bc 4FF0000E 		mov	lr, #0
+ 159 00c0 00F833E0 		strb	lr, [r0, r3, lsl #3]
   70:Core/Src/Origin/MazeSimulation.c ****     }
- 161              		.loc 1 70 9 is_stmt 1 view .LVU48
+ 160              		.loc 1 70 9 is_stmt 1 view .LVU48
   70:Core/Src/Origin/MazeSimulation.c ****     }
- 162              		.loc 1 70 47 is_stmt 0 view .LVU49
- 163 00cc 00EBC303 		add	r3, r0, r3, lsl #3
- 164 00d0 83F804E0 		strb	lr, [r3, #4]
- 165 00d4 6346     		mov	r3, ip
- 166 00d6 BEE7     		b	.L5
- 167              	.LVL13:
- 168              	.L11:
+ 161              		.loc 1 70 47 is_stmt 0 view .LVU49
+ 162 00c4 00EBC303 		add	r3, r0, r3, lsl #3
+ 163 00c8 83F804E0 		strb	lr, [r3, #4]
+ 164 00cc 6346     		mov	r3, ip
+ 165 00ce BFE7     		b	.L5
+ 166              	.LVL13:
+ 167              	.L11:
   75:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
- 169              		.loc 1 75 9 is_stmt 1 view .LVU50
+ 168              		.loc 1 75 9 is_stmt 1 view .LVU50
   75:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
- 170              		.loc 1 75 40 is_stmt 0 view .LVU51
- 171 00d8 4B1C     		adds	r3, r1, #1
- 172              	.LVL14:
+ 169              		.loc 1 75 40 is_stmt 0 view .LVU51
+ 170 00d0 4B1C     		adds	r3, r1, #1
+ 171              	.LVL14:
   75:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.ColumnNode[x+1][y].draw = true;
- 173              		.loc 1 75 57 view .LVU52
- 174 00da 02EB0313 		add	r3, r2, r3, lsl #4
- 175 00de 03F58873 		add	r3, r3, #272
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 6
+ 172              		.loc 1 75 57 view .LVU52
+ 173 00d2 02EB8303 		add	r3, r2, r3, lsl #2
+ 174 00d6 1433     		adds	r3, r3, #20
+ 175 00d8 4FF0010E 		mov	lr, #1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 6
 
 
- 176 00e2 4FF0010E 		mov	lr, #1
- 177 00e6 00F833E0 		strb	lr, [r0, r3, lsl #3]
+ 176 00dc 00F833E0 		strb	lr, [r0, r3, lsl #3]
   76:Core/Src/Origin/MazeSimulation.c ****         value -= 2;
- 178              		.loc 1 76 9 is_stmt 1 view .LVU53
+ 177              		.loc 1 76 9 is_stmt 1 view .LVU53
   76:Core/Src/Origin/MazeSimulation.c ****         value -= 2;
- 179              		.loc 1 76 52 is_stmt 0 view .LVU54
- 180 00ea 00EBC303 		add	r3, r0, r3, lsl #3
- 181 00ee 83F804E0 		strb	lr, [r3, #4]
+ 178              		.loc 1 76 52 is_stmt 0 view .LVU54
+ 179 00e0 00EBC303 		add	r3, r0, r3, lsl #3
+ 180 00e4 83F804E0 		strb	lr, [r3, #4]
   77:Core/Src/Origin/MazeSimulation.c ****     }
- 182              		.loc 1 77 9 is_stmt 1 view .LVU55
- 183              	.LVL15:
+ 181              		.loc 1 77 9 is_stmt 1 view .LVU55
+ 182              	.LVL15:
   77:Core/Src/Origin/MazeSimulation.c ****     }
- 184              		.loc 1 77 15 is_stmt 0 view .LVU56
- 185 00f2 6346     		mov	r3, ip
- 186 00f4 C4E7     		b	.L7
- 187              	.LVL16:
- 188              	.L12:
+ 183              		.loc 1 77 15 is_stmt 0 view .LVU56
+ 184 00e8 6346     		mov	r3, ip
+ 185 00ea C6E7     		b	.L7
+ 186              	.LVL16:
+ 187              	.L12:
   87:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
- 189              		.loc 1 87 9 is_stmt 1 view .LVU57
+ 188              		.loc 1 87 9 is_stmt 1 view .LVU57
   87:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
- 190              		.loc 1 87 40 is_stmt 0 view .LVU58
- 191 00f6 0132     		adds	r2, r2, #1
- 192              	.LVL17:
+ 189              		.loc 1 87 40 is_stmt 0 view .LVU58
+ 190 00ec 0132     		adds	r2, r2, #1
+ 191              	.LVL17:
   87:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
- 193              		.loc 1 87 54 view .LVU59
- 194 00f8 01EB0111 		add	r1, r1, r1, lsl #4
- 195              	.LVL18:
+ 192              		.loc 1 87 54 view .LVU59
+ 193 00ee 01EB8101 		add	r1, r1, r1, lsl #2
+ 194              	.LVL18:
   87:Core/Src/Origin/MazeSimulation.c ****         simu->virtual_maze.RawNode[x][y+1].draw = true;
- 196              		.loc 1 87 54 view .LVU60
- 197 00fc 1144     		add	r1, r1, r2
- 198 00fe 0122     		movs	r2, #1
- 199 0100 00F83120 		strb	r2, [r0, r1, lsl #3]
+ 195              		.loc 1 87 54 view .LVU60
+ 196 00f2 1144     		add	r1, r1, r2
+ 197 00f4 0122     		movs	r2, #1
+ 198 00f6 00F83120 		strb	r2, [r0, r1, lsl #3]
   88:Core/Src/Origin/MazeSimulation.c ****         value -= 1;
- 200              		.loc 1 88 9 is_stmt 1 view .LVU61
+ 199              		.loc 1 88 9 is_stmt 1 view .LVU61
   88:Core/Src/Origin/MazeSimulation.c ****         value -= 1;
- 201              		.loc 1 88 49 is_stmt 0 view .LVU62
- 202 0104 00EBC101 		add	r1, r0, r1, lsl #3
- 203 0108 0A71     		strb	r2, [r1, #4]
+ 200              		.loc 1 88 49 is_stmt 0 view .LVU62
+ 201 00fa 00EBC101 		add	r1, r0, r1, lsl #3
+ 202 00fe 0A71     		strb	r2, [r1, #4]
   89:Core/Src/Origin/MazeSimulation.c ****     }
- 204              		.loc 1 89 9 is_stmt 1 view .LVU63
+ 203              		.loc 1 89 9 is_stmt 1 view .LVU63
   89:Core/Src/Origin/MazeSimulation.c ****     }
- 205              		.loc 1 89 15 is_stmt 0 view .LVU64
- 206 010a 013B     		subs	r3, r3, #1
- 207              	.LVL19:
+ 204              		.loc 1 89 15 is_stmt 0 view .LVU64
+ 205 0100 013B     		subs	r3, r3, #1
+ 206              	.LVL19:
   89:Core/Src/Origin/MazeSimulation.c ****     }
- 208              		.loc 1 89 15 view .LVU65
- 209 010c DBB2     		uxtb	r3, r3
- 210              	.LVL20:
+ 207              		.loc 1 89 15 view .LVU65
+ 208 0102 DBB2     		uxtb	r3, r3
+ 209              	.LVL20:
   89:Core/Src/Origin/MazeSimulation.c ****     }
- 211              		.loc 1 89 15 view .LVU66
- 212 010e C3E7     		b	.L9
- 213              		.cfi_endproc
- 214              	.LFE4:
- 216              		.section	.text.convert16ValueToWallDirection_Simulation,"ax",%progbits
- 217              		.align	1
- 218              		.global	convert16ValueToWallDirection_Simulation
- 219              		.syntax unified
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 7
+ 210              		.loc 1 89 15 view .LVU66
+ 211 0104 C5E7     		b	.L9
+ 212              		.cfi_endproc
+ 213              	.LFE4:
+ 215              		.section	.text.convert16ValueToWallDirection_Simulation,"ax",%progbits
+ 216              		.align	1
+ 217              		.global	convert16ValueToWallDirection_Simulation
+ 218              		.syntax unified
+ 219              		.thumb
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 7
 
 
- 220              		.thumb
- 221              		.thumb_func
- 223              	convert16ValueToWallDirection_Simulation:
- 224              	.LVL21:
- 225              	.LFB3:
+ 220              		.thumb_func
+ 222              	convert16ValueToWallDirection_Simulation:
+ 223              	.LVL21:
+ 224              	.LFB3:
    7:Core/Src/Origin/MazeSimulation.c ****     //4方角の壁があるか無いかを返す
- 226              		.loc 1 7 1 is_stmt 1 view -0
- 227              		.cfi_startproc
- 228              		@ args = 0, pretend = 0, frame = 0
- 229              		@ frame_needed = 0, uses_anonymous_args = 0
- 230              		@ link register save eliminated.
+ 225              		.loc 1 7 1 is_stmt 1 view -0
+ 226              		.cfi_startproc
+ 227              		@ args = 0, pretend = 0, frame = 0
+ 228              		@ frame_needed = 0, uses_anonymous_args = 0
+ 229              		@ link register save eliminated.
    9:Core/Src/Origin/MazeSimulation.c ****     {
- 231              		.loc 1 9 5 view .LVU68
+ 230              		.loc 1 9 5 view .LVU68
    9:Core/Src/Origin/MazeSimulation.c ****     {
- 232              		.loc 1 9 15 is_stmt 0 view .LVU69
- 233 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
+ 231              		.loc 1 9 15 is_stmt 0 view .LVU69
+ 232 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
    9:Core/Src/Origin/MazeSimulation.c ****     {
- 234              		.loc 1 9 5 view .LVU70
- 235 0002 062B     		cmp	r3, #6
- 236 0004 00F29080 		bhi	.L20
- 237 0008 DFE803F0 		tbb	[pc, r3]
- 238              	.L16:
- 239 000c 04       		.byte	(.L19-.L16)/2
- 240 000d 8E       		.byte	(.L20-.L16)/2
- 241 000e 28       		.byte	(.L18-.L16)/2
- 242 000f 8E       		.byte	(.L20-.L16)/2
- 243 0010 4A       		.byte	(.L17-.L16)/2
- 244 0011 8E       		.byte	(.L20-.L16)/2
- 245 0012 6C       		.byte	(.L15-.L16)/2
- 246 0013 00       		.p2align 1
- 247              	.L19:
+ 233              		.loc 1 9 5 view .LVU70
+ 234 0002 062B     		cmp	r3, #6
+ 235 0004 00F28A80 		bhi	.L20
+ 236 0008 DFE803F0 		tbb	[pc, r3]
+ 237              	.L16:
+ 238 000c 04       		.byte	(.L19-.L16)/2
+ 239 000d 88       		.byte	(.L20-.L16)/2
+ 240 000e 26       		.byte	(.L18-.L16)/2
+ 241 000f 88       		.byte	(.L20-.L16)/2
+ 242 0010 47       		.byte	(.L17-.L16)/2
+ 243 0011 88       		.byte	(.L20-.L16)/2
+ 244 0012 67       		.byte	(.L15-.L16)/2
+ 245 0013 00       		.p2align 1
+ 246              	.L19:
   12:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 248              		.loc 1 12 9 is_stmt 1 view .LVU71
+ 247              		.loc 1 12 9 is_stmt 1 view .LVU71
   12:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 249              		.loc 1 12 56 is_stmt 0 view .LVU72
- 250 0014 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 248              		.loc 1 12 56 is_stmt 0 view .LVU72
+ 249 0014 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   12:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 251              		.loc 1 12 68 view .LVU73
- 252 0016 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+ 250              		.loc 1 12 68 view .LVU73
+ 251 0016 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
   12:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 253              		.loc 1 12 71 view .LVU74
- 254 001a 0CF1010C 		add	ip, ip, #1
+ 252              		.loc 1 12 71 view .LVU74
+ 253 001a 0CF1010C 		add	ip, ip, #1
   12:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 255              		.loc 1 12 74 view .LVU75
- 256 001e 03EB0313 		add	r3, r3, r3, lsl #4
- 257 0022 6344     		add	r3, r3, ip
- 258 0024 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 254              		.loc 1 12 74 view .LVU75
+ 255 001e 03EB8303 		add	r3, r3, r3, lsl #2
+ 256 0022 6344     		add	r3, r3, ip
+ 257 0024 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   12:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 259              		.loc 1 12 20 view .LVU76
- 260 0028 1370     		strb	r3, [r2]
+ 258              		.loc 1 12 20 view .LVU76
+ 259 0028 1370     		strb	r3, [r2]
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
- 261              		.loc 1 13 9 is_stmt 1 view .LVU77
+ 260              		.loc 1 13 9 is_stmt 1 view .LVU77
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
- 262              		.loc 1 13 60 is_stmt 0 view .LVU78
- 263 002a 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 261              		.loc 1 13 60 is_stmt 0 view .LVU78
+ 262 002a 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
- 264              		.loc 1 13 63 view .LVU79
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 8
+ 263              		.loc 1 13 63 view .LVU79
+ 264 002c 03F1010C 		add	ip, r3, #1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 8
 
 
- 265 002c 03F1010C 		add	ip, r3, #1
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
- 266              		.loc 1 13 74 view .LVU80
- 267 0030 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 265              		.loc 1 13 74 view .LVU80
+ 266 0030 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
- 268              		.loc 1 13 77 view .LVU81
- 269 0032 03EB0C13 		add	r3, r3, ip, lsl #4
- 270 0036 03F58873 		add	r3, r3, #272
- 271 003a 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 267              		.loc 1 13 77 view .LVU81
+ 268 0032 03EB8C03 		add	r3, r3, ip, lsl #2
+ 269 0036 1433     		adds	r3, r3, #20
+ 270 0038 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   13:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //南
- 272              		.loc 1 13 20 view .LVU82
- 273 003e 5370     		strb	r3, [r2, #1]
+ 271              		.loc 1 13 20 view .LVU82
+ 272 003c 5370     		strb	r3, [r2, #1]
   14:Core/Src/Origin/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 274              		.loc 1 14 9 is_stmt 1 view .LVU83
+ 273              		.loc 1 14 9 is_stmt 1 view .LVU83
   14:Core/Src/Origin/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 275              		.loc 1 14 20 is_stmt 0 view .LVU84
- 276 0040 0023     		movs	r3, #0
- 277 0042 9370     		strb	r3, [r2, #2]
+ 274              		.loc 1 14 20 is_stmt 0 view .LVU84
+ 275 003e 0023     		movs	r3, #0
+ 276 0040 9370     		strb	r3, [r2, #2]
   15:Core/Src/Origin/MazeSimulation.c ****         break;
- 278              		.loc 1 15 9 is_stmt 1 view .LVU85
+ 277              		.loc 1 15 9 is_stmt 1 view .LVU85
   15:Core/Src/Origin/MazeSimulation.c ****         break;
- 279              		.loc 1 15 59 is_stmt 0 view .LVU86
- 280 0044 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+ 278              		.loc 1 15 59 is_stmt 0 view .LVU86
+ 279 0042 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
   15:Core/Src/Origin/MazeSimulation.c ****         break;
- 281              		.loc 1 15 70 view .LVU87
- 282 0048 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 280              		.loc 1 15 70 view .LVU87
+ 281 0046 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
   15:Core/Src/Origin/MazeSimulation.c ****         break;
- 283              		.loc 1 15 73 view .LVU88
- 284 004a 03EB0C13 		add	r3, r3, ip, lsl #4
- 285 004e 03F58873 		add	r3, r3, #272
- 286 0052 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 282              		.loc 1 15 73 view .LVU88
+ 283 0048 03EB8C03 		add	r3, r3, ip, lsl #2
+ 284 004c 1433     		adds	r3, r3, #20
+ 285 004e 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   15:Core/Src/Origin/MazeSimulation.c ****         break;
- 287              		.loc 1 15 20 view .LVU89
- 288 0056 D370     		strb	r3, [r2, #3]
+ 286              		.loc 1 15 20 view .LVU89
+ 287 0052 D370     		strb	r3, [r2, #3]
   16:Core/Src/Origin/MazeSimulation.c ****     case east:
- 289              		.loc 1 16 9 is_stmt 1 view .LVU90
+ 288              		.loc 1 16 9 is_stmt 1 view .LVU90
   40:Core/Src/Origin/MazeSimulation.c **** 
- 290              		.loc 1 40 12 is_stmt 0 view .LVU91
- 291 0058 0120     		movs	r0, #1
- 292              	.LVL22:
+ 289              		.loc 1 40 12 is_stmt 0 view .LVU91
+ 290 0054 0120     		movs	r0, #1
+ 291              	.LVL22:
   16:Core/Src/Origin/MazeSimulation.c ****     case east:
- 293              		.loc 1 16 9 view .LVU92
- 294 005a 7047     		bx	lr
- 295              	.LVL23:
- 296              	.L18:
+ 292              		.loc 1 16 9 view .LVU92
+ 293 0056 7047     		bx	lr
+ 294              	.LVL23:
+ 295              	.L18:
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 297              		.loc 1 18 9 is_stmt 1 view .LVU93
+ 296              		.loc 1 18 9 is_stmt 1 view .LVU93
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 298              		.loc 1 18 56 is_stmt 0 view .LVU94
- 299 005c 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 297              		.loc 1 18 56 is_stmt 0 view .LVU94
+ 298 0058 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 300              		.loc 1 18 68 view .LVU95
- 301 005e 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+ 299              		.loc 1 18 68 view .LVU95
+ 300 005a 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 302              		.loc 1 18 71 view .LVU96
- 303 0062 0CF1010C 		add	ip, ip, #1
+ 301              		.loc 1 18 71 view .LVU96
+ 302 005e 0CF1010C 		add	ip, ip, #1
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 9
+ 303              		.loc 1 18 74 view .LVU97
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 9
 
 
- 304              		.loc 1 18 74 view .LVU97
- 305 0066 03EB0313 		add	r3, r3, r3, lsl #4
- 306 006a 6344     		add	r3, r3, ip
- 307 006c 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 304 0062 03EB8303 		add	r3, r3, r3, lsl #2
+ 305 0066 6344     		add	r3, r3, ip
+ 306 0068 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   18:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 308              		.loc 1 18 20 view .LVU98
- 309 0070 D370     		strb	r3, [r2, #3]
+ 307              		.loc 1 18 20 view .LVU98
+ 308 006c D370     		strb	r3, [r2, #3]
   19:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 310              		.loc 1 19 9 is_stmt 1 view .LVU99
+ 309              		.loc 1 19 9 is_stmt 1 view .LVU99
   19:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 311              		.loc 1 19 60 is_stmt 0 view .LVU100
- 312 0072 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 310              		.loc 1 19 60 is_stmt 0 view .LVU100
+ 311 006e 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   19:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 313              		.loc 1 19 63 view .LVU101
- 314 0074 03F1010C 		add	ip, r3, #1
+ 312              		.loc 1 19 63 view .LVU101
+ 313 0070 03F1010C 		add	ip, r3, #1
   19:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 315              		.loc 1 19 74 view .LVU102
- 316 0078 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 314              		.loc 1 19 74 view .LVU102
+ 315 0074 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
   19:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 317              		.loc 1 19 77 view .LVU103
- 318 007a 03EB0C13 		add	r3, r3, ip, lsl #4
- 319 007e 03F58873 		add	r3, r3, #272
- 320 0082 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 316              		.loc 1 19 77 view .LVU103
+ 317 0076 03EB8C03 		add	r3, r3, ip, lsl #2
+ 318 007a 1433     		adds	r3, r3, #20
+ 319 007c 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   19:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 321              		.loc 1 19 20 view .LVU104
- 322 0086 1370     		strb	r3, [r2]
+ 320              		.loc 1 19 20 view .LVU104
+ 321 0080 1370     		strb	r3, [r2]
   20:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
- 323              		.loc 1 20 9 is_stmt 1 view .LVU105
+ 322              		.loc 1 20 9 is_stmt 1 view .LVU105
   20:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
- 324              		.loc 1 20 56 is_stmt 0 view .LVU106
- 325 0088 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 323              		.loc 1 20 56 is_stmt 0 view .LVU106
+ 324 0082 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   20:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
- 326              		.loc 1 20 67 view .LVU107
- 327 008a 4978     		ldrb	r1, [r1, #1]	@ zero_extendqisi2
- 328              	.LVL24:
+ 325              		.loc 1 20 67 view .LVU107
+ 326 0084 4978     		ldrb	r1, [r1, #1]	@ zero_extendqisi2
+ 327              	.LVL24:
   20:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
- 329              		.loc 1 20 70 view .LVU108
- 330 008c 03EB0313 		add	r3, r3, r3, lsl #4
- 331 0090 0B44     		add	r3, r3, r1
- 332 0092 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 328              		.loc 1 20 70 view .LVU108
+ 329 0086 03EB8303 		add	r3, r3, r3, lsl #2
+ 330 008a 0B44     		add	r3, r3, r1
+ 331 008c 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   20:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //西
- 333              		.loc 1 20 20 view .LVU109
- 334 0096 5370     		strb	r3, [r2, #1]
+ 332              		.loc 1 20 20 view .LVU109
+ 333 0090 5370     		strb	r3, [r2, #1]
   21:Core/Src/Origin/MazeSimulation.c ****         break;
- 335              		.loc 1 21 9 is_stmt 1 view .LVU110
+ 334              		.loc 1 21 9 is_stmt 1 view .LVU110
   21:Core/Src/Origin/MazeSimulation.c ****         break;
- 336              		.loc 1 21 20 is_stmt 0 view .LVU111
- 337 0098 0023     		movs	r3, #0
- 338 009a 9370     		strb	r3, [r2, #2]
+ 335              		.loc 1 21 20 is_stmt 0 view .LVU111
+ 336 0092 0023     		movs	r3, #0
+ 337 0094 9370     		strb	r3, [r2, #2]
   22:Core/Src/Origin/MazeSimulation.c ****     case south:
- 339              		.loc 1 22 9 is_stmt 1 view .LVU112
+ 338              		.loc 1 22 9 is_stmt 1 view .LVU112
   40:Core/Src/Origin/MazeSimulation.c **** 
- 340              		.loc 1 40 12 is_stmt 0 view .LVU113
- 341 009c 0120     		movs	r0, #1
- 342              	.LVL25:
+ 339              		.loc 1 40 12 is_stmt 0 view .LVU113
+ 340 0096 0120     		movs	r0, #1
+ 341              	.LVL25:
   22:Core/Src/Origin/MazeSimulation.c ****     case south:
- 343              		.loc 1 22 9 view .LVU114
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 10
+ 342              		.loc 1 22 9 view .LVU114
+ 343 0098 7047     		bx	lr
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 10
 
 
- 344 009e 7047     		bx	lr
- 345              	.LVL26:
- 346              	.L17:
+ 344              	.LVL26:
+ 345              	.L17:
   24:Core/Src/Origin/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 347              		.loc 1 24 9 is_stmt 1 view .LVU115
+ 346              		.loc 1 24 9 is_stmt 1 view .LVU115
   24:Core/Src/Origin/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.ColumnNode[(st->pos.x)+1][st->pos.y].existence; //東
- 348              		.loc 1 24 20 is_stmt 0 view .LVU116
- 349 00a0 0023     		movs	r3, #0
- 350 00a2 9370     		strb	r3, [r2, #2]
+ 347              		.loc 1 24 20 is_stmt 0 view .LVU116
+ 348 009a 0023     		movs	r3, #0
+ 349 009c 9370     		strb	r3, [r2, #2]
   25:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 351              		.loc 1 25 9 is_stmt 1 view .LVU117
+ 350              		.loc 1 25 9 is_stmt 1 view .LVU117
   25:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 352              		.loc 1 25 60 is_stmt 0 view .LVU118
- 353 00a4 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 351              		.loc 1 25 60 is_stmt 0 view .LVU118
+ 352 009e 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   25:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 354              		.loc 1 25 63 view .LVU119
- 355 00a6 03F1010C 		add	ip, r3, #1
+ 353              		.loc 1 25 63 view .LVU119
+ 354 00a0 03F1010C 		add	ip, r3, #1
   25:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 356              		.loc 1 25 74 view .LVU120
- 357 00aa 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 355              		.loc 1 25 74 view .LVU120
+ 356 00a4 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
   25:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 358              		.loc 1 25 77 view .LVU121
- 359 00ac 03EB0C13 		add	r3, r3, ip, lsl #4
- 360 00b0 03F58873 		add	r3, r3, #272
- 361 00b4 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 357              		.loc 1 25 77 view .LVU121
+ 358 00a6 03EB8C03 		add	r3, r3, ip, lsl #2
+ 359 00aa 1433     		adds	r3, r3, #20
+ 360 00ac 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   25:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 362              		.loc 1 25 20 view .LVU122
- 363 00b8 D370     		strb	r3, [r2, #3]
+ 361              		.loc 1 25 20 view .LVU122
+ 362 00b0 D370     		strb	r3, [r2, #3]
   26:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 364              		.loc 1 26 9 is_stmt 1 view .LVU123
+ 363              		.loc 1 26 9 is_stmt 1 view .LVU123
   26:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 365              		.loc 1 26 56 is_stmt 0 view .LVU124
- 366 00ba 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 364              		.loc 1 26 56 is_stmt 0 view .LVU124
+ 365 00b2 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   26:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 367              		.loc 1 26 67 view .LVU125
- 368 00bc 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+ 366              		.loc 1 26 67 view .LVU125
+ 367 00b4 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
   26:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 369              		.loc 1 26 70 view .LVU126
- 370 00c0 03EB0313 		add	r3, r3, r3, lsl #4
- 371 00c4 6344     		add	r3, r3, ip
- 372 00c6 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 368              		.loc 1 26 70 view .LVU126
+ 369 00b8 03EB8303 		add	r3, r3, r3, lsl #2
+ 370 00bc 6344     		add	r3, r3, ip
+ 371 00be 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   26:Core/Src/Origin/MazeSimulation.c ****         wall_st[1] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 373              		.loc 1 26 20 view .LVU127
- 374 00ca 1370     		strb	r3, [r2]
+ 372              		.loc 1 26 20 view .LVU127
+ 373 00c2 1370     		strb	r3, [r2]
   27:Core/Src/Origin/MazeSimulation.c ****         break;
- 375              		.loc 1 27 9 is_stmt 1 view .LVU128
+ 374              		.loc 1 27 9 is_stmt 1 view .LVU128
   27:Core/Src/Origin/MazeSimulation.c ****         break;
- 376              		.loc 1 27 59 is_stmt 0 view .LVU129
- 377 00cc 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+ 375              		.loc 1 27 59 is_stmt 0 view .LVU129
+ 376 00c4 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
   27:Core/Src/Origin/MazeSimulation.c ****         break;
- 378              		.loc 1 27 70 view .LVU130
- 379 00d0 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 377              		.loc 1 27 70 view .LVU130
+ 378 00c8 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
   27:Core/Src/Origin/MazeSimulation.c ****         break;
- 380              		.loc 1 27 73 view .LVU131
- 381 00d2 03EB0C13 		add	r3, r3, ip, lsl #4
- 382 00d6 03F58873 		add	r3, r3, #272
- 383 00da 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 11
+ 379              		.loc 1 27 73 view .LVU131
+ 380 00ca 03EB8C03 		add	r3, r3, ip, lsl #2
+ 381 00ce 1433     		adds	r3, r3, #20
+ 382 00d0 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+  27:Core/Src/Origin/MazeSimulation.c ****         break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 11
 
 
-  27:Core/Src/Origin/MazeSimulation.c ****         break;
- 384              		.loc 1 27 20 view .LVU132
- 385 00de 5370     		strb	r3, [r2, #1]
+ 383              		.loc 1 27 20 view .LVU132
+ 384 00d4 5370     		strb	r3, [r2, #1]
   28:Core/Src/Origin/MazeSimulation.c ****     case west:
- 386              		.loc 1 28 9 is_stmt 1 view .LVU133
+ 385              		.loc 1 28 9 is_stmt 1 view .LVU133
   40:Core/Src/Origin/MazeSimulation.c **** 
- 387              		.loc 1 40 12 is_stmt 0 view .LVU134
- 388 00e0 0120     		movs	r0, #1
- 389              	.LVL27:
+ 386              		.loc 1 40 12 is_stmt 0 view .LVU134
+ 387 00d6 0120     		movs	r0, #1
+ 388              	.LVL27:
   28:Core/Src/Origin/MazeSimulation.c ****     case west:
- 390              		.loc 1 28 9 view .LVU135
- 391 00e2 7047     		bx	lr
- 392              	.LVL28:
- 393              	.L15:
+ 389              		.loc 1 28 9 view .LVU135
+ 390 00d8 7047     		bx	lr
+ 391              	.LVL28:
+ 392              	.L15:
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
- 394              		.loc 1 30 9 is_stmt 1 view .LVU136
+ 393              		.loc 1 30 9 is_stmt 1 view .LVU136
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
- 395              		.loc 1 30 56 is_stmt 0 view .LVU137
- 396 00e4 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 394              		.loc 1 30 56 is_stmt 0 view .LVU137
+ 395 00da 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
- 397              		.loc 1 30 68 view .LVU138
- 398 00e6 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+ 396              		.loc 1 30 68 view .LVU138
+ 397 00dc 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
- 399              		.loc 1 30 71 view .LVU139
- 400 00ea 0CF1010C 		add	ip, ip, #1
+ 398              		.loc 1 30 71 view .LVU139
+ 399 00e0 0CF1010C 		add	ip, ip, #1
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
- 401              		.loc 1 30 74 view .LVU140
- 402 00ee 03EB0313 		add	r3, r3, r3, lsl #4
- 403 00f2 6344     		add	r3, r3, ip
- 404 00f4 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 400              		.loc 1 30 74 view .LVU140
+ 401 00e4 03EB8303 		add	r3, r3, r3, lsl #2
+ 402 00e8 6344     		add	r3, r3, ip
+ 403 00ea 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   30:Core/Src/Origin/MazeSimulation.c ****         wall_st[2] = 0;                                                                 //東
- 405              		.loc 1 30 20 view .LVU141
- 406 00f8 5370     		strb	r3, [r2, #1]
+ 404              		.loc 1 30 20 view .LVU141
+ 405 00ee 5370     		strb	r3, [r2, #1]
   31:Core/Src/Origin/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 407              		.loc 1 31 9 is_stmt 1 view .LVU142
+ 406              		.loc 1 31 9 is_stmt 1 view .LVU142
   31:Core/Src/Origin/MazeSimulation.c ****         wall_st[3] = simu->virtual_maze.RawNode[st->pos.x][st->pos.y].existence;        //南
- 408              		.loc 1 31 20 is_stmt 0 view .LVU143
- 409 00fa 0023     		movs	r3, #0
- 410 00fc 9370     		strb	r3, [r2, #2]
+ 407              		.loc 1 31 20 is_stmt 0 view .LVU143
+ 408 00f0 0023     		movs	r3, #0
+ 409 00f2 9370     		strb	r3, [r2, #2]
   32:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 411              		.loc 1 32 9 is_stmt 1 view .LVU144
+ 410              		.loc 1 32 9 is_stmt 1 view .LVU144
   32:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 412              		.loc 1 32 56 is_stmt 0 view .LVU145
- 413 00fe 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 411              		.loc 1 32 56 is_stmt 0 view .LVU145
+ 412 00f4 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
   32:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 414              		.loc 1 32 67 view .LVU146
- 415 0100 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
+ 413              		.loc 1 32 67 view .LVU146
+ 414 00f6 91F801C0 		ldrb	ip, [r1, #1]	@ zero_extendqisi2
   32:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 416              		.loc 1 32 70 view .LVU147
- 417 0104 03EB0313 		add	r3, r3, r3, lsl #4
- 418 0108 6344     		add	r3, r3, ip
- 419 010a 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
+ 415              		.loc 1 32 70 view .LVU147
+ 416 00fa 03EB8303 		add	r3, r3, r3, lsl #2
+ 417 00fe 6344     		add	r3, r3, ip
+ 418 0100 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   32:Core/Src/Origin/MazeSimulation.c ****         wall_st[0] = simu->virtual_maze.ColumnNode[st->pos.x][st->pos.y].existence;     //西
- 420              		.loc 1 32 20 view .LVU148
- 421 010e D370     		strb	r3, [r2, #3]
+ 419              		.loc 1 32 20 view .LVU148
+ 420 0104 D370     		strb	r3, [r2, #3]
   33:Core/Src/Origin/MazeSimulation.c ****         break;
- 422              		.loc 1 33 9 is_stmt 1 view .LVU149
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 12
+ 421              		.loc 1 33 9 is_stmt 1 view .LVU149
+  33:Core/Src/Origin/MazeSimulation.c ****         break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 12
 
 
+ 422              		.loc 1 33 59 is_stmt 0 view .LVU150
+ 423 0106 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
   33:Core/Src/Origin/MazeSimulation.c ****         break;
- 423              		.loc 1 33 59 is_stmt 0 view .LVU150
- 424 0110 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+ 424              		.loc 1 33 70 view .LVU151
+ 425 010a 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
   33:Core/Src/Origin/MazeSimulation.c ****         break;
- 425              		.loc 1 33 70 view .LVU151
- 426 0114 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 426              		.loc 1 33 73 view .LVU152
+ 427 010c 03EB8C03 		add	r3, r3, ip, lsl #2
+ 428 0110 1433     		adds	r3, r3, #20
+ 429 0112 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
   33:Core/Src/Origin/MazeSimulation.c ****         break;
- 427              		.loc 1 33 73 view .LVU152
- 428 0116 03EB0C13 		add	r3, r3, ip, lsl #4
- 429 011a 03F58873 		add	r3, r3, #272
- 430 011e 10F83330 		ldrb	r3, [r0, r3, lsl #3]	@ zero_extendqisi2
-  33:Core/Src/Origin/MazeSimulation.c ****         break;
- 431              		.loc 1 33 20 view .LVU153
- 432 0122 1370     		strb	r3, [r2]
+ 430              		.loc 1 33 20 view .LVU153
+ 431 0116 1370     		strb	r3, [r2]
   34:Core/Src/Origin/MazeSimulation.c ****     default:
- 433              		.loc 1 34 9 is_stmt 1 view .LVU154
+ 432              		.loc 1 34 9 is_stmt 1 view .LVU154
   40:Core/Src/Origin/MazeSimulation.c **** 
- 434              		.loc 1 40 12 is_stmt 0 view .LVU155
- 435 0124 0120     		movs	r0, #1
- 436              	.LVL29:
+ 433              		.loc 1 40 12 is_stmt 0 view .LVU155
+ 434 0118 0120     		movs	r0, #1
+ 435              	.LVL29:
   34:Core/Src/Origin/MazeSimulation.c ****     default:
- 437              		.loc 1 34 9 view .LVU156
- 438 0126 7047     		bx	lr
- 439              	.LVL30:
- 440              	.L20:
+ 436              		.loc 1 34 9 view .LVU156
+ 437 011a 7047     		bx	lr
+ 438              	.LVL30:
+ 439              	.L20:
    9:Core/Src/Origin/MazeSimulation.c ****     {
- 441              		.loc 1 9 5 view .LVU157
- 442 0128 0020     		movs	r0, #0
- 443              	.LVL31:
+ 440              		.loc 1 9 5 view .LVU157
+ 441 011c 0020     		movs	r0, #0
+ 442              	.LVL31:
   42:Core/Src/Origin/MazeSimulation.c **** 
- 444              		.loc 1 42 1 view .LVU158
- 445 012a 7047     		bx	lr
- 446              		.cfi_endproc
- 447              	.LFE3:
- 449              		.section	.rodata.getNodeFrom16Value_Simulation.str1.4,"aMS",%progbits,1
- 450              		.align	2
- 451              	.LC0:
- 452 0000 E382B7E3 		.ascii	"\343\202\267\343\203\237\343\203\245\343\203\254\343"
- 452      839FE383 
- 452      A5E383AC 
- 452      E3
- 453 000d 83BCE382 		.ascii	"\203\274\343\202\267\343\203\247\343\203\263\347\224"
- 453      B7E383A7 
- 453      E383B3E7 
- 453      94
- 454 001a A8E381AE 		.ascii	"\250\343\201\25616\351\200\262\346\225\260\343\203\236"
- 454      3136E980 
- 454      B2E695B0 
- 454      E3839E
- 455 0029 E38383E3 		.ascii	"\343\203\203\343\203\227\343\201\213\343\202\211\345"
- 455      8397E381 
- 455      8BE38289 
- 455      E5
- 456 0036 A381E683 		.ascii	"\243\201\346\203\205\345\240\261\343\201\270\343\201"
- 456      85E5A0B1 
- 456      E381B8E3 
- 456      81
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 13
+ 443              		.loc 1 42 1 view .LVU158
+ 444 011e 7047     		bx	lr
+ 445              		.cfi_endproc
+ 446              	.LFE3:
+ 448              		.section	.rodata.getNodeFrom16Value_Simulation.str1.4,"aMS",%progbits,1
+ 449              		.align	2
+ 450              	.LC0:
+ 451 0000 E382B7E3 		.ascii	"\343\202\267\343\203\237\343\203\245\343\203\254\343"
+ 451      839FE383 
+ 451      A5E383AC 
+ 451      E3
+ 452 000d 83BCE382 		.ascii	"\203\274\343\202\267\343\203\247\343\203\263\347\224"
+ 452      B7E383A7 
+ 452      E383B3E7 
+ 452      94
+ 453 001a A8E381AE 		.ascii	"\250\343\201\25616\351\200\262\346\225\260\343\203\236"
+ 453      3136E980 
+ 453      B2E695B0 
+ 453      E3839E
+ 454 0029 E38383E3 		.ascii	"\343\203\203\343\203\227\343\201\213\343\202\211\345"
+ 454      8397E381 
+ 454      8BE38289 
+ 454      E5
+ 455 0036 A381E683 		.ascii	"\243\201\346\203\205\345\240\261\343\201\270\343\201"
+ 455      85E5A0B1 
+ 455      E381B8E3 
+ 455      81
+ 456 0043 AEE5A489 		.ascii	"\256\345\244\211\346\217\233\343\201\256\346\210\220"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 13
 
 
- 457 0043 AEE5A489 		.ascii	"\256\345\244\211\346\217\233\343\201\256\346\210\220"
- 457      E68F9BE3 
- 457      81AEE688 
- 457      90
- 458 0050 E590A60D 		.ascii	"\345\220\246\015\000"
- 458      00
- 459 0055 000000   		.align	2
- 460              	.LC1:
- 461 0058 256400   		.ascii	"%d\000"
- 462 005b 00       		.align	2
- 463              	.LC2:
- 464 005c 0D00     		.ascii	"\015\000"
- 465              		.section	.text.getNodeFrom16Value_Simulation,"ax",%progbits
- 466              		.align	1
- 467              		.global	getNodeFrom16Value_Simulation
- 468              		.syntax unified
- 469              		.thumb
- 470              		.thumb_func
- 472              	getNodeFrom16Value_Simulation:
- 473              	.LVL32:
- 474              	.LFB5:
+ 456      E68F9BE3 
+ 456      81AEE688 
+ 456      90
+ 457 0050 E590A60D 		.ascii	"\345\220\246\015\000"
+ 457      00
+ 458 0055 000000   		.align	2
+ 459              	.LC1:
+ 460 0058 256400   		.ascii	"%d\000"
+ 461 005b 00       		.align	2
+ 462              	.LC2:
+ 463 005c 0D00     		.ascii	"\015\000"
+ 464              		.section	.text.getNodeFrom16Value_Simulation,"ax",%progbits
+ 465              		.align	1
+ 466              		.global	getNodeFrom16Value_Simulation
+ 467              		.syntax unified
+ 468              		.thumb
+ 469              		.thumb_func
+ 471              	getNodeFrom16Value_Simulation:
+ 472              	.LVL32:
+ 473              	.LFB5:
  100:Core/Src/Origin/MazeSimulation.c **** //MATLABから読み取った16マップを探索に使用する壁情報に変換
  101:Core/Src/Origin/MazeSimulation.c **** 
  102:Core/Src/Origin/MazeSimulation.c **** void getNodeFrom16Value_Simulation(simulation *simu)
  103:Core/Src/Origin/MazeSimulation.c **** {
- 475              		.loc 1 103 1 is_stmt 1 view -0
- 476              		.cfi_startproc
- 477              		@ args = 0, pretend = 0, frame = 0
- 478              		@ frame_needed = 0, uses_anonymous_args = 0
- 479              		.loc 1 103 1 is_stmt 0 view .LVU160
- 480 0000 70B5     		push	{r4, r5, r6, lr}
- 481              	.LCFI1:
- 482              		.cfi_def_cfa_offset 16
- 483              		.cfi_offset 4, -16
- 484              		.cfi_offset 5, -12
- 485              		.cfi_offset 6, -8
- 486              		.cfi_offset 14, -4
- 487 0002 0646     		mov	r6, r0
+ 474              		.loc 1 103 1 is_stmt 1 view -0
+ 475              		.cfi_startproc
+ 476              		@ args = 0, pretend = 0, frame = 0
+ 477              		@ frame_needed = 0, uses_anonymous_args = 0
+ 478              		.loc 1 103 1 is_stmt 0 view .LVU160
+ 479 0000 70B5     		push	{r4, r5, r6, lr}
+ 480              	.LCFI1:
+ 481              		.cfi_def_cfa_offset 16
+ 482              		.cfi_offset 4, -16
+ 483              		.cfi_offset 5, -12
+ 484              		.cfi_offset 6, -8
+ 485              		.cfi_offset 14, -4
+ 486 0002 0646     		mov	r6, r0
  104:Core/Src/Origin/MazeSimulation.c ****     _Bool error_check;
- 488              		.loc 1 104 5 is_stmt 1 view .LVU161
+ 487              		.loc 1 104 5 is_stmt 1 view .LVU161
  105:Core/Src/Origin/MazeSimulation.c ****     printf("シミュレーション用の16進数マップから壁情報への変換の成否\r\n
- 489              		.loc 1 105 5 view .LVU162
- 490 0004 1148     		ldr	r0, .L30
- 491              	.LVL33:
- 492              		.loc 1 105 5 is_stmt 0 view .LVU163
- 493 0006 FFF7FEFF 		bl	puts
- 494              	.LVL34:
+ 488              		.loc 1 105 5 view .LVU162
+ 489 0004 1148     		ldr	r0, .L30
+ 490              	.LVL33:
+ 491              		.loc 1 105 5 is_stmt 0 view .LVU163
+ 492 0006 FFF7FEFF 		bl	puts
+ 493              	.LVL34:
  106:Core/Src/Origin/MazeSimulation.c ****     for(int j=NUMBER_OF_SQUARES_Y-1; j >= 0; j--)
- 495              		.loc 1 106 5 is_stmt 1 view .LVU164
- 496              	.LBB2:
- 497              		.loc 1 106 9 view .LVU165
- 498              		.loc 1 106 13 is_stmt 0 view .LVU166
- 499 000a 0F25     		movs	r5, #15
- 500              		.loc 1 106 5 view .LVU167
- 501 000c 15E0     		b	.L22
- 502              	.LVL35:
- 503              	.L23:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 14
+ 494              		.loc 1 106 5 is_stmt 1 view .LVU164
+ 495              	.LBB2:
+ 496              		.loc 1 106 9 view .LVU165
+ 497              		.loc 1 106 13 is_stmt 0 view .LVU166
+ 498 000a 0325     		movs	r5, #3
+ 499              		.loc 1 106 5 view .LVU167
+ 500 000c 15E0     		b	.L22
+ 501              	.LVL35:
+ 502              	.L23:
+ 503              	.LBB3:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 14
 
 
- 504              	.LBB3:
  107:Core/Src/Origin/MazeSimulation.c ****     {
  108:Core/Src/Origin/MazeSimulation.c ****         for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
- 505              		.loc 1 108 47 is_stmt 1 discriminator 2 view .LVU168
- 506              		.loc 1 108 48 is_stmt 0 discriminator 2 view .LVU169
- 507 000e 0134     		adds	r4, r4, #1
- 508              	.LVL36:
- 509              	.L25:
- 510              		.loc 1 108 22 is_stmt 1 discriminator 1 view .LVU170
- 511              		.loc 1 108 9 is_stmt 0 discriminator 1 view .LVU171
- 512 0010 0F2C     		cmp	r4, #15
- 513 0012 0EDC     		bgt	.L28
+ 504              		.loc 1 108 47 is_stmt 1 discriminator 2 view .LVU168
+ 505              		.loc 1 108 48 is_stmt 0 discriminator 2 view .LVU169
+ 506 000e 0134     		adds	r4, r4, #1
+ 507              	.LVL36:
+ 508              	.L25:
+ 509              		.loc 1 108 22 is_stmt 1 discriminator 1 view .LVU170
+ 510              		.loc 1 108 9 is_stmt 0 discriminator 1 view .LVU171
+ 511 0010 032C     		cmp	r4, #3
+ 512 0012 0EDC     		bgt	.L28
  109:Core/Src/Origin/MazeSimulation.c ****         {
  110:Core/Src/Origin/MazeSimulation.c ****             error_check = convert16ValueToNode(simu, i, j);
- 514              		.loc 1 110 13 is_stmt 1 view .LVU172
- 515              		.loc 1 110 27 is_stmt 0 view .LVU173
- 516 0014 EAB2     		uxtb	r2, r5
- 517 0016 E1B2     		uxtb	r1, r4
- 518 0018 3046     		mov	r0, r6
- 519 001a FFF7FEFF 		bl	convert16ValueToNode
- 520              	.LVL37:
- 521 001e 0146     		mov	r1, r0
- 522              	.LVL38:
+ 513              		.loc 1 110 13 is_stmt 1 view .LVU172
+ 514              		.loc 1 110 27 is_stmt 0 view .LVU173
+ 515 0014 EAB2     		uxtb	r2, r5
+ 516 0016 E1B2     		uxtb	r1, r4
+ 517 0018 3046     		mov	r0, r6
+ 518 001a FFF7FEFF 		bl	convert16ValueToNode
+ 519              	.LVL37:
+ 520 001e 0146     		mov	r1, r0
+ 521              	.LVL38:
  111:Core/Src/Origin/MazeSimulation.c ****             
  112:Core/Src/Origin/MazeSimulation.c ****             printf("%d",error_check);
- 523              		.loc 1 112 13 is_stmt 1 view .LVU174
- 524 0020 0B48     		ldr	r0, .L30+4
- 525 0022 FFF7FEFF 		bl	printf
- 526              	.LVL39:
+ 522              		.loc 1 112 13 is_stmt 1 view .LVU174
+ 523 0020 0B48     		ldr	r0, .L30+4
+ 524 0022 FFF7FEFF 		bl	printf
+ 525              	.LVL39:
  113:Core/Src/Origin/MazeSimulation.c ****             if(i < NUMBER_OF_SQUARES_X-1)
- 527              		.loc 1 113 13 view .LVU175
- 528              		.loc 1 113 15 is_stmt 0 view .LVU176
- 529 0026 0E2C     		cmp	r4, #14
- 530 0028 F1DC     		bgt	.L23
+ 526              		.loc 1 113 13 view .LVU175
+ 527              		.loc 1 113 15 is_stmt 0 view .LVU176
+ 528 0026 022C     		cmp	r4, #2
+ 529 0028 F1DC     		bgt	.L23
  114:Core/Src/Origin/MazeSimulation.c ****                 printf(",");
- 531              		.loc 1 114 17 is_stmt 1 view .LVU177
- 532 002a 2C20     		movs	r0, #44
- 533 002c FFF7FEFF 		bl	putchar
- 534              	.LVL40:
- 535 0030 EDE7     		b	.L23
- 536              	.L28:
- 537              		.loc 1 114 17 is_stmt 0 view .LVU178
- 538              	.LBE3:
+ 530              		.loc 1 114 17 is_stmt 1 view .LVU177
+ 531 002a 2C20     		movs	r0, #44
+ 532 002c FFF7FEFF 		bl	putchar
+ 533              	.LVL40:
+ 534 0030 EDE7     		b	.L23
+ 535              	.L28:
+ 536              		.loc 1 114 17 is_stmt 0 view .LVU178
+ 537              	.LBE3:
  115:Core/Src/Origin/MazeSimulation.c ****         }
  116:Core/Src/Origin/MazeSimulation.c ****         printf("\r\n");
- 539              		.loc 1 116 9 is_stmt 1 discriminator 2 view .LVU179
- 540 0032 0848     		ldr	r0, .L30+8
- 541 0034 FFF7FEFF 		bl	puts
- 542              	.LVL41:
+ 538              		.loc 1 116 9 is_stmt 1 discriminator 2 view .LVU179
+ 539 0032 0848     		ldr	r0, .L30+8
+ 540 0034 FFF7FEFF 		bl	puts
+ 541              	.LVL41:
  106:Core/Src/Origin/MazeSimulation.c ****     {
- 543              		.loc 1 106 46 discriminator 2 view .LVU180
+ 542              		.loc 1 106 46 discriminator 2 view .LVU180
  106:Core/Src/Origin/MazeSimulation.c ****     {
- 544              		.loc 1 106 47 is_stmt 0 discriminator 2 view .LVU181
- 545 0038 013D     		subs	r5, r5, #1
- 546              	.LVL42:
- 547              	.L22:
+ 543              		.loc 1 106 47 is_stmt 0 discriminator 2 view .LVU181
+ 544 0038 013D     		subs	r5, r5, #1
+ 545              	.LVL42:
+ 546              	.L22:
  106:Core/Src/Origin/MazeSimulation.c ****     {
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 15
+ 547              		.loc 1 106 38 is_stmt 1 discriminator 1 view .LVU182
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 15
 
 
- 548              		.loc 1 106 38 is_stmt 1 discriminator 1 view .LVU182
  106:Core/Src/Origin/MazeSimulation.c ****     {
- 549              		.loc 1 106 5 is_stmt 0 discriminator 1 view .LVU183
- 550 003a 002D     		cmp	r5, #0
- 551 003c 01DB     		blt	.L29
- 552              	.LBB4:
+ 548              		.loc 1 106 5 is_stmt 0 discriminator 1 view .LVU183
+ 549 003a 002D     		cmp	r5, #0
+ 550 003c 01DB     		blt	.L29
+ 551              	.LBB4:
  108:Core/Src/Origin/MazeSimulation.c ****         {
- 553              		.loc 1 108 17 view .LVU184
- 554 003e 0024     		movs	r4, #0
- 555 0040 E6E7     		b	.L25
- 556              	.L29:
- 557              	.LBE4:
- 558              	.LBE2:
+ 552              		.loc 1 108 17 view .LVU184
+ 553 003e 0024     		movs	r4, #0
+ 554 0040 E6E7     		b	.L25
+ 555              	.L29:
+ 556              	.LBE4:
+ 557              	.LBE2:
  117:Core/Src/Origin/MazeSimulation.c ****     }
  118:Core/Src/Origin/MazeSimulation.c ****     printf("\r\n");
- 559              		.loc 1 118 5 is_stmt 1 view .LVU185
- 560 0042 0448     		ldr	r0, .L30+8
- 561 0044 FFF7FEFF 		bl	puts
- 562              	.LVL43:
+ 558              		.loc 1 118 5 is_stmt 1 view .LVU185
+ 559 0042 0448     		ldr	r0, .L30+8
+ 560 0044 FFF7FEFF 		bl	puts
+ 561              	.LVL43:
  119:Core/Src/Origin/MazeSimulation.c **** }
- 563              		.loc 1 119 1 is_stmt 0 view .LVU186
- 564 0048 70BD     		pop	{r4, r5, r6, pc}
- 565              	.LVL44:
- 566              	.L31:
- 567              		.loc 1 119 1 view .LVU187
- 568 004a 00BF     		.align	2
- 569              	.L30:
- 570 004c 00000000 		.word	.LC0
- 571 0050 58000000 		.word	.LC1
- 572 0054 5C000000 		.word	.LC2
- 573              		.cfi_endproc
- 574              	.LFE5:
- 576              		.section	.rodata.getFileData.str1.4,"aMS",%progbits,1
- 577              		.align	2
- 578              	.LC3:
- 579 0000 25730A25 		.ascii	"%s\012%s\012\000"
- 579      730A00
- 580 0007 00       		.align	2
- 581              	.LC4:
- 582 0008 7200     		.ascii	"r\000"
- 583 000a 0000     		.align	2
- 584              	.LC5:
- 585 000c 25732066 		.ascii	"%s file not open!\012\000"
- 585      696C6520 
- 585      6E6F7420 
- 585      6F70656E 
- 585      210A00
- 586 001f 00       		.align	2
- 587              	.LC6:
- 588 0020 25732066 		.ascii	"%s file opened!\012\000"
- 588      696C6520 
- 588      6F70656E 
- 588      6564210A 
- 588      00
- 589 0031 000000   		.align	2
- 590              	.LC7:
- 591 0034 25686875 		.ascii	"%hhu,\000"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 16
+ 562              		.loc 1 119 1 is_stmt 0 view .LVU186
+ 563 0048 70BD     		pop	{r4, r5, r6, pc}
+ 564              	.LVL44:
+ 565              	.L31:
+ 566              		.loc 1 119 1 view .LVU187
+ 567 004a 00BF     		.align	2
+ 568              	.L30:
+ 569 004c 00000000 		.word	.LC0
+ 570 0050 58000000 		.word	.LC1
+ 571 0054 5C000000 		.word	.LC2
+ 572              		.cfi_endproc
+ 573              	.LFE5:
+ 575              		.section	.rodata.getFileData.str1.4,"aMS",%progbits,1
+ 576              		.align	2
+ 577              	.LC3:
+ 578 0000 25730A25 		.ascii	"%s\012%s\012\000"
+ 578      730A00
+ 579 0007 00       		.align	2
+ 580              	.LC4:
+ 581 0008 7200     		.ascii	"r\000"
+ 582 000a 0000     		.align	2
+ 583              	.LC5:
+ 584 000c 25732066 		.ascii	"%s file not open!\012\000"
+ 584      696C6520 
+ 584      6E6F7420 
+ 584      6F70656E 
+ 584      210A00
+ 585 001f 00       		.align	2
+ 586              	.LC6:
+ 587 0020 25732066 		.ascii	"%s file opened!\012\000"
+ 587      696C6520 
+ 587      6F70656E 
+ 587      6564210A 
+ 587      00
+ 588 0031 000000   		.align	2
+ 589              	.LC7:
+ 590 0034 25686875 		.ascii	"%hhu,\000"
+ 590      2C00
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 16
 
 
- 591      2C00
- 592 003a 0000     		.align	2
- 593              	.LC8:
- 594 003c 257500   		.ascii	"%u\000"
- 595              		.section	.text.getFileData,"ax",%progbits
- 596              		.align	1
- 597              		.global	getFileData
- 598              		.syntax unified
- 599              		.thumb
- 600              		.thumb_func
- 602              	getFileData:
- 603              	.LVL45:
- 604              	.LFB6:
+ 591 003a 0000     		.align	2
+ 592              	.LC8:
+ 593 003c 257500   		.ascii	"%u\000"
+ 594              		.section	.text.getFileData,"ax",%progbits
+ 595              		.align	1
+ 596              		.global	getFileData
+ 597              		.syntax unified
+ 598              		.thumb
+ 599              		.thumb_func
+ 601              	getFileData:
+ 602              	.LVL45:
+ 603              	.LFB6:
  120:Core/Src/Origin/MazeSimulation.c **** _Bool getFileData(simulation *simu)
  121:Core/Src/Origin/MazeSimulation.c **** {
- 605              		.loc 1 121 1 is_stmt 1 view -0
- 606              		.cfi_startproc
- 607              		@ args = 0, pretend = 0, frame = 0
- 608              		@ frame_needed = 0, uses_anonymous_args = 0
- 609              		.loc 1 121 1 is_stmt 0 view .LVU189
- 610 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 611              	.LCFI2:
- 612              		.cfi_def_cfa_offset 24
- 613              		.cfi_offset 3, -24
- 614              		.cfi_offset 4, -20
- 615              		.cfi_offset 5, -16
- 616              		.cfi_offset 6, -12
- 617              		.cfi_offset 7, -8
- 618              		.cfi_offset 14, -4
- 619 0002 0646     		mov	r6, r0
+ 604              		.loc 1 121 1 is_stmt 1 view -0
+ 605              		.cfi_startproc
+ 606              		@ args = 0, pretend = 0, frame = 0
+ 607              		@ frame_needed = 0, uses_anonymous_args = 0
+ 608              		.loc 1 121 1 is_stmt 0 view .LVU189
+ 609 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 610              	.LCFI2:
+ 611              		.cfi_def_cfa_offset 24
+ 612              		.cfi_offset 3, -24
+ 613              		.cfi_offset 4, -20
+ 614              		.cfi_offset 5, -16
+ 615              		.cfi_offset 6, -12
+ 616              		.cfi_offset 7, -8
+ 617              		.cfi_offset 14, -4
+ 618 0002 0646     		mov	r6, r0
  122:Core/Src/Origin/MazeSimulation.c ****     //ファイルの絶対パスを入力
  123:Core/Src/Origin/MazeSimulation.c ****     //printf("迷路テキストファイル名 : "); scanf("%s", (char *)(simu->filename) );
  124:Core/Src/Origin/MazeSimulation.c ****     
  125:Core/Src/Origin/MazeSimulation.c ****     strcpy(simu->filename, FILE_NAME);
- 620              		.loc 1 125 5 is_stmt 1 view .LVU190
- 621              		.loc 1 125 16 is_stmt 0 view .LVU191
- 622 0004 00F59054 		add	r4, r0, #4608
- 623              		.loc 1 125 5 view .LVU192
- 624 0008 244D     		ldr	r5, .L44
- 625 000a 2946     		mov	r1, r5
- 626 000c 2046     		mov	r0, r4
- 627              	.LVL46:
- 628              		.loc 1 125 5 view .LVU193
- 629 000e FFF7FEFF 		bl	strcpy
- 630              	.LVL47:
+ 619              		.loc 1 125 5 is_stmt 1 view .LVU190
+ 620              		.loc 1 125 16 is_stmt 0 view .LVU191
+ 621 0004 00F5A874 		add	r4, r0, #336
+ 622              		.loc 1 125 5 view .LVU192
+ 623 0008 224D     		ldr	r5, .L44
+ 624 000a 2946     		mov	r1, r5
+ 625 000c 2046     		mov	r0, r4
+ 626              	.LVL46:
+ 627              		.loc 1 125 5 view .LVU193
+ 628 000e FFF7FEFF 		bl	strcpy
+ 629              	.LVL47:
  126:Core/Src/Origin/MazeSimulation.c ****     printf("%s\n%s\n", simu->filename, FILE_NAME);
- 631              		.loc 1 126 5 is_stmt 1 view .LVU194
- 632 0012 2A46     		mov	r2, r5
- 633 0014 2146     		mov	r1, r4
- 634 0016 2248     		ldr	r0, .L44+4
- 635 0018 FFF7FEFF 		bl	printf
- 636              	.LVL48:
+ 630              		.loc 1 126 5 is_stmt 1 view .LVU194
+ 631 0012 2A46     		mov	r2, r5
+ 632 0014 2146     		mov	r1, r4
+ 633 0016 2048     		ldr	r0, .L44+4
+ 634 0018 FFF7FEFF 		bl	printf
+ 635              	.LVL48:
  127:Core/Src/Origin/MazeSimulation.c ****     simu->fp = fopen(simu->filename, "r"); // ファイルを開く。失敗するとNULLを返す�
- 637              		.loc 1 127 5 view .LVU195
- 638              		.loc 1 127 16 is_stmt 0 view .LVU196
- 639 001c 2149     		ldr	r1, .L44+8
- 640 001e 2046     		mov	r0, r4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 17
+ 636              		.loc 1 127 5 view .LVU195
+ 637              		.loc 1 127 16 is_stmt 0 view .LVU196
+ 638 001c 1F49     		ldr	r1, .L44+8
+ 639 001e 2046     		mov	r0, r4
+ 640 0020 FFF7FEFF 		bl	fopen
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 17
 
 
- 641 0020 FFF7FEFF 		bl	fopen
- 642              	.LVL49:
- 643              		.loc 1 127 14 view .LVU197
- 644 0024 06F58053 		add	r3, r6, #4096
- 645 0028 C3F8C802 		str	r0, [r3, #712]
+ 641              	.LVL49:
+ 642              		.loc 1 127 14 view .LVU197
+ 643 0024 C6F81802 		str	r0, [r6, #536]
  128:Core/Src/Origin/MazeSimulation.c **** 	if(simu->fp == NULL) {
- 646              		.loc 1 128 2 is_stmt 1 view .LVU198
- 647              		.loc 1 128 4 is_stmt 0 view .LVU199
- 648 002c 28B1     		cbz	r0, .L41
+ 644              		.loc 1 128 2 is_stmt 1 view .LVU198
+ 645              		.loc 1 128 4 is_stmt 0 view .LVU199
+ 646 0028 28B1     		cbz	r0, .L41
  129:Core/Src/Origin/MazeSimulation.c **** 		printf("%s file not open!\n", simu->filename);
  130:Core/Src/Origin/MazeSimulation.c **** 		return false;
  131:Core/Src/Origin/MazeSimulation.c **** 	} else {
  132:Core/Src/Origin/MazeSimulation.c **** 		printf("%s file opened!\n", simu->filename);
- 649              		.loc 1 132 3 is_stmt 1 view .LVU200
- 650 002e 2146     		mov	r1, r4
- 651 0030 1D48     		ldr	r0, .L44+12
- 652 0032 FFF7FEFF 		bl	printf
- 653              	.LVL50:
+ 647              		.loc 1 132 3 is_stmt 1 view .LVU200
+ 648 002a 2146     		mov	r1, r4
+ 649 002c 1C48     		ldr	r0, .L44+12
+ 650 002e FFF7FEFF 		bl	printf
+ 651              	.LVL50:
  133:Core/Src/Origin/MazeSimulation.c **** 	}
  134:Core/Src/Origin/MazeSimulation.c **** 
  135:Core/Src/Origin/MazeSimulation.c ****     for(int j=NUMBER_OF_SQUARES_Y-1; j >= 0; j--)
- 654              		.loc 1 135 5 view .LVU201
- 655              	.LBB5:
- 656              		.loc 1 135 9 view .LVU202
- 657              		.loc 1 135 13 is_stmt 0 view .LVU203
- 658 0036 0F27     		movs	r7, #15
- 659              		.loc 1 135 5 view .LVU204
- 660 0038 27E0     		b	.L35
- 661              	.LVL51:
- 662              	.L41:
- 663              		.loc 1 135 5 view .LVU205
- 664              	.LBE5:
+ 652              		.loc 1 135 5 view .LVU201
+ 653              	.LBB5:
+ 654              		.loc 1 135 9 view .LVU202
+ 655              		.loc 1 135 13 is_stmt 0 view .LVU203
+ 656 0032 0327     		movs	r7, #3
+ 657              		.loc 1 135 5 view .LVU204
+ 658 0034 24E0     		b	.L35
+ 659              	.LVL51:
+ 660              	.L41:
+ 661              		.loc 1 135 5 view .LVU205
+ 662              	.LBE5:
  129:Core/Src/Origin/MazeSimulation.c **** 		printf("%s file not open!\n", simu->filename);
- 665              		.loc 1 129 3 is_stmt 1 view .LVU206
- 666 003a 2146     		mov	r1, r4
- 667 003c 1B48     		ldr	r0, .L44+16
- 668 003e FFF7FEFF 		bl	printf
- 669              	.LVL52:
+ 663              		.loc 1 129 3 is_stmt 1 view .LVU206
+ 664 0036 2146     		mov	r1, r4
+ 665 0038 1A48     		ldr	r0, .L44+16
+ 666 003a FFF7FEFF 		bl	printf
+ 667              	.LVL52:
  130:Core/Src/Origin/MazeSimulation.c **** 	} else {
- 670              		.loc 1 130 3 view .LVU207
+ 668              		.loc 1 130 3 view .LVU207
  130:Core/Src/Origin/MazeSimulation.c **** 	} else {
- 671              		.loc 1 130 10 is_stmt 0 view .LVU208
- 672 0042 0020     		movs	r0, #0
- 673 0044 29E0     		b	.L34
- 674              	.LVL53:
- 675              	.L36:
- 676              	.LBB8:
- 677              	.LBB6:
+ 669              		.loc 1 130 10 is_stmt 0 view .LVU208
+ 670 003e 0020     		movs	r0, #0
+ 671 0040 26E0     		b	.L34
+ 672              	.LVL53:
+ 673              	.L36:
+ 674              	.LBB8:
+ 675              	.LBB6:
  136:Core/Src/Origin/MazeSimulation.c ****     {
  137:Core/Src/Origin/MazeSimulation.c ****         for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
- 678              		.loc 1 137 47 is_stmt 1 discriminator 2 view .LVU209
- 679              		.loc 1 137 48 is_stmt 0 discriminator 2 view .LVU210
- 680 0046 0135     		adds	r5, r5, #1
- 681              	.LVL54:
- 682              	.L38:
- 683              		.loc 1 137 22 is_stmt 1 discriminator 1 view .LVU211
- 684              		.loc 1 137 9 is_stmt 0 discriminator 1 view .LVU212
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 18
+ 676              		.loc 1 137 47 is_stmt 1 discriminator 2 view .LVU209
+ 677              		.loc 1 137 48 is_stmt 0 discriminator 2 view .LVU210
+ 678 0042 0135     		adds	r5, r5, #1
+ 679              	.LVL54:
+ 680              	.L38:
+ 681              		.loc 1 137 22 is_stmt 1 discriminator 1 view .LVU211
+ 682              		.loc 1 137 9 is_stmt 0 discriminator 1 view .LVU212
+ 683 0044 032D     		cmp	r5, #3
+ 684 0046 17DC     		bgt	.L42
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 18
 
 
- 685 0048 0F2D     		cmp	r5, #15
- 686 004a 1ADC     		bgt	.L42
  138:Core/Src/Origin/MazeSimulation.c ****         {
  139:Core/Src/Origin/MazeSimulation.c ****             fscanf(simu->fp, "%hhu,", &(simu->value_16[i][j]));
- 687              		.loc 1 139 13 is_stmt 1 view .LVU213
- 688 004c 2C01     		lsls	r4, r5, #4
- 689 004e 07EB0512 		add	r2, r7, r5, lsl #4
- 690 0052 02F58852 		add	r2, r2, #4352
- 691 0056 06F58053 		add	r3, r6, #4096
- 692 005a 3244     		add	r2, r2, r6
- 693 005c 1449     		ldr	r1, .L44+20
- 694 005e D3F8C802 		ldr	r0, [r3, #712]
- 695 0062 FFF7FEFF 		bl	fscanf
- 696              	.LVL55:
+ 685              		.loc 1 139 13 is_stmt 1 view .LVU213
+ 686 0048 AC00     		lsls	r4, r5, #2
+ 687 004a 07EB8502 		add	r2, r7, r5, lsl #2
+ 688 004e 02F5A072 		add	r2, r2, #320
+ 689 0052 3244     		add	r2, r2, r6
+ 690 0054 1449     		ldr	r1, .L44+20
+ 691 0056 D6F81802 		ldr	r0, [r6, #536]
+ 692 005a FFF7FEFF 		bl	fscanf
+ 693              	.LVL55:
  140:Core/Src/Origin/MazeSimulation.c ****             printf("%u",simu->value_16[i][j]);
- 697              		.loc 1 140 13 view .LVU214
- 698              		.loc 1 140 42 is_stmt 0 view .LVU215
- 699 0066 3444     		add	r4, r4, r6
- 700 0068 3C44     		add	r4, r4, r7
- 701 006a 04F58854 		add	r4, r4, #4352
- 702              		.loc 1 140 13 view .LVU216
- 703 006e 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
- 704 0070 1048     		ldr	r0, .L44+24
- 705 0072 FFF7FEFF 		bl	printf
- 706              	.LVL56:
+ 694              		.loc 1 140 13 view .LVU214
+ 695              		.loc 1 140 42 is_stmt 0 view .LVU215
+ 696 005e 3444     		add	r4, r4, r6
+ 697 0060 3C44     		add	r4, r4, r7
+ 698              		.loc 1 140 13 view .LVU216
+ 699 0062 94F84011 		ldrb	r1, [r4, #320]	@ zero_extendqisi2
+ 700 0066 1148     		ldr	r0, .L44+24
+ 701 0068 FFF7FEFF 		bl	printf
+ 702              	.LVL56:
  141:Core/Src/Origin/MazeSimulation.c ****             if(i < NUMBER_OF_SQUARES_X -1)
- 707              		.loc 1 141 13 is_stmt 1 view .LVU217
- 708              		.loc 1 141 15 is_stmt 0 view .LVU218
- 709 0076 0E2D     		cmp	r5, #14
- 710 0078 E5DC     		bgt	.L36
+ 703              		.loc 1 141 13 is_stmt 1 view .LVU217
+ 704              		.loc 1 141 15 is_stmt 0 view .LVU218
+ 705 006c 022D     		cmp	r5, #2
+ 706 006e E8DC     		bgt	.L36
  142:Core/Src/Origin/MazeSimulation.c ****                 printf(",");
- 711              		.loc 1 142 17 is_stmt 1 view .LVU219
- 712 007a 2C20     		movs	r0, #44
- 713 007c FFF7FEFF 		bl	putchar
- 714              	.LVL57:
- 715 0080 E1E7     		b	.L36
- 716              	.L42:
- 717              		.loc 1 142 17 is_stmt 0 view .LVU220
- 718              	.LBE6:
+ 707              		.loc 1 142 17 is_stmt 1 view .LVU219
+ 708 0070 2C20     		movs	r0, #44
+ 709 0072 FFF7FEFF 		bl	putchar
+ 710              	.LVL57:
+ 711 0076 E4E7     		b	.L36
+ 712              	.L42:
+ 713              		.loc 1 142 17 is_stmt 0 view .LVU220
+ 714              	.LBE6:
  143:Core/Src/Origin/MazeSimulation.c ****         }
  144:Core/Src/Origin/MazeSimulation.c ****         printf("\r\n");
- 719              		.loc 1 144 9 is_stmt 1 discriminator 2 view .LVU221
- 720 0082 0D48     		ldr	r0, .L44+28
- 721 0084 FFF7FEFF 		bl	puts
- 722              	.LVL58:
+ 715              		.loc 1 144 9 is_stmt 1 discriminator 2 view .LVU221
+ 716 0078 0D48     		ldr	r0, .L44+28
+ 717 007a FFF7FEFF 		bl	puts
+ 718              	.LVL58:
  135:Core/Src/Origin/MazeSimulation.c ****     {
- 723              		.loc 1 135 46 discriminator 2 view .LVU222
+ 719              		.loc 1 135 46 discriminator 2 view .LVU222
  135:Core/Src/Origin/MazeSimulation.c ****     {
- 724              		.loc 1 135 47 is_stmt 0 discriminator 2 view .LVU223
- 725 0088 013F     		subs	r7, r7, #1
- 726              	.LVL59:
- 727              	.L35:
+ 720              		.loc 1 135 47 is_stmt 0 discriminator 2 view .LVU223
+ 721 007e 013F     		subs	r7, r7, #1
+ 722              	.LVL59:
+ 723              	.L35:
  135:Core/Src/Origin/MazeSimulation.c ****     {
- 728              		.loc 1 135 38 is_stmt 1 discriminator 1 view .LVU224
+ 724              		.loc 1 135 38 is_stmt 1 discriminator 1 view .LVU224
  135:Core/Src/Origin/MazeSimulation.c ****     {
- 729              		.loc 1 135 5 is_stmt 0 discriminator 1 view .LVU225
- 730 008a 002F     		cmp	r7, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 19
-
-
- 731 008c 01DB     		blt	.L43
- 732              	.LBB7:
+ 725              		.loc 1 135 5 is_stmt 0 discriminator 1 view .LVU225
+ 726 0080 002F     		cmp	r7, #0
+ 727 0082 01DB     		blt	.L43
+ 728              	.LBB7:
  137:Core/Src/Origin/MazeSimulation.c ****         {
- 733              		.loc 1 137 17 view .LVU226
- 734 008e 0025     		movs	r5, #0
- 735 0090 DAE7     		b	.L38
- 736              	.L43:
- 737              	.LBE7:
- 738              	.LBE8:
+ 729              		.loc 1 137 17 view .LVU226
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 19
+
+
+ 730 0084 0025     		movs	r5, #0
+ 731 0086 DDE7     		b	.L38
+ 732              	.L43:
+ 733              	.LBE7:
+ 734              	.LBE8:
  145:Core/Src/Origin/MazeSimulation.c ****     }
  146:Core/Src/Origin/MazeSimulation.c ****     printf("\r\n");
- 739              		.loc 1 146 5 is_stmt 1 view .LVU227
- 740 0092 0948     		ldr	r0, .L44+28
- 741 0094 FFF7FEFF 		bl	puts
- 742              	.LVL60:
+ 735              		.loc 1 146 5 is_stmt 1 view .LVU227
+ 736 0088 0948     		ldr	r0, .L44+28
+ 737 008a FFF7FEFF 		bl	puts
+ 738              	.LVL60:
  147:Core/Src/Origin/MazeSimulation.c ****     return true;
- 743              		.loc 1 147 5 view .LVU228
- 744              		.loc 1 147 12 is_stmt 0 view .LVU229
- 745 0098 0120     		movs	r0, #1
- 746              	.LVL61:
- 747              	.L34:
+ 739              		.loc 1 147 5 view .LVU228
+ 740              		.loc 1 147 12 is_stmt 0 view .LVU229
+ 741 008e 0120     		movs	r0, #1
+ 742              	.LVL61:
+ 743              	.L34:
  148:Core/Src/Origin/MazeSimulation.c **** }
- 748              		.loc 1 148 1 view .LVU230
- 749 009a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 750              	.LVL62:
- 751              	.L45:
- 752              		.loc 1 148 1 view .LVU231
- 753              		.align	2
- 754              	.L44:
- 755 009c 00000000 		.word	.LANCHOR0
- 756 00a0 00000000 		.word	.LC3
- 757 00a4 08000000 		.word	.LC4
- 758 00a8 20000000 		.word	.LC6
- 759 00ac 0C000000 		.word	.LC5
- 760 00b0 34000000 		.word	.LC7
- 761 00b4 3C000000 		.word	.LC8
- 762 00b8 5C000000 		.word	.LC2
- 763              		.cfi_endproc
- 764              	.LFE6:
- 766              		.section	.text.getWallDirection,"ax",%progbits
- 767              		.align	1
- 768              		.global	getWallDirection
- 769              		.syntax unified
- 770              		.thumb
- 771              		.thumb_func
- 773              	getWallDirection:
- 774              	.LVL63:
- 775              	.LFB7:
+ 744              		.loc 1 148 1 view .LVU230
+ 745 0090 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 746              	.LVL62:
+ 747              	.L45:
+ 748              		.loc 1 148 1 view .LVU231
+ 749 0092 00BF     		.align	2
+ 750              	.L44:
+ 751 0094 00000000 		.word	.LANCHOR0
+ 752 0098 00000000 		.word	.LC3
+ 753 009c 08000000 		.word	.LC4
+ 754 00a0 20000000 		.word	.LC6
+ 755 00a4 0C000000 		.word	.LC5
+ 756 00a8 34000000 		.word	.LC7
+ 757 00ac 3C000000 		.word	.LC8
+ 758 00b0 5C000000 		.word	.LC2
+ 759              		.cfi_endproc
+ 760              	.LFE6:
+ 762              		.section	.text.getWallDirection,"ax",%progbits
+ 763              		.align	1
+ 764              		.global	getWallDirection
+ 765              		.syntax unified
+ 766              		.thumb
+ 767              		.thumb_func
+ 769              	getWallDirection:
+ 770              	.LVL63:
+ 771              	.LFB7:
  149:Core/Src/Origin/MazeSimulation.c **** 
  150:Core/Src/Origin/MazeSimulation.c **** //走行シミュレーションに必要な処理
  151:Core/Src/Origin/MazeSimulation.c **** //向いている方角に合わせて前右左の取得
  152:Core/Src/Origin/MazeSimulation.c **** void getWallDirection(simulation *simu, state *st, uint8_t *wall)
  153:Core/Src/Origin/MazeSimulation.c **** {
- 776              		.loc 1 153 1 is_stmt 1 view -0
- 777              		.cfi_startproc
- 778              		@ args = 0, pretend = 0, frame = 0
- 779              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 20
-
-
- 780              		@ link register save eliminated.
+ 772              		.loc 1 153 1 is_stmt 1 view -0
+ 773              		.cfi_startproc
+ 774              		@ args = 0, pretend = 0, frame = 0
+ 775              		@ frame_needed = 0, uses_anonymous_args = 0
+ 776              		@ link register save eliminated.
  154:Core/Src/Origin/MazeSimulation.c ****     switch (st->car)
- 781              		.loc 1 154 5 view .LVU233
- 782              		.loc 1 154 15 is_stmt 0 view .LVU234
- 783 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
- 784              		.loc 1 154 5 view .LVU235
- 785 0002 6BB9     		cbnz	r3, .L46
+ 777              		.loc 1 154 5 view .LVU233
+ 778              		.loc 1 154 15 is_stmt 0 view .LVU234
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 20
+
+
+ 779 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
+ 780              		.loc 1 154 5 view .LVU235
+ 781 0002 63B9     		cbnz	r3, .L46
  155:Core/Src/Origin/MazeSimulation.c ****     {
  156:Core/Src/Origin/MazeSimulation.c ****     case north:
  157:Core/Src/Origin/MazeSimulation.c ****         wall[0] = simu->value_16[st->pos.x][st->pos.y];
- 786              		.loc 1 157 9 is_stmt 1 view .LVU236
- 787              		.loc 1 157 41 is_stmt 0 view .LVU237
- 788 0004 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
- 789              		.loc 1 157 52 view .LVU238
- 790 0008 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
- 791              		.loc 1 157 44 view .LVU239
- 792 000a 00EB0C10 		add	r0, r0, ip, lsl #4
- 793              	.LVL64:
- 794              		.loc 1 157 44 view .LVU240
- 795 000e 1844     		add	r0, r0, r3
- 796 0010 00F58850 		add	r0, r0, #4352
- 797 0014 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
- 798              		.loc 1 157 17 view .LVU241
- 799 0016 1370     		strb	r3, [r2]
+ 782              		.loc 1 157 9 is_stmt 1 view .LVU236
+ 783              		.loc 1 157 41 is_stmt 0 view .LVU237
+ 784 0004 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+ 785              		.loc 1 157 52 view .LVU238
+ 786 0008 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 787              		.loc 1 157 44 view .LVU239
+ 788 000a 00EB8C00 		add	r0, r0, ip, lsl #2
+ 789              	.LVL64:
+ 790              		.loc 1 157 44 view .LVU240
+ 791 000e 1844     		add	r0, r0, r3
+ 792 0010 90F84031 		ldrb	r3, [r0, #320]	@ zero_extendqisi2
+ 793              		.loc 1 157 17 view .LVU241
+ 794 0014 1370     		strb	r3, [r2]
  158:Core/Src/Origin/MazeSimulation.c ****         wall[1] = 0;
- 800              		.loc 1 158 9 is_stmt 1 view .LVU242
- 801              		.loc 1 158 17 is_stmt 0 view .LVU243
- 802 0018 0023     		movs	r3, #0
- 803 001a 5370     		strb	r3, [r2, #1]
+ 795              		.loc 1 158 9 is_stmt 1 view .LVU242
+ 796              		.loc 1 158 17 is_stmt 0 view .LVU243
+ 797 0016 0023     		movs	r3, #0
+ 798 0018 5370     		strb	r3, [r2, #1]
  159:Core/Src/Origin/MazeSimulation.c ****         wall[2] = 0;
- 804              		.loc 1 159 9 is_stmt 1 view .LVU244
- 805              		.loc 1 159 17 is_stmt 0 view .LVU245
- 806 001c 9370     		strb	r3, [r2, #2]
+ 799              		.loc 1 159 9 is_stmt 1 view .LVU244
+ 800              		.loc 1 159 17 is_stmt 0 view .LVU245
+ 801 001a 9370     		strb	r3, [r2, #2]
  160:Core/Src/Origin/MazeSimulation.c ****         wall[3] = 0;
- 807              		.loc 1 160 9 is_stmt 1 view .LVU246
- 808              		.loc 1 160 17 is_stmt 0 view .LVU247
- 809 001e D370     		strb	r3, [r2, #3]
+ 802              		.loc 1 160 9 is_stmt 1 view .LVU246
+ 803              		.loc 1 160 17 is_stmt 0 view .LVU247
+ 804 001c D370     		strb	r3, [r2, #3]
  161:Core/Src/Origin/MazeSimulation.c ****         break;
- 810              		.loc 1 161 9 is_stmt 1 view .LVU248
- 811              	.L46:
+ 805              		.loc 1 161 9 is_stmt 1 view .LVU248
+ 806              	.L46:
  162:Core/Src/Origin/MazeSimulation.c ****     
  163:Core/Src/Origin/MazeSimulation.c ****     default:
  164:Core/Src/Origin/MazeSimulation.c ****         break;
@@ -1188,67 +1183,67 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 1
  166:Core/Src/Origin/MazeSimulation.c **** 
  167:Core/Src/Origin/MazeSimulation.c **** 
  168:Core/Src/Origin/MazeSimulation.c **** }
- 812              		.loc 1 168 1 is_stmt 0 view .LVU249
- 813 0020 7047     		bx	lr
- 814              		.cfi_endproc
- 815              	.LFE7:
- 817              		.global	FILE_NAME
- 818              		.section	.data.FILE_NAME,"aw"
- 819              		.align	2
- 820              		.set	.LANCHOR0,. + 0
- 823              	FILE_NAME:
- 824 0000 2F6D6E74 		.ascii	"/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 21
+ 807              		.loc 1 168 1 is_stmt 0 view .LVU249
+ 808 001e 7047     		bx	lr
+ 809              		.cfi_endproc
+ 810              	.LFE7:
+ 812              		.global	FILE_NAME
+ 813              		.section	.data.FILE_NAME,"aw"
+ 814              		.align	2
+ 815              		.set	.LANCHOR0,. + 0
+ 818              	FILE_NAME:
+ 819 0000 2F6D6E74 		.ascii	"/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2"
+ 819      2F632F55 
+ 819      73657273 
+ 819      2F6C656F 
+ 819      70692F4D 
+ 820 0033 3032314D 		.ascii	"021MS.txt\000"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 21
 
 
- 824      2F632F55 
- 824      73657273 
- 824      2F6C656F 
- 824      70692F4D 
- 825 0033 3032314D 		.ascii	"021MS.txt\000"
- 825      532E7478 
- 825      7400
- 826 003d 00000000 		.space	139
- 826      00000000 
- 826      00000000 
- 826      00000000 
- 826      00000000 
- 827              		.text
- 828              	.Letext0:
- 829              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stdint
- 830              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef
- 831              		.file 4 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_types.h"
- 832              		.file 5 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\reent.h"
- 833              		.file 6 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\lock.h"
- 834              		.file 7 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
- 835              		.file 8 "Core/Inc/Origin/MazeLib.h"
- 836              		.file 9 "Core/Inc/Origin/MazeSimulation.h"
- 837              		.file 10 "<built-in>"
- 838              		.file 11 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\string.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s 			page 22
+ 820      532E7478 
+ 820      7400
+ 821 003d 00000000 		.space	139
+ 821      00000000 
+ 821      00000000 
+ 821      00000000 
+ 821      00000000 
+ 822              		.text
+ 823              	.Letext0:
+ 824              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stdint
+ 825              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef
+ 826              		.file 4 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_types.h"
+ 827              		.file 5 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\reent.h"
+ 828              		.file 6 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\lock.h"
+ 829              		.file 7 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 830              		.file 8 "Core/Src/Origin/../../Inc/Origin/MazeLib.h"
+ 831              		.file 9 "Core/Src/Origin/../../Inc/Origin/MazeSimulation.h"
+ 832              		.file 10 "<built-in>"
+ 833              		.file 11 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\string.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s 			page 22
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 MazeSimulation.c
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:20     .text.convert16ValueToNode:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:25     .text.convert16ValueToNode:00000000 convert16ValueToNode
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:217    .text.convert16ValueToWallDirection_Simulation:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:223    .text.convert16ValueToWallDirection_Simulation:00000000 convert16ValueToWallDirection_Simulation
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:239    .text.convert16ValueToWallDirection_Simulation:0000000c $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:450    .rodata.getNodeFrom16Value_Simulation.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:466    .text.getNodeFrom16Value_Simulation:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:472    .text.getNodeFrom16Value_Simulation:00000000 getNodeFrom16Value_Simulation
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:570    .text.getNodeFrom16Value_Simulation:0000004c $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:577    .rodata.getFileData.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:596    .text.getFileData:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:602    .text.getFileData:00000000 getFileData
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:755    .text.getFileData:0000009c $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:767    .text.getWallDirection:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:773    .text.getWallDirection:00000000 getWallDirection
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:823    .data.FILE_NAME:00000000 FILE_NAME
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:819    .data.FILE_NAME:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:246    .text.convert16ValueToWallDirection_Simulation:00000013 $d
-C:\Users\leopi\AppData\Local\Temp\cciLX9Ha.s:246    .text.convert16ValueToWallDirection_Simulation:00000014 $t
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:20     .text.convert16ValueToNode:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:25     .text.convert16ValueToNode:00000000 convert16ValueToNode
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:216    .text.convert16ValueToWallDirection_Simulation:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:222    .text.convert16ValueToWallDirection_Simulation:00000000 convert16ValueToWallDirection_Simulation
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:238    .text.convert16ValueToWallDirection_Simulation:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:449    .rodata.getNodeFrom16Value_Simulation.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:465    .text.getNodeFrom16Value_Simulation:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:471    .text.getNodeFrom16Value_Simulation:00000000 getNodeFrom16Value_Simulation
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:569    .text.getNodeFrom16Value_Simulation:0000004c $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:576    .rodata.getFileData.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:595    .text.getFileData:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:601    .text.getFileData:00000000 getFileData
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:751    .text.getFileData:00000094 $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:763    .text.getWallDirection:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:769    .text.getWallDirection:00000000 getWallDirection
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:818    .data.FILE_NAME:00000000 FILE_NAME
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:814    .data.FILE_NAME:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:245    .text.convert16ValueToWallDirection_Simulation:00000013 $d
+C:\Users\leopi\AppData\Local\Temp\ccCr1TPy.s:245    .text.convert16ValueToWallDirection_Simulation:00000014 $t
 
 UNDEFINED SYMBOLS
 puts

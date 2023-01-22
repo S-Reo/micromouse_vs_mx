@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
   33              		@ link register save eliminated.
   24:Core/Src/Origin/dfs.c **** 	DFS_Flag = true;
   34              		.loc 1 24 2 view .LVU1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 2
 
 
   35              		.loc 1 24 11 is_stmt 0 view .LVU2
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
   88              		@ frame_needed = 0, uses_anonymous_args = 0
   89              		@ link register save eliminated.
   30:Core/Src/Origin/dfs.c **** 	return DFS_Flag;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 3
 
 
   90              		.loc 1 30 2 view .LVU9
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  142              		@ frame_needed = 0, uses_anonymous_args = 0
  143              		@ link register save eliminated.
   37:Core/Src/Origin/dfs.c **** 	Stack_Flag = false;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 4
 
 
  144              		.loc 1 37 2 view .LVU16
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  196              		@ frame_needed = 0, uses_anonymous_args = 0
  197              		@ link register save eliminated.
   44:Core/Src/Origin/dfs.c **** 	Stack_Num = 0;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 5
 
 
  198              		.loc 1 44 2 view .LVU23
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  251              		@ args = 0, pretend = 0, frame = 0
  252              		@ frame_needed = 0, uses_anonymous_args = 0
  253              		@ link register save eliminated.
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 6
 
 
   50:Core/Src/Origin/dfs.c **** 	return Stack_Num;
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  304 0028 00000000 		.word	.LANCHOR2
  305 002c 00000000 		.word	.LANCHOR3
  306              		.cfi_endproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 7
 
 
  307              	.LFE12:
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  361              		.align	1
  362              		.global	InitVisit
  363              		.syntax unified
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 8
 
 
  364              		.thumb
@@ -449,7 +449,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  385              		.loc 1 63 4 is_stmt 1 discriminator 3 view .LVU55
  386              		.loc 1 63 16 is_stmt 0 discriminator 3 view .LVU56
  387 0004 084A     		ldr	r2, .L43
- 388 0006 02EB0012 		add	r2, r2, r0, lsl #4
+ 388 0006 02EB8002 		add	r2, r2, r0, lsl #2
  389 000a 0021     		movs	r1, #0
  390 000c D154     		strb	r1, [r2, r3]
   62:Core/Src/Origin/dfs.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
@@ -463,7 +463,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  396              		.loc 1 62 16 is_stmt 1 discriminator 1 view .LVU59
   62:Core/Src/Origin/dfs.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  397              		.loc 1 62 3 is_stmt 0 discriminator 1 view .LVU60
- 398 0010 0F2B     		cmp	r3, #15
+ 398 0010 032B     		cmp	r3, #3
  399 0012 F7DD     		ble	.L39
  400              	.LBE3:
   61:Core/Src/Origin/dfs.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
@@ -477,8 +477,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  406              		.loc 1 61 15 is_stmt 1 discriminator 1 view .LVU63
   61:Core/Src/Origin/dfs.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
  407              		.loc 1 61 2 is_stmt 0 discriminator 1 view .LVU64
- 408 0016 0F28     		cmp	r0, #15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 9
+ 408 0016 0328     		cmp	r0, #3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 9
 
 
  409 0018 01DC     		bgt	.L42
@@ -538,12 +538,12 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  458              		.loc 1 69 2 view .LVU70
  459              	.LBB5:
  460              		.loc 1 69 6 view .LVU71
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 10
 
 
  461              	.LVL11:
  462              		.loc 1 69 10 is_stmt 0 view .LVU72
- 463 0002 0F25     		movs	r5, #15
+ 463 0002 0325     		movs	r5, #3
  464              		.loc 1 69 2 view .LVU73
  465 0004 0DE0     		b	.L46
  466              	.LVL12:
@@ -554,7 +554,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  469              		.loc 1 71 4 is_stmt 1 discriminator 3 view .LVU74
  470              		.loc 1 71 25 is_stmt 0 discriminator 3 view .LVU75
  471 0006 094B     		ldr	r3, .L52
- 472 0008 03EB0413 		add	r3, r3, r4, lsl #4
+ 472 0008 03EB8403 		add	r3, r3, r4, lsl #2
  473              		.loc 1 71 4 discriminator 3 view .LVU76
  474 000c 595D     		ldrb	r1, [r3, r5]	@ zero_extendqisi2
  475 000e 0848     		ldr	r0, .L52+4
@@ -571,7 +571,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  483              		.loc 1 70 16 is_stmt 1 discriminator 1 view .LVU79
   70:Core/Src/Origin/dfs.c **** 		for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
  484              		.loc 1 70 3 is_stmt 0 discriminator 1 view .LVU80
- 485 0016 0F2C     		cmp	r4, #15
+ 485 0016 032C     		cmp	r4, #3
  486 0018 F5DD     		ble	.L47
  487              	.LBE6:
   72:Core/Src/Origin/dfs.c **** 		}
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  502              		.loc 1 70 11 view .LVU86
  503 0026 0024     		movs	r4, #0
  504 0028 F5E7     		b	.L48
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 11
 
 
  505              	.L51:
@@ -644,7 +644,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  543 000a 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
  544              		.loc 1 77 22 view .LVU93
  545 000e 034B     		ldr	r3, .L56
- 546 0010 03EB0113 		add	r3, r3, r1, lsl #4
+ 546 0010 03EB8103 		add	r3, r3, r1, lsl #2
  547 0014 0121     		movs	r1, #1
  548 0016 9954     		strb	r1, [r3, r2]
   78:Core/Src/Origin/dfs.c **** }
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  556              		.align	2
  557              	.L56:
  558 001c 00000000 		.word	.LANCHOR4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 12
 
 
  559              		.cfi_endproc
@@ -686,7 +686,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  581 0002 4278     		ldrb	r2, [r0, #1]	@ zero_extendqisi2
  582              		.loc 1 80 22 view .LVU99
  583 0004 024B     		ldr	r3, .L59
- 584 0006 03EB0113 		add	r3, r3, r1, lsl #4
+ 584 0006 03EB8103 		add	r3, r3, r1, lsl #2
   81:Core/Src/Origin/dfs.c **** }
  585              		.loc 1 81 1 view .LVU100
  586 000a 985C     		ldrb	r0, [r3, r2]	@ zero_extendqisi2
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  611              		.loc 1 84 2 view .LVU103
  612              		.loc 1 84 18 is_stmt 0 view .LVU104
  613 0000 024B     		ldr	r3, .L62
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 13
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 13
 
 
  614 0002 0022     		movs	r2, #0
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  658 0008 91F80090 		ldrb	r9, [r1]	@ zero_extendqisi2
  659              	.LVL21:
   97:Core/Src/Origin/dfs.c **** 	uint8_t y = now_st->pos.y;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 14
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 14
 
 
  660              		.loc 1 97 2 is_stmt 1 view .LVU112
@@ -821,16 +821,16 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  683              		.loc 1 111 2 view .LVU124
  684 001e 06F00703 		and	r3, r6, #7
  685 0022 062B     		cmp	r3, #6
- 686 0024 00F2CB81 		bhi	.L80
+ 686 0024 00F2C681 		bhi	.L80
  687 0028 DFE813F0 		tbh	[pc, r3, lsl #1]
  688              	.L67:
  689 002c 0700     		.2byte	(.L70-.L67)/2
- 690 002e C901     		.2byte	(.L80-.L67)/2
- 691 0030 7700     		.2byte	(.L69-.L67)/2
- 692 0032 C901     		.2byte	(.L80-.L67)/2
- 693 0034 DB00     		.2byte	(.L68-.L67)/2
- 694 0036 C901     		.2byte	(.L80-.L67)/2
- 695 0038 5401     		.2byte	(.L66-.L67)/2
+ 690 002e C401     		.2byte	(.L80-.L67)/2
+ 691 0030 7500     		.2byte	(.L69-.L67)/2
+ 692 0032 C401     		.2byte	(.L80-.L67)/2
+ 693 0034 D900     		.2byte	(.L68-.L67)/2
+ 694 0036 C401     		.2byte	(.L80-.L67)/2
+ 695 0038 5001     		.2byte	(.L66-.L67)/2
  696              		.p2align 1
  697              	.L70:
  112:Core/Src/Origin/dfs.c **** 	case north:
@@ -838,74 +838,74 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  114:Core/Src/Origin/dfs.c **** 		//yのサイズ
  115:Core/Src/Origin/dfs.c **** 		//右
  116:Core/Src/Origin/dfs.c **** 		if(nd_x <= NUMBER_OF_SQUARES_X-1){
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 15
 
 
  698              		.loc 1 116 3 view .LVU125
  699              		.loc 1 116 5 is_stmt 0 view .LVU126
- 700 003a 0F2D     		cmp	r5, #15
- 701 003c 20D8     		bhi	.L81
+ 700 003a 032D     		cmp	r5, #3
+ 701 003c 1FD8     		bhi	.L81
  117:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
  702              		.loc 1 117 4 is_stmt 1 view .LVU127
  703              		.loc 1 117 29 is_stmt 0 view .LVU128
  704 003e 6B1C     		adds	r3, r5, #1
  705              		.loc 1 117 38 view .LVU129
- 706 0040 08EB0313 		add	r3, r8, r3, lsl #4
- 707 0044 03F58873 		add	r3, r3, #272
- 708 0048 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 706 0040 08EB8303 		add	r3, r8, r3, lsl #2
+ 707 0044 1433     		adds	r3, r3, #20
+ 708 0046 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  709              		.loc 1 117 6 view .LVU130
- 710 004c 002B     		cmp	r3, #0
- 711 004e 5ED1     		bne	.L82
+ 710 004a 002B     		cmp	r3, #0
+ 711 004c 5DD1     		bne	.L82
  118:Core/Src/Origin/dfs.c **** 				if( x < NUMBER_OF_SQUARES_X-1 ){
  712              		.loc 1 118 5 is_stmt 1 view .LVU131
  713              		.loc 1 118 7 is_stmt 0 view .LVU132
- 714 0050 B9F10E0F 		cmp	r9, #14
- 715 0054 5DD8     		bhi	.L83
+ 714 004e B9F1020F 		cmp	r9, #2
+ 715 0052 5CD8     		bhi	.L83
  119:Core/Src/Origin/dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
  716              		.loc 1 119 6 is_stmt 1 view .LVU133
  717              		.loc 1 119 17 is_stmt 0 view .LVU134
- 718 0056 09F10103 		add	r3, r9, #1
+ 718 0054 09F10103 		add	r3, r9, #1
  719              		.loc 1 119 20 view .LVU135
- 720 005a B04A     		ldr	r2, .L98
- 721 005c 02EB0313 		add	r3, r2, r3, lsl #4
- 722 0060 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 720 0058 AE4A     		ldr	r2, .L98
+ 721 005a 02EB8303 		add	r3, r2, r3, lsl #2
+ 722 005e 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
  723              		.loc 1 119 8 view .LVU136
- 724 0064 002B     		cmp	r3, #0
- 725 0066 56D1     		bne	.L84
+ 724 0062 002B     		cmp	r3, #0
+ 725 0064 55D1     		bne	.L84
  120:Core/Src/Origin/dfs.c **** 						++cnt;
  726              		.loc 1 120 7 is_stmt 1 view .LVU137
  727              	.LVL27:
  121:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
  728              		.loc 1 121 7 view .LVU138
  729              		.loc 1 121 19 is_stmt 0 view .LVU139
- 730 0068 421C     		adds	r2, r0, #1
+ 730 0066 421C     		adds	r2, r0, #1
  731              		.loc 1 121 42 view .LVU140
- 732 006a 09F10101 		add	r1, r9, #1
+ 732 0068 09F10101 		add	r1, r9, #1
  733              		.loc 1 121 27 view .LVU141
- 734 006e AC4B     		ldr	r3, .L98+4
- 735 0070 03F81210 		strb	r1, [r3, r2, lsl #1]
+ 734 006c AA4B     		ldr	r3, .L98+4
+ 735 006e 03F81210 		strb	r1, [r3, r2, lsl #1]
  122:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  736              		.loc 1 122 7 is_stmt 1 view .LVU142
  737              		.loc 1 122 40 is_stmt 0 view .LVU143
- 738 0074 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 738 0072 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
  739              		.loc 1 122 27 view .LVU144
- 740 0076 03EB4203 		add	r3, r3, r2, lsl #1
- 741 007a 5970     		strb	r1, [r3, #1]
+ 740 0074 03EB4203 		add	r3, r3, r2, lsl #1
+ 741 0078 5970     		strb	r1, [r3, #1]
  120:Core/Src/Origin/dfs.c **** 						++cnt;
  742              		.loc 1 120 7 view .LVU145
- 743 007c 0126     		movs	r6, #1
+ 743 007a 0126     		movs	r6, #1
  744              	.LVL28:
  120:Core/Src/Origin/dfs.c **** 						++cnt;
  745              		.loc 1 120 7 view .LVU146
- 746 007e 00E0     		b	.L71
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 16
+ 746 007c 00E0     		b	.L71
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 16
 
 
  747              	.LVL29:
  748              	.L81:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  749              		.loc 1 105 6 view .LVU147
- 750 0080 0026     		movs	r6, #0
+ 750 007e 0026     		movs	r6, #0
  751              	.LVL30:
  752              	.L71:
  123:Core/Src/Origin/dfs.c **** 					}
@@ -916,49 +916,49 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  128:Core/Src/Origin/dfs.c **** 		if( maze->ColumnNode[nd_x][nd_y].existence == NOWALL ){ //行ける
  753              		.loc 1 128 3 is_stmt 1 view .LVU148
  754              		.loc 1 128 35 is_stmt 0 view .LVU149
- 755 0082 08EB0513 		add	r3, r8, r5, lsl #4
- 756 0086 03F58873 		add	r3, r3, #272
- 757 008a 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 755 0080 08EB8503 		add	r3, r8, r5, lsl #2
+ 756 0084 1433     		adds	r3, r3, #20
+ 757 0086 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  758              		.loc 1 128 5 view .LVU150
- 759 008e ABB9     		cbnz	r3, .L72
+ 759 008a ABB9     		cbnz	r3, .L72
  129:Core/Src/Origin/dfs.c **** 			if( 1 <= x ){
  760              		.loc 1 129 4 is_stmt 1 view .LVU151
  761              		.loc 1 129 6 is_stmt 0 view .LVU152
- 762 0090 B9F1000F 		cmp	r9, #0
- 763 0094 12D0     		beq	.L72
+ 762 008c B9F1000F 		cmp	r9, #0
+ 763 0090 12D0     		beq	.L72
  130:Core/Src/Origin/dfs.c **** 				if( Visit[x-1][y] == false){ //未訪問
  764              		.loc 1 130 5 is_stmt 1 view .LVU153
  765              		.loc 1 130 16 is_stmt 0 view .LVU154
- 766 0096 09F1FF33 		add	r3, r9, #-1
+ 766 0092 09F1FF33 		add	r3, r9, #-1
  767              		.loc 1 130 19 view .LVU155
- 768 009a A04A     		ldr	r2, .L98
- 769 009c 02EB0313 		add	r3, r2, r3, lsl #4
- 770 00a0 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 768 0096 9F4A     		ldr	r2, .L98
+ 769 0098 02EB8303 		add	r3, r2, r3, lsl #2
+ 770 009c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
  771              		.loc 1 130 7 view .LVU156
- 772 00a4 53B9     		cbnz	r3, .L72
+ 772 00a0 53B9     		cbnz	r3, .L72
  131:Core/Src/Origin/dfs.c **** 					++cnt;
  773              		.loc 1 131 6 is_stmt 1 view .LVU157
- 774 00a6 0136     		adds	r6, r6, #1
+ 774 00a2 0136     		adds	r6, r6, #1
  775              	.LVL31:
  132:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x-1;
  776              		.loc 1 132 6 view .LVU158
  777              		.loc 1 132 39 is_stmt 0 view .LVU159
- 778 00a8 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 778 00a4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  779              		.loc 1 132 18 view .LVU160
- 780 00aa 8119     		adds	r1, r0, r6
+ 780 00a6 8119     		adds	r1, r0, r6
  781              		.loc 1 132 41 view .LVU161
- 782 00ac 013A     		subs	r2, r2, #1
+ 782 00a8 013A     		subs	r2, r2, #1
  783              		.loc 1 132 26 view .LVU162
- 784 00ae 9C4B     		ldr	r3, .L98+4
- 785 00b0 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 784 00aa 9B4B     		ldr	r3, .L98+4
+ 785 00ac 03F81120 		strb	r2, [r3, r1, lsl #1]
  133:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].y = now_st->pos.y;
  786              		.loc 1 133 6 is_stmt 1 view .LVU163
  787              		.loc 1 133 39 is_stmt 0 view .LVU164
- 788 00b4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 788 00b0 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  789              		.loc 1 133 26 view .LVU165
- 790 00b6 03EB4103 		add	r3, r3, r1, lsl #1
- 791 00ba 5A70     		strb	r2, [r3, #1]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 17
+ 790 00b2 03EB4103 		add	r3, r3, r1, lsl #1
+ 791 00b6 5A70     		strb	r2, [r3, #1]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 17
 
 
  792              	.L72:
@@ -969,64 +969,64 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  138:Core/Src/Origin/dfs.c **** 		if(nd_y <= NUMBER_OF_SQUARES_Y-1){
  793              		.loc 1 138 3 is_stmt 1 view .LVU166
  794              		.loc 1 138 5 is_stmt 0 view .LVU167
- 795 00bc B8F10F0F 		cmp	r8, #15
- 796 00c0 1DD8     		bhi	.L73
+ 795 00b8 B8F1030F 		cmp	r8, #3
+ 796 00bc 1DD8     		bhi	.L73
  139:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
  797              		.loc 1 139 4 is_stmt 1 view .LVU168
  798              		.loc 1 139 32 is_stmt 0 view .LVU169
- 799 00c2 08F10108 		add	r8, r8, #1
+ 799 00be 08F10108 		add	r8, r8, #1
  800              	.LVL32:
  801              		.loc 1 139 35 view .LVU170
- 802 00c6 05EB0515 		add	r5, r5, r5, lsl #4
+ 802 00c2 05EB8505 		add	r5, r5, r5, lsl #2
  803              	.LVL33:
  804              		.loc 1 139 35 view .LVU171
- 805 00ca 4544     		add	r5, r5, r8
- 806 00cc 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
+ 805 00c6 4544     		add	r5, r5, r8
+ 806 00c8 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
  807              		.loc 1 139 6 view .LVU172
- 808 00d0 ABB9     		cbnz	r3, .L73
+ 808 00cc ABB9     		cbnz	r3, .L73
  140:Core/Src/Origin/dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
  809              		.loc 1 140 5 is_stmt 1 view .LVU173
  810              		.loc 1 140 7 is_stmt 0 view .LVU174
- 811 00d2 BAF10E0F 		cmp	r10, #14
- 812 00d6 12D8     		bhi	.L73
+ 811 00ce BAF1020F 		cmp	r10, #2
+ 812 00d2 12D8     		bhi	.L73
  141:Core/Src/Origin/dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
  813              		.loc 1 141 6 is_stmt 1 view .LVU175
  814              		.loc 1 141 20 is_stmt 0 view .LVU176
- 815 00d8 0AF1010A 		add	r10, r10, #1
+ 815 00d4 0AF1010A 		add	r10, r10, #1
  816              	.LVL34:
  817              		.loc 1 141 18 view .LVU177
- 818 00dc 8F4B     		ldr	r3, .L98
- 819 00de 03EB0919 		add	r9, r3, r9, lsl #4
+ 818 00d8 8E4B     		ldr	r3, .L98
+ 819 00da 03EB8909 		add	r9, r3, r9, lsl #2
  820              	.LVL35:
  821              		.loc 1 141 18 view .LVU178
- 822 00e2 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 822 00de 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
  823              		.loc 1 141 8 view .LVU179
- 824 00e6 53B9     		cbnz	r3, .L73
+ 824 00e2 53B9     		cbnz	r3, .L73
  142:Core/Src/Origin/dfs.c **** 						++cnt;
  825              		.loc 1 142 7 is_stmt 1 view .LVU180
- 826 00e8 0136     		adds	r6, r6, #1
+ 826 00e4 0136     		adds	r6, r6, #1
  827              	.LVL36:
  143:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  828              		.loc 1 143 7 view .LVU181
  829              		.loc 1 143 19 is_stmt 0 view .LVU182
- 830 00ea 8119     		adds	r1, r0, r6
+ 830 00e6 8119     		adds	r1, r0, r6
  831              		.loc 1 143 40 view .LVU183
- 832 00ec 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 832 00e8 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  833              		.loc 1 143 27 view .LVU184
- 834 00ee 8C4B     		ldr	r3, .L98+4
- 835 00f0 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 834 00ea 8B4B     		ldr	r3, .L98+4
+ 835 00ec 03F81120 		strb	r2, [r3, r1, lsl #1]
  144:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y ) + 1;
  836              		.loc 1 144 7 is_stmt 1 view .LVU185
  837              		.loc 1 144 41 is_stmt 0 view .LVU186
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 18
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 18
 
 
- 838 00f4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 838 00f0 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  839              		.loc 1 144 46 view .LVU187
- 840 00f6 0132     		adds	r2, r2, #1
+ 840 00f2 0132     		adds	r2, r2, #1
  841              		.loc 1 144 27 view .LVU188
- 842 00f8 03EB4103 		add	r3, r3, r1, lsl #1
- 843 00fc 5A70     		strb	r2, [r3, #1]
+ 842 00f4 03EB4103 		add	r3, r3, r1, lsl #1
+ 843 00f8 5A70     		strb	r2, [r3, #1]
  844              	.LVL37:
  845              	.L73:
  145:Core/Src/Origin/dfs.c **** 					}
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  191:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
  192:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  193:Core/Src/Origin/dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 19
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 19
 
 
  194:Core/Src/Origin/dfs.c **** 						++cnt;
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  248:Core/Src/Origin/dfs.c **** 					}
  249:Core/Src/Origin/dfs.c **** 				}
  250:Core/Src/Origin/dfs.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 20
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 20
 
 
  251:Core/Src/Origin/dfs.c **** 		}
@@ -1162,86 +1162,86 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  268:Core/Src/Origin/dfs.c **** 	}
  269:Core/Src/Origin/dfs.c **** 	SetStackNum(n+cnt);
  847              		.loc 1 269 2 view .LVU190
- 848 00fe 3044     		add	r0, r0, r6
+ 848 00fa 3044     		add	r0, r0, r6
  849              	.LVL38:
  850              		.loc 1 269 2 is_stmt 0 view .LVU191
- 851 0100 FFF7FEFF 		bl	SetStackNum
+ 851 00fc FFF7FEFF 		bl	SetStackNum
  852              	.LVL39:
  270:Core/Src/Origin/dfs.c **** 	return (cnt == 0) ? false : true; //何も積まれなかったらfalse
  853              		.loc 1 270 2 is_stmt 1 view .LVU192
  854              		.loc 1 270 28 is_stmt 0 view .LVU193
- 855 0104 301E     		subs	r0, r6, #0
- 856 0106 18BF     		it	ne
- 857 0108 0120     		movne	r0, #1
+ 855 0100 301E     		subs	r0, r6, #0
+ 856 0102 18BF     		it	ne
+ 857 0104 0120     		movne	r0, #1
  858              	.LVL40:
  859              	.L65:
  271:Core/Src/Origin/dfs.c **** //	return n;
  272:Core/Src/Origin/dfs.c **** //	}
  273:Core/Src/Origin/dfs.c **** }
  860              		.loc 1 273 1 view .LVU194
- 861 010a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 861 0106 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
  862              	.LVL41:
  863              	.L82:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  864              		.loc 1 105 6 view .LVU195
- 865 010e 0026     		movs	r6, #0
+ 865 010a 0026     		movs	r6, #0
  866              	.LVL42:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  867              		.loc 1 105 6 view .LVU196
- 868 0110 B7E7     		b	.L71
+ 868 010c B8E7     		b	.L71
  869              	.LVL43:
  870              	.L83:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  871              		.loc 1 105 6 view .LVU197
- 872 0112 0026     		movs	r6, #0
+ 872 010e 0026     		movs	r6, #0
  873              	.LVL44:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  874              		.loc 1 105 6 view .LVU198
- 875 0114 B5E7     		b	.L71
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 21
+ 875 0110 B6E7     		b	.L71
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 21
 
 
  876              	.LVL45:
  877              	.L84:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  878              		.loc 1 105 6 view .LVU199
- 879 0116 0026     		movs	r6, #0
+ 879 0112 0026     		movs	r6, #0
  880              	.LVL46:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  881              		.loc 1 105 6 view .LVU200
- 882 0118 B3E7     		b	.L71
+ 882 0114 B4E7     		b	.L71
  883              	.LVL47:
  884              	.L69:
  154:Core/Src/Origin/dfs.c **** 			if( 1 <= y){
  885              		.loc 1 154 3 is_stmt 1 view .LVU201
  154:Core/Src/Origin/dfs.c **** 			if( 1 <= y){
  886              		.loc 1 154 32 is_stmt 0 view .LVU202
- 887 011a 05EB0513 		add	r3, r5, r5, lsl #4
- 888 011e 4344     		add	r3, r3, r8
- 889 0120 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 887 0116 05EB8503 		add	r3, r5, r5, lsl #2
+ 888 011a 4344     		add	r3, r3, r8
+ 889 011c 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  154:Core/Src/Origin/dfs.c **** 			if( 1 <= y){
  890              		.loc 1 154 5 view .LVU203
- 891 0124 ABB9     		cbnz	r3, .L85
+ 891 0120 ABB9     		cbnz	r3, .L85
  155:Core/Src/Origin/dfs.c **** 				if( Visit[x][y-1] == false ){ //未訪問
  892              		.loc 1 155 4 is_stmt 1 view .LVU204
  155:Core/Src/Origin/dfs.c **** 				if( Visit[x][y-1] == false ){ //未訪問
  893              		.loc 1 155 6 is_stmt 0 view .LVU205
- 894 0126 BAF1000F 		cmp	r10, #0
- 895 012a 56D0     		beq	.L86
+ 894 0122 BAF1000F 		cmp	r10, #0
+ 895 0126 56D0     		beq	.L86
  156:Core/Src/Origin/dfs.c **** 					++cnt;
  896              		.loc 1 156 5 is_stmt 1 view .LVU206
  156:Core/Src/Origin/dfs.c **** 					++cnt;
  897              		.loc 1 156 19 is_stmt 0 view .LVU207
- 898 012c 0AF1FF33 		add	r3, r10, #-1
+ 898 0128 0AF1FF33 		add	r3, r10, #-1
  156:Core/Src/Origin/dfs.c **** 					++cnt;
  899              		.loc 1 156 17 view .LVU208
- 900 0130 7A4A     		ldr	r2, .L98
- 901 0132 02EB0912 		add	r2, r2, r9, lsl #4
- 902 0136 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 900 012c 794A     		ldr	r2, .L98
+ 901 012e 02EB8902 		add	r2, r2, r9, lsl #2
+ 902 0132 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
  156:Core/Src/Origin/dfs.c **** 					++cnt;
  903              		.loc 1 156 7 view .LVU209
- 904 0138 002B     		cmp	r3, #0
- 905 013a 50D1     		bne	.L87
+ 904 0134 002B     		cmp	r3, #0
+ 905 0136 50D1     		bne	.L87
  157:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x;
  906              		.loc 1 157 6 is_stmt 1 view .LVU210
  907              	.LVL48:
@@ -1249,256 +1249,256 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  908              		.loc 1 158 6 view .LVU211
  158:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].y = (now_st->pos.y ) - 1;
  909              		.loc 1 158 18 is_stmt 0 view .LVU212
- 910 013c 421C     		adds	r2, r0, #1
+ 910 0138 421C     		adds	r2, r0, #1
  158:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].y = (now_st->pos.y ) - 1;
  911              		.loc 1 158 26 view .LVU213
- 912 013e 784B     		ldr	r3, .L98+4
- 913 0140 03F81290 		strb	r9, [r3, r2, lsl #1]
+ 912 013a 774B     		ldr	r3, .L98+4
+ 913 013c 03F81290 		strb	r9, [r3, r2, lsl #1]
  159:Core/Src/Origin/dfs.c **** 				}
  914              		.loc 1 159 6 is_stmt 1 view .LVU214
  159:Core/Src/Origin/dfs.c **** 				}
  915              		.loc 1 159 40 is_stmt 0 view .LVU215
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 22
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 22
 
 
- 916 0144 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 916 0140 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
  159:Core/Src/Origin/dfs.c **** 				}
  917              		.loc 1 159 45 view .LVU216
- 918 0146 0139     		subs	r1, r1, #1
+ 918 0142 0139     		subs	r1, r1, #1
  159:Core/Src/Origin/dfs.c **** 				}
  919              		.loc 1 159 26 view .LVU217
- 920 0148 03EB4203 		add	r3, r3, r2, lsl #1
- 921 014c 5970     		strb	r1, [r3, #1]
+ 920 0144 03EB4203 		add	r3, r3, r2, lsl #1
+ 921 0148 5970     		strb	r1, [r3, #1]
  157:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x;
  922              		.loc 1 157 6 view .LVU218
- 923 014e 0126     		movs	r6, #1
+ 923 014a 0126     		movs	r6, #1
  924              	.LVL49:
  157:Core/Src/Origin/dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x;
  925              		.loc 1 157 6 view .LVU219
- 926 0150 00E0     		b	.L74
+ 926 014c 00E0     		b	.L74
  927              	.LVL50:
  928              	.L85:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  929              		.loc 1 105 6 view .LVU220
- 930 0152 0026     		movs	r6, #0
+ 930 014e 0026     		movs	r6, #0
  931              	.LVL51:
  932              	.L74:
  164:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
  933              		.loc 1 164 3 is_stmt 1 view .LVU221
  164:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
  934              		.loc 1 164 5 is_stmt 0 view .LVU222
- 935 0154 B8F10F0F 		cmp	r8, #15
- 936 0158 1CD8     		bhi	.L75
+ 935 0150 B8F1030F 		cmp	r8, #3
+ 936 0154 1CD8     		bhi	.L75
  165:Core/Src/Origin/dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
  937              		.loc 1 165 4 is_stmt 1 view .LVU223
  165:Core/Src/Origin/dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
  938              		.loc 1 165 32 is_stmt 0 view .LVU224
- 939 015a 08F10103 		add	r3, r8, #1
+ 939 0156 08F10103 		add	r3, r8, #1
  165:Core/Src/Origin/dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
  940              		.loc 1 165 35 view .LVU225
- 941 015e 05EB0512 		add	r2, r5, r5, lsl #4
- 942 0162 1344     		add	r3, r3, r2
- 943 0164 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 941 015a 05EB8502 		add	r2, r5, r5, lsl #2
+ 942 015e 1344     		add	r3, r3, r2
+ 943 0160 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  165:Core/Src/Origin/dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
  944              		.loc 1 165 6 view .LVU226
- 945 0168 A3B9     		cbnz	r3, .L75
+ 945 0164 A3B9     		cbnz	r3, .L75
  166:Core/Src/Origin/dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
  946              		.loc 1 166 5 is_stmt 1 view .LVU227
  166:Core/Src/Origin/dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
  947              		.loc 1 166 7 is_stmt 0 view .LVU228
- 948 016a BAF10E0F 		cmp	r10, #14
- 949 016e 11D8     		bhi	.L75
+ 948 0166 BAF1020F 		cmp	r10, #2
+ 949 016a 11D8     		bhi	.L75
  167:Core/Src/Origin/dfs.c **** 						++cnt;
  950              		.loc 1 167 6 is_stmt 1 view .LVU229
  167:Core/Src/Origin/dfs.c **** 						++cnt;
  951              		.loc 1 167 20 is_stmt 0 view .LVU230
- 952 0170 0AF10103 		add	r3, r10, #1
+ 952 016c 0AF10103 		add	r3, r10, #1
  167:Core/Src/Origin/dfs.c **** 						++cnt;
  953              		.loc 1 167 18 view .LVU231
- 954 0174 694A     		ldr	r2, .L98
- 955 0176 02EB0912 		add	r2, r2, r9, lsl #4
- 956 017a D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 23
+ 954 0170 684A     		ldr	r2, .L98
+ 955 0172 02EB8902 		add	r2, r2, r9, lsl #2
+ 956 0176 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 23
 
 
  167:Core/Src/Origin/dfs.c **** 						++cnt;
  957              		.loc 1 167 8 view .LVU232
- 958 017c 53B9     		cbnz	r3, .L75
+ 958 0178 53B9     		cbnz	r3, .L75
  168:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  959              		.loc 1 168 7 is_stmt 1 view .LVU233
- 960 017e 0136     		adds	r6, r6, #1
+ 960 017a 0136     		adds	r6, r6, #1
  961              	.LVL52:
  169:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
  962              		.loc 1 169 7 view .LVU234
  169:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
  963              		.loc 1 169 19 is_stmt 0 view .LVU235
- 964 0180 8119     		adds	r1, r0, r6
+ 964 017c 8119     		adds	r1, r0, r6
  169:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
  965              		.loc 1 169 40 view .LVU236
- 966 0182 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 966 017e 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  169:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
  967              		.loc 1 169 27 view .LVU237
- 968 0184 664B     		ldr	r3, .L98+4
- 969 0186 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 968 0180 654B     		ldr	r3, .L98+4
+ 969 0182 03F81120 		strb	r2, [r3, r1, lsl #1]
  170:Core/Src/Origin/dfs.c **** 					}
  970              		.loc 1 170 7 is_stmt 1 view .LVU238
  170:Core/Src/Origin/dfs.c **** 					}
  971              		.loc 1 170 41 is_stmt 0 view .LVU239
- 972 018a 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 972 0186 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  170:Core/Src/Origin/dfs.c **** 					}
  973              		.loc 1 170 45 view .LVU240
- 974 018c 0132     		adds	r2, r2, #1
+ 974 0188 0132     		adds	r2, r2, #1
  170:Core/Src/Origin/dfs.c **** 					}
  975              		.loc 1 170 27 view .LVU241
- 976 018e 03EB4103 		add	r3, r3, r1, lsl #1
- 977 0192 5A70     		strb	r2, [r3, #1]
+ 976 018a 03EB4103 		add	r3, r3, r1, lsl #1
+ 977 018e 5A70     		strb	r2, [r3, #1]
  978              	.L75:
  176:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
  979              		.loc 1 176 3 is_stmt 1 view .LVU242
  176:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
  980              		.loc 1 176 5 is_stmt 0 view .LVU243
- 981 0194 0F2D     		cmp	r5, #15
- 982 0196 B2D8     		bhi	.L73
+ 981 0190 032D     		cmp	r5, #3
+ 982 0192 B2D8     		bhi	.L73
  177:Core/Src/Origin/dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
  983              		.loc 1 177 4 is_stmt 1 view .LVU244
  177:Core/Src/Origin/dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
  984              		.loc 1 177 29 is_stmt 0 view .LVU245
- 985 0198 0135     		adds	r5, r5, #1
+ 985 0194 0135     		adds	r5, r5, #1
  986              	.LVL53:
  177:Core/Src/Origin/dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
  987              		.loc 1 177 38 view .LVU246
- 988 019a 08EB0518 		add	r8, r8, r5, lsl #4
+ 988 0196 08EB8508 		add	r8, r8, r5, lsl #2
  989              	.LVL54:
  177:Core/Src/Origin/dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
  990              		.loc 1 177 38 view .LVU247
- 991 019e 08F58878 		add	r8, r8, #272
- 992 01a2 17F83830 		ldrb	r3, [r7, r8, lsl #3]	@ zero_extendqisi2
+ 991 019a 08F11408 		add	r8, r8, #20
+ 992 019e 17F83830 		ldrb	r3, [r7, r8, lsl #3]	@ zero_extendqisi2
  177:Core/Src/Origin/dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
  993              		.loc 1 177 6 view .LVU248
- 994 01a6 002B     		cmp	r3, #0
- 995 01a8 A9D1     		bne	.L73
+ 994 01a2 002B     		cmp	r3, #0
+ 995 01a4 A9D1     		bne	.L73
  178:Core/Src/Origin/dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 24
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 24
 
 
  996              		.loc 1 178 5 is_stmt 1 view .LVU249
  178:Core/Src/Origin/dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
  997              		.loc 1 178 7 is_stmt 0 view .LVU250
- 998 01aa B9F10E0F 		cmp	r9, #14
- 999 01ae A6D8     		bhi	.L73
+ 998 01a6 B9F1020F 		cmp	r9, #2
+ 999 01aa A6D8     		bhi	.L73
  179:Core/Src/Origin/dfs.c **** 						++cnt;
  1000              		.loc 1 179 6 is_stmt 1 view .LVU251
  179:Core/Src/Origin/dfs.c **** 						++cnt;
  1001              		.loc 1 179 17 is_stmt 0 view .LVU252
- 1002 01b0 09F10109 		add	r9, r9, #1
+ 1002 01ac 09F10109 		add	r9, r9, #1
  1003              	.LVL55:
  179:Core/Src/Origin/dfs.c **** 						++cnt;
  1004              		.loc 1 179 20 view .LVU253
- 1005 01b4 594B     		ldr	r3, .L98
- 1006 01b6 03EB0919 		add	r9, r3, r9, lsl #4
+ 1005 01b0 584B     		ldr	r3, .L98
+ 1006 01b2 03EB8909 		add	r9, r3, r9, lsl #2
  1007              	.LVL56:
  179:Core/Src/Origin/dfs.c **** 						++cnt;
  1008              		.loc 1 179 20 view .LVU254
- 1009 01ba 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 1009 01b6 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
  179:Core/Src/Origin/dfs.c **** 						++cnt;
  1010              		.loc 1 179 8 view .LVU255
- 1011 01be 002B     		cmp	r3, #0
- 1012 01c0 9DD1     		bne	.L73
+ 1011 01ba 002B     		cmp	r3, #0
+ 1012 01bc 9DD1     		bne	.L73
  180:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
  1013              		.loc 1 180 7 is_stmt 1 view .LVU256
- 1014 01c2 0136     		adds	r6, r6, #1
+ 1014 01be 0136     		adds	r6, r6, #1
  1015              	.LVL57:
  181:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1016              		.loc 1 181 7 view .LVU257
  181:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1017              		.loc 1 181 40 is_stmt 0 view .LVU258
- 1018 01c4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1018 01c0 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  181:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1019              		.loc 1 181 19 view .LVU259
- 1020 01c6 8119     		adds	r1, r0, r6
+ 1020 01c2 8119     		adds	r1, r0, r6
  181:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1021              		.loc 1 181 42 view .LVU260
- 1022 01c8 0132     		adds	r2, r2, #1
+ 1022 01c4 0132     		adds	r2, r2, #1
  181:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1023              		.loc 1 181 27 view .LVU261
- 1024 01ca 554B     		ldr	r3, .L98+4
- 1025 01cc 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1024 01c6 544B     		ldr	r3, .L98+4
+ 1025 01c8 03F81120 		strb	r2, [r3, r1, lsl #1]
  182:Core/Src/Origin/dfs.c **** 					}
  1026              		.loc 1 182 7 is_stmt 1 view .LVU262
  182:Core/Src/Origin/dfs.c **** 					}
  1027              		.loc 1 182 40 is_stmt 0 view .LVU263
- 1028 01d0 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1028 01cc 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  182:Core/Src/Origin/dfs.c **** 					}
  1029              		.loc 1 182 27 view .LVU264
- 1030 01d2 03EB4103 		add	r3, r3, r1, lsl #1
- 1031 01d6 5A70     		strb	r2, [r3, #1]
- 1032 01d8 91E7     		b	.L73
+ 1030 01ce 03EB4103 		add	r3, r3, r1, lsl #1
+ 1031 01d2 5A70     		strb	r2, [r3, #1]
+ 1032 01d4 91E7     		b	.L73
  1033              	.LVL58:
  1034              	.L86:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1035              		.loc 1 105 6 view .LVU265
- 1036 01da 0026     		movs	r6, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 25
+ 1036 01d6 0026     		movs	r6, #0
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 25
 
 
  1037              	.LVL59:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1038              		.loc 1 105 6 view .LVU266
- 1039 01dc BAE7     		b	.L74
+ 1039 01d8 BAE7     		b	.L74
  1040              	.LVL60:
  1041              	.L87:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1042              		.loc 1 105 6 view .LVU267
- 1043 01de 0026     		movs	r6, #0
+ 1043 01da 0026     		movs	r6, #0
  1044              	.LVL61:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1045              		.loc 1 105 6 view .LVU268
- 1046 01e0 B8E7     		b	.L74
+ 1046 01dc B8E7     		b	.L74
  1047              	.LVL62:
  1048              	.L68:
  190:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
  1049              		.loc 1 190 3 is_stmt 1 view .LVU269
  190:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
  1050              		.loc 1 190 5 is_stmt 0 view .LVU270
- 1051 01e2 B8F1000F 		cmp	r8, #0
- 1052 01e6 21D0     		beq	.L88
+ 1051 01de B8F1000F 		cmp	r8, #0
+ 1052 01e2 20D0     		beq	.L88
  191:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1053              		.loc 1 191 4 is_stmt 1 view .LVU271
  191:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1054              		.loc 1 191 35 is_stmt 0 view .LVU272
- 1055 01e8 08F1FF33 		add	r3, r8, #-1
+ 1055 01e4 08F1FF33 		add	r3, r8, #-1
  191:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1056              		.loc 1 191 38 view .LVU273
- 1057 01ec 03EB0513 		add	r3, r3, r5, lsl #4
- 1058 01f0 03F58873 		add	r3, r3, #272
- 1059 01f4 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1057 01e8 03EB8503 		add	r3, r3, r5, lsl #2
+ 1058 01ec 1433     		adds	r3, r3, #20
+ 1059 01ee 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  191:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1060              		.loc 1 191 6 view .LVU274
- 1061 01f8 002B     		cmp	r3, #0
- 1062 01fa 65D1     		bne	.L89
+ 1061 01f2 002B     		cmp	r3, #0
+ 1062 01f4 64D1     		bne	.L89
  192:Core/Src/Origin/dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
  1063              		.loc 1 192 5 is_stmt 1 view .LVU275
  192:Core/Src/Origin/dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
  1064              		.loc 1 192 7 is_stmt 0 view .LVU276
- 1065 01fc B9F1000F 		cmp	r9, #0
- 1066 0200 64D0     		beq	.L90
+ 1065 01f6 B9F1000F 		cmp	r9, #0
+ 1066 01fa 63D0     		beq	.L90
  193:Core/Src/Origin/dfs.c **** 						++cnt;
  1067              		.loc 1 193 6 is_stmt 1 view .LVU277
  193:Core/Src/Origin/dfs.c **** 						++cnt;
  1068              		.loc 1 193 17 is_stmt 0 view .LVU278
- 1069 0202 09F1FF33 		add	r3, r9, #-1
+ 1069 01fc 09F1FF33 		add	r3, r9, #-1
  193:Core/Src/Origin/dfs.c **** 						++cnt;
  1070              		.loc 1 193 20 view .LVU279
- 1071 0206 454A     		ldr	r2, .L98
- 1072 0208 02EB0313 		add	r3, r2, r3, lsl #4
- 1073 020c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 1071 0200 444A     		ldr	r2, .L98
+ 1072 0202 02EB8303 		add	r3, r2, r3, lsl #2
+ 1073 0206 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
  193:Core/Src/Origin/dfs.c **** 						++cnt;
  1074              		.loc 1 193 8 view .LVU280
- 1075 0210 002B     		cmp	r3, #0
- 1076 0212 5DD1     		bne	.L91
+ 1075 020a 002B     		cmp	r3, #0
+ 1076 020c 5CD1     		bne	.L91
  194:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
  1077              		.loc 1 194 7 is_stmt 1 view .LVU281
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 26
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 26
 
 
  1078              	.LVL63:
@@ -1506,275 +1506,275 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  1079              		.loc 1 195 7 view .LVU282
  195:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1080              		.loc 1 195 19 is_stmt 0 view .LVU283
- 1081 0214 421C     		adds	r2, r0, #1
+ 1081 020e 421C     		adds	r2, r0, #1
  195:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1082              		.loc 1 195 42 view .LVU284
- 1083 0216 09F1FF31 		add	r1, r9, #-1
+ 1083 0210 09F1FF31 		add	r1, r9, #-1
  195:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1084              		.loc 1 195 27 view .LVU285
- 1085 021a 414B     		ldr	r3, .L98+4
- 1086 021c 03F81210 		strb	r1, [r3, r2, lsl #1]
+ 1085 0214 404B     		ldr	r3, .L98+4
+ 1086 0216 03F81210 		strb	r1, [r3, r2, lsl #1]
  196:Core/Src/Origin/dfs.c **** 					}
  1087              		.loc 1 196 7 is_stmt 1 view .LVU286
  196:Core/Src/Origin/dfs.c **** 					}
  1088              		.loc 1 196 40 is_stmt 0 view .LVU287
- 1089 0220 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 1089 021a 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
  196:Core/Src/Origin/dfs.c **** 					}
  1090              		.loc 1 196 27 view .LVU288
- 1091 0222 03EB4203 		add	r3, r3, r2, lsl #1
- 1092 0226 5970     		strb	r1, [r3, #1]
+ 1091 021c 03EB4203 		add	r3, r3, r2, lsl #1
+ 1092 0220 5970     		strb	r1, [r3, #1]
  194:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
  1093              		.loc 1 194 7 view .LVU289
- 1094 0228 0126     		movs	r6, #1
+ 1094 0222 0126     		movs	r6, #1
  1095              	.LVL64:
  194:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
  1096              		.loc 1 194 7 view .LVU290
- 1097 022a 00E0     		b	.L76
+ 1097 0224 00E0     		b	.L76
  1098              	.LVL65:
  1099              	.L88:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1100              		.loc 1 105 6 view .LVU291
- 1101 022c 0026     		movs	r6, #0
+ 1101 0226 0026     		movs	r6, #0
  1102              	.LVL66:
  1103              	.L76:
  202:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y-1].existence == NOWALL ){ //行ける
  1104              		.loc 1 202 3 is_stmt 1 view .LVU292
  202:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y-1].existence == NOWALL ){ //行ける
  1105              		.loc 1 202 5 is_stmt 0 view .LVU293
- 1106 022e 0F2D     		cmp	r5, #15
- 1107 0230 22D8     		bhi	.L77
+ 1106 0228 032D     		cmp	r5, #3
+ 1107 022a 21D8     		bhi	.L77
  202:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y-1].existence == NOWALL ){ //行ける
  1108              		.loc 1 202 38 discriminator 1 view .LVU294
- 1109 0232 B8F1000F 		cmp	r8, #0
- 1110 0236 1FD0     		beq	.L77
+ 1109 022c B8F1000F 		cmp	r8, #0
+ 1110 0230 1ED0     		beq	.L77
  203:Core/Src/Origin/dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
  1111              		.loc 1 203 4 is_stmt 1 view .LVU295
  203:Core/Src/Origin/dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
  1112              		.loc 1 203 29 is_stmt 0 view .LVU296
- 1113 0238 6B1C     		adds	r3, r5, #1
+ 1113 0232 6B1C     		adds	r3, r5, #1
  203:Core/Src/Origin/dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
  1114              		.loc 1 203 37 view .LVU297
- 1115 023a 08F1FF32 		add	r2, r8, #-1
+ 1115 0234 08F1FF32 		add	r2, r8, #-1
  203:Core/Src/Origin/dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
  1116              		.loc 1 203 40 view .LVU298
- 1117 023e 02EB0313 		add	r3, r2, r3, lsl #4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 27
+ 1117 0238 02EB8303 		add	r3, r2, r3, lsl #2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 27
 
 
- 1118 0242 03F58873 		add	r3, r3, #272
- 1119 0246 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1118 023c 1433     		adds	r3, r3, #20
+ 1119 023e 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  203:Core/Src/Origin/dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
  1120              		.loc 1 203 6 view .LVU299
- 1121 024a ABB9     		cbnz	r3, .L77
+ 1121 0242 ABB9     		cbnz	r3, .L77
  204:Core/Src/Origin/dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
  1122              		.loc 1 204 5 is_stmt 1 view .LVU300
  204:Core/Src/Origin/dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
  1123              		.loc 1 204 7 is_stmt 0 view .LVU301
- 1124 024c B9F10E0F 		cmp	r9, #14
- 1125 0250 12D8     		bhi	.L77
+ 1124 0244 B9F1020F 		cmp	r9, #2
+ 1125 0248 12D8     		bhi	.L77
  205:Core/Src/Origin/dfs.c **** 						++cnt;
  1126              		.loc 1 205 6 is_stmt 1 view .LVU302
  205:Core/Src/Origin/dfs.c **** 						++cnt;
  1127              		.loc 1 205 17 is_stmt 0 view .LVU303
- 1128 0252 09F10103 		add	r3, r9, #1
+ 1128 024a 09F10103 		add	r3, r9, #1
  205:Core/Src/Origin/dfs.c **** 						++cnt;
  1129              		.loc 1 205 20 view .LVU304
- 1130 0256 314A     		ldr	r2, .L98
- 1131 0258 02EB0313 		add	r3, r2, r3, lsl #4
- 1132 025c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 1130 024e 314A     		ldr	r2, .L98
+ 1131 0250 02EB8303 		add	r3, r2, r3, lsl #2
+ 1132 0254 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
  205:Core/Src/Origin/dfs.c **** 						++cnt;
  1133              		.loc 1 205 8 view .LVU305
- 1134 0260 53B9     		cbnz	r3, .L77
+ 1134 0258 53B9     		cbnz	r3, .L77
  206:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
  1135              		.loc 1 206 7 is_stmt 1 view .LVU306
- 1136 0262 0136     		adds	r6, r6, #1
+ 1136 025a 0136     		adds	r6, r6, #1
  1137              	.LVL67:
  207:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1138              		.loc 1 207 7 view .LVU307
  207:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1139              		.loc 1 207 40 is_stmt 0 view .LVU308
- 1140 0264 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1140 025c 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  207:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1141              		.loc 1 207 19 view .LVU309
- 1142 0266 8119     		adds	r1, r0, r6
+ 1142 025e 8119     		adds	r1, r0, r6
  207:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1143              		.loc 1 207 42 view .LVU310
- 1144 0268 0132     		adds	r2, r2, #1
+ 1144 0260 0132     		adds	r2, r2, #1
  207:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1145              		.loc 1 207 27 view .LVU311
- 1146 026a 2D4B     		ldr	r3, .L98+4
- 1147 026c 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1146 0262 2D4B     		ldr	r3, .L98+4
+ 1147 0264 03F81120 		strb	r2, [r3, r1, lsl #1]
  208:Core/Src/Origin/dfs.c **** 					}
  1148              		.loc 1 208 7 is_stmt 1 view .LVU312
  208:Core/Src/Origin/dfs.c **** 					}
  1149              		.loc 1 208 40 is_stmt 0 view .LVU313
- 1150 0270 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1150 0268 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  208:Core/Src/Origin/dfs.c **** 					}
  1151              		.loc 1 208 27 view .LVU314
- 1152 0272 03EB4103 		add	r3, r3, r1, lsl #1
- 1153 0276 5A70     		strb	r2, [r3, #1]
+ 1152 026a 03EB4103 		add	r3, r3, r1, lsl #1
+ 1153 026e 5A70     		strb	r2, [r3, #1]
  1154              	.L77:
  215:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
  1155              		.loc 1 215 3 is_stmt 1 view .LVU315
  215:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
  1156              		.loc 1 215 5 is_stmt 0 view .LVU316
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 28
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 28
 
 
- 1157 0278 B8F1000F 		cmp	r8, #0
- 1158 027c 3FF43FAF 		beq	.L73
+ 1157 0270 B8F1000F 		cmp	r8, #0
+ 1158 0274 3FF441AF 		beq	.L73
  216:Core/Src/Origin/dfs.c **** 				if( 1 <= y){
  1159              		.loc 1 216 4 is_stmt 1 view .LVU317
  216:Core/Src/Origin/dfs.c **** 				if( 1 <= y){
  1160              		.loc 1 216 32 is_stmt 0 view .LVU318
- 1161 0280 08F1FF38 		add	r8, r8, #-1
+ 1161 0278 08F1FF38 		add	r8, r8, #-1
  1162              	.LVL68:
  216:Core/Src/Origin/dfs.c **** 				if( 1 <= y){
  1163              		.loc 1 216 35 view .LVU319
- 1164 0284 05EB0515 		add	r5, r5, r5, lsl #4
+ 1164 027c 05EB8505 		add	r5, r5, r5, lsl #2
  1165              	.LVL69:
  216:Core/Src/Origin/dfs.c **** 				if( 1 <= y){
  1166              		.loc 1 216 35 view .LVU320
- 1167 0288 4544     		add	r5, r5, r8
- 1168 028a 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
+ 1167 0280 4544     		add	r5, r5, r8
+ 1168 0282 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
  216:Core/Src/Origin/dfs.c **** 				if( 1 <= y){
  1169              		.loc 1 216 6 view .LVU321
- 1170 028e 002B     		cmp	r3, #0
- 1171 0290 7FF435AF 		bne	.L73
+ 1170 0286 002B     		cmp	r3, #0
+ 1171 0288 7FF437AF 		bne	.L73
  217:Core/Src/Origin/dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
  1172              		.loc 1 217 5 is_stmt 1 view .LVU322
  217:Core/Src/Origin/dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
  1173              		.loc 1 217 7 is_stmt 0 view .LVU323
- 1174 0294 BAF1000F 		cmp	r10, #0
- 1175 0298 3FF431AF 		beq	.L73
+ 1174 028c BAF1000F 		cmp	r10, #0
+ 1175 0290 3FF433AF 		beq	.L73
  218:Core/Src/Origin/dfs.c **** 						++cnt;
  1176              		.loc 1 218 6 is_stmt 1 view .LVU324
  218:Core/Src/Origin/dfs.c **** 						++cnt;
  1177              		.loc 1 218 20 is_stmt 0 view .LVU325
- 1178 029c 0AF1FF3A 		add	r10, r10, #-1
+ 1178 0294 0AF1FF3A 		add	r10, r10, #-1
  1179              	.LVL70:
  218:Core/Src/Origin/dfs.c **** 						++cnt;
  1180              		.loc 1 218 18 view .LVU326
- 1181 02a0 1E4B     		ldr	r3, .L98
- 1182 02a2 03EB0919 		add	r9, r3, r9, lsl #4
+ 1181 0298 1E4B     		ldr	r3, .L98
+ 1182 029a 03EB8909 		add	r9, r3, r9, lsl #2
  1183              	.LVL71:
  218:Core/Src/Origin/dfs.c **** 						++cnt;
  1184              		.loc 1 218 18 view .LVU327
- 1185 02a6 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 1185 029e 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
  218:Core/Src/Origin/dfs.c **** 						++cnt;
  1186              		.loc 1 218 8 view .LVU328
- 1187 02aa 002B     		cmp	r3, #0
- 1188 02ac 7FF427AF 		bne	.L73
+ 1187 02a2 002B     		cmp	r3, #0
+ 1188 02a4 7FF429AF 		bne	.L73
  219:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  1189              		.loc 1 219 7 is_stmt 1 view .LVU329
- 1190 02b0 0136     		adds	r6, r6, #1
+ 1190 02a8 0136     		adds	r6, r6, #1
  1191              	.LVL72:
  220:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1192              		.loc 1 220 7 view .LVU330
  220:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1193              		.loc 1 220 19 is_stmt 0 view .LVU331
- 1194 02b2 8119     		adds	r1, r0, r6
+ 1194 02aa 8119     		adds	r1, r0, r6
  220:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1195              		.loc 1 220 40 view .LVU332
- 1196 02b4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1196 02ac 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  220:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 29
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 29
 
 
  1197              		.loc 1 220 27 view .LVU333
- 1198 02b6 1A4B     		ldr	r3, .L98+4
- 1199 02b8 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1198 02ae 1A4B     		ldr	r3, .L98+4
+ 1199 02b0 03F81120 		strb	r2, [r3, r1, lsl #1]
  221:Core/Src/Origin/dfs.c **** 					}
  1200              		.loc 1 221 7 is_stmt 1 view .LVU334
  221:Core/Src/Origin/dfs.c **** 					}
  1201              		.loc 1 221 40 is_stmt 0 view .LVU335
- 1202 02bc 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1202 02b4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  221:Core/Src/Origin/dfs.c **** 					}
  1203              		.loc 1 221 42 view .LVU336
- 1204 02be 013A     		subs	r2, r2, #1
+ 1204 02b6 013A     		subs	r2, r2, #1
  221:Core/Src/Origin/dfs.c **** 					}
  1205              		.loc 1 221 27 view .LVU337
- 1206 02c0 03EB4103 		add	r3, r3, r1, lsl #1
- 1207 02c4 5A70     		strb	r2, [r3, #1]
- 1208 02c6 1AE7     		b	.L73
+ 1206 02b8 03EB4103 		add	r3, r3, r1, lsl #1
+ 1207 02bc 5A70     		strb	r2, [r3, #1]
+ 1208 02be 1CE7     		b	.L73
  1209              	.LVL73:
  1210              	.L89:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1211              		.loc 1 105 6 view .LVU338
- 1212 02c8 0026     		movs	r6, #0
+ 1212 02c0 0026     		movs	r6, #0
  1213              	.LVL74:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1214              		.loc 1 105 6 view .LVU339
- 1215 02ca B0E7     		b	.L76
+ 1215 02c2 B1E7     		b	.L76
  1216              	.LVL75:
  1217              	.L90:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1218              		.loc 1 105 6 view .LVU340
- 1219 02cc 0026     		movs	r6, #0
+ 1219 02c4 0026     		movs	r6, #0
  1220              	.LVL76:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1221              		.loc 1 105 6 view .LVU341
- 1222 02ce AEE7     		b	.L76
+ 1222 02c6 AFE7     		b	.L76
  1223              	.LVL77:
  1224              	.L91:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1225              		.loc 1 105 6 view .LVU342
- 1226 02d0 0026     		movs	r6, #0
+ 1226 02c8 0026     		movs	r6, #0
  1227              	.LVL78:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1228              		.loc 1 105 6 view .LVU343
- 1229 02d2 ACE7     		b	.L76
+ 1229 02ca ADE7     		b	.L76
  1230              	.LVL79:
  1231              	.L66:
  229:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
  1232              		.loc 1 229 3 is_stmt 1 view .LVU344
  229:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
  1233              		.loc 1 229 5 is_stmt 0 view .LVU345
- 1234 02d4 35B3     		cbz	r5, .L92
+ 1234 02cc 35B3     		cbz	r5, .L92
  229:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
  1235              		.loc 1 229 19 discriminator 1 view .LVU346
- 1236 02d6 B8F10F0F 		cmp	r8, #15
- 1237 02da 68D8     		bhi	.L93
+ 1236 02ce B8F1030F 		cmp	r8, #3
+ 1237 02d2 67D8     		bhi	.L93
  230:Core/Src/Origin/dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
  1238              		.loc 1 230 4 is_stmt 1 view .LVU347
  230:Core/Src/Origin/dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 30
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 30
 
 
  1239              		.loc 1 230 26 is_stmt 0 view .LVU348
- 1240 02dc 6B1E     		subs	r3, r5, #1
+ 1240 02d4 6B1E     		subs	r3, r5, #1
  230:Core/Src/Origin/dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
  1241              		.loc 1 230 34 view .LVU349
- 1242 02de 08F10102 		add	r2, r8, #1
+ 1242 02d6 08F10102 		add	r2, r8, #1
  230:Core/Src/Origin/dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
  1243              		.loc 1 230 37 view .LVU350
- 1244 02e2 03EB0313 		add	r3, r3, r3, lsl #4
- 1245 02e6 1344     		add	r3, r3, r2
- 1246 02e8 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1244 02da 03EB8303 		add	r3, r3, r3, lsl #2
+ 1245 02de 1344     		add	r3, r3, r2
+ 1246 02e0 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  230:Core/Src/Origin/dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
  1247              		.loc 1 230 6 view .LVU351
- 1248 02ec 002B     		cmp	r3, #0
- 1249 02ee 60D1     		bne	.L94
+ 1248 02e4 002B     		cmp	r3, #0
+ 1249 02e6 5FD1     		bne	.L94
  231:Core/Src/Origin/dfs.c **** 					if( Visit[x][y+1] == false ){ //未訪問
  1250              		.loc 1 231 5 is_stmt 1 view .LVU352
  231:Core/Src/Origin/dfs.c **** 					if( Visit[x][y+1] == false ){ //未訪問
  1251              		.loc 1 231 7 is_stmt 0 view .LVU353
- 1252 02f0 BAF10E0F 		cmp	r10, #14
- 1253 02f4 5FD8     		bhi	.L95
+ 1252 02e8 BAF1020F 		cmp	r10, #2
+ 1253 02ec 5ED8     		bhi	.L95
  232:Core/Src/Origin/dfs.c **** 						++cnt;
  1254              		.loc 1 232 6 is_stmt 1 view .LVU354
  232:Core/Src/Origin/dfs.c **** 						++cnt;
  1255              		.loc 1 232 20 is_stmt 0 view .LVU355
- 1256 02f6 0AF10103 		add	r3, r10, #1
+ 1256 02ee 0AF10103 		add	r3, r10, #1
  232:Core/Src/Origin/dfs.c **** 						++cnt;
  1257              		.loc 1 232 18 view .LVU356
- 1258 02fa 084A     		ldr	r2, .L98
- 1259 02fc 02EB0912 		add	r2, r2, r9, lsl #4
- 1260 0300 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 1258 02f2 084A     		ldr	r2, .L98
+ 1259 02f4 02EB8902 		add	r2, r2, r9, lsl #2
+ 1260 02f8 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
  232:Core/Src/Origin/dfs.c **** 						++cnt;
  1261              		.loc 1 232 8 view .LVU357
- 1262 0302 002B     		cmp	r3, #0
- 1263 0304 59D1     		bne	.L96
+ 1262 02fa 002B     		cmp	r3, #0
+ 1263 02fc 58D1     		bne	.L96
  233:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  1264              		.loc 1 233 7 is_stmt 1 view .LVU358
  1265              	.LVL80:
@@ -1782,247 +1782,247 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  1266              		.loc 1 234 7 view .LVU359
  234:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
  1267              		.loc 1 234 19 is_stmt 0 view .LVU360
- 1268 0306 421C     		adds	r2, r0, #1
+ 1268 02fe 421C     		adds	r2, r0, #1
  234:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
  1269              		.loc 1 234 27 view .LVU361
- 1270 0308 054B     		ldr	r3, .L98+4
- 1271 030a 03F81290 		strb	r9, [r3, r2, lsl #1]
+ 1270 0300 054B     		ldr	r3, .L98+4
+ 1271 0302 03F81290 		strb	r9, [r3, r2, lsl #1]
  235:Core/Src/Origin/dfs.c **** 					}
  1272              		.loc 1 235 7 is_stmt 1 view .LVU362
  235:Core/Src/Origin/dfs.c **** 					}
  1273              		.loc 1 235 40 is_stmt 0 view .LVU363
- 1274 030e 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 1274 0306 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
  235:Core/Src/Origin/dfs.c **** 					}
  1275              		.loc 1 235 42 view .LVU364
- 1276 0310 0131     		adds	r1, r1, #1
+ 1276 0308 0131     		adds	r1, r1, #1
  235:Core/Src/Origin/dfs.c **** 					}
  1277              		.loc 1 235 27 view .LVU365
- 1278 0312 03EB4203 		add	r3, r3, r2, lsl #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 31
+ 1278 030a 03EB4203 		add	r3, r3, r2, lsl #1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 31
 
 
- 1279 0316 5970     		strb	r1, [r3, #1]
+ 1279 030e 5970     		strb	r1, [r3, #1]
  233:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  1280              		.loc 1 233 7 view .LVU366
- 1281 0318 0126     		movs	r6, #1
+ 1281 0310 0126     		movs	r6, #1
  1282              	.LVL81:
  233:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  1283              		.loc 1 233 7 view .LVU367
- 1284 031a 04E0     		b	.L78
+ 1284 0312 04E0     		b	.L78
  1285              	.L99:
  1286              		.align	2
  1287              	.L98:
- 1288 031c 00000000 		.word	.LANCHOR4
- 1289 0320 00000000 		.word	.LANCHOR3
+ 1288 0314 00000000 		.word	.LANCHOR4
+ 1289 0318 00000000 		.word	.LANCHOR3
  1290              	.LVL82:
  1291              	.L92:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1292              		.loc 1 105 6 view .LVU368
- 1293 0324 0026     		movs	r6, #0
+ 1293 031c 0026     		movs	r6, #0
  1294              	.LVL83:
  1295              	.L78:
  241:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
  1296              		.loc 1 241 3 is_stmt 1 view .LVU369
  241:Core/Src/Origin/dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
  1297              		.loc 1 241 5 is_stmt 0 view .LVU370
- 1298 0326 DDB1     		cbz	r5, .L79
+ 1298 031e DDB1     		cbz	r5, .L79
  242:Core/Src/Origin/dfs.c **** 				if( 1 <= y ){
  1299              		.loc 1 242 4 is_stmt 1 view .LVU371
  242:Core/Src/Origin/dfs.c **** 				if( 1 <= y ){
  1300              		.loc 1 242 26 is_stmt 0 view .LVU372
- 1301 0328 6B1E     		subs	r3, r5, #1
+ 1301 0320 6B1E     		subs	r3, r5, #1
  242:Core/Src/Origin/dfs.c **** 				if( 1 <= y ){
  1302              		.loc 1 242 35 view .LVU373
- 1303 032a 03EB0313 		add	r3, r3, r3, lsl #4
- 1304 032e 4344     		add	r3, r3, r8
- 1305 0330 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1303 0322 03EB8303 		add	r3, r3, r3, lsl #2
+ 1304 0326 4344     		add	r3, r3, r8
+ 1305 0328 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  242:Core/Src/Origin/dfs.c **** 				if( 1 <= y ){
  1306              		.loc 1 242 6 view .LVU374
- 1307 0334 A3B9     		cbnz	r3, .L79
+ 1307 032c A3B9     		cbnz	r3, .L79
  243:Core/Src/Origin/dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
  1308              		.loc 1 243 5 is_stmt 1 view .LVU375
  243:Core/Src/Origin/dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
  1309              		.loc 1 243 7 is_stmt 0 view .LVU376
- 1310 0336 BAF1000F 		cmp	r10, #0
- 1311 033a 11D0     		beq	.L79
+ 1310 032e BAF1000F 		cmp	r10, #0
+ 1311 0332 11D0     		beq	.L79
  244:Core/Src/Origin/dfs.c **** 						++cnt;
  1312              		.loc 1 244 6 is_stmt 1 view .LVU377
  244:Core/Src/Origin/dfs.c **** 						++cnt;
  1313              		.loc 1 244 20 is_stmt 0 view .LVU378
- 1314 033c 0AF1FF33 		add	r3, r10, #-1
+ 1314 0334 0AF1FF33 		add	r3, r10, #-1
  244:Core/Src/Origin/dfs.c **** 						++cnt;
  1315              		.loc 1 244 18 view .LVU379
- 1316 0340 204A     		ldr	r2, .L100
- 1317 0342 02EB0912 		add	r2, r2, r9, lsl #4
- 1318 0346 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 1316 0338 1F4A     		ldr	r2, .L100
+ 1317 033a 02EB8902 		add	r2, r2, r9, lsl #2
+ 1318 033e D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
  244:Core/Src/Origin/dfs.c **** 						++cnt;
  1319              		.loc 1 244 8 view .LVU380
- 1320 0348 53B9     		cbnz	r3, .L79
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 32
+ 1320 0340 53B9     		cbnz	r3, .L79
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 32
 
 
  245:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
  1321              		.loc 1 245 7 is_stmt 1 view .LVU381
- 1322 034a 0136     		adds	r6, r6, #1
+ 1322 0342 0136     		adds	r6, r6, #1
  1323              	.LVL84:
  246:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1324              		.loc 1 246 7 view .LVU382
  246:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1325              		.loc 1 246 19 is_stmt 0 view .LVU383
- 1326 034c 8119     		adds	r1, r0, r6
+ 1326 0344 8119     		adds	r1, r0, r6
  246:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1327              		.loc 1 246 40 view .LVU384
- 1328 034e 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1328 0346 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  246:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  1329              		.loc 1 246 27 view .LVU385
- 1330 0350 1D4B     		ldr	r3, .L100+4
- 1331 0352 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1330 0348 1C4B     		ldr	r3, .L100+4
+ 1331 034a 03F81120 		strb	r2, [r3, r1, lsl #1]
  247:Core/Src/Origin/dfs.c **** 					}
  1332              		.loc 1 247 7 is_stmt 1 view .LVU386
  247:Core/Src/Origin/dfs.c **** 					}
  1333              		.loc 1 247 40 is_stmt 0 view .LVU387
- 1334 0356 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1334 034e 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  247:Core/Src/Origin/dfs.c **** 					}
  1335              		.loc 1 247 42 view .LVU388
- 1336 0358 013A     		subs	r2, r2, #1
+ 1336 0350 013A     		subs	r2, r2, #1
  247:Core/Src/Origin/dfs.c **** 					}
  1337              		.loc 1 247 27 view .LVU389
- 1338 035a 03EB4103 		add	r3, r3, r1, lsl #1
- 1339 035e 5A70     		strb	r2, [r3, #1]
+ 1338 0352 03EB4103 		add	r3, r3, r1, lsl #1
+ 1339 0356 5A70     		strb	r2, [r3, #1]
  1340              	.L79:
  253:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
  1341              		.loc 1 253 3 is_stmt 1 view .LVU390
  253:Core/Src/Origin/dfs.c **** 			if( maze->ColumnNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
  1342              		.loc 1 253 5 is_stmt 0 view .LVU391
- 1343 0360 002D     		cmp	r5, #0
- 1344 0362 3FF4CCAE 		beq	.L73
+ 1343 0358 002D     		cmp	r5, #0
+ 1344 035a 3FF4CEAE 		beq	.L73
  254:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1345              		.loc 1 254 4 is_stmt 1 view .LVU392
  254:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1346              		.loc 1 254 29 is_stmt 0 view .LVU393
- 1347 0366 013D     		subs	r5, r5, #1
+ 1347 035e 013D     		subs	r5, r5, #1
  1348              	.LVL85:
  254:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1349              		.loc 1 254 38 view .LVU394
- 1350 0368 08EB0515 		add	r5, r8, r5, lsl #4
+ 1350 0360 08EB8505 		add	r5, r8, r5, lsl #2
  1351              	.LVL86:
  254:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1352              		.loc 1 254 38 view .LVU395
- 1353 036c 05F58875 		add	r5, r5, #272
- 1354 0370 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
+ 1353 0364 1435     		adds	r5, r5, #20
+ 1354 0366 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
  254:Core/Src/Origin/dfs.c **** 				if( 1 <= x){
  1355              		.loc 1 254 6 view .LVU396
- 1356 0374 002B     		cmp	r3, #0
- 1357 0376 7FF4C2AE 		bne	.L73
+ 1356 036a 002B     		cmp	r3, #0
+ 1357 036c 7FF4C5AE 		bne	.L73
  255:Core/Src/Origin/dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
  1358              		.loc 1 255 5 is_stmt 1 view .LVU397
  255:Core/Src/Origin/dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
  1359              		.loc 1 255 7 is_stmt 0 view .LVU398
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 33
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 33
 
 
- 1360 037a B9F1000F 		cmp	r9, #0
- 1361 037e 3FF4BEAE 		beq	.L73
+ 1360 0370 B9F1000F 		cmp	r9, #0
+ 1361 0374 3FF4C1AE 		beq	.L73
  256:Core/Src/Origin/dfs.c **** 						++cnt;
  1362              		.loc 1 256 6 is_stmt 1 view .LVU399
  256:Core/Src/Origin/dfs.c **** 						++cnt;
  1363              		.loc 1 256 17 is_stmt 0 view .LVU400
- 1364 0382 09F1FF39 		add	r9, r9, #-1
+ 1364 0378 09F1FF39 		add	r9, r9, #-1
  1365              	.LVL87:
  256:Core/Src/Origin/dfs.c **** 						++cnt;
  1366              		.loc 1 256 20 view .LVU401
- 1367 0386 0F4B     		ldr	r3, .L100
- 1368 0388 03EB0919 		add	r9, r3, r9, lsl #4
+ 1367 037c 0E4B     		ldr	r3, .L100
+ 1368 037e 03EB8909 		add	r9, r3, r9, lsl #2
  1369              	.LVL88:
  256:Core/Src/Origin/dfs.c **** 						++cnt;
  1370              		.loc 1 256 20 view .LVU402
- 1371 038c 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 1371 0382 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
  256:Core/Src/Origin/dfs.c **** 						++cnt;
  1372              		.loc 1 256 8 view .LVU403
- 1373 0390 002B     		cmp	r3, #0
- 1374 0392 7FF4B4AE 		bne	.L73
+ 1373 0386 002B     		cmp	r3, #0
+ 1374 0388 7FF4B7AE 		bne	.L73
  257:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
  1375              		.loc 1 257 7 is_stmt 1 view .LVU404
- 1376 0396 0136     		adds	r6, r6, #1
+ 1376 038c 0136     		adds	r6, r6, #1
  1377              	.LVL89:
  258:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1378              		.loc 1 258 7 view .LVU405
  258:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1379              		.loc 1 258 40 is_stmt 0 view .LVU406
- 1380 0398 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1380 038e 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  258:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1381              		.loc 1 258 19 view .LVU407
- 1382 039a 8119     		adds	r1, r0, r6
+ 1382 0390 8119     		adds	r1, r0, r6
  258:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1383              		.loc 1 258 42 view .LVU408
- 1384 039c 013A     		subs	r2, r2, #1
+ 1384 0392 013A     		subs	r2, r2, #1
  258:Core/Src/Origin/dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
  1385              		.loc 1 258 27 view .LVU409
- 1386 039e 0A4B     		ldr	r3, .L100+4
- 1387 03a0 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1386 0394 094B     		ldr	r3, .L100+4
+ 1387 0396 03F81120 		strb	r2, [r3, r1, lsl #1]
  259:Core/Src/Origin/dfs.c **** 					}
  1388              		.loc 1 259 7 is_stmt 1 view .LVU410
  259:Core/Src/Origin/dfs.c **** 					}
  1389              		.loc 1 259 40 is_stmt 0 view .LVU411
- 1390 03a4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1390 039a 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  259:Core/Src/Origin/dfs.c **** 					}
  1391              		.loc 1 259 27 view .LVU412
- 1392 03a6 03EB4103 		add	r3, r3, r1, lsl #1
- 1393 03aa 5A70     		strb	r2, [r3, #1]
- 1394 03ac A7E6     		b	.L73
+ 1392 039c 03EB4103 		add	r3, r3, r1, lsl #1
+ 1393 03a0 5A70     		strb	r2, [r3, #1]
+ 1394 03a2 AAE6     		b	.L73
  1395              	.LVL90:
  1396              	.L93:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1397              		.loc 1 105 6 view .LVU413
- 1398 03ae 0026     		movs	r6, #0
+ 1398 03a4 0026     		movs	r6, #0
  1399              	.LVL91:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1400              		.loc 1 105 6 view .LVU414
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 34
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 34
 
 
- 1401 03b0 B9E7     		b	.L78
+ 1401 03a6 BAE7     		b	.L78
  1402              	.LVL92:
  1403              	.L94:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1404              		.loc 1 105 6 view .LVU415
- 1405 03b2 0026     		movs	r6, #0
+ 1405 03a8 0026     		movs	r6, #0
  1406              	.LVL93:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1407              		.loc 1 105 6 view .LVU416
- 1408 03b4 B7E7     		b	.L78
+ 1408 03aa B8E7     		b	.L78
  1409              	.LVL94:
  1410              	.L95:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1411              		.loc 1 105 6 view .LVU417
- 1412 03b6 0026     		movs	r6, #0
+ 1412 03ac 0026     		movs	r6, #0
  1413              	.LVL95:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1414              		.loc 1 105 6 view .LVU418
- 1415 03b8 B5E7     		b	.L78
+ 1415 03ae B6E7     		b	.L78
  1416              	.LVL96:
  1417              	.L96:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1418              		.loc 1 105 6 view .LVU419
- 1419 03ba 0026     		movs	r6, #0
+ 1419 03b0 0026     		movs	r6, #0
  1420              	.LVL97:
  105:Core/Src/Origin/dfs.c **** 	//スタックの流れ
  1421              		.loc 1 105 6 view .LVU420
- 1422 03bc B3E7     		b	.L78
+ 1422 03b2 B4E7     		b	.L78
  1423              	.LVL98:
  1424              	.L80:
  111:Core/Src/Origin/dfs.c **** 	case north:
  1425              		.loc 1 111 2 view .LVU421
- 1426 03be 0020     		movs	r0, #0
+ 1426 03b4 0020     		movs	r0, #0
  1427              	.LVL99:
  111:Core/Src/Origin/dfs.c **** 	case north:
  1428              		.loc 1 111 2 view .LVU422
- 1429 03c0 A3E6     		b	.L65
+ 1429 03b6 A6E6     		b	.L65
  1430              	.L101:
- 1431 03c2 00BF     		.align	2
+ 1431              		.align	2
  1432              	.L100:
- 1433 03c4 00000000 		.word	.LANCHOR4
- 1434 03c8 00000000 		.word	.LANCHOR3
+ 1433 03b8 00000000 		.word	.LANCHOR4
+ 1434 03bc 00000000 		.word	.LANCHOR3
  1435              		.cfi_endproc
  1436              	.LFE19:
  1438              		.global	Visit
@@ -2038,7 +2038,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  1452              		.section	.bss.Stack_Num,"aw",%nobits
  1453              		.align	2
  1454              		.set	.LANCHOR2,. + 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 35
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 35
 
 
  1457              	Stack_Num:
@@ -2047,8 +2047,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  1460              		.align	2
  1461              		.set	.LANCHOR4,. + 0
  1464              	Visit:
- 1465 0000 00000000 		.space	256
- 1465      00000000 
+ 1465 0000 00000000 		.space	16
  1465      00000000 
  1465      00000000 
  1465      00000000 
@@ -2068,79 +2067,79 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 1
  1477              		.file 4 "Core/Inc/dfs.h"
  1478              		.file 5 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
  1479              		.file 6 "<built-in>"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 36
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 36
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 dfs.c
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:20     .text.HighDFSFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:26     .text.HighDFSFlag:00000000 HighDFSFlag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:44     .text.HighDFSFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:49     .text.LowDFSFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:55     .text.LowDFSFlag:00000000 LowDFSFlag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:72     .text.LowDFSFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:77     .text.GetDFSFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:83     .text.GetDFSFlag:00000000 GetDFSFlag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:98     .text.GetDFSFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:103    .text.HighStackFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:109    .text.HighStackFlag:00000000 HighStackFlag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:126    .text.HighStackFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:131    .text.LowStackFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:137    .text.LowStackFlag:00000000 LowStackFlag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:154    .text.LowStackFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:159    .text.GetStackFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:165    .text.GetStackFlag:00000000 GetStackFlag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:180    .text.GetStackFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:185    .text.InitStackNum:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:191    .text.InitStackNum:00000000 InitStackNum
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:208    .text.InitStackNum:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:213    .text.SetStackNum:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:219    .text.SetStackNum:00000000 SetStackNum
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:236    .text.SetStackNum:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:241    .text.GetStackNum:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:247    .text.GetStackNum:00000000 GetStackNum
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:262    .text.GetStackNum:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:267    .text.GetStackMass:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:273    .text.GetStackMass:00000000 GetStackMass
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:304    .text.GetStackMass:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:310    .text.ComparePosition:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:316    .text.ComparePosition:00000000 ComparePosition
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:361    .text.InitVisit:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:367    .text.InitVisit:00000000 InitVisit
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:427    .text.InitVisit:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:432    .rodata.printVisited.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:439    .text.printVisited:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:445    .text.printVisited:00000000 printVisited
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:515    .text.printVisited:0000002c $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:522    .text.VisitedMass:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:528    .text.VisitedMass:00000000 VisitedMass
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:558    .text.VisitedMass:0000001c $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:563    .text.GetVisited:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:569    .text.GetVisited:00000000 GetVisited
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:593    .text.GetVisited:00000010 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:598    .text.InitMassStack:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:604    .text.InitMassStack:00000000 InitMassStack
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:624    .text.InitMassStack:0000000c $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:629    .text.StackMass:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:635    .text.StackMass:00000000 StackMass
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:689    .text.StackMass:0000002c $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:696    .text.StackMass:0000003a $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1288   .text.StackMass:0000031c $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1293   .text.StackMass:00000324 $t
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1433   .text.StackMass:000003c4 $d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s 			page 37
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:20     .text.HighDFSFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:26     .text.HighDFSFlag:00000000 HighDFSFlag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:44     .text.HighDFSFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:49     .text.LowDFSFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:55     .text.LowDFSFlag:00000000 LowDFSFlag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:72     .text.LowDFSFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:77     .text.GetDFSFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:83     .text.GetDFSFlag:00000000 GetDFSFlag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:98     .text.GetDFSFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:103    .text.HighStackFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:109    .text.HighStackFlag:00000000 HighStackFlag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:126    .text.HighStackFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:131    .text.LowStackFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:137    .text.LowStackFlag:00000000 LowStackFlag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:154    .text.LowStackFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:159    .text.GetStackFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:165    .text.GetStackFlag:00000000 GetStackFlag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:180    .text.GetStackFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:185    .text.InitStackNum:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:191    .text.InitStackNum:00000000 InitStackNum
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:208    .text.InitStackNum:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:213    .text.SetStackNum:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:219    .text.SetStackNum:00000000 SetStackNum
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:236    .text.SetStackNum:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:241    .text.GetStackNum:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:247    .text.GetStackNum:00000000 GetStackNum
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:262    .text.GetStackNum:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:267    .text.GetStackMass:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:273    .text.GetStackMass:00000000 GetStackMass
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:304    .text.GetStackMass:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:310    .text.ComparePosition:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:316    .text.ComparePosition:00000000 ComparePosition
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:361    .text.InitVisit:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:367    .text.InitVisit:00000000 InitVisit
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:427    .text.InitVisit:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:432    .rodata.printVisited.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:439    .text.printVisited:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:445    .text.printVisited:00000000 printVisited
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:515    .text.printVisited:0000002c $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:522    .text.VisitedMass:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:528    .text.VisitedMass:00000000 VisitedMass
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:558    .text.VisitedMass:0000001c $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:563    .text.GetVisited:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:569    .text.GetVisited:00000000 GetVisited
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:593    .text.GetVisited:00000010 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:598    .text.InitMassStack:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:604    .text.InitMassStack:00000000 InitMassStack
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:624    .text.InitMassStack:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:629    .text.StackMass:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:635    .text.StackMass:00000000 StackMass
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:689    .text.StackMass:0000002c $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:696    .text.StackMass:0000003a $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1288   .text.StackMass:00000314 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1293   .text.StackMass:0000031c $t
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1433   .text.StackMass:000003b8 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s 			page 37
 
 
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1464   .bss.Visit:00000000 Visit
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1471   .bss.mass_stack:00000000 mass_stack
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1444   .bss.DFS_Flag:00000000 DFS_Flag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1445   .bss.DFS_Flag:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1450   .bss.Stack_Flag:00000000 Stack_Flag
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1451   .bss.Stack_Flag:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1453   .bss.Stack_Num:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1457   .bss.Stack_Num:00000000 Stack_Num
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1460   .bss.Visit:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccu3jS8T.s:1467   .bss.mass_stack:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1464   .bss.Visit:00000000 Visit
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1471   .bss.mass_stack:00000000 mass_stack
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1444   .bss.DFS_Flag:00000000 DFS_Flag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1445   .bss.DFS_Flag:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1450   .bss.Stack_Flag:00000000 Stack_Flag
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1451   .bss.Stack_Flag:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1453   .bss.Stack_Num:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1457   .bss.Stack_Num:00000000 Stack_Num
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1460   .bss.Visit:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc7OP7lw.s:1467   .bss.mass_stack:00000000 $d
 
 UNDEFINED SYMBOLS
 printf

@@ -23,6 +23,7 @@
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim5;
 
+#define OUTPUT_MAX 4200*0.6 //840*0.6//
 
 void Motor_PWM_Start();
 void Motor_PWM_Stop();

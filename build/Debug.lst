@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -47,18 +47,18 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
   17:Core/Src/Tools/Debug.c **** #include "IEH2_4096.h"
   18:Core/Src/Tools/Debug.c **** #include "mouse_ADC.h"
   19:Core/Src/Tools/Debug.c **** #include "LED_Driver.h"
-  20:Core/Src/Tools/Debug.c **** #include "IR_Emitter.h"
+  20:Core/Src/Tools/Debug.c **** 
   21:Core/Src/Tools/Debug.c **** #include "Motor_Driver.h"
   22:Core/Src/Tools/Debug.c **** #include "ICM_20648.h"
   23:Core/Src/Tools/Debug.c **** #include "UI.h"
   24:Core/Src/Tools/Debug.c **** 
   25:Core/Src/Tools/Debug.c **** #include "MicroMouse.h"
-  26:Core/Src/Tools/Debug.c **** 
+  26:Core/Src/Tools/Debug.c **** #include "Interrupt.h"
   27:Core/Src/Tools/Debug.c **** #include "tim_info.h"
   28:Core/Src/Tools/Debug.c **** //ハードウェアの情報、ソフトウェアの情報（パラメータも）などすべて�
   29:Core/Src/Tools/Debug.c **** 	//CPUの動作周波数の設定や、タイマの周期、割込み周期などの情報も見れ
   30:Core/Src/Tools/Debug.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 2
 
 
   31:Core/Src/Tools/Debug.c **** //使用中のタイマ情報を表示するモード（CubeIDEで設定した初期値であるこ
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
   69 0030 00000000 		.word	htim2
   70 0034 00000000 		.word	htim5
   71 0038 00000000 		.word	htim3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 3
 
 
   72 003c 00000000 		.word	htim4
@@ -133,79 +133,124 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
   83              	Buffering:
   84              	.LFB239:
   45:Core/Src/Tools/Debug.c **** 
-  46:Core/Src/Tools/Debug.c **** //フォトセンサの値の変動が大きいのを調整したい
-  47:Core/Src/Tools/Debug.c **** 
-  48:Core/Src/Tools/Debug.c **** //領域を指定
-  49:Core/Src/Tools/Debug.c **** 	//マップ
-  50:Core/Src/Tools/Debug.c **** 	//区画ごとのログ(デバッグ用)
-  51:Core/Src/Tools/Debug.c **** 	//パラメータ保存
-  52:Core/Src/Tools/Debug.c **** //ひとまずこれだけ
-  53:Core/Src/Tools/Debug.c **** //パラメータ保存
-  54:Core/Src/Tools/Debug.c **** //uint32_t StartAddressParameter = start_adress_sector9;	//開始アドレス
-  55:Core/Src/Tools/Debug.c **** //uint32_t EndAddressParameter = end_adress_sector9;		//終了アドレス
-  56:Core/Src/Tools/Debug.c **** 
-  57:Core/Src/Tools/Debug.c **** //区画ごとのログ
-  58:Core/Src/Tools/Debug.c **** //	const uint32_t StartAddressParcelLog = start_adress_sector11;	//開始アドレス
-  59:Core/Src/Tools/Debug.c **** //	const uint32_t EndAddressParcelLog = end_adress_sector11;		//終了アドレス
-  60:Core/Src/Tools/Debug.c **** //
-  61:Core/Src/Tools/Debug.c **** ////流れ
-  62:Core/Src/Tools/Debug.c **** //	//更新されたタイミングでflashにそのまま書き込む。変数を経由すると�
-  63:Core/Src/Tools/Debug.c **** //
-  64:Core/Src/Tools/Debug.c **** //typedef struct debug
-  65:Core/Src/Tools/Debug.c **** //{
-  66:Core/Src/Tools/Debug.c **** //	int 			it;
-  67:Core/Src/Tools/Debug.c **** //	float 			ft;
-  68:Core/Src/Tools/Debug.c **** //	double 		dl;
-  69:Core/Src/Tools/Debug.c **** //	char			ch;
-  70:Core/Src/Tools/Debug.c **** //	uint32_t 	u32;
-  71:Core/Src/Tools/Debug.c **** //
-  72:Core/Src/Tools/Debug.c **** //}DebugData;
-  73:Core/Src/Tools/Debug.c **** //DebugData Debug[10]={0};
-  74:Core/Src/Tools/Debug.c **** //void DebugPhoto(float sl, float sr, float fl, float fr)
-  75:Core/Src/Tools/Debug.c **** //{
-  76:Core/Src/Tools/Debug.c **** //
-  77:Core/Src/Tools/Debug.c **** //
-  78:Core/Src/Tools/Debug.c **** //}
-  79:Core/Src/Tools/Debug.c **** //void StoreParcelLog()
-  80:Core/Src/Tools/Debug.c **** //{
-  81:Core/Src/Tools/Debug.c **** //	Photo[SL];
-  82:Core/Src/Tools/Debug.c **** //	FLASH_Write_Word_F(address, data);
-  83:Core/Src/Tools/Debug.c **** //}
-  84:Core/Src/Tools/Debug.c **** void Buffering()
-  85:Core/Src/Tools/Debug.c **** {
-  85              		.loc 1 85 1 is_stmt 1 view -0
+  46:Core/Src/Tools/Debug.c **** 
+  47:Core/Src/Tools/Debug.c **** // アクションのチェック
+  48:Core/Src/Tools/Debug.c **** #if 0
+  49:Core/Src/Tools/Debug.c **** void testMotion(){
+  50:Core/Src/Tools/Debug.c **** 		//テストする
+  51:Core/Src/Tools/Debug.c **** 	MouseInit();
+  52:Core/Src/Tools/Debug.c **** 
+  53:Core/Src/Tools/Debug.c **** 	PIDChangeFlag(L_VELO_PID, 1);
+  54:Core/Src/Tools/Debug.c **** 	PIDChangeFlag(R_VELO_PID, 1);
+  55:Core/Src/Tools/Debug.c **** 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],T
+  56:Core/Src/Tools/Debug.c **** 	//PIDChangeFlagStraight(N_WALL_PID);
+  57:Core/Src/Tools/Debug.c **** 	PIDChangeFlag(D_WALL_PID, 0);
+  58:Core/Src/Tools/Debug.c **** 	PIDChangeFlag(L_WALL_PID, 0);
+  59:Core/Src/Tools/Debug.c **** 	PIDChangeFlag(R_WALL_PID, 0);
+  60:Core/Src/Tools/Debug.c **** 	PIDChangeFlag(A_VELO_PID, 1);
+  61:Core/Src/Tools/Debug.c **** 	ExploreVelocity=0;
+  62:Core/Src/Tools/Debug.c **** 	Signal(mode);
+  63:Core/Src/Tools/Debug.c **** 	//HAL_Delay(500);
+  64:Core/Src/Tools/Debug.c **** 
+  65:Core/Src/Tools/Debug.c **** 	//IT_mode = WRITINGFREE;
+  66:Core/Src/Tools/Debug.c **** 	IT_mode = EXPLORE;
+  67:Core/Src/Tools/Debug.c **** 
+  68:Core/Src/Tools/Debug.c **** 	
+  69:Core/Src/Tools/Debug.c **** 	// //直線距離の計測
+  70:Core/Src/Tools/Debug.c **** 	// //加減速
+  71:Core/Src/Tools/Debug.c **** 	// FastStraight(0.5, (61.5+90*7)/90, 1.00, -1.00/*2.89, -2.89*/, 240, 0);
+  72:Core/Src/Tools/Debug.c **** 
+  73:Core/Src/Tools/Debug.c **** 	// 45度ターンなど試す
+  74:Core/Src/Tools/Debug.c **** 	ExploreVelocity=300;
+  75:Core/Src/Tools/Debug.c **** 	setFastDiagonalParam(0);
+  76:Core/Src/Tools/Debug.c **** 		// Accel(61.5-45, ExploreVelocity, &my_map, &my_mouse);
+  77:Core/Src/Tools/Debug.c **** 		FastStraight(1,2+((61.5-45)/90),2.89,-2.89,4000,ExploreVelocity);
+  78:Core/Src/Tools/Debug.c **** 		// SlalomFastRight(&fast45);
+  79:Core/Src/Tools/Debug.c **** 		SlalomFastRight(&fast135);
+  80:Core/Src/Tools/Debug.c **** 		// PIDChangeFlag(A_VELO_PID, 0);
+  81:Core/Src/Tools/Debug.c **** 		Decel(45, 0);
+  82:Core/Src/Tools/Debug.c **** 	while(1){
+  83:Core/Src/Tools/Debug.c **** 		// PIDChangeFlag(L_VELO_PID, 0);
+  84:Core/Src/Tools/Debug.c **** 		// PIDChangeFlag(R_VELO_PID, 0);
+  85:Core/Src/Tools/Debug.c **** 		// PIDChangeFlag(A_VELO_PID, 0);
+  86:Core/Src/Tools/Debug.c **** 	}
+  87:Core/Src/Tools/Debug.c **** }
+  88:Core/Src/Tools/Debug.c **** #endif
+  89:Core/Src/Tools/Debug.c **** 
+  90:Core/Src/Tools/Debug.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 4
+
+
+  91:Core/Src/Tools/Debug.c **** //領域を指定
+  92:Core/Src/Tools/Debug.c **** 	//マップ
+  93:Core/Src/Tools/Debug.c **** 	//区画ごとのログ(デバッグ用)
+  94:Core/Src/Tools/Debug.c **** 	//パラメータ保存
+  95:Core/Src/Tools/Debug.c **** //ひとまずこれだけ
+  96:Core/Src/Tools/Debug.c **** //パラメータ保存
+  97:Core/Src/Tools/Debug.c **** //uint32_t StartAddressParameter = start_adress_sector9;	//開始アドレス
+  98:Core/Src/Tools/Debug.c **** //uint32_t EndAddressParameter = end_adress_sector9;		//終了アドレス
+  99:Core/Src/Tools/Debug.c **** //区画ごとのログ
+ 100:Core/Src/Tools/Debug.c **** //	const uint32_t StartAddressParcelLog = start_adress_sector11;	//開始アドレス
+ 101:Core/Src/Tools/Debug.c **** //	const uint32_t EndAddressParcelLog = end_adress_sector11;		//終了アドレス
+ 102:Core/Src/Tools/Debug.c **** //
+ 103:Core/Src/Tools/Debug.c **** ////流れ
+ 104:Core/Src/Tools/Debug.c **** //	//更新されたタイミングでflashにそのまま書き込む。変数を経由すると�
+ 105:Core/Src/Tools/Debug.c **** //
+ 106:Core/Src/Tools/Debug.c **** //typedef struct debug
+ 107:Core/Src/Tools/Debug.c **** //{
+ 108:Core/Src/Tools/Debug.c **** //	int 			it;
+ 109:Core/Src/Tools/Debug.c **** //	float 			ft;
+ 110:Core/Src/Tools/Debug.c **** //	double 		dl;
+ 111:Core/Src/Tools/Debug.c **** //	char			ch;
+ 112:Core/Src/Tools/Debug.c **** //	uint32_t 	u32;
+ 113:Core/Src/Tools/Debug.c **** //
+ 114:Core/Src/Tools/Debug.c **** //}DebugData;
+ 115:Core/Src/Tools/Debug.c **** //DebugData Debug[10]={0};
+ 116:Core/Src/Tools/Debug.c **** //void DebugPhoto(float sl, float sr, float fl, float fr)
+ 117:Core/Src/Tools/Debug.c **** //{
+ 118:Core/Src/Tools/Debug.c **** //
+ 119:Core/Src/Tools/Debug.c **** //
+ 120:Core/Src/Tools/Debug.c **** //}
+ 121:Core/Src/Tools/Debug.c **** //void StoreParcelLog()
+ 122:Core/Src/Tools/Debug.c **** //{
+ 123:Core/Src/Tools/Debug.c **** //	Photo[SL];
+ 124:Core/Src/Tools/Debug.c **** //	FLASH_Write_Word_F(address, data);
+ 125:Core/Src/Tools/Debug.c **** //}
+ 126:Core/Src/Tools/Debug.c **** void Buffering()
+ 127:Core/Src/Tools/Debug.c **** {
+  85              		.loc 1 127 1 is_stmt 1 view -0
   86              		.cfi_startproc
   87              		@ args = 0, pretend = 0, frame = 0
   88              		@ frame_needed = 0, uses_anonymous_args = 0
   89 0000 10B5     		push	{r4, lr}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 4
-
-
   90              	.LCFI1:
   91              		.cfi_def_cfa_offset 8
   92              		.cfi_offset 4, -8
   93              		.cfi_offset 14, -4
-  86:Core/Src/Tools/Debug.c **** 	  setbuf(stdout,NULL);
-  94              		.loc 1 86 4 view .LVU9
-  95              		.loc 1 86 11 is_stmt 0 view .LVU10
+ 128:Core/Src/Tools/Debug.c **** 	  setbuf(stdout,NULL);
+  94              		.loc 1 128 4 view .LVU9
+  95              		.loc 1 128 11 is_stmt 0 view .LVU10
   96 0002 064C     		ldr	r4, .L7
   97 0004 2368     		ldr	r3, [r4]
-  98              		.loc 1 86 4 view .LVU11
+  98              		.loc 1 128 4 view .LVU11
   99 0006 0021     		movs	r1, #0
  100 0008 9868     		ldr	r0, [r3, #8]
  101 000a FFF7FEFF 		bl	setbuf
  102              	.LVL6:
-  87:Core/Src/Tools/Debug.c **** 	  setbuf(stdin,NULL);
- 103              		.loc 1 87 4 is_stmt 1 view .LVU12
- 104              		.loc 1 87 11 is_stmt 0 view .LVU13
+ 129:Core/Src/Tools/Debug.c **** 	  setbuf(stdin,NULL);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 5
+
+
+ 103              		.loc 1 129 4 is_stmt 1 view .LVU12
+ 104              		.loc 1 129 11 is_stmt 0 view .LVU13
  105 000e 2368     		ldr	r3, [r4]
- 106              		.loc 1 87 4 view .LVU14
+ 106              		.loc 1 129 4 view .LVU14
  107 0010 0021     		movs	r1, #0
  108 0012 5868     		ldr	r0, [r3, #4]
  109 0014 FFF7FEFF 		bl	setbuf
  110              	.LVL7:
-  88:Core/Src/Tools/Debug.c **** }
- 111              		.loc 1 88 1 view .LVU15
+ 130:Core/Src/Tools/Debug.c **** }
+ 111              		.loc 1 130 1 view .LVU15
  112 0018 10BD     		pop	{r4, pc}
  113              	.L8:
  114 001a 00BF     		.align	2
@@ -221,9 +266,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  125              		.thumb_func
  127              	Copy_Gain:
  128              	.LFB240:
-  89:Core/Src/Tools/Debug.c **** void Copy_Gain()
-  90:Core/Src/Tools/Debug.c **** {
- 129              		.loc 1 90 1 is_stmt 1 view -0
+ 131:Core/Src/Tools/Debug.c **** void Copy_Gain()
+ 132:Core/Src/Tools/Debug.c **** {
+ 129              		.loc 1 132 1 is_stmt 1 view -0
  130              		.cfi_startproc
  131              		@ args = 0, pretend = 0, frame = 64
  132              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -236,179 +281,179 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  139 0002 91B0     		sub	sp, sp, #68
  140              	.LCFI3:
  141              		.cfi_def_cfa_offset 80
-  91:Core/Src/Tools/Debug.c **** 	//コピーしなくても、単品で書き込める。
-  92:Core/Src/Tools/Debug.c **** 	//セクター消去して、一つ一つ書き込む。
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 5
-
-
-  93:Core/Src/Tools/Debug.c **** 	//printf("\r\nどしたん\r\n");
-  94:Core/Src/Tools/Debug.c **** 
-  95:Core/Src/Tools/Debug.c **** 	uint32_t address = start_adress_sector9;
- 142              		.loc 1 95 2 view .LVU17
- 143              		.loc 1 95 11 is_stmt 0 view .LVU18
+ 133:Core/Src/Tools/Debug.c **** 	//コピーしなくても、単品で書き込める。
+ 134:Core/Src/Tools/Debug.c **** 	//セクター消去して、一つ一つ書き込む。
+ 135:Core/Src/Tools/Debug.c **** 	//printf("\r\nどしたん\r\n");
+ 136:Core/Src/Tools/Debug.c **** 
+ 137:Core/Src/Tools/Debug.c **** 	uint32_t address = start_adress_sector9;
+ 142              		.loc 1 137 2 view .LVU17
+ 143              		.loc 1 137 11 is_stmt 0 view .LVU18
  144 0004 1D4B     		ldr	r3, .L13
  145 0006 1D68     		ldr	r5, [r3]
  146              	.LVL8:
-  96:Core/Src/Tools/Debug.c **** 	float data[16]={0};
- 147              		.loc 1 96 2 is_stmt 1 view .LVU19
- 148              		.loc 1 96 8 is_stmt 0 view .LVU20
+ 138:Core/Src/Tools/Debug.c **** 	float data[16]={0};
+ 147              		.loc 1 138 2 is_stmt 1 view .LVU19
+ 148              		.loc 1 138 8 is_stmt 0 view .LVU20
  149 0008 4022     		movs	r2, #64
  150 000a 0021     		movs	r1, #0
  151 000c 6846     		mov	r0, sp
  152 000e FFF7FEFF 		bl	memset
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 6
+
+
  153              	.LVL9:
-  97:Core/Src/Tools/Debug.c **** 	data[0] = Pid[L_VELO_PID].KP;
- 154              		.loc 1 97 2 is_stmt 1 view .LVU21
- 155              		.loc 1 97 27 is_stmt 0 view .LVU22
+ 139:Core/Src/Tools/Debug.c **** 	data[0] = Pid[L_VELO_PID].KP;
+ 154              		.loc 1 139 2 is_stmt 1 view .LVU21
+ 155              		.loc 1 139 27 is_stmt 0 view .LVU22
  156 0012 1B4B     		ldr	r3, .L13+4
  157 0014 D3F8B020 		ldr	r2, [r3, #176]	@ float
- 158              		.loc 1 97 10 view .LVU23
+ 158              		.loc 1 139 10 view .LVU23
  159 0018 0092     		str	r2, [sp]	@ float
-  98:Core/Src/Tools/Debug.c **** 	data[1] = Pid[L_VELO_PID].KI;
- 160              		.loc 1 98 2 is_stmt 1 view .LVU24
- 161              		.loc 1 98 27 is_stmt 0 view .LVU25
+ 140:Core/Src/Tools/Debug.c **** 	data[1] = Pid[L_VELO_PID].KI;
+ 160              		.loc 1 140 2 is_stmt 1 view .LVU24
+ 161              		.loc 1 140 27 is_stmt 0 view .LVU25
  162 001a D3F8B420 		ldr	r2, [r3, #180]	@ float
- 163              		.loc 1 98 10 view .LVU26
+ 163              		.loc 1 140 10 view .LVU26
  164 001e 0192     		str	r2, [sp, #4]	@ float
-  99:Core/Src/Tools/Debug.c **** 	data[2] = Pid[L_VELO_PID].KD;
- 165              		.loc 1 99 2 is_stmt 1 view .LVU27
- 166              		.loc 1 99 27 is_stmt 0 view .LVU28
+ 141:Core/Src/Tools/Debug.c **** 	data[2] = Pid[L_VELO_PID].KD;
+ 165              		.loc 1 141 2 is_stmt 1 view .LVU27
+ 166              		.loc 1 141 27 is_stmt 0 view .LVU28
  167 0020 D3F8B820 		ldr	r2, [r3, #184]	@ float
- 168              		.loc 1 99 10 view .LVU29
+ 168              		.loc 1 141 10 view .LVU29
  169 0024 0292     		str	r2, [sp, #8]	@ float
- 100:Core/Src/Tools/Debug.c **** 
- 101:Core/Src/Tools/Debug.c **** 	data[3] = Pid[A_VELO_PID].KP;
- 170              		.loc 1 101 2 is_stmt 1 view .LVU30
- 171              		.loc 1 101 27 is_stmt 0 view .LVU31
+ 142:Core/Src/Tools/Debug.c **** 
+ 143:Core/Src/Tools/Debug.c **** 	data[3] = Pid[A_VELO_PID].KP;
+ 170              		.loc 1 143 2 is_stmt 1 view .LVU30
+ 171              		.loc 1 143 27 is_stmt 0 view .LVU31
  172 0026 1A68     		ldr	r2, [r3]	@ float
- 173              		.loc 1 101 10 view .LVU32
+ 173              		.loc 1 143 10 view .LVU32
  174 0028 0392     		str	r2, [sp, #12]	@ float
- 102:Core/Src/Tools/Debug.c **** 	data[4] = Pid[A_VELO_PID].KI;
- 175              		.loc 1 102 2 is_stmt 1 view .LVU33
- 176              		.loc 1 102 27 is_stmt 0 view .LVU34
+ 144:Core/Src/Tools/Debug.c **** 	data[4] = Pid[A_VELO_PID].KI;
+ 175              		.loc 1 144 2 is_stmt 1 view .LVU33
+ 176              		.loc 1 144 27 is_stmt 0 view .LVU34
  177 002a 5A68     		ldr	r2, [r3, #4]	@ float
- 178              		.loc 1 102 10 view .LVU35
+ 178              		.loc 1 144 10 view .LVU35
  179 002c 0492     		str	r2, [sp, #16]	@ float
- 103:Core/Src/Tools/Debug.c **** 	data[5] = Pid[A_VELO_PID].KD;
- 180              		.loc 1 103 2 is_stmt 1 view .LVU36
- 181              		.loc 1 103 27 is_stmt 0 view .LVU37
+ 145:Core/Src/Tools/Debug.c **** 	data[5] = Pid[A_VELO_PID].KD;
+ 180              		.loc 1 145 2 is_stmt 1 view .LVU36
+ 181              		.loc 1 145 27 is_stmt 0 view .LVU37
  182 002e 9A68     		ldr	r2, [r3, #8]	@ float
- 183              		.loc 1 103 10 view .LVU38
+ 183              		.loc 1 145 10 view .LVU38
  184 0030 0592     		str	r2, [sp, #20]	@ float
- 104:Core/Src/Tools/Debug.c **** 
- 105:Core/Src/Tools/Debug.c **** 	data[6] = Pid[L_WALL_PID].KP;
- 185              		.loc 1 105 2 is_stmt 1 view .LVU39
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 6
-
-
- 186              		.loc 1 105 27 is_stmt 0 view .LVU40
+ 146:Core/Src/Tools/Debug.c **** 
+ 147:Core/Src/Tools/Debug.c **** 	data[6] = Pid[L_WALL_PID].KP;
+ 185              		.loc 1 147 2 is_stmt 1 view .LVU39
+ 186              		.loc 1 147 27 is_stmt 0 view .LVU40
  187 0032 9A6D     		ldr	r2, [r3, #88]	@ float
- 188              		.loc 1 105 10 view .LVU41
+ 188              		.loc 1 147 10 view .LVU41
  189 0034 0692     		str	r2, [sp, #24]	@ float
- 106:Core/Src/Tools/Debug.c **** 	data[7] = Pid[L_WALL_PID].KI;
- 190              		.loc 1 106 2 is_stmt 1 view .LVU42
- 191              		.loc 1 106 27 is_stmt 0 view .LVU43
+ 148:Core/Src/Tools/Debug.c **** 	data[7] = Pid[L_WALL_PID].KI;
+ 190              		.loc 1 148 2 is_stmt 1 view .LVU42
+ 191              		.loc 1 148 27 is_stmt 0 view .LVU43
  192 0036 DA6D     		ldr	r2, [r3, #92]	@ float
- 193              		.loc 1 106 10 view .LVU44
+ 193              		.loc 1 148 10 view .LVU44
  194 0038 0792     		str	r2, [sp, #28]	@ float
- 107:Core/Src/Tools/Debug.c **** 	data[8] = Pid[L_WALL_PID].KD;
- 195              		.loc 1 107 2 is_stmt 1 view .LVU45
- 196              		.loc 1 107 27 is_stmt 0 view .LVU46
+ 149:Core/Src/Tools/Debug.c **** 	data[8] = Pid[L_WALL_PID].KD;
+ 195              		.loc 1 149 2 is_stmt 1 view .LVU45
+ 196              		.loc 1 149 27 is_stmt 0 view .LVU46
  197 003a 1A6E     		ldr	r2, [r3, #96]	@ float
- 198              		.loc 1 107 10 view .LVU47
+ 198              		.loc 1 149 10 view .LVU47
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 7
+
+
  199 003c 0892     		str	r2, [sp, #32]	@ float
- 108:Core/Src/Tools/Debug.c **** 
- 109:Core/Src/Tools/Debug.c **** 	data[9] = Pid[R_WALL_PID].KP;
- 200              		.loc 1 109 2 is_stmt 1 view .LVU48
- 201              		.loc 1 109 27 is_stmt 0 view .LVU49
+ 150:Core/Src/Tools/Debug.c **** 
+ 151:Core/Src/Tools/Debug.c **** 	data[9] = Pid[R_WALL_PID].KP;
+ 200              		.loc 1 151 2 is_stmt 1 view .LVU48
+ 201              		.loc 1 151 27 is_stmt 0 view .LVU49
  202 003e D3F88420 		ldr	r2, [r3, #132]	@ float
- 203              		.loc 1 109 10 view .LVU50
+ 203              		.loc 1 151 10 view .LVU50
  204 0042 0992     		str	r2, [sp, #36]	@ float
- 110:Core/Src/Tools/Debug.c **** 	data[10] = Pid[R_WALL_PID].KI;
- 205              		.loc 1 110 2 is_stmt 1 view .LVU51
- 206              		.loc 1 110 28 is_stmt 0 view .LVU52
+ 152:Core/Src/Tools/Debug.c **** 	data[10] = Pid[R_WALL_PID].KI;
+ 205              		.loc 1 152 2 is_stmt 1 view .LVU51
+ 206              		.loc 1 152 28 is_stmt 0 view .LVU52
  207 0044 D3F88820 		ldr	r2, [r3, #136]	@ float
- 208              		.loc 1 110 11 view .LVU53
+ 208              		.loc 1 152 11 view .LVU53
  209 0048 0A92     		str	r2, [sp, #40]	@ float
- 111:Core/Src/Tools/Debug.c **** 	data[11] = Pid[R_WALL_PID].KD;
- 210              		.loc 1 111 2 is_stmt 1 view .LVU54
- 211              		.loc 1 111 28 is_stmt 0 view .LVU55
+ 153:Core/Src/Tools/Debug.c **** 	data[11] = Pid[R_WALL_PID].KD;
+ 210              		.loc 1 153 2 is_stmt 1 view .LVU54
+ 211              		.loc 1 153 28 is_stmt 0 view .LVU55
  212 004a D3F88C20 		ldr	r2, [r3, #140]	@ float
- 213              		.loc 1 111 11 view .LVU56
+ 213              		.loc 1 153 11 view .LVU56
  214 004e 0B92     		str	r2, [sp, #44]	@ float
- 112:Core/Src/Tools/Debug.c **** 
- 113:Core/Src/Tools/Debug.c **** 	data[12] = Pid[D_WALL_PID].KP;
- 215              		.loc 1 113 2 is_stmt 1 view .LVU57
- 216              		.loc 1 113 28 is_stmt 0 view .LVU58
+ 154:Core/Src/Tools/Debug.c **** 
+ 155:Core/Src/Tools/Debug.c **** 	data[12] = Pid[D_WALL_PID].KP;
+ 215              		.loc 1 155 2 is_stmt 1 view .LVU57
+ 216              		.loc 1 155 28 is_stmt 0 view .LVU58
  217 0050 DA6A     		ldr	r2, [r3, #44]	@ float
- 218              		.loc 1 113 11 view .LVU59
+ 218              		.loc 1 155 11 view .LVU59
  219 0052 0C92     		str	r2, [sp, #48]	@ float
- 114:Core/Src/Tools/Debug.c **** 	data[13] = Pid[D_WALL_PID].KI;
- 220              		.loc 1 114 2 is_stmt 1 view .LVU60
- 221              		.loc 1 114 28 is_stmt 0 view .LVU61
+ 156:Core/Src/Tools/Debug.c **** 	data[13] = Pid[D_WALL_PID].KI;
+ 220              		.loc 1 156 2 is_stmt 1 view .LVU60
+ 221              		.loc 1 156 28 is_stmt 0 view .LVU61
  222 0054 1A6B     		ldr	r2, [r3, #48]	@ float
- 223              		.loc 1 114 11 view .LVU62
+ 223              		.loc 1 156 11 view .LVU62
  224 0056 0D92     		str	r2, [sp, #52]	@ float
- 115:Core/Src/Tools/Debug.c **** 	data[14] = Pid[D_WALL_PID].KD;
- 225              		.loc 1 115 2 is_stmt 1 view .LVU63
- 226              		.loc 1 115 28 is_stmt 0 view .LVU64
+ 157:Core/Src/Tools/Debug.c **** 	data[14] = Pid[D_WALL_PID].KD;
+ 225              		.loc 1 157 2 is_stmt 1 view .LVU63
+ 226              		.loc 1 157 28 is_stmt 0 view .LVU64
  227 0058 5B6B     		ldr	r3, [r3, #52]	@ float
- 228              		.loc 1 115 11 view .LVU65
+ 228              		.loc 1 157 11 view .LVU65
  229 005a 0E93     		str	r3, [sp, #56]	@ float
- 116:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 230              		.loc 1 116 2 is_stmt 1 view .LVU66
+ 158:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 230              		.loc 1 158 2 is_stmt 1 view .LVU66
  231              	.LBB2:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 7
-
-
- 232              		.loc 1 116 6 view .LVU67
+ 232              		.loc 1 158 6 view .LVU67
  233              	.LVL10:
- 234              		.loc 1 116 10 is_stmt 0 view .LVU68
+ 234              		.loc 1 158 10 is_stmt 0 view .LVU68
  235 005c 0024     		movs	r4, #0
- 236              		.loc 1 116 2 view .LVU69
+ 236              		.loc 1 158 2 view .LVU69
  237 005e 09E0     		b	.L10
  238              	.LVL11:
  239              	.L11:
- 117:Core/Src/Tools/Debug.c **** 	{
- 118:Core/Src/Tools/Debug.c **** 
- 119:Core/Src/Tools/Debug.c **** 		FLASH_Write_Word_F( address, data[i]);
- 240              		.loc 1 119 3 is_stmt 1 discriminator 3 view .LVU70
+ 159:Core/Src/Tools/Debug.c **** 	{
+ 160:Core/Src/Tools/Debug.c **** 
+ 161:Core/Src/Tools/Debug.c **** 		FLASH_Write_Word_F( address, data[i]);
+ 240              		.loc 1 161 3 is_stmt 1 discriminator 3 view .LVU70
  241 0060 10AB     		add	r3, sp, #64
  242 0062 03EB8403 		add	r3, r3, r4, lsl #2
  243 0066 13ED100A 		vldr.32	s0, [r3, #-64]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 8
+
+
  244 006a 2846     		mov	r0, r5
  245 006c FFF7FEFF 		bl	FLASH_Write_Word_F
  246              	.LVL12:
- 120:Core/Src/Tools/Debug.c **** 		address += 0x04;
- 247              		.loc 1 120 3 discriminator 3 view .LVU71
- 248              		.loc 1 120 11 is_stmt 0 discriminator 3 view .LVU72
+ 162:Core/Src/Tools/Debug.c **** 		address += 0x04;
+ 247              		.loc 1 162 3 discriminator 3 view .LVU71
+ 248              		.loc 1 162 11 is_stmt 0 discriminator 3 view .LVU72
  249 0070 0435     		adds	r5, r5, #4
  250              	.LVL13:
- 116:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 251              		.loc 1 116 23 is_stmt 1 discriminator 3 view .LVU73
- 116:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 252              		.loc 1 116 24 is_stmt 0 discriminator 3 view .LVU74
+ 158:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 251              		.loc 1 158 23 is_stmt 1 discriminator 3 view .LVU73
+ 158:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 252              		.loc 1 158 24 is_stmt 0 discriminator 3 view .LVU74
  253 0072 0134     		adds	r4, r4, #1
  254              	.LVL14:
  255              	.L10:
- 116:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 256              		.loc 1 116 15 is_stmt 1 discriminator 1 view .LVU75
- 116:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 257              		.loc 1 116 2 is_stmt 0 discriminator 1 view .LVU76
+ 158:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 256              		.loc 1 158 15 is_stmt 1 discriminator 1 view .LVU75
+ 158:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 257              		.loc 1 158 2 is_stmt 0 discriminator 1 view .LVU76
  258 0074 0E2C     		cmp	r4, #14
  259 0076 F3DD     		ble	.L11
- 116:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 260              		.loc 1 116 2 discriminator 1 view .LVU77
+ 158:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 260              		.loc 1 158 2 discriminator 1 view .LVU77
  261              	.LBE2:
- 121:Core/Src/Tools/Debug.c **** 	}
- 122:Core/Src/Tools/Debug.c **** 
- 123:Core/Src/Tools/Debug.c **** 
- 124:Core/Src/Tools/Debug.c **** 	//printf("\r\nはなしきこか？\r\n");
- 125:Core/Src/Tools/Debug.c **** 	//起動時にCopy_Gainを実行する
- 126:Core/Src/Tools/Debug.c **** 	//Flash_clear_sector9();
- 127:Core/Src/Tools/Debug.c **** 
- 128:Core/Src/Tools/Debug.c **** }
- 262              		.loc 1 128 1 view .LVU78
+ 163:Core/Src/Tools/Debug.c **** 	}
+ 164:Core/Src/Tools/Debug.c **** 
+ 165:Core/Src/Tools/Debug.c **** 
+ 166:Core/Src/Tools/Debug.c **** 	//printf("\r\nはなしきこか？\r\n");
+ 167:Core/Src/Tools/Debug.c **** 	//起動時にCopy_Gainを実行する
+ 168:Core/Src/Tools/Debug.c **** 	//Flash_clear_sector9();
+ 169:Core/Src/Tools/Debug.c **** 
+ 170:Core/Src/Tools/Debug.c **** }
+ 262              		.loc 1 170 1 view .LVU78
  263 0078 11B0     		add	sp, sp, #68
  264              	.LCFI4:
  265              		.cfi_def_cfa_offset 12
@@ -416,11 +461,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  267 007a 30BD     		pop	{r4, r5, pc}
  268              	.LVL15:
  269              	.L14:
- 270              		.loc 1 128 1 view .LVU79
+ 270              		.loc 1 170 1 view .LVU79
  271              		.align	2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 8
-
-
  272              	.L13:
  273 007c 00000000 		.word	start_adress_sector9
  274 0080 00000000 		.word	Pid
@@ -436,6 +478,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  283 0009 000000   		.align	2
  284              	.LC1:
  285 000c 6A756467 		.ascii	"judge : %d\015\012\000"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 9
+
+
  285      65203A20 
  285      25640D0A 
  285      00
@@ -464,9 +509,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  299              		.thumb_func
  301              	Load_Gain:
  302              	.LFB241:
- 129:Core/Src/Tools/Debug.c **** void Load_Gain()
- 130:Core/Src/Tools/Debug.c **** {
- 303              		.loc 1 130 1 is_stmt 1 view -0
+ 171:Core/Src/Tools/Debug.c **** void Load_Gain()
+ 172:Core/Src/Tools/Debug.c **** {
+ 303              		.loc 1 172 1 is_stmt 1 view -0
  304              		.cfi_startproc
  305              		@ args = 0, pretend = 0, frame = 64
  306              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -478,9 +523,6 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  312              		.cfi_offset 6, -12
  313              		.cfi_offset 7, -8
  314              		.cfi_offset 14, -4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 9
-
-
  315 0002 2DED048B 		vpush.64	{d8, d9}
  316              	.LCFI6:
  317              		.cfi_def_cfa_offset 36
@@ -491,79 +533,82 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  322 0006 91B0     		sub	sp, sp, #68
  323              	.LCFI7:
  324              		.cfi_def_cfa_offset 104
- 131:Core/Src/Tools/Debug.c **** 
- 132:Core/Src/Tools/Debug.c **** 	//flashから変数に読み出し。
- 133:Core/Src/Tools/Debug.c **** 	//非数の数数えて、全部そうだったらそのまま
- 134:Core/Src/Tools/Debug.c **** 	//そうでなければ読みだした値は全てゲインとして代入
- 135:Core/Src/Tools/Debug.c **** 	//Flash_load_sector9();
- 136:Core/Src/Tools/Debug.c **** 
- 137:Core/Src/Tools/Debug.c **** 	//読み出し
- 138:Core/Src/Tools/Debug.c **** 	uint32_t address = start_adress_sector9;//こっちか
- 325              		.loc 1 138 2 view .LVU81
- 326              		.loc 1 138 11 is_stmt 0 view .LVU82
+ 173:Core/Src/Tools/Debug.c **** 
+ 174:Core/Src/Tools/Debug.c **** 	//flashから変数に読み出し。
+ 175:Core/Src/Tools/Debug.c **** 	//非数の数数えて、全部そうだったらそのまま
+ 176:Core/Src/Tools/Debug.c **** 	//そうでなければ読みだした値は全てゲインとして代入
+ 177:Core/Src/Tools/Debug.c **** 	//Flash_load_sector9();
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 10
+
+
+ 178:Core/Src/Tools/Debug.c **** 
+ 179:Core/Src/Tools/Debug.c **** 	//読み出し
+ 180:Core/Src/Tools/Debug.c **** 	uint32_t address = start_adress_sector9;//こっちか
+ 325              		.loc 1 180 2 view .LVU81
+ 326              		.loc 1 180 11 is_stmt 0 view .LVU82
  327 0008 624B     		ldr	r3, .L24
  328 000a 1E68     		ldr	r6, [r3]
  329              	.LVL16:
- 139:Core/Src/Tools/Debug.c **** 	float data[16]={0};//1個多く要素を作る。
- 330              		.loc 1 139 2 is_stmt 1 view .LVU83
- 331              		.loc 1 139 8 is_stmt 0 view .LVU84
+ 181:Core/Src/Tools/Debug.c **** 	float data[16]={0};//1個多く要素を作る。
+ 330              		.loc 1 181 2 is_stmt 1 view .LVU83
+ 331              		.loc 1 181 8 is_stmt 0 view .LVU84
  332 000c 4022     		movs	r2, #64
  333 000e 0021     		movs	r1, #0
  334 0010 6846     		mov	r0, sp
  335 0012 FFF7FEFF 		bl	memset
  336              	.LVL17:
- 140:Core/Src/Tools/Debug.c **** 
- 141:Core/Src/Tools/Debug.c **** 	//チェック
- 142:Core/Src/Tools/Debug.c **** 	int judge;
- 337              		.loc 1 142 2 is_stmt 1 view .LVU85
- 143:Core/Src/Tools/Debug.c **** 	uint8_t j=0;
- 338              		.loc 1 143 2 view .LVU86
- 144:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
- 339              		.loc 1 144 2 view .LVU87
+ 182:Core/Src/Tools/Debug.c **** 
+ 183:Core/Src/Tools/Debug.c **** 	//チェック
+ 184:Core/Src/Tools/Debug.c **** 	int judge;
+ 337              		.loc 1 184 2 is_stmt 1 view .LVU85
+ 185:Core/Src/Tools/Debug.c **** 	uint8_t j=0;
+ 338              		.loc 1 185 2 view .LVU86
+ 186:Core/Src/Tools/Debug.c **** 	for(int i=0; i < 15; i++)
+ 339              		.loc 1 186 2 view .LVU87
  340              	.LBB3:
- 341              		.loc 1 144 6 view .LVU88
- 342              		.loc 1 144 10 is_stmt 0 view .LVU89
+ 341              		.loc 1 186 6 view .LVU88
+ 342              		.loc 1 186 10 is_stmt 0 view .LVU89
  343 0016 0025     		movs	r5, #0
  344              	.LBE3:
- 143:Core/Src/Tools/Debug.c **** 	uint8_t j=0;
- 345              		.loc 1 143 10 view .LVU90
+ 185:Core/Src/Tools/Debug.c **** 	uint8_t j=0;
+ 345              		.loc 1 185 10 view .LVU90
  346 0018 2F46     		mov	r7, r5
  347              	.LBB4:
- 348              		.loc 1 144 2 view .LVU91
+ 348              		.loc 1 186 2 view .LVU91
  349 001a 00E0     		b	.L16
  350              	.LVL18:
  351              	.L17:
- 352              		.loc 1 144 23 is_stmt 1 discriminator 2 view .LVU92
- 353              		.loc 1 144 24 is_stmt 0 discriminator 2 view .LVU93
+ 352              		.loc 1 186 23 is_stmt 1 discriminator 2 view .LVU92
+ 353              		.loc 1 186 24 is_stmt 0 discriminator 2 view .LVU93
  354 001c 0135     		adds	r5, r5, #1
  355              	.LVL19:
  356              	.L16:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 10
-
-
- 357              		.loc 1 144 15 is_stmt 1 discriminator 1 view .LVU94
- 358              		.loc 1 144 2 is_stmt 0 discriminator 1 view .LVU95
+ 357              		.loc 1 186 15 is_stmt 1 discriminator 1 view .LVU94
+ 358              		.loc 1 186 2 is_stmt 0 discriminator 1 view .LVU95
  359 001e 0E2D     		cmp	r5, #14
  360 0020 28DC     		bgt	.L22
- 145:Core/Src/Tools/Debug.c **** 	{
- 146:Core/Src/Tools/Debug.c **** 		FLASH_Read_Word_F( address, &data[i]);
- 361              		.loc 1 146 3 is_stmt 1 view .LVU96
+ 187:Core/Src/Tools/Debug.c **** 	{
+ 188:Core/Src/Tools/Debug.c **** 		FLASH_Read_Word_F( address, &data[i]);
+ 361              		.loc 1 188 3 is_stmt 1 view .LVU96
  362 0022 AC00     		lsls	r4, r5, #2
  363 0024 0DEB8501 		add	r1, sp, r5, lsl #2
  364 0028 3046     		mov	r0, r6
  365 002a FFF7FEFF 		bl	FLASH_Read_Word_F
  366              	.LVL20:
- 147:Core/Src/Tools/Debug.c **** 		address += 0x04;
- 367              		.loc 1 147 3 view .LVU97
- 368              		.loc 1 147 11 is_stmt 0 view .LVU98
+ 189:Core/Src/Tools/Debug.c **** 		address += 0x04;
+ 367              		.loc 1 189 3 view .LVU97
+ 368              		.loc 1 189 11 is_stmt 0 view .LVU98
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 11
+
+
  369 002e 0436     		adds	r6, r6, #4
  370              	.LVL21:
- 148:Core/Src/Tools/Debug.c **** 		printf("%d, %f\r\n",i,data[i]);
- 371              		.loc 1 148 3 is_stmt 1 view .LVU99
- 372              		.loc 1 148 29 is_stmt 0 view .LVU100
+ 190:Core/Src/Tools/Debug.c **** 		printf("%d, %f\r\n",i,data[i]);
+ 371              		.loc 1 190 3 is_stmt 1 view .LVU99
+ 372              		.loc 1 190 29 is_stmt 0 view .LVU100
  373 0030 04F14003 		add	r3, r4, #64
  374 0034 0DEB0304 		add	r4, sp, r3
- 375              		.loc 1 148 3 view .LVU101
+ 375              		.loc 1 190 3 view .LVU101
  376 0038 54F8400C 		ldr	r0, [r4, #-64]	@ float
  377 003c FFF7FEFF 		bl	__aeabi_f2d
  378              	.LVL22:
@@ -573,169 +618,169 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  382 0046 5448     		ldr	r0, .L24+4
  383 0048 FFF7FEFF 		bl	printf
  384              	.LVL23:
- 149:Core/Src/Tools/Debug.c **** 		judge = isnanf(data[i]); //nanでなければ0
- 385              		.loc 1 149 3 is_stmt 1 view .LVU102
- 386              		.loc 1 149 22 is_stmt 0 view .LVU103
+ 191:Core/Src/Tools/Debug.c **** 		judge = isnanf(data[i]); //nanでなければ0
+ 385              		.loc 1 191 3 is_stmt 1 view .LVU102
+ 386              		.loc 1 191 22 is_stmt 0 view .LVU103
  387 004c 14ED108A 		vldr.32	s16, [r4, #-64]
- 388              		.loc 1 149 11 view .LVU104
+ 388              		.loc 1 191 11 view .LVU104
  389 0050 B4EE488A 		vcmp.f32	s16, s16
  390 0054 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  391              	.LVL24:
- 150:Core/Src/Tools/Debug.c **** 		printf("judge : %d\r\n", judge);
- 392              		.loc 1 150 3 is_stmt 1 view .LVU105
+ 192:Core/Src/Tools/Debug.c **** 		printf("judge : %d\r\n", judge);
+ 392              		.loc 1 192 3 is_stmt 1 view .LVU105
  393 0058 6CBF     		ite	vs
  394 005a 0121     		movvs	r1, #1
  395 005c 0021     		movvc	r1, #0
  396 005e 4F48     		ldr	r0, .L24+8
  397 0060 FFF7FEFF 		bl	printf
  398              	.LVL25:
- 151:Core/Src/Tools/Debug.c **** 		if(judge == 1) //コンパイラでisnanfの結果が変わる
- 399              		.loc 1 151 3 view .LVU106
- 400              		.loc 1 151 5 is_stmt 0 view .LVU107
+ 193:Core/Src/Tools/Debug.c **** 		if(judge == 1) //コンパイラでisnanfの結果が変わる
+ 399              		.loc 1 193 3 view .LVU106
+ 400              		.loc 1 193 5 is_stmt 0 view .LVU107
  401 0064 B4EE488A 		vcmp.f32	s16, s16
  402              	.LVL26:
- 403              		.loc 1 151 5 view .LVU108
+ 403              		.loc 1 193 5 view .LVU108
  404 0068 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  405 006c D6D7     		bvc	.L17
- 152:Core/Src/Tools/Debug.c **** 		{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 11
-
-
- 153:Core/Src/Tools/Debug.c **** 			j++;
- 406              		.loc 1 153 4 is_stmt 1 view .LVU109
- 407              		.loc 1 153 5 is_stmt 0 view .LVU110
+ 194:Core/Src/Tools/Debug.c **** 		{
+ 195:Core/Src/Tools/Debug.c **** 			j++;
+ 406              		.loc 1 195 4 is_stmt 1 view .LVU109
+ 407              		.loc 1 195 5 is_stmt 0 view .LVU110
  408 006e 0137     		adds	r7, r7, #1
  409              	.LVL27:
- 410              		.loc 1 153 5 view .LVU111
+ 410              		.loc 1 195 5 view .LVU111
  411 0070 FFB2     		uxtb	r7, r7
  412              	.LVL28:
- 413              		.loc 1 153 5 view .LVU112
+ 413              		.loc 1 195 5 view .LVU112
  414 0072 D3E7     		b	.L17
  415              	.LVL29:
  416              	.L22:
- 417              		.loc 1 153 5 view .LVU113
+ 417              		.loc 1 195 5 view .LVU113
  418              	.LBE4:
- 154:Core/Src/Tools/Debug.c **** 		}
- 155:Core/Src/Tools/Debug.c **** 		//nanなら0以外なのでnanの数を数える
- 156:Core/Src/Tools/Debug.c **** 
- 157:Core/Src/Tools/Debug.c **** 
- 158:Core/Src/Tools/Debug.c **** 	}
- 159:Core/Src/Tools/Debug.c **** 	//起動時、flashに0がたくさん。そのときは何もしない
- 160:Core/Src/Tools/Debug.c **** 	//数字が入っていれば、それを入れる
- 161:Core/Src/Tools/Debug.c **** 	printf("%d\r\n",j);
- 419              		.loc 1 161 2 is_stmt 1 view .LVU114
+ 196:Core/Src/Tools/Debug.c **** 		}
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 12
+
+
+ 197:Core/Src/Tools/Debug.c **** 		//nanなら0以外なのでnanの数を数える
+ 198:Core/Src/Tools/Debug.c **** 
+ 199:Core/Src/Tools/Debug.c **** 
+ 200:Core/Src/Tools/Debug.c **** 	}
+ 201:Core/Src/Tools/Debug.c **** 	//起動時、flashに0がたくさん。そのときは何もしない
+ 202:Core/Src/Tools/Debug.c **** 	//数字が入っていれば、それを入れる
+ 203:Core/Src/Tools/Debug.c **** 	printf("%d\r\n",j);
+ 419              		.loc 1 203 2 is_stmt 1 view .LVU114
  420 0074 3946     		mov	r1, r7
  421 0076 4A48     		ldr	r0, .L24+12
  422 0078 FFF7FEFF 		bl	printf
  423              	.LVL30:
- 162:Core/Src/Tools/Debug.c **** 		if(j == 15)//全てnan0であれば
- 424              		.loc 1 162 3 view .LVU115
- 425              		.loc 1 162 5 is_stmt 0 view .LVU116
+ 204:Core/Src/Tools/Debug.c **** 		if(j == 15)//全てnan0であれば
+ 424              		.loc 1 204 3 view .LVU115
+ 425              		.loc 1 204 5 is_stmt 0 view .LVU116
  426 007c 0F2F     		cmp	r7, #15
  427 007e 39D0     		beq	.L23
- 163:Core/Src/Tools/Debug.c **** 		{
- 164:Core/Src/Tools/Debug.c **** 			printf("デフォルトゲインセット\r\n");
- 165:Core/Src/Tools/Debug.c **** 			//何も入っていないときは、デフォルト値を書き込む
- 166:Core/Src/Tools/Debug.c **** 		  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
- 167:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
- 168:Core/Src/Tools/Debug.c **** 
- 169:Core/Src/Tools/Debug.c **** 		  PIDSetGain(A_VELO_PID, 14.6,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
- 170:Core/Src/Tools/Debug.c **** 		  PIDSetGain(F_WALL_PID, 14.6,0,0);
- 171:Core/Src/Tools/Debug.c **** 		  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
- 172:Core/Src/Tools/Debug.c **** 		  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
- 173:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
- 174:Core/Src/Tools/Debug.c **** 
- 175:Core/Src/Tools/Debug.c **** 			Flash_clear_sector9();
- 176:Core/Src/Tools/Debug.c **** 			//printf("\r\nどや\r\n");
- 177:Core/Src/Tools/Debug.c **** 			Copy_Gain();
- 178:Core/Src/Tools/Debug.c **** 			//たまに、書き換えたのにflashの中身が消えてこっちの処理になる？
- 179:Core/Src/Tools/Debug.c **** 		}
- 180:Core/Src/Tools/Debug.c **** 		//そうでなければ、ゲインに代入
- 181:Core/Src/Tools/Debug.c **** 		else
- 182:Core/Src/Tools/Debug.c **** 		{
- 183:Core/Src/Tools/Debug.c **** //			Pid[L_VELO_PID].KP = data[0];
- 184:Core/Src/Tools/Debug.c **** //			Pid[L_VELO_PID].KI = data[1];
- 185:Core/Src/Tools/Debug.c **** //			Pid[L_VELO_PID].KD = data[2];
- 186:Core/Src/Tools/Debug.c **** //
- 187:Core/Src/Tools/Debug.c **** //			Pid[A_VELO_PID].KP = data[3];
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 12
-
-
- 188:Core/Src/Tools/Debug.c **** //			Pid[A_VELO_PID].KI = data[4];
- 189:Core/Src/Tools/Debug.c **** //			Pid[A_VELO_PID].KD = data[5];
- 190:Core/Src/Tools/Debug.c **** //
- 191:Core/Src/Tools/Debug.c **** //			Pid[L_WALL_PID].KP = data[6];
- 192:Core/Src/Tools/Debug.c **** //			Pid[L_WALL_PID].KI = data[7];
- 193:Core/Src/Tools/Debug.c **** //			Pid[L_WALL_PID].KD = data[8];
- 194:Core/Src/Tools/Debug.c **** 			//2回目以降こっちが呼ばれる
- 195:Core/Src/Tools/Debug.c **** 			PIDSetGain(L_VELO_PID, data[0], data[1], data[2]);
- 428              		.loc 1 195 4 is_stmt 1 view .LVU117
+ 205:Core/Src/Tools/Debug.c **** 		{
+ 206:Core/Src/Tools/Debug.c **** 			printf("デフォルトゲインセット\r\n");
+ 207:Core/Src/Tools/Debug.c **** 			//何も入っていないときは、デフォルト値を書き込む
+ 208:Core/Src/Tools/Debug.c **** 		  PIDSetGain(L_VELO_PID, 14.6, 2800,0.001);
+ 209:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+ 210:Core/Src/Tools/Debug.c **** 
+ 211:Core/Src/Tools/Debug.c **** 		  PIDSetGain(A_VELO_PID, 14.6,0,0);//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+ 212:Core/Src/Tools/Debug.c **** 		  PIDSetGain(F_WALL_PID, 14.6,0,0);
+ 213:Core/Src/Tools/Debug.c **** 		  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
+ 214:Core/Src/Tools/Debug.c **** 		  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+ 215:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+ 216:Core/Src/Tools/Debug.c **** 
+ 217:Core/Src/Tools/Debug.c **** 			Flash_clear_sector9();
+ 218:Core/Src/Tools/Debug.c **** 			//printf("\r\nどや\r\n");
+ 219:Core/Src/Tools/Debug.c **** 			Copy_Gain();
+ 220:Core/Src/Tools/Debug.c **** 			//たまに、書き換えたのにflashの中身が消えてこっちの処理になる？
+ 221:Core/Src/Tools/Debug.c **** 		}
+ 222:Core/Src/Tools/Debug.c **** 		//そうでなければ、ゲインに代入
+ 223:Core/Src/Tools/Debug.c **** 		else
+ 224:Core/Src/Tools/Debug.c **** 		{
+ 225:Core/Src/Tools/Debug.c **** //			Pid[L_VELO_PID].KP = data[0];
+ 226:Core/Src/Tools/Debug.c **** //			Pid[L_VELO_PID].KI = data[1];
+ 227:Core/Src/Tools/Debug.c **** //			Pid[L_VELO_PID].KD = data[2];
+ 228:Core/Src/Tools/Debug.c **** //
+ 229:Core/Src/Tools/Debug.c **** //			Pid[A_VELO_PID].KP = data[3];
+ 230:Core/Src/Tools/Debug.c **** //			Pid[A_VELO_PID].KI = data[4];
+ 231:Core/Src/Tools/Debug.c **** //			Pid[A_VELO_PID].KD = data[5];
+ 232:Core/Src/Tools/Debug.c **** //
+ 233:Core/Src/Tools/Debug.c **** //			Pid[L_WALL_PID].KP = data[6];
+ 234:Core/Src/Tools/Debug.c **** //			Pid[L_WALL_PID].KI = data[7];
+ 235:Core/Src/Tools/Debug.c **** //			Pid[L_WALL_PID].KD = data[8];
+ 236:Core/Src/Tools/Debug.c **** 			//2回目以降こっちが呼ばれる
+ 237:Core/Src/Tools/Debug.c **** 			PIDSetGain(L_VELO_PID, data[0], data[1], data[2]);
+ 428              		.loc 1 237 4 is_stmt 1 view .LVU117
  429 0080 9DED021A 		vldr.32	s2, [sp, #8]
  430 0084 DDED010A 		vldr.32	s1, [sp, #4]
  431 0088 9DED000A 		vldr.32	s0, [sp]
  432 008c 0420     		movs	r0, #4
  433 008e FFF7FEFF 		bl	PIDSetGain
  434              	.LVL31:
- 196:Core/Src/Tools/Debug.c **** 			PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
- 435              		.loc 1 196 4 view .LVU118
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 13
+
+
+ 238:Core/Src/Tools/Debug.c **** 			PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
+ 435              		.loc 1 238 4 view .LVU118
  436 0092 9DED021A 		vldr.32	s2, [sp, #8]
  437 0096 DDED010A 		vldr.32	s1, [sp, #4]
  438 009a 9DED000A 		vldr.32	s0, [sp]
  439 009e 0520     		movs	r0, #5
  440 00a0 FFF7FEFF 		bl	PIDSetGain
  441              	.LVL32:
- 197:Core/Src/Tools/Debug.c **** 			//PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
- 198:Core/Src/Tools/Debug.c **** 			//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
- 199:Core/Src/Tools/Debug.c **** 			//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
- 200:Core/Src/Tools/Debug.c **** 			PIDSetGain(A_VELO_PID, data[3], data[4], data[5]);//28.6379,340.0855,0.21289);//17.4394, 321.233
- 442              		.loc 1 200 4 view .LVU119
+ 239:Core/Src/Tools/Debug.c **** 			//PIDSetGain(R_VELO_PID, data[0], data[1], data[2]);
+ 240:Core/Src/Tools/Debug.c **** 			//PIDSetGain(B_VELO, 1.1941, 33.5232, 0.0059922);
+ 241:Core/Src/Tools/Debug.c **** 			//28.6379,340.0855,0.21289);//17.4394, 321.233, 0.12492);
+ 242:Core/Src/Tools/Debug.c **** 			PIDSetGain(A_VELO_PID, data[3], data[4], data[5]);//28.6379,340.0855,0.21289);//17.4394, 321.233
+ 442              		.loc 1 242 4 view .LVU119
  443 00a4 9DED051A 		vldr.32	s2, [sp, #20]
  444 00a8 DDED040A 		vldr.32	s1, [sp, #16]
  445 00ac 9DED030A 		vldr.32	s0, [sp, #12]
  446 00b0 0020     		movs	r0, #0
  447 00b2 FFF7FEFF 		bl	PIDSetGain
  448              	.LVL33:
- 201:Core/Src/Tools/Debug.c **** 			//Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはや�
- 202:Core/Src/Tools/Debug.c **** 			//Dは微分= 振動を抑えられるぶん収束が遅くなる。
- 203:Core/Src/Tools/Debug.c **** 			//PIDSetGain(D_WALL_PID, data[0], data[1], data[2]);
- 204:Core/Src/Tools/Debug.c **** 			PIDSetGain(L_WALL_PID, data[6], data[7], data[8]);
- 449              		.loc 1 204 4 view .LVU120
+ 243:Core/Src/Tools/Debug.c **** 			//Iは積分=偏差を消す。ゲインが大きいと偏差が縮まるが、収束がはや�
+ 244:Core/Src/Tools/Debug.c **** 			//Dは微分= 振動を抑えられるぶん収束が遅くなる。
+ 245:Core/Src/Tools/Debug.c **** 			//PIDSetGain(D_WALL_PID, data[0], data[1], data[2]);
+ 246:Core/Src/Tools/Debug.c **** 			PIDSetGain(L_WALL_PID, data[6], data[7], data[8]);
+ 449              		.loc 1 246 4 view .LVU120
  450 00b6 9DED081A 		vldr.32	s2, [sp, #32]
  451 00ba DDED070A 		vldr.32	s1, [sp, #28]
  452 00be 9DED060A 		vldr.32	s0, [sp, #24]
  453 00c2 0220     		movs	r0, #2
  454 00c4 FFF7FEFF 		bl	PIDSetGain
  455              	.LVL34:
- 205:Core/Src/Tools/Debug.c **** 			PIDSetGain(R_WALL_PID, data[9], data[10], data[11]);
- 456              		.loc 1 205 4 view .LVU121
+ 247:Core/Src/Tools/Debug.c **** 			PIDSetGain(R_WALL_PID, data[9], data[10], data[11]);
+ 456              		.loc 1 247 4 view .LVU121
  457 00c8 9DED0B1A 		vldr.32	s2, [sp, #44]
  458 00cc DDED0A0A 		vldr.32	s1, [sp, #40]
  459 00d0 9DED090A 		vldr.32	s0, [sp, #36]
  460 00d4 0320     		movs	r0, #3
  461 00d6 FFF7FEFF 		bl	PIDSetGain
  462              	.LVL35:
- 206:Core/Src/Tools/Debug.c **** 			PIDSetGain(D_WALL_PID, data[12], data[13], data[14]);
- 463              		.loc 1 206 4 view .LVU122
+ 248:Core/Src/Tools/Debug.c **** 			PIDSetGain(D_WALL_PID, data[12], data[13], data[14]);
+ 463              		.loc 1 248 4 view .LVU122
  464 00da 9DED0E1A 		vldr.32	s2, [sp, #56]
  465 00de DDED0D0A 		vldr.32	s1, [sp, #52]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 13
-
-
  466 00e2 9DED0C0A 		vldr.32	s0, [sp, #48]
  467 00e6 0120     		movs	r0, #1
  468 00e8 FFF7FEFF 		bl	PIDSetGain
  469              	.LVL36:
  470              	.L15:
- 207:Core/Src/Tools/Debug.c **** 			//PIDSetGain(R_WALL_PID, data[0], data[1], data[2]);
- 208:Core/Src/Tools/Debug.c **** 		}
- 209:Core/Src/Tools/Debug.c **** 
- 210:Core/Src/Tools/Debug.c **** }
- 471              		.loc 1 210 1 is_stmt 0 view .LVU123
+ 249:Core/Src/Tools/Debug.c **** 			//PIDSetGain(R_WALL_PID, data[0], data[1], data[2]);
+ 250:Core/Src/Tools/Debug.c **** 		}
+ 251:Core/Src/Tools/Debug.c **** 
+ 252:Core/Src/Tools/Debug.c **** }
+ 471              		.loc 1 252 1 is_stmt 0 view .LVU123
  472 00ec 11B0     		add	sp, sp, #68
  473              	.LCFI8:
  474              		.cfi_remember_state
  475              		.cfi_def_cfa_offset 36
  476              		@ sp needed
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 14
+
+
  477 00ee BDEC048B 		vldm	sp!, {d8-d9}
  478              	.LCFI9:
  479              		.cfi_restore 82
@@ -748,13 +793,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  486              	.L23:
  487              	.LCFI10:
  488              		.cfi_restore_state
- 164:Core/Src/Tools/Debug.c **** 			//何も入っていないときは、デフォルト値を書き込む
- 489              		.loc 1 164 4 is_stmt 1 view .LVU124
+ 206:Core/Src/Tools/Debug.c **** 			//何も入っていないときは、デフォルト値を書き込む
+ 489              		.loc 1 206 4 is_stmt 1 view .LVU124
  490 00f4 2B48     		ldr	r0, .L24+16
  491 00f6 FFF7FEFF 		bl	puts
  492              	.LVL38:
- 166:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
- 493              		.loc 1 166 5 view .LVU125
+ 208:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_VELO_PID, 14.6, 2800,0.001);
+ 493              		.loc 1 208 5 view .LVU125
  494 00fa 9FED2B9A 		vldr.32	s18, .L24+20
  495 00fe 9FED2B8A 		vldr.32	s16, .L24+24
  496 0102 DFED2B8A 		vldr.32	s17, .L24+28
@@ -764,64 +809,64 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  500 0112 0420     		movs	r0, #4
  501 0114 FFF7FEFF 		bl	PIDSetGain
  502              	.LVL39:
- 167:Core/Src/Tools/Debug.c **** 
- 503              		.loc 1 167 5 view .LVU126
+ 209:Core/Src/Tools/Debug.c **** 
+ 503              		.loc 1 209 5 view .LVU126
  504 0118 B0EE491A 		vmov.f32	s2, s18
  505 011c F0EE480A 		vmov.f32	s1, s16
  506 0120 B0EE680A 		vmov.f32	s0, s17
  507 0124 0520     		movs	r0, #5
  508 0126 FFF7FEFF 		bl	PIDSetGain
  509              	.LVL40:
- 169:Core/Src/Tools/Debug.c **** 		  PIDSetGain(F_WALL_PID, 14.6,0,0);
- 510              		.loc 1 169 5 view .LVU127
+ 211:Core/Src/Tools/Debug.c **** 		  PIDSetGain(F_WALL_PID, 14.6,0,0);
+ 510              		.loc 1 211 5 view .LVU127
  511 012a 9FED228A 		vldr.32	s16, .L24+32
  512 012e B0EE481A 		vmov.f32	s2, s16
  513 0132 F0EE480A 		vmov.f32	s1, s16
  514 0136 B0EE680A 		vmov.f32	s0, s17
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 14
-
-
  515 013a 0020     		movs	r0, #0
  516 013c FFF7FEFF 		bl	PIDSetGain
  517              	.LVL41:
- 170:Core/Src/Tools/Debug.c **** 		  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
- 518              		.loc 1 170 5 view .LVU128
+ 212:Core/Src/Tools/Debug.c **** 		  PIDSetGain(D_WALL_PID, 6, 4, 0	);//3.2,0,0);/4.5,1.5,0.003);//3.6, 20, 0);//5.2//速度制御
+ 518              		.loc 1 212 5 view .LVU128
  519 0140 B0EE481A 		vmov.f32	s2, s16
  520 0144 F0EE480A 		vmov.f32	s1, s16
  521 0148 B0EE680A 		vmov.f32	s0, s17
  522 014c 0820     		movs	r0, #8
  523 014e FFF7FEFF 		bl	PIDSetGain
  524              	.LVL42:
- 171:Core/Src/Tools/Debug.c **** 		  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
- 525              		.loc 1 171 5 view .LVU129
+ 213:Core/Src/Tools/Debug.c **** 		  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+ 525              		.loc 1 213 5 view .LVU129
  526 0152 B0EE481A 		vmov.f32	s2, s16
  527 0156 F1EE000A 		vmov.f32	s1, #4.0e+0
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 15
+
+
  528 015a B1EE080A 		vmov.f32	s0, #6.0e+0
  529 015e 0120     		movs	r0, #1
  530 0160 FFF7FEFF 		bl	PIDSetGain
  531              	.LVL43:
- 172:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
- 532              		.loc 1 172 5 view .LVU130
+ 214:Core/Src/Tools/Debug.c **** 		  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
+ 532              		.loc 1 214 5 view .LVU130
  533 0164 B0EE481A 		vmov.f32	s2, s16
  534 0168 F2EE000A 		vmov.f32	s1, #8.0e+0
  535 016c B2EE080A 		vmov.f32	s0, #1.2e+1
  536 0170 0220     		movs	r0, #2
  537 0172 FFF7FEFF 		bl	PIDSetGain
  538              	.LVL44:
- 173:Core/Src/Tools/Debug.c **** 
- 539              		.loc 1 173 5 view .LVU131
+ 215:Core/Src/Tools/Debug.c **** 
+ 539              		.loc 1 215 5 view .LVU131
  540 0176 B0EE481A 		vmov.f32	s2, s16
  541 017a F2EE000A 		vmov.f32	s1, #8.0e+0
  542 017e B2EE080A 		vmov.f32	s0, #1.2e+1
  543 0182 0320     		movs	r0, #3
  544 0184 FFF7FEFF 		bl	PIDSetGain
  545              	.LVL45:
- 175:Core/Src/Tools/Debug.c **** 			//printf("\r\nどや\r\n");
- 546              		.loc 1 175 4 view .LVU132
+ 217:Core/Src/Tools/Debug.c **** 			//printf("\r\nどや\r\n");
+ 546              		.loc 1 217 4 view .LVU132
  547 0188 FFF7FEFF 		bl	Flash_clear_sector9
  548              	.LVL46:
- 177:Core/Src/Tools/Debug.c **** 			//たまに、書き換えたのにflashの中身が消えてこっちの処理になる？
- 549              		.loc 1 177 4 view .LVU133
+ 219:Core/Src/Tools/Debug.c **** 			//たまに、書き換えたのにflashの中身が消えてこっちの処理になる？
+ 549              		.loc 1 219 4 view .LVU133
  550 018c FFF7FEFF 		bl	Copy_Gain
  551              	.LVL47:
  552 0190 ACE7     		b	.L15
@@ -838,9 +883,6 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  563 01b0 9A996941 		.word	1097439642
  564 01b4 00000000 		.word	0
  565              		.cfi_endproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 15
-
-
  566              	.LFE241:
  568              		.section	.rodata.Change_Gain.str1.4,"aMS",%progbits,1
  569              		.align	2
@@ -856,6 +898,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  575 0018 5B315D20 		.ascii	"[1] \350\273\212\350\274\252\345\267\246\345\217\263"
  575      E8BB8AE8 
  575      BCAAE5B7 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 16
+
+
  575      A6E58FB3 
  576 0028 203A2025 		.ascii	" : %f, %f, %f\015\012\000"
  576      662C2025 
@@ -898,9 +943,6 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  592 00b7 B582E4BA 		.ascii	"\265\202\344\272\206) :\000"
  592      8629203A 
  592      00
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 16
-
-
  593              		.align	2
  594              	.LC11:
  595 00c0 256300   		.ascii	"%c\000"
@@ -916,6 +958,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  601 00d8 0D0A2563 		.ascii	"\015\012%c\343\200\201 %c \343\202\222\351\201\270\346"
  601      E3808120 
  601      256320E3 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 17
+
+
  601      8292E981 
  601      B8E6
  602 00ea 8A9EE381 		.ascii	"\212\236\343\201\227\343\201\276\343\201\227\343\201"
@@ -958,12 +1003,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  626              		.thumb_func
  628              	Change_Gain:
  629              	.LFB242:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 17
-
-
- 211:Core/Src/Tools/Debug.c **** void Change_Gain()
- 212:Core/Src/Tools/Debug.c **** {
- 630              		.loc 1 212 1 view -0
+ 253:Core/Src/Tools/Debug.c **** void Change_Gain()
+ 254:Core/Src/Tools/Debug.c **** {
+ 630              		.loc 1 254 1 view -0
  631              		.cfi_startproc
  632              		@ args = 0, pretend = 0, frame = 8
  633              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -976,231 +1018,231 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  640              		.cfi_offset 7, -12
  641              		.cfi_offset 8, -8
  642              		.cfi_offset 14, -4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 18
+
+
  643 0004 86B0     		sub	sp, sp, #24
  644              	.LCFI12:
  645              		.cfi_def_cfa_offset 48
- 213:Core/Src/Tools/Debug.c **** 	//他の処理や割り込みを停止
- 214:Core/Src/Tools/Debug.c **** 
- 215:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Stop_IT(&htim1);
- 646              		.loc 1 215 2 view .LVU135
+ 255:Core/Src/Tools/Debug.c **** 	//他の処理や割り込みを停止
+ 256:Core/Src/Tools/Debug.c **** 
+ 257:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Stop_IT(&htim1);
+ 646              		.loc 1 257 2 view .LVU135
  647 0006 AF48     		ldr	r0, .L59
  648 0008 FFF7FEFF 		bl	HAL_TIM_Base_Stop_IT
  649              	.LVL48:
- 216:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Stop_IT(&htim8);
- 650              		.loc 1 216 2 view .LVU136
+ 258:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Stop_IT(&htim8);
+ 650              		.loc 1 258 2 view .LVU136
  651 000c AE48     		ldr	r0, .L59+4
  652 000e FFF7FEFF 		bl	HAL_TIM_Base_Stop_IT
  653              	.LVL49:
- 217:Core/Src/Tools/Debug.c **** 	Motor_PWM_Stop();
- 654              		.loc 1 217 2 view .LVU137
+ 259:Core/Src/Tools/Debug.c **** 	Motor_PWM_Stop();
+ 654              		.loc 1 259 2 view .LVU137
  655 0012 FFF7FEFF 		bl	Motor_PWM_Stop
  656              	.LVL50:
- 218:Core/Src/Tools/Debug.c **** 	EmitterOFF();
- 657              		.loc 1 218 2 view .LVU138
+ 260:Core/Src/Tools/Debug.c **** 	EmitterOFF();
+ 657              		.loc 1 260 2 view .LVU138
  658 0016 FFF7FEFF 		bl	EmitterOFF
  659              	.LVL51:
- 219:Core/Src/Tools/Debug.c **** //	ADCStart();
- 220:Core/Src/Tools/Debug.c **** //	printf("start\r\n");
- 221:Core/Src/Tools/Debug.c **** 	//ADCStop();//ここ
- 222:Core/Src/Tools/Debug.c **** 	HAL_Delay(200);
- 660              		.loc 1 222 2 view .LVU139
+ 261:Core/Src/Tools/Debug.c **** //	ADCStart();
+ 262:Core/Src/Tools/Debug.c **** //	printf("start\r\n");
+ 263:Core/Src/Tools/Debug.c **** 	//ADCStop();//ここ
+ 264:Core/Src/Tools/Debug.c **** 	HAL_Delay(200);
+ 660              		.loc 1 264 2 view .LVU139
  661 001a C820     		movs	r0, #200
  662 001c FFF7FEFF 		bl	HAL_Delay
  663              	.LVL52:
- 223:Core/Src/Tools/Debug.c **** 
- 224:Core/Src/Tools/Debug.c **** 	//ゲイン調整する
- 225:Core/Src/Tools/Debug.c **** 	char change_mode='0';
- 664              		.loc 1 225 2 view .LVU140
- 665              		.loc 1 225 7 is_stmt 0 view .LVU141
+ 265:Core/Src/Tools/Debug.c **** 
+ 266:Core/Src/Tools/Debug.c **** 	//ゲイン調整する
+ 267:Core/Src/Tools/Debug.c **** 	char change_mode='0';
+ 664              		.loc 1 267 2 view .LVU140
+ 665              		.loc 1 267 7 is_stmt 0 view .LVU141
  666 0020 3023     		movs	r3, #48
  667 0022 8DF81730 		strb	r3, [sp, #23]
- 226:Core/Src/Tools/Debug.c **** 	char pid = '0';
- 668              		.loc 1 226 2 is_stmt 1 view .LVU142
- 669              		.loc 1 226 7 is_stmt 0 view .LVU143
+ 268:Core/Src/Tools/Debug.c **** 	char pid = '0';
+ 668              		.loc 1 268 2 is_stmt 1 view .LVU142
+ 669              		.loc 1 268 7 is_stmt 0 view .LVU143
  670 0026 8DF81630 		strb	r3, [sp, #22]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 18
-
-
  671 002a 14E0     		b	.L46
  672              	.L34:
- 227:Core/Src/Tools/Debug.c **** 
- 228:Core/Src/Tools/Debug.c **** 	char nl;
- 229:Core/Src/Tools/Debug.c **** 
- 230:Core/Src/Tools/Debug.c **** 	while(1)
- 231:Core/Src/Tools/Debug.c **** 	{
- 232:Core/Src/Tools/Debug.c **** 		//float a = Pid[2].KP;
- 233:Core/Src/Tools/Debug.c **** 		printf("現在のPIDゲイン\r\n");
- 234:Core/Src/Tools/Debug.c **** 		printf("[1] 車輪左右 : %f, %f, %f\r\n",Pid[L_VELO_PID].KP, Pid[L_VELO_PID].KI, Pid[L_VELO_PID
- 235:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
- 236:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
- 237:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
- 238:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
- 239:Core/Src/Tools/Debug.c **** 
- 240:Core/Src/Tools/Debug.c **** 		Buffering();
- 241:Core/Src/Tools/Debug.c **** 		printf("モード(0で終了) :"); scanf("%c",&change_mode);
- 242:Core/Src/Tools/Debug.c **** 		if(change_mode == '0')
- 243:Core/Src/Tools/Debug.c **** 		{
- 244:Core/Src/Tools/Debug.c **** 			break;
- 245:Core/Src/Tools/Debug.c **** 		}
- 246:Core/Src/Tools/Debug.c **** 		else
- 247:Core/Src/Tools/Debug.c **** 		{
- 248:Core/Src/Tools/Debug.c **** 
- 249:Core/Src/Tools/Debug.c **** 			Buffering();
- 250:Core/Src/Tools/Debug.c **** 			printf("\r\nP , I or D ? : "); scanf("%c",&pid);
- 251:Core/Src/Tools/Debug.c **** 			printf("\r\n%c、 %c を選択しました\r\n",change_mode,pid);
- 252:Core/Src/Tools/Debug.c **** 
- 253:Core/Src/Tools/Debug.c **** 			Buffering();
- 254:Core/Src/Tools/Debug.c **** 			printf("\r\n値を入力 : ");
- 255:Core/Src/Tools/Debug.c **** 
- 256:Core/Src/Tools/Debug.c **** 			switch(change_mode)
- 257:Core/Src/Tools/Debug.c **** 			{
- 258:Core/Src/Tools/Debug.c **** 			case '1'://並進速度制御ゲイン
- 259:Core/Src/Tools/Debug.c **** 				//printf("p , i or d ?");scanf("%c",pid);
- 260:Core/Src/Tools/Debug.c **** 
- 261:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
- 673              		.loc 1 261 5 is_stmt 1 view .LVU144
- 674              		.loc 1 261 12 is_stmt 0 view .LVU145
+ 269:Core/Src/Tools/Debug.c **** 
+ 270:Core/Src/Tools/Debug.c **** 	char nl;
+ 271:Core/Src/Tools/Debug.c **** 
+ 272:Core/Src/Tools/Debug.c **** 	while(1)
+ 273:Core/Src/Tools/Debug.c **** 	{
+ 274:Core/Src/Tools/Debug.c **** 		//float a = Pid[2].KP;
+ 275:Core/Src/Tools/Debug.c **** 		printf("現在のPIDゲイン\r\n");
+ 276:Core/Src/Tools/Debug.c **** 		printf("[1] 車輪左右 : %f, %f, %f\r\n",Pid[L_VELO_PID].KP, Pid[L_VELO_PID].KI, Pid[L_VELO_PID
+ 277:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
+ 278:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
+ 279:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
+ 280:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
+ 281:Core/Src/Tools/Debug.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 19
+
+
+ 282:Core/Src/Tools/Debug.c **** 		Buffering();
+ 283:Core/Src/Tools/Debug.c **** 		printf("モード(0で終了) :"); scanf("%c",&change_mode);
+ 284:Core/Src/Tools/Debug.c **** 		if(change_mode == '0')
+ 285:Core/Src/Tools/Debug.c **** 		{
+ 286:Core/Src/Tools/Debug.c **** 			break;
+ 287:Core/Src/Tools/Debug.c **** 		}
+ 288:Core/Src/Tools/Debug.c **** 		else
+ 289:Core/Src/Tools/Debug.c **** 		{
+ 290:Core/Src/Tools/Debug.c **** 
+ 291:Core/Src/Tools/Debug.c **** 			Buffering();
+ 292:Core/Src/Tools/Debug.c **** 			printf("\r\nP , I or D ? : "); scanf("%c",&pid);
+ 293:Core/Src/Tools/Debug.c **** 			printf("\r\n%c、 %c を選択しました\r\n",change_mode,pid);
+ 294:Core/Src/Tools/Debug.c **** 
+ 295:Core/Src/Tools/Debug.c **** 			Buffering();
+ 296:Core/Src/Tools/Debug.c **** 			printf("\r\n値を入力 : ");
+ 297:Core/Src/Tools/Debug.c **** 
+ 298:Core/Src/Tools/Debug.c **** 			switch(change_mode)
+ 299:Core/Src/Tools/Debug.c **** 			{
+ 300:Core/Src/Tools/Debug.c **** 			case '1'://並進速度制御ゲイン
+ 301:Core/Src/Tools/Debug.c **** 				//printf("p , i or d ?");scanf("%c",pid);
+ 302:Core/Src/Tools/Debug.c **** 
+ 303:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
+ 673              		.loc 1 303 5 is_stmt 1 view .LVU144
+ 674              		.loc 1 303 12 is_stmt 0 view .LVU145
  675 002c 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
- 676              		.loc 1 261 7 view .LVU146
+ 676              		.loc 1 303 7 view .LVU146
  677 0030 702B     		cmp	r3, #112
  678 0032 00F0C180 		beq	.L48
- 262:Core/Src/Tools/Debug.c **** 				{
- 263:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_VELO_PID].KP);
- 264:Core/Src/Tools/Debug.c **** 				}
- 265:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
- 679              		.loc 1 265 10 is_stmt 1 view .LVU147
- 680              		.loc 1 265 12 is_stmt 0 view .LVU148
+ 304:Core/Src/Tools/Debug.c **** 				{
+ 305:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_VELO_PID].KP);
+ 306:Core/Src/Tools/Debug.c **** 				}
+ 307:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
+ 679              		.loc 1 307 10 is_stmt 1 view .LVU147
+ 680              		.loc 1 307 12 is_stmt 0 view .LVU148
  681 0036 692B     		cmp	r3, #105
  682 0038 00F0C380 		beq	.L49
- 266:Core/Src/Tools/Debug.c **** 				{
- 267:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_VELO_PID].KI);
- 268:Core/Src/Tools/Debug.c **** 				}
- 269:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
- 683              		.loc 1 269 10 is_stmt 1 view .LVU149
- 684              		.loc 1 269 12 is_stmt 0 view .LVU150
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 19
-
-
+ 308:Core/Src/Tools/Debug.c **** 				{
+ 309:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_VELO_PID].KI);
+ 310:Core/Src/Tools/Debug.c **** 				}
+ 311:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
+ 683              		.loc 1 311 10 is_stmt 1 view .LVU149
+ 684              		.loc 1 311 12 is_stmt 0 view .LVU150
  685 003c 642B     		cmp	r3, #100
  686 003e 00F0C580 		beq	.L50
  687              	.L36:
- 270:Core/Src/Tools/Debug.c **** 				{
- 271:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_VELO_PID].KD);
- 272:Core/Src/Tools/Debug.c **** 				}
- 273:Core/Src/Tools/Debug.c **** 				break;
- 274:Core/Src/Tools/Debug.c **** 
- 275:Core/Src/Tools/Debug.c **** 			case '2'://回転角速度制御ゲイン
- 276:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
- 277:Core/Src/Tools/Debug.c **** 				{
- 278:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[A_VELO_PID].KP);
- 279:Core/Src/Tools/Debug.c **** 				}
- 280:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
- 281:Core/Src/Tools/Debug.c **** 				{
- 282:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[A_VELO_PID].KI);
- 283:Core/Src/Tools/Debug.c **** 				}
- 284:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
- 285:Core/Src/Tools/Debug.c **** 				{
- 286:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[A_VELO_PID].KD);
- 287:Core/Src/Tools/Debug.c **** 				}
- 288:Core/Src/Tools/Debug.c **** 				break;
- 289:Core/Src/Tools/Debug.c **** 
- 290:Core/Src/Tools/Debug.c **** 			case '3'://壁制御ゲイン
- 291:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
- 292:Core/Src/Tools/Debug.c **** 				{
- 293:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_WALL_PID].KP);
- 294:Core/Src/Tools/Debug.c **** 				}
- 295:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
- 296:Core/Src/Tools/Debug.c **** 				{
- 297:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_WALL_PID].KI);
- 298:Core/Src/Tools/Debug.c **** 				}
- 299:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
- 300:Core/Src/Tools/Debug.c **** 				{
- 301:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_WALL_PID].KD);
- 302:Core/Src/Tools/Debug.c **** 				}
- 303:Core/Src/Tools/Debug.c **** 				break;
- 304:Core/Src/Tools/Debug.c **** 			case '4'://壁制御ゲイン
- 305:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
- 306:Core/Src/Tools/Debug.c **** 				{
- 307:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[R_WALL_PID].KP);
- 308:Core/Src/Tools/Debug.c **** 				}
- 309:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
- 310:Core/Src/Tools/Debug.c **** 				{
- 311:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[R_WALL_PID].KI);
- 312:Core/Src/Tools/Debug.c **** 				}
- 313:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
- 314:Core/Src/Tools/Debug.c **** 				{
- 315:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[R_WALL_PID].KD);
- 316:Core/Src/Tools/Debug.c **** 				}
- 317:Core/Src/Tools/Debug.c **** 				break;
- 318:Core/Src/Tools/Debug.c **** 			case '5'://壁制御ゲイン
- 319:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
- 320:Core/Src/Tools/Debug.c **** 				{
- 321:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[D_WALL_PID].KP);
- 322:Core/Src/Tools/Debug.c **** 				}
- 323:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 20
+ 312:Core/Src/Tools/Debug.c **** 				{
+ 313:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_VELO_PID].KD);
+ 314:Core/Src/Tools/Debug.c **** 				}
+ 315:Core/Src/Tools/Debug.c **** 				break;
+ 316:Core/Src/Tools/Debug.c **** 
+ 317:Core/Src/Tools/Debug.c **** 			case '2'://回転角速度制御ゲイン
+ 318:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
+ 319:Core/Src/Tools/Debug.c **** 				{
+ 320:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[A_VELO_PID].KP);
+ 321:Core/Src/Tools/Debug.c **** 				}
+ 322:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
+ 323:Core/Src/Tools/Debug.c **** 				{
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 20
 
 
- 324:Core/Src/Tools/Debug.c **** 				{
- 325:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[D_WALL_PID].KI);
- 326:Core/Src/Tools/Debug.c **** 				}
- 327:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
- 328:Core/Src/Tools/Debug.c **** 				{
- 329:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[D_WALL_PID].KD);
- 330:Core/Src/Tools/Debug.c **** 				}
- 331:Core/Src/Tools/Debug.c **** 				break;
- 332:Core/Src/Tools/Debug.c **** 			default :
- 333:Core/Src/Tools/Debug.c **** 				printf("該当しません\r\n");
- 334:Core/Src/Tools/Debug.c **** 				break;
- 335:Core/Src/Tools/Debug.c **** 			}
- 336:Core/Src/Tools/Debug.c **** 			Buffering();
- 688              		.loc 1 336 4 is_stmt 1 view .LVU151
+ 324:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[A_VELO_PID].KI);
+ 325:Core/Src/Tools/Debug.c **** 				}
+ 326:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
+ 327:Core/Src/Tools/Debug.c **** 				{
+ 328:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[A_VELO_PID].KD);
+ 329:Core/Src/Tools/Debug.c **** 				}
+ 330:Core/Src/Tools/Debug.c **** 				break;
+ 331:Core/Src/Tools/Debug.c **** 
+ 332:Core/Src/Tools/Debug.c **** 			case '3'://壁制御ゲイン
+ 333:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
+ 334:Core/Src/Tools/Debug.c **** 				{
+ 335:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_WALL_PID].KP);
+ 336:Core/Src/Tools/Debug.c **** 				}
+ 337:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
+ 338:Core/Src/Tools/Debug.c **** 				{
+ 339:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_WALL_PID].KI);
+ 340:Core/Src/Tools/Debug.c **** 				}
+ 341:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
+ 342:Core/Src/Tools/Debug.c **** 				{
+ 343:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[L_WALL_PID].KD);
+ 344:Core/Src/Tools/Debug.c **** 				}
+ 345:Core/Src/Tools/Debug.c **** 				break;
+ 346:Core/Src/Tools/Debug.c **** 			case '4'://壁制御ゲイン
+ 347:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
+ 348:Core/Src/Tools/Debug.c **** 				{
+ 349:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[R_WALL_PID].KP);
+ 350:Core/Src/Tools/Debug.c **** 				}
+ 351:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
+ 352:Core/Src/Tools/Debug.c **** 				{
+ 353:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[R_WALL_PID].KI);
+ 354:Core/Src/Tools/Debug.c **** 				}
+ 355:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
+ 356:Core/Src/Tools/Debug.c **** 				{
+ 357:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[R_WALL_PID].KD);
+ 358:Core/Src/Tools/Debug.c **** 				}
+ 359:Core/Src/Tools/Debug.c **** 				break;
+ 360:Core/Src/Tools/Debug.c **** 			case '5'://壁制御ゲイン
+ 361:Core/Src/Tools/Debug.c **** 				if(pid == 'p')
+ 362:Core/Src/Tools/Debug.c **** 				{
+ 363:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[D_WALL_PID].KP);
+ 364:Core/Src/Tools/Debug.c **** 				}
+ 365:Core/Src/Tools/Debug.c **** 				else if(pid == 'i')
+ 366:Core/Src/Tools/Debug.c **** 				{
+ 367:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[D_WALL_PID].KI);
+ 368:Core/Src/Tools/Debug.c **** 				}
+ 369:Core/Src/Tools/Debug.c **** 				else if(pid == 'd')
+ 370:Core/Src/Tools/Debug.c **** 				{
+ 371:Core/Src/Tools/Debug.c **** 					scanf("%f",&Pid[D_WALL_PID].KD);
+ 372:Core/Src/Tools/Debug.c **** 				}
+ 373:Core/Src/Tools/Debug.c **** 				break;
+ 374:Core/Src/Tools/Debug.c **** 			default :
+ 375:Core/Src/Tools/Debug.c **** 				printf("該当しません\r\n");
+ 376:Core/Src/Tools/Debug.c **** 				break;
+ 377:Core/Src/Tools/Debug.c **** 			}
+ 378:Core/Src/Tools/Debug.c **** 			Buffering();
+ 688              		.loc 1 378 4 is_stmt 1 view .LVU151
  689 0042 FFF7FEFF 		bl	Buffering
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 21
+
+
  690              	.LVL53:
- 337:Core/Src/Tools/Debug.c **** 			scanf("%c",&nl);
- 691              		.loc 1 337 4 view .LVU152
+ 379:Core/Src/Tools/Debug.c **** 			scanf("%c",&nl);
+ 691              		.loc 1 379 4 view .LVU152
  692 0046 0DF11501 		add	r1, sp, #21
  693 004a A048     		ldr	r0, .L59+8
  694 004c FFF7FEFF 		bl	scanf
  695              	.LVL54:
- 338:Core/Src/Tools/Debug.c **** 			printf("\r\n");
- 696              		.loc 1 338 4 view .LVU153
+ 380:Core/Src/Tools/Debug.c **** 			printf("\r\n");
+ 696              		.loc 1 380 4 view .LVU153
  697 0050 9F48     		ldr	r0, .L59+12
  698 0052 FFF7FEFF 		bl	puts
  699              	.LVL55:
- 230:Core/Src/Tools/Debug.c **** 	{
- 700              		.loc 1 230 7 view .LVU154
+ 272:Core/Src/Tools/Debug.c **** 	{
+ 700              		.loc 1 272 7 view .LVU154
  701              	.L46:
- 228:Core/Src/Tools/Debug.c **** 
- 702              		.loc 1 228 2 view .LVU155
- 230:Core/Src/Tools/Debug.c **** 	{
- 703              		.loc 1 230 2 view .LVU156
- 233:Core/Src/Tools/Debug.c **** 		printf("[1] 車輪左右 : %f, %f, %f\r\n",Pid[L_VELO_PID].KP, Pid[L_VELO_PID].KI, Pid[L_VELO_PID
- 704              		.loc 1 233 3 view .LVU157
+ 270:Core/Src/Tools/Debug.c **** 
+ 702              		.loc 1 270 2 view .LVU155
+ 272:Core/Src/Tools/Debug.c **** 	{
+ 703              		.loc 1 272 2 view .LVU156
+ 275:Core/Src/Tools/Debug.c **** 		printf("[1] 車輪左右 : %f, %f, %f\r\n",Pid[L_VELO_PID].KP, Pid[L_VELO_PID].KI, Pid[L_VELO_PID
+ 704              		.loc 1 275 3 view .LVU157
  705 0056 9F48     		ldr	r0, .L59+16
  706 0058 FFF7FEFF 		bl	puts
  707              	.LVL56:
- 234:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
- 708              		.loc 1 234 3 view .LVU158
- 234:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
- 709              		.loc 1 234 61 is_stmt 0 view .LVU159
+ 276:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
+ 708              		.loc 1 276 3 view .LVU158
+ 276:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
+ 709              		.loc 1 276 61 is_stmt 0 view .LVU159
  710 005c 9E4C     		ldr	r4, .L59+20
- 234:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
- 711              		.loc 1 234 81 view .LVU160
+ 276:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
+ 711              		.loc 1 276 81 view .LVU160
  712 005e D4F8B450 		ldr	r5, [r4, #180]	@ float
- 234:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
- 713              		.loc 1 234 101 view .LVU161
+ 276:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
+ 713              		.loc 1 276 101 view .LVU161
  714 0062 D4F8B880 		ldr	r8, [r4, #184]	@ float
- 234:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
- 715              		.loc 1 234 3 view .LVU162
+ 276:Core/Src/Tools/Debug.c **** 		printf("[2] 角度 : %f, %f, %f\r\n", Pid[A_VELO_PID].KP, Pid[A_VELO_PID].KI, Pid[A_VELO_PID].KD)
+ 715              		.loc 1 276 3 view .LVU162
  716 0066 D4F8B000 		ldr	r0, [r4, #176]	@ float
  717 006a FFF7FEFF 		bl	__aeabi_f2d
  718              	.LVL57:
  719 006e 0646     		mov	r6, r0
  720 0070 0F46     		mov	r7, r1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 21
-
-
  721 0072 4046     		mov	r0, r8	@ float
  722 0074 FFF7FEFF 		bl	__aeabi_f2d
  723              	.LVL58:
@@ -1214,16 +1256,19 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  731 008a 9448     		ldr	r0, .L59+24
  732 008c FFF7FEFF 		bl	printf
  733              	.LVL60:
- 235:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
- 734              		.loc 1 235 3 is_stmt 1 view .LVU163
- 235:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
- 735              		.loc 1 235 76 is_stmt 0 view .LVU164
+ 277:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
+ 734              		.loc 1 277 3 is_stmt 1 view .LVU163
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 22
+
+
+ 277:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
+ 735              		.loc 1 277 76 is_stmt 0 view .LVU164
  736 0090 6568     		ldr	r5, [r4, #4]	@ float
- 235:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
- 737              		.loc 1 235 96 view .LVU165
+ 277:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
+ 737              		.loc 1 277 96 view .LVU165
  738 0092 D4F80880 		ldr	r8, [r4, #8]	@ float
- 235:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
- 739              		.loc 1 235 3 view .LVU166
+ 277:Core/Src/Tools/Debug.c **** 		printf("[3] 左壁 : %f, %f, %f\r\n", Pid[L_WALL_PID].KP, Pid[L_WALL_PID].KI, Pid[L_WALL_PID].KD)
+ 739              		.loc 1 277 3 view .LVU166
  740 0096 2068     		ldr	r0, [r4]	@ float
  741 0098 FFF7FEFF 		bl	__aeabi_f2d
  742              	.LVL61:
@@ -1242,25 +1287,22 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  755 00b8 8948     		ldr	r0, .L59+28
  756 00ba FFF7FEFF 		bl	printf
  757              	.LVL64:
- 236:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
- 758              		.loc 1 236 3 is_stmt 1 view .LVU167
- 236:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
- 759              		.loc 1 236 76 is_stmt 0 view .LVU168
+ 278:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
+ 758              		.loc 1 278 3 is_stmt 1 view .LVU167
+ 278:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
+ 759              		.loc 1 278 76 is_stmt 0 view .LVU168
  760 00be E56D     		ldr	r5, [r4, #92]	@ float
- 236:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
- 761              		.loc 1 236 96 view .LVU169
+ 278:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
+ 761              		.loc 1 278 96 view .LVU169
  762 00c0 D4F86080 		ldr	r8, [r4, #96]	@ float
- 236:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
- 763              		.loc 1 236 3 view .LVU170
+ 278:Core/Src/Tools/Debug.c **** 		printf("[4] 右壁 : %f, %f, %f\r\n", Pid[R_WALL_PID].KP, Pid[R_WALL_PID].KI, Pid[R_WALL_PID].KD)
+ 763              		.loc 1 278 3 view .LVU170
  764 00c4 A06D     		ldr	r0, [r4, #88]	@ float
  765 00c6 FFF7FEFF 		bl	__aeabi_f2d
  766              	.LVL65:
  767 00ca 0646     		mov	r6, r0
  768 00cc 0F46     		mov	r7, r1
  769 00ce 4046     		mov	r0, r8	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 22
-
-
  770 00d0 FFF7FEFF 		bl	__aeabi_f2d
  771              	.LVL66:
  772 00d4 CDE90201 		strd	r0, [sp, #8]
@@ -1273,16 +1315,19 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  779 00e6 7F48     		ldr	r0, .L59+32
  780 00e8 FFF7FEFF 		bl	printf
  781              	.LVL68:
- 237:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
- 782              		.loc 1 237 3 is_stmt 1 view .LVU171
- 237:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
- 783              		.loc 1 237 76 is_stmt 0 view .LVU172
+ 279:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
+ 782              		.loc 1 279 3 is_stmt 1 view .LVU171
+ 279:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 23
+
+
+ 783              		.loc 1 279 76 is_stmt 0 view .LVU172
  784 00ec D4F88850 		ldr	r5, [r4, #136]	@ float
- 237:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
- 785              		.loc 1 237 96 view .LVU173
+ 279:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
+ 785              		.loc 1 279 96 view .LVU173
  786 00f0 D4F88C80 		ldr	r8, [r4, #140]	@ float
- 237:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
- 787              		.loc 1 237 3 view .LVU174
+ 279:Core/Src/Tools/Debug.c **** 		printf("[5] 両壁 : %f, %f, %f\r\n", Pid[D_WALL_PID].KP, Pid[D_WALL_PID].KI, Pid[D_WALL_PID].KD)
+ 787              		.loc 1 279 3 view .LVU174
  788 00f4 D4F88400 		ldr	r0, [r4, #132]	@ float
  789 00f8 FFF7FEFF 		bl	__aeabi_f2d
  790              	.LVL69:
@@ -1301,16 +1346,16 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  803 0118 7348     		ldr	r0, .L59+36
  804 011a FFF7FEFF 		bl	printf
  805              	.LVL72:
- 238:Core/Src/Tools/Debug.c **** 
- 806              		.loc 1 238 3 is_stmt 1 view .LVU175
- 238:Core/Src/Tools/Debug.c **** 
- 807              		.loc 1 238 76 is_stmt 0 view .LVU176
+ 280:Core/Src/Tools/Debug.c **** 
+ 806              		.loc 1 280 3 is_stmt 1 view .LVU175
+ 280:Core/Src/Tools/Debug.c **** 
+ 807              		.loc 1 280 76 is_stmt 0 view .LVU176
  808 011e 266B     		ldr	r6, [r4, #48]	@ float
- 238:Core/Src/Tools/Debug.c **** 
- 809              		.loc 1 238 96 view .LVU177
+ 280:Core/Src/Tools/Debug.c **** 
+ 809              		.loc 1 280 96 view .LVU177
  810 0120 676B     		ldr	r7, [r4, #52]	@ float
- 238:Core/Src/Tools/Debug.c **** 
- 811              		.loc 1 238 3 view .LVU178
+ 280:Core/Src/Tools/Debug.c **** 
+ 811              		.loc 1 280 3 view .LVU178
  812 0122 E06A     		ldr	r0, [r4, #44]	@ float
  813 0124 FFF7FEFF 		bl	__aeabi_f2d
  814              	.LVL73:
@@ -1318,9 +1363,6 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  816 012a 0D46     		mov	r5, r1
  817 012c 3846     		mov	r0, r7	@ float
  818 012e FFF7FEFF 		bl	__aeabi_f2d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 23
-
-
  819              	.LVL74:
  820 0132 CDE90201 		strd	r0, [sp, #8]
  821 0136 3046     		mov	r0, r6	@ float
@@ -1332,70 +1374,73 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  827 0144 6948     		ldr	r0, .L59+40
  828 0146 FFF7FEFF 		bl	printf
  829              	.LVL76:
- 240:Core/Src/Tools/Debug.c **** 		printf("モード(0で終了) :"); scanf("%c",&change_mode);
- 830              		.loc 1 240 3 is_stmt 1 view .LVU179
+ 282:Core/Src/Tools/Debug.c **** 		printf("モード(0で終了) :"); scanf("%c",&change_mode);
+ 830              		.loc 1 282 3 is_stmt 1 view .LVU179
  831 014a FFF7FEFF 		bl	Buffering
  832              	.LVL77:
- 241:Core/Src/Tools/Debug.c **** 		if(change_mode == '0')
- 833              		.loc 1 241 3 view .LVU180
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 24
+
+
+ 283:Core/Src/Tools/Debug.c **** 		if(change_mode == '0')
+ 833              		.loc 1 283 3 view .LVU180
  834 014e 6848     		ldr	r0, .L59+44
  835 0150 FFF7FEFF 		bl	printf
  836              	.LVL78:
- 241:Core/Src/Tools/Debug.c **** 		if(change_mode == '0')
- 837              		.loc 1 241 38 view .LVU181
+ 283:Core/Src/Tools/Debug.c **** 		if(change_mode == '0')
+ 837              		.loc 1 283 38 view .LVU181
  838 0154 0DF11701 		add	r1, sp, #23
  839 0158 5C48     		ldr	r0, .L59+8
  840 015a FFF7FEFF 		bl	scanf
  841              	.LVL79:
- 242:Core/Src/Tools/Debug.c **** 		{
- 842              		.loc 1 242 3 view .LVU182
- 242:Core/Src/Tools/Debug.c **** 		{
- 843              		.loc 1 242 18 is_stmt 0 view .LVU183
+ 284:Core/Src/Tools/Debug.c **** 		{
+ 842              		.loc 1 284 3 view .LVU182
+ 284:Core/Src/Tools/Debug.c **** 		{
+ 843              		.loc 1 284 18 is_stmt 0 view .LVU183
  844 015e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
- 242:Core/Src/Tools/Debug.c **** 		{
- 845              		.loc 1 242 5 view .LVU184
+ 284:Core/Src/Tools/Debug.c **** 		{
+ 845              		.loc 1 284 5 view .LVU184
  846 0162 302B     		cmp	r3, #48
  847 0164 00F09B80 		beq	.L27
- 249:Core/Src/Tools/Debug.c **** 			printf("\r\nP , I or D ? : "); scanf("%c",&pid);
- 848              		.loc 1 249 4 is_stmt 1 view .LVU185
+ 291:Core/Src/Tools/Debug.c **** 			printf("\r\nP , I or D ? : "); scanf("%c",&pid);
+ 848              		.loc 1 291 4 is_stmt 1 view .LVU185
  849 0168 FFF7FEFF 		bl	Buffering
  850              	.LVL80:
- 250:Core/Src/Tools/Debug.c **** 			printf("\r\n%c、 %c を選択しました\r\n",change_mode,pid);
- 851              		.loc 1 250 4 view .LVU186
+ 292:Core/Src/Tools/Debug.c **** 			printf("\r\n%c、 %c を選択しました\r\n",change_mode,pid);
+ 851              		.loc 1 292 4 view .LVU186
  852 016c 6148     		ldr	r0, .L59+48
  853 016e FFF7FEFF 		bl	printf
  854              	.LVL81:
- 250:Core/Src/Tools/Debug.c **** 			printf("\r\n%c、 %c を選択しました\r\n",change_mode,pid);
- 855              		.loc 1 250 35 view .LVU187
+ 292:Core/Src/Tools/Debug.c **** 			printf("\r\n%c、 %c を選択しました\r\n",change_mode,pid);
+ 855              		.loc 1 292 35 view .LVU187
  856 0172 0DF11601 		add	r1, sp, #22
  857 0176 5548     		ldr	r0, .L59+8
  858 0178 FFF7FEFF 		bl	scanf
  859              	.LVL82:
- 251:Core/Src/Tools/Debug.c **** 
- 860              		.loc 1 251 4 view .LVU188
+ 293:Core/Src/Tools/Debug.c **** 
+ 860              		.loc 1 293 4 view .LVU188
  861 017c 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
  862 0180 9DF81710 		ldrb	r1, [sp, #23]	@ zero_extendqisi2
  863 0184 5C48     		ldr	r0, .L59+52
  864 0186 FFF7FEFF 		bl	printf
  865              	.LVL83:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 24
-
-
- 253:Core/Src/Tools/Debug.c **** 			printf("\r\n値を入力 : ");
- 866              		.loc 1 253 4 view .LVU189
+ 295:Core/Src/Tools/Debug.c **** 			printf("\r\n値を入力 : ");
+ 866              		.loc 1 295 4 view .LVU189
  867 018a FFF7FEFF 		bl	Buffering
  868              	.LVL84:
- 254:Core/Src/Tools/Debug.c **** 
- 869              		.loc 1 254 4 view .LVU190
+ 296:Core/Src/Tools/Debug.c **** 
+ 869              		.loc 1 296 4 view .LVU190
  870 018e 5B48     		ldr	r0, .L59+56
  871 0190 FFF7FEFF 		bl	printf
  872              	.LVL85:
- 256:Core/Src/Tools/Debug.c **** 			{
- 873              		.loc 1 256 4 view .LVU191
+ 298:Core/Src/Tools/Debug.c **** 			{
+ 873              		.loc 1 298 4 view .LVU191
  874 0194 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
  875 0198 313B     		subs	r3, r3, #49
  876 019a 042B     		cmp	r3, #4
  877 019c 7BD8     		bhi	.L28
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 25
+
+
  878 019e 01A2     		adr	r2, .L30
  879 01a0 52F823F0 		ldr	pc, [r2, r3, lsl #2]
  880              		.p2align 2
@@ -1407,295 +1452,295 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  886 01b4 67020000 		.word	.L29+1
  887              		.p2align 1
  888              	.L48:
- 263:Core/Src/Tools/Debug.c **** 				}
- 889              		.loc 1 263 6 view .LVU192
+ 305:Core/Src/Tools/Debug.c **** 				}
+ 889              		.loc 1 305 6 view .LVU192
  890 01b8 5149     		ldr	r1, .L59+60
  891 01ba 5248     		ldr	r0, .L59+64
  892 01bc FFF7FEFF 		bl	scanf
  893              	.LVL86:
  894 01c0 3FE7     		b	.L36
  895              	.L49:
- 267:Core/Src/Tools/Debug.c **** 				}
- 896              		.loc 1 267 6 view .LVU193
+ 309:Core/Src/Tools/Debug.c **** 				}
+ 896              		.loc 1 309 6 view .LVU193
  897 01c2 5149     		ldr	r1, .L59+68
  898 01c4 4F48     		ldr	r0, .L59+64
  899 01c6 FFF7FEFF 		bl	scanf
  900              	.LVL87:
  901 01ca 3AE7     		b	.L36
  902              	.L50:
- 271:Core/Src/Tools/Debug.c **** 				}
- 903              		.loc 1 271 6 view .LVU194
+ 313:Core/Src/Tools/Debug.c **** 				}
+ 903              		.loc 1 313 6 view .LVU194
  904 01cc 4F49     		ldr	r1, .L59+72
  905 01ce 4D48     		ldr	r0, .L59+64
  906 01d0 FFF7FEFF 		bl	scanf
  907              	.LVL88:
  908 01d4 35E7     		b	.L36
  909              	.L33:
- 276:Core/Src/Tools/Debug.c **** 				{
- 910              		.loc 1 276 5 view .LVU195
- 276:Core/Src/Tools/Debug.c **** 				{
- 911              		.loc 1 276 12 is_stmt 0 view .LVU196
+ 318:Core/Src/Tools/Debug.c **** 				{
+ 910              		.loc 1 318 5 view .LVU195
+ 318:Core/Src/Tools/Debug.c **** 				{
+ 911              		.loc 1 318 12 is_stmt 0 view .LVU196
  912 01d6 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
- 276:Core/Src/Tools/Debug.c **** 				{
- 913              		.loc 1 276 7 view .LVU197
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 25
-
-
+ 318:Core/Src/Tools/Debug.c **** 				{
+ 913              		.loc 1 318 7 view .LVU197
  914 01da 702B     		cmp	r3, #112
  915 01dc 09D0     		beq	.L51
- 280:Core/Src/Tools/Debug.c **** 				{
- 916              		.loc 1 280 10 is_stmt 1 view .LVU198
- 280:Core/Src/Tools/Debug.c **** 				{
- 917              		.loc 1 280 12 is_stmt 0 view .LVU199
+ 322:Core/Src/Tools/Debug.c **** 				{
+ 916              		.loc 1 322 10 is_stmt 1 view .LVU198
+ 322:Core/Src/Tools/Debug.c **** 				{
+ 917              		.loc 1 322 12 is_stmt 0 view .LVU199
  918 01de 692B     		cmp	r3, #105
  919 01e0 0CD0     		beq	.L52
- 284:Core/Src/Tools/Debug.c **** 				{
- 920              		.loc 1 284 10 is_stmt 1 view .LVU200
- 284:Core/Src/Tools/Debug.c **** 				{
- 921              		.loc 1 284 12 is_stmt 0 view .LVU201
+ 326:Core/Src/Tools/Debug.c **** 				{
+ 920              		.loc 1 326 10 is_stmt 1 view .LVU200
+ 326:Core/Src/Tools/Debug.c **** 				{
+ 921              		.loc 1 326 12 is_stmt 0 view .LVU201
  922 01e2 642B     		cmp	r3, #100
  923 01e4 7FF42DAF 		bne	.L36
- 286:Core/Src/Tools/Debug.c **** 				}
- 924              		.loc 1 286 6 is_stmt 1 view .LVU202
+ 328:Core/Src/Tools/Debug.c **** 				}
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 26
+
+
+ 924              		.loc 1 328 6 is_stmt 1 view .LVU202
  925 01e8 4949     		ldr	r1, .L59+76
  926 01ea 4648     		ldr	r0, .L59+64
  927 01ec FFF7FEFF 		bl	scanf
  928              	.LVL89:
  929 01f0 27E7     		b	.L36
  930              	.L51:
- 278:Core/Src/Tools/Debug.c **** 				}
- 931              		.loc 1 278 6 view .LVU203
+ 320:Core/Src/Tools/Debug.c **** 				}
+ 931              		.loc 1 320 6 view .LVU203
  932 01f2 3949     		ldr	r1, .L59+20
  933 01f4 4348     		ldr	r0, .L59+64
  934 01f6 FFF7FEFF 		bl	scanf
  935              	.LVL90:
  936 01fa 22E7     		b	.L36
  937              	.L52:
- 282:Core/Src/Tools/Debug.c **** 				}
- 938              		.loc 1 282 6 view .LVU204
+ 324:Core/Src/Tools/Debug.c **** 				}
+ 938              		.loc 1 324 6 view .LVU204
  939 01fc 4549     		ldr	r1, .L59+80
  940 01fe 4148     		ldr	r0, .L59+64
  941 0200 FFF7FEFF 		bl	scanf
  942              	.LVL91:
  943 0204 1DE7     		b	.L36
  944              	.L32:
- 291:Core/Src/Tools/Debug.c **** 				{
- 945              		.loc 1 291 5 view .LVU205
- 291:Core/Src/Tools/Debug.c **** 				{
- 946              		.loc 1 291 12 is_stmt 0 view .LVU206
+ 333:Core/Src/Tools/Debug.c **** 				{
+ 945              		.loc 1 333 5 view .LVU205
+ 333:Core/Src/Tools/Debug.c **** 				{
+ 946              		.loc 1 333 12 is_stmt 0 view .LVU206
  947 0206 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
- 291:Core/Src/Tools/Debug.c **** 				{
- 948              		.loc 1 291 7 view .LVU207
+ 333:Core/Src/Tools/Debug.c **** 				{
+ 948              		.loc 1 333 7 view .LVU207
  949 020a 702B     		cmp	r3, #112
  950 020c 09D0     		beq	.L53
- 295:Core/Src/Tools/Debug.c **** 				{
- 951              		.loc 1 295 10 is_stmt 1 view .LVU208
- 295:Core/Src/Tools/Debug.c **** 				{
- 952              		.loc 1 295 12 is_stmt 0 view .LVU209
+ 337:Core/Src/Tools/Debug.c **** 				{
+ 951              		.loc 1 337 10 is_stmt 1 view .LVU208
+ 337:Core/Src/Tools/Debug.c **** 				{
+ 952              		.loc 1 337 12 is_stmt 0 view .LVU209
  953 020e 692B     		cmp	r3, #105
  954 0210 0CD0     		beq	.L54
- 299:Core/Src/Tools/Debug.c **** 				{
- 955              		.loc 1 299 10 is_stmt 1 view .LVU210
- 299:Core/Src/Tools/Debug.c **** 				{
- 956              		.loc 1 299 12 is_stmt 0 view .LVU211
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 26
-
-
+ 341:Core/Src/Tools/Debug.c **** 				{
+ 955              		.loc 1 341 10 is_stmt 1 view .LVU210
+ 341:Core/Src/Tools/Debug.c **** 				{
+ 956              		.loc 1 341 12 is_stmt 0 view .LVU211
  957 0212 642B     		cmp	r3, #100
  958 0214 7FF415AF 		bne	.L36
- 301:Core/Src/Tools/Debug.c **** 				}
- 959              		.loc 1 301 6 is_stmt 1 view .LVU212
+ 343:Core/Src/Tools/Debug.c **** 				}
+ 959              		.loc 1 343 6 is_stmt 1 view .LVU212
  960 0218 3F49     		ldr	r1, .L59+84
  961 021a 3A48     		ldr	r0, .L59+64
  962 021c FFF7FEFF 		bl	scanf
  963              	.LVL92:
  964 0220 0FE7     		b	.L36
  965              	.L53:
- 293:Core/Src/Tools/Debug.c **** 				}
- 966              		.loc 1 293 6 view .LVU213
+ 335:Core/Src/Tools/Debug.c **** 				}
+ 966              		.loc 1 335 6 view .LVU213
  967 0222 3E49     		ldr	r1, .L59+88
  968 0224 3748     		ldr	r0, .L59+64
  969 0226 FFF7FEFF 		bl	scanf
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 27
+
+
  970              	.LVL93:
  971 022a 0AE7     		b	.L36
  972              	.L54:
- 297:Core/Src/Tools/Debug.c **** 				}
- 973              		.loc 1 297 6 view .LVU214
+ 339:Core/Src/Tools/Debug.c **** 				}
+ 973              		.loc 1 339 6 view .LVU214
  974 022c 3C49     		ldr	r1, .L59+92
  975 022e 3548     		ldr	r0, .L59+64
  976 0230 FFF7FEFF 		bl	scanf
  977              	.LVL94:
  978 0234 05E7     		b	.L36
  979              	.L31:
- 305:Core/Src/Tools/Debug.c **** 				{
- 980              		.loc 1 305 5 view .LVU215
- 305:Core/Src/Tools/Debug.c **** 				{
- 981              		.loc 1 305 12 is_stmt 0 view .LVU216
+ 347:Core/Src/Tools/Debug.c **** 				{
+ 980              		.loc 1 347 5 view .LVU215
+ 347:Core/Src/Tools/Debug.c **** 				{
+ 981              		.loc 1 347 12 is_stmt 0 view .LVU216
  982 0236 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
- 305:Core/Src/Tools/Debug.c **** 				{
- 983              		.loc 1 305 7 view .LVU217
+ 347:Core/Src/Tools/Debug.c **** 				{
+ 983              		.loc 1 347 7 view .LVU217
  984 023a 702B     		cmp	r3, #112
  985 023c 09D0     		beq	.L55
- 309:Core/Src/Tools/Debug.c **** 				{
- 986              		.loc 1 309 10 is_stmt 1 view .LVU218
- 309:Core/Src/Tools/Debug.c **** 				{
- 987              		.loc 1 309 12 is_stmt 0 view .LVU219
+ 351:Core/Src/Tools/Debug.c **** 				{
+ 986              		.loc 1 351 10 is_stmt 1 view .LVU218
+ 351:Core/Src/Tools/Debug.c **** 				{
+ 987              		.loc 1 351 12 is_stmt 0 view .LVU219
  988 023e 692B     		cmp	r3, #105
  989 0240 0CD0     		beq	.L56
- 313:Core/Src/Tools/Debug.c **** 				{
- 990              		.loc 1 313 10 is_stmt 1 view .LVU220
- 313:Core/Src/Tools/Debug.c **** 				{
- 991              		.loc 1 313 12 is_stmt 0 view .LVU221
+ 355:Core/Src/Tools/Debug.c **** 				{
+ 990              		.loc 1 355 10 is_stmt 1 view .LVU220
+ 355:Core/Src/Tools/Debug.c **** 				{
+ 991              		.loc 1 355 12 is_stmt 0 view .LVU221
  992 0242 642B     		cmp	r3, #100
  993 0244 7FF4FDAE 		bne	.L36
- 315:Core/Src/Tools/Debug.c **** 				}
- 994              		.loc 1 315 6 is_stmt 1 view .LVU222
+ 357:Core/Src/Tools/Debug.c **** 				}
+ 994              		.loc 1 357 6 is_stmt 1 view .LVU222
  995 0248 3649     		ldr	r1, .L59+96
  996 024a 2E48     		ldr	r0, .L59+64
  997 024c FFF7FEFF 		bl	scanf
  998              	.LVL95:
  999 0250 F7E6     		b	.L36
  1000              	.L55:
- 307:Core/Src/Tools/Debug.c **** 				}
- 1001              		.loc 1 307 6 view .LVU223
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 27
-
-
+ 349:Core/Src/Tools/Debug.c **** 				}
+ 1001              		.loc 1 349 6 view .LVU223
  1002 0252 3549     		ldr	r1, .L59+100
  1003 0254 2B48     		ldr	r0, .L59+64
  1004 0256 FFF7FEFF 		bl	scanf
  1005              	.LVL96:
  1006 025a F2E6     		b	.L36
  1007              	.L56:
- 311:Core/Src/Tools/Debug.c **** 				}
- 1008              		.loc 1 311 6 view .LVU224
+ 353:Core/Src/Tools/Debug.c **** 				}
+ 1008              		.loc 1 353 6 view .LVU224
  1009 025c 3349     		ldr	r1, .L59+104
  1010 025e 2948     		ldr	r0, .L59+64
  1011 0260 FFF7FEFF 		bl	scanf
  1012              	.LVL97:
  1013 0264 EDE6     		b	.L36
  1014              	.L29:
- 319:Core/Src/Tools/Debug.c **** 				{
- 1015              		.loc 1 319 5 view .LVU225
- 319:Core/Src/Tools/Debug.c **** 				{
- 1016              		.loc 1 319 12 is_stmt 0 view .LVU226
+ 361:Core/Src/Tools/Debug.c **** 				{
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 28
+
+
+ 1015              		.loc 1 361 5 view .LVU225
+ 361:Core/Src/Tools/Debug.c **** 				{
+ 1016              		.loc 1 361 12 is_stmt 0 view .LVU226
  1017 0266 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
- 319:Core/Src/Tools/Debug.c **** 				{
- 1018              		.loc 1 319 7 view .LVU227
+ 361:Core/Src/Tools/Debug.c **** 				{
+ 1018              		.loc 1 361 7 view .LVU227
  1019 026a 702B     		cmp	r3, #112
  1020 026c 09D0     		beq	.L57
- 323:Core/Src/Tools/Debug.c **** 				{
- 1021              		.loc 1 323 10 is_stmt 1 view .LVU228
- 323:Core/Src/Tools/Debug.c **** 				{
- 1022              		.loc 1 323 12 is_stmt 0 view .LVU229
+ 365:Core/Src/Tools/Debug.c **** 				{
+ 1021              		.loc 1 365 10 is_stmt 1 view .LVU228
+ 365:Core/Src/Tools/Debug.c **** 				{
+ 1022              		.loc 1 365 12 is_stmt 0 view .LVU229
  1023 026e 692B     		cmp	r3, #105
  1024 0270 0CD0     		beq	.L58
- 327:Core/Src/Tools/Debug.c **** 				{
- 1025              		.loc 1 327 10 is_stmt 1 view .LVU230
- 327:Core/Src/Tools/Debug.c **** 				{
- 1026              		.loc 1 327 12 is_stmt 0 view .LVU231
+ 369:Core/Src/Tools/Debug.c **** 				{
+ 1025              		.loc 1 369 10 is_stmt 1 view .LVU230
+ 369:Core/Src/Tools/Debug.c **** 				{
+ 1026              		.loc 1 369 12 is_stmt 0 view .LVU231
  1027 0272 642B     		cmp	r3, #100
  1028 0274 7FF4E5AE 		bne	.L36
- 329:Core/Src/Tools/Debug.c **** 				}
- 1029              		.loc 1 329 6 is_stmt 1 view .LVU232
+ 371:Core/Src/Tools/Debug.c **** 				}
+ 1029              		.loc 1 371 6 is_stmt 1 view .LVU232
  1030 0278 2D49     		ldr	r1, .L59+108
  1031 027a 2248     		ldr	r0, .L59+64
  1032 027c FFF7FEFF 		bl	scanf
  1033              	.LVL98:
  1034 0280 DFE6     		b	.L36
  1035              	.L57:
- 321:Core/Src/Tools/Debug.c **** 				}
- 1036              		.loc 1 321 6 view .LVU233
+ 363:Core/Src/Tools/Debug.c **** 				}
+ 1036              		.loc 1 363 6 view .LVU233
  1037 0282 2C49     		ldr	r1, .L59+112
  1038 0284 1F48     		ldr	r0, .L59+64
  1039 0286 FFF7FEFF 		bl	scanf
  1040              	.LVL99:
  1041 028a DAE6     		b	.L36
  1042              	.L58:
- 325:Core/Src/Tools/Debug.c **** 				}
- 1043              		.loc 1 325 6 view .LVU234
+ 367:Core/Src/Tools/Debug.c **** 				}
+ 1043              		.loc 1 367 6 view .LVU234
  1044 028c 2A49     		ldr	r1, .L59+116
  1045 028e 1D48     		ldr	r0, .L59+64
  1046 0290 FFF7FEFF 		bl	scanf
  1047              	.LVL100:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 28
-
-
  1048 0294 D5E6     		b	.L36
  1049              	.L28:
- 333:Core/Src/Tools/Debug.c **** 				break;
- 1050              		.loc 1 333 5 view .LVU235
+ 375:Core/Src/Tools/Debug.c **** 				break;
+ 1050              		.loc 1 375 5 view .LVU235
  1051 0296 2948     		ldr	r0, .L59+120
  1052 0298 FFF7FEFF 		bl	puts
  1053              	.LVL101:
- 334:Core/Src/Tools/Debug.c **** 			}
- 1054              		.loc 1 334 5 view .LVU236
+ 376:Core/Src/Tools/Debug.c **** 			}
+ 1054              		.loc 1 376 5 view .LVU236
  1055 029c D1E6     		b	.L36
  1056              	.L27:
- 339:Core/Src/Tools/Debug.c **** 		}
- 340:Core/Src/Tools/Debug.c **** 
- 341:Core/Src/Tools/Debug.c **** 	}
- 342:Core/Src/Tools/Debug.c **** 	printf("\r\n完了\r\n");
- 1057              		.loc 1 342 2 view .LVU237
+ 381:Core/Src/Tools/Debug.c **** 		}
+ 382:Core/Src/Tools/Debug.c **** 
+ 383:Core/Src/Tools/Debug.c **** 	}
+ 384:Core/Src/Tools/Debug.c **** 	printf("\r\n完了\r\n");
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 29
+
+
+ 1057              		.loc 1 384 2 view .LVU237
  1058 029e 2848     		ldr	r0, .L59+124
  1059 02a0 FFF7FEFF 		bl	puts
  1060              	.LVL102:
- 343:Core/Src/Tools/Debug.c **** 
- 344:Core/Src/Tools/Debug.c **** 	//値の変更は終了
- 345:Core/Src/Tools/Debug.c **** 
- 346:Core/Src/Tools/Debug.c **** 	//ROMに保存したい
- 347:Core/Src/Tools/Debug.c **** 	//work_ram[5120] 以降から使える。(これより前はマップデータ等)切りのいい5
- 348:Core/Src/Tools/Debug.c **** 	Flash_clear_sector9();
- 1061              		.loc 1 348 2 view .LVU238
+ 385:Core/Src/Tools/Debug.c **** 
+ 386:Core/Src/Tools/Debug.c **** 	//値の変更は終了
+ 387:Core/Src/Tools/Debug.c **** 
+ 388:Core/Src/Tools/Debug.c **** 	//ROMに保存したい
+ 389:Core/Src/Tools/Debug.c **** 	//work_ram[5120] 以降から使える。(これより前はマップデータ等)切りのいい5
+ 390:Core/Src/Tools/Debug.c **** 	Flash_clear_sector9();
+ 1061              		.loc 1 390 2 view .LVU238
  1062 02a4 FFF7FEFF 		bl	Flash_clear_sector9
  1063              	.LVL103:
- 349:Core/Src/Tools/Debug.c **** 	//printf("\r\nどや\r\n");
- 350:Core/Src/Tools/Debug.c **** 	Copy_Gain();
- 1064              		.loc 1 350 2 view .LVU239
+ 391:Core/Src/Tools/Debug.c **** 	//printf("\r\nどや\r\n");
+ 392:Core/Src/Tools/Debug.c **** 	Copy_Gain();
+ 1064              		.loc 1 392 2 view .LVU239
  1065 02a8 FFF7FEFF 		bl	Copy_Gain
  1066              	.LVL104:
- 351:Core/Src/Tools/Debug.c **** 	//printf("\r\nいいね\r\n");
- 352:Core/Src/Tools/Debug.c **** 
- 353:Core/Src/Tools/Debug.c **** 	ChangeLED(7);
- 1067              		.loc 1 353 2 view .LVU240
+ 393:Core/Src/Tools/Debug.c **** 	//printf("\r\nいいね\r\n");
+ 394:Core/Src/Tools/Debug.c **** 
+ 395:Core/Src/Tools/Debug.c **** 	ChangeLED(7);
+ 1067              		.loc 1 395 2 view .LVU240
  1068 02ac 0720     		movs	r0, #7
  1069 02ae FFF7FEFF 		bl	ChangeLED
  1070              	.LVL105:
- 354:Core/Src/Tools/Debug.c **** 	HAL_Delay(200);
- 1071              		.loc 1 354 2 view .LVU241
+ 396:Core/Src/Tools/Debug.c **** 	HAL_Delay(200);
+ 1071              		.loc 1 396 2 view .LVU241
  1072 02b2 C820     		movs	r0, #200
  1073 02b4 FFF7FEFF 		bl	HAL_Delay
  1074              	.LVL106:
- 355:Core/Src/Tools/Debug.c **** 	ChangeLED(0);
- 1075              		.loc 1 355 2 view .LVU242
+ 397:Core/Src/Tools/Debug.c **** 	ChangeLED(0);
+ 1075              		.loc 1 397 2 view .LVU242
  1076 02b8 0020     		movs	r0, #0
  1077 02ba FFF7FEFF 		bl	ChangeLED
  1078              	.LVL107:
- 356:Core/Src/Tools/Debug.c **** 
- 357:Core/Src/Tools/Debug.c **** 	//別のモードに移行する。今回はしない。
- 358:Core/Src/Tools/Debug.c **** //	mode.select = 3;
- 359:Core/Src/Tools/Debug.c **** //	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
- 360:Core/Src/Tools/Debug.c **** //	TIM3 -> CNT = 30000 - 1;
- 361:Core/Src/Tools/Debug.c **** //	Execution_Select();
- 362:Core/Src/Tools/Debug.c **** //	Encoder_Start();
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 29
-
-
- 363:Core/Src/Tools/Debug.c **** //	Encoder_Reset();
- 364:Core/Src/Tools/Debug.c **** //	IMU_Calib();
- 365:Core/Src/Tools/Debug.c **** #if 0
- 366:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Start_IT(&htim1);
- 367:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Start_IT(&htim8);
- 368:Core/Src/Tools/Debug.c **** 	Motor_PWM_Start();
- 369:Core/Src/Tools/Debug.c **** 	Emitter_ON();
- 370:Core/Src/Tools/Debug.c **** 	ADC_Start();
- 371:Core/Src/Tools/Debug.c **** #endif
- 372:Core/Src/Tools/Debug.c **** }
- 1079              		.loc 1 372 1 is_stmt 0 view .LVU243
+ 398:Core/Src/Tools/Debug.c **** 
+ 399:Core/Src/Tools/Debug.c **** 	//別のモードに移行する。今回はしない。
+ 400:Core/Src/Tools/Debug.c **** //	mode.select = 3;
+ 401:Core/Src/Tools/Debug.c **** //	HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
+ 402:Core/Src/Tools/Debug.c **** //	TIM3 -> CNT = 30000 - 1;
+ 403:Core/Src/Tools/Debug.c **** //	Execution_Select();
+ 404:Core/Src/Tools/Debug.c **** //	Encoder_Start();
+ 405:Core/Src/Tools/Debug.c **** //	Encoder_Reset();
+ 406:Core/Src/Tools/Debug.c **** //	IMU_Calib();
+ 407:Core/Src/Tools/Debug.c **** #if 0
+ 408:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Start_IT(&htim1);
+ 409:Core/Src/Tools/Debug.c **** 	HAL_TIM_Base_Start_IT(&htim8);
+ 410:Core/Src/Tools/Debug.c **** 	Motor_PWM_Start();
+ 411:Core/Src/Tools/Debug.c **** 	Emitter_ON();
+ 412:Core/Src/Tools/Debug.c **** 	ADC_Start();
+ 413:Core/Src/Tools/Debug.c **** #endif
+ 414:Core/Src/Tools/Debug.c **** }
+ 1079              		.loc 1 414 1 is_stmt 0 view .LVU243
  1080 02be 06B0     		add	sp, sp, #24
  1081              	.LCFI13:
  1082              		.cfi_def_cfa_offset 24
  1083              		@ sp needed
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 30
+
+
  1084 02c0 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
  1085              	.L60:
  1086              		.align	2
@@ -1738,9 +1783,6 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  1124              	.Letext0:
  1125              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
  1126              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 30
-
-
  1127              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
  1128              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
  1129              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
@@ -1752,38 +1794,41 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 1
  1135              		.file 12 "Core/Inc/Hw/Flash.h"
  1136              		.file 13 "Core/Inc/Tools/PID_Control.h"
  1137              		.file 14 "Core/Inc/Hw/IEH2_4096.h"
- 1138              		.file 15 "Core/Inc/Hw/IR_Emitter.h"
- 1139              		.file 16 "Core/Inc/Hw/Motor_Driver.h"
- 1140              		.file 17 "Core/Inc/Origin/MicroMouse.h"
+ 1138              		.file 15 "Core/Inc/Hw/Motor_Driver.h"
+ 1139              		.file 16 "Core/Inc/Origin/MicroMouse.h"
+ 1140              		.file 17 "Core/Inc/Origin/Interrupt.h"
  1141              		.file 18 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 31
+
+
  1142              		.file 19 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
  1143              		.file 20 "Core/Inc/Hw/LED_Driver.h"
  1144              		.file 21 "<built-in>"
  1145              		.file 22 "Core/Inc/Tools/tim_info.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s 			page 31
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s 			page 32
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Debug.c
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:20     .text.printHardWareInformation:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:26     .text.printHardWareInformation:00000000 printHardWareInformation
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:67     .text.printHardWareInformation:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:77     .text.Buffering:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:83     .text.Buffering:00000000 Buffering
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:116    .text.Buffering:0000001c $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:121    .text.Copy_Gain:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:127    .text.Copy_Gain:00000000 Copy_Gain
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:273    .text.Copy_Gain:0000007c $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:280    .rodata.Load_Gain.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:295    .text.Load_Gain:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:301    .text.Load_Gain:00000000 Load_Gain
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:556    .text.Load_Gain:00000194 $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:569    .rodata.Change_Gain.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:622    .text.Change_Gain:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:628    .text.Change_Gain:00000000 Change_Gain
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:882    .text.Change_Gain:000001a4 $d
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:887    .text.Change_Gain:000001b8 $t
-C:\Users\leopi\AppData\Local\Temp\ccs5MYfZ.s:1088   .text.Change_Gain:000002c4 $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:20     .text.printHardWareInformation:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:26     .text.printHardWareInformation:00000000 printHardWareInformation
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:67     .text.printHardWareInformation:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:77     .text.Buffering:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:83     .text.Buffering:00000000 Buffering
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:116    .text.Buffering:0000001c $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:121    .text.Copy_Gain:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:127    .text.Copy_Gain:00000000 Copy_Gain
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:273    .text.Copy_Gain:0000007c $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:280    .rodata.Load_Gain.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:295    .text.Load_Gain:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:301    .text.Load_Gain:00000000 Load_Gain
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:556    .text.Load_Gain:00000194 $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:569    .rodata.Change_Gain.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:622    .text.Change_Gain:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:628    .text.Change_Gain:00000000 Change_Gain
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:882    .text.Change_Gain:000001a4 $d
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:887    .text.Change_Gain:000001b8 $t
+C:\Users\leopi\AppData\Local\Temp\ccTG84Ba.s:1088   .text.Change_Gain:000002c4 $d
 
 UNDEFINED SYMBOLS
 printTIMinfo

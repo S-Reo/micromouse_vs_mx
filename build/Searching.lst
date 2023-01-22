@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -19,13 +19,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 1
   16              		.text
   17              	.Ltext0:
   18              		.cfi_sections	.debug_frame
-  19              		.section	.text.initSearchData,"ax",%progbits
+  19              		.section	.text.FindUnwantedSquares,"ax",%progbits
   20              		.align	1
-  21              		.global	initSearchData
+  21              		.global	FindUnwantedSquares
   22              		.syntax unified
   23              		.thumb
   24              		.thumb_func
-  26              	initSearchData:
+  26              	FindUnwantedSquares:
   27              	.LVL0:
   28              	.LFB238:
   29              		.file 1 "Core/Src/Origin/Searching.c"
@@ -46,1902 +46,2210 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 1
   15:Core/Src/Origin/Searching.c ****  #include "Action.h"
   16:Core/Src/Origin/Searching.c **** #include "PID_Control.h"
   17:Core/Src/Origin/Searching.c ****  #include "LED_Driver.h"
-  18:Core/Src/Origin/Searching.c **** 
-  19:Core/Src/Origin/Searching.c **** #include "dfs.h"
-  20:Core/Src/Origin/Searching.c **** 
-  21:Core/Src/Origin/Searching.c **** // 探索に必要な迷路データ、プロフィールの処理
-  22:Core/Src/Origin/Searching.c **** // 迷路データ、プロフィールの更新用の関数など
-  23:Core/Src/Origin/Searching.c **** 
-  24:Core/Src/Origin/Searching.c **** void initSearchData(maze_node *my_maze, profile *Mouse)
-  25:Core/Src/Origin/Searching.c **** {
-  30              		.loc 1 25 1 view -0
+  18:Core/Src/Origin/Searching.c **** #include "dfs.h"
+  19:Core/Src/Origin/Searching.c **** 
+  20:Core/Src/Origin/Searching.c **** // 探索に必要な迷路データ、プロフィールの処理
+  21:Core/Src/Origin/Searching.c **** // 迷路データ、プロフィールの更新用の関数など
+  22:Core/Src/Origin/Searching.c **** 
+  23:Core/Src/Origin/Searching.c **** void FindUnwantedSquares(maze_node *maze){
+  30              		.loc 1 23 42 view -0
   31              		.cfi_startproc
   32              		@ args = 0, pretend = 0, frame = 0
   33              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 2
+  24:Core/Src/Origin/Searching.c **** 	//未訪問のマスをピックアップ
+  25:Core/Src/Origin/Searching.c **** 	//それぞれの四方のノードを確認
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 2
 
 
-  34              		.loc 1 25 1 is_stmt 0 view .LVU1
-  35 0000 30B5     		push	{r4, r5, lr}
-  36              	.LCFI0:
-  37              		.cfi_def_cfa_offset 12
-  38              		.cfi_offset 4, -12
-  39              		.cfi_offset 5, -8
-  40              		.cfi_offset 14, -4
-  41 0002 83B0     		sub	sp, sp, #12
-  42              	.LCFI1:
-  43              		.cfi_def_cfa_offset 24
-  44 0004 0446     		mov	r4, r0
-  45 0006 0D46     		mov	r5, r1
-  26:Core/Src/Origin/Searching.c ****     initMaze(my_maze);
-  46              		.loc 1 26 5 is_stmt 1 view .LVU2
-  47 0008 FFF7FEFF 		bl	initMaze
-  48              	.LVL1:
-  27:Core/Src/Origin/Searching.c ****     initWeight(my_maze); //3/20ms
-  49              		.loc 1 27 5 view .LVU3
-  50 000c 2046     		mov	r0, r4
-  51 000e FFF7FEFF 		bl	initWeight
-  52              	.LVL2:
-  28:Core/Src/Origin/Searching.c ****     //状態の初期化
-  29:Core/Src/Origin/Searching.c ****     initProfile(Mouse, my_maze);
-  53              		.loc 1 29 5 view .LVU4
-  54 0012 2146     		mov	r1, r4
-  55 0014 2846     		mov	r0, r5
-  56 0016 FFF7FEFF 		bl	initProfile
-  57              	.LVL3:
-  30:Core/Src/Origin/Searching.c **** 
-  31:Core/Src/Origin/Searching.c ****     Mouse->now.node = &(my_maze->RawNode[0][0]);
-  58              		.loc 1 31 5 view .LVU5
-  59              		.loc 1 31 21 is_stmt 0 view .LVU6
-  60 001a 2C61     		str	r4, [r5, #16]
-  32:Core/Src/Origin/Searching.c ****     Mouse->next.node = &(my_maze->RawNode[0][1]);
-  61              		.loc 1 32 5 is_stmt 1 view .LVU7
-  62              		.loc 1 32 24 is_stmt 0 view .LVU8
-  63 001c 04F10803 		add	r3, r4, #8
-  64              		.loc 1 32 22 view .LVU9
-  65 0020 EB61     		str	r3, [r5, #28]
-  33:Core/Src/Origin/Searching.c **** 
-  34:Core/Src/Origin/Searching.c ****     //スタート座標にいる状態で、現在の重みを更新
-  35:Core/Src/Origin/Searching.c ****      updateAllNodeWeight(my_maze, Mouse->goal_lesser.x, Mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZ
-  66              		.loc 1 35 6 is_stmt 1 view .LVU10
-  67 0022 0123     		movs	r3, #1
-  68 0024 0193     		str	r3, [sp, #4]
-  69 0026 0223     		movs	r3, #2
-  70 0028 0093     		str	r3, [sp]
-  71 002a 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
-  72 002c 2978     		ldrb	r1, [r5]	@ zero_extendqisi2
-  73 002e 2046     		mov	r0, r4
-  74 0030 FFF7FEFF 		bl	updateAllNodeWeight
-  75              	.LVL4:
-  36:Core/Src/Origin/Searching.c **** //     updateAllNodeWeight(&my_map, my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, GOAL_SIZE_X, GO
-  37:Core/Src/Origin/Searching.c **** }
-  76              		.loc 1 37 1 is_stmt 0 view .LVU11
-  77 0034 03B0     		add	sp, sp, #12
-  78              	.LCFI2:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 3
+  26:Core/Src/Origin/Searching.c **** 	//未探索がひとつもなければVisitedに
+  27:Core/Src/Origin/Searching.c **** 	//未探索が三つなら、全て壁があるのか見て、そうならVisitedに
+  28:Core/Src/Origin/Searching.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
+  34              		.loc 1 28 2 view .LVU1
+  35              	.LBB2:
+  36              		.loc 1 28 6 view .LVU2
+  37              		.loc 1 28 10 is_stmt 0 view .LVU3
+  38 0000 0021     		movs	r1, #0
+  39              		.loc 1 28 2 view .LVU4
+  40 0002 56E0     		b	.L9
+  41              	.LVL1:
+  42              	.L4:
+  43              	.LCFI0:
+  44              		.cfi_def_cfa_offset 8
+  45              		.cfi_offset 4, -8
+  46              		.cfi_offset 14, -4
+  47              	.LBB3:
+  48              	.LBB4:
+  29:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  30:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  31:Core/Src/Origin/Searching.c **** 				continue;
+  32:Core/Src/Origin/Searching.c **** 			uint8_t n = maze->RawNode[i][j+1].existence;	//北
+  33:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+  34:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+  35:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
+  36:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+  37:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  38:Core/Src/Origin/Searching.c **** 				continue;
+  39:Core/Src/Origin/Searching.c **** 			}
+  40:Core/Src/Origin/Searching.c **** 			int known_check=0;
+  49              		.loc 1 40 4 is_stmt 1 view .LVU5
+  41:Core/Src/Origin/Searching.c **** 			known_check += (n == WALL) ? true : false;
+  50              		.loc 1 41 4 view .LVU6
+  42:Core/Src/Origin/Searching.c **** 			known_check += (e == WALL) ? true : false;
+  51              		.loc 1 42 4 view .LVU7
+  52              		.loc 1 42 38 is_stmt 0 view .LVU8
+  53 0004 012A     		cmp	r2, #1
+  54 0006 14BF     		ite	ne
+  55 0008 0022     		movne	r2, #0
+  56              	.LVL2:
+  57              		.loc 1 42 38 view .LVU9
+  58 000a 0122     		moveq	r2, #1
+  59              		.loc 1 42 16 view .LVU10
+  60 000c 012C     		cmp	r4, #1
+  61 000e 08BF     		it	eq
+  62 0010 0132     		addeq	r2, r2, #1
+  63              	.LVL3:
+  43:Core/Src/Origin/Searching.c **** 			known_check += (w == WALL) ? true : false;
+  64              		.loc 1 43 4 is_stmt 1 view .LVU11
+  65              		.loc 1 43 16 is_stmt 0 view .LVU12
+  66 0012 BEF1010F 		cmp	lr, #1
+  67 0016 08BF     		it	eq
+  68 0018 0132     		addeq	r2, r2, #1
+  69              	.LVL4:
+  44:Core/Src/Origin/Searching.c **** 			known_check += (s == WALL) ? true : false;
+  70              		.loc 1 44 4 is_stmt 1 view .LVU13
+  71              		.loc 1 44 16 is_stmt 0 view .LVU14
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 3
 
 
-  79              		.cfi_def_cfa_offset 12
-  80              		@ sp needed
-  81 0036 30BD     		pop	{r4, r5, pc}
-  82              		.loc 1 37 1 view .LVU12
-  83              		.cfi_endproc
-  84              	.LFE238:
-  86              		.section	.text.FindUnwantedSquares,"ax",%progbits
-  87              		.align	1
-  88              		.global	FindUnwantedSquares
-  89              		.syntax unified
-  90              		.thumb
-  91              		.thumb_func
-  93              	FindUnwantedSquares:
-  94              	.LVL5:
-  95              	.LFB239:
-  38:Core/Src/Origin/Searching.c **** void FindUnwantedSquares(maze_node *maze){
-  96              		.loc 1 38 42 is_stmt 1 view -0
-  97              		.cfi_startproc
-  98              		@ args = 0, pretend = 0, frame = 0
-  99              		@ frame_needed = 0, uses_anonymous_args = 0
-  39:Core/Src/Origin/Searching.c **** 	//未訪問のマスをピックアップ
-  40:Core/Src/Origin/Searching.c **** 	//それぞれの四方のノードを確認
-  41:Core/Src/Origin/Searching.c **** 	//未探索がひとつもなければVisitedに
-  42:Core/Src/Origin/Searching.c **** 	//未探索が三つなら、全て壁があるのか見て、そうならVisitedに
-  43:Core/Src/Origin/Searching.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
- 100              		.loc 1 43 2 view .LVU14
- 101              	.LBB2:
- 102              		.loc 1 43 6 view .LVU15
- 103              		.loc 1 43 10 is_stmt 0 view .LVU16
- 104 0000 0021     		movs	r1, #0
- 105              		.loc 1 43 2 view .LVU17
- 106 0002 57E0     		b	.L11
- 107              	.LVL6:
- 108              	.L6:
- 109              	.LCFI3:
- 110              		.cfi_def_cfa_offset 8
- 111              		.cfi_offset 4, -8
- 112              		.cfi_offset 14, -4
- 113              	.LBB3:
- 114              	.LBB4:
-  44:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
-  45:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
-  46:Core/Src/Origin/Searching.c **** 				continue;
-  47:Core/Src/Origin/Searching.c **** 			uint8_t n = maze->RawNode[i][j+1].existence;	//北
-  48:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
-  49:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
-  50:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
-  51:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
-  52:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
-  53:Core/Src/Origin/Searching.c **** 				continue;
-  54:Core/Src/Origin/Searching.c **** 			}
-  55:Core/Src/Origin/Searching.c **** 			int known_check=0;
- 115              		.loc 1 55 4 is_stmt 1 view .LVU18
-  56:Core/Src/Origin/Searching.c **** 			known_check += (n == WALL) ? true : false;
- 116              		.loc 1 56 4 view .LVU19
-  57:Core/Src/Origin/Searching.c **** 			known_check += (e == WALL) ? true : false;
- 117              		.loc 1 57 4 view .LVU20
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 4
+  72 001a BCF1010F 		cmp	ip, #1
+  73 001e 08BF     		it	eq
+  74 0020 0132     		addeq	r2, r2, #1
+  75              	.LVL5:
+  45:Core/Src/Origin/Searching.c **** 			if(known_check == 3){
+  76              		.loc 1 45 4 is_stmt 1 view .LVU15
+  77              		.loc 1 45 6 is_stmt 0 view .LVU16
+  78 0022 032A     		cmp	r2, #3
+  79 0024 2DD0     		beq	.L17
+  80              	.LVL6:
+  81              	.L3:
+  82              		.loc 1 45 6 view .LVU17
+  83              	.LBE4:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  84              		.loc 1 29 41 is_stmt 1 discriminator 2 view .LVU18
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  85              		.loc 1 29 42 is_stmt 0 discriminator 2 view .LVU19
+  86 0026 0133     		adds	r3, r3, #1
+  87              	.LVL7:
+  88              	.L6:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  89              		.loc 1 29 16 is_stmt 1 discriminator 1 view .LVU20
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  90              		.loc 1 29 3 is_stmt 0 discriminator 1 view .LVU21
+  91 0028 032B     		cmp	r3, #3
+  92 002a 30DC     		bgt	.L18
+  93              	.LBB5:
+  30:Core/Src/Origin/Searching.c **** 				continue;
+  94              		.loc 1 30 4 is_stmt 1 view .LVU22
+  30:Core/Src/Origin/Searching.c **** 				continue;
+  95              		.loc 1 30 15 is_stmt 0 view .LVU23
+  96 002c 234A     		ldr	r2, .L23
+  97 002e 02EB8102 		add	r2, r2, r1, lsl #2
+  98 0032 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+  30:Core/Src/Origin/Searching.c **** 				continue;
+  99              		.loc 1 30 6 view .LVU24
+ 100 0034 002A     		cmp	r2, #0
+ 101 0036 F6D1     		bne	.L3
+ 102              	.LVL8:
+ 103              	.L11:
+  32:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+ 104              		.loc 1 32 4 is_stmt 1 view .LVU25
+  32:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+ 105              		.loc 1 32 34 is_stmt 0 view .LVU26
+ 106 0038 5A1C     		adds	r2, r3, #1
+  32:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+ 107              		.loc 1 32 12 view .LVU27
+ 108 003a 01EB810C 		add	ip, r1, r1, lsl #2
+ 109 003e 6244     		add	r2, r2, ip
+ 110 0040 10F83240 		ldrb	r4, [r0, r2, lsl #3]	@ zero_extendqisi2
+ 111              	.LVL9:
+  33:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+ 112              		.loc 1 33 4 is_stmt 1 view .LVU28
+  33:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+ 113              		.loc 1 33 34 is_stmt 0 view .LVU29
+ 114 0044 4A1C     		adds	r2, r1, #1
+  33:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 4
 
 
- 118              		.loc 1 57 38 is_stmt 0 view .LVU21
- 119 0004 012A     		cmp	r2, #1
- 120 0006 14BF     		ite	ne
- 121 0008 0022     		movne	r2, #0
- 122              	.LVL7:
- 123              		.loc 1 57 38 view .LVU22
- 124 000a 0122     		moveq	r2, #1
- 125              		.loc 1 57 16 view .LVU23
- 126 000c 012C     		cmp	r4, #1
- 127 000e 08BF     		it	eq
- 128 0010 0132     		addeq	r2, r2, #1
- 129              	.LVL8:
-  58:Core/Src/Origin/Searching.c **** 			known_check += (w == WALL) ? true : false;
- 130              		.loc 1 58 4 is_stmt 1 view .LVU24
- 131              		.loc 1 58 16 is_stmt 0 view .LVU25
- 132 0012 BEF1010F 		cmp	lr, #1
- 133 0016 08BF     		it	eq
- 134 0018 0132     		addeq	r2, r2, #1
- 135              	.LVL9:
-  59:Core/Src/Origin/Searching.c **** 			known_check += (s == WALL) ? true : false;
- 136              		.loc 1 59 4 is_stmt 1 view .LVU26
- 137              		.loc 1 59 16 is_stmt 0 view .LVU27
- 138 001a BCF1010F 		cmp	ip, #1
- 139 001e 08BF     		it	eq
- 140 0020 0132     		addeq	r2, r2, #1
- 141              	.LVL10:
-  60:Core/Src/Origin/Searching.c **** 			if(known_check == 3){
- 142              		.loc 1 60 4 is_stmt 1 view .LVU28
- 143              		.loc 1 60 6 is_stmt 0 view .LVU29
- 144 0022 032A     		cmp	r2, #3
- 145 0024 2ED0     		beq	.L19
- 146              	.LVL11:
- 147              	.L5:
- 148              		.loc 1 60 6 view .LVU30
- 149              	.LBE4:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 150              		.loc 1 44 41 is_stmt 1 discriminator 2 view .LVU31
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 151              		.loc 1 44 42 is_stmt 0 discriminator 2 view .LVU32
- 152 0026 0133     		adds	r3, r3, #1
- 153              	.LVL12:
- 154              	.L8:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 155              		.loc 1 44 16 is_stmt 1 discriminator 1 view .LVU33
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 156              		.loc 1 44 3 is_stmt 0 discriminator 1 view .LVU34
- 157 0028 0F2B     		cmp	r3, #15
- 158 002a 31DC     		bgt	.L20
- 159              	.LBB5:
-  45:Core/Src/Origin/Searching.c **** 				continue;
- 160              		.loc 1 45 4 is_stmt 1 view .LVU35
-  45:Core/Src/Origin/Searching.c **** 				continue;
- 161              		.loc 1 45 15 is_stmt 0 view .LVU36
- 162 002c 244A     		ldr	r2, .L25
- 163 002e 02EB0112 		add	r2, r2, r1, lsl #4
- 164 0032 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
-  45:Core/Src/Origin/Searching.c **** 				continue;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 5
+ 115              		.loc 1 33 12 view .LVU30
+ 116 0046 03EB8202 		add	r2, r3, r2, lsl #2
+ 117 004a 1432     		adds	r2, r2, #20
+ 118 004c 10F83220 		ldrb	r2, [r0, r2, lsl #3]	@ zero_extendqisi2
+ 119              	.LVL10:
+  34:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
+ 120              		.loc 1 34 4 is_stmt 1 view .LVU31
+  34:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
+ 121              		.loc 1 34 12 is_stmt 0 view .LVU32
+ 122 0050 03EB810E 		add	lr, r3, r1, lsl #2
+ 123 0054 0EF1140E 		add	lr, lr, #20
+ 124 0058 10F83EE0 		ldrb	lr, [r0, lr, lsl #3]	@ zero_extendqisi2
+ 125              	.LVL11:
+  35:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+ 126              		.loc 1 35 4 is_stmt 1 view .LVU33
+  35:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+ 127              		.loc 1 35 12 is_stmt 0 view .LVU34
+ 128 005c 9C44     		add	ip, ip, r3
+ 129 005e 10F83CC0 		ldrb	ip, [r0, ip, lsl #3]	@ zero_extendqisi2
+ 130              	.LVL12:
+  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+ 131              		.loc 1 36 4 is_stmt 1 view .LVU35
+  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+ 132              		.loc 1 36 6 is_stmt 0 view .LVU36
+ 133 0062 022C     		cmp	r4, #2
+ 134 0064 CED0     		beq	.L4
+  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+ 135              		.loc 1 36 20 discriminator 1 view .LVU37
+ 136 0066 022A     		cmp	r2, #2
+ 137 0068 CCD0     		beq	.L4
+  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+ 138              		.loc 1 36 36 discriminator 2 view .LVU38
+ 139 006a BEF1020F 		cmp	lr, #2
+ 140 006e C9D0     		beq	.L4
+  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+ 141              		.loc 1 36 52 discriminator 3 view .LVU39
+ 142 0070 BCF1020F 		cmp	ip, #2
+ 143 0074 C6D0     		beq	.L4
+  37:Core/Src/Origin/Searching.c **** 				continue;
+ 144              		.loc 1 37 5 is_stmt 1 view .LVU40
+  37:Core/Src/Origin/Searching.c **** 				continue;
+ 145              		.loc 1 37 17 is_stmt 0 view .LVU41
+ 146 0076 114A     		ldr	r2, .L23
+ 147              	.LVL13:
+  37:Core/Src/Origin/Searching.c **** 				continue;
+ 148              		.loc 1 37 17 view .LVU42
+ 149 0078 02EB8102 		add	r2, r2, r1, lsl #2
+ 150 007c 0124     		movs	r4, #1
+ 151              	.LVL14:
+  37:Core/Src/Origin/Searching.c **** 				continue;
+ 152              		.loc 1 37 17 view .LVU43
+ 153 007e D454     		strb	r4, [r2, r3]
+ 154              	.LVL15:
+  38:Core/Src/Origin/Searching.c **** 			}
+ 155              		.loc 1 38 5 is_stmt 1 view .LVU44
+ 156 0080 D1E7     		b	.L3
+ 157              	.LVL16:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 5
 
 
- 165              		.loc 1 45 6 view .LVU37
- 166 0034 002A     		cmp	r2, #0
- 167 0036 F6D1     		bne	.L5
- 168              	.LVL13:
- 169              	.L13:
-  47:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
- 170              		.loc 1 47 4 is_stmt 1 view .LVU38
-  47:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
- 171              		.loc 1 47 34 is_stmt 0 view .LVU39
- 172 0038 5A1C     		adds	r2, r3, #1
-  47:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
- 173              		.loc 1 47 12 view .LVU40
- 174 003a 01EB011C 		add	ip, r1, r1, lsl #4
- 175 003e 6244     		add	r2, r2, ip
- 176 0040 10F83240 		ldrb	r4, [r0, r2, lsl #3]	@ zero_extendqisi2
- 177              	.LVL14:
-  48:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
- 178              		.loc 1 48 4 is_stmt 1 view .LVU41
-  48:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
- 179              		.loc 1 48 34 is_stmt 0 view .LVU42
- 180 0044 4A1C     		adds	r2, r1, #1
-  48:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
- 181              		.loc 1 48 12 view .LVU43
- 182 0046 03EB0212 		add	r2, r3, r2, lsl #4
- 183 004a 02F58872 		add	r2, r2, #272
- 184 004e 10F83220 		ldrb	r2, [r0, r2, lsl #3]	@ zero_extendqisi2
- 185              	.LVL15:
-  49:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
- 186              		.loc 1 49 4 is_stmt 1 view .LVU44
-  49:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
- 187              		.loc 1 49 12 is_stmt 0 view .LVU45
- 188 0052 03EB011E 		add	lr, r3, r1, lsl #4
- 189 0056 0EF5887E 		add	lr, lr, #272
- 190 005a 10F83EE0 		ldrb	lr, [r0, lr, lsl #3]	@ zero_extendqisi2
- 191              	.LVL16:
-  50:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
- 192              		.loc 1 50 4 is_stmt 1 view .LVU46
-  50:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
- 193              		.loc 1 50 12 is_stmt 0 view .LVU47
- 194 005e 9C44     		add	ip, ip, r3
- 195 0060 10F83CC0 		ldrb	ip, [r0, ip, lsl #3]	@ zero_extendqisi2
- 196              	.LVL17:
-  51:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
- 197              		.loc 1 51 4 is_stmt 1 view .LVU48
-  51:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
- 198              		.loc 1 51 6 is_stmt 0 view .LVU49
- 199 0064 022C     		cmp	r4, #2
- 200 0066 CDD0     		beq	.L6
-  51:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
- 201              		.loc 1 51 20 discriminator 1 view .LVU50
- 202 0068 022A     		cmp	r2, #2
- 203 006a CBD0     		beq	.L6
-  51:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
- 204              		.loc 1 51 36 discriminator 2 view .LVU51
- 205 006c BEF1020F 		cmp	lr, #2
- 206 0070 C8D0     		beq	.L6
-  51:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 6
+ 158              	.L17:
+  46:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+ 159              		.loc 1 46 5 view .LVU45
+ 160              		.loc 1 46 17 is_stmt 0 view .LVU46
+ 161 0082 0E4A     		ldr	r2, .L23
+ 162              	.LVL17:
+ 163              		.loc 1 46 17 view .LVU47
+ 164 0084 02EB8102 		add	r2, r2, r1, lsl #2
+ 165 0088 0124     		movs	r4, #1
+ 166              	.LVL18:
+ 167              		.loc 1 46 17 view .LVU48
+ 168 008a D454     		strb	r4, [r2, r3]
+ 169              	.LVL19:
+  47:Core/Src/Origin/Searching.c **** 				continue;
+ 170              		.loc 1 47 5 is_stmt 1 view .LVU49
+ 171 008c CBE7     		b	.L3
+ 172              	.L18:
+ 173              		.loc 1 47 5 is_stmt 0 view .LVU50
+ 174              	.LBE5:
+ 175              	.LBE3:
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 176              		.loc 1 28 40 is_stmt 1 discriminator 2 view .LVU51
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 177              		.loc 1 28 41 is_stmt 0 discriminator 2 view .LVU52
+ 178 008e 0131     		adds	r1, r1, #1
+ 179              	.LVL20:
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 180              		.loc 1 28 15 is_stmt 1 discriminator 2 view .LVU53
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 181              		.loc 1 28 2 is_stmt 0 discriminator 2 view .LVU54
+ 182 0090 0329     		cmp	r1, #3
+ 183 0092 01DC     		bgt	.L19
+ 184              	.LBB7:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 185              		.loc 1 29 11 view .LVU55
+ 186 0094 0023     		movs	r3, #0
+ 187              	.LVL21:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 188              		.loc 1 29 11 view .LVU56
+ 189 0096 C7E7     		b	.L6
+ 190              	.LVL22:
+ 191              	.L19:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 192              		.loc 1 29 11 view .LVU57
+ 193              	.LBE7:
+ 194              	.LBE2:
+  48:Core/Src/Origin/Searching.c **** 			}
+  49:Core/Src/Origin/Searching.c **** 		}
+  50:Core/Src/Origin/Searching.c **** 	}
+  51:Core/Src/Origin/Searching.c **** }
+ 195              		.loc 1 51 1 view .LVU58
+ 196 0098 10BD     		pop	{r4, pc}
+ 197              	.LVL23:
+ 198              	.L21:
+ 199              	.LCFI1:
+ 200              		.cfi_def_cfa_offset 0
+ 201              		.cfi_restore 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 6
 
 
- 207              		.loc 1 51 52 discriminator 3 view .LVU52
- 208 0072 BCF1020F 		cmp	ip, #2
- 209 0076 C5D0     		beq	.L6
-  52:Core/Src/Origin/Searching.c **** 				continue;
- 210              		.loc 1 52 5 is_stmt 1 view .LVU53
-  52:Core/Src/Origin/Searching.c **** 				continue;
- 211              		.loc 1 52 17 is_stmt 0 view .LVU54
- 212 0078 114A     		ldr	r2, .L25
- 213              	.LVL18:
-  52:Core/Src/Origin/Searching.c **** 				continue;
- 214              		.loc 1 52 17 view .LVU55
- 215 007a 02EB0112 		add	r2, r2, r1, lsl #4
- 216 007e 0124     		movs	r4, #1
- 217              	.LVL19:
-  52:Core/Src/Origin/Searching.c **** 				continue;
- 218              		.loc 1 52 17 view .LVU56
- 219 0080 D454     		strb	r4, [r2, r3]
- 220              	.LVL20:
-  53:Core/Src/Origin/Searching.c **** 			}
- 221              		.loc 1 53 5 is_stmt 1 view .LVU57
- 222 0082 D0E7     		b	.L5
- 223              	.LVL21:
- 224              	.L19:
-  61:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
- 225              		.loc 1 61 5 view .LVU58
- 226              		.loc 1 61 17 is_stmt 0 view .LVU59
- 227 0084 0E4A     		ldr	r2, .L25
- 228              	.LVL22:
- 229              		.loc 1 61 17 view .LVU60
- 230 0086 02EB0112 		add	r2, r2, r1, lsl #4
- 231 008a 0124     		movs	r4, #1
- 232              	.LVL23:
- 233              		.loc 1 61 17 view .LVU61
- 234 008c D454     		strb	r4, [r2, r3]
- 235              	.LVL24:
-  62:Core/Src/Origin/Searching.c **** 				continue;
- 236              		.loc 1 62 5 is_stmt 1 view .LVU62
- 237 008e CAE7     		b	.L5
- 238              	.L20:
- 239              		.loc 1 62 5 is_stmt 0 view .LVU63
- 240              	.LBE5:
- 241              	.LBE3:
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 242              		.loc 1 43 40 is_stmt 1 discriminator 2 view .LVU64
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 243              		.loc 1 43 41 is_stmt 0 discriminator 2 view .LVU65
- 244 0090 0131     		adds	r1, r1, #1
- 245              	.LVL25:
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 246              		.loc 1 43 15 is_stmt 1 discriminator 2 view .LVU66
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 247              		.loc 1 43 2 is_stmt 0 discriminator 2 view .LVU67
- 248 0092 0F29     		cmp	r1, #15
- 249 0094 01DC     		bgt	.L21
- 250              	.LBB7:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 251              		.loc 1 44 11 view .LVU68
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 7
+ 202              		.cfi_restore 14
+ 203              	.LBB10:
+ 204              	.LBB8:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 205              		.loc 1 29 41 is_stmt 1 view .LVU59
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 206              		.loc 1 29 42 is_stmt 0 view .LVU60
+ 207 009a 0133     		adds	r3, r3, #1
+ 208              	.LVL24:
+ 209              	.L12:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 210              		.loc 1 29 16 is_stmt 1 view .LVU61
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 211              		.loc 1 29 3 is_stmt 0 view .LVU62
+ 212 009c 032B     		cmp	r3, #3
+ 213 009e 07DC     		bgt	.L20
+ 214              	.LBB6:
+  30:Core/Src/Origin/Searching.c **** 				continue;
+ 215              		.loc 1 30 4 is_stmt 1 view .LVU63
+  30:Core/Src/Origin/Searching.c **** 				continue;
+ 216              		.loc 1 30 15 is_stmt 0 view .LVU64
+ 217 00a0 064A     		ldr	r2, .L23
+ 218 00a2 02EB8102 		add	r2, r2, r1, lsl #2
+ 219 00a6 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+  30:Core/Src/Origin/Searching.c **** 				continue;
+ 220              		.loc 1 30 6 view .LVU65
+ 221 00a8 002A     		cmp	r2, #0
+ 222 00aa F6D1     		bne	.L21
+  30:Core/Src/Origin/Searching.c **** 				continue;
+ 223              		.loc 1 30 6 view .LVU66
+ 224              	.LBE6:
+ 225              	.LBE8:
+ 226              	.LBE10:
+  23:Core/Src/Origin/Searching.c **** 	//未訪問のマスをピックアップ
+ 227              		.loc 1 23 42 view .LVU67
+ 228 00ac 10B5     		push	{r4, lr}
+ 229              	.LCFI2:
+ 230              		.cfi_def_cfa_offset 8
+ 231              		.cfi_offset 4, -8
+ 232              		.cfi_offset 14, -4
+ 233 00ae C3E7     		b	.L11
+ 234              	.L20:
+ 235              	.LCFI3:
+ 236              		.cfi_def_cfa_offset 0
+ 237              		.cfi_restore 4
+ 238              		.cfi_restore 14
+ 239              	.LBB11:
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 240              		.loc 1 28 40 is_stmt 1 view .LVU68
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 241              		.loc 1 28 41 is_stmt 0 view .LVU69
+ 242 00b0 0131     		adds	r1, r1, #1
+ 243              	.LVL25:
+ 244              	.L9:
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ 245              		.loc 1 28 15 is_stmt 1 view .LVU70
+  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 7
 
 
- 252 0096 0023     		movs	r3, #0
- 253              	.LVL26:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 254              		.loc 1 44 11 view .LVU69
- 255 0098 C6E7     		b	.L8
- 256              	.LVL27:
- 257              	.L21:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 258              		.loc 1 44 11 view .LVU70
- 259              	.LBE7:
- 260              	.LBE2:
-  63:Core/Src/Origin/Searching.c **** 			}
-  64:Core/Src/Origin/Searching.c **** 		}
-  65:Core/Src/Origin/Searching.c **** 	}
-  66:Core/Src/Origin/Searching.c **** }
- 261              		.loc 1 66 1 view .LVU71
- 262 009a 10BD     		pop	{r4, pc}
- 263              	.LVL28:
- 264              	.L23:
- 265              	.LCFI4:
- 266              		.cfi_def_cfa_offset 0
- 267              		.cfi_restore 4
- 268              		.cfi_restore 14
- 269              	.LBB10:
- 270              	.LBB8:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 271              		.loc 1 44 41 is_stmt 1 view .LVU72
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 272              		.loc 1 44 42 is_stmt 0 view .LVU73
- 273 009c 0133     		adds	r3, r3, #1
- 274              	.LVL29:
- 275              	.L14:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 276              		.loc 1 44 16 is_stmt 1 view .LVU74
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 277              		.loc 1 44 3 is_stmt 0 view .LVU75
- 278 009e 0F2B     		cmp	r3, #15
- 279 00a0 07DC     		bgt	.L22
- 280              	.LBB6:
-  45:Core/Src/Origin/Searching.c **** 				continue;
- 281              		.loc 1 45 4 is_stmt 1 view .LVU76
-  45:Core/Src/Origin/Searching.c **** 				continue;
- 282              		.loc 1 45 15 is_stmt 0 view .LVU77
- 283 00a2 074A     		ldr	r2, .L25
- 284 00a4 02EB0112 		add	r2, r2, r1, lsl #4
- 285 00a8 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
-  45:Core/Src/Origin/Searching.c **** 				continue;
- 286              		.loc 1 45 6 view .LVU78
- 287 00aa 002A     		cmp	r2, #0
- 288 00ac F6D1     		bne	.L23
-  45:Core/Src/Origin/Searching.c **** 				continue;
- 289              		.loc 1 45 6 view .LVU79
- 290              	.LBE6:
- 291              	.LBE8:
- 292              	.LBE10:
-  38:Core/Src/Origin/Searching.c **** 	//未訪問のマスをピックアップ
- 293              		.loc 1 38 42 view .LVU80
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 8
+ 246              		.loc 1 28 2 is_stmt 0 view .LVU71
+ 247 00b2 0329     		cmp	r1, #3
+ 248 00b4 01DC     		bgt	.L22
+ 249              	.LBB9:
+  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+ 250              		.loc 1 29 11 view .LVU72
+ 251 00b6 0023     		movs	r3, #0
+ 252 00b8 F0E7     		b	.L12
+ 253              	.L22:
+ 254 00ba 7047     		bx	lr
+ 255              	.L24:
+ 256              		.align	2
+ 257              	.L23:
+ 258 00bc 00000000 		.word	Visit
+ 259              	.LBE9:
+ 260              	.LBE11:
+ 261              		.cfi_endproc
+ 262              	.LFE238:
+ 264              		.global	__aeabi_f2d
+ 265              		.global	__aeabi_dmul
+ 266              		.global	__aeabi_d2f
+ 267              		.section	.text.setSearchTurnParam,"ax",%progbits
+ 268              		.align	1
+ 269              		.global	setSearchTurnParam
+ 270              		.syntax unified
+ 271              		.thumb
+ 272              		.thumb_func
+ 274              	setSearchTurnParam:
+ 275              	.LVL26:
+ 276              	.LFB239:
+  52:Core/Src/Origin/Searching.c **** //探索及び最短走行のロジック（制御ロジックは考慮しない）
+  53:Core/Src/Origin/Searching.c **** //後ろの方にはActionを含めた処理も. MazeSimulationでActionっぽい処理が書けれ
+  54:Core/Src/Origin/Searching.c **** 
+  55:Core/Src/Origin/Searching.c **** 
+  56:Core/Src/Origin/Searching.c **** void setSearchTurnParam(int8_t mode){
+ 277              		.loc 1 56 37 is_stmt 1 view -0
+ 278              		.cfi_startproc
+ 279              		@ args = 0, pretend = 0, frame = 0
+ 280              		@ frame_needed = 0, uses_anonymous_args = 0
+ 281              		.loc 1 56 37 is_stmt 0 view .LVU74
+ 282 0000 10B5     		push	{r4, lr}
+ 283              	.LCFI4:
+ 284              		.cfi_def_cfa_offset 8
+ 285              		.cfi_offset 4, -8
+ 286              		.cfi_offset 14, -4
+  57:Core/Src/Origin/Searching.c **** 	
+  58:Core/Src/Origin/Searching.c **** 	switch(mode)
+ 287              		.loc 1 58 2 is_stmt 1 view .LVU75
+ 288 0002 0138     		subs	r0, r0, #1
+ 289              	.LVL27:
+ 290              		.loc 1 58 2 is_stmt 0 view .LVU76
+ 291 0004 0328     		cmp	r0, #3
+ 292 0006 12D8     		bhi	.L26
+ 293 0008 DFE800F0 		tbb	[pc, r0]
+ 294              	.L28:
+ 295 000c 02       		.byte	(.L31-.L28)/2
+ 296 000d 4A       		.byte	(.L30-.L28)/2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 8
 
 
- 294 00ae 10B5     		push	{r4, lr}
- 295              	.LCFI5:
- 296              		.cfi_def_cfa_offset 8
- 297              		.cfi_offset 4, -8
- 298              		.cfi_offset 14, -4
- 299 00b0 C2E7     		b	.L13
- 300              	.L22:
- 301              	.LCFI6:
- 302              		.cfi_def_cfa_offset 0
- 303              		.cfi_restore 4
- 304              		.cfi_restore 14
- 305              	.LBB11:
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 306              		.loc 1 43 40 is_stmt 1 view .LVU81
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 307              		.loc 1 43 41 is_stmt 0 view .LVU82
- 308 00b2 0131     		adds	r1, r1, #1
- 309              	.LVL30:
- 310              	.L11:
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 311              		.loc 1 43 15 is_stmt 1 view .LVU83
-  43:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
- 312              		.loc 1 43 2 is_stmt 0 view .LVU84
- 313 00b4 0F29     		cmp	r1, #15
- 314 00b6 01DC     		bgt	.L24
- 315              	.LBB9:
-  44:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
- 316              		.loc 1 44 11 view .LVU85
- 317 00b8 0023     		movs	r3, #0
- 318 00ba F0E7     		b	.L14
- 319              	.L24:
- 320 00bc 7047     		bx	lr
- 321              	.L26:
- 322 00be 00BF     		.align	2
- 323              	.L25:
- 324 00c0 00000000 		.word	Visit
- 325              	.LBE9:
- 326              	.LBE11:
- 327              		.cfi_endproc
- 328              	.LFE239:
- 330              		.section	.text.updateRealSearch,"ax",%progbits
- 331              		.align	1
- 332              		.global	updateRealSearch
- 333              		.syntax unified
- 334              		.thumb
- 335              		.thumb_func
- 337              	updateRealSearch:
- 338              	.LVL31:
- 339              	.LFB240:
-  67:Core/Src/Origin/Searching.c **** //探索及び最短走行のロジック（制御ロジックは考慮しない）
-  68:Core/Src/Origin/Searching.c **** //後ろの方にはActionを含めた処理も. MazeSimulationでActionっぽい処理が書けれ
+ 297 000e 5C       		.byte	(.L29-.L28)/2
+ 298 000f 6E       		.byte	(.L27-.L28)/2
+ 299              		.p2align 1
+ 300              	.L31:
+  59:Core/Src/Origin/Searching.c **** 	{
+  60:Core/Src/Origin/Searching.c **** 	case 1:
+  61:Core/Src/Origin/Searching.c **** 		ExploreVelocity=90;
+ 301              		.loc 1 61 3 is_stmt 1 view .LVU77
+ 302              		.loc 1 61 18 is_stmt 0 view .LVU78
+ 303 0010 434A     		ldr	r2, .L33+16
+ 304 0012 444B     		ldr	r3, .L33+20
+ 305 0014 1A60     		str	r2, [r3]	@ float
+  62:Core/Src/Origin/Searching.c **** 		//未
+  63:Core/Src/Origin/Searching.c **** 		Sla.Pre = 9;
+ 306              		.loc 1 63 3 is_stmt 1 view .LVU79
+ 307              		.loc 1 63 11 is_stmt 0 view .LVU80
+ 308 0016 444B     		ldr	r3, .L33+24
+ 309 0018 4449     		ldr	r1, .L33+28
+ 310 001a 1960     		str	r1, [r3]	@ float
+  64:Core/Src/Origin/Searching.c **** 		Sla.Fol = 20;
+ 311              		.loc 1 64 3 is_stmt 1 view .LVU81
+ 312              		.loc 1 64 11 is_stmt 0 view .LVU82
+ 313 001c 4449     		ldr	r1, .L33+32
+ 314 001e 5960     		str	r1, [r3, #4]	@ float
+  65:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.014;
+ 315              		.loc 1 65 3 is_stmt 1 view .LVU83
+ 316              		.loc 1 65 13 is_stmt 0 view .LVU84
+ 317 0020 4449     		ldr	r1, .L33+36
+ 318 0022 9960     		str	r1, [r3, #8]	@ float
+  66:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 319              		.loc 1 66 3 is_stmt 1 view .LVU85
+ 320              		.loc 1 66 14 is_stmt 0 view .LVU86
+ 321 0024 4449     		ldr	r1, .L33+40
+ 322 0026 1961     		str	r1, [r3, #16]	@ float
+  67:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 323              		.loc 1 67 3 is_stmt 1 view .LVU87
+ 324              		.loc 1 67 14 is_stmt 0 view .LVU88
+ 325 0028 4449     		ldr	r1, .L33+44
+ 326 002a 5961     		str	r1, [r3, #20]	@ float
+  68:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 327              		.loc 1 68 3 is_stmt 1 view .LVU89
+ 328              		.loc 1 68 14 is_stmt 0 view .LVU90
+ 329 002c 9A61     		str	r2, [r3, #24]	@ float
   69:Core/Src/Origin/Searching.c **** 
-  70:Core/Src/Origin/Searching.c **** 
-  71:Core/Src/Origin/Searching.c **** void updateRealSearch(maze_node *maze, profile *mouse)
-  72:Core/Src/Origin/Searching.c **** {
- 340              		.loc 1 72 1 is_stmt 1 view -0
- 341              		.cfi_startproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 9
+  70:Core/Src/Origin/Searching.c **** //		ExploreVelocity=180;//*40/1000
+  71:Core/Src/Origin/Searching.c **** //		Sla.Pre = 5;
+  72:Core/Src/Origin/Searching.c **** //		Sla.Fol = 12;
+  73:Core/Src/Origin/Searching.c **** //		Sla.Alalpha = 0.0007;
+  74:Core/Src/Origin/Searching.c **** //		Sla.Theta1 = 30;
+  75:Core/Src/Origin/Searching.c **** //		Sla.Theta2 = 60;
+  76:Core/Src/Origin/Searching.c **** //		Sla.Theta3 = 90;
+  77:Core/Src/Origin/Searching.c **** 		break;
+ 330              		.loc 1 77 3 is_stmt 1 view .LVU91
+ 331              	.L26:
+  78:Core/Src/Origin/Searching.c **** 	case 2:
+  79:Core/Src/Origin/Searching.c **** 		//完
+  80:Core/Src/Origin/Searching.c **** //		ExploreVelocity=135;//*40/1000
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 9
 
 
- 342              		@ args = 0, pretend = 0, frame = 16
- 343              		@ frame_needed = 0, uses_anonymous_args = 0
- 344              		.loc 1 72 1 is_stmt 0 view .LVU87
- 345 0000 F0B5     		push	{r4, r5, r6, r7, lr}
- 346              	.LCFI7:
- 347              		.cfi_def_cfa_offset 20
- 348              		.cfi_offset 4, -20
- 349              		.cfi_offset 5, -16
- 350              		.cfi_offset 6, -12
- 351              		.cfi_offset 7, -8
- 352              		.cfi_offset 14, -4
- 353 0002 87B0     		sub	sp, sp, #28
- 354              	.LCFI8:
- 355              		.cfi_def_cfa_offset 48
- 356 0004 0546     		mov	r5, r0
- 357 0006 0C46     		mov	r4, r1
-  73:Core/Src/Origin/Searching.c **** 	//壁情報は
-  74:Core/Src/Origin/Searching.c **** 	wall_state wall_dir[4]={0};
- 358              		.loc 1 74 2 is_stmt 1 view .LVU88
- 359              		.loc 1 74 13 is_stmt 0 view .LVU89
- 360 0008 0023     		movs	r3, #0
- 361 000a 0593     		str	r3, [sp, #20]
-  75:Core/Src/Origin/Searching.c **** 	//wall_state wall_st[4]={0};
-  76:Core/Src/Origin/Searching.c **** 
-  77:Core/Src/Origin/Searching.c **** 	//壁センサ値を読んで、各方角の壁の有無を判定
-  78:Core/Src/Origin/Searching.c **** 		//区画進入直前なので、更新予定の方角と座標がNextに入っているはず
-  79:Core/Src/Origin/Searching.c **** 		//前後左右の値として入れる
-  80:Core/Src/Origin/Searching.c **** 
-  81:Core/Src/Origin/Searching.c **** 	shiftState(mouse);
- 362              		.loc 1 81 2 is_stmt 1 view .LVU90
- 363 000c 0846     		mov	r0, r1
- 364              	.LVL32:
- 365              		.loc 1 81 2 is_stmt 0 view .LVU91
- 366 000e FFF7FEFF 		bl	shiftState
- 367              	.LVL33:
-  82:Core/Src/Origin/Searching.c **** 	VisitedMass(mouse->now.pos);
- 368              		.loc 1 82 2 is_stmt 1 view .LVU92
- 369 0012 A068     		ldr	r0, [r4, #8]
- 370 0014 FFF7FEFF 		bl	VisitedMass
- 371              	.LVL34:
-  83:Core/Src/Origin/Searching.c **** 
-  84:Core/Src/Origin/Searching.c ****     switch (mouse->now.car%8)
- 372              		.loc 1 84 5 view .LVU93
- 373              		.loc 1 84 23 is_stmt 0 view .LVU94
- 374 0018 A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
- 375              		.loc 1 84 5 view .LVU95
- 376 001a 03F00703 		and	r3, r3, #7
- 377 001e 062B     		cmp	r3, #6
- 378 0020 35D8     		bhi	.L28
- 379 0022 DFE803F0 		tbb	[pc, r3]
- 380              	.L30:
- 381 0026 04       		.byte	(.L33-.L30)/2
- 382 0027 34       		.byte	(.L28-.L30)/2
- 383 0028 6C       		.byte	(.L32-.L30)/2
- 384 0029 34       		.byte	(.L28-.L30)/2
- 385 002a 9D       		.byte	(.L31-.L30)/2
- 386 002b 34       		.byte	(.L28-.L30)/2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 10
+  81:Core/Src/Origin/Searching.c **** //		Sla.Pre = 5;
+  82:Core/Src/Origin/Searching.c **** //		Sla.Fol = 10;
+  83:Core/Src/Origin/Searching.c **** //		Sla.Alpha = 0.0273;
+  84:Core/Src/Origin/Searching.c **** //		Sla.Theta1 = 30;
+  85:Core/Src/Origin/Searching.c **** //		Sla.Theta2 = 60;
+  86:Core/Src/Origin/Searching.c **** //		Sla.Theta3 = 90;
+  87:Core/Src/Origin/Searching.c **** 
+  88:Core/Src/Origin/Searching.c **** 		ExploreVelocity=180;
+  89:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+  90:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12;
+  91:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.043;
+  92:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+  93:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+  94:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+  95:Core/Src/Origin/Searching.c **** 		break;
+  96:Core/Src/Origin/Searching.c **** 	case 3:
+  97:Core/Src/Origin/Searching.c **** 		ExploreVelocity=240;
+  98:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+  99:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12; //16
+ 100:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.078;
+ 101:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 102:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 103:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 104:Core/Src/Origin/Searching.c **** 		break;
+ 105:Core/Src/Origin/Searching.c **** 	case 4:
+ 106:Core/Src/Origin/Searching.c **** 		ExploreVelocity=300;
+ 107:Core/Src/Origin/Searching.c **** 		Sla.Pre = 3;
+ 108:Core/Src/Origin/Searching.c **** 		Sla.Fol = 5;
+ 109:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.117;
+ 110:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 111:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 112:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 113:Core/Src/Origin/Searching.c **** 		//		//未
+ 114:Core/Src/Origin/Searching.c **** 		break;
+ 115:Core/Src/Origin/Searching.c **** 	}
+ 116:Core/Src/Origin/Searching.c **** 	Sla.Pre *=  2/MM_PER_PULSE;
+ 332              		.loc 1 116 2 view .LVU92
+ 333              		.loc 1 116 10 is_stmt 0 view .LVU93
+ 334 002e 3E4C     		ldr	r4, .L33+24
+ 335 0030 2068     		ldr	r0, [r4]	@ float
+ 336 0032 FFF7FEFF 		bl	__aeabi_f2d
+ 337              	.LVL28:
+ 338 0036 36A3     		adr	r3, .L33
+ 339 0038 D3E90023 		ldrd	r2, [r3]
+ 340 003c FFF7FEFF 		bl	__aeabi_dmul
+ 341              	.LVL29:
+ 342 0040 FFF7FEFF 		bl	__aeabi_d2f
+ 343              	.LVL30:
+ 344 0044 2060     		str	r0, [r4]	@ float
+ 117:Core/Src/Origin/Searching.c **** 	Sla.Fol *=  2/MM_PER_PULSE;
+ 345              		.loc 1 117 2 is_stmt 1 view .LVU94
+ 346              		.loc 1 117 10 is_stmt 0 view .LVU95
+ 347 0046 6068     		ldr	r0, [r4, #4]	@ float
+ 348 0048 FFF7FEFF 		bl	__aeabi_f2d
+ 349              	.LVL31:
+ 350 004c 30A3     		adr	r3, .L33
+ 351 004e D3E90023 		ldrd	r2, [r3]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 10
 
 
- 387 002c CE       		.byte	(.L29-.L30)/2
- 388 002d 00       		.p2align 1
- 389              	.L33:
-  85:Core/Src/Origin/Searching.c ****     {
-  86:Core/Src/Origin/Searching.c ****     case north:
-  87:Core/Src/Origin/Searching.c ****     	wall_dir[0] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
- 390              		.loc 1 87 6 is_stmt 1 view .LVU96
- 391              		.loc 1 87 27 is_stmt 0 view .LVU97
- 392 002e A34B     		ldr	r3, .L49
- 393 0030 D3ED007A 		vldr.32	s15, [r3]
- 394              		.loc 1 87 39 view .LVU98
- 395 0034 93ED037A 		vldr.32	s14, [r3, #12]
- 396              		.loc 1 87 32 view .LVU99
- 397 0038 77EE877A 		vadd.f32	s15, s15, s14
- 398              		.loc 1 87 44 view .LVU100
- 399 003c B6EE007A 		vmov.f32	s14, #5.0e-1
- 400 0040 67EE877A 		vmul.f32	s15, s15, s14
- 401              		.loc 1 87 74 view .LVU101
- 402 0044 9FED9E7A 		vldr.32	s14, .L49+4
- 403 0048 F4EEC77A 		vcmpe.f32	s15, s14
- 404 004c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 405 0050 CCBF     		ite	gt
- 406 0052 0122     		movgt	r2, #1
- 407 0054 0022     		movle	r2, #0
- 408              		.loc 1 87 18 view .LVU102
- 409 0056 8DF81420 		strb	r2, [sp, #20]
-  88:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 410              		.loc 1 88 6 is_stmt 1 view .LVU103
- 411              		.loc 1 88 25 is_stmt 0 view .LVU104
- 412 005a 93ED017A 		vldr.32	s14, [r3, #4]
- 413              		.loc 1 88 52 view .LVU105
- 414 005e DFED997A 		vldr.32	s15, .L49+8
- 415 0062 B4EEE77A 		vcmpe.f32	s14, s15
- 416 0066 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 417 006a CCBF     		ite	gt
- 418 006c 0122     		movgt	r2, #1
- 419 006e 0022     		movle	r2, #0
- 420              		.loc 1 88 18 view .LVU106
- 421 0070 8DF81520 		strb	r2, [sp, #21]
-  89:Core/Src/Origin/Searching.c ****     	wall_dir[2] = NOWALL;
- 422              		.loc 1 89 6 is_stmt 1 view .LVU107
-  90:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 423              		.loc 1 90 6 view .LVU108
- 424              		.loc 1 90 25 is_stmt 0 view .LVU109
- 425 0074 93ED027A 		vldr.32	s14, [r3, #8]
- 426              		.loc 1 90 50 view .LVU110
- 427 0078 DFED937A 		vldr.32	s15, .L49+12
- 428 007c B4EEE77A 		vcmpe.f32	s14, s15
- 429 0080 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 430 0084 CCBF     		ite	gt
- 431 0086 0123     		movgt	r3, #1
- 432 0088 0023     		movle	r3, #0
- 433              		.loc 1 90 18 view .LVU111
- 434 008a 8DF81730 		strb	r3, [sp, #23]
-  91:Core/Src/Origin/Searching.c ****         break;
- 435              		.loc 1 91 9 is_stmt 1 view .LVU112
- 436              	.L28:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 11
+ 352 0052 FFF7FEFF 		bl	__aeabi_dmul
+ 353              	.LVL32:
+ 354 0056 FFF7FEFF 		bl	__aeabi_d2f
+ 355              	.LVL33:
+ 356 005a 6060     		str	r0, [r4, #4]	@ float
+ 118:Core/Src/Origin/Searching.c **** 	Sla.Theta1 *= M_PI/180;
+ 357              		.loc 1 118 2 is_stmt 1 view .LVU96
+ 358              		.loc 1 118 13 is_stmt 0 view .LVU97
+ 359 005c 2069     		ldr	r0, [r4, #16]	@ float
+ 360 005e FFF7FEFF 		bl	__aeabi_f2d
+ 361              	.LVL34:
+ 362 0062 2DA3     		adr	r3, .L33+8
+ 363 0064 D3E90023 		ldrd	r2, [r3]
+ 364 0068 FFF7FEFF 		bl	__aeabi_dmul
+ 365              	.LVL35:
+ 366 006c FFF7FEFF 		bl	__aeabi_d2f
+ 367              	.LVL36:
+ 368 0070 2061     		str	r0, [r4, #16]	@ float
+ 119:Core/Src/Origin/Searching.c **** 	Sla.Theta2 *= M_PI/180;
+ 369              		.loc 1 119 2 is_stmt 1 view .LVU98
+ 370              		.loc 1 119 13 is_stmt 0 view .LVU99
+ 371 0072 6069     		ldr	r0, [r4, #20]	@ float
+ 372 0074 FFF7FEFF 		bl	__aeabi_f2d
+ 373              	.LVL37:
+ 374 0078 27A3     		adr	r3, .L33+8
+ 375 007a D3E90023 		ldrd	r2, [r3]
+ 376 007e FFF7FEFF 		bl	__aeabi_dmul
+ 377              	.LVL38:
+ 378 0082 FFF7FEFF 		bl	__aeabi_d2f
+ 379              	.LVL39:
+ 380 0086 6061     		str	r0, [r4, #20]	@ float
+ 120:Core/Src/Origin/Searching.c **** 	Sla.Theta3 *= M_PI/180;
+ 381              		.loc 1 120 2 is_stmt 1 view .LVU100
+ 382              		.loc 1 120 13 is_stmt 0 view .LVU101
+ 383 0088 A069     		ldr	r0, [r4, #24]	@ float
+ 384 008a FFF7FEFF 		bl	__aeabi_f2d
+ 385              	.LVL40:
+ 386 008e 22A3     		adr	r3, .L33+8
+ 387 0090 D3E90023 		ldrd	r2, [r3]
+ 388 0094 FFF7FEFF 		bl	__aeabi_dmul
+ 389              	.LVL41:
+ 390 0098 FFF7FEFF 		bl	__aeabi_d2f
+ 391              	.LVL42:
+ 392 009c A061     		str	r0, [r4, #24]	@ float
+ 121:Core/Src/Origin/Searching.c **** }
+ 393              		.loc 1 121 1 view .LVU102
+ 394 009e 10BD     		pop	{r4, pc}
+ 395              	.L30:
+  88:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+ 396              		.loc 1 88 3 is_stmt 1 view .LVU103
+  88:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+ 397              		.loc 1 88 18 is_stmt 0 view .LVU104
+ 398 00a0 204B     		ldr	r3, .L33+20
+ 399 00a2 274A     		ldr	r2, .L33+48
+ 400 00a4 1A60     		str	r2, [r3]	@ float
+  89:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12;
+ 401              		.loc 1 89 3 is_stmt 1 view .LVU105
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 11
 
 
-  92:Core/Src/Origin/Searching.c ****     case east:
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[1] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
-  94:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
-  95:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
-  96:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
-  97:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
-  98:Core/Src/Origin/Searching.c **** //    		ChangeLED(7);
-  99:Core/Src/Origin/Searching.c **** //    	else if(wall_dir[1] == NOWALL  && wall_dir[2] == WALL && wall_dir[0] == WALL)
- 100:Core/Src/Origin/Searching.c **** //		{
- 101:Core/Src/Origin/Searching.c **** //    		ChangeLED(1);
- 102:Core/Src/Origin/Searching.c **** //    		//全て正常に認識している
- 103:Core/Src/Origin/Searching.c **** //		}
- 104:Core/Src/Origin/Searching.c ****         break;
- 105:Core/Src/Origin/Searching.c ****     case south:
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[2] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
- 107:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 108:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
- 109:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 110:Core/Src/Origin/Searching.c ****         break;
- 111:Core/Src/Origin/Searching.c ****     case west:
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[3] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
- 113:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 114:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
- 115:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 116:Core/Src/Origin/Searching.c ****         break;
- 117:Core/Src/Origin/Searching.c ****     default:
- 118:Core/Src/Origin/Searching.c ****         //万が一斜めの方角を向いているときに呼び出してしまったら、
- 119:Core/Src/Origin/Searching.c ****         break;
- 120:Core/Src/Origin/Searching.c ****     }
- 121:Core/Src/Origin/Searching.c **** 	//各方角の壁に壁の有無を代入
- 122:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].north = wall_dir[0];
- 123:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].east = wall_dir[1];
- 124:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].south = wall_dir[2];
- 125:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].west = wall_dir[3];
- 126:Core/Src/Origin/Searching.c ****     //アクションが終わるときがノードの上にいる状態なので、状態シフト
- 127:Core/Src/Origin/Searching.c ****     mouse->now.wall.north = wall_dir[0];
- 437              		.loc 1 127 5 view .LVU113
- 438              		.loc 1 127 37 is_stmt 0 view .LVU114
- 439 008e 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
- 440              		.loc 1 127 27 view .LVU115
- 441 0092 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
- 442 0094 62F30103 		bfi	r3, r2, #0, #2
- 443 0098 2373     		strb	r3, [r4, #12]
- 128:Core/Src/Origin/Searching.c ****     mouse->now.wall.east = wall_dir[1];
- 444              		.loc 1 128 5 is_stmt 1 view .LVU116
- 445              		.loc 1 128 36 is_stmt 0 view .LVU117
- 446 009a 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
- 447              		.loc 1 128 26 view .LVU118
- 448 009e DBB2     		uxtb	r3, r3
- 449 00a0 62F38303 		bfi	r3, r2, #2, #2
- 450 00a4 2373     		strb	r3, [r4, #12]
- 129:Core/Src/Origin/Searching.c ****     mouse->now.wall.south = wall_dir[2];
- 451              		.loc 1 129 5 is_stmt 1 view .LVU119
- 452              		.loc 1 129 37 is_stmt 0 view .LVU120
- 453 00a6 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
- 454              		.loc 1 129 27 view .LVU121
- 455 00aa DBB2     		uxtb	r3, r3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 12
+  89:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12;
+ 402              		.loc 1 89 11 is_stmt 0 view .LVU106
+ 403 00a6 204B     		ldr	r3, .L33+24
+ 404 00a8 4FF08242 		mov	r2, #1090519040
+ 405 00ac 1A60     		str	r2, [r3]	@ float
+  90:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.043;
+ 406              		.loc 1 90 3 is_stmt 1 view .LVU107
+  90:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.043;
+ 407              		.loc 1 90 11 is_stmt 0 view .LVU108
+ 408 00ae 254A     		ldr	r2, .L33+52
+ 409 00b0 5A60     		str	r2, [r3, #4]	@ float
+  91:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 410              		.loc 1 91 3 is_stmt 1 view .LVU109
+  91:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 411              		.loc 1 91 13 is_stmt 0 view .LVU110
+ 412 00b2 254A     		ldr	r2, .L33+56
+ 413 00b4 9A60     		str	r2, [r3, #8]	@ float
+  92:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 414              		.loc 1 92 3 is_stmt 1 view .LVU111
+  92:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 415              		.loc 1 92 14 is_stmt 0 view .LVU112
+ 416 00b6 204A     		ldr	r2, .L33+40
+ 417 00b8 1A61     		str	r2, [r3, #16]	@ float
+  93:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 418              		.loc 1 93 3 is_stmt 1 view .LVU113
+  93:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 419              		.loc 1 93 14 is_stmt 0 view .LVU114
+ 420 00ba 204A     		ldr	r2, .L33+44
+ 421 00bc 5A61     		str	r2, [r3, #20]	@ float
+  94:Core/Src/Origin/Searching.c **** 		break;
+ 422              		.loc 1 94 3 is_stmt 1 view .LVU115
+  94:Core/Src/Origin/Searching.c **** 		break;
+ 423              		.loc 1 94 14 is_stmt 0 view .LVU116
+ 424 00be 184A     		ldr	r2, .L33+16
+ 425 00c0 9A61     		str	r2, [r3, #24]	@ float
+  95:Core/Src/Origin/Searching.c **** 	case 3:
+ 426              		.loc 1 95 3 is_stmt 1 view .LVU117
+ 427 00c2 B4E7     		b	.L26
+ 428              	.L29:
+  97:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+ 429              		.loc 1 97 3 view .LVU118
+  97:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+ 430              		.loc 1 97 18 is_stmt 0 view .LVU119
+ 431 00c4 174B     		ldr	r3, .L33+20
+ 432 00c6 214A     		ldr	r2, .L33+60
+ 433 00c8 1A60     		str	r2, [r3]	@ float
+  98:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12; //16
+ 434              		.loc 1 98 3 is_stmt 1 view .LVU120
+  98:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12; //16
+ 435              		.loc 1 98 11 is_stmt 0 view .LVU121
+ 436 00ca 174B     		ldr	r3, .L33+24
+ 437 00cc 4FF08242 		mov	r2, #1090519040
+ 438 00d0 1A60     		str	r2, [r3]	@ float
+  99:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.078;
+ 439              		.loc 1 99 3 is_stmt 1 view .LVU122
+  99:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.078;
+ 440              		.loc 1 99 11 is_stmt 0 view .LVU123
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 12
 
 
- 456 00ac 62F30513 		bfi	r3, r2, #4, #2
- 457 00b0 2373     		strb	r3, [r4, #12]
- 130:Core/Src/Origin/Searching.c ****     mouse->now.wall.west = wall_dir[3];
- 458              		.loc 1 130 5 is_stmt 1 view .LVU122
- 459              		.loc 1 130 36 is_stmt 0 view .LVU123
- 460 00b2 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
- 461              		.loc 1 130 26 view .LVU124
- 462 00b6 DBB2     		uxtb	r3, r3
- 463 00b8 62F38713 		bfi	r3, r2, #6, #2
- 464 00bc 2373     		strb	r3, [r4, #12]
+ 441 00d2 1C4A     		ldr	r2, .L33+52
+ 442 00d4 5A60     		str	r2, [r3, #4]	@ float
+ 100:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 443              		.loc 1 100 3 is_stmt 1 view .LVU124
+ 100:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 444              		.loc 1 100 13 is_stmt 0 view .LVU125
+ 445 00d6 1E4A     		ldr	r2, .L33+64
+ 446 00d8 9A60     		str	r2, [r3, #8]	@ float
+ 101:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 447              		.loc 1 101 3 is_stmt 1 view .LVU126
+ 101:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 448              		.loc 1 101 14 is_stmt 0 view .LVU127
+ 449 00da 174A     		ldr	r2, .L33+40
+ 450 00dc 1A61     		str	r2, [r3, #16]	@ float
+ 102:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 451              		.loc 1 102 3 is_stmt 1 view .LVU128
+ 102:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 452              		.loc 1 102 14 is_stmt 0 view .LVU129
+ 453 00de 174A     		ldr	r2, .L33+44
+ 454 00e0 5A61     		str	r2, [r3, #20]	@ float
+ 103:Core/Src/Origin/Searching.c **** 		break;
+ 455              		.loc 1 103 3 is_stmt 1 view .LVU130
+ 103:Core/Src/Origin/Searching.c **** 		break;
+ 456              		.loc 1 103 14 is_stmt 0 view .LVU131
+ 457 00e2 0F4A     		ldr	r2, .L33+16
+ 458 00e4 9A61     		str	r2, [r3, #24]	@ float
+ 104:Core/Src/Origin/Searching.c **** 	case 4:
+ 459              		.loc 1 104 3 is_stmt 1 view .LVU132
+ 460 00e6 A2E7     		b	.L26
+ 461              	.L27:
+ 106:Core/Src/Origin/Searching.c **** 		Sla.Pre = 3;
+ 462              		.loc 1 106 3 view .LVU133
+ 106:Core/Src/Origin/Searching.c **** 		Sla.Pre = 3;
+ 463              		.loc 1 106 18 is_stmt 0 view .LVU134
+ 464 00e8 0E4B     		ldr	r3, .L33+20
+ 465 00ea 1A4A     		ldr	r2, .L33+68
+ 466 00ec 1A60     		str	r2, [r3]	@ float
+ 107:Core/Src/Origin/Searching.c **** 		Sla.Fol = 5;
+ 467              		.loc 1 107 3 is_stmt 1 view .LVU135
+ 107:Core/Src/Origin/Searching.c **** 		Sla.Fol = 5;
+ 468              		.loc 1 107 11 is_stmt 0 view .LVU136
+ 469 00ee 0E4B     		ldr	r3, .L33+24
+ 470 00f0 194A     		ldr	r2, .L33+72
+ 471 00f2 1A60     		str	r2, [r3]	@ float
+ 108:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.117;
+ 472              		.loc 1 108 3 is_stmt 1 view .LVU137
+ 108:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.117;
+ 473              		.loc 1 108 11 is_stmt 0 view .LVU138
+ 474 00f4 194A     		ldr	r2, .L33+76
+ 475 00f6 5A60     		str	r2, [r3, #4]	@ float
+ 109:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 476              		.loc 1 109 3 is_stmt 1 view .LVU139
+ 109:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 477              		.loc 1 109 13 is_stmt 0 view .LVU140
+ 478 00f8 194A     		ldr	r2, .L33+80
+ 479 00fa 9A60     		str	r2, [r3, #8]	@ float
+ 110:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 13
+
+
+ 480              		.loc 1 110 3 is_stmt 1 view .LVU141
+ 110:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 481              		.loc 1 110 14 is_stmt 0 view .LVU142
+ 482 00fc 0E4A     		ldr	r2, .L33+40
+ 483 00fe 1A61     		str	r2, [r3, #16]	@ float
+ 111:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 484              		.loc 1 111 3 is_stmt 1 view .LVU143
+ 111:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 485              		.loc 1 111 14 is_stmt 0 view .LVU144
+ 486 0100 0E4A     		ldr	r2, .L33+44
+ 487 0102 5A61     		str	r2, [r3, #20]	@ float
+ 112:Core/Src/Origin/Searching.c **** 		//		//未
+ 488              		.loc 1 112 3 is_stmt 1 view .LVU145
+ 112:Core/Src/Origin/Searching.c **** 		//		//未
+ 489              		.loc 1 112 14 is_stmt 0 view .LVU146
+ 490 0104 064A     		ldr	r2, .L33+16
+ 491 0106 9A61     		str	r2, [r3, #24]	@ float
+ 114:Core/Src/Origin/Searching.c **** 	}
+ 492              		.loc 1 114 3 is_stmt 1 view .LVU147
+ 493 0108 91E7     		b	.L26
+ 494              	.L34:
+ 495 010a 00BFAFF3 		.align	3
+ 495      0080
+ 496              	.L33:
+ 497 0110 540D8F9F 		.word	-1618014892
+ 498 0114 4AE59E40 		.word	1084155210
+ 499 0118 399D52A2 		.word	-1571644103
+ 500 011c 46DF913F 		.word	1066524486
+ 501 0120 0000B442 		.word	1119092736
+ 502 0124 00000000 		.word	ExploreVelocity
+ 503 0128 00000000 		.word	Sla
+ 504 012c 00001041 		.word	1091567616
+ 505 0130 0000A041 		.word	1101004800
+ 506 0134 4260653C 		.word	1013276738
+ 507 0138 0000F041 		.word	1106247680
+ 508 013c 00007042 		.word	1114636288
+ 509 0140 00003443 		.word	1127481344
+ 510 0144 00004041 		.word	1094713344
+ 511 0148 C520303D 		.word	1026564293
+ 512 014c 00007043 		.word	1131413504
+ 513 0150 77BE9F3D 		.word	1033879159
+ 514 0154 00009643 		.word	1133903872
+ 515 0158 00004040 		.word	1077936128
+ 516 015c 0000A040 		.word	1084227584
+ 517 0160 B29DEF3D 		.word	1039113650
+ 518              		.cfi_endproc
+ 519              	.LFE239:
+ 521              		.section	.text.updateRealSearch,"ax",%progbits
+ 522              		.align	1
+ 523              		.global	updateRealSearch
+ 524              		.syntax unified
+ 525              		.thumb
+ 526              		.thumb_func
+ 528              	updateRealSearch:
+ 529              	.LVL43:
+ 530              	.LFB240:
+ 122:Core/Src/Origin/Searching.c **** void updateRealSearch(maze_node *maze, profile *mouse)
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 14
+
+
+ 123:Core/Src/Origin/Searching.c **** {
+ 531              		.loc 1 123 1 view -0
+ 532              		.cfi_startproc
+ 533              		@ args = 0, pretend = 0, frame = 16
+ 534              		@ frame_needed = 0, uses_anonymous_args = 0
+ 535              		.loc 1 123 1 is_stmt 0 view .LVU149
+ 536 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 537              	.LCFI5:
+ 538              		.cfi_def_cfa_offset 20
+ 539              		.cfi_offset 4, -20
+ 540              		.cfi_offset 5, -16
+ 541              		.cfi_offset 6, -12
+ 542              		.cfi_offset 7, -8
+ 543              		.cfi_offset 14, -4
+ 544 0002 87B0     		sub	sp, sp, #28
+ 545              	.LCFI6:
+ 546              		.cfi_def_cfa_offset 48
+ 547 0004 0546     		mov	r5, r0
+ 548 0006 0C46     		mov	r4, r1
+ 124:Core/Src/Origin/Searching.c **** 	//壁情報は
+ 125:Core/Src/Origin/Searching.c **** 	wall_state wall_dir[4]={0};
+ 549              		.loc 1 125 2 is_stmt 1 view .LVU150
+ 550              		.loc 1 125 13 is_stmt 0 view .LVU151
+ 551 0008 0023     		movs	r3, #0
+ 552 000a 0593     		str	r3, [sp, #20]
+ 126:Core/Src/Origin/Searching.c **** 	//wall_state wall_st[4]={0};
+ 127:Core/Src/Origin/Searching.c **** 
+ 128:Core/Src/Origin/Searching.c **** 	//壁センサ値を読んで、各方角の壁の有無を判定
+ 129:Core/Src/Origin/Searching.c **** 		//区画進入直前なので、更新予定の方角と座標がNextに入っているはず
+ 130:Core/Src/Origin/Searching.c **** 		//前後左右の値として入れる
  131:Core/Src/Origin/Searching.c **** 
- 132:Core/Src/Origin/Searching.c **** 	//getWallNow(&(my_mouse->now), &wall[0]);
- 133:Core/Src/Origin/Searching.c **** 
- 134:Core/Src/Origin/Searching.c ****     //現在方角、壁は、合ってる。座標とノードは？
- 135:Core/Src/Origin/Searching.c ****     //ここで壁の存在を反映
- 136:Core/Src/Origin/Searching.c **** 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
- 465              		.loc 1 136 2 is_stmt 1 view .LVU125
- 466 00be 04F10806 		add	r6, r4, #8
- 467 00c2 637A     		ldrb	r3, [r4, #9]	@ zero_extendqisi2
- 468 00c4 227A     		ldrb	r2, [r4, #8]	@ zero_extendqisi2
- 469 00c6 3146     		mov	r1, r6
- 470 00c8 2846     		mov	r0, r5
- 471 00ca FFF7FEFF 		bl	updateNodeThree
- 472              	.LVL35:
- 137:Core/Src/Origin/Searching.c **** 
- 138:Core/Src/Origin/Searching.c **** 
- 139:Core/Src/Origin/Searching.c **** 	//これの前に、target.posに到達したかどうかが必要
- 140:Core/Src/Origin/Searching.c **** 			//到達していればStackを再開
- 141:Core/Src/Origin/Searching.c **** 	position start_pos = {0,0};
- 473              		.loc 1 141 2 view .LVU126
- 474              		.loc 1 141 11 is_stmt 0 view .LVU127
- 475 00ce 0023     		movs	r3, #0
- 476 00d0 8DF81030 		strb	r3, [sp, #16]
- 477 00d4 8DF81130 		strb	r3, [sp, #17]
- 142:Core/Src/Origin/Searching.c **** 	if(GetStackFlag() == true){
- 478              		.loc 1 142 2 is_stmt 1 view .LVU128
- 479              		.loc 1 142 5 is_stmt 0 view .LVU129
- 480 00d8 FFF7FEFF 		bl	GetStackFlag
- 481              	.LVL36:
- 482              		.loc 1 142 4 view .LVU130
- 483 00dc 0028     		cmp	r0, #0
- 484 00de 40F0A180 		bne	.L45
- 485              	.L34:
- 143:Core/Src/Origin/Searching.c **** 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.p
- 144:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 145:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
- 146:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
- 147:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
- 148:Core/Src/Origin/Searching.c **** 
- 149:Core/Src/Origin/Searching.c **** 				int n = GetStackNum();
- 150:Core/Src/Origin/Searching.c **** 
- 151:Core/Src/Origin/Searching.c **** 				//0なら
- 152:Core/Src/Origin/Searching.c **** 				if(n == 0){
- 153:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
- 154:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
- 155:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
- 156:Core/Src/Origin/Searching.c **** 				}//0以外なら通常通り
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 13
+ 132:Core/Src/Origin/Searching.c **** 	shiftState(mouse);
+ 553              		.loc 1 132 2 is_stmt 1 view .LVU152
+ 554 000c 0846     		mov	r0, r1
+ 555              	.LVL44:
+ 556              		.loc 1 132 2 is_stmt 0 view .LVU153
+ 557 000e FFF7FEFF 		bl	shiftState
+ 558              	.LVL45:
+ 133:Core/Src/Origin/Searching.c **** 	VisitedMass(mouse->now.pos);
+ 559              		.loc 1 133 2 is_stmt 1 view .LVU154
+ 560 0012 A068     		ldr	r0, [r4, #8]
+ 561 0014 FFF7FEFF 		bl	VisitedMass
+ 562              	.LVL46:
+ 134:Core/Src/Origin/Searching.c **** 
+ 135:Core/Src/Origin/Searching.c ****     switch (mouse->now.car%8)
+ 563              		.loc 1 135 5 view .LVU155
+ 564              		.loc 1 135 23 is_stmt 0 view .LVU156
+ 565 0018 A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
+ 566              		.loc 1 135 5 view .LVU157
+ 567 001a 03F00703 		and	r3, r3, #7
+ 568 001e 062B     		cmp	r3, #6
+ 569 0020 35D8     		bhi	.L36
+ 570 0022 DFE803F0 		tbb	[pc, r3]
+ 571              	.L38:
+ 572 0026 04       		.byte	(.L41-.L38)/2
+ 573 0027 34       		.byte	(.L36-.L38)/2
+ 574 0028 6C       		.byte	(.L40-.L38)/2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 15
 
 
- 157:Core/Src/Origin/Searching.c **** 				else{
- 158:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
- 159:Core/Src/Origin/Searching.c **** 					position pos;
- 160:Core/Src/Origin/Searching.c **** 					_Bool is_first = false;
- 161:Core/Src/Origin/Searching.c **** 					while( 1 ){
- 162:Core/Src/Origin/Searching.c **** 						pos = GetStackMass();
- 163:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
- 164:Core/Src/Origin/Searching.c **** 						if(n == 0){
- 165:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
- 166:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
- 167:Core/Src/Origin/Searching.c **** 							break;
- 168:Core/Src/Origin/Searching.c **** 						}
- 169:Core/Src/Origin/Searching.c **** 						else if(is_first == false){
- 170:Core/Src/Origin/Searching.c **** 
- 171:Core/Src/Origin/Searching.c **** 							mouse->target.pos =pos;
- 172:Core/Src/Origin/Searching.c **** 							--n;
- 173:Core/Src/Origin/Searching.c **** 							SetStackNum(n);
- 174:Core/Src/Origin/Searching.c **** 							break;
- 175:Core/Src/Origin/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
- 176:Core/Src/Origin/Searching.c **** 						else if(is_first == true){
- 177:Core/Src/Origin/Searching.c **** 							--n;
- 178:Core/Src/Origin/Searching.c **** 							SetStackNum(n); //0になったら
- 179:Core/Src/Origin/Searching.c **** 						}
- 180:Core/Src/Origin/Searching.c **** 						 //訪問済みであれば更に下を読む
- 181:Core/Src/Origin/Searching.c **** 					}
- 182:Core/Src/Origin/Searching.c **** 				}
- 183:Core/Src/Origin/Searching.c **** 
- 184:Core/Src/Origin/Searching.c **** 			}//到達していなければ、そのまま最短でtarget.posに向かう
- 185:Core/Src/Origin/Searching.c **** 	}
- 186:Core/Src/Origin/Searching.c **** 
- 187:Core/Src/Origin/Searching.c **** //	int WALL_MASK = 0x01;
- 188:Core/Src/Origin/Searching.c **** 	//壁の存在を基に重みマップを更新
- 189:Core/Src/Origin/Searching.c **** 	updateAllNodeWeight(maze, mouse->target.pos.x, mouse->target.pos.y, mouse->target_size, mouse->tar
- 486              		.loc 1 189 2 is_stmt 1 view .LVU131
- 487 00e2 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
- 488 00e4 794A     		ldr	r2, .L49+16
- 489 00e6 1268     		ldr	r2, [r2]
- 490 00e8 0192     		str	r2, [sp, #4]
- 491 00ea 0093     		str	r3, [sp]
- 492 00ec 94F82120 		ldrb	r2, [r4, #33]	@ zero_extendqisi2
- 493 00f0 94F82010 		ldrb	r1, [r4, #32]	@ zero_extendqisi2
- 494 00f4 2846     		mov	r0, r5
- 495 00f6 FFF7FEFF 		bl	updateAllNodeWeight
- 496              	.LVL37:
- 190:Core/Src/Origin/Searching.c **** 			//mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01); // goal_lesser_x,
- 191:Core/Src/Origin/Searching.c **** }
- 497              		.loc 1 191 1 is_stmt 0 view .LVU132
- 498 00fa 07B0     		add	sp, sp, #28
- 499              	.LCFI9:
- 500              		.cfi_remember_state
- 501              		.cfi_def_cfa_offset 20
- 502              		@ sp needed
- 503 00fc F0BD     		pop	{r4, r5, r6, r7, pc}
- 504              	.LVL38:
- 505              	.L32:
- 506              	.LCFI10:
- 507              		.cfi_restore_state
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 14
+ 575 0029 34       		.byte	(.L36-.L38)/2
+ 576 002a 9D       		.byte	(.L39-.L38)/2
+ 577 002b 34       		.byte	(.L36-.L38)/2
+ 578 002c CE       		.byte	(.L37-.L38)/2
+ 579 002d 00       		.p2align 1
+ 580              	.L41:
+ 136:Core/Src/Origin/Searching.c ****     {
+ 137:Core/Src/Origin/Searching.c ****     case north:
+ 138:Core/Src/Origin/Searching.c ****     	wall_dir[0] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 581              		.loc 1 138 6 is_stmt 1 view .LVU158
+ 582              		.loc 1 138 27 is_stmt 0 view .LVU159
+ 583 002e A34B     		ldr	r3, .L57
+ 584 0030 D3ED007A 		vldr.32	s15, [r3]
+ 585              		.loc 1 138 39 view .LVU160
+ 586 0034 93ED037A 		vldr.32	s14, [r3, #12]
+ 587              		.loc 1 138 32 view .LVU161
+ 588 0038 77EE877A 		vadd.f32	s15, s15, s14
+ 589              		.loc 1 138 44 view .LVU162
+ 590 003c B6EE007A 		vmov.f32	s14, #5.0e-1
+ 591 0040 67EE877A 		vmul.f32	s15, s15, s14
+ 592              		.loc 1 138 74 view .LVU163
+ 593 0044 9FED9E7A 		vldr.32	s14, .L57+4
+ 594 0048 F4EEC77A 		vcmpe.f32	s15, s14
+ 595 004c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 596 0050 CCBF     		ite	gt
+ 597 0052 0122     		movgt	r2, #1
+ 598 0054 0022     		movle	r2, #0
+ 599              		.loc 1 138 18 view .LVU164
+ 600 0056 8DF81420 		strb	r2, [sp, #20]
+ 139:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 601              		.loc 1 139 6 is_stmt 1 view .LVU165
+ 602              		.loc 1 139 25 is_stmt 0 view .LVU166
+ 603 005a 93ED017A 		vldr.32	s14, [r3, #4]
+ 604              		.loc 1 139 56 view .LVU167
+ 605 005e DFED997A 		vldr.32	s15, .L57+8
+ 606 0062 B4EEE77A 		vcmpe.f32	s14, s15
+ 607 0066 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 608 006a CCBF     		ite	gt
+ 609 006c 0122     		movgt	r2, #1
+ 610 006e 0022     		movle	r2, #0
+ 611              		.loc 1 139 18 view .LVU168
+ 612 0070 8DF81520 		strb	r2, [sp, #21]
+ 140:Core/Src/Origin/Searching.c ****     	wall_dir[2] = NOWALL;
+ 613              		.loc 1 140 6 is_stmt 1 view .LVU169
+ 141:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 614              		.loc 1 141 6 view .LVU170
+ 615              		.loc 1 141 25 is_stmt 0 view .LVU171
+ 616 0074 93ED027A 		vldr.32	s14, [r3, #8]
+ 617              		.loc 1 141 50 view .LVU172
+ 618 0078 DFED937A 		vldr.32	s15, .L57+12
+ 619 007c B4EEE77A 		vcmpe.f32	s14, s15
+ 620 0080 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 621 0084 CCBF     		ite	gt
+ 622 0086 0123     		movgt	r3, #1
+ 623 0088 0023     		movle	r3, #0
+ 624              		.loc 1 141 18 view .LVU173
+ 625 008a 8DF81730 		strb	r3, [sp, #23]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 16
 
 
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 508              		.loc 1 93 6 is_stmt 1 view .LVU133
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 509              		.loc 1 93 27 is_stmt 0 view .LVU134
- 510 00fe 6F4B     		ldr	r3, .L49
- 511 0100 D3ED007A 		vldr.32	s15, [r3]
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 512              		.loc 1 93 39 view .LVU135
- 513 0104 93ED037A 		vldr.32	s14, [r3, #12]
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 514              		.loc 1 93 32 view .LVU136
- 515 0108 77EE877A 		vadd.f32	s15, s15, s14
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 516              		.loc 1 93 44 view .LVU137
- 517 010c B6EE007A 		vmov.f32	s14, #5.0e-1
- 518 0110 67EE877A 		vmul.f32	s15, s15, s14
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 519              		.loc 1 93 74 view .LVU138
- 520 0114 9FED6A7A 		vldr.32	s14, .L49+4
- 521 0118 F4EEC77A 		vcmpe.f32	s15, s14
- 522 011c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 523 0120 CCBF     		ite	gt
- 524 0122 0122     		movgt	r2, #1
- 525 0124 0022     		movle	r2, #0
-  93:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 526              		.loc 1 93 18 view .LVU139
- 527 0126 8DF81520 		strb	r2, [sp, #21]
-  94:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
- 528              		.loc 1 94 6 is_stmt 1 view .LVU140
-  94:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
- 529              		.loc 1 94 25 is_stmt 0 view .LVU141
- 530 012a 93ED017A 		vldr.32	s14, [r3, #4]
-  94:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
- 531              		.loc 1 94 52 view .LVU142
- 532 012e DFED657A 		vldr.32	s15, .L49+8
- 533 0132 B4EEE77A 		vcmpe.f32	s14, s15
- 534 0136 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 535 013a CCBF     		ite	gt
- 536 013c 0122     		movgt	r2, #1
- 537 013e 0022     		movle	r2, #0
-  94:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
- 538              		.loc 1 94 18 view .LVU143
- 539 0140 8DF81620 		strb	r2, [sp, #22]
-  95:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 540              		.loc 1 95 6 is_stmt 1 view .LVU144
-  96:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
- 541              		.loc 1 96 6 view .LVU145
-  96:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
- 542              		.loc 1 96 25 is_stmt 0 view .LVU146
- 543 0144 93ED027A 		vldr.32	s14, [r3, #8]
-  96:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
- 544              		.loc 1 96 50 view .LVU147
- 545 0148 DFED5F7A 		vldr.32	s15, .L49+12
- 546 014c B4EEE77A 		vcmpe.f32	s14, s15
- 547 0150 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 548 0154 CCBF     		ite	gt
- 549 0156 0123     		movgt	r3, #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 15
+ 142:Core/Src/Origin/Searching.c ****         break;
+ 626              		.loc 1 142 9 is_stmt 1 view .LVU174
+ 627              	.L36:
+ 143:Core/Src/Origin/Searching.c ****     case east:
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[1] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 145:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 146:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 147:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 148:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 149:Core/Src/Origin/Searching.c **** //    		ChangeLED(7);
+ 150:Core/Src/Origin/Searching.c **** //    	else if(wall_dir[1] == NOWALL  && wall_dir[2] == WALL && wall_dir[0] == WALL)
+ 151:Core/Src/Origin/Searching.c **** //		{
+ 152:Core/Src/Origin/Searching.c **** //    		ChangeLED(1);
+ 153:Core/Src/Origin/Searching.c **** //    		//全て正常に認識している
+ 154:Core/Src/Origin/Searching.c **** //		}
+ 155:Core/Src/Origin/Searching.c ****         break;
+ 156:Core/Src/Origin/Searching.c ****     case south:
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[2] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 158:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 159:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 160:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 161:Core/Src/Origin/Searching.c ****         break;
+ 162:Core/Src/Origin/Searching.c ****     case west:
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[3] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 164:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 165:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 166:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 167:Core/Src/Origin/Searching.c ****         break;
+ 168:Core/Src/Origin/Searching.c ****     default:
+ 169:Core/Src/Origin/Searching.c ****         //万が一斜めの方角を向いているときに呼び出してしまったら、
+ 170:Core/Src/Origin/Searching.c ****         break;
+ 171:Core/Src/Origin/Searching.c ****     }
+ 172:Core/Src/Origin/Searching.c **** 	//各方角の壁に壁の有無を代入
+ 173:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].north = wall_dir[0];
+ 174:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].east = wall_dir[1];
+ 175:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].south = wall_dir[2];
+ 176:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].west = wall_dir[3];
+ 177:Core/Src/Origin/Searching.c ****     //アクションが終わるときがノードの上にいる状態なので、状態シフト
+ 178:Core/Src/Origin/Searching.c ****     mouse->now.wall.north = wall_dir[0];
+ 628              		.loc 1 178 5 view .LVU175
+ 629              		.loc 1 178 37 is_stmt 0 view .LVU176
+ 630 008e 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 631              		.loc 1 178 27 view .LVU177
+ 632 0092 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
+ 633 0094 62F30103 		bfi	r3, r2, #0, #2
+ 634 0098 2373     		strb	r3, [r4, #12]
+ 179:Core/Src/Origin/Searching.c ****     mouse->now.wall.east = wall_dir[1];
+ 635              		.loc 1 179 5 is_stmt 1 view .LVU178
+ 636              		.loc 1 179 36 is_stmt 0 view .LVU179
+ 637 009a 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 638              		.loc 1 179 26 view .LVU180
+ 639 009e DBB2     		uxtb	r3, r3
+ 640 00a0 62F38303 		bfi	r3, r2, #2, #2
+ 641 00a4 2373     		strb	r3, [r4, #12]
+ 180:Core/Src/Origin/Searching.c ****     mouse->now.wall.south = wall_dir[2];
+ 642              		.loc 1 180 5 is_stmt 1 view .LVU181
+ 643              		.loc 1 180 37 is_stmt 0 view .LVU182
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 17
 
 
- 550 0158 0023     		movle	r3, #0
-  96:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
- 551              		.loc 1 96 18 view .LVU148
- 552 015a 8DF81430 		strb	r3, [sp, #20]
- 104:Core/Src/Origin/Searching.c ****     case south:
- 553              		.loc 1 104 9 is_stmt 1 view .LVU149
- 554 015e 96E7     		b	.L28
- 555              	.L31:
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 556              		.loc 1 106 6 view .LVU150
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 557              		.loc 1 106 27 is_stmt 0 view .LVU151
- 558 0160 564B     		ldr	r3, .L49
- 559 0162 D3ED007A 		vldr.32	s15, [r3]
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 560              		.loc 1 106 39 view .LVU152
- 561 0166 93ED037A 		vldr.32	s14, [r3, #12]
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 562              		.loc 1 106 32 view .LVU153
- 563 016a 77EE877A 		vadd.f32	s15, s15, s14
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 564              		.loc 1 106 44 view .LVU154
- 565 016e B6EE007A 		vmov.f32	s14, #5.0e-1
- 566 0172 67EE877A 		vmul.f32	s15, s15, s14
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 567              		.loc 1 106 74 view .LVU155
- 568 0176 9FED527A 		vldr.32	s14, .L49+4
- 569 017a F4EEC77A 		vcmpe.f32	s15, s14
- 570 017e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 571 0182 CCBF     		ite	gt
- 572 0184 0122     		movgt	r2, #1
- 573 0186 0022     		movle	r2, #0
- 106:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 574              		.loc 1 106 18 view .LVU156
- 575 0188 8DF81620 		strb	r2, [sp, #22]
- 107:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
- 576              		.loc 1 107 6 is_stmt 1 view .LVU157
- 107:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
- 577              		.loc 1 107 25 is_stmt 0 view .LVU158
- 578 018c 93ED017A 		vldr.32	s14, [r3, #4]
- 107:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
- 579              		.loc 1 107 52 view .LVU159
- 580 0190 DFED4C7A 		vldr.32	s15, .L49+8
- 581 0194 B4EEE77A 		vcmpe.f32	s14, s15
- 582 0198 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 583 019c CCBF     		ite	gt
- 584 019e 0122     		movgt	r2, #1
- 585 01a0 0022     		movle	r2, #0
- 107:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
- 586              		.loc 1 107 18 view .LVU160
- 587 01a2 8DF81720 		strb	r2, [sp, #23]
- 108:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 588              		.loc 1 108 6 is_stmt 1 view .LVU161
- 109:Core/Src/Origin/Searching.c ****         break;
- 589              		.loc 1 109 6 view .LVU162
- 109:Core/Src/Origin/Searching.c ****         break;
- 590              		.loc 1 109 25 is_stmt 0 view .LVU163
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 16
-
-
- 591 01a6 93ED027A 		vldr.32	s14, [r3, #8]
- 109:Core/Src/Origin/Searching.c ****         break;
- 592              		.loc 1 109 50 view .LVU164
- 593 01aa DFED477A 		vldr.32	s15, .L49+12
- 594 01ae B4EEE77A 		vcmpe.f32	s14, s15
- 595 01b2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 596 01b6 CCBF     		ite	gt
- 597 01b8 0123     		movgt	r3, #1
- 598 01ba 0023     		movle	r3, #0
- 109:Core/Src/Origin/Searching.c ****         break;
- 599              		.loc 1 109 18 view .LVU165
- 600 01bc 8DF81530 		strb	r3, [sp, #21]
- 110:Core/Src/Origin/Searching.c ****     case west:
- 601              		.loc 1 110 9 is_stmt 1 view .LVU166
- 602 01c0 65E7     		b	.L28
- 603              	.L29:
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 604              		.loc 1 112 6 view .LVU167
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 605              		.loc 1 112 27 is_stmt 0 view .LVU168
- 606 01c2 3E4B     		ldr	r3, .L49
- 607 01c4 D3ED007A 		vldr.32	s15, [r3]
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 608              		.loc 1 112 39 view .LVU169
- 609 01c8 93ED037A 		vldr.32	s14, [r3, #12]
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 610              		.loc 1 112 32 view .LVU170
- 611 01cc 77EE877A 		vadd.f32	s15, s15, s14
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 612              		.loc 1 112 44 view .LVU171
- 613 01d0 B6EE007A 		vmov.f32	s14, #5.0e-1
- 614 01d4 67EE877A 		vmul.f32	s15, s15, s14
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 615              		.loc 1 112 74 view .LVU172
- 616 01d8 9FED397A 		vldr.32	s14, .L49+4
- 617 01dc F4EEC77A 		vcmpe.f32	s15, s14
- 618 01e0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 619 01e4 CCBF     		ite	gt
- 620 01e6 0122     		movgt	r2, #1
- 621 01e8 0022     		movle	r2, #0
- 112:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SR] > RIGHT_WALL  ?  WALL :  NOWALL;
- 622              		.loc 1 112 18 view .LVU173
- 623 01ea 8DF81720 		strb	r2, [sp, #23]
- 113:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
- 624              		.loc 1 113 6 is_stmt 1 view .LVU174
- 113:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
- 625              		.loc 1 113 25 is_stmt 0 view .LVU175
- 626 01ee 93ED017A 		vldr.32	s14, [r3, #4]
- 113:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
- 627              		.loc 1 113 52 view .LVU176
- 628 01f2 DFED347A 		vldr.32	s15, .L49+8
- 629 01f6 B4EEE77A 		vcmpe.f32	s14, s15
- 630 01fa F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 631 01fe CCBF     		ite	gt
- 632 0200 0122     		movgt	r2, #1
- 633 0202 0022     		movle	r2, #0
- 113:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 17
-
-
- 634              		.loc 1 113 18 view .LVU177
- 635 0204 8DF81420 		strb	r2, [sp, #20]
- 114:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 636              		.loc 1 114 6 is_stmt 1 view .LVU178
- 115:Core/Src/Origin/Searching.c ****         break;
- 637              		.loc 1 115 6 view .LVU179
- 115:Core/Src/Origin/Searching.c ****         break;
- 638              		.loc 1 115 25 is_stmt 0 view .LVU180
- 639 0208 93ED027A 		vldr.32	s14, [r3, #8]
- 115:Core/Src/Origin/Searching.c ****         break;
- 640              		.loc 1 115 50 view .LVU181
- 641 020c DFED2E7A 		vldr.32	s15, .L49+12
- 642 0210 B4EEE77A 		vcmpe.f32	s14, s15
- 643 0214 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 644 0218 CCBF     		ite	gt
- 645 021a 0123     		movgt	r3, #1
- 646 021c 0023     		movle	r3, #0
- 115:Core/Src/Origin/Searching.c ****         break;
- 647              		.loc 1 115 18 view .LVU182
- 648 021e 8DF81630 		strb	r3, [sp, #22]
- 116:Core/Src/Origin/Searching.c ****     default:
- 649              		.loc 1 116 9 is_stmt 1 view .LVU183
- 650 0222 34E7     		b	.L28
- 651              	.L45:
- 143:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 652              		.loc 1 143 4 view .LVU184
- 143:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 653              		.loc 1 143 23 is_stmt 0 view .LVU185
- 654 0224 04F12007 		add	r7, r4, #32
- 143:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 655              		.loc 1 143 7 view .LVU186
- 656 0228 3146     		mov	r1, r6
- 657 022a 3846     		mov	r0, r7
- 658 022c FFF7FEFF 		bl	ComparePosition
- 659              	.LVL39:
- 143:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 660              		.loc 1 143 6 view .LVU187
- 661 0230 30B9     		cbnz	r0, .L35
- 143:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 662              		.loc 1 143 67 discriminator 1 view .LVU188
- 663 0232 04A9     		add	r1, sp, #16
- 664 0234 3846     		mov	r0, r7
- 665 0236 FFF7FEFF 		bl	ComparePosition
- 666              	.LVL40:
- 143:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 667              		.loc 1 143 64 discriminator 1 view .LVU189
- 668 023a 0028     		cmp	r0, #0
- 669 023c 3FF451AF 		beq	.L34
- 670              	.L35:
- 671              	.LBB12:
- 144:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
- 672              		.loc 1 144 5 is_stmt 1 view .LVU190
- 144:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
- 673              		.loc 1 144 24 is_stmt 0 view .LVU191
- 674 0240 0123     		movs	r3, #1
- 675 0242 2371     		strb	r3, [r4, #4]
- 145:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 18
-
-
- 676              		.loc 1 145 5 is_stmt 1 view .LVU192
- 145:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
- 677              		.loc 1 145 33 is_stmt 0 view .LVU193
- 678 0244 3146     		mov	r1, r6
- 679 0246 2846     		mov	r0, r5
- 680 0248 FFF7FEFF 		bl	StackMass
- 681              	.LVL41:
- 146:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
- 682              		.loc 1 146 5 is_stmt 1 view .LVU194
- 146:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
- 683              		.loc 1 146 7 is_stmt 0 view .LVU195
- 684 024c C8B9     		cbnz	r0, .L36
- 146:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
- 685              		.loc 1 146 34 is_stmt 1 discriminator 1 view .LVU196
- 686 024e 0720     		movs	r0, #7
- 687              	.LVL42:
- 146:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
- 688              		.loc 1 146 34 is_stmt 0 discriminator 1 view .LVU197
- 689 0250 FFF7FEFF 		bl	ChangeLED
- 690              	.LVL43:
- 691              	.L37:
- 149:Core/Src/Origin/Searching.c **** 
- 692              		.loc 1 149 5 is_stmt 1 view .LVU198
- 149:Core/Src/Origin/Searching.c **** 
- 693              		.loc 1 149 13 is_stmt 0 view .LVU199
- 694 0254 FFF7FEFF 		bl	GetStackNum
- 695              	.LVL44:
- 152:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
- 696              		.loc 1 152 5 is_stmt 1 view .LVU200
- 152:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
- 697              		.loc 1 152 7 is_stmt 0 view .LVU201
- 698 0258 0646     		mov	r6, r0
- 699 025a B0B1     		cbz	r0, .L46
- 700              	.LBB13:
- 158:Core/Src/Origin/Searching.c **** 					position pos;
- 701              		.loc 1 158 6 is_stmt 1 view .LVU202
- 158:Core/Src/Origin/Searching.c **** 					position pos;
- 702              		.loc 1 158 16 is_stmt 0 view .LVU203
- 703 025c 1B4B     		ldr	r3, .L49+16
- 704 025e 0122     		movs	r2, #1
- 705 0260 1A60     		str	r2, [r3]
- 159:Core/Src/Origin/Searching.c **** 					_Bool is_first = false;
- 706              		.loc 1 159 6 is_stmt 1 view .LVU204
- 160:Core/Src/Origin/Searching.c **** 					while( 1 ){
- 707              		.loc 1 160 6 view .LVU205
- 708              	.LVL45:
- 709              	.L42:
- 161:Core/Src/Origin/Searching.c **** 						pos = GetStackMass();
- 710              		.loc 1 161 6 view .LVU206
- 162:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
- 711              		.loc 1 162 7 view .LVU207
- 162:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
- 712              		.loc 1 162 13 is_stmt 0 view .LVU208
- 713 0262 FFF7FEFF 		bl	GetStackMass
- 714              	.LVL46:
- 715 0266 ADF80C00 		strh	r0, [sp, #12]	@ movhi
- 163:Core/Src/Origin/Searching.c **** 						if(n == 0){
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 19
-
-
- 716              		.loc 1 163 7 is_stmt 1 view .LVU209
- 163:Core/Src/Origin/Searching.c **** 						if(n == 0){
- 717              		.loc 1 163 18 is_stmt 0 view .LVU210
- 718 026a 03A8     		add	r0, sp, #12
- 719 026c FFF7FEFF 		bl	GetVisited
- 720              	.LVL47:
- 164:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
- 721              		.loc 1 164 7 is_stmt 1 view .LVU211
- 164:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
- 722              		.loc 1 164 9 is_stmt 0 view .LVU212
- 723 0270 AEB1     		cbz	r6, .L47
- 169:Core/Src/Origin/Searching.c **** 
- 724              		.loc 1 169 12 is_stmt 1 view .LVU213
- 169:Core/Src/Origin/Searching.c **** 
- 725              		.loc 1 169 14 is_stmt 0 view .LVU214
- 726 0272 D8B1     		cbz	r0, .L48
- 176:Core/Src/Origin/Searching.c **** 							--n;
- 727              		.loc 1 176 12 is_stmt 1 view .LVU215
- 176:Core/Src/Origin/Searching.c **** 							--n;
- 728              		.loc 1 176 14 is_stmt 0 view .LVU216
- 729 0274 0028     		cmp	r0, #0
- 730 0276 F4D0     		beq	.L42
- 177:Core/Src/Origin/Searching.c **** 							SetStackNum(n); //0になったら
- 731              		.loc 1 177 8 is_stmt 1 view .LVU217
- 732 0278 013E     		subs	r6, r6, #1
- 733              	.LVL48:
- 178:Core/Src/Origin/Searching.c **** 						}
- 734              		.loc 1 178 8 view .LVU218
- 735 027a 3046     		mov	r0, r6
- 736              	.LVL49:
- 178:Core/Src/Origin/Searching.c **** 						}
- 737              		.loc 1 178 8 is_stmt 0 view .LVU219
- 738 027c FFF7FEFF 		bl	SetStackNum
- 739              	.LVL50:
- 740 0280 EFE7     		b	.L42
- 741              	.LVL51:
- 742              	.L36:
- 178:Core/Src/Origin/Searching.c **** 						}
- 743              		.loc 1 178 8 view .LVU220
- 744              	.LBE13:
- 147:Core/Src/Origin/Searching.c **** 
- 745              		.loc 1 147 10 is_stmt 1 view .LVU221
- 746 0282 0020     		movs	r0, #0
- 747              	.LVL52:
- 147:Core/Src/Origin/Searching.c **** 
- 748              		.loc 1 147 10 is_stmt 0 view .LVU222
- 749 0284 FFF7FEFF 		bl	ChangeLED
- 750              	.LVL53:
- 751 0288 E4E7     		b	.L37
- 752              	.LVL54:
- 753              	.L46:
- 153:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
- 754              		.loc 1 153 6 is_stmt 1 view .LVU223
- 153:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
- 755              		.loc 1 153 16 is_stmt 0 view .LVU224
- 756 028a 104B     		ldr	r3, .L49+16
- 757 028c 0122     		movs	r2, #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 20
-
-
- 758 028e 1A60     		str	r2, [r3]
- 154:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
- 759              		.loc 1 154 6 is_stmt 1 view .LVU225
- 154:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
- 760              		.loc 1 154 26 is_stmt 0 view .LVU226
- 761 0290 FFF7FEFF 		bl	GetStackMass
- 762              	.LVL55:
- 154:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
- 763              		.loc 1 154 26 view .LVU227
- 764 0294 2084     		strh	r0, [r4, #32]	@ movhi
- 155:Core/Src/Origin/Searching.c **** 				}//0以外なら通常通り
- 765              		.loc 1 155 6 is_stmt 1 view .LVU228
- 766 0296 3046     		mov	r0, r6
- 767 0298 FFF7FEFF 		bl	SetStackNum
- 768              	.LVL56:
- 769 029c 21E7     		b	.L34
- 770              	.LVL57:
- 771              	.L47:
- 772              	.LBB14:
- 165:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
- 773              		.loc 1 165 8 view .LVU229
- 165:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
- 774              		.loc 1 165 26 is_stmt 0 view .LVU230
- 775 029e BDF80C30 		ldrh	r3, [sp, #12]
- 776 02a2 2384     		strh	r3, [r4, #32]	@ movhi
- 166:Core/Src/Origin/Searching.c **** 							break;
- 777              		.loc 1 166 8 is_stmt 1 view .LVU231
- 778 02a4 0720     		movs	r0, #7
- 779              	.LVL58:
- 166:Core/Src/Origin/Searching.c **** 							break;
- 780              		.loc 1 166 8 is_stmt 0 view .LVU232
- 781 02a6 FFF7FEFF 		bl	ChangeLED
- 782              	.LVL59:
- 167:Core/Src/Origin/Searching.c **** 						}
- 783              		.loc 1 167 8 is_stmt 1 view .LVU233
- 784 02aa 1AE7     		b	.L34
- 785              	.LVL60:
- 786              	.L48:
- 171:Core/Src/Origin/Searching.c **** 							--n;
- 787              		.loc 1 171 8 view .LVU234
- 171:Core/Src/Origin/Searching.c **** 							--n;
- 788              		.loc 1 171 26 is_stmt 0 view .LVU235
- 789 02ac BDF80C30 		ldrh	r3, [sp, #12]
- 790 02b0 2384     		strh	r3, [r4, #32]	@ movhi
- 172:Core/Src/Origin/Searching.c **** 							SetStackNum(n);
- 791              		.loc 1 172 8 is_stmt 1 view .LVU236
- 792              	.LVL61:
- 173:Core/Src/Origin/Searching.c **** 							break;
- 793              		.loc 1 173 8 view .LVU237
- 794 02b2 701E     		subs	r0, r6, #1
- 795              	.LVL62:
- 173:Core/Src/Origin/Searching.c **** 							break;
- 796              		.loc 1 173 8 is_stmt 0 view .LVU238
- 797 02b4 FFF7FEFF 		bl	SetStackNum
- 798              	.LVL63:
- 174:Core/Src/Origin/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
- 799              		.loc 1 174 8 is_stmt 1 view .LVU239
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 21
-
-
- 800 02b8 13E7     		b	.L34
- 801              	.L50:
- 802 02ba 00BF     		.align	2
- 803              	.L49:
- 804 02bc 00000000 		.word	Photo
- 805 02c0 00003442 		.word	1110704128
- 806 02c4 0000B442 		.word	1119092736
- 807 02c8 0000C842 		.word	1120403456
- 808 02cc 00000000 		.word	WALL_MASK
- 809              	.LBE14:
- 810              	.LBE12:
- 811              		.cfi_endproc
- 812              	.LFE240:
- 814              		.section	.text.getNextDirection,"ax",%progbits
- 815              		.align	1
- 816              		.global	getNextDirection
- 817              		.syntax unified
- 818              		.thumb
- 819              		.thumb_func
- 821              	getNextDirection:
- 822              	.LVL64:
- 823              	.LFB241:
- 192:Core/Src/Origin/Searching.c **** //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせ�
- 193:Core/Src/Origin/Searching.c **** //現情報と次情報から次の進行方向を得る処理
- 194:Core/Src/Origin/Searching.c **** 
- 195:Core/Src/Origin/Searching.c **** void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
- 196:Core/Src/Origin/Searching.c **** {
- 824              		.loc 1 196 1 view -0
- 825              		.cfi_startproc
- 826              		@ args = 0, pretend = 0, frame = 0
- 827              		@ frame_needed = 0, uses_anonymous_args = 0
- 828              		.loc 1 196 1 is_stmt 0 view .LVU241
- 829 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 830              	.LCFI11:
- 831              		.cfi_def_cfa_offset 24
- 832              		.cfi_offset 3, -24
- 833              		.cfi_offset 4, -20
- 834              		.cfi_offset 5, -16
- 835              		.cfi_offset 6, -12
- 836              		.cfi_offset 7, -8
- 837              		.cfi_offset 14, -4
- 838 0002 0546     		mov	r5, r0
- 839 0004 0C46     		mov	r4, r1
- 840 0006 1646     		mov	r6, r2
- 197:Core/Src/Origin/Searching.c **** 	//一回目の旋回後、東を向いている
- 198:Core/Src/Origin/Searching.c **** 	//選ぶノードがおかしい
- 199:Core/Src/Origin/Searching.c **** 	//重みが、壁がある方が小さくなってしまっている.
- 200:Core/Src/Origin/Searching.c **** 	//
+ 644 00a6 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 645              		.loc 1 180 27 view .LVU183
+ 646 00aa DBB2     		uxtb	r3, r3
+ 647 00ac 62F30513 		bfi	r3, r2, #4, #2
+ 648 00b0 2373     		strb	r3, [r4, #12]
+ 181:Core/Src/Origin/Searching.c ****     mouse->now.wall.west = wall_dir[3];
+ 649              		.loc 1 181 5 is_stmt 1 view .LVU184
+ 650              		.loc 1 181 36 is_stmt 0 view .LVU185
+ 651 00b2 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 652              		.loc 1 181 26 view .LVU186
+ 653 00b6 DBB2     		uxtb	r3, r3
+ 654 00b8 62F38713 		bfi	r3, r2, #6, #2
+ 655 00bc 2373     		strb	r3, [r4, #12]
+ 182:Core/Src/Origin/Searching.c **** 
+ 183:Core/Src/Origin/Searching.c **** 	//getWallNow(&(my_mouse->now), &wall[0]);
+ 184:Core/Src/Origin/Searching.c **** 
+ 185:Core/Src/Origin/Searching.c ****     //現在方角、壁は、合ってる。座標とノードは？
+ 186:Core/Src/Origin/Searching.c ****     //ここで壁の存在を反映
+ 187:Core/Src/Origin/Searching.c **** 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
+ 656              		.loc 1 187 2 is_stmt 1 view .LVU187
+ 657 00be 04F10806 		add	r6, r4, #8
+ 658 00c2 637A     		ldrb	r3, [r4, #9]	@ zero_extendqisi2
+ 659 00c4 227A     		ldrb	r2, [r4, #8]	@ zero_extendqisi2
+ 660 00c6 3146     		mov	r1, r6
+ 661 00c8 2846     		mov	r0, r5
+ 662 00ca FFF7FEFF 		bl	updateNodeThree
+ 663              	.LVL47:
+ 188:Core/Src/Origin/Searching.c **** 
+ 189:Core/Src/Origin/Searching.c **** 
+ 190:Core/Src/Origin/Searching.c **** 	//これの前に、target.posに到達したかどうかが必要
+ 191:Core/Src/Origin/Searching.c **** 			//到達していればStackを再開
+ 192:Core/Src/Origin/Searching.c **** 	position start_pos = {0,0};
+ 664              		.loc 1 192 2 view .LVU188
+ 665              		.loc 1 192 11 is_stmt 0 view .LVU189
+ 666 00ce 0023     		movs	r3, #0
+ 667 00d0 8DF81030 		strb	r3, [sp, #16]
+ 668 00d4 8DF81130 		strb	r3, [sp, #17]
+ 193:Core/Src/Origin/Searching.c **** 	if(GetStackFlag() == true){
+ 669              		.loc 1 193 2 is_stmt 1 view .LVU190
+ 670              		.loc 1 193 5 is_stmt 0 view .LVU191
+ 671 00d8 FFF7FEFF 		bl	GetStackFlag
+ 672              	.LVL48:
+ 673              		.loc 1 193 4 view .LVU192
+ 674 00dc 0028     		cmp	r0, #0
+ 675 00de 40F0A180 		bne	.L53
+ 676              	.L42:
+ 194:Core/Src/Origin/Searching.c **** 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.p
+ 195:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 196:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
+ 197:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
+ 198:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 199:Core/Src/Origin/Searching.c **** 
+ 200:Core/Src/Origin/Searching.c **** 				int n = GetStackNum();
  201:Core/Src/Origin/Searching.c **** 
- 202:Core/Src/Origin/Searching.c **** 	//メインでノード選択
- 203:Core/Src/Origin/Searching.c **** 	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, mask);
- 841              		.loc 1 203 2 is_stmt 1 view .LVU242
- 842              		.loc 1 203 21 is_stmt 0 view .LVU243
- 843 0008 0A69     		ldr	r2, [r1, #16]
- 844              	.LVL65:
- 845              		.loc 1 203 21 view .LVU244
- 846 000a 897A     		ldrb	r1, [r1, #10]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 22
+ 202:Core/Src/Origin/Searching.c **** 				//0なら
+ 203:Core/Src/Origin/Searching.c **** 				if(n == 0){
+ 204:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 18
 
 
- 847              	.LVL66:
- 848              		.loc 1 203 21 view .LVU245
- 849 000c FFF7FEFF 		bl	getNextNode
- 850              	.LVL67:
- 851              		.loc 1 203 21 view .LVU246
- 852 0010 0246     		mov	r2, r0
- 853              		.loc 1 203 19 view .LVU247
- 854 0012 E061     		str	r0, [r4, #28]
- 204:Core/Src/Origin/Searching.c **** 	getNextState(&(Mouse->now), &(Mouse->next), Mouse->next.node);
- 855              		.loc 1 204 2 is_stmt 1 view .LVU248
- 856 0014 04F11401 		add	r1, r4, #20
- 857 0018 04F10800 		add	r0, r4, #8
- 858 001c FFF7FEFF 		bl	getNextState
- 859              	.LVL68:
- 205:Core/Src/Origin/Searching.c **** 
- 206:Core/Src/Origin/Searching.c **** 	//既知区間加速このswitch文中で書くかも
- 207:Core/Src/Origin/Searching.c **** 		//コマンドキューのときはここでコマンドを発行してキューに渡す
- 208:Core/Src/Origin/Searching.c **** 	AddVelocity = 0;
- 860              		.loc 1 208 2 view .LVU249
- 861              		.loc 1 208 14 is_stmt 0 view .LVU250
- 862 0020 624B     		ldr	r3, .L69
- 863 0022 0022     		movs	r2, #0
- 864 0024 1A60     		str	r2, [r3]	@ float
- 209:Core/Src/Origin/Searching.c **** 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしま�
- 210:Core/Src/Origin/Searching.c **** 	_Bool accel_or_not = false;
- 865              		.loc 1 210 2 is_stmt 1 view .LVU251
- 866              	.LVL69:
- 211:Core/Src/Origin/Searching.c **** 	int accel_or_decel = 0;
- 867              		.loc 1 211 2 view .LVU252
- 212:Core/Src/Origin/Searching.c **** 	switch(Mouse->now.dir%8) //次の方角からアクションを選択
- 868              		.loc 1 212 2 view .LVU253
- 869              		.loc 1 212 19 is_stmt 0 view .LVU254
- 870 0026 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
- 871              		.loc 1 212 2 view .LVU255
- 872 0028 03F00703 		and	r3, r3, #7
- 873 002c 062B     		cmp	r3, #6
- 874 002e 2BD8     		bhi	.L51
- 875 0030 DFE803F0 		tbb	[pc, r3]
- 876              	.L54:
- 877 0034 04       		.byte	(.L59-.L54)/2
- 878 0035 2A       		.byte	(.L51-.L54)/2
- 879 0036 49       		.byte	(.L58-.L54)/2
- 880 0037 53       		.byte	(.L57-.L54)/2
- 881 0038 63       		.byte	(.L56-.L54)/2
- 882 0039 A1       		.byte	(.L55-.L54)/2
- 883 003a B1       		.byte	(.L53-.L54)/2
- 884 003b 00       		.p2align 1
- 885              	.L59:
- 213:Core/Src/Origin/Searching.c **** 	{
- 214:Core/Src/Origin/Searching.c **** 	case front:
- 215:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 216:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
- 217:Core/Src/Origin/Searching.c **** //		accel_or_decel = 0;
- 218:Core/Src/Origin/Searching.c **** 
- 219:Core/Src/Origin/Searching.c **** 		//直進後の選択肢も見ておく
- 220:Core/Src/Origin/Searching.c **** 		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
- 886              		.loc 1 220 3 is_stmt 1 view .LVU256
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 23
-
-
- 887              		.loc 1 220 18 is_stmt 0 view .LVU257
- 888 003c E269     		ldr	r2, [r4, #28]
- 889 003e A17D     		ldrb	r1, [r4, #22]	@ zero_extendqisi2
- 890 0040 2846     		mov	r0, r5
- 891 0042 FFF7FEFF 		bl	judgeAccelorNot
- 892              	.LVL70:
+ 205:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+ 206:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 207:Core/Src/Origin/Searching.c **** 				}//0以外なら通常通り
+ 208:Core/Src/Origin/Searching.c **** 				else{
+ 209:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
+ 210:Core/Src/Origin/Searching.c **** 					position pos;
+ 211:Core/Src/Origin/Searching.c **** 					_Bool is_first = false;
+ 212:Core/Src/Origin/Searching.c **** 					while( 1 ){
+ 213:Core/Src/Origin/Searching.c **** 						pos = GetStackMass();
+ 214:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
+ 215:Core/Src/Origin/Searching.c **** 						if(n == 0){
+ 216:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
+ 217:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
+ 218:Core/Src/Origin/Searching.c **** 							break;
+ 219:Core/Src/Origin/Searching.c **** 						}
+ 220:Core/Src/Origin/Searching.c **** 						else if(is_first == false){
  221:Core/Src/Origin/Searching.c **** 
- 222:Core/Src/Origin/Searching.c **** 		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.�
- 223:Core/Src/Origin/Searching.c **** 		if(accel_or_not == true) //既知で.直進
- 893              		.loc 1 223 3 is_stmt 1 view .LVU258
- 894              		.loc 1 223 5 is_stmt 0 view .LVU259
- 895 0046 60B3     		cbz	r0, .L60
- 224:Core/Src/Origin/Searching.c **** 		{
- 225:Core/Src/Origin/Searching.c **** 			//加速かそのまま.
- 226:Core/Src/Origin/Searching.c **** 			//現在速度がマックスかどうか
- 227:Core/Src/Origin/Searching.c **** 			if(VelocityMax == true)
- 896              		.loc 1 227 4 is_stmt 1 view .LVU260
- 897              		.loc 1 227 19 is_stmt 0 view .LVU261
- 898 0048 594B     		ldr	r3, .L69+4
- 899 004a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 900              		.loc 1 227 6 view .LVU262
- 901 004c EBB1     		cbz	r3, .L61
- 228:Core/Src/Origin/Searching.c **** 			{
- 229:Core/Src/Origin/Searching.c **** 				accel_or_decel = 0; //そのまま
- 902              		.loc 1 229 5 is_stmt 1 view .LVU263
- 230:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 903              		.loc 1 230 5 view .LVU264
- 904              		.loc 1 230 34 is_stmt 0 view .LVU265
- 905 004e 594B     		ldr	r3, .L69+8
- 906 0050 D3ED007A 		vldr.32	s15, [r3]
- 907 0054 B7EE087A 		vmov.f32	s14, #1.5e+0
- 908 0058 67EE877A 		vmul.f32	s15, s15, s14
- 909              		.loc 1 230 17 view .LVU266
- 910 005c 534B     		ldr	r3, .L69
- 911 005e C3ED007A 		vstr.32	s15, [r3]
- 229:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 912              		.loc 1 229 20 view .LVU267
- 913 0062 0020     		movs	r0, #0
- 914              	.LVL71:
- 915              	.L62:
- 231:Core/Src/Origin/Searching.c **** //				ChangeLED(0);
- 232:Core/Src/Origin/Searching.c **** 			}
- 233:Core/Src/Origin/Searching.c **** 			else
- 234:Core/Src/Origin/Searching.c **** 			{
- 235:Core/Src/Origin/Searching.c **** 				accel_or_decel = 1; //加速
- 236:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 237:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
- 238:Core/Src/Origin/Searching.c **** 			}
- 239:Core/Src/Origin/Searching.c **** 		}
- 240:Core/Src/Origin/Searching.c **** 		else
- 241:Core/Src/Origin/Searching.c **** 		{
- 242:Core/Src/Origin/Searching.c **** 			//未知もしくは、既知でも直進で無ければ.減速かそのまま
- 243:Core/Src/Origin/Searching.c **** 			//現在速度がマックスかどうか
- 244:Core/Src/Origin/Searching.c **** 			if(VelocityMax == true)
- 245:Core/Src/Origin/Searching.c **** 			{
- 246:Core/Src/Origin/Searching.c **** 				accel_or_decel = -1; //減速
- 247:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 24
+ 222:Core/Src/Origin/Searching.c **** 							mouse->target.pos =pos;
+ 223:Core/Src/Origin/Searching.c **** 							--n;
+ 224:Core/Src/Origin/Searching.c **** 							SetStackNum(n);
+ 225:Core/Src/Origin/Searching.c **** 							break;
+ 226:Core/Src/Origin/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
+ 227:Core/Src/Origin/Searching.c **** 						else if(is_first == true){
+ 228:Core/Src/Origin/Searching.c **** 							--n;
+ 229:Core/Src/Origin/Searching.c **** 							SetStackNum(n); //0になったら
+ 230:Core/Src/Origin/Searching.c **** 						}
+ 231:Core/Src/Origin/Searching.c **** 						 //訪問済みであれば更に下を読む
+ 232:Core/Src/Origin/Searching.c **** 					}
+ 233:Core/Src/Origin/Searching.c **** 				}
+ 234:Core/Src/Origin/Searching.c **** 
+ 235:Core/Src/Origin/Searching.c **** 			}//到達していなければ、そのまま最短でtarget.posに向かう
+ 236:Core/Src/Origin/Searching.c **** 	}
+ 237:Core/Src/Origin/Searching.c **** 
+ 238:Core/Src/Origin/Searching.c **** //	int WALL_MASK = 0x01;
+ 239:Core/Src/Origin/Searching.c **** 	//壁の存在を基に重みマップを更新
+ 240:Core/Src/Origin/Searching.c **** 	updateAllNodeWeight(maze, mouse->target.pos.x, mouse->target.pos.y, mouse->target_size, mouse->tar
+ 677              		.loc 1 240 2 is_stmt 1 view .LVU193
+ 678 00e2 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 679 00e4 794A     		ldr	r2, .L57+16
+ 680 00e6 1268     		ldr	r2, [r2]
+ 681 00e8 0192     		str	r2, [sp, #4]
+ 682 00ea 0093     		str	r3, [sp]
+ 683 00ec 94F82120 		ldrb	r2, [r4, #33]	@ zero_extendqisi2
+ 684 00f0 94F82010 		ldrb	r1, [r4, #32]	@ zero_extendqisi2
+ 685 00f4 2846     		mov	r0, r5
+ 686 00f6 FFF7FEFF 		bl	updateAllNodeWeight
+ 687              	.LVL49:
+ 241:Core/Src/Origin/Searching.c **** 			//mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01); // goal_lesser_x,
+ 242:Core/Src/Origin/Searching.c **** }
+ 688              		.loc 1 242 1 is_stmt 0 view .LVU194
+ 689 00fa 07B0     		add	sp, sp, #28
+ 690              	.LCFI7:
+ 691              		.cfi_remember_state
+ 692              		.cfi_def_cfa_offset 20
+ 693              		@ sp needed
+ 694 00fc F0BD     		pop	{r4, r5, r6, r7, pc}
+ 695              	.LVL50:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 19
 
 
- 248:Core/Src/Origin/Searching.c **** //				ChangeLED(cnt);
- 249:Core/Src/Origin/Searching.c **** 				cnt += 2;
- 250:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 251:Core/Src/Origin/Searching.c **** 			}
- 252:Core/Src/Origin/Searching.c **** 			else //マックスでない
- 253:Core/Src/Origin/Searching.c **** 			{
- 254:Core/Src/Origin/Searching.c **** 				accel_or_decel = 0; //そのまま
- 255:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 256:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
- 257:Core/Src/Origin/Searching.c **** 			}
- 258:Core/Src/Origin/Searching.c **** 		}
- 259:Core/Src/Origin/Searching.c **** 
- 260:Core/Src/Origin/Searching.c **** 
- 261:Core/Src/Origin/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速す�
- 262:Core/Src/Origin/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのま�
- 263:Core/Src/Origin/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索�
- 264:Core/Src/Origin/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度�
- 265:Core/Src/Origin/Searching.c **** 		//ただ直進
- 266:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 916              		.loc 1 266 3 is_stmt 1 view .LVU268
- 917              		.loc 1 266 8 is_stmt 0 view .LVU269
- 918 0064 544B     		ldr	r3, .L69+12
- 919 0066 1A68     		ldr	r2, [r3]
- 920 0068 544B     		ldr	r3, .L69+16
- 921 006a 1A60     		str	r2, [r3]
- 267:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
- 922              		.loc 1 267 3 is_stmt 1 view .LVU270
- 923 006c 514B     		ldr	r3, .L69+8
- 924 006e D3ED000A 		vldr.32	s1, [r3]
- 925 0072 4E4B     		ldr	r3, .L69
- 926 0074 D3ED007A 		vldr.32	s15, [r3]
- 927 0078 2246     		mov	r2, r4
- 928 007a 2946     		mov	r1, r5
- 929 007c 70EEA70A 		vadd.f32	s1, s1, s15
- 930 0080 9FED4F0A 		vldr.32	s0, .L69+20
- 931 0084 FFF7FEFF 		bl	GoStraight
- 932              	.LVL72:
- 268:Core/Src/Origin/Searching.c **** 		break;
- 933              		.loc 1 268 3 view .LVU271
- 934              	.L51:
- 269:Core/Src/Origin/Searching.c **** 	case right:
- 270:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 271:Core/Src/Origin/Searching.c **** 		//右旋回
- 272:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 273:Core/Src/Origin/Searching.c **** 
- 274:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
- 275:Core/Src/Origin/Searching.c **** 		break;
- 276:Core/Src/Origin/Searching.c **** 	case backright:
- 277:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 278:Core/Src/Origin/Searching.c **** 		//Uターンして右旋回
- 279:Core/Src/Origin/Searching.c **** 		//壁の更新の処理を呼ばない
- 280:Core/Src/Origin/Searching.c **** //		SearchOrFast = 1;
- 281:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
- 282:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
- 283:Core/Src/Origin/Searching.c **** 		//1ノード、アクションごとに行動を更新したい.
- 284:Core/Src/Origin/Searching.c **** 		//方角の更新は基本加減算でない
- 285:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse); //間の座標変動を
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 25
+ 696              	.L40:
+ 697              	.LCFI8:
+ 698              		.cfi_restore_state
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 699              		.loc 1 144 6 is_stmt 1 view .LVU195
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 700              		.loc 1 144 27 is_stmt 0 view .LVU196
+ 701 00fe 6F4B     		ldr	r3, .L57
+ 702 0100 D3ED007A 		vldr.32	s15, [r3]
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 703              		.loc 1 144 39 view .LVU197
+ 704 0104 93ED037A 		vldr.32	s14, [r3, #12]
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 705              		.loc 1 144 32 view .LVU198
+ 706 0108 77EE877A 		vadd.f32	s15, s15, s14
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 707              		.loc 1 144 44 view .LVU199
+ 708 010c B6EE007A 		vmov.f32	s14, #5.0e-1
+ 709 0110 67EE877A 		vmul.f32	s15, s15, s14
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 710              		.loc 1 144 74 view .LVU200
+ 711 0114 9FED6A7A 		vldr.32	s14, .L57+4
+ 712 0118 F4EEC77A 		vcmpe.f32	s15, s14
+ 713 011c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 714 0120 CCBF     		ite	gt
+ 715 0122 0122     		movgt	r2, #1
+ 716 0124 0022     		movle	r2, #0
+ 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 717              		.loc 1 144 18 view .LVU201
+ 718 0126 8DF81520 		strb	r2, [sp, #21]
+ 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 719              		.loc 1 145 6 is_stmt 1 view .LVU202
+ 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 720              		.loc 1 145 25 is_stmt 0 view .LVU203
+ 721 012a 93ED017A 		vldr.32	s14, [r3, #4]
+ 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 722              		.loc 1 145 56 view .LVU204
+ 723 012e DFED657A 		vldr.32	s15, .L57+8
+ 724 0132 B4EEE77A 		vcmpe.f32	s14, s15
+ 725 0136 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 726 013a CCBF     		ite	gt
+ 727 013c 0122     		movgt	r2, #1
+ 728 013e 0022     		movle	r2, #0
+ 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 729              		.loc 1 145 18 view .LVU205
+ 730 0140 8DF81620 		strb	r2, [sp, #22]
+ 146:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 731              		.loc 1 146 6 is_stmt 1 view .LVU206
+ 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 732              		.loc 1 147 6 view .LVU207
+ 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 733              		.loc 1 147 25 is_stmt 0 view .LVU208
+ 734 0144 93ED027A 		vldr.32	s14, [r3, #8]
+ 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 735              		.loc 1 147 50 view .LVU209
+ 736 0148 DFED5F7A 		vldr.32	s15, .L57+12
+ 737 014c B4EEE77A 		vcmpe.f32	s14, s15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 20
 
 
- 286:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 287:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
- 288:Core/Src/Origin/Searching.c **** 
- 289:Core/Src/Origin/Searching.c **** 
- 290:Core/Src/Origin/Searching.c **** 		break;
- 291:Core/Src/Origin/Searching.c **** 	case back:
- 292:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 293:Core/Src/Origin/Searching.c **** 		//Uターンして直進.加速できる
- 294:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
- 295:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 296:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
- 297:Core/Src/Origin/Searching.c **** //		accel_or_decel = 0;
- 298:Core/Src/Origin/Searching.c **** 		//直進後の選択肢も見ておく
- 299:Core/Src/Origin/Searching.c **** 				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
- 300:Core/Src/Origin/Searching.c **** 
- 301:Core/Src/Origin/Searching.c **** 				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか
- 302:Core/Src/Origin/Searching.c **** 				if(accel_or_not == true) //既知で.直進
- 303:Core/Src/Origin/Searching.c **** 				{
- 304:Core/Src/Origin/Searching.c **** 					//加速かそのまま.
- 305:Core/Src/Origin/Searching.c **** 					//現在速度がマックスかどうか
- 306:Core/Src/Origin/Searching.c **** 					if(VelocityMax == true)
- 307:Core/Src/Origin/Searching.c **** 					{
- 308:Core/Src/Origin/Searching.c **** 						accel_or_decel = 0; //そのまま
- 309:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 310:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
- 311:Core/Src/Origin/Searching.c **** 					}
- 312:Core/Src/Origin/Searching.c **** 					else
- 313:Core/Src/Origin/Searching.c **** 					{
- 314:Core/Src/Origin/Searching.c **** 						accel_or_decel = 1; //加速
- 315:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 316:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
- 317:Core/Src/Origin/Searching.c **** 					}
- 318:Core/Src/Origin/Searching.c **** 				}
- 319:Core/Src/Origin/Searching.c **** 				else
- 320:Core/Src/Origin/Searching.c **** 				{
- 321:Core/Src/Origin/Searching.c **** 					//未知もしくは、既知でも直進で無ければ.減速かそのまま
- 322:Core/Src/Origin/Searching.c **** 					//現在速度がマックスかどうか
- 323:Core/Src/Origin/Searching.c **** 					if(VelocityMax == true)
- 324:Core/Src/Origin/Searching.c **** 					{
- 325:Core/Src/Origin/Searching.c **** 						accel_or_decel = -1; //減速
- 326:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
- 327:Core/Src/Origin/Searching.c **** //						ChangeLED(cnt);
- 328:Core/Src/Origin/Searching.c **** 						cnt += 2;
- 329:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 330:Core/Src/Origin/Searching.c **** 					}
- 331:Core/Src/Origin/Searching.c **** 					else //マックスでない
- 332:Core/Src/Origin/Searching.c **** 					{
- 333:Core/Src/Origin/Searching.c **** 						accel_or_decel = 0; //そのまま
- 334:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 335:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
- 336:Core/Src/Origin/Searching.c **** 					}
- 337:Core/Src/Origin/Searching.c **** 				}
- 338:Core/Src/Origin/Searching.c **** 				//壁と座標の更新が要りそう
- 339:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 340:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 738 0150 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 739 0154 CCBF     		ite	gt
+ 740 0156 0123     		movgt	r3, #1
+ 741 0158 0023     		movle	r3, #0
+ 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 742              		.loc 1 147 18 view .LVU210
+ 743 015a 8DF81430 		strb	r3, [sp, #20]
+ 155:Core/Src/Origin/Searching.c ****     case south:
+ 744              		.loc 1 155 9 is_stmt 1 view .LVU211
+ 745 015e 96E7     		b	.L36
+ 746              	.L39:
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 747              		.loc 1 157 6 view .LVU212
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 748              		.loc 1 157 27 is_stmt 0 view .LVU213
+ 749 0160 564B     		ldr	r3, .L57
+ 750 0162 D3ED007A 		vldr.32	s15, [r3]
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 751              		.loc 1 157 39 view .LVU214
+ 752 0166 93ED037A 		vldr.32	s14, [r3, #12]
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 753              		.loc 1 157 32 view .LVU215
+ 754 016a 77EE877A 		vadd.f32	s15, s15, s14
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 755              		.loc 1 157 44 view .LVU216
+ 756 016e B6EE007A 		vmov.f32	s14, #5.0e-1
+ 757 0172 67EE877A 		vmul.f32	s15, s15, s14
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 758              		.loc 1 157 74 view .LVU217
+ 759 0176 9FED527A 		vldr.32	s14, .L57+4
+ 760 017a F4EEC77A 		vcmpe.f32	s15, s14
+ 761 017e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 762 0182 CCBF     		ite	gt
+ 763 0184 0122     		movgt	r2, #1
+ 764 0186 0022     		movle	r2, #0
+ 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 765              		.loc 1 157 18 view .LVU218
+ 766 0188 8DF81620 		strb	r2, [sp, #22]
+ 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 767              		.loc 1 158 6 is_stmt 1 view .LVU219
+ 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 768              		.loc 1 158 25 is_stmt 0 view .LVU220
+ 769 018c 93ED017A 		vldr.32	s14, [r3, #4]
+ 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 770              		.loc 1 158 56 view .LVU221
+ 771 0190 DFED4C7A 		vldr.32	s15, .L57+8
+ 772 0194 B4EEE77A 		vcmpe.f32	s14, s15
+ 773 0198 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 774 019c CCBF     		ite	gt
+ 775 019e 0122     		movgt	r2, #1
+ 776 01a0 0022     		movle	r2, #0
+ 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 777              		.loc 1 158 18 view .LVU222
+ 778 01a2 8DF81720 		strb	r2, [sp, #23]
+ 159:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 779              		.loc 1 159 6 is_stmt 1 view .LVU223
+ 160:Core/Src/Origin/Searching.c ****         break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 21
+
+
+ 780              		.loc 1 160 6 view .LVU224
+ 160:Core/Src/Origin/Searching.c ****         break;
+ 781              		.loc 1 160 25 is_stmt 0 view .LVU225
+ 782 01a6 93ED027A 		vldr.32	s14, [r3, #8]
+ 160:Core/Src/Origin/Searching.c ****         break;
+ 783              		.loc 1 160 50 view .LVU226
+ 784 01aa DFED477A 		vldr.32	s15, .L57+12
+ 785 01ae B4EEE77A 		vcmpe.f32	s14, s15
+ 786 01b2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 787 01b6 CCBF     		ite	gt
+ 788 01b8 0123     		movgt	r3, #1
+ 789 01ba 0023     		movle	r3, #0
+ 160:Core/Src/Origin/Searching.c ****         break;
+ 790              		.loc 1 160 18 view .LVU227
+ 791 01bc 8DF81530 		strb	r3, [sp, #21]
+ 161:Core/Src/Origin/Searching.c ****     case west:
+ 792              		.loc 1 161 9 is_stmt 1 view .LVU228
+ 793 01c0 65E7     		b	.L36
+ 794              	.L37:
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 795              		.loc 1 163 6 view .LVU229
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 796              		.loc 1 163 27 is_stmt 0 view .LVU230
+ 797 01c2 3E4B     		ldr	r3, .L57
+ 798 01c4 D3ED007A 		vldr.32	s15, [r3]
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 799              		.loc 1 163 39 view .LVU231
+ 800 01c8 93ED037A 		vldr.32	s14, [r3, #12]
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 801              		.loc 1 163 32 view .LVU232
+ 802 01cc 77EE877A 		vadd.f32	s15, s15, s14
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 803              		.loc 1 163 44 view .LVU233
+ 804 01d0 B6EE007A 		vmov.f32	s14, #5.0e-1
+ 805 01d4 67EE877A 		vmul.f32	s15, s15, s14
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 806              		.loc 1 163 74 view .LVU234
+ 807 01d8 9FED397A 		vldr.32	s14, .L57+4
+ 808 01dc F4EEC77A 		vcmpe.f32	s15, s14
+ 809 01e0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 810 01e4 CCBF     		ite	gt
+ 811 01e6 0122     		movgt	r2, #1
+ 812 01e8 0022     		movle	r2, #0
+ 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 813              		.loc 1 163 18 view .LVU235
+ 814 01ea 8DF81720 		strb	r2, [sp, #23]
+ 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 815              		.loc 1 164 6 is_stmt 1 view .LVU236
+ 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 816              		.loc 1 164 25 is_stmt 0 view .LVU237
+ 817 01ee 93ED017A 		vldr.32	s14, [r3, #4]
+ 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 818              		.loc 1 164 56 view .LVU238
+ 819 01f2 DFED347A 		vldr.32	s15, .L57+8
+ 820 01f6 B4EEE77A 		vcmpe.f32	s14, s15
+ 821 01fa F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 822 01fe CCBF     		ite	gt
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 22
+
+
+ 823 0200 0122     		movgt	r2, #1
+ 824 0202 0022     		movle	r2, #0
+ 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 825              		.loc 1 164 18 view .LVU239
+ 826 0204 8DF81420 		strb	r2, [sp, #20]
+ 165:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 827              		.loc 1 165 6 is_stmt 1 view .LVU240
+ 166:Core/Src/Origin/Searching.c ****         break;
+ 828              		.loc 1 166 6 view .LVU241
+ 166:Core/Src/Origin/Searching.c ****         break;
+ 829              		.loc 1 166 25 is_stmt 0 view .LVU242
+ 830 0208 93ED027A 		vldr.32	s14, [r3, #8]
+ 166:Core/Src/Origin/Searching.c ****         break;
+ 831              		.loc 1 166 50 view .LVU243
+ 832 020c DFED2E7A 		vldr.32	s15, .L57+12
+ 833 0210 B4EEE77A 		vcmpe.f32	s14, s15
+ 834 0214 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 835 0218 CCBF     		ite	gt
+ 836 021a 0123     		movgt	r3, #1
+ 837 021c 0023     		movle	r3, #0
+ 166:Core/Src/Origin/Searching.c ****         break;
+ 838              		.loc 1 166 18 view .LVU244
+ 839 021e 8DF81630 		strb	r3, [sp, #22]
+ 167:Core/Src/Origin/Searching.c ****     default:
+ 840              		.loc 1 167 9 is_stmt 1 view .LVU245
+ 841 0222 34E7     		b	.L36
+ 842              	.L53:
+ 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 843              		.loc 1 194 4 view .LVU246
+ 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 844              		.loc 1 194 23 is_stmt 0 view .LVU247
+ 845 0224 04F12007 		add	r7, r4, #32
+ 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 846              		.loc 1 194 7 view .LVU248
+ 847 0228 3146     		mov	r1, r6
+ 848 022a 3846     		mov	r0, r7
+ 849 022c FFF7FEFF 		bl	ComparePosition
+ 850              	.LVL51:
+ 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 851              		.loc 1 194 6 view .LVU249
+ 852 0230 30B9     		cbnz	r0, .L43
+ 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 853              		.loc 1 194 67 discriminator 1 view .LVU250
+ 854 0232 04A9     		add	r1, sp, #16
+ 855 0234 3846     		mov	r0, r7
+ 856 0236 FFF7FEFF 		bl	ComparePosition
+ 857              	.LVL52:
+ 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 858              		.loc 1 194 64 discriminator 1 view .LVU251
+ 859 023a 0028     		cmp	r0, #0
+ 860 023c 3FF451AF 		beq	.L42
+ 861              	.L43:
+ 862              	.LBB12:
+ 195:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
+ 863              		.loc 1 195 5 is_stmt 1 view .LVU252
+ 195:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
+ 864              		.loc 1 195 24 is_stmt 0 view .LVU253
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 23
+
+
+ 865 0240 0123     		movs	r3, #1
+ 866 0242 2371     		strb	r3, [r4, #4]
+ 196:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
+ 867              		.loc 1 196 5 is_stmt 1 view .LVU254
+ 196:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
+ 868              		.loc 1 196 33 is_stmt 0 view .LVU255
+ 869 0244 3146     		mov	r1, r6
+ 870 0246 2846     		mov	r0, r5
+ 871 0248 FFF7FEFF 		bl	StackMass
+ 872              	.LVL53:
+ 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 873              		.loc 1 197 5 is_stmt 1 view .LVU256
+ 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 874              		.loc 1 197 7 is_stmt 0 view .LVU257
+ 875 024c C8B9     		cbnz	r0, .L44
+ 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 876              		.loc 1 197 34 is_stmt 1 discriminator 1 view .LVU258
+ 877 024e 0720     		movs	r0, #7
+ 878              	.LVL54:
+ 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 879              		.loc 1 197 34 is_stmt 0 discriminator 1 view .LVU259
+ 880 0250 FFF7FEFF 		bl	ChangeLED
+ 881              	.LVL55:
+ 882              	.L45:
+ 200:Core/Src/Origin/Searching.c **** 
+ 883              		.loc 1 200 5 is_stmt 1 view .LVU260
+ 200:Core/Src/Origin/Searching.c **** 
+ 884              		.loc 1 200 13 is_stmt 0 view .LVU261
+ 885 0254 FFF7FEFF 		bl	GetStackNum
+ 886              	.LVL56:
+ 203:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
+ 887              		.loc 1 203 5 is_stmt 1 view .LVU262
+ 203:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
+ 888              		.loc 1 203 7 is_stmt 0 view .LVU263
+ 889 0258 0646     		mov	r6, r0
+ 890 025a B0B1     		cbz	r0, .L54
+ 891              	.LBB13:
+ 209:Core/Src/Origin/Searching.c **** 					position pos;
+ 892              		.loc 1 209 6 is_stmt 1 view .LVU264
+ 209:Core/Src/Origin/Searching.c **** 					position pos;
+ 893              		.loc 1 209 16 is_stmt 0 view .LVU265
+ 894 025c 1B4B     		ldr	r3, .L57+16
+ 895 025e 0122     		movs	r2, #1
+ 896 0260 1A60     		str	r2, [r3]
+ 210:Core/Src/Origin/Searching.c **** 					_Bool is_first = false;
+ 897              		.loc 1 210 6 is_stmt 1 view .LVU266
+ 211:Core/Src/Origin/Searching.c **** 					while( 1 ){
+ 898              		.loc 1 211 6 view .LVU267
+ 899              	.LVL57:
+ 900              	.L50:
+ 212:Core/Src/Origin/Searching.c **** 						pos = GetStackMass();
+ 901              		.loc 1 212 6 view .LVU268
+ 213:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
+ 902              		.loc 1 213 7 view .LVU269
+ 213:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
+ 903              		.loc 1 213 13 is_stmt 0 view .LVU270
+ 904 0262 FFF7FEFF 		bl	GetStackMass
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 24
+
+
+ 905              	.LVL58:
+ 906 0266 ADF80C00 		strh	r0, [sp, #12]	@ movhi
+ 214:Core/Src/Origin/Searching.c **** 						if(n == 0){
+ 907              		.loc 1 214 7 is_stmt 1 view .LVU271
+ 214:Core/Src/Origin/Searching.c **** 						if(n == 0){
+ 908              		.loc 1 214 18 is_stmt 0 view .LVU272
+ 909 026a 03A8     		add	r0, sp, #12
+ 910 026c FFF7FEFF 		bl	GetVisited
+ 911              	.LVL59:
+ 215:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
+ 912              		.loc 1 215 7 is_stmt 1 view .LVU273
+ 215:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
+ 913              		.loc 1 215 9 is_stmt 0 view .LVU274
+ 914 0270 AEB1     		cbz	r6, .L55
+ 220:Core/Src/Origin/Searching.c **** 
+ 915              		.loc 1 220 12 is_stmt 1 view .LVU275
+ 220:Core/Src/Origin/Searching.c **** 
+ 916              		.loc 1 220 14 is_stmt 0 view .LVU276
+ 917 0272 D8B1     		cbz	r0, .L56
+ 227:Core/Src/Origin/Searching.c **** 							--n;
+ 918              		.loc 1 227 12 is_stmt 1 view .LVU277
+ 227:Core/Src/Origin/Searching.c **** 							--n;
+ 919              		.loc 1 227 14 is_stmt 0 view .LVU278
+ 920 0274 0028     		cmp	r0, #0
+ 921 0276 F4D0     		beq	.L50
+ 228:Core/Src/Origin/Searching.c **** 							SetStackNum(n); //0になったら
+ 922              		.loc 1 228 8 is_stmt 1 view .LVU279
+ 923 0278 013E     		subs	r6, r6, #1
+ 924              	.LVL60:
+ 229:Core/Src/Origin/Searching.c **** 						}
+ 925              		.loc 1 229 8 view .LVU280
+ 926 027a 3046     		mov	r0, r6
+ 927              	.LVL61:
+ 229:Core/Src/Origin/Searching.c **** 						}
+ 928              		.loc 1 229 8 is_stmt 0 view .LVU281
+ 929 027c FFF7FEFF 		bl	SetStackNum
+ 930              	.LVL62:
+ 931 0280 EFE7     		b	.L50
+ 932              	.LVL63:
+ 933              	.L44:
+ 229:Core/Src/Origin/Searching.c **** 						}
+ 934              		.loc 1 229 8 view .LVU282
+ 935              	.LBE13:
+ 198:Core/Src/Origin/Searching.c **** 
+ 936              		.loc 1 198 10 is_stmt 1 view .LVU283
+ 937 0282 0020     		movs	r0, #0
+ 938              	.LVL64:
+ 198:Core/Src/Origin/Searching.c **** 
+ 939              		.loc 1 198 10 is_stmt 0 view .LVU284
+ 940 0284 FFF7FEFF 		bl	ChangeLED
+ 941              	.LVL65:
+ 942 0288 E4E7     		b	.L45
+ 943              	.LVL66:
+ 944              	.L54:
+ 204:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+ 945              		.loc 1 204 6 is_stmt 1 view .LVU285
+ 204:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 25
+
+
+ 946              		.loc 1 204 16 is_stmt 0 view .LVU286
+ 947 028a 104B     		ldr	r3, .L57+16
+ 948 028c 0122     		movs	r2, #1
+ 949 028e 1A60     		str	r2, [r3]
+ 205:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 950              		.loc 1 205 6 is_stmt 1 view .LVU287
+ 205:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 951              		.loc 1 205 26 is_stmt 0 view .LVU288
+ 952 0290 FFF7FEFF 		bl	GetStackMass
+ 953              	.LVL67:
+ 205:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 954              		.loc 1 205 26 view .LVU289
+ 955 0294 2084     		strh	r0, [r4, #32]	@ movhi
+ 206:Core/Src/Origin/Searching.c **** 				}//0以外なら通常通り
+ 956              		.loc 1 206 6 is_stmt 1 view .LVU290
+ 957 0296 3046     		mov	r0, r6
+ 958 0298 FFF7FEFF 		bl	SetStackNum
+ 959              	.LVL68:
+ 960 029c 21E7     		b	.L42
+ 961              	.LVL69:
+ 962              	.L55:
+ 963              	.LBB14:
+ 216:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
+ 964              		.loc 1 216 8 view .LVU291
+ 216:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
+ 965              		.loc 1 216 26 is_stmt 0 view .LVU292
+ 966 029e BDF80C30 		ldrh	r3, [sp, #12]
+ 967 02a2 2384     		strh	r3, [r4, #32]	@ movhi
+ 217:Core/Src/Origin/Searching.c **** 							break;
+ 968              		.loc 1 217 8 is_stmt 1 view .LVU293
+ 969 02a4 0720     		movs	r0, #7
+ 970              	.LVL70:
+ 217:Core/Src/Origin/Searching.c **** 							break;
+ 971              		.loc 1 217 8 is_stmt 0 view .LVU294
+ 972 02a6 FFF7FEFF 		bl	ChangeLED
+ 973              	.LVL71:
+ 218:Core/Src/Origin/Searching.c **** 						}
+ 974              		.loc 1 218 8 is_stmt 1 view .LVU295
+ 975 02aa 1AE7     		b	.L42
+ 976              	.LVL72:
+ 977              	.L56:
+ 222:Core/Src/Origin/Searching.c **** 							--n;
+ 978              		.loc 1 222 8 view .LVU296
+ 222:Core/Src/Origin/Searching.c **** 							--n;
+ 979              		.loc 1 222 26 is_stmt 0 view .LVU297
+ 980 02ac BDF80C30 		ldrh	r3, [sp, #12]
+ 981 02b0 2384     		strh	r3, [r4, #32]	@ movhi
+ 223:Core/Src/Origin/Searching.c **** 							SetStackNum(n);
+ 982              		.loc 1 223 8 is_stmt 1 view .LVU298
+ 983              	.LVL73:
+ 224:Core/Src/Origin/Searching.c **** 							break;
+ 984              		.loc 1 224 8 view .LVU299
+ 985 02b2 701E     		subs	r0, r6, #1
+ 986              	.LVL74:
+ 224:Core/Src/Origin/Searching.c **** 							break;
+ 987              		.loc 1 224 8 is_stmt 0 view .LVU300
+ 988 02b4 FFF7FEFF 		bl	SetStackNum
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 26
+
+
+ 989              	.LVL75:
+ 225:Core/Src/Origin/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
+ 990              		.loc 1 225 8 is_stmt 1 view .LVU301
+ 991 02b8 13E7     		b	.L42
+ 992              	.L58:
+ 993 02ba 00BF     		.align	2
+ 994              	.L57:
+ 995 02bc 00000000 		.word	Photo
+ 996 02c0 00004842 		.word	1112014848
+ 997 02c4 0000B442 		.word	1119092736
+ 998 02c8 0000C842 		.word	1120403456
+ 999 02cc 00000000 		.word	WALL_MASK
+ 1000              	.LBE14:
+ 1001              	.LBE12:
+ 1002              		.cfi_endproc
+ 1003              	.LFE240:
+ 1005              		.section	.text.getNextDirection,"ax",%progbits
+ 1006              		.align	1
+ 1007              		.global	getNextDirection
+ 1008              		.syntax unified
+ 1009              		.thumb
+ 1010              		.thumb_func
+ 1012              	getNextDirection:
+ 1013              	.LVL76:
+ 1014              	.LFB241:
+ 243:Core/Src/Origin/Searching.c **** //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせ�
+ 244:Core/Src/Origin/Searching.c **** //現情報と次情報から次の進行方向を得る処理
+ 245:Core/Src/Origin/Searching.c **** 
+ 246:Core/Src/Origin/Searching.c **** void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
+ 247:Core/Src/Origin/Searching.c **** {
+ 1015              		.loc 1 247 1 view -0
+ 1016              		.cfi_startproc
+ 1017              		@ args = 0, pretend = 0, frame = 0
+ 1018              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1019              		.loc 1 247 1 is_stmt 0 view .LVU303
+ 1020 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1021              	.LCFI9:
+ 1022              		.cfi_def_cfa_offset 24
+ 1023              		.cfi_offset 3, -24
+ 1024              		.cfi_offset 4, -20
+ 1025              		.cfi_offset 5, -16
+ 1026              		.cfi_offset 6, -12
+ 1027              		.cfi_offset 7, -8
+ 1028              		.cfi_offset 14, -4
+ 1029 0002 0546     		mov	r5, r0
+ 1030 0004 0C46     		mov	r4, r1
+ 1031 0006 1646     		mov	r6, r2
+ 248:Core/Src/Origin/Searching.c **** 	//一回目の旋回後、東を向いている
+ 249:Core/Src/Origin/Searching.c **** 	//選ぶノードがおかしい
+ 250:Core/Src/Origin/Searching.c **** 	//重みが、壁がある方が小さくなってしまっている.
+ 251:Core/Src/Origin/Searching.c **** 	//
+ 252:Core/Src/Origin/Searching.c **** 
+ 253:Core/Src/Origin/Searching.c **** 	//メインでノード選択
+ 254:Core/Src/Origin/Searching.c **** 	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, mask);
+ 1032              		.loc 1 254 2 is_stmt 1 view .LVU304
+ 1033              		.loc 1 254 21 is_stmt 0 view .LVU305
+ 1034 0008 0A69     		ldr	r2, [r1, #16]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 27
+
+
+ 1035              	.LVL77:
+ 1036              		.loc 1 254 21 view .LVU306
+ 1037 000a 897A     		ldrb	r1, [r1, #10]	@ zero_extendqisi2
+ 1038              	.LVL78:
+ 1039              		.loc 1 254 21 view .LVU307
+ 1040 000c FFF7FEFF 		bl	getNextNode
+ 1041              	.LVL79:
+ 1042              		.loc 1 254 21 view .LVU308
+ 1043 0010 0246     		mov	r2, r0
+ 1044              		.loc 1 254 19 view .LVU309
+ 1045 0012 E061     		str	r0, [r4, #28]
+ 255:Core/Src/Origin/Searching.c **** 	getNextState(&(Mouse->now), &(Mouse->next), Mouse->next.node);
+ 1046              		.loc 1 255 2 is_stmt 1 view .LVU310
+ 1047 0014 04F11401 		add	r1, r4, #20
+ 1048 0018 04F10800 		add	r0, r4, #8
+ 1049 001c FFF7FEFF 		bl	getNextState
+ 1050              	.LVL80:
+ 256:Core/Src/Origin/Searching.c **** 
+ 257:Core/Src/Origin/Searching.c **** 	//既知区間加速このswitch文中で書くかも
+ 258:Core/Src/Origin/Searching.c **** 		//コマンドキューのときはここでコマンドを発行してキューに渡す
+ 259:Core/Src/Origin/Searching.c **** 	AddVelocity = 0;
+ 1051              		.loc 1 259 2 view .LVU311
+ 1052              		.loc 1 259 14 is_stmt 0 view .LVU312
+ 1053 0020 624B     		ldr	r3, .L77
+ 1054 0022 0022     		movs	r2, #0
+ 1055 0024 1A60     		str	r2, [r3]	@ float
+ 260:Core/Src/Origin/Searching.c **** 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしま�
+ 261:Core/Src/Origin/Searching.c **** 	_Bool accel_or_not = false;
+ 1056              		.loc 1 261 2 is_stmt 1 view .LVU313
+ 1057              	.LVL81:
+ 262:Core/Src/Origin/Searching.c **** 	int accel_or_decel = 0;
+ 1058              		.loc 1 262 2 view .LVU314
+ 263:Core/Src/Origin/Searching.c **** 	switch(Mouse->now.dir%8) //次の方角からアクションを選択
+ 1059              		.loc 1 263 2 view .LVU315
+ 1060              		.loc 1 263 19 is_stmt 0 view .LVU316
+ 1061 0026 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
+ 1062              		.loc 1 263 2 view .LVU317
+ 1063 0028 03F00703 		and	r3, r3, #7
+ 1064 002c 062B     		cmp	r3, #6
+ 1065 002e 2BD8     		bhi	.L59
+ 1066 0030 DFE803F0 		tbb	[pc, r3]
+ 1067              	.L62:
+ 1068 0034 04       		.byte	(.L67-.L62)/2
+ 1069 0035 2A       		.byte	(.L59-.L62)/2
+ 1070 0036 49       		.byte	(.L66-.L62)/2
+ 1071 0037 53       		.byte	(.L65-.L62)/2
+ 1072 0038 63       		.byte	(.L64-.L62)/2
+ 1073 0039 A1       		.byte	(.L63-.L62)/2
+ 1074 003a B1       		.byte	(.L61-.L62)/2
+ 1075 003b 00       		.p2align 1
+ 1076              	.L67:
+ 264:Core/Src/Origin/Searching.c **** 	{
+ 265:Core/Src/Origin/Searching.c **** 	case front:
+ 266:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
+ 267:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
+ 268:Core/Src/Origin/Searching.c **** //		accel_or_decel = 0;
+ 269:Core/Src/Origin/Searching.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 28
+
+
+ 270:Core/Src/Origin/Searching.c **** 		//直進後の選択肢も見ておく
+ 271:Core/Src/Origin/Searching.c **** 		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
+ 1077              		.loc 1 271 3 is_stmt 1 view .LVU318
+ 1078              		.loc 1 271 18 is_stmt 0 view .LVU319
+ 1079 003c E269     		ldr	r2, [r4, #28]
+ 1080 003e A17D     		ldrb	r1, [r4, #22]	@ zero_extendqisi2
+ 1081 0040 2846     		mov	r0, r5
+ 1082 0042 FFF7FEFF 		bl	judgeAccelorNot
+ 1083              	.LVL82:
+ 272:Core/Src/Origin/Searching.c **** 
+ 273:Core/Src/Origin/Searching.c **** 		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.�
+ 274:Core/Src/Origin/Searching.c **** 		if(accel_or_not == true) //既知で.直進
+ 1084              		.loc 1 274 3 is_stmt 1 view .LVU320
+ 1085              		.loc 1 274 5 is_stmt 0 view .LVU321
+ 1086 0046 60B3     		cbz	r0, .L68
+ 275:Core/Src/Origin/Searching.c **** 		{
+ 276:Core/Src/Origin/Searching.c **** 			//加速かそのまま.
+ 277:Core/Src/Origin/Searching.c **** 			//現在速度がマックスかどうか
+ 278:Core/Src/Origin/Searching.c **** 			if(VelocityMax == true)
+ 1087              		.loc 1 278 4 is_stmt 1 view .LVU322
+ 1088              		.loc 1 278 19 is_stmt 0 view .LVU323
+ 1089 0048 594B     		ldr	r3, .L77+4
+ 1090 004a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1091              		.loc 1 278 6 view .LVU324
+ 1092 004c EBB1     		cbz	r3, .L69
+ 279:Core/Src/Origin/Searching.c **** 			{
+ 280:Core/Src/Origin/Searching.c **** 				accel_or_decel = 0; //そのまま
+ 1093              		.loc 1 280 5 is_stmt 1 view .LVU325
+ 281:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 1094              		.loc 1 281 5 view .LVU326
+ 1095              		.loc 1 281 34 is_stmt 0 view .LVU327
+ 1096 004e 594B     		ldr	r3, .L77+8
+ 1097 0050 D3ED007A 		vldr.32	s15, [r3]
+ 1098 0054 B7EE087A 		vmov.f32	s14, #1.5e+0
+ 1099 0058 67EE877A 		vmul.f32	s15, s15, s14
+ 1100              		.loc 1 281 17 view .LVU328
+ 1101 005c 534B     		ldr	r3, .L77
+ 1102 005e C3ED007A 		vstr.32	s15, [r3]
+ 280:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 1103              		.loc 1 280 20 view .LVU329
+ 1104 0062 0020     		movs	r0, #0
+ 1105              	.LVL83:
+ 1106              	.L70:
+ 282:Core/Src/Origin/Searching.c **** //				ChangeLED(0);
+ 283:Core/Src/Origin/Searching.c **** 			}
+ 284:Core/Src/Origin/Searching.c **** 			else
+ 285:Core/Src/Origin/Searching.c **** 			{
+ 286:Core/Src/Origin/Searching.c **** 				accel_or_decel = 1; //加速
+ 287:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 288:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 289:Core/Src/Origin/Searching.c **** 			}
+ 290:Core/Src/Origin/Searching.c **** 		}
+ 291:Core/Src/Origin/Searching.c **** 		else
+ 292:Core/Src/Origin/Searching.c **** 		{
+ 293:Core/Src/Origin/Searching.c **** 			//未知もしくは、既知でも直進で無ければ.減速かそのまま
+ 294:Core/Src/Origin/Searching.c **** 			//現在速度がマックスかどうか
+ 295:Core/Src/Origin/Searching.c **** 			if(VelocityMax == true)
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 29
+
+
+ 296:Core/Src/Origin/Searching.c **** 			{
+ 297:Core/Src/Origin/Searching.c **** 				accel_or_decel = -1; //減速
+ 298:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 299:Core/Src/Origin/Searching.c **** //				ChangeLED(cnt);
+ 300:Core/Src/Origin/Searching.c **** 				cnt += 2;
+ 301:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 302:Core/Src/Origin/Searching.c **** 			}
+ 303:Core/Src/Origin/Searching.c **** 			else //マックスでない
+ 304:Core/Src/Origin/Searching.c **** 			{
+ 305:Core/Src/Origin/Searching.c **** 				accel_or_decel = 0; //そのまま
+ 306:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 307:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
+ 308:Core/Src/Origin/Searching.c **** 			}
+ 309:Core/Src/Origin/Searching.c **** 		}
+ 310:Core/Src/Origin/Searching.c **** 
+ 311:Core/Src/Origin/Searching.c **** 
+ 312:Core/Src/Origin/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速す�
+ 313:Core/Src/Origin/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのま�
+ 314:Core/Src/Origin/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索�
+ 315:Core/Src/Origin/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度�
+ 316:Core/Src/Origin/Searching.c **** 		//ただ直進
+ 317:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 1107              		.loc 1 317 3 is_stmt 1 view .LVU330
+ 1108              		.loc 1 317 8 is_stmt 0 view .LVU331
+ 1109 0064 544B     		ldr	r3, .L77+12
+ 1110 0066 1A68     		ldr	r2, [r3]
+ 1111 0068 544B     		ldr	r3, .L77+16
+ 1112 006a 1A60     		str	r2, [r3]
+ 318:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
+ 1113              		.loc 1 318 3 is_stmt 1 view .LVU332
+ 1114 006c 514B     		ldr	r3, .L77+8
+ 1115 006e D3ED000A 		vldr.32	s1, [r3]
+ 1116 0072 4E4B     		ldr	r3, .L77
+ 1117 0074 D3ED007A 		vldr.32	s15, [r3]
+ 1118 0078 2246     		mov	r2, r4
+ 1119 007a 2946     		mov	r1, r5
+ 1120 007c 70EEA70A 		vadd.f32	s1, s1, s15
+ 1121 0080 9FED4F0A 		vldr.32	s0, .L77+20
+ 1122 0084 FFF7FEFF 		bl	GoStraight
+ 1123              	.LVL84:
+ 319:Core/Src/Origin/Searching.c **** 		break;
+ 1124              		.loc 1 319 3 view .LVU333
+ 1125              	.L59:
+ 320:Core/Src/Origin/Searching.c **** 	case right:
+ 321:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
+ 322:Core/Src/Origin/Searching.c **** 		//右旋回
+ 323:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 324:Core/Src/Origin/Searching.c **** 
+ 325:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 326:Core/Src/Origin/Searching.c **** 		break;
+ 327:Core/Src/Origin/Searching.c **** 	case backright:
+ 328:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
+ 329:Core/Src/Origin/Searching.c **** 		//Uターンして右旋回
+ 330:Core/Src/Origin/Searching.c **** 		//壁の更新の処理を呼ばない
+ 331:Core/Src/Origin/Searching.c **** //		SearchOrFast = 1;
+ 332:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
+ 333:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 30
+
+
+ 334:Core/Src/Origin/Searching.c **** 		//1ノード、アクションごとに行動を更新したい.
+ 335:Core/Src/Origin/Searching.c **** 		//方角の更新は基本加減算でない
+ 336:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse); //間の座標変動を
+ 337:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 338:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 339:Core/Src/Origin/Searching.c **** 
+ 340:Core/Src/Origin/Searching.c **** 
  341:Core/Src/Origin/Searching.c **** 		break;
- 342:Core/Src/Origin/Searching.c **** 	case backleft:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 26
-
-
+ 342:Core/Src/Origin/Searching.c **** 	case back:
  343:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 344:Core/Src/Origin/Searching.c **** 		//Uターンして左旋回
+ 344:Core/Src/Origin/Searching.c **** 		//Uターンして直進.加速できる
  345:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
  346:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 347:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 348:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
- 349:Core/Src/Origin/Searching.c **** 		break;
- 350:Core/Src/Origin/Searching.c **** 	case left:
- 351:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 352:Core/Src/Origin/Searching.c **** 		//左旋回
- 353:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 354:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
- 355:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
- 356:Core/Src/Origin/Searching.c **** 		break;
- 357:Core/Src/Origin/Searching.c **** 	}
- 358:Core/Src/Origin/Searching.c **** 
- 359:Core/Src/Origin/Searching.c **** }
- 935              		.loc 1 359 1 is_stmt 0 view .LVU272
- 936 0088 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 937              	.LVL73:
- 938              	.L61:
- 235:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 939              		.loc 1 235 5 is_stmt 1 view .LVU273
- 236:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
- 940              		.loc 1 236 5 view .LVU274
- 236:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
- 941              		.loc 1 236 34 is_stmt 0 view .LVU275
- 942 008a 4A4B     		ldr	r3, .L69+8
- 943 008c D3ED007A 		vldr.32	s15, [r3]
- 944 0090 B7EE087A 		vmov.f32	s14, #1.5e+0
- 945 0094 67EE877A 		vmul.f32	s15, s15, s14
- 236:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
- 946              		.loc 1 236 17 view .LVU276
- 947 0098 444B     		ldr	r3, .L69
- 948 009a C3ED007A 		vstr.32	s15, [r3]
- 235:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 949              		.loc 1 235 20 view .LVU277
- 950 009e 0120     		movs	r0, #1
- 951              	.LVL74:
- 235:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 952              		.loc 1 235 20 view .LVU278
- 953 00a0 E0E7     		b	.L62
- 954              	.LVL75:
- 955              	.L60:
- 244:Core/Src/Origin/Searching.c **** 			{
- 956              		.loc 1 244 4 is_stmt 1 view .LVU279
- 244:Core/Src/Origin/Searching.c **** 			{
- 957              		.loc 1 244 19 is_stmt 0 view .LVU280
- 958 00a2 434B     		ldr	r3, .L69+4
- 959 00a4 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 244:Core/Src/Origin/Searching.c **** 			{
- 960              		.loc 1 244 6 view .LVU281
- 961 00a6 4BB1     		cbz	r3, .L63
- 962              	.LBB15:
- 246:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
- 963              		.loc 1 246 5 is_stmt 1 view .LVU282
- 964              	.LVL76:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 27
+ 347:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
+ 348:Core/Src/Origin/Searching.c **** //		accel_or_decel = 0;
+ 349:Core/Src/Origin/Searching.c **** 		//直進後の選択肢も見ておく
+ 350:Core/Src/Origin/Searching.c **** 				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
+ 351:Core/Src/Origin/Searching.c **** 
+ 352:Core/Src/Origin/Searching.c **** 				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか
+ 353:Core/Src/Origin/Searching.c **** 				if(accel_or_not == true) //既知で.直進
+ 354:Core/Src/Origin/Searching.c **** 				{
+ 355:Core/Src/Origin/Searching.c **** 					//加速かそのまま.
+ 356:Core/Src/Origin/Searching.c **** 					//現在速度がマックスかどうか
+ 357:Core/Src/Origin/Searching.c **** 					if(VelocityMax == true)
+ 358:Core/Src/Origin/Searching.c **** 					{
+ 359:Core/Src/Origin/Searching.c **** 						accel_or_decel = 0; //そのまま
+ 360:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 361:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
+ 362:Core/Src/Origin/Searching.c **** 					}
+ 363:Core/Src/Origin/Searching.c **** 					else
+ 364:Core/Src/Origin/Searching.c **** 					{
+ 365:Core/Src/Origin/Searching.c **** 						accel_or_decel = 1; //加速
+ 366:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 367:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
+ 368:Core/Src/Origin/Searching.c **** 					}
+ 369:Core/Src/Origin/Searching.c **** 				}
+ 370:Core/Src/Origin/Searching.c **** 				else
+ 371:Core/Src/Origin/Searching.c **** 				{
+ 372:Core/Src/Origin/Searching.c **** 					//未知もしくは、既知でも直進で無ければ.減速かそのまま
+ 373:Core/Src/Origin/Searching.c **** 					//現在速度がマックスかどうか
+ 374:Core/Src/Origin/Searching.c **** 					if(VelocityMax == true)
+ 375:Core/Src/Origin/Searching.c **** 					{
+ 376:Core/Src/Origin/Searching.c **** 						accel_or_decel = -1; //減速
+ 377:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 378:Core/Src/Origin/Searching.c **** //						ChangeLED(cnt);
+ 379:Core/Src/Origin/Searching.c **** 						cnt += 2;
+ 380:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 381:Core/Src/Origin/Searching.c **** 					}
+ 382:Core/Src/Origin/Searching.c **** 					else //マックスでない
+ 383:Core/Src/Origin/Searching.c **** 					{
+ 384:Core/Src/Origin/Searching.c **** 						accel_or_decel = 0; //そのまま
+ 385:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 386:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
+ 387:Core/Src/Origin/Searching.c **** 					}
+ 388:Core/Src/Origin/Searching.c **** 				}
+ 389:Core/Src/Origin/Searching.c **** 				//壁と座標の更新が要りそう
+ 390:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 31
 
 
- 247:Core/Src/Origin/Searching.c **** //				ChangeLED(cnt);
- 965              		.loc 1 247 5 view .LVU283
- 249:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 966              		.loc 1 249 5 view .LVU284
- 249:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 967              		.loc 1 249 9 is_stmt 0 view .LVU285
- 968 00a8 464A     		ldr	r2, .L69+24
- 969 00aa 1368     		ldr	r3, [r2]
- 970 00ac 0233     		adds	r3, r3, #2
- 971 00ae 1360     		str	r3, [r2]
- 250:Core/Src/Origin/Searching.c **** 			}
- 972              		.loc 1 250 5 is_stmt 1 view .LVU286
- 250:Core/Src/Origin/Searching.c **** 			}
- 973              		.loc 1 250 17 is_stmt 0 view .LVU287
- 974 00b0 3E4B     		ldr	r3, .L69
- 975 00b2 0022     		movs	r2, #0
- 976 00b4 1A60     		str	r2, [r3]	@ float
- 246:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
- 977              		.loc 1 246 20 view .LVU288
- 978 00b6 4FF0FF30 		mov	r0, #-1
- 979              	.LVL77:
- 246:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
- 980              		.loc 1 246 20 view .LVU289
- 981              	.LBE15:
- 982 00ba D3E7     		b	.L62
- 983              	.LVL78:
- 984              	.L63:
- 254:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 985              		.loc 1 254 5 is_stmt 1 view .LVU290
- 255:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
- 986              		.loc 1 255 5 view .LVU291
- 255:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
- 987              		.loc 1 255 17 is_stmt 0 view .LVU292
- 988 00bc 3B4B     		ldr	r3, .L69
- 989 00be 0022     		movs	r2, #0
- 990 00c0 1A60     		str	r2, [r3]	@ float
- 254:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 991              		.loc 1 254 20 view .LVU293
- 992 00c2 0020     		movs	r0, #0
- 993              	.LVL79:
- 254:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 994              		.loc 1 254 20 view .LVU294
- 995 00c4 CEE7     		b	.L62
- 996              	.LVL80:
- 997              	.L58:
- 272:Core/Src/Origin/Searching.c **** 
- 998              		.loc 1 272 3 is_stmt 1 view .LVU295
- 272:Core/Src/Origin/Searching.c **** 
- 999              		.loc 1 272 8 is_stmt 0 view .LVU296
- 1000 00c6 3C4B     		ldr	r3, .L69+12
- 1001 00c8 1A68     		ldr	r2, [r3]
- 1002 00ca 3C4B     		ldr	r3, .L69+16
- 1003 00cc 1A60     		str	r2, [r3]
- 274:Core/Src/Origin/Searching.c **** 		break;
- 1004              		.loc 1 274 3 is_stmt 1 view .LVU297
- 1005 00ce 2246     		mov	r2, r4
- 1006 00d0 2946     		mov	r1, r5
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 28
+ 391:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 392:Core/Src/Origin/Searching.c **** 		break;
+ 393:Core/Src/Origin/Searching.c **** 	case backleft:
+ 394:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
+ 395:Core/Src/Origin/Searching.c **** 		//Uターンして左旋回
+ 396:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
+ 397:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 398:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 399:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 400:Core/Src/Origin/Searching.c **** 		break;
+ 401:Core/Src/Origin/Searching.c **** 	case left:
+ 402:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
+ 403:Core/Src/Origin/Searching.c **** 		//左旋回
+ 404:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 405:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
+ 406:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 407:Core/Src/Origin/Searching.c **** 		break;
+ 408:Core/Src/Origin/Searching.c **** 	}
+ 409:Core/Src/Origin/Searching.c **** 
+ 410:Core/Src/Origin/Searching.c **** }
+ 1126              		.loc 1 410 1 is_stmt 0 view .LVU334
+ 1127 0088 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1128              	.LVL85:
+ 1129              	.L69:
+ 286:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 1130              		.loc 1 286 5 is_stmt 1 view .LVU335
+ 287:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 1131              		.loc 1 287 5 view .LVU336
+ 287:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 1132              		.loc 1 287 34 is_stmt 0 view .LVU337
+ 1133 008a 4A4B     		ldr	r3, .L77+8
+ 1134 008c D3ED007A 		vldr.32	s15, [r3]
+ 1135 0090 B7EE087A 		vmov.f32	s14, #1.5e+0
+ 1136 0094 67EE877A 		vmul.f32	s15, s15, s14
+ 287:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 1137              		.loc 1 287 17 view .LVU338
+ 1138 0098 444B     		ldr	r3, .L77
+ 1139 009a C3ED007A 		vstr.32	s15, [r3]
+ 286:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 1140              		.loc 1 286 20 view .LVU339
+ 1141 009e 0120     		movs	r0, #1
+ 1142              	.LVL86:
+ 286:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 1143              		.loc 1 286 20 view .LVU340
+ 1144 00a0 E0E7     		b	.L70
+ 1145              	.LVL87:
+ 1146              	.L68:
+ 295:Core/Src/Origin/Searching.c **** 			{
+ 1147              		.loc 1 295 4 is_stmt 1 view .LVU341
+ 295:Core/Src/Origin/Searching.c **** 			{
+ 1148              		.loc 1 295 19 is_stmt 0 view .LVU342
+ 1149 00a2 434B     		ldr	r3, .L77+4
+ 1150 00a4 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 295:Core/Src/Origin/Searching.c **** 			{
+ 1151              		.loc 1 295 6 view .LVU343
+ 1152 00a6 4BB1     		cbz	r3, .L71
+ 1153              	.LBB15:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 32
 
 
- 1007 00d2 3046     		mov	r0, r6
- 1008 00d4 FFF7FEFF 		bl	TurnRight
- 1009              	.LVL81:
- 275:Core/Src/Origin/Searching.c **** 	case backright:
- 1010              		.loc 1 275 3 view .LVU298
- 1011 00d8 D6E7     		b	.L51
- 1012              	.L57:
- 281:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
- 1013              		.loc 1 281 3 view .LVU299
- 281:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
- 1014              		.loc 1 281 8 is_stmt 0 view .LVU300
- 1015 00da 384F     		ldr	r7, .L69+16
- 1016 00dc 0123     		movs	r3, #1
- 1017 00de 3B60     		str	r3, [r7]
- 285:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 1018              		.loc 1 285 3 is_stmt 1 view .LVU301
- 1019 00e0 2146     		mov	r1, r4
- 1020 00e2 2846     		mov	r0, r5
- 1021 00e4 FFF7FEFF 		bl	GoBack
- 1022              	.LVL82:
- 286:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
- 1023              		.loc 1 286 3 view .LVU302
- 286:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
- 1024              		.loc 1 286 8 is_stmt 0 view .LVU303
- 1025 00e8 334B     		ldr	r3, .L69+12
- 1026 00ea 1B68     		ldr	r3, [r3]
- 1027 00ec 3B60     		str	r3, [r7]
- 287:Core/Src/Origin/Searching.c **** 
- 1028              		.loc 1 287 3 is_stmt 1 view .LVU304
- 1029 00ee 2246     		mov	r2, r4
- 1030 00f0 2946     		mov	r1, r5
- 1031 00f2 3046     		mov	r0, r6
- 1032 00f4 FFF7FEFF 		bl	TurnRight
- 1033              	.LVL83:
- 290:Core/Src/Origin/Searching.c **** 	case back:
- 1034              		.loc 1 290 3 view .LVU305
- 1035 00f8 C6E7     		b	.L51
- 1036              	.L56:
- 294:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 1037              		.loc 1 294 3 view .LVU306
- 294:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 1038              		.loc 1 294 8 is_stmt 0 view .LVU307
- 1039 00fa 304B     		ldr	r3, .L69+16
- 1040 00fc 0122     		movs	r2, #1
- 1041 00fe 1A60     		str	r2, [r3]
- 295:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
- 1042              		.loc 1 295 3 is_stmt 1 view .LVU308
- 1043 0100 2146     		mov	r1, r4
- 1044 0102 2846     		mov	r0, r5
- 1045 0104 FFF7FEFF 		bl	GoBack
- 1046              	.LVL84:
- 299:Core/Src/Origin/Searching.c **** 
- 1047              		.loc 1 299 5 view .LVU309
- 299:Core/Src/Origin/Searching.c **** 
- 1048              		.loc 1 299 20 is_stmt 0 view .LVU310
- 1049 0108 E269     		ldr	r2, [r4, #28]
- 1050 010a A17D     		ldrb	r1, [r4, #22]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 29
+ 297:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 1154              		.loc 1 297 5 is_stmt 1 view .LVU344
+ 1155              	.LVL88:
+ 298:Core/Src/Origin/Searching.c **** //				ChangeLED(cnt);
+ 1156              		.loc 1 298 5 view .LVU345
+ 300:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 1157              		.loc 1 300 5 view .LVU346
+ 300:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 1158              		.loc 1 300 9 is_stmt 0 view .LVU347
+ 1159 00a8 464A     		ldr	r2, .L77+24
+ 1160 00aa 1368     		ldr	r3, [r2]
+ 1161 00ac 0233     		adds	r3, r3, #2
+ 1162 00ae 1360     		str	r3, [r2]
+ 301:Core/Src/Origin/Searching.c **** 			}
+ 1163              		.loc 1 301 5 is_stmt 1 view .LVU348
+ 301:Core/Src/Origin/Searching.c **** 			}
+ 1164              		.loc 1 301 17 is_stmt 0 view .LVU349
+ 1165 00b0 3E4B     		ldr	r3, .L77
+ 1166 00b2 0022     		movs	r2, #0
+ 1167 00b4 1A60     		str	r2, [r3]	@ float
+ 297:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 1168              		.loc 1 297 20 view .LVU350
+ 1169 00b6 4FF0FF30 		mov	r0, #-1
+ 1170              	.LVL89:
+ 297:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 1171              		.loc 1 297 20 view .LVU351
+ 1172              	.LBE15:
+ 1173 00ba D3E7     		b	.L70
+ 1174              	.LVL90:
+ 1175              	.L71:
+ 305:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 1176              		.loc 1 305 5 is_stmt 1 view .LVU352
+ 306:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
+ 1177              		.loc 1 306 5 view .LVU353
+ 306:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
+ 1178              		.loc 1 306 17 is_stmt 0 view .LVU354
+ 1179 00bc 3B4B     		ldr	r3, .L77
+ 1180 00be 0022     		movs	r2, #0
+ 1181 00c0 1A60     		str	r2, [r3]	@ float
+ 305:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 1182              		.loc 1 305 20 view .LVU355
+ 1183 00c2 0020     		movs	r0, #0
+ 1184              	.LVL91:
+ 305:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 1185              		.loc 1 305 20 view .LVU356
+ 1186 00c4 CEE7     		b	.L70
+ 1187              	.LVL92:
+ 1188              	.L66:
+ 323:Core/Src/Origin/Searching.c **** 
+ 1189              		.loc 1 323 3 is_stmt 1 view .LVU357
+ 323:Core/Src/Origin/Searching.c **** 
+ 1190              		.loc 1 323 8 is_stmt 0 view .LVU358
+ 1191 00c6 3C4B     		ldr	r3, .L77+12
+ 1192 00c8 1A68     		ldr	r2, [r3]
+ 1193 00ca 3C4B     		ldr	r3, .L77+16
+ 1194 00cc 1A60     		str	r2, [r3]
+ 325:Core/Src/Origin/Searching.c **** 		break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 33
 
 
- 1051 010c 2846     		mov	r0, r5
- 1052 010e FFF7FEFF 		bl	judgeAccelorNot
- 1053              	.LVL85:
- 302:Core/Src/Origin/Searching.c **** 				{
- 1054              		.loc 1 302 5 is_stmt 1 view .LVU311
- 302:Core/Src/Origin/Searching.c **** 				{
- 1055              		.loc 1 302 7 is_stmt 0 view .LVU312
- 1056 0112 F0B1     		cbz	r0, .L64
- 306:Core/Src/Origin/Searching.c **** 					{
- 1057              		.loc 1 306 6 is_stmt 1 view .LVU313
- 306:Core/Src/Origin/Searching.c **** 					{
- 1058              		.loc 1 306 21 is_stmt 0 view .LVU314
- 1059 0114 264B     		ldr	r3, .L69+4
- 1060 0116 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 306:Core/Src/Origin/Searching.c **** 					{
- 1061              		.loc 1 306 8 view .LVU315
- 1062 0118 B3B1     		cbz	r3, .L65
- 308:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 1063              		.loc 1 308 7 is_stmt 1 view .LVU316
- 309:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
- 1064              		.loc 1 309 7 view .LVU317
- 309:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
- 1065              		.loc 1 309 19 is_stmt 0 view .LVU318
- 1066 011a 244B     		ldr	r3, .L69
- 1067 011c 2A4A     		ldr	r2, .L69+28
- 1068 011e 1A60     		str	r2, [r3]	@ float
- 308:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 1069              		.loc 1 308 22 view .LVU319
- 1070 0120 0020     		movs	r0, #0
- 1071              	.LVL86:
- 1072              	.L66:
- 339:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
- 1073              		.loc 1 339 3 is_stmt 1 view .LVU320
- 339:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
- 1074              		.loc 1 339 8 is_stmt 0 view .LVU321
- 1075 0122 254B     		ldr	r3, .L69+12
- 1076 0124 1A68     		ldr	r2, [r3]
- 1077 0126 254B     		ldr	r3, .L69+16
- 1078 0128 1A60     		str	r2, [r3]
- 340:Core/Src/Origin/Searching.c **** 		break;
- 1079              		.loc 1 340 3 is_stmt 1 view .LVU322
- 1080 012a 224B     		ldr	r3, .L69+8
- 1081 012c D3ED000A 		vldr.32	s1, [r3]
- 1082 0130 1E4B     		ldr	r3, .L69
- 1083 0132 D3ED007A 		vldr.32	s15, [r3]
- 1084 0136 2246     		mov	r2, r4
- 1085 0138 2946     		mov	r1, r5
- 1086 013a 70EEA70A 		vadd.f32	s1, s1, s15
- 1087 013e 9FED200A 		vldr.32	s0, .L69+20
- 1088 0142 FFF7FEFF 		bl	GoStraight
- 1089              	.LVL87:
- 341:Core/Src/Origin/Searching.c **** 	case backleft:
- 1090              		.loc 1 341 3 view .LVU323
- 1091 0146 9FE7     		b	.L51
- 1092              	.LVL88:
- 1093              	.L65:
- 314:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 30
-
-
- 1094              		.loc 1 314 7 view .LVU324
- 315:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
- 1095              		.loc 1 315 7 view .LVU325
- 315:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
- 1096              		.loc 1 315 19 is_stmt 0 view .LVU326
- 1097 0148 184B     		ldr	r3, .L69
- 1098 014a 1F4A     		ldr	r2, .L69+28
- 1099 014c 1A60     		str	r2, [r3]	@ float
- 314:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 1100              		.loc 1 314 22 view .LVU327
- 1101 014e 0120     		movs	r0, #1
- 1102              	.LVL89:
- 314:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 1103              		.loc 1 314 22 view .LVU328
- 1104 0150 E7E7     		b	.L66
- 1105              	.LVL90:
- 1106              	.L64:
- 323:Core/Src/Origin/Searching.c **** 					{
- 1107              		.loc 1 323 6 is_stmt 1 view .LVU329
- 323:Core/Src/Origin/Searching.c **** 					{
- 1108              		.loc 1 323 21 is_stmt 0 view .LVU330
- 1109 0152 174B     		ldr	r3, .L69+4
- 1110 0154 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 323:Core/Src/Origin/Searching.c **** 					{
- 1111              		.loc 1 323 8 view .LVU331
- 1112 0156 4BB1     		cbz	r3, .L67
- 1113              	.LBB16:
- 325:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
- 1114              		.loc 1 325 7 is_stmt 1 view .LVU332
- 1115              	.LVL91:
- 326:Core/Src/Origin/Searching.c **** //						ChangeLED(cnt);
- 1116              		.loc 1 326 7 view .LVU333
- 328:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 1117              		.loc 1 328 7 view .LVU334
- 328:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 1118              		.loc 1 328 11 is_stmt 0 view .LVU335
- 1119 0158 1C4A     		ldr	r2, .L69+32
- 1120 015a 1368     		ldr	r3, [r2]
- 1121 015c 0233     		adds	r3, r3, #2
- 1122 015e 1360     		str	r3, [r2]
- 329:Core/Src/Origin/Searching.c **** 					}
- 1123              		.loc 1 329 7 is_stmt 1 view .LVU336
- 329:Core/Src/Origin/Searching.c **** 					}
- 1124              		.loc 1 329 19 is_stmt 0 view .LVU337
- 1125 0160 124B     		ldr	r3, .L69
- 1126 0162 0022     		movs	r2, #0
- 1127 0164 1A60     		str	r2, [r3]	@ float
- 325:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
- 1128              		.loc 1 325 22 view .LVU338
- 1129 0166 4FF0FF30 		mov	r0, #-1
- 1130              	.LVL92:
- 325:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
- 1131              		.loc 1 325 22 view .LVU339
- 1132              	.LBE16:
- 1133 016a DAE7     		b	.L66
- 1134              	.LVL93:
- 1135              	.L67:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 31
-
-
- 333:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 1136              		.loc 1 333 7 is_stmt 1 view .LVU340
- 334:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
- 1137              		.loc 1 334 7 view .LVU341
- 334:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
- 1138              		.loc 1 334 19 is_stmt 0 view .LVU342
- 1139 016c 0F4B     		ldr	r3, .L69
- 1140 016e 0022     		movs	r2, #0
- 1141 0170 1A60     		str	r2, [r3]	@ float
- 333:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 1142              		.loc 1 333 22 view .LVU343
- 1143 0172 0020     		movs	r0, #0
- 1144              	.LVL94:
- 333:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 1145              		.loc 1 333 22 view .LVU344
- 1146 0174 D5E7     		b	.L66
- 1147              	.LVL95:
- 1148              	.L55:
+ 1195              		.loc 1 325 3 is_stmt 1 view .LVU359
+ 1196 00ce 2246     		mov	r2, r4
+ 1197 00d0 2946     		mov	r1, r5
+ 1198 00d2 3046     		mov	r0, r6
+ 1199 00d4 FFF7FEFF 		bl	TurnRight
+ 1200              	.LVL93:
+ 326:Core/Src/Origin/Searching.c **** 	case backright:
+ 1201              		.loc 1 326 3 view .LVU360
+ 1202 00d8 D6E7     		b	.L59
+ 1203              	.L65:
+ 332:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
+ 1204              		.loc 1 332 3 view .LVU361
+ 332:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
+ 1205              		.loc 1 332 8 is_stmt 0 view .LVU362
+ 1206 00da 384F     		ldr	r7, .L77+16
+ 1207 00dc 0123     		movs	r3, #1
+ 1208 00de 3B60     		str	r3, [r7]
+ 336:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 1209              		.loc 1 336 3 is_stmt 1 view .LVU363
+ 1210 00e0 2146     		mov	r1, r4
+ 1211 00e2 2846     		mov	r0, r5
+ 1212 00e4 FFF7FEFF 		bl	GoBack
+ 1213              	.LVL94:
+ 337:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 1214              		.loc 1 337 3 view .LVU364
+ 337:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 1215              		.loc 1 337 8 is_stmt 0 view .LVU365
+ 1216 00e8 334B     		ldr	r3, .L77+12
+ 1217 00ea 1B68     		ldr	r3, [r3]
+ 1218 00ec 3B60     		str	r3, [r7]
+ 338:Core/Src/Origin/Searching.c **** 
+ 1219              		.loc 1 338 3 is_stmt 1 view .LVU366
+ 1220 00ee 2246     		mov	r2, r4
+ 1221 00f0 2946     		mov	r1, r5
+ 1222 00f2 3046     		mov	r0, r6
+ 1223 00f4 FFF7FEFF 		bl	TurnRight
+ 1224              	.LVL95:
+ 341:Core/Src/Origin/Searching.c **** 	case back:
+ 1225              		.loc 1 341 3 view .LVU367
+ 1226 00f8 C6E7     		b	.L59
+ 1227              	.L64:
  345:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 1149              		.loc 1 345 3 is_stmt 1 view .LVU345
+ 1228              		.loc 1 345 3 view .LVU368
  345:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 1150              		.loc 1 345 8 is_stmt 0 view .LVU346
- 1151 0176 114F     		ldr	r7, .L69+16
- 1152 0178 0123     		movs	r3, #1
- 1153 017a 3B60     		str	r3, [r7]
- 346:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 1154              		.loc 1 346 3 is_stmt 1 view .LVU347
- 1155 017c 2146     		mov	r1, r4
- 1156 017e 2846     		mov	r0, r5
- 1157 0180 FFF7FEFF 		bl	GoBack
- 1158              	.LVL96:
- 347:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
- 1159              		.loc 1 347 3 view .LVU348
- 347:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
- 1160              		.loc 1 347 8 is_stmt 0 view .LVU349
- 1161 0184 0C4B     		ldr	r3, .L69+12
- 1162 0186 1B68     		ldr	r3, [r3]
- 1163 0188 3B60     		str	r3, [r7]
- 348:Core/Src/Origin/Searching.c **** 		break;
- 1164              		.loc 1 348 3 is_stmt 1 view .LVU350
- 1165 018a 2246     		mov	r2, r4
- 1166 018c 2946     		mov	r1, r5
- 1167 018e 3046     		mov	r0, r6
- 1168 0190 FFF7FEFF 		bl	TurnLeft
- 1169              	.LVL97:
- 349:Core/Src/Origin/Searching.c **** 	case left:
- 1170              		.loc 1 349 3 view .LVU351
- 1171 0194 78E7     		b	.L51
- 1172              	.L53:
- 353:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
- 1173              		.loc 1 353 3 view .LVU352
- 353:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
- 1174              		.loc 1 353 8 is_stmt 0 view .LVU353
- 1175 0196 084B     		ldr	r3, .L69+12
- 1176 0198 1A68     		ldr	r2, [r3]
- 1177 019a 084B     		ldr	r3, .L69+16
- 1178 019c 1A60     		str	r2, [r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 32
+ 1229              		.loc 1 345 8 is_stmt 0 view .LVU369
+ 1230 00fa 304B     		ldr	r3, .L77+16
+ 1231 00fc 0122     		movs	r2, #1
+ 1232 00fe 1A60     		str	r2, [r3]
+ 346:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
+ 1233              		.loc 1 346 3 is_stmt 1 view .LVU370
+ 1234 0100 2146     		mov	r1, r4
+ 1235 0102 2846     		mov	r0, r5
+ 1236 0104 FFF7FEFF 		bl	GoBack
+ 1237              	.LVL96:
+ 350:Core/Src/Origin/Searching.c **** 
+ 1238              		.loc 1 350 5 view .LVU371
+ 350:Core/Src/Origin/Searching.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 34
 
 
- 355:Core/Src/Origin/Searching.c **** 		break;
- 1179              		.loc 1 355 3 is_stmt 1 view .LVU354
- 1180 019e 2246     		mov	r2, r4
- 1181 01a0 2946     		mov	r1, r5
- 1182 01a2 3046     		mov	r0, r6
- 1183 01a4 FFF7FEFF 		bl	TurnLeft
- 1184              	.LVL98:
- 356:Core/Src/Origin/Searching.c **** 	}
- 1185              		.loc 1 356 3 view .LVU355
- 1186              		.loc 1 359 1 is_stmt 0 view .LVU356
- 1187 01a8 6EE7     		b	.L51
- 1188              	.L70:
- 1189 01aa 00BF     		.align	2
- 1190              	.L69:
- 1191 01ac 00000000 		.word	AddVelocity
- 1192 01b0 00000000 		.word	VelocityMax
- 1193 01b4 00000000 		.word	ExploreVelocity
- 1194 01b8 00000000 		.word	SearchOrFast
- 1195 01bc 00000000 		.word	Calc
- 1196 01c0 0000B442 		.word	1119092736
- 1197 01c4 00000000 		.word	.LANCHOR0
- 1198 01c8 00007543 		.word	1131741184
- 1199 01cc 00000000 		.word	.LANCHOR1
- 1200              		.cfi_endproc
- 1201              	.LFE241:
- 1203              		.section	.data.cnt.0,"aw"
- 1204              		.align	2
- 1205              		.set	.LANCHOR1,. + 0
- 1208              	cnt.0:
- 1209 0000 01000000 		.word	1
- 1210              		.section	.data.cnt.1,"aw"
- 1211              		.align	2
- 1212              		.set	.LANCHOR0,. + 0
- 1215              	cnt.1:
- 1216 0000 01000000 		.word	1
- 1217              		.text
- 1218              	.Letext0:
- 1219              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
- 1220              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 1221              		.file 4 "Core/Inc/Origin/MazeLib.h"
- 1222              		.file 5 "Core/Inc/Origin/MicroMouse.h"
- 1223              		.file 6 "Core/Inc/dfs.h"
- 1224              		.file 7 "Core/Inc/Origin/Action.h"
- 1225              		.file 8 "Core/Inc/Hw/LED_Driver.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s 			page 33
+ 1239              		.loc 1 350 20 is_stmt 0 view .LVU372
+ 1240 0108 E269     		ldr	r2, [r4, #28]
+ 1241 010a A17D     		ldrb	r1, [r4, #22]	@ zero_extendqisi2
+ 1242 010c 2846     		mov	r0, r5
+ 1243 010e FFF7FEFF 		bl	judgeAccelorNot
+ 1244              	.LVL97:
+ 353:Core/Src/Origin/Searching.c **** 				{
+ 1245              		.loc 1 353 5 is_stmt 1 view .LVU373
+ 353:Core/Src/Origin/Searching.c **** 				{
+ 1246              		.loc 1 353 7 is_stmt 0 view .LVU374
+ 1247 0112 F0B1     		cbz	r0, .L72
+ 357:Core/Src/Origin/Searching.c **** 					{
+ 1248              		.loc 1 357 6 is_stmt 1 view .LVU375
+ 357:Core/Src/Origin/Searching.c **** 					{
+ 1249              		.loc 1 357 21 is_stmt 0 view .LVU376
+ 1250 0114 264B     		ldr	r3, .L77+4
+ 1251 0116 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 357:Core/Src/Origin/Searching.c **** 					{
+ 1252              		.loc 1 357 8 view .LVU377
+ 1253 0118 B3B1     		cbz	r3, .L73
+ 359:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 1254              		.loc 1 359 7 is_stmt 1 view .LVU378
+ 360:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
+ 1255              		.loc 1 360 7 view .LVU379
+ 360:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
+ 1256              		.loc 1 360 19 is_stmt 0 view .LVU380
+ 1257 011a 244B     		ldr	r3, .L77
+ 1258 011c 2A4A     		ldr	r2, .L77+28
+ 1259 011e 1A60     		str	r2, [r3]	@ float
+ 359:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 1260              		.loc 1 359 22 view .LVU381
+ 1261 0120 0020     		movs	r0, #0
+ 1262              	.LVL98:
+ 1263              	.L74:
+ 390:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 1264              		.loc 1 390 3 is_stmt 1 view .LVU382
+ 390:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 1265              		.loc 1 390 8 is_stmt 0 view .LVU383
+ 1266 0122 254B     		ldr	r3, .L77+12
+ 1267 0124 1A68     		ldr	r2, [r3]
+ 1268 0126 254B     		ldr	r3, .L77+16
+ 1269 0128 1A60     		str	r2, [r3]
+ 391:Core/Src/Origin/Searching.c **** 		break;
+ 1270              		.loc 1 391 3 is_stmt 1 view .LVU384
+ 1271 012a 224B     		ldr	r3, .L77+8
+ 1272 012c D3ED000A 		vldr.32	s1, [r3]
+ 1273 0130 1E4B     		ldr	r3, .L77
+ 1274 0132 D3ED007A 		vldr.32	s15, [r3]
+ 1275 0136 2246     		mov	r2, r4
+ 1276 0138 2946     		mov	r1, r5
+ 1277 013a 70EEA70A 		vadd.f32	s1, s1, s15
+ 1278 013e 9FED200A 		vldr.32	s0, .L77+20
+ 1279 0142 FFF7FEFF 		bl	GoStraight
+ 1280              	.LVL99:
+ 392:Core/Src/Origin/Searching.c **** 	case backleft:
+ 1281              		.loc 1 392 3 view .LVU385
+ 1282 0146 9FE7     		b	.L59
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 35
+
+
+ 1283              	.LVL100:
+ 1284              	.L73:
+ 365:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 1285              		.loc 1 365 7 view .LVU386
+ 366:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
+ 1286              		.loc 1 366 7 view .LVU387
+ 366:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
+ 1287              		.loc 1 366 19 is_stmt 0 view .LVU388
+ 1288 0148 184B     		ldr	r3, .L77
+ 1289 014a 1F4A     		ldr	r2, .L77+28
+ 1290 014c 1A60     		str	r2, [r3]	@ float
+ 365:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 1291              		.loc 1 365 22 view .LVU389
+ 1292 014e 0120     		movs	r0, #1
+ 1293              	.LVL101:
+ 365:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 1294              		.loc 1 365 22 view .LVU390
+ 1295 0150 E7E7     		b	.L74
+ 1296              	.LVL102:
+ 1297              	.L72:
+ 374:Core/Src/Origin/Searching.c **** 					{
+ 1298              		.loc 1 374 6 is_stmt 1 view .LVU391
+ 374:Core/Src/Origin/Searching.c **** 					{
+ 1299              		.loc 1 374 21 is_stmt 0 view .LVU392
+ 1300 0152 174B     		ldr	r3, .L77+4
+ 1301 0154 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 374:Core/Src/Origin/Searching.c **** 					{
+ 1302              		.loc 1 374 8 view .LVU393
+ 1303 0156 4BB1     		cbz	r3, .L75
+ 1304              	.LBB16:
+ 376:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 1305              		.loc 1 376 7 is_stmt 1 view .LVU394
+ 1306              	.LVL103:
+ 377:Core/Src/Origin/Searching.c **** //						ChangeLED(cnt);
+ 1307              		.loc 1 377 7 view .LVU395
+ 379:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 1308              		.loc 1 379 7 view .LVU396
+ 379:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 1309              		.loc 1 379 11 is_stmt 0 view .LVU397
+ 1310 0158 1C4A     		ldr	r2, .L77+32
+ 1311 015a 1368     		ldr	r3, [r2]
+ 1312 015c 0233     		adds	r3, r3, #2
+ 1313 015e 1360     		str	r3, [r2]
+ 380:Core/Src/Origin/Searching.c **** 					}
+ 1314              		.loc 1 380 7 is_stmt 1 view .LVU398
+ 380:Core/Src/Origin/Searching.c **** 					}
+ 1315              		.loc 1 380 19 is_stmt 0 view .LVU399
+ 1316 0160 124B     		ldr	r3, .L77
+ 1317 0162 0022     		movs	r2, #0
+ 1318 0164 1A60     		str	r2, [r3]	@ float
+ 376:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 1319              		.loc 1 376 22 view .LVU400
+ 1320 0166 4FF0FF30 		mov	r0, #-1
+ 1321              	.LVL104:
+ 376:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 1322              		.loc 1 376 22 view .LVU401
+ 1323              	.LBE16:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 36
+
+
+ 1324 016a DAE7     		b	.L74
+ 1325              	.LVL105:
+ 1326              	.L75:
+ 384:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 1327              		.loc 1 384 7 is_stmt 1 view .LVU402
+ 385:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
+ 1328              		.loc 1 385 7 view .LVU403
+ 385:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
+ 1329              		.loc 1 385 19 is_stmt 0 view .LVU404
+ 1330 016c 0F4B     		ldr	r3, .L77
+ 1331 016e 0022     		movs	r2, #0
+ 1332 0170 1A60     		str	r2, [r3]	@ float
+ 384:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 1333              		.loc 1 384 22 view .LVU405
+ 1334 0172 0020     		movs	r0, #0
+ 1335              	.LVL106:
+ 384:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 1336              		.loc 1 384 22 view .LVU406
+ 1337 0174 D5E7     		b	.L74
+ 1338              	.LVL107:
+ 1339              	.L63:
+ 396:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 1340              		.loc 1 396 3 is_stmt 1 view .LVU407
+ 396:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 1341              		.loc 1 396 8 is_stmt 0 view .LVU408
+ 1342 0176 114F     		ldr	r7, .L77+16
+ 1343 0178 0123     		movs	r3, #1
+ 1344 017a 3B60     		str	r3, [r7]
+ 397:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 1345              		.loc 1 397 3 is_stmt 1 view .LVU409
+ 1346 017c 2146     		mov	r1, r4
+ 1347 017e 2846     		mov	r0, r5
+ 1348 0180 FFF7FEFF 		bl	GoBack
+ 1349              	.LVL108:
+ 398:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 1350              		.loc 1 398 3 view .LVU410
+ 398:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 1351              		.loc 1 398 8 is_stmt 0 view .LVU411
+ 1352 0184 0C4B     		ldr	r3, .L77+12
+ 1353 0186 1B68     		ldr	r3, [r3]
+ 1354 0188 3B60     		str	r3, [r7]
+ 399:Core/Src/Origin/Searching.c **** 		break;
+ 1355              		.loc 1 399 3 is_stmt 1 view .LVU412
+ 1356 018a 2246     		mov	r2, r4
+ 1357 018c 2946     		mov	r1, r5
+ 1358 018e 3046     		mov	r0, r6
+ 1359 0190 FFF7FEFF 		bl	TurnLeft
+ 1360              	.LVL109:
+ 400:Core/Src/Origin/Searching.c **** 	case left:
+ 1361              		.loc 1 400 3 view .LVU413
+ 1362 0194 78E7     		b	.L59
+ 1363              	.L61:
+ 404:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
+ 1364              		.loc 1 404 3 view .LVU414
+ 404:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
+ 1365              		.loc 1 404 8 is_stmt 0 view .LVU415
+ 1366 0196 084B     		ldr	r3, .L77+12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 37
+
+
+ 1367 0198 1A68     		ldr	r2, [r3]
+ 1368 019a 084B     		ldr	r3, .L77+16
+ 1369 019c 1A60     		str	r2, [r3]
+ 406:Core/Src/Origin/Searching.c **** 		break;
+ 1370              		.loc 1 406 3 is_stmt 1 view .LVU416
+ 1371 019e 2246     		mov	r2, r4
+ 1372 01a0 2946     		mov	r1, r5
+ 1373 01a2 3046     		mov	r0, r6
+ 1374 01a4 FFF7FEFF 		bl	TurnLeft
+ 1375              	.LVL110:
+ 407:Core/Src/Origin/Searching.c **** 	}
+ 1376              		.loc 1 407 3 view .LVU417
+ 1377              		.loc 1 410 1 is_stmt 0 view .LVU418
+ 1378 01a8 6EE7     		b	.L59
+ 1379              	.L78:
+ 1380 01aa 00BF     		.align	2
+ 1381              	.L77:
+ 1382 01ac 00000000 		.word	AddVelocity
+ 1383 01b0 00000000 		.word	VelocityMax
+ 1384 01b4 00000000 		.word	ExploreVelocity
+ 1385 01b8 00000000 		.word	SearchOrFast
+ 1386 01bc 00000000 		.word	Calc
+ 1387 01c0 0000B442 		.word	1119092736
+ 1388 01c4 00000000 		.word	.LANCHOR0
+ 1389 01c8 00007543 		.word	1131741184
+ 1390 01cc 00000000 		.word	.LANCHOR1
+ 1391              		.cfi_endproc
+ 1392              	.LFE241:
+ 1394              		.section	.data.cnt.0,"aw"
+ 1395              		.align	2
+ 1396              		.set	.LANCHOR1,. + 0
+ 1399              	cnt.0:
+ 1400 0000 01000000 		.word	1
+ 1401              		.section	.data.cnt.1,"aw"
+ 1402              		.align	2
+ 1403              		.set	.LANCHOR0,. + 0
+ 1406              	cnt.1:
+ 1407 0000 01000000 		.word	1
+ 1408              		.text
+ 1409              	.Letext0:
+ 1410              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 1411              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1412              		.file 4 "Core/Inc/Origin/MazeLib.h"
+ 1413              		.file 5 "Core/Inc/Origin/MicroMouse.h"
+ 1414              		.file 6 "Core/Inc/dfs.h"
+ 1415              		.file 7 "Core/Inc/Origin/Action.h"
+ 1416              		.file 8 "Core/Inc/Hw/LED_Driver.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 38
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Searching.c
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:20     .text.initSearchData:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:26     .text.initSearchData:00000000 initSearchData
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:87     .text.FindUnwantedSquares:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:93     .text.FindUnwantedSquares:00000000 FindUnwantedSquares
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:324    .text.FindUnwantedSquares:000000c0 $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:331    .text.updateRealSearch:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:337    .text.updateRealSearch:00000000 updateRealSearch
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:381    .text.updateRealSearch:00000026 $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:804    .text.updateRealSearch:000002bc $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:815    .text.getNextDirection:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:821    .text.getNextDirection:00000000 getNextDirection
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:877    .text.getNextDirection:00000034 $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:1191   .text.getNextDirection:000001ac $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:1204   .data.cnt.0:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:1208   .data.cnt.0:00000000 cnt.0
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:1211   .data.cnt.1:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:1215   .data.cnt.1:00000000 cnt.1
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:388    .text.updateRealSearch:0000002d $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:388    .text.updateRealSearch:0000002e $t
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:884    .text.getNextDirection:0000003b $d
-C:\Users\leopi\AppData\Local\Temp\ccB1y1i5.s:884    .text.getNextDirection:0000003c $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:20     .text.FindUnwantedSquares:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:26     .text.FindUnwantedSquares:00000000 FindUnwantedSquares
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:258    .text.FindUnwantedSquares:000000bc $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:268    .text.setSearchTurnParam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:274    .text.setSearchTurnParam:00000000 setSearchTurnParam
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:295    .text.setSearchTurnParam:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:299    .text.setSearchTurnParam:00000010 $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:497    .text.setSearchTurnParam:00000110 $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:522    .text.updateRealSearch:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:528    .text.updateRealSearch:00000000 updateRealSearch
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:572    .text.updateRealSearch:00000026 $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:995    .text.updateRealSearch:000002bc $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1006   .text.getNextDirection:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1012   .text.getNextDirection:00000000 getNextDirection
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1068   .text.getNextDirection:00000034 $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1382   .text.getNextDirection:000001ac $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1395   .data.cnt.0:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1399   .data.cnt.0:00000000 cnt.0
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1402   .data.cnt.1:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1406   .data.cnt.1:00000000 cnt.1
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:579    .text.updateRealSearch:0000002d $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:579    .text.updateRealSearch:0000002e $t
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1075   .text.getNextDirection:0000003b $d
+C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1075   .text.getNextDirection:0000003c $t
 
 UNDEFINED SYMBOLS
-initMaze
-initWeight
-initProfile
-updateAllNodeWeight
 Visit
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f
+ExploreVelocity
+Sla
 shiftState
 VisitedMass
 updateNodeThree
 GetStackFlag
+updateAllNodeWeight
 ComparePosition
 StackMass
 ChangeLED
@@ -1960,6 +2268,8 @@ GoBack
 TurnLeft
 AddVelocity
 VelocityMax
-ExploreVelocity
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 39
+
+
 SearchOrFast
 Calc

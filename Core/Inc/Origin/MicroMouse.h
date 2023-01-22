@@ -9,57 +9,12 @@
 #define INC_MICROMOUSE_H_
 
 #include <main.h>
+extern TIM_HandleTypeDef htim1; //割込みタイマ
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 #include "MazeLib.h"
-extern volatile int Calc;
-extern volatile int SearchOrFast;
-extern TIM_HandleTypeDef htim1;
-
-extern volatile _Bool VelocityMax;
-
-extern volatile float Photo[4];
-extern volatile float TargetPhoto[4];
-extern volatile float PhotoDiff;
-//extern int PulseDisplacement[2];
-extern int KeepCounter;
-//速度 mm/s
-extern volatile float CurrentVelocity[3];
-extern volatile float TargetVelocity[3];
-extern volatile float ControlTargetVelocity;
-
-
-extern volatile int KeepPulse[3];
-extern int PulseDisplacement[3];
-extern volatile int TotalPulse[3];
-
-//角速度 rad/s
-extern volatile float AngularV;
-extern float EncAngV;
-//角度 rad/msを積算
-extern volatile float Angle;
-
-
-extern float ImuAngV,ImuAngle;
-extern float ImuAccel, ImuVelocity, ImuMileage;
-//ここまでがエンコーダからのUpdate
-
-//ここからは目標値と現在値を用いた制御
-
-extern float ExploreVelocity;
-extern float AddVelocity;
-extern volatile float Acceleration;
-extern volatile float TargetAngularV;
-extern volatile float AngularAcceleration;
-extern float AngularLeapsity;
-extern volatile float TargetAngle;
-extern int VelocityLeftOut, VelocityRightOut;
-extern int WallRightOut, WallLeftOut;
-extern int L_motor, R_motor;
-
-
-
 
 #define T1 0.001f
 #define T2 0.0238095238095238000 //ms
@@ -83,7 +38,7 @@ extern int L_motor, R_motor;
 
 
 #define FL	0
-#define SR	1
+#define SIDE_R	1
 #define SL	2
 #define FR	3
 
@@ -99,7 +54,7 @@ extern int L_motor, R_motor;
 #define VIRTUAL	3
 #define UNKNOWN 2
 //壁の閾値(走行中に変更できるようにしたい)
-#define FRONT_WALL 45//70  //２つの和/2 //1700 になるように前壁制御
+#define FRONT_WALL 50//70  //２つの和/2 //1700 になるように前壁制御
 #define RIGHT_WALL 90//90 //380
 #define LEFT_WALL 100//90 //420
 
@@ -139,6 +94,58 @@ extern int L_motor, R_motor;
 #define WALL_JUDGE_PULSE 25/MM_PER_PULSE
 
 
+extern volatile int Calc;
+extern volatile int SearchOrFast;
+
+
+extern volatile _Bool VelocityMax;
+
+extern float Photo[4];
+extern volatile float TargetPhoto[4];
+extern volatile float PhotoDiff;
+//extern int PulseDisplacement[2];
+extern int KeepCounter;
+//速度 mm/s
+extern volatile float CurrentVelocity[3];
+extern volatile float TargetVelocity[3];
+extern volatile float ControlTargetVelocity;
+
+
+extern volatile int KeepPulse[3];
+extern int PulseDisplacement[3];
+extern volatile int TotalPulse[3];
+
+
+//角速度 rad/s
+extern volatile float AngularV;
+extern float EncAngV;
+//角度 rad/msを積算
+extern volatile float Angle;
+
+
+extern float ImuAngV,ImuAngle;
+extern float ImuAccel, ImuVelocity, ImuMileage;
+//ここまでがエンコーダからのUpdate
+
+//ここからは目標値と現在値を用いた制御
+
+extern float ExploreVelocity;
+extern float AddVelocity;
+extern volatile float Acceleration;
+extern volatile float TargetAngularV;
+extern volatile float AngularAcceleration;
+extern float AngularLeapsity;
+extern volatile float TargetAngle;
+extern int VelocityLeftOut, VelocityRightOut;
+extern int WallRightOut, WallLeftOut;
+extern int L_motor, R_motor;
+
+extern void MouseStartAll();
+extern void MousePIDResetAll();
+extern void MousePIDFlagAll(_Bool high_or_low);
+extern void MouseResetTotalPulses();
+extern void MouseResetParameters();
+extern void MouseInit();
 typedef enum Action	//区画の境界に来た時の状態表現だから
 {
 	accel	= 0,
