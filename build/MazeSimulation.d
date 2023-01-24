@@ -1,5 +1,4 @@
-build/MazeSimulation.o: Core/Src/Origin/MazeSimulation.c \
- Core/Src/Origin/../../Inc/Origin/MazeSimulation.h \
- Core/Src/Origin/../../Inc/Origin/MazeLib.h
-Core/Src/Origin/../../Inc/Origin/MazeSimulation.h:
-Core/Src/Origin/../../Inc/Origin/MazeLib.h:
+build/MazeSimulation.o: Core/Src/MazeLibrary/MazeSimulation.c \
+ Core/Inc/MazeLibrary/MazeSimulation.h Core/Inc/MazeLibrary/MazeLib.h
+Core/Inc/MazeLibrary/MazeSimulation.h:
+Core/Inc/MazeLibrary/MazeLib.h:

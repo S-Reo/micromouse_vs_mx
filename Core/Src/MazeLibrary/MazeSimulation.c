@@ -1,4 +1,4 @@
-#include "../../Inc/Origin/MazeSimulation.h"
+#include "MazeSimulation.h"
 #include <string.h>
 //#include "MazeLib.h"
 char FILE_NAME[200] = "/mnt/c/Users/leopi/MATLAB/MazeSimu/MazeTextData/MM2021MS.txt";

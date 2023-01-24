@@ -14,9 +14,6 @@ extern Path FastPath[16*16];
 extern int Num_Nodes;
 
 // void setFastParam(int n);
-void setFastDiagonalParam(int n);
-
-extern slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
 
 void FindUnwantedSquares(maze_node *maze);
 

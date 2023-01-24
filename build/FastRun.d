@@ -1,7 +1,6 @@
-build/FastRun.o: Core/Src/Origin/FastRun.c \
- Core/Src/Origin/../../Inc/Origin/FastRun.h \
- Core/Src/Origin/../../Inc/Origin/MazeLib.h \
- Core/Src/Origin/../../Inc/Origin/MicroMouse.h Core/Inc/main.h \
+build/FastRun.o: Core/Src/MazeLibrary/FastRun.c \
+ Core/Inc/MazeLibrary/FastRun.h Core/Inc/MazeLibrary/MazeLib.h \
+ Core/Inc/Main/MicroMouse.h Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -32,10 +31,11 @@ build/FastRun.o: Core/Src/Origin/FastRun.c \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Src/Origin/../../Inc/Origin/Action.h
-Core/Src/Origin/../../Inc/Origin/FastRun.h:
-Core/Src/Origin/../../Inc/Origin/MazeLib.h:
-Core/Src/Origin/../../Inc/Origin/MicroMouse.h:
+ Core/Inc/MazeLibrary/MazeLib.h Core/Inc/Main/Action.h \
+ Core/Inc/Main/MicroMouse.h
+Core/Inc/MazeLibrary/FastRun.h:
+Core/Inc/MazeLibrary/MazeLib.h:
+Core/Inc/Main/MicroMouse.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -69,4 +69,6 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-Core/Src/Origin/../../Inc/Origin/Action.h:
+Core/Inc/MazeLibrary/MazeLib.h:
+Core/Inc/Main/Action.h:
+Core/Inc/Main/MicroMouse.h:

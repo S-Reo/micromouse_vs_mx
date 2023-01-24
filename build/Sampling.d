@@ -1,5 +1,5 @@
 build/Sampling.o: Core/Src/Tools/Sampling.c Core/Inc/Tools/Sampling.h \
- Core/Inc/Hw/IR_Emitter.h Core/Inc/main.h \
+ Core/Inc/HardWare/IR_Emitter.h Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -30,10 +30,10 @@ build/Sampling.o: Core/Src/Tools/Sampling.c Core/Inc/Tools/Sampling.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Inc/Hw/mouse_ADC.h Core/Inc/Origin/MicroMouse.h \
- Core/Inc/Origin/MazeLib.h
+ Core/Inc/HardWare/mouse_ADC.h Core/Inc/Main/MicroMouse.h \
+ Core/Inc/MazeLibrary/MazeLib.h
 Core/Inc/Tools/Sampling.h:
-Core/Inc/Hw/IR_Emitter.h:
+Core/Inc/HardWare/IR_Emitter.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -67,6 +67,6 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-Core/Inc/Hw/mouse_ADC.h:
-Core/Inc/Origin/MicroMouse.h:
-Core/Inc/Origin/MazeLib.h:
+Core/Inc/HardWare/mouse_ADC.h:
+Core/Inc/Main/MicroMouse.h:
+Core/Inc/MazeLibrary/MazeLib.h:

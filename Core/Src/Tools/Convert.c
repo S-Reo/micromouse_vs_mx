@@ -226,3 +226,4 @@ int GetBatteryLevel(float current_voltage, float battery_min, float battery_max,
 	}
 	return pattern;
 }
+

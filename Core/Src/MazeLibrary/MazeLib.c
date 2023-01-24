@@ -1,4 +1,4 @@
-#include "../../Inc/Origin/MazeLib.h"
+#include "MazeLib.h"
 //迷路データを管理する機能を担う(探索者ファイルと分ける必要がある)
 // 初期化
 // 表示

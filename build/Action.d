@@ -1,6 +1,6 @@
-build/Action.o: Core/Src/Origin/Action.c Core/Inc/Origin/Action.h \
- Core/Inc/Origin/MazeLib.h Core/Inc/Origin/MicroMouse.h Core/Inc/main.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+build/Action.o: Core/Src/Main/Action.c Core/Inc/Main/Action.h \
+ Core/Inc/MazeLibrary/MazeLib.h Core/Inc/Main/MicroMouse.h \
+ Core/Inc/main.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -31,13 +31,13 @@ build/Action.o: Core/Src/Origin/Action.c Core/Inc/Origin/Action.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  Core/Inc/Tools/Convert.h Core/Inc/Tools/PID_Control.h \
- Core/Inc/Origin/MicroMouse.h Core/Inc/Hw/ICM_20648.h Core/Inc/Tools/UI.h \
- Core/Inc/Origin/Interrupt.h Core/Inc/Hw/Motor_Driver.h \
- Core/Inc/Hw/IR_Emitter.h Core/Inc/Origin/MazeLib.h \
- Core/Inc/Origin/Searching.h
-Core/Inc/Origin/Action.h:
-Core/Inc/Origin/MazeLib.h:
-Core/Inc/Origin/MicroMouse.h:
+ Core/Inc/Main/MicroMouse.h Core/Inc/HardWare/ICM_20648.h \
+ Core/Inc/Tools/UI.h Core/Inc/Main/Interrupt.h \
+ Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/IR_Emitter.h \
+ Core/Inc/MazeLibrary/Searching.h
+Core/Inc/Main/Action.h:
+Core/Inc/MazeLibrary/MazeLib.h:
+Core/Inc/Main/MicroMouse.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -73,11 +73,10 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 Core/Inc/Tools/Convert.h:
 Core/Inc/Tools/PID_Control.h:
-Core/Inc/Origin/MicroMouse.h:
-Core/Inc/Hw/ICM_20648.h:
+Core/Inc/Main/MicroMouse.h:
+Core/Inc/HardWare/ICM_20648.h:
 Core/Inc/Tools/UI.h:
-Core/Inc/Origin/Interrupt.h:
-Core/Inc/Hw/Motor_Driver.h:
-Core/Inc/Hw/IR_Emitter.h:
-Core/Inc/Origin/MazeLib.h:
-Core/Inc/Origin/Searching.h:
+Core/Inc/Main/Interrupt.h:
+Core/Inc/HardWare/Motor_Driver.h:
+Core/Inc/HardWare/IR_Emitter.h:
+Core/Inc/MazeLibrary/Searching.h:

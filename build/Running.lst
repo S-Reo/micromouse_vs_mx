@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -28,37 +28,37 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
   26              	FastStraight:
   27              	.LVL0:
   28              	.LFB238:
-  29              		.file 1 "Core/Src/Origin/Running.c"
-   1:Core/Src/Origin/Running.c **** // 探索、最短などを使った、最終的な走行全体の処理を記述する
-   2:Core/Src/Origin/Running.c **** 
-   3:Core/Src/Origin/Running.c **** #include "Searching.h"
-   4:Core/Src/Origin/Running.c **** #include "FastRun.h"
-   5:Core/Src/Origin/Running.c **** 
-   6:Core/Src/Origin/Running.c **** #include "UI.h"
-   7:Core/Src/Origin/Running.c **** #include "Interrupt.h"
-   8:Core/Src/Origin/Running.c **** #include "dfs.h"
-   9:Core/Src/Origin/Running.c **** 
-  10:Core/Src/Origin/Running.c **** #include "MicroMouse.h"
-  11:Core/Src/Origin/Running.c **** #include "Mode.h"
-  12:Core/Src/Origin/Running.c **** 
-  13:Core/Src/Origin/Running.c **** 
-  14:Core/Src/Origin/Running.c **** #include "PID_Control.h"
-  15:Core/Src/Origin/Running.c **** #include "ICM_20648.h"
-  16:Core/Src/Origin/Running.c **** #include "Flash.h"
-  17:Core/Src/Origin/Running.c **** #include "Record.h"
-  18:Core/Src/Origin/Running.c **** 
-  19:Core/Src/Origin/Running.c **** // #include "MazeLib.h"
-  20:Core/Src/Origin/Running.c **** 
-  21:Core/Src/Origin/Running.c **** // ハードウェアの関数をいちいち呼び出すのが面倒で見辛い
-  22:Core/Src/Origin/Running.c **** 
-  23:Core/Src/Origin/Running.c **** profile my_mouse;
-  24:Core/Src/Origin/Running.c **** maze_node my_map;
-  25:Core/Src/Origin/Running.c **** 
-  26:Core/Src/Origin/Running.c **** // Actionを含めた処理はここ
-  27:Core/Src/Origin/Running.c **** const float conv_pul = 2/MM_PER_PULSE;
-  28:Core/Src/Origin/Running.c **** void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed)
-  29:Core/Src/Origin/Running.c **** {
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 2
+  29              		.file 1 "Core/Src/Main/Running.c"
+   1:Core/Src/Main/Running.c **** // 探索、最短などを使った、最終的な走行全体の処理を記述する
+   2:Core/Src/Main/Running.c **** 
+   3:Core/Src/Main/Running.c **** #include "Searching.h"
+   4:Core/Src/Main/Running.c **** #include "FastRun.h"
+   5:Core/Src/Main/Running.c **** 
+   6:Core/Src/Main/Running.c **** #include "UI.h"
+   7:Core/Src/Main/Running.c **** #include "Interrupt.h"
+   8:Core/Src/Main/Running.c **** #include "dfs.h"
+   9:Core/Src/Main/Running.c **** 
+  10:Core/Src/Main/Running.c **** #include "MicroMouse.h"
+  11:Core/Src/Main/Running.c **** #include "Mode.h"
+  12:Core/Src/Main/Running.c **** 
+  13:Core/Src/Main/Running.c **** 
+  14:Core/Src/Main/Running.c **** #include "PID_Control.h"
+  15:Core/Src/Main/Running.c **** #include "ICM_20648.h"
+  16:Core/Src/Main/Running.c **** #include "Flash.h"
+  17:Core/Src/Main/Running.c **** #include "Record.h"
+  18:Core/Src/Main/Running.c **** 
+  19:Core/Src/Main/Running.c **** // #include "MazeLib.h"
+  20:Core/Src/Main/Running.c **** 
+  21:Core/Src/Main/Running.c **** // ハードウェアの関数をいちいち呼び出すのが面倒で見辛い
+  22:Core/Src/Main/Running.c **** 
+  23:Core/Src/Main/Running.c **** profile my_mouse;
+  24:Core/Src/Main/Running.c **** maze_node my_map;
+  25:Core/Src/Main/Running.c **** 
+  26:Core/Src/Main/Running.c **** // Actionを含めた処理はここ
+  27:Core/Src/Main/Running.c **** const float conv_pul = 2/MM_PER_PULSE;
+  28:Core/Src/Main/Running.c **** void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed)
+  29:Core/Src/Main/Running.c **** {
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 2
 
 
   30              		.loc 1 29 1 view -0
@@ -86,7 +86,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
   52 0012 11EE905A 		vmov	r5, s3
   53 0016 B0EE428A 		vmov.f32	s16, s4
   54 001a F0EE628A 		vmov.f32	s17, s5
-  30:Core/Src/Origin/Running.c **** 		float add_distance = cut*90*num;//スタート時の加速では61.5になるようにnumをか�
+  30:Core/Src/Main/Running.c **** 		float add_distance = cut*90*num;//スタート時の加速では61.5になるようにnumをか�
   55              		.loc 1 30 3 is_stmt 1 view .LVU2
   56              		.loc 1 30 27 is_stmt 0 view .LVU3
   57 001e DFEDAD7A 		vldr.32	s15, .L38
@@ -94,13 +94,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
   59              		.loc 1 30 9 view .LVU4
   60 0026 67EEA07A 		vmul.f32	s15, s15, s1
   61              	.LVL1:
-  31:Core/Src/Origin/Running.c **** 		TargetAngularV = 0;
+  31:Core/Src/Main/Running.c **** 		TargetAngularV = 0;
   62              		.loc 1 31 3 is_stmt 1 view .LVU5
   63              		.loc 1 31 18 is_stmt 0 view .LVU6
   64 002a AB4B     		ldr	r3, .L38+4
   65 002c 0022     		movs	r2, #0
   66 002e 1A60     		str	r2, [r3]	@ float
-  32:Core/Src/Origin/Running.c **** 		int target_pulse = (int)(add_distance*conv_pul);
+  32:Core/Src/Main/Running.c **** 		int target_pulse = (int)(add_distance*conv_pul);
   67              		.loc 1 32 3 is_stmt 1 view .LVU7
   68              		.loc 1 32 40 is_stmt 0 view .LVU8
   69 0030 9FEDAA7A 		vldr.32	s14, .L38+8
@@ -110,26 +110,26 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
   73 0038 FDEEE77A 		vcvt.s32.f32	s15, s15
   74 003c 17EE904A 		vmov	r4, s15	@ int
   75              	.LVL3:
-  33:Core/Src/Origin/Running.c **** //		dbc = 1;
-  34:Core/Src/Origin/Running.c **** 		static int section_num=0;
+  33:Core/Src/Main/Running.c **** //		dbc = 1;
+  34:Core/Src/Main/Running.c **** 		static int section_num=0;
   76              		.loc 1 34 3 is_stmt 1 view .LVU10
-  35:Core/Src/Origin/Running.c **** 		while( ( TotalPulse[BODY] )  < ( KeepPulse[BODY] + target_pulse) )
+  35:Core/Src/Main/Running.c **** 		while( ( TotalPulse[BODY] )  < ( KeepPulse[BODY] + target_pulse) )
   77              		.loc 1 35 3 view .LVU11
   78              		.loc 1 35 8 is_stmt 0 view .LVU12
   79 0040 54E0     		b	.L2
   80              	.LVL4:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 3
 
 
   81              	.L30:
-  36:Core/Src/Origin/Running.c **** 		{
-  37:Core/Src/Origin/Running.c **** 			if(TargetVelocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
-  38:Core/Src/Origin/Running.c **** 			{
-  39:Core/Src/Origin/Running.c **** 				Acceleration = 0;
-  40:Core/Src/Origin/Running.c **** 			}
-  41:Core/Src/Origin/Running.c **** 			else
-  42:Core/Src/Origin/Running.c **** 			{
-  43:Core/Src/Origin/Running.c **** 				Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
+  36:Core/Src/Main/Running.c **** 		{
+  37:Core/Src/Main/Running.c **** 			if(TargetVelocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
+  38:Core/Src/Main/Running.c **** 			{
+  39:Core/Src/Main/Running.c **** 				Acceleration = 0;
+  40:Core/Src/Main/Running.c **** 			}
+  41:Core/Src/Main/Running.c **** 			else
+  42:Core/Src/Main/Running.c **** 			{
+  43:Core/Src/Main/Running.c **** 				Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
   82              		.loc 1 43 5 is_stmt 1 view .LVU13
   83              		.loc 1 43 18 is_stmt 0 view .LVU14
   84 0042 A74B     		ldr	r3, .L38+12
@@ -138,77 +138,77 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
   87              	.LVL5:
   88              	.L36:
   89              	.LBB2:
-  44:Core/Src/Origin/Running.c **** 			}
-  45:Core/Src/Origin/Running.c **** 			//壁の値を見て一瞬だけ制御オン
-  46:Core/Src/Origin/Running.c **** 				//90mm毎に左右を見る
-  47:Core/Src/Origin/Running.c **** 
-  48:Core/Src/Origin/Running.c **** 			if(  ( (TotalPulse[BODY] ) >= ( KeepPulse[BODY] + (int)(0.95f*90.0f*conv_pul)*section_num)) && (
-  49:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
-  50:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  44:Core/Src/Main/Running.c **** 			}
+  45:Core/Src/Main/Running.c **** 			//壁の値を見て一瞬だけ制御オン
+  46:Core/Src/Main/Running.c **** 				//90mm毎に左右を見る
+  47:Core/Src/Main/Running.c **** 
+  48:Core/Src/Main/Running.c **** 			if(  ( (TotalPulse[BODY] ) >= ( KeepPulse[BODY] + (int)(0.95f*90.0f*conv_pul)*section_num)) && (
+  49:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  50:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
   90              		.loc 1 50 6 is_stmt 1 view .LVU15
   91 0048 0121     		movs	r1, #1
   92 004a 0846     		mov	r0, r1
   93 004c FFF7FEFF 		bl	PIDChangeFlag
   94              	.LVL6:
-  51:Core/Src/Origin/Running.c **** 					PIDChangeFlag(A_VELO_PID, 0);
+  51:Core/Src/Main/Running.c **** 					PIDChangeFlag(A_VELO_PID, 0);
   95              		.loc 1 51 6 view .LVU16
   96 0050 0021     		movs	r1, #0
   97 0052 0846     		mov	r0, r1
   98 0054 FFF7FEFF 		bl	PIDChangeFlag
   99              	.LVL7:
-  52:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 0);
+  52:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 0);
  100              		.loc 1 52 6 view .LVU17
  101 0058 0021     		movs	r1, #0
  102 005a 0320     		movs	r0, #3
  103 005c FFF7FEFF 		bl	PIDChangeFlag
  104              	.LVL8:
-  53:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
+  53:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
  105              		.loc 1 53 6 view .LVU18
  106 0060 0021     		movs	r1, #0
  107 0062 0220     		movs	r0, #2
  108 0064 FFF7FEFF 		bl	PIDChangeFlag
  109              	.LVL9:
-  54:Core/Src/Origin/Running.c **** 					ChangeLED(5);
+  54:Core/Src/Main/Running.c **** 					ChangeLED(5);
  110              		.loc 1 54 6 view .LVU19
  111 0068 0520     		movs	r0, #5
  112 006a FFF7FEFF 		bl	ChangeLED
  113              	.LVL10:
  114              	.LBE2:
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  115              		.loc 1 49 62 is_stmt 0 view .LVU20
  116 006e 3DE0     		b	.L2
  117              	.L37:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 4
 
 
  118              	.LBB3:
-  55:Core/Src/Origin/Running.c **** 				}
-  56:Core/Src/Origin/Running.c **** 				else if(Photo[SL] >= LEFT_WALL ){
-  57:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 1);
+  55:Core/Src/Main/Running.c **** 				}
+  56:Core/Src/Main/Running.c **** 				else if(Photo[SL] >= LEFT_WALL ){
+  57:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 1);
  119              		.loc 1 57 6 is_stmt 1 view .LVU21
  120 0070 0121     		movs	r1, #1
  121 0072 0220     		movs	r0, #2
  122 0074 FFF7FEFF 		bl	PIDChangeFlag
  123              	.LVL11:
-  58:Core/Src/Origin/Running.c **** 					PIDChangeFlag(A_VELO_PID, 0);
+  58:Core/Src/Main/Running.c **** 					PIDChangeFlag(A_VELO_PID, 0);
  124              		.loc 1 58 6 view .LVU22
  125 0078 0021     		movs	r1, #0
  126 007a 0846     		mov	r0, r1
  127 007c FFF7FEFF 		bl	PIDChangeFlag
  128              	.LVL12:
-  59:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 0);
+  59:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 0);
  129              		.loc 1 59 6 view .LVU23
  130 0080 0021     		movs	r1, #0
  131 0082 0320     		movs	r0, #3
  132 0084 FFF7FEFF 		bl	PIDChangeFlag
  133              	.LVL13:
-  60:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
+  60:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
  134              		.loc 1 60 6 view .LVU24
  135 0088 0021     		movs	r1, #0
  136 008a 0120     		movs	r0, #1
  137 008c FFF7FEFF 		bl	PIDChangeFlag
  138              	.LVL14:
-  61:Core/Src/Origin/Running.c **** 					ChangeLED(4);
+  61:Core/Src/Main/Running.c **** 					ChangeLED(4);
  139              		.loc 1 61 6 view .LVU25
  140 0090 0420     		movs	r0, #4
  141 0092 FFF7FEFF 		bl	ChangeLED
@@ -218,44 +218,44 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  145              	.LVL16:
  146              	.L32:
  147              	.LBB4:
-  62:Core/Src/Origin/Running.c **** 
-  63:Core/Src/Origin/Running.c **** 				}
-  64:Core/Src/Origin/Running.c **** 				else if(Photo[SIDE_R] >= RIGHT_WALL){
-  65:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
-  66:Core/Src/Origin/Running.c **** 					PIDChangeFlag(A_VELO_PID,0);
-  67:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
-  68:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
-  69:Core/Src/Origin/Running.c **** 					ChangeLED(1);
-  70:Core/Src/Origin/Running.c **** 				}
-  71:Core/Src/Origin/Running.c **** 				else {
-  72:Core/Src/Origin/Running.c **** 					PIDChangeFlag(A_VELO_PID, 1);
+  62:Core/Src/Main/Running.c **** 
+  63:Core/Src/Main/Running.c **** 				}
+  64:Core/Src/Main/Running.c **** 				else if(Photo[SIDE_R] >= RIGHT_WALL){
+  65:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
+  66:Core/Src/Main/Running.c **** 					PIDChangeFlag(A_VELO_PID,0);
+  67:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
+  68:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
+  69:Core/Src/Main/Running.c **** 					ChangeLED(1);
+  70:Core/Src/Main/Running.c **** 				}
+  71:Core/Src/Main/Running.c **** 				else {
+  72:Core/Src/Main/Running.c **** 					PIDChangeFlag(A_VELO_PID, 1);
  148              		.loc 1 72 6 view .LVU26
  149 0098 0121     		movs	r1, #1
  150 009a 0020     		movs	r0, #0
  151 009c FFF7FEFF 		bl	PIDChangeFlag
  152              	.LVL17:
-  73:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 0);
+  73:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 0);
  153              		.loc 1 73 6 view .LVU27
  154 00a0 0021     		movs	r1, #0
  155 00a2 0320     		movs	r0, #3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 5
 
 
  156 00a4 FFF7FEFF 		bl	PIDChangeFlag
  157              	.LVL18:
-  74:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
+  74:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
  158              		.loc 1 74 6 view .LVU28
  159 00a8 0021     		movs	r1, #0
  160 00aa 0220     		movs	r0, #2
  161 00ac FFF7FEFF 		bl	PIDChangeFlag
  162              	.LVL19:
-  75:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
+  75:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
  163              		.loc 1 75 6 view .LVU29
  164 00b0 0021     		movs	r1, #0
  165 00b2 0120     		movs	r0, #1
  166 00b4 FFF7FEFF 		bl	PIDChangeFlag
  167              	.LVL20:
-  76:Core/Src/Origin/Running.c **** 					ChangeLED(2);
+  76:Core/Src/Main/Running.c **** 					ChangeLED(2);
  168              		.loc 1 76 6 view .LVU30
  169 00b8 0220     		movs	r0, #2
  170 00ba FFF7FEFF 		bl	ChangeLED
@@ -264,44 +264,44 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  173              	.L6:
  174              	.LBE4:
  175              	.LBB5:
-  77:Core/Src/Origin/Running.c **** 				}
-  78:Core/Src/Origin/Running.c **** //				ChangeLED(section_num);
-  79:Core/Src/Origin/Running.c **** 			}
-  80:Core/Src/Origin/Running.c **** 			else {
-  81:Core/Src/Origin/Running.c **** 				section_num++;
+  77:Core/Src/Main/Running.c **** 				}
+  78:Core/Src/Main/Running.c **** //				ChangeLED(section_num);
+  79:Core/Src/Main/Running.c **** 			}
+  80:Core/Src/Main/Running.c **** 			else {
+  81:Core/Src/Main/Running.c **** 				section_num++;
  176              		.loc 1 81 5 view .LVU31
  177              		.loc 1 81 16 is_stmt 0 view .LVU32
  178 00c0 0133     		adds	r3, r3, #1
  179 00c2 884A     		ldr	r2, .L38+16
  180 00c4 1360     		str	r3, [r2]
-  82:Core/Src/Origin/Running.c **** 				PIDChangeFlag(D_WALL_PID, 0);
+  82:Core/Src/Main/Running.c **** 				PIDChangeFlag(D_WALL_PID, 0);
  181              		.loc 1 82 5 is_stmt 1 view .LVU33
  182 00c6 0021     		movs	r1, #0
  183 00c8 0120     		movs	r0, #1
  184 00ca FFF7FEFF 		bl	PIDChangeFlag
  185              	.LVL22:
-  83:Core/Src/Origin/Running.c **** 				PIDChangeFlag(R_WALL_PID, 0);
+  83:Core/Src/Main/Running.c **** 				PIDChangeFlag(R_WALL_PID, 0);
  186              		.loc 1 83 5 view .LVU34
  187 00ce 0021     		movs	r1, #0
  188 00d0 0320     		movs	r0, #3
  189 00d2 FFF7FEFF 		bl	PIDChangeFlag
  190              	.LVL23:
-  84:Core/Src/Origin/Running.c **** 				PIDChangeFlag(L_WALL_PID, 0);
+  84:Core/Src/Main/Running.c **** 				PIDChangeFlag(L_WALL_PID, 0);
  191              		.loc 1 84 5 view .LVU35
  192 00d6 0021     		movs	r1, #0
  193 00d8 0220     		movs	r0, #2
  194 00da FFF7FEFF 		bl	PIDChangeFlag
  195              	.LVL24:
-  85:Core/Src/Origin/Running.c **** 				PIDChangeFlag(A_VELO_PID, 1);
+  85:Core/Src/Main/Running.c **** 				PIDChangeFlag(A_VELO_PID, 1);
  196              		.loc 1 85 5 view .LVU36
  197 00de 0121     		movs	r1, #1
  198 00e0 0020     		movs	r0, #0
  199 00e2 FFF7FEFF 		bl	PIDChangeFlag
  200              	.LVL25:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 6
 
 
-  86:Core/Src/Origin/Running.c **** 				ChangeLED(0);
+  86:Core/Src/Main/Running.c **** 				ChangeLED(0);
  201              		.loc 1 86 5 view .LVU37
  202 00e6 0020     		movs	r0, #0
  203 00e8 FFF7FEFF 		bl	ChangeLED
@@ -309,161 +309,161 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  205              	.L2:
  206              		.loc 1 86 5 is_stmt 0 view .LVU38
  207              	.LBE5:
-  35:Core/Src/Origin/Running.c **** 		{
+  35:Core/Src/Main/Running.c **** 		{
  208              		.loc 1 35 8 is_stmt 1 view .LVU39
-  35:Core/Src/Origin/Running.c **** 		{
+  35:Core/Src/Main/Running.c **** 		{
  209              		.loc 1 35 22 is_stmt 0 view .LVU40
  210 00ec 7E4B     		ldr	r3, .L38+20
  211 00ee 9A68     		ldr	r2, [r3, #8]
-  35:Core/Src/Origin/Running.c **** 		{
+  35:Core/Src/Main/Running.c **** 		{
  212              		.loc 1 35 45 view .LVU41
  213 00f0 7E4B     		ldr	r3, .L38+24
  214 00f2 9B68     		ldr	r3, [r3, #8]
-  35:Core/Src/Origin/Running.c **** 		{
+  35:Core/Src/Main/Running.c **** 		{
  215              		.loc 1 35 52 view .LVU42
  216 00f4 2344     		add	r3, r3, r4
-  35:Core/Src/Origin/Running.c **** 		{
+  35:Core/Src/Main/Running.c **** 		{
  217              		.loc 1 35 8 view .LVU43
  218 00f6 9A42     		cmp	r2, r3
  219 00f8 57DA     		bge	.L35
-  37:Core/Src/Origin/Running.c **** 			{
+  37:Core/Src/Main/Running.c **** 			{
  220              		.loc 1 37 4 is_stmt 1 view .LVU44
-  37:Core/Src/Origin/Running.c **** 			{
+  37:Core/Src/Main/Running.c **** 			{
  221              		.loc 1 37 21 is_stmt 0 view .LVU45
  222 00fa 7D4B     		ldr	r3, .L38+28
  223 00fc D3ED027A 		vldr.32	s15, [r3, #8]
-  37:Core/Src/Origin/Running.c **** 			{
+  37:Core/Src/Main/Running.c **** 			{
  224              		.loc 1 37 6 view .LVU46
  225 0100 F4EEC87A 		vcmpe.f32	s15, s16
  226 0104 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  227 0108 9BDB     		blt	.L30
-  39:Core/Src/Origin/Running.c **** 			}
+  39:Core/Src/Main/Running.c **** 			}
  228              		.loc 1 39 5 is_stmt 1 view .LVU47
-  39:Core/Src/Origin/Running.c **** 			}
+  39:Core/Src/Main/Running.c **** 			}
  229              		.loc 1 39 18 is_stmt 0 view .LVU48
  230 010a 754B     		ldr	r3, .L38+12
  231 010c 0022     		movs	r2, #0
  232 010e 1A60     		str	r2, [r3]	@ float
  233              	.L5:
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  234              		.loc 1 48 4 is_stmt 1 view .LVU49
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  235              		.loc 1 48 22 is_stmt 0 view .LVU50
  236 0110 754B     		ldr	r3, .L38+20
  237 0112 9968     		ldr	r1, [r3, #8]
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  238              		.loc 1 48 45 view .LVU51
  239 0114 754B     		ldr	r3, .L38+24
  240 0116 9A68     		ldr	r2, [r3, #8]
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  241              		.loc 1 48 81 view .LVU52
  242 0118 724B     		ldr	r3, .L38+16
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 7
 
 
  243 011a 1B68     		ldr	r3, [r3]
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  244              		.loc 1 48 52 view .LVU53
  245 011c 7548     		ldr	r0, .L38+32
  246 011e 00FB0322 		mla	r2, r0, r3, r2
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  247              		.loc 1 48 6 view .LVU54
  248 0122 9142     		cmp	r1, r2
  249 0124 CCDB     		blt	.L6
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  250              		.loc 1 48 112 discriminator 1 view .LVU55
  251 0126 704A     		ldr	r2, .L38+20
  252 0128 9168     		ldr	r1, [r2, #8]
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  253              		.loc 1 48 135 discriminator 1 view .LVU56
  254 012a 704A     		ldr	r2, .L38+24
  255 012c 9268     		ldr	r2, [r2, #8]
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  256              		.loc 1 48 142 discriminator 1 view .LVU57
  257 012e 7248     		ldr	r0, .L38+36
  258 0130 00FB0322 		mla	r2, r0, r3, r2
-  48:Core/Src/Origin/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+  48:Core/Src/Main/Running.c **** 				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
  259              		.loc 1 48 96 discriminator 1 view .LVU58
  260 0134 9142     		cmp	r1, r2
  261 0136 C3DC     		bgt	.L6
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  262              		.loc 1 49 5 is_stmt 1 view .LVU59
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  263              		.loc 1 49 13 is_stmt 0 view .LVU60
  264 0138 704B     		ldr	r3, .L38+40
  265 013a D3ED027A 		vldr.32	s15, [r3, #8]
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  266              		.loc 1 49 7 view .LVU61
  267 013e 9FED707A 		vldr.32	s14, .L38+44
  268 0142 F4EEC77A 		vcmpe.f32	s15, s14
  269 0146 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  270 014a 09DB     		blt	.L7
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  271              		.loc 1 49 39 discriminator 1 view .LVU62
  272 014c D3ED016A 		vldr.32	s13, [r3, #4]
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  273              		.loc 1 49 31 discriminator 1 view .LVU63
  274 0150 9FED607A 		vldr.32	s14, .L38
  275              	.LVL27:
-  49:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
+  49:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 1);
  276              		.loc 1 49 31 discriminator 1 view .LVU64
  277 0154 F4EEC76A 		vcmpe.f32	s13, s14
  278 0158 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  279 015c BFF674AF 		bge	.L36
  280              	.LVL28:
  281              	.L7:
-  56:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 1);
+  56:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 1);
  282              		.loc 1 56 10 is_stmt 1 view .LVU65
-  56:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 1);
+  56:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 1);
  283              		.loc 1 56 12 is_stmt 0 view .LVU66
  284 0160 9FED677A 		vldr.32	s14, .L38+44
  285 0164 F4EEC77A 		vcmpe.f32	s15, s14
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 8
 
 
  286 0168 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  287 016c 80DA     		bge	.L37
-  64:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
+  64:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
  288              		.loc 1 64 10 is_stmt 1 view .LVU67
-  64:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
+  64:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
  289              		.loc 1 64 18 is_stmt 0 view .LVU68
  290 016e 634B     		ldr	r3, .L38+40
  291 0170 93ED017A 		vldr.32	s14, [r3, #4]
-  64:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
+  64:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
  292              		.loc 1 64 12 view .LVU69
  293 0174 DFED577A 		vldr.32	s15, .L38
  294              	.LVL29:
-  64:Core/Src/Origin/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
+  64:Core/Src/Main/Running.c **** 					PIDChangeFlag(R_WALL_PID, 1);
  295              		.loc 1 64 12 view .LVU70
  296 0178 B4EEE77A 		vcmpe.f32	s14, s15
  297 017c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  298 0180 8ADB     		blt	.L32
  299              	.LBB6:
-  65:Core/Src/Origin/Running.c **** 					PIDChangeFlag(A_VELO_PID,0);
+  65:Core/Src/Main/Running.c **** 					PIDChangeFlag(A_VELO_PID,0);
  300              		.loc 1 65 6 is_stmt 1 view .LVU71
  301 0182 0121     		movs	r1, #1
  302 0184 0320     		movs	r0, #3
  303 0186 FFF7FEFF 		bl	PIDChangeFlag
  304              	.LVL30:
-  66:Core/Src/Origin/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
+  66:Core/Src/Main/Running.c **** 					PIDChangeFlag(D_WALL_PID, 0);
  305              		.loc 1 66 6 view .LVU72
  306 018a 0021     		movs	r1, #0
  307 018c 0846     		mov	r0, r1
  308 018e FFF7FEFF 		bl	PIDChangeFlag
  309              	.LVL31:
-  67:Core/Src/Origin/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
+  67:Core/Src/Main/Running.c **** 					PIDChangeFlag(L_WALL_PID, 0);
  310              		.loc 1 67 6 view .LVU73
  311 0192 0021     		movs	r1, #0
  312 0194 0120     		movs	r0, #1
  313 0196 FFF7FEFF 		bl	PIDChangeFlag
  314              	.LVL32:
-  68:Core/Src/Origin/Running.c **** 					ChangeLED(1);
+  68:Core/Src/Main/Running.c **** 					ChangeLED(1);
  315              		.loc 1 68 6 view .LVU74
  316 019a 0021     		movs	r1, #0
  317 019c 0220     		movs	r0, #2
  318 019e FFF7FEFF 		bl	PIDChangeFlag
  319              	.LVL33:
-  69:Core/Src/Origin/Running.c **** 				}
+  69:Core/Src/Main/Running.c **** 				}
  320              		.loc 1 69 6 view .LVU75
  321 01a2 0120     		movs	r0, #1
  322 01a4 FFF7FEFF 		bl	ChangeLED
@@ -471,65 +471,65 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  324              	.LBE6:
  325 01a8 A0E7     		b	.L2
  326              	.L35:
-  87:Core/Src/Origin/Running.c **** 			}
-  88:Core/Src/Origin/Running.c **** 				//壁の存在を閾値で確認
-  89:Core/Src/Origin/Running.c **** 				//3パターンに該当すれば壁制御を一瞬だけ入れる
-  90:Core/Src/Origin/Running.c **** 				//割込みのタイマを使ってタイミングを決める. （また複雑に...）
-  91:Core/Src/Origin/Running.c **** 
-  92:Core/Src/Origin/Running.c **** 
-  93:Core/Src/Origin/Running.c **** 		}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 9
+  87:Core/Src/Main/Running.c **** 			}
+  88:Core/Src/Main/Running.c **** 				//壁の存在を閾値で確認
+  89:Core/Src/Main/Running.c **** 				//3パターンに該当すれば壁制御を一瞬だけ入れる
+  90:Core/Src/Main/Running.c **** 				//割込みのタイマを使ってタイミングを決める. （また複雑に...）
+  91:Core/Src/Main/Running.c **** 
+  92:Core/Src/Main/Running.c **** 
+  93:Core/Src/Main/Running.c **** 		}
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 9
 
 
-  94:Core/Src/Origin/Running.c **** 		PIDChangeFlag(D_WALL_PID, 0);
+  94:Core/Src/Main/Running.c **** 		PIDChangeFlag(D_WALL_PID, 0);
  327              		.loc 1 94 3 view .LVU76
  328 01aa 0021     		movs	r1, #0
  329 01ac 0120     		movs	r0, #1
  330 01ae FFF7FEFF 		bl	PIDChangeFlag
  331              	.LVL35:
-  95:Core/Src/Origin/Running.c **** 		PIDChangeFlag(R_WALL_PID, 0);
+  95:Core/Src/Main/Running.c **** 		PIDChangeFlag(R_WALL_PID, 0);
  332              		.loc 1 95 3 view .LVU77
  333 01b2 0021     		movs	r1, #0
  334 01b4 0320     		movs	r0, #3
  335 01b6 FFF7FEFF 		bl	PIDChangeFlag
  336              	.LVL36:
-  96:Core/Src/Origin/Running.c **** 		PIDChangeFlag(L_WALL_PID, 0);
+  96:Core/Src/Main/Running.c **** 		PIDChangeFlag(L_WALL_PID, 0);
  337              		.loc 1 96 3 view .LVU78
  338 01ba 0021     		movs	r1, #0
  339 01bc 0220     		movs	r0, #2
  340 01be FFF7FEFF 		bl	PIDChangeFlag
  341              	.LVL37:
-  97:Core/Src/Origin/Running.c **** 		PIDChangeFlag(A_VELO_PID, 1);
+  97:Core/Src/Main/Running.c **** 		PIDChangeFlag(A_VELO_PID, 1);
  342              		.loc 1 97 3 view .LVU79
  343 01c2 0121     		movs	r1, #1
  344 01c4 0020     		movs	r0, #0
  345 01c6 FFF7FEFF 		bl	PIDChangeFlag
  346              	.LVL38:
-  98:Core/Src/Origin/Running.c **** 		ChangeLED(0);
+  98:Core/Src/Main/Running.c **** 		ChangeLED(0);
  347              		.loc 1 98 3 view .LVU80
  348 01ca 0020     		movs	r0, #0
  349 01cc FFF7FEFF 		bl	ChangeLED
  350              	.LVL39:
-  99:Core/Src/Origin/Running.c **** 		section_num = 0;
+  99:Core/Src/Main/Running.c **** 		section_num = 0;
  351              		.loc 1 99 3 view .LVU81
  352              		.loc 1 99 15 is_stmt 0 view .LVU82
  353 01d0 444B     		ldr	r3, .L38+16
  354 01d2 0022     		movs	r2, #0
  355 01d4 1A60     		str	r2, [r3]
- 100:Core/Src/Origin/Running.c **** 		Acceleration = 0;
+ 100:Core/Src/Main/Running.c **** 		Acceleration = 0;
  356              		.loc 1 100 3 is_stmt 1 view .LVU83
  357              		.loc 1 100 16 is_stmt 0 view .LVU84
  358 01d6 424B     		ldr	r3, .L38+12
  359 01d8 0022     		movs	r2, #0
  360 01da 1A60     		str	r2, [r3]	@ float
- 101:Core/Src/Origin/Running.c **** 		KeepPulse[BODY] += target_pulse;
+ 101:Core/Src/Main/Running.c **** 		KeepPulse[BODY] += target_pulse;
  361              		.loc 1 101 3 is_stmt 1 view .LVU85
  362              		.loc 1 101 19 is_stmt 0 view .LVU86
  363 01dc 434B     		ldr	r3, .L38+24
  364 01de 9A68     		ldr	r2, [r3, #8]
  365 01e0 2244     		add	r2, r2, r4
  366 01e2 9A60     		str	r2, [r3, #8]
- 102:Core/Src/Origin/Running.c **** 		KeepPulse[LEFT] += target_pulse*0.5f;
+ 102:Core/Src/Main/Running.c **** 		KeepPulse[LEFT] += target_pulse*0.5f;
  367              		.loc 1 102 3 is_stmt 1 view .LVU87
  368              		.loc 1 102 19 is_stmt 0 view .LVU88
  369 01e4 93ED007A 		vldr.32	s14, [r3]	@ int
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  372 01ec F8EEE77A 		vcvt.f32.s32	s15, s15
  373 01f0 F6EE006A 		vmov.f32	s13, #5.0e-1
  374 01f4 67EEA67A 		vmul.f32	s15, s15, s13
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 10
 
 
  375              		.loc 1 102 19 view .LVU90
@@ -546,7 +546,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  377 01fc 37EE277A 		vadd.f32	s14, s14, s15
  378 0200 BDEEC77A 		vcvt.s32.f32	s14, s14
  379 0204 83ED007A 		vstr.32	s14, [r3]	@ int
- 103:Core/Src/Origin/Running.c **** 		KeepPulse[RIGHT] += target_pulse*0.5f;
+ 103:Core/Src/Main/Running.c **** 		KeepPulse[RIGHT] += target_pulse*0.5f;
  380              		.loc 1 103 3 is_stmt 1 view .LVU91
  381              		.loc 1 103 20 is_stmt 0 view .LVU92
  382 0208 93ED017A 		vldr.32	s14, [r3, #4]	@ int
@@ -554,8 +554,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  384 0210 37EE277A 		vadd.f32	s14, s14, s15
  385 0214 BDEEC77A 		vcvt.s32.f32	s14, s14
  386 0218 83ED017A 		vstr.32	s14, [r3, #4]	@ int
- 104:Core/Src/Origin/Running.c **** 
- 105:Core/Src/Origin/Running.c **** 		float dec_distance = (1-cut)*90*num;
+ 104:Core/Src/Main/Running.c **** 
+ 105:Core/Src/Main/Running.c **** 		float dec_distance = (1-cut)*90*num;
  387              		.loc 1 105 3 is_stmt 1 view .LVU93
  388              		.loc 1 105 26 is_stmt 0 view .LVU94
  389 021c F7EE007A 		vmov.f32	s15, #1.0e+0
@@ -568,7 +568,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  396              		.loc 1 105 9 view .LVU97
  397 022c 67EE897A 		vmul.f32	s15, s15, s18
  398              	.LVL41:
- 106:Core/Src/Origin/Running.c **** 		target_pulse = (int)(dec_distance *conv_pul);
+ 106:Core/Src/Main/Running.c **** 		target_pulse = (int)(dec_distance *conv_pul);
  399              		.loc 1 106 3 is_stmt 1 view .LVU98
  400              		.loc 1 106 37 is_stmt 0 view .LVU99
  401 0230 9FED2A7A 		vldr.32	s14, .L38+8
@@ -580,105 +580,105 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  407 0238 FDEEE77A 		vcvt.s32.f32	s15, s15
  408 023c 17EE902A 		vmov	r2, s15	@ int
  409              	.LVL44:
- 107:Core/Src/Origin/Running.c **** 
- 108:Core/Src/Origin/Running.c **** 		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY])
+ 107:Core/Src/Main/Running.c **** 
+ 108:Core/Src/Main/Running.c **** 		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY])
  410              		.loc 1 108 3 is_stmt 1 view .LVU102
  411              		.loc 1 108 8 is_stmt 0 view .LVU103
  412 0240 01E0     		b	.L16
  413              	.L33:
- 109:Core/Src/Origin/Running.c **** 		{
- 110:Core/Src/Origin/Running.c **** 			if(TargetVelocity[BODY] <= end_speed) //
- 111:Core/Src/Origin/Running.c **** 			{
- 112:Core/Src/Origin/Running.c **** 				Acceleration = 0;
- 113:Core/Src/Origin/Running.c **** //				TargetVelocity[BODY] = end_speed;
- 114:Core/Src/Origin/Running.c **** 			}
- 115:Core/Src/Origin/Running.c **** 			else
- 116:Core/Src/Origin/Running.c **** 			{
- 117:Core/Src/Origin/Running.c **** 				Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
+ 109:Core/Src/Main/Running.c **** 		{
+ 110:Core/Src/Main/Running.c **** 			if(TargetVelocity[BODY] <= end_speed) //
+ 111:Core/Src/Main/Running.c **** 			{
+ 112:Core/Src/Main/Running.c **** 				Acceleration = 0;
+ 113:Core/Src/Main/Running.c **** //				TargetVelocity[BODY] = end_speed;
+ 114:Core/Src/Main/Running.c **** 			}
+ 115:Core/Src/Main/Running.c **** 			else
+ 116:Core/Src/Main/Running.c **** 			{
+ 117:Core/Src/Main/Running.c **** 				Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
  414              		.loc 1 117 5 is_stmt 1 view .LVU104
  415              		.loc 1 117 18 is_stmt 0 view .LVU105
  416 0242 274B     		ldr	r3, .L38+12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 11
 
 
  417 0244 1D60     		str	r5, [r3]	@ float
  418              	.L16:
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  419              		.loc 1 108 8 is_stmt 1 view .LVU106
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  420              		.loc 1 108 18 is_stmt 0 view .LVU107
  421 0246 2D4B     		ldr	r3, .L38+40
  422 0248 D3ED037A 		vldr.32	s15, [r3, #12]
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  423              		.loc 1 108 28 view .LVU108
  424 024c 93ED007A 		vldr.32	s14, [r3]
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  425              		.loc 1 108 22 view .LVU109
  426 0250 77EE877A 		vadd.f32	s15, s15, s14
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  427              		.loc 1 108 8 view .LVU110
  428 0254 9FED2B7A 		vldr.32	s14, .L38+48
  429 0258 F4EEC77A 		vcmpe.f32	s15, s14
  430 025c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  431 0260 12D5     		bpl	.L20
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  432              		.loc 1 108 56 discriminator 1 view .LVU111
  433 0262 224B     		ldr	r3, .L38+24
  434 0264 9B68     		ldr	r3, [r3, #8]
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  435              		.loc 1 108 63 discriminator 1 view .LVU112
  436 0266 1344     		add	r3, r3, r2
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  437              		.loc 1 108 93 discriminator 1 view .LVU113
  438 0268 1F49     		ldr	r1, .L38+20
  439 026a 8968     		ldr	r1, [r1, #8]
- 108:Core/Src/Origin/Running.c **** 		{
+ 108:Core/Src/Main/Running.c **** 		{
  440              		.loc 1 108 42 discriminator 1 view .LVU114
  441 026c 8B42     		cmp	r3, r1
  442 026e 0BDD     		ble	.L20
- 110:Core/Src/Origin/Running.c **** 			{
+ 110:Core/Src/Main/Running.c **** 			{
  443              		.loc 1 110 4 is_stmt 1 view .LVU115
- 110:Core/Src/Origin/Running.c **** 			{
+ 110:Core/Src/Main/Running.c **** 			{
  444              		.loc 1 110 21 is_stmt 0 view .LVU116
  445 0270 1F4B     		ldr	r3, .L38+28
  446 0272 D3ED027A 		vldr.32	s15, [r3, #8]
- 110:Core/Src/Origin/Running.c **** 			{
+ 110:Core/Src/Main/Running.c **** 			{
  447              		.loc 1 110 6 view .LVU117
  448 0276 F4EEE87A 		vcmpe.f32	s15, s17
  449 027a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  450 027e E0D8     		bhi	.L33
- 112:Core/Src/Origin/Running.c **** //				TargetVelocity[BODY] = end_speed;
+ 112:Core/Src/Main/Running.c **** //				TargetVelocity[BODY] = end_speed;
  451              		.loc 1 112 5 is_stmt 1 view .LVU118
- 112:Core/Src/Origin/Running.c **** //				TargetVelocity[BODY] = end_speed;
+ 112:Core/Src/Main/Running.c **** //				TargetVelocity[BODY] = end_speed;
  452              		.loc 1 112 18 is_stmt 0 view .LVU119
  453 0280 174B     		ldr	r3, .L38+12
  454 0282 0021     		movs	r1, #0
  455 0284 1960     		str	r1, [r3]	@ float
  456 0286 DEE7     		b	.L16
  457              	.L20:
- 118:Core/Src/Origin/Running.c **** 			}
- 119:Core/Src/Origin/Running.c **** 			//Acceleration = decel;//-2.89;//1.0000f;//
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 12
+ 118:Core/Src/Main/Running.c **** 			}
+ 119:Core/Src/Main/Running.c **** 			//Acceleration = decel;//-2.89;//1.0000f;//
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 12
 
 
- 120:Core/Src/Origin/Running.c **** //			if(TargetVelocity[BODY] <= 240)
- 121:Core/Src/Origin/Running.c **** //				Acceleration = 0;
- 122:Core/Src/Origin/Running.c **** 		}
- 123:Core/Src/Origin/Running.c **** 		Acceleration = 0;
+ 120:Core/Src/Main/Running.c **** //			if(TargetVelocity[BODY] <= 240)
+ 121:Core/Src/Main/Running.c **** //				Acceleration = 0;
+ 122:Core/Src/Main/Running.c **** 		}
+ 123:Core/Src/Main/Running.c **** 		Acceleration = 0;
  458              		.loc 1 123 3 is_stmt 1 view .LVU120
  459              		.loc 1 123 16 is_stmt 0 view .LVU121
  460 0288 154B     		ldr	r3, .L38+12
  461 028a 0021     		movs	r1, #0
  462 028c 1960     		str	r1, [r3]	@ float
- 124:Core/Src/Origin/Running.c **** //		TargetVelocity[BODY] = end_speed;
- 125:Core/Src/Origin/Running.c **** 		KeepPulse[BODY] += target_pulse;
+ 124:Core/Src/Main/Running.c **** //		TargetVelocity[BODY] = end_speed;
+ 125:Core/Src/Main/Running.c **** 		KeepPulse[BODY] += target_pulse;
  463              		.loc 1 125 3 is_stmt 1 view .LVU122
  464              		.loc 1 125 19 is_stmt 0 view .LVU123
  465 028e 174B     		ldr	r3, .L38+24
  466 0290 9968     		ldr	r1, [r3, #8]
  467 0292 1144     		add	r1, r1, r2
  468 0294 9960     		str	r1, [r3, #8]
- 126:Core/Src/Origin/Running.c **** 		KeepPulse[LEFT] += target_pulse*0.5f;
+ 126:Core/Src/Main/Running.c **** 		KeepPulse[LEFT] += target_pulse*0.5f;
  469              		.loc 1 126 3 is_stmt 1 view .LVU124
  470              		.loc 1 126 19 is_stmt 0 view .LVU125
  471 0296 93ED007A 		vldr.32	s14, [r3]	@ int
@@ -692,7 +692,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  479 02ae 37EE277A 		vadd.f32	s14, s14, s15
  480 02b2 BDEEC77A 		vcvt.s32.f32	s14, s14
  481 02b6 83ED007A 		vstr.32	s14, [r3]	@ int
- 127:Core/Src/Origin/Running.c **** 		KeepPulse[RIGHT] += target_pulse*0.5f;
+ 127:Core/Src/Main/Running.c **** 		KeepPulse[RIGHT] += target_pulse*0.5f;
  482              		.loc 1 127 3 is_stmt 1 view .LVU128
  483              		.loc 1 127 20 is_stmt 0 view .LVU129
  484 02ba 93ED017A 		vldr.32	s14, [r3, #4]	@ int
@@ -700,8 +700,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  486 02c2 77EE277A 		vadd.f32	s15, s14, s15
  487 02c6 FDEEE77A 		vcvt.s32.f32	s15, s15
  488 02ca C3ED017A 		vstr.32	s15, [r3, #4]	@ int
- 128:Core/Src/Origin/Running.c **** 
- 129:Core/Src/Origin/Running.c **** }
+ 128:Core/Src/Main/Running.c **** 
+ 129:Core/Src/Main/Running.c **** }
  489              		.loc 1 129 1 view .LVU130
  490 02ce BDEC048B 		vldm	sp!, {d8-d9}
  491              	.LCFI2:
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  502              		.loc 1 129 1 view .LVU132
  503              		.align	2
  504              	.L38:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 13
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 13
 
 
  505 02d4 0000B442 		.word	1119092736
@@ -748,9 +748,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  531              	MaxParaRunTest:
  532              	.LVL47:
  533              	.LFB239:
- 130:Core/Src/Origin/Running.c **** //90度ターンと直進と加減速の繰り返しで最短走行
- 131:Core/Src/Origin/Running.c **** void MaxParaRunTest(maze_node *maze, profile *mouse)
- 132:Core/Src/Origin/Running.c **** {
+ 130:Core/Src/Main/Running.c **** //90度ターンと直進と加減速の繰り返しで最短走行
+ 131:Core/Src/Main/Running.c **** void MaxParaRunTest(maze_node *maze, profile *mouse)
+ 132:Core/Src/Main/Running.c **** {
  534              		.loc 1 132 1 is_stmt 1 view -0
  535              		.cfi_startproc
  536              		@ args = 0, pretend = 0, frame = 0
@@ -772,29 +772,29 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  552              		.cfi_offset 81, -28
  553 0008 8046     		mov	r8, r0
  554 000a 0F46     		mov	r7, r1
- 133:Core/Src/Origin/Running.c **** 	int start_cnt=0;
+ 133:Core/Src/Main/Running.c **** 	int start_cnt=0;
  555              		.loc 1 133 2 is_stmt 1 view .LVU135
  556              	.LVL48:
- 134:Core/Src/Origin/Running.c **** 	float straight_num = 0;
+ 134:Core/Src/Main/Running.c **** 	float straight_num = 0;
  557              		.loc 1 134 2 view .LVU136
- 135:Core/Src/Origin/Running.c **** 	//ノードの数だけループ
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 14
+ 135:Core/Src/Main/Running.c **** 	//ノードの数だけループ
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 14
 
 
- 136:Core/Src/Origin/Running.c **** 	int num_nodes = Num_Nodes;
+ 136:Core/Src/Main/Running.c **** 	int num_nodes = Num_Nodes;
  558              		.loc 1 136 2 view .LVU137
  559              		.loc 1 136 6 is_stmt 0 view .LVU138
  560 000c 684B     		ldr	r3, .L54+8
  561 000e 1E68     		ldr	r6, [r3]
  562              	.LVL49:
- 137:Core/Src/Origin/Running.c **** 	ChangeLED(0);
+ 137:Core/Src/Main/Running.c **** 	ChangeLED(0);
  563              		.loc 1 137 2 is_stmt 1 view .LVU139
  564 0010 0020     		movs	r0, #0
  565              	.LVL50:
  566              		.loc 1 137 2 is_stmt 0 view .LVU140
  567 0012 FFF7FEFF 		bl	ChangeLED
  568              	.LVL51:
- 138:Core/Src/Origin/Running.c **** 	for(int count=0; count <= num_nodes; count++)
+ 138:Core/Src/Main/Running.c **** 	for(int count=0; count <= num_nodes; count++)
  569              		.loc 1 138 2 is_stmt 1 view .LVU141
  570              	.LBB7:
  571              		.loc 1 138 6 view .LVU142
@@ -804,41 +804,41 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  575 0018 2FE0     		b	.L41
  576              	.LVL52:
  577              	.L47:
- 139:Core/Src/Origin/Running.c **** 	{
- 140:Core/Src/Origin/Running.c **** 		switch(FastPath[count].path_action)
- 141:Core/Src/Origin/Running.c **** 		{
- 142:Core/Src/Origin/Running.c **** 		case START:
- 143:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
+ 139:Core/Src/Main/Running.c **** 	{
+ 140:Core/Src/Main/Running.c **** 		switch(FastPath[count].path_action)
+ 141:Core/Src/Main/Running.c **** 		{
+ 142:Core/Src/Main/Running.c **** 		case START:
+ 143:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
  578              		.loc 1 143 4 is_stmt 1 view .LVU145
  579 001a 0121     		movs	r1, #1
  580 001c 0020     		movs	r0, #0
  581 001e FFF7FEFF 		bl	PIDChangeFlag
  582              	.LVL53:
- 144:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 144:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  583              		.loc 1 144 4 view .LVU146
  584 0022 0021     		movs	r1, #0
  585 0024 0320     		movs	r0, #3
  586 0026 FFF7FEFF 		bl	PIDChangeFlag
  587              	.LVL54:
- 145:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 145:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  588              		.loc 1 145 4 view .LVU147
  589 002a 0021     		movs	r1, #0
  590 002c 0220     		movs	r0, #2
  591 002e FFF7FEFF 		bl	PIDChangeFlag
  592              	.LVL55:
- 146:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 146:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  593              		.loc 1 146 4 view .LVU148
  594 0032 0021     		movs	r1, #0
  595 0034 0120     		movs	r0, #1
  596 0036 FFF7FEFF 		bl	PIDChangeFlag
  597              	.LVL56:
- 147:Core/Src/Origin/Running.c **** 			FastStraight(1, 61.5/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+ 147:Core/Src/Main/Running.c **** 			FastStraight(1, 61.5/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
  598              		.loc 1 147 4 view .LVU149
  599 003a 5E4B     		ldr	r3, .L54+12
  600 003c 93ED002A 		vldr.32	s4, [r3]
  601 0040 F0EE422A 		vmov.f32	s5, s4
  602 0044 DFED5C1A 		vldr.32	s3, .L54+16
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 15
 
 
  603 0048 9FED5C1A 		vldr.32	s2, .L54+20
@@ -846,59 +846,59 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  605 0050 B7EE000A 		vmov.f32	s0, #1.0e+0
  606 0054 FFF7FEFF 		bl	FastStraight
  607              	.LVL57:
- 148:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 148:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  608              		.loc 1 148 4 view .LVU150
  609 0058 0021     		movs	r1, #0
  610 005a 0846     		mov	r0, r1
  611 005c FFF7FEFF 		bl	PIDChangeFlag
  612              	.LVL58:
- 149:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 149:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  613              		.loc 1 149 4 view .LVU151
  614 0060 0021     		movs	r1, #0
  615 0062 0320     		movs	r0, #3
  616 0064 FFF7FEFF 		bl	PIDChangeFlag
  617              	.LVL59:
- 150:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 150:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  618              		.loc 1 150 4 view .LVU152
  619 0068 0021     		movs	r1, #0
  620 006a 0220     		movs	r0, #2
  621 006c FFF7FEFF 		bl	PIDChangeFlag
  622              	.LVL60:
- 151:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 151:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  623              		.loc 1 151 4 view .LVU153
  624 0070 0021     		movs	r1, #0
  625 0072 0120     		movs	r0, #1
  626 0074 FFF7FEFF 		bl	PIDChangeFlag
  627              	.LVL61:
- 152:Core/Src/Origin/Running.c **** 			break;
+ 152:Core/Src/Main/Running.c **** 			break;
  628              		.loc 1 152 4 view .LVU154
  629              	.L42:
- 138:Core/Src/Origin/Running.c **** 	{
+ 138:Core/Src/Main/Running.c **** 	{
  630              		.loc 1 138 39 discriminator 2 view .LVU155
- 138:Core/Src/Origin/Running.c **** 	{
+ 138:Core/Src/Main/Running.c **** 	{
  631              		.loc 1 138 44 is_stmt 0 discriminator 2 view .LVU156
  632 0078 0135     		adds	r5, r5, #1
  633              	.LVL62:
  634              	.L41:
- 138:Core/Src/Origin/Running.c **** 	{
+ 138:Core/Src/Main/Running.c **** 	{
  635              		.loc 1 138 19 is_stmt 1 discriminator 1 view .LVU157
- 138:Core/Src/Origin/Running.c **** 	{
+ 138:Core/Src/Main/Running.c **** 	{
  636              		.loc 1 138 2 is_stmt 0 discriminator 1 view .LVU158
  637 007a B542     		cmp	r5, r6
  638 007c 00F38D80 		bgt	.L53
- 140:Core/Src/Origin/Running.c **** 		{
+ 140:Core/Src/Main/Running.c **** 		{
  639              		.loc 1 140 3 is_stmt 1 view .LVU159
- 140:Core/Src/Origin/Running.c **** 		{
+ 140:Core/Src/Main/Running.c **** 		{
  640              		.loc 1 140 25 is_stmt 0 view .LVU160
  641 0080 504B     		ldr	r3, .L54+28
  642 0082 03EB0513 		add	r3, r3, r5, lsl #4
  643 0086 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
- 140:Core/Src/Origin/Running.c **** 		{
+ 140:Core/Src/Main/Running.c **** 		{
  644              		.loc 1 140 3 view .LVU161
  645 0088 052B     		cmp	r3, #5
  646 008a F5D8     		bhi	.L42
  647 008c 01A2     		adr	r2, .L44
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 16
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 16
 
 
  648 008e 52F823F0 		ldr	pc, [r2, r3, lsl #2]
@@ -913,32 +913,32 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  657              	.LVL63:
  658              		.p2align 1
  659              	.L48:
- 153:Core/Src/Origin/Running.c **** 		case ACC_DEC:
- 154:Core/Src/Origin/Running.c **** 			//加減速が続く回数を数える
- 155:Core/Src/Origin/Running.c **** 
- 156:Core/Src/Origin/Running.c **** //			ChangeLED(4);
- 157:Core/Src/Origin/Running.c **** 			start_cnt = count;
- 158:Core/Src/Origin/Running.c **** 			while(FastPath[count].path_action == ACC_DEC)
- 159:Core/Src/Origin/Running.c **** 			{
- 160:Core/Src/Origin/Running.c **** 				count ++;
+ 153:Core/Src/Main/Running.c **** 		case ACC_DEC:
+ 154:Core/Src/Main/Running.c **** 			//加減速が続く回数を数える
+ 155:Core/Src/Main/Running.c **** 
+ 156:Core/Src/Main/Running.c **** //			ChangeLED(4);
+ 157:Core/Src/Main/Running.c **** 			start_cnt = count;
+ 158:Core/Src/Main/Running.c **** 			while(FastPath[count].path_action == ACC_DEC)
+ 159:Core/Src/Main/Running.c **** 			{
+ 160:Core/Src/Main/Running.c **** 				count ++;
  660              		.loc 1 160 5 is_stmt 1 view .LVU162
  661              		.loc 1 160 11 is_stmt 0 view .LVU163
  662 00ac 0134     		adds	r4, r4, #1
  663              	.LVL64:
  664              	.L46:
- 158:Core/Src/Origin/Running.c **** 			{
+ 158:Core/Src/Main/Running.c **** 			{
  665              		.loc 1 158 9 is_stmt 1 view .LVU164
- 158:Core/Src/Origin/Running.c **** 			{
+ 158:Core/Src/Main/Running.c **** 			{
  666              		.loc 1 158 25 is_stmt 0 view .LVU165
  667 00ae 454B     		ldr	r3, .L54+28
  668 00b0 03EB0413 		add	r3, r3, r4, lsl #4
  669 00b4 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
- 158:Core/Src/Origin/Running.c **** 			{
+ 158:Core/Src/Main/Running.c **** 			{
  670              		.loc 1 158 9 view .LVU166
  671 00b6 012B     		cmp	r3, #1
  672 00b8 F8D0     		beq	.L48
- 161:Core/Src/Origin/Running.c **** 			}
- 162:Core/Src/Origin/Running.c **** 			straight_num = (float)(count - start_cnt);
+ 161:Core/Src/Main/Running.c **** 			}
+ 162:Core/Src/Main/Running.c **** 			straight_num = (float)(count - start_cnt);
  673              		.loc 1 162 4 is_stmt 1 view .LVU167
  674              		.loc 1 162 33 is_stmt 0 view .LVU168
  675 00ba 631B     		subs	r3, r4, r5
@@ -946,11 +946,11 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  677              		.loc 1 162 17 view .LVU169
  678 00c0 B8EEC88A 		vcvt.f32.s32	s16, s16
  679              	.LVL65:
- 163:Core/Src/Origin/Running.c **** 			if(start_cnt == 0){
+ 163:Core/Src/Main/Running.c **** 			if(start_cnt == 0){
  680              		.loc 1 163 4 is_stmt 1 view .LVU170
  681              		.loc 1 163 6 is_stmt 0 view .LVU171
  682 00c4 65B9     		cbnz	r5, .L49
- 164:Core/Src/Origin/Running.c **** 				straight_num -= ((90-61.5)/90);
+ 164:Core/Src/Main/Running.c **** 				straight_num -= ((90-61.5)/90);
  683              		.loc 1 164 5 is_stmt 1 view .LVU172
  684              		.loc 1 164 18 is_stmt 0 view .LVU173
  685 00c6 18EE100A 		vmov	r0, s16
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  687              	.LVL66:
  688 00ce 36A3     		adr	r3, .L54
  689 00d0 D3E90023 		ldrd	r2, [r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 17
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 17
 
 
  690 00d4 FFF7FEFF 		bl	__aeabi_dsub
@@ -968,34 +968,34 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  694 00dc 08EE100A 		vmov	s16, r0
  695              	.LVL69:
  696              	.L49:
- 165:Core/Src/Origin/Running.c **** 			}
- 166:Core/Src/Origin/Running.c **** //			ChangeLED(1);
- 167:Core/Src/Origin/Running.c **** //			FastPath[start_cnt].path_state.pos.x
- 168:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
+ 165:Core/Src/Main/Running.c **** 			}
+ 166:Core/Src/Main/Running.c **** //			ChangeLED(1);
+ 167:Core/Src/Main/Running.c **** //			FastPath[start_cnt].path_state.pos.x
+ 168:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
  697              		.loc 1 168 4 is_stmt 1 view .LVU174
  698 00e0 0121     		movs	r1, #1
  699 00e2 0020     		movs	r0, #0
  700 00e4 FFF7FEFF 		bl	PIDChangeFlag
  701              	.LVL70:
- 169:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 169:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  702              		.loc 1 169 4 view .LVU175
  703 00e8 0021     		movs	r1, #0
  704 00ea 0320     		movs	r0, #3
  705 00ec FFF7FEFF 		bl	PIDChangeFlag
  706              	.LVL71:
- 170:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 170:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  707              		.loc 1 170 4 view .LVU176
  708 00f0 0021     		movs	r1, #0
  709 00f2 0220     		movs	r0, #2
  710 00f4 FFF7FEFF 		bl	PIDChangeFlag
  711              	.LVL72:
- 171:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 171:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  712              		.loc 1 171 4 view .LVU177
  713 00f8 0021     		movs	r1, #0
  714 00fa 0120     		movs	r0, #1
  715 00fc FFF7FEFF 		bl	PIDChangeFlag
  716              	.LVL73:
- 172:Core/Src/Origin/Running.c **** 			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+ 172:Core/Src/Main/Running.c **** 			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
  717              		.loc 1 172 4 view .LVU178
  718 0100 2C4B     		ldr	r3, .L54+12
  719 0102 D3ED002A 		vldr.32	s5, [r3]
@@ -1006,19 +1006,19 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  724 0116 B6EE000A 		vmov.f32	s0, #5.0e-1
  725 011a FFF7FEFF 		bl	FastStraight
  726              	.LVL74:
- 173:Core/Src/Origin/Running.c **** 			count--;
+ 173:Core/Src/Main/Running.c **** 			count--;
  727              		.loc 1 173 4 view .LVU179
  728              		.loc 1 173 9 is_stmt 0 view .LVU180
  729 011e 651E     		subs	r5, r4, #1
  730              	.LVL75:
- 174:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 174:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  731              		.loc 1 174 4 is_stmt 1 view .LVU181
  732 0120 0021     		movs	r1, #0
  733 0122 0846     		mov	r0, r1
  734 0124 FFF7FEFF 		bl	PIDChangeFlag
  735              	.LVL76:
- 175:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 18
+ 175:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 18
 
 
  736              		.loc 1 175 4 view .LVU182
@@ -1026,111 +1026,111 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  738 012a 0320     		movs	r0, #3
  739 012c FFF7FEFF 		bl	PIDChangeFlag
  740              	.LVL77:
- 176:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 176:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  741              		.loc 1 176 4 view .LVU183
  742 0130 0021     		movs	r1, #0
  743 0132 0220     		movs	r0, #2
  744 0134 FFF7FEFF 		bl	PIDChangeFlag
  745              	.LVL78:
- 177:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 177:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  746              		.loc 1 177 4 view .LVU184
  747 0138 0021     		movs	r1, #0
  748 013a 0120     		movs	r0, #1
  749 013c FFF7FEFF 		bl	PIDChangeFlag
  750              	.LVL79:
- 178:Core/Src/Origin/Running.c **** 			//countを飛ばす
- 179:Core/Src/Origin/Running.c **** 			break;
+ 178:Core/Src/Main/Running.c **** 			//countを飛ばす
+ 179:Core/Src/Main/Running.c **** 			break;
  751              		.loc 1 179 4 view .LVU185
  752 0140 9AE7     		b	.L42
  753              	.LVL80:
  754              	.L51:
- 140:Core/Src/Origin/Running.c **** 		{
+ 140:Core/Src/Main/Running.c **** 		{
  755              		.loc 1 140 3 is_stmt 0 view .LVU186
  756 0142 2C46     		mov	r4, r5
  757 0144 B3E7     		b	.L46
  758              	.L45:
- 180:Core/Src/Origin/Running.c **** 		case L_90_SEARCH:
- 181:Core/Src/Origin/Running.c **** //			ChangeLED(2);
- 182:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 180:Core/Src/Main/Running.c **** 		case L_90_SEARCH:
+ 181:Core/Src/Main/Running.c **** //			ChangeLED(2);
+ 182:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  759              		.loc 1 182 4 is_stmt 1 view .LVU187
  760 0146 0021     		movs	r1, #0
  761 0148 0846     		mov	r0, r1
  762 014a FFF7FEFF 		bl	PIDChangeFlag
  763              	.LVL81:
- 183:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 183:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  764              		.loc 1 183 4 view .LVU188
  765 014e 0021     		movs	r1, #0
  766 0150 0320     		movs	r0, #3
  767 0152 FFF7FEFF 		bl	PIDChangeFlag
  768              	.LVL82:
- 184:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 184:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  769              		.loc 1 184 4 view .LVU189
  770 0156 0021     		movs	r1, #0
  771 0158 0220     		movs	r0, #2
  772 015a FFF7FEFF 		bl	PIDChangeFlag
  773              	.LVL83:
- 185:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 185:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  774              		.loc 1 185 4 view .LVU190
  775 015e 0021     		movs	r1, #0
  776 0160 0120     		movs	r0, #1
  777 0162 FFF7FEFF 		bl	PIDChangeFlag
  778              	.LVL84:
- 186:Core/Src/Origin/Running.c **** 			SlalomLeft(maze, mouse);
+ 186:Core/Src/Main/Running.c **** 			SlalomLeft(maze, mouse);
  779              		.loc 1 186 4 view .LVU191
  780 0166 3946     		mov	r1, r7
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 19
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 19
 
 
  781 0168 4046     		mov	r0, r8
  782 016a FFF7FEFF 		bl	SlalomLeft
  783              	.LVL85:
- 187:Core/Src/Origin/Running.c **** 			break;
+ 187:Core/Src/Main/Running.c **** 			break;
  784              		.loc 1 187 4 view .LVU192
  785 016e 83E7     		b	.L42
  786              	.L43:
- 188:Core/Src/Origin/Running.c **** 		case R_90_SEARCH:
- 189:Core/Src/Origin/Running.c **** //			ChangeLED(3);
- 190:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 188:Core/Src/Main/Running.c **** 		case R_90_SEARCH:
+ 189:Core/Src/Main/Running.c **** //			ChangeLED(3);
+ 190:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  787              		.loc 1 190 4 view .LVU193
  788 0170 0021     		movs	r1, #0
  789 0172 0846     		mov	r0, r1
  790 0174 FFF7FEFF 		bl	PIDChangeFlag
  791              	.LVL86:
- 191:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 191:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  792              		.loc 1 191 4 view .LVU194
  793 0178 0021     		movs	r1, #0
  794 017a 0320     		movs	r0, #3
  795 017c FFF7FEFF 		bl	PIDChangeFlag
  796              	.LVL87:
- 192:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 192:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  797              		.loc 1 192 4 view .LVU195
  798 0180 0021     		movs	r1, #0
  799 0182 0220     		movs	r0, #2
  800 0184 FFF7FEFF 		bl	PIDChangeFlag
  801              	.LVL88:
- 193:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 193:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  802              		.loc 1 193 4 view .LVU196
  803 0188 0021     		movs	r1, #0
  804 018a 0120     		movs	r0, #1
  805 018c FFF7FEFF 		bl	PIDChangeFlag
  806              	.LVL89:
- 194:Core/Src/Origin/Running.c **** 			SlalomRight(maze, mouse);
+ 194:Core/Src/Main/Running.c **** 			SlalomRight(maze, mouse);
  807              		.loc 1 194 4 view .LVU197
  808 0190 3946     		mov	r1, r7
  809 0192 4046     		mov	r0, r8
  810 0194 FFF7FEFF 		bl	SlalomRight
  811              	.LVL90:
- 195:Core/Src/Origin/Running.c **** 			break;
+ 195:Core/Src/Main/Running.c **** 			break;
  812              		.loc 1 195 4 view .LVU198
  813 0198 6EE7     		b	.L42
  814              	.L53:
  815              		.loc 1 195 4 is_stmt 0 view .LVU199
  816              	.LBE7:
- 196:Core/Src/Origin/Running.c **** 		default :
- 197:Core/Src/Origin/Running.c **** 			break;
- 198:Core/Src/Origin/Running.c **** 		}
- 199:Core/Src/Origin/Running.c **** 	}
- 200:Core/Src/Origin/Running.c **** }
+ 196:Core/Src/Main/Running.c **** 		default :
+ 197:Core/Src/Main/Running.c **** 			break;
+ 198:Core/Src/Main/Running.c **** 		}
+ 199:Core/Src/Main/Running.c **** 	}
+ 200:Core/Src/Main/Running.c **** }
  817              		.loc 1 200 1 view .LVU200
  818 019a BDEC028B 		vldm	sp!, {d8}
  819              	.LCFI5:
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  821              		.cfi_restore 81
  822              		.cfi_def_cfa_offset 24
  823 019e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 20
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 20
 
 
  824              	.LVL91:
@@ -1168,9 +1168,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  848              		.thumb_func
  850              	DiagonalRunTest:
  851              	.LFB240:
- 201:Core/Src/Origin/Running.c **** 
- 202:Core/Src/Origin/Running.c **** void DiagonalRunTest()
- 203:Core/Src/Origin/Running.c **** {
+ 201:Core/Src/Main/Running.c **** 
+ 202:Core/Src/Main/Running.c **** void DiagonalRunTest()
+ 203:Core/Src/Main/Running.c **** {
  852              		.loc 1 203 1 is_stmt 1 view -0
  853              		.cfi_startproc
  854              		@ args = 0, pretend = 0, frame = 0
@@ -1187,27 +1187,27 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  865              		.cfi_def_cfa_offset 24
  866              		.cfi_offset 80, -24
  867              		.cfi_offset 81, -20
- 204:Core/Src/Origin/Running.c **** 	int start_cnt=0;
+ 204:Core/Src/Main/Running.c **** 	int start_cnt=0;
  868              		.loc 1 204 2 view .LVU203
  869              	.LVL92:
- 205:Core/Src/Origin/Running.c **** 	float straight_num = 0;
+ 205:Core/Src/Main/Running.c **** 	float straight_num = 0;
  870              		.loc 1 205 2 view .LVU204
- 206:Core/Src/Origin/Running.c **** 	//ノードの数だけループ
- 207:Core/Src/Origin/Running.c **** 	int num_nodes = Num_Nodes;
+ 206:Core/Src/Main/Running.c **** 	//ノードの数だけループ
+ 207:Core/Src/Main/Running.c **** 	int num_nodes = Num_Nodes;
  871              		.loc 1 207 2 view .LVU205
  872              		.loc 1 207 6 is_stmt 0 view .LVU206
  873 0006 E24B     		ldr	r3, .L83+16
  874 0008 1D68     		ldr	r5, [r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 21
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 21
 
 
  875              	.LVL93:
- 208:Core/Src/Origin/Running.c **** 	ChangeLED(0);
+ 208:Core/Src/Main/Running.c **** 	ChangeLED(0);
  876              		.loc 1 208 2 is_stmt 1 view .LVU207
  877 000a 0020     		movs	r0, #0
  878 000c FFF7FEFF 		bl	ChangeLED
  879              	.LVL94:
- 209:Core/Src/Origin/Running.c **** 	for(int count=0; count <= num_nodes; count++)
+ 209:Core/Src/Main/Running.c **** 	for(int count=0; count <= num_nodes; count++)
  880              		.loc 1 209 2 view .LVU208
  881              	.LBB8:
  882              		.loc 1 209 6 view .LVU209
@@ -1217,35 +1217,35 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  886 0012 2FE0     		b	.L57
  887              	.LVL95:
  888              	.L74:
- 210:Core/Src/Origin/Running.c **** 	{
- 211:Core/Src/Origin/Running.c **** 		switch(FastPath[count].path_action)
- 212:Core/Src/Origin/Running.c **** 		{
- 213:Core/Src/Origin/Running.c **** 		case START:
- 214:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
+ 210:Core/Src/Main/Running.c **** 	{
+ 211:Core/Src/Main/Running.c **** 		switch(FastPath[count].path_action)
+ 212:Core/Src/Main/Running.c **** 		{
+ 213:Core/Src/Main/Running.c **** 		case START:
+ 214:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
  889              		.loc 1 214 4 is_stmt 1 view .LVU212
  890 0014 0121     		movs	r1, #1
  891 0016 0020     		movs	r0, #0
  892 0018 FFF7FEFF 		bl	PIDChangeFlag
  893              	.LVL96:
- 215:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 215:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  894              		.loc 1 215 4 view .LVU213
  895 001c 0021     		movs	r1, #0
  896 001e 0320     		movs	r0, #3
  897 0020 FFF7FEFF 		bl	PIDChangeFlag
  898              	.LVL97:
- 216:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 216:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  899              		.loc 1 216 4 view .LVU214
  900 0024 0021     		movs	r1, #0
  901 0026 0220     		movs	r0, #2
  902 0028 FFF7FEFF 		bl	PIDChangeFlag
  903              	.LVL98:
- 217:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 217:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  904              		.loc 1 217 4 view .LVU215
  905 002c 0021     		movs	r1, #0
  906 002e 0120     		movs	r0, #1
  907 0030 FFF7FEFF 		bl	PIDChangeFlag
  908              	.LVL99:
- 218:Core/Src/Origin/Running.c **** 			FastStraight(1, (61.5-45)/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+ 218:Core/Src/Main/Running.c **** 			FastStraight(1, (61.5-45)/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
  909              		.loc 1 218 4 view .LVU216
  910 0034 D74B     		ldr	r3, .L83+20
  911 0036 93ED002A 		vldr.32	s4, [r3]
@@ -1256,57 +1256,57 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  916 004a B7EE000A 		vmov.f32	s0, #1.0e+0
  917 004e FFF7FEFF 		bl	FastStraight
  918              	.LVL100:
- 219:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 219:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  919              		.loc 1 219 4 view .LVU217
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 22
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 22
 
 
  920 0052 0021     		movs	r1, #0
  921 0054 0846     		mov	r0, r1
  922 0056 FFF7FEFF 		bl	PIDChangeFlag
  923              	.LVL101:
- 220:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 220:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  924              		.loc 1 220 4 view .LVU218
  925 005a 0021     		movs	r1, #0
  926 005c 0320     		movs	r0, #3
  927 005e FFF7FEFF 		bl	PIDChangeFlag
  928              	.LVL102:
- 221:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 221:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  929              		.loc 1 221 4 view .LVU219
  930 0062 0021     		movs	r1, #0
  931 0064 0220     		movs	r0, #2
  932 0066 FFF7FEFF 		bl	PIDChangeFlag
  933              	.LVL103:
- 222:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 222:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  934              		.loc 1 222 4 view .LVU220
  935 006a 0021     		movs	r1, #0
  936 006c 0120     		movs	r0, #1
  937 006e FFF7FEFF 		bl	PIDChangeFlag
  938              	.LVL104:
- 223:Core/Src/Origin/Running.c **** 			break;
+ 223:Core/Src/Main/Running.c **** 			break;
  939              		.loc 1 223 4 view .LVU221
  940              	.L58:
- 209:Core/Src/Origin/Running.c **** 	{
+ 209:Core/Src/Main/Running.c **** 	{
  941              		.loc 1 209 39 discriminator 2 view .LVU222
- 209:Core/Src/Origin/Running.c **** 	{
+ 209:Core/Src/Main/Running.c **** 	{
  942              		.loc 1 209 44 is_stmt 0 discriminator 2 view .LVU223
  943 0072 0134     		adds	r4, r4, #1
  944              	.LVL105:
  945              	.L57:
- 209:Core/Src/Origin/Running.c **** 	{
+ 209:Core/Src/Main/Running.c **** 	{
  946              		.loc 1 209 19 is_stmt 1 discriminator 1 view .LVU224
- 209:Core/Src/Origin/Running.c **** 	{
+ 209:Core/Src/Main/Running.c **** 	{
  947              		.loc 1 209 2 is_stmt 0 discriminator 1 view .LVU225
  948 0074 AC42     		cmp	r4, r5
  949 0076 00F3E181 		bgt	.L82
- 211:Core/Src/Origin/Running.c **** 		{
+ 211:Core/Src/Main/Running.c **** 		{
  950              		.loc 1 211 3 is_stmt 1 view .LVU226
- 211:Core/Src/Origin/Running.c **** 		{
+ 211:Core/Src/Main/Running.c **** 		{
  951              		.loc 1 211 25 is_stmt 0 view .LVU227
  952 007a CA4B     		ldr	r3, .L83+36
  953 007c 03EB0413 		add	r3, r3, r4, lsl #4
  954 0080 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
- 211:Core/Src/Origin/Running.c **** 		{
+ 211:Core/Src/Main/Running.c **** 		{
  955              		.loc 1 211 3 view .LVU228
  956 0082 132B     		cmp	r3, #19
  957 0084 F5D8     		bhi	.L58
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  963 0090 73000000 		.word	.L58+1
  964 0094 13020000 		.word	.L79+1
  965 0098 73010000 		.word	.L80+1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 23
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 23
 
 
  966 009c 73000000 		.word	.L58+1
@@ -1340,32 +1340,32 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  982              	.LVL106:
  983              		.p2align 1
  984              	.L75:
- 224:Core/Src/Origin/Running.c **** 		case ACC_DEC_90:
- 225:Core/Src/Origin/Running.c **** 			//加減速が続く回数を数える
- 226:Core/Src/Origin/Running.c **** 
- 227:Core/Src/Origin/Running.c **** //			ChangeLED(4);
- 228:Core/Src/Origin/Running.c **** 			start_cnt = count;
- 229:Core/Src/Origin/Running.c **** 			while(FastPath[count].path_action == ACC_DEC_90)
- 230:Core/Src/Origin/Running.c **** 			{
- 231:Core/Src/Origin/Running.c **** 				count ++;
+ 224:Core/Src/Main/Running.c **** 		case ACC_DEC_90:
+ 225:Core/Src/Main/Running.c **** 			//加減速が続く回数を数える
+ 226:Core/Src/Main/Running.c **** 
+ 227:Core/Src/Main/Running.c **** //			ChangeLED(4);
+ 228:Core/Src/Main/Running.c **** 			start_cnt = count;
+ 229:Core/Src/Main/Running.c **** 			while(FastPath[count].path_action == ACC_DEC_90)
+ 230:Core/Src/Main/Running.c **** 			{
+ 231:Core/Src/Main/Running.c **** 				count ++;
  985              		.loc 1 231 5 is_stmt 1 view .LVU229
  986              		.loc 1 231 11 is_stmt 0 view .LVU230
  987 00dc 0136     		adds	r6, r6, #1
  988              	.LVL107:
  989              	.L72:
- 229:Core/Src/Origin/Running.c **** 			{
+ 229:Core/Src/Main/Running.c **** 			{
  990              		.loc 1 229 9 is_stmt 1 view .LVU231
- 229:Core/Src/Origin/Running.c **** 			{
+ 229:Core/Src/Main/Running.c **** 			{
  991              		.loc 1 229 25 is_stmt 0 view .LVU232
  992 00de B14B     		ldr	r3, .L83+36
  993 00e0 03EB0613 		add	r3, r3, r6, lsl #4
  994 00e4 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
- 229:Core/Src/Origin/Running.c **** 			{
+ 229:Core/Src/Main/Running.c **** 			{
  995              		.loc 1 229 9 view .LVU233
  996 00e6 032B     		cmp	r3, #3
  997 00e8 F8D0     		beq	.L75
- 232:Core/Src/Origin/Running.c **** 			}
- 233:Core/Src/Origin/Running.c **** 			straight_num = (float)(count - start_cnt);
+ 232:Core/Src/Main/Running.c **** 			}
+ 233:Core/Src/Main/Running.c **** 			straight_num = (float)(count - start_cnt);
  998              		.loc 1 233 4 is_stmt 1 view .LVU234
  999              		.loc 1 233 33 is_stmt 0 view .LVU235
  1000 00ea 331B     		subs	r3, r6, r4
@@ -1373,12 +1373,12 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1002              		.loc 1 233 17 view .LVU236
  1003 00f0 B8EEC88A 		vcvt.f32.s32	s16, s16
  1004              	.LVL108:
- 234:Core/Src/Origin/Running.c **** 			if(start_cnt == 0){
+ 234:Core/Src/Main/Running.c **** 			if(start_cnt == 0){
  1005              		.loc 1 234 4 is_stmt 1 view .LVU237
  1006              		.loc 1 234 6 is_stmt 0 view .LVU238
  1007 00f4 64B9     		cbnz	r4, .L76
- 235:Core/Src/Origin/Running.c **** 				straight_num += ((61.5-45)/90);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 24
+ 235:Core/Src/Main/Running.c **** 				straight_num += ((61.5-45)/90);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 24
 
 
  1008              		.loc 1 235 5 is_stmt 1 view .LVU239
@@ -1395,34 +1395,34 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1019 010c 08EE100A 		vmov	s16, r0
  1020              	.LVL112:
  1021              	.L76:
- 236:Core/Src/Origin/Running.c **** 			}
- 237:Core/Src/Origin/Running.c **** //			ChangeLED(1);
- 238:Core/Src/Origin/Running.c **** //			FastPath[start_cnt].path_state.pos.x
- 239:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
+ 236:Core/Src/Main/Running.c **** 			}
+ 237:Core/Src/Main/Running.c **** //			ChangeLED(1);
+ 238:Core/Src/Main/Running.c **** //			FastPath[start_cnt].path_state.pos.x
+ 239:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
  1022              		.loc 1 239 4 is_stmt 1 view .LVU241
  1023 0110 0121     		movs	r1, #1
  1024 0112 0020     		movs	r0, #0
  1025 0114 FFF7FEFF 		bl	PIDChangeFlag
  1026              	.LVL113:
- 240:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 240:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1027              		.loc 1 240 4 view .LVU242
  1028 0118 0021     		movs	r1, #0
  1029 011a 0320     		movs	r0, #3
  1030 011c FFF7FEFF 		bl	PIDChangeFlag
  1031              	.LVL114:
- 241:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 241:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1032              		.loc 1 241 4 view .LVU243
  1033 0120 0021     		movs	r1, #0
  1034 0122 0220     		movs	r0, #2
  1035 0124 FFF7FEFF 		bl	PIDChangeFlag
  1036              	.LVL115:
- 242:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 242:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1037              		.loc 1 242 4 view .LVU244
  1038 0128 0021     		movs	r1, #0
  1039 012a 0120     		movs	r0, #1
  1040 012c FFF7FEFF 		bl	PIDChangeFlag
  1041              	.LVL116:
- 243:Core/Src/Origin/Running.c **** 			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+ 243:Core/Src/Main/Running.c **** 			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
  1042              		.loc 1 243 4 view .LVU245
  1043 0130 984B     		ldr	r3, .L83+20
  1044 0132 D3ED002A 		vldr.32	s5, [r3]
@@ -1433,76 +1433,76 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1049 0146 B6EE000A 		vmov.f32	s0, #5.0e-1
  1050 014a FFF7FEFF 		bl	FastStraight
  1051              	.LVL117:
- 244:Core/Src/Origin/Running.c **** 			count--;
+ 244:Core/Src/Main/Running.c **** 			count--;
  1052              		.loc 1 244 4 view .LVU246
  1053              		.loc 1 244 9 is_stmt 0 view .LVU247
  1054 014e 741E     		subs	r4, r6, #1
  1055              	.LVL118:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 25
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 25
 
 
- 245:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 245:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1056              		.loc 1 245 4 is_stmt 1 view .LVU248
  1057 0150 0021     		movs	r1, #0
  1058 0152 0846     		mov	r0, r1
  1059 0154 FFF7FEFF 		bl	PIDChangeFlag
  1060              	.LVL119:
- 246:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 246:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1061              		.loc 1 246 4 view .LVU249
  1062 0158 0021     		movs	r1, #0
  1063 015a 0320     		movs	r0, #3
  1064 015c FFF7FEFF 		bl	PIDChangeFlag
  1065              	.LVL120:
- 247:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 247:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1066              		.loc 1 247 4 view .LVU250
  1067 0160 0021     		movs	r1, #0
  1068 0162 0220     		movs	r0, #2
  1069 0164 FFF7FEFF 		bl	PIDChangeFlag
  1070              	.LVL121:
- 248:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 248:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1071              		.loc 1 248 4 view .LVU251
  1072 0168 0021     		movs	r1, #0
  1073 016a 0120     		movs	r0, #1
  1074 016c FFF7FEFF 		bl	PIDChangeFlag
  1075              	.LVL122:
- 249:Core/Src/Origin/Running.c **** 			//countを飛ばす
- 250:Core/Src/Origin/Running.c **** 			break;
+ 249:Core/Src/Main/Running.c **** 			//countを飛ばす
+ 250:Core/Src/Main/Running.c **** 			break;
  1076              		.loc 1 250 4 view .LVU252
  1077 0170 7FE7     		b	.L58
  1078              	.LVL123:
  1079              	.L80:
- 211:Core/Src/Origin/Running.c **** 		{
+ 211:Core/Src/Main/Running.c **** 		{
  1080              		.loc 1 211 3 is_stmt 0 view .LVU253
  1081 0172 2646     		mov	r6, r4
  1082 0174 B3E7     		b	.L72
  1083              	.LVL124:
  1084              	.L77:
- 251:Core/Src/Origin/Running.c **** 		case ACC_DEC_45:
- 252:Core/Src/Origin/Running.c **** 			start_cnt = count;
- 253:Core/Src/Origin/Running.c **** 			while(FastPath[count].path_action == ACC_DEC_45)
- 254:Core/Src/Origin/Running.c **** 			{
- 255:Core/Src/Origin/Running.c **** 				count ++;
+ 251:Core/Src/Main/Running.c **** 		case ACC_DEC_45:
+ 252:Core/Src/Main/Running.c **** 			start_cnt = count;
+ 253:Core/Src/Main/Running.c **** 			while(FastPath[count].path_action == ACC_DEC_45)
+ 254:Core/Src/Main/Running.c **** 			{
+ 255:Core/Src/Main/Running.c **** 				count ++;
  1085              		.loc 1 255 5 is_stmt 1 view .LVU254
  1086              		.loc 1 255 11 is_stmt 0 view .LVU255
  1087 0176 0136     		adds	r6, r6, #1
  1088              	.LVL125:
  1089              	.L73:
- 253:Core/Src/Origin/Running.c **** 			{
+ 253:Core/Src/Main/Running.c **** 			{
  1090              		.loc 1 253 9 is_stmt 1 view .LVU256
- 253:Core/Src/Origin/Running.c **** 			{
+ 253:Core/Src/Main/Running.c **** 			{
  1091              		.loc 1 253 25 is_stmt 0 view .LVU257
  1092 0178 8A4B     		ldr	r3, .L83+36
  1093 017a 03EB0613 		add	r3, r3, r6, lsl #4
  1094 017e 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
- 253:Core/Src/Origin/Running.c **** 			{
+ 253:Core/Src/Main/Running.c **** 			{
  1095              		.loc 1 253 9 view .LVU258
  1096 0180 022B     		cmp	r3, #2
  1097 0182 F8D0     		beq	.L77
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 26
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 26
 
 
- 256:Core/Src/Origin/Running.c **** 			}
- 257:Core/Src/Origin/Running.c **** 			straight_num = (float)(count - start_cnt);
+ 256:Core/Src/Main/Running.c **** 			}
+ 257:Core/Src/Main/Running.c **** 			straight_num = (float)(count - start_cnt);
  1098              		.loc 1 257 4 is_stmt 1 view .LVU259
  1099              		.loc 1 257 33 is_stmt 0 view .LVU260
  1100 0184 341B     		subs	r4, r6, r4
@@ -1510,34 +1510,34 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1102 0186 07EE904A 		vmov	s15, r4	@ int
  1103 018a B8EEE78A 		vcvt.f32.s32	s16, s15
  1104              	.LVL126:
- 258:Core/Src/Origin/Running.c **** 			
- 259:Core/Src/Origin/Running.c **** //			ChangeLED(1);
- 260:Core/Src/Origin/Running.c **** //			FastPath[start_cnt].path_state.pos.x
- 261:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
+ 258:Core/Src/Main/Running.c **** 			
+ 259:Core/Src/Main/Running.c **** //			ChangeLED(1);
+ 260:Core/Src/Main/Running.c **** //			FastPath[start_cnt].path_state.pos.x
+ 261:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 1);
  1105              		.loc 1 261 4 is_stmt 1 view .LVU262
  1106 018e 0121     		movs	r1, #1
  1107 0190 0020     		movs	r0, #0
  1108 0192 FFF7FEFF 		bl	PIDChangeFlag
  1109              	.LVL127:
- 262:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 262:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1110              		.loc 1 262 4 view .LVU263
  1111 0196 0021     		movs	r1, #0
  1112 0198 0320     		movs	r0, #3
  1113 019a FFF7FEFF 		bl	PIDChangeFlag
  1114              	.LVL128:
- 263:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 263:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1115              		.loc 1 263 4 view .LVU264
  1116 019e 0021     		movs	r1, #0
  1117 01a0 0220     		movs	r0, #2
  1118 01a2 FFF7FEFF 		bl	PIDChangeFlag
  1119              	.LVL129:
- 264:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 264:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1120              		.loc 1 264 4 view .LVU265
  1121 01a6 0021     		movs	r1, #0
  1122 01a8 0120     		movs	r0, #1
  1123 01aa FFF7FEFF 		bl	PIDChangeFlag
  1124              	.LVL130:
- 265:Core/Src/Origin/Running.c **** 			FastStraight(0.5, straight_num*0.5*1.41421, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+ 265:Core/Src/Main/Running.c **** 			FastStraight(0.5, straight_num*0.5*1.41421, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
  1125              		.loc 1 265 4 view .LVU266
  1126              		.loc 1 265 34 is_stmt 0 view .LVU267
  1127 01ae 18EE100A 		vmov	r0, s16
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1142              	.LVL134:
  1143              		.loc 1 265 4 view .LVU270
  1144 01ce FFF7FEFF 		bl	__aeabi_d2f
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 27
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 27
 
 
  1145              	.LVL135:
@@ -1570,369 +1570,369 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1151 01e6 B6EE000A 		vmov.f32	s0, #5.0e-1
  1152 01ea FFF7FEFF 		bl	FastStraight
  1153              	.LVL136:
- 266:Core/Src/Origin/Running.c **** 			count--;
+ 266:Core/Src/Main/Running.c **** 			count--;
  1154              		.loc 1 266 4 is_stmt 1 view .LVU271
  1155              		.loc 1 266 9 is_stmt 0 view .LVU272
  1156 01ee 741E     		subs	r4, r6, #1
  1157              	.LVL137:
- 267:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 267:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1158              		.loc 1 267 4 is_stmt 1 view .LVU273
  1159 01f0 0021     		movs	r1, #0
  1160 01f2 0846     		mov	r0, r1
  1161 01f4 FFF7FEFF 		bl	PIDChangeFlag
  1162              	.LVL138:
- 268:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 268:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1163              		.loc 1 268 4 view .LVU274
  1164 01f8 0021     		movs	r1, #0
  1165 01fa 0320     		movs	r0, #3
  1166 01fc FFF7FEFF 		bl	PIDChangeFlag
  1167              	.LVL139:
- 269:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 269:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1168              		.loc 1 269 4 view .LVU275
  1169 0200 0021     		movs	r1, #0
  1170 0202 0220     		movs	r0, #2
  1171 0204 FFF7FEFF 		bl	PIDChangeFlag
  1172              	.LVL140:
- 270:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 270:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1173              		.loc 1 270 4 view .LVU276
  1174 0208 0021     		movs	r1, #0
  1175 020a 0120     		movs	r0, #1
  1176 020c FFF7FEFF 		bl	PIDChangeFlag
  1177              	.LVL141:
- 271:Core/Src/Origin/Running.c **** 			break;
+ 271:Core/Src/Main/Running.c **** 			break;
  1178              		.loc 1 271 4 view .LVU277
  1179 0210 2FE7     		b	.L58
  1180              	.L79:
- 211:Core/Src/Origin/Running.c **** 		{
+ 211:Core/Src/Main/Running.c **** 		{
  1181              		.loc 1 211 3 is_stmt 0 view .LVU278
  1182 0212 2646     		mov	r6, r4
  1183 0214 B0E7     		b	.L73
  1184              	.L71:
- 272:Core/Src/Origin/Running.c **** 		case L_90_FAST:
- 273:Core/Src/Origin/Running.c **** //			ChangeLED(2);
- 274:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 272:Core/Src/Main/Running.c **** 		case L_90_FAST:
+ 273:Core/Src/Main/Running.c **** //			ChangeLED(2);
+ 274:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1185              		.loc 1 274 4 is_stmt 1 view .LVU279
  1186 0216 0021     		movs	r1, #0
  1187 0218 0846     		mov	r0, r1
  1188 021a FFF7FEFF 		bl	PIDChangeFlag
  1189              	.LVL142:
- 275:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 275:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1190              		.loc 1 275 4 view .LVU280
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 28
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 28
 
 
  1191 021e 0021     		movs	r1, #0
  1192 0220 0320     		movs	r0, #3
  1193 0222 FFF7FEFF 		bl	PIDChangeFlag
  1194              	.LVL143:
- 276:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 276:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1195              		.loc 1 276 4 view .LVU281
  1196 0226 0021     		movs	r1, #0
  1197 0228 0220     		movs	r0, #2
  1198 022a FFF7FEFF 		bl	PIDChangeFlag
  1199              	.LVL144:
- 277:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 277:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1200              		.loc 1 277 4 view .LVU282
  1201 022e 0021     		movs	r1, #0
  1202 0230 0120     		movs	r0, #1
  1203 0232 FFF7FEFF 		bl	PIDChangeFlag
  1204              	.LVL145:
- 278:Core/Src/Origin/Running.c **** 			SlalomFastLeft(&fast90);
+ 278:Core/Src/Main/Running.c **** 			SlalomFastLeft(&fast90);
  1205              		.loc 1 278 4 view .LVU283
  1206 0236 5E48     		ldr	r0, .L83+48
  1207 0238 FFF7FEFF 		bl	SlalomFastLeft
  1208              	.LVL146:
- 279:Core/Src/Origin/Running.c **** 			break;
+ 279:Core/Src/Main/Running.c **** 			break;
  1209              		.loc 1 279 4 view .LVU284
  1210 023c 19E7     		b	.L58
  1211              	.L70:
- 280:Core/Src/Origin/Running.c **** 		case R_90_FAST:
- 281:Core/Src/Origin/Running.c **** //			ChangeLED(3);
- 282:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 280:Core/Src/Main/Running.c **** 		case R_90_FAST:
+ 281:Core/Src/Main/Running.c **** //			ChangeLED(3);
+ 282:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1212              		.loc 1 282 4 view .LVU285
  1213 023e 0021     		movs	r1, #0
  1214 0240 0846     		mov	r0, r1
  1215 0242 FFF7FEFF 		bl	PIDChangeFlag
  1216              	.LVL147:
- 283:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 283:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1217              		.loc 1 283 4 view .LVU286
  1218 0246 0021     		movs	r1, #0
  1219 0248 0320     		movs	r0, #3
  1220 024a FFF7FEFF 		bl	PIDChangeFlag
  1221              	.LVL148:
- 284:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 284:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1222              		.loc 1 284 4 view .LVU287
  1223 024e 0021     		movs	r1, #0
  1224 0250 0220     		movs	r0, #2
  1225 0252 FFF7FEFF 		bl	PIDChangeFlag
  1226              	.LVL149:
- 285:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 285:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1227              		.loc 1 285 4 view .LVU288
  1228 0256 0021     		movs	r1, #0
  1229 0258 0120     		movs	r0, #1
  1230 025a FFF7FEFF 		bl	PIDChangeFlag
  1231              	.LVL150:
- 286:Core/Src/Origin/Running.c **** 			SlalomFastRight(&fast90);
+ 286:Core/Src/Main/Running.c **** 			SlalomFastRight(&fast90);
  1232              		.loc 1 286 4 view .LVU289
  1233 025e 5448     		ldr	r0, .L83+48
  1234 0260 FFF7FEFF 		bl	SlalomFastRight
  1235              	.LVL151:
- 287:Core/Src/Origin/Running.c **** 			break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 29
+ 287:Core/Src/Main/Running.c **** 			break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 29
 
 
  1236              		.loc 1 287 4 view .LVU290
  1237 0264 05E7     		b	.L58
  1238              	.L69:
- 288:Core/Src/Origin/Running.c **** 
- 289:Core/Src/Origin/Running.c **** 		case L_90_FAST_DIAGONAL:
- 290:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 288:Core/Src/Main/Running.c **** 
+ 289:Core/Src/Main/Running.c **** 		case L_90_FAST_DIAGONAL:
+ 290:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1239              		.loc 1 290 4 view .LVU291
  1240 0266 0021     		movs	r1, #0
  1241 0268 0846     		mov	r0, r1
  1242 026a FFF7FEFF 		bl	PIDChangeFlag
  1243              	.LVL152:
- 291:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 291:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1244              		.loc 1 291 4 view .LVU292
  1245 026e 0021     		movs	r1, #0
  1246 0270 0320     		movs	r0, #3
  1247 0272 FFF7FEFF 		bl	PIDChangeFlag
  1248              	.LVL153:
- 292:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 292:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1249              		.loc 1 292 4 view .LVU293
  1250 0276 0021     		movs	r1, #0
  1251 0278 0220     		movs	r0, #2
  1252 027a FFF7FEFF 		bl	PIDChangeFlag
  1253              	.LVL154:
- 293:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 293:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1254              		.loc 1 293 4 view .LVU294
  1255 027e 0021     		movs	r1, #0
  1256 0280 0120     		movs	r0, #1
  1257 0282 FFF7FEFF 		bl	PIDChangeFlag
  1258              	.LVL155:
- 294:Core/Src/Origin/Running.c **** 			SlalomFastLeft(&fast90diagonal);
+ 294:Core/Src/Main/Running.c **** 			SlalomFastLeft(&fast90diagonal);
  1259              		.loc 1 294 4 view .LVU295
  1260 0286 4B48     		ldr	r0, .L83+52
  1261 0288 FFF7FEFF 		bl	SlalomFastLeft
  1262              	.LVL156:
- 295:Core/Src/Origin/Running.c **** 			break;
+ 295:Core/Src/Main/Running.c **** 			break;
  1263              		.loc 1 295 4 view .LVU296
  1264 028c F1E6     		b	.L58
  1265              	.L68:
- 296:Core/Src/Origin/Running.c **** 		case R_90_FAST_DIAGONAL:
- 297:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 296:Core/Src/Main/Running.c **** 		case R_90_FAST_DIAGONAL:
+ 297:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1266              		.loc 1 297 4 view .LVU297
  1267 028e 0021     		movs	r1, #0
  1268 0290 0846     		mov	r0, r1
  1269 0292 FFF7FEFF 		bl	PIDChangeFlag
  1270              	.LVL157:
- 298:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 298:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1271              		.loc 1 298 4 view .LVU298
  1272 0296 0021     		movs	r1, #0
  1273 0298 0320     		movs	r0, #3
  1274 029a FFF7FEFF 		bl	PIDChangeFlag
  1275              	.LVL158:
- 299:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 299:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1276              		.loc 1 299 4 view .LVU299
  1277 029e 0021     		movs	r1, #0
  1278 02a0 0220     		movs	r0, #2
  1279 02a2 FFF7FEFF 		bl	PIDChangeFlag
  1280              	.LVL159:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 30
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 30
 
 
- 300:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 300:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1281              		.loc 1 300 4 view .LVU300
  1282 02a6 0021     		movs	r1, #0
  1283 02a8 0120     		movs	r0, #1
  1284 02aa FFF7FEFF 		bl	PIDChangeFlag
  1285              	.LVL160:
- 301:Core/Src/Origin/Running.c **** 			SlalomFastRight(&fast90diagonal);
+ 301:Core/Src/Main/Running.c **** 			SlalomFastRight(&fast90diagonal);
  1286              		.loc 1 301 4 view .LVU301
  1287 02ae 4148     		ldr	r0, .L83+52
  1288 02b0 FFF7FEFF 		bl	SlalomFastRight
  1289              	.LVL161:
- 302:Core/Src/Origin/Running.c **** 			break;
+ 302:Core/Src/Main/Running.c **** 			break;
  1290              		.loc 1 302 4 view .LVU302
  1291 02b4 DDE6     		b	.L58
  1292              	.L67:
- 303:Core/Src/Origin/Running.c **** 
- 304:Core/Src/Origin/Running.c **** 		case L_45_FAST:
- 305:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 303:Core/Src/Main/Running.c **** 
+ 304:Core/Src/Main/Running.c **** 		case L_45_FAST:
+ 305:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1293              		.loc 1 305 4 view .LVU303
  1294 02b6 0021     		movs	r1, #0
  1295 02b8 0846     		mov	r0, r1
  1296 02ba FFF7FEFF 		bl	PIDChangeFlag
  1297              	.LVL162:
- 306:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 306:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1298              		.loc 1 306 4 view .LVU304
  1299 02be 0021     		movs	r1, #0
  1300 02c0 0320     		movs	r0, #3
  1301 02c2 FFF7FEFF 		bl	PIDChangeFlag
  1302              	.LVL163:
- 307:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 307:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1303              		.loc 1 307 4 view .LVU305
  1304 02c6 0021     		movs	r1, #0
  1305 02c8 0220     		movs	r0, #2
  1306 02ca FFF7FEFF 		bl	PIDChangeFlag
  1307              	.LVL164:
- 308:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 308:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1308              		.loc 1 308 4 view .LVU306
  1309 02ce 0021     		movs	r1, #0
  1310 02d0 0120     		movs	r0, #1
  1311 02d2 FFF7FEFF 		bl	PIDChangeFlag
  1312              	.LVL165:
- 309:Core/Src/Origin/Running.c **** 			SlalomFastLeft(&fast45);
+ 309:Core/Src/Main/Running.c **** 			SlalomFastLeft(&fast45);
  1313              		.loc 1 309 4 view .LVU307
  1314 02d6 3848     		ldr	r0, .L83+56
  1315 02d8 FFF7FEFF 		bl	SlalomFastLeft
  1316              	.LVL166:
- 310:Core/Src/Origin/Running.c **** 			break;
+ 310:Core/Src/Main/Running.c **** 			break;
  1317              		.loc 1 310 4 view .LVU308
  1318 02dc C9E6     		b	.L58
  1319              	.L63:
- 311:Core/Src/Origin/Running.c **** 		case L_45_FAST_REVERSE:
- 312:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 311:Core/Src/Main/Running.c **** 		case L_45_FAST_REVERSE:
+ 312:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1320              		.loc 1 312 4 view .LVU309
  1321 02de 0021     		movs	r1, #0
  1322 02e0 0846     		mov	r0, r1
  1323 02e2 FFF7FEFF 		bl	PIDChangeFlag
  1324              	.LVL167:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 31
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 31
 
 
- 313:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 313:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1325              		.loc 1 313 4 view .LVU310
  1326 02e6 0021     		movs	r1, #0
  1327 02e8 0320     		movs	r0, #3
  1328 02ea FFF7FEFF 		bl	PIDChangeFlag
  1329              	.LVL168:
- 314:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 314:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1330              		.loc 1 314 4 view .LVU311
  1331 02ee 0021     		movs	r1, #0
  1332 02f0 0220     		movs	r0, #2
  1333 02f2 FFF7FEFF 		bl	PIDChangeFlag
  1334              	.LVL169:
- 315:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 315:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1335              		.loc 1 315 4 view .LVU312
  1336 02f6 0021     		movs	r1, #0
  1337 02f8 0120     		movs	r0, #1
  1338 02fa FFF7FEFF 		bl	PIDChangeFlag
  1339              	.LVL170:
- 316:Core/Src/Origin/Running.c **** 			SlalomFastLeft(&fast45reverse);
+ 316:Core/Src/Main/Running.c **** 			SlalomFastLeft(&fast45reverse);
  1340              		.loc 1 316 4 view .LVU313
  1341 02fe 2F48     		ldr	r0, .L83+60
  1342 0300 FFF7FEFF 		bl	SlalomFastLeft
  1343              	.LVL171:
- 317:Core/Src/Origin/Running.c **** 			break;
+ 317:Core/Src/Main/Running.c **** 			break;
  1344              		.loc 1 317 4 view .LVU314
  1345 0304 B5E6     		b	.L58
  1346              	.L66:
- 318:Core/Src/Origin/Running.c **** 		case R_45_FAST:
- 319:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 318:Core/Src/Main/Running.c **** 		case R_45_FAST:
+ 319:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1347              		.loc 1 319 4 view .LVU315
  1348 0306 0021     		movs	r1, #0
  1349 0308 0846     		mov	r0, r1
  1350 030a FFF7FEFF 		bl	PIDChangeFlag
  1351              	.LVL172:
- 320:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 320:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1352              		.loc 1 320 4 view .LVU316
  1353 030e 0021     		movs	r1, #0
  1354 0310 0320     		movs	r0, #3
  1355 0312 FFF7FEFF 		bl	PIDChangeFlag
  1356              	.LVL173:
- 321:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 321:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1357              		.loc 1 321 4 view .LVU317
  1358 0316 0021     		movs	r1, #0
  1359 0318 0220     		movs	r0, #2
  1360 031a FFF7FEFF 		bl	PIDChangeFlag
  1361              	.LVL174:
- 322:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 322:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1362              		.loc 1 322 4 view .LVU318
  1363 031e 0021     		movs	r1, #0
  1364 0320 0120     		movs	r0, #1
  1365 0322 FFF7FEFF 		bl	PIDChangeFlag
  1366              	.LVL175:
- 323:Core/Src/Origin/Running.c **** 			SlalomFastRight(&fast45);
+ 323:Core/Src/Main/Running.c **** 			SlalomFastRight(&fast45);
  1367              		.loc 1 323 4 view .LVU319
  1368 0326 2448     		ldr	r0, .L83+56
  1369 0328 FFF7FEFF 		bl	SlalomFastRight
  1370              	.LVL176:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 32
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 32
 
 
- 324:Core/Src/Origin/Running.c **** 			break;
+ 324:Core/Src/Main/Running.c **** 			break;
  1371              		.loc 1 324 4 view .LVU320
  1372 032c A1E6     		b	.L58
  1373              	.L62:
- 325:Core/Src/Origin/Running.c **** 		case R_45_FAST_REVERSE:
- 326:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 325:Core/Src/Main/Running.c **** 		case R_45_FAST_REVERSE:
+ 326:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1374              		.loc 1 326 4 view .LVU321
  1375 032e 0021     		movs	r1, #0
  1376 0330 0846     		mov	r0, r1
  1377 0332 FFF7FEFF 		bl	PIDChangeFlag
  1378              	.LVL177:
- 327:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 327:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1379              		.loc 1 327 4 view .LVU322
  1380 0336 0021     		movs	r1, #0
  1381 0338 0320     		movs	r0, #3
  1382 033a FFF7FEFF 		bl	PIDChangeFlag
  1383              	.LVL178:
- 328:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 328:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1384              		.loc 1 328 4 view .LVU323
  1385 033e 0021     		movs	r1, #0
  1386 0340 0220     		movs	r0, #2
  1387 0342 FFF7FEFF 		bl	PIDChangeFlag
  1388              	.LVL179:
- 329:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 329:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1389              		.loc 1 329 4 view .LVU324
  1390 0346 0021     		movs	r1, #0
  1391 0348 0120     		movs	r0, #1
  1392 034a FFF7FEFF 		bl	PIDChangeFlag
  1393              	.LVL180:
- 330:Core/Src/Origin/Running.c **** 			SlalomFastRight(&fast45reverse);
+ 330:Core/Src/Main/Running.c **** 			SlalomFastRight(&fast45reverse);
  1394              		.loc 1 330 4 view .LVU325
  1395 034e 1B48     		ldr	r0, .L83+60
  1396 0350 FFF7FEFF 		bl	SlalomFastRight
  1397              	.LVL181:
- 331:Core/Src/Origin/Running.c **** 			break;
+ 331:Core/Src/Main/Running.c **** 			break;
  1398              		.loc 1 331 4 view .LVU326
  1399 0354 8DE6     		b	.L58
  1400              	.L65:
- 332:Core/Src/Origin/Running.c **** 		case L_135_FAST:
- 333:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 332:Core/Src/Main/Running.c **** 		case L_135_FAST:
+ 333:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1401              		.loc 1 333 4 view .LVU327
  1402 0356 0021     		movs	r1, #0
  1403 0358 0846     		mov	r0, r1
  1404 035a FFF7FEFF 		bl	PIDChangeFlag
  1405              	.LVL182:
- 334:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 334:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1406              		.loc 1 334 4 view .LVU328
  1407 035e 0021     		movs	r1, #0
  1408 0360 0320     		movs	r0, #3
  1409 0362 FFF7FEFF 		bl	PIDChangeFlag
  1410              	.LVL183:
- 335:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 335:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1411              		.loc 1 335 4 view .LVU329
  1412 0366 0021     		movs	r1, #0
  1413 0368 0220     		movs	r0, #2
  1414 036a FFF7FEFF 		bl	PIDChangeFlag
  1415              	.LVL184:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 33
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 33
 
 
- 336:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 336:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1416              		.loc 1 336 4 view .LVU330
  1417 036e 0021     		movs	r1, #0
  1418 0370 0120     		movs	r0, #1
  1419 0372 FFF7FEFF 		bl	PIDChangeFlag
  1420              	.LVL185:
- 337:Core/Src/Origin/Running.c **** 			SlalomFastLeft(&fast135);
+ 337:Core/Src/Main/Running.c **** 			SlalomFastLeft(&fast135);
  1421              		.loc 1 337 4 view .LVU331
  1422 0376 1248     		ldr	r0, .L83+64
  1423 0378 FFF7FEFF 		bl	SlalomFastLeft
  1424              	.LVL186:
- 338:Core/Src/Origin/Running.c **** 			break;
+ 338:Core/Src/Main/Running.c **** 			break;
  1425              		.loc 1 338 4 view .LVU332
  1426 037c 79E6     		b	.L58
  1427              	.L84:
@@ -1956,120 +1956,120 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1445 03bc 00000000 		.word	fast45reverse
  1446 03c0 00000000 		.word	fast135
  1447              	.L61:
- 339:Core/Src/Origin/Running.c **** 		case L_135_FAST_REVERSE:
- 340:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 339:Core/Src/Main/Running.c **** 		case L_135_FAST_REVERSE:
+ 340:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1448              		.loc 1 340 4 view .LVU333
  1449 03c4 0021     		movs	r1, #0
  1450 03c6 0846     		mov	r0, r1
  1451 03c8 FFF7FEFF 		bl	PIDChangeFlag
  1452              	.LVL187:
- 341:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 341:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1453              		.loc 1 341 4 view .LVU334
  1454 03cc 0021     		movs	r1, #0
  1455 03ce 0320     		movs	r0, #3
  1456 03d0 FFF7FEFF 		bl	PIDChangeFlag
  1457              	.LVL188:
- 342:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 342:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1458              		.loc 1 342 4 view .LVU335
  1459 03d4 0021     		movs	r1, #0
  1460 03d6 0220     		movs	r0, #2
  1461 03d8 FFF7FEFF 		bl	PIDChangeFlag
  1462              	.LVL189:
- 343:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 343:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1463              		.loc 1 343 4 view .LVU336
  1464 03dc 0021     		movs	r1, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 34
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 34
 
 
  1465 03de 0120     		movs	r0, #1
  1466 03e0 FFF7FEFF 		bl	PIDChangeFlag
  1467              	.LVL190:
- 344:Core/Src/Origin/Running.c **** 			SlalomFastLeft(&fast135reverse);
+ 344:Core/Src/Main/Running.c **** 			SlalomFastLeft(&fast135reverse);
  1468              		.loc 1 344 4 view .LVU337
  1469 03e4 1748     		ldr	r0, .L85
  1470 03e6 FFF7FEFF 		bl	SlalomFastLeft
  1471              	.LVL191:
- 345:Core/Src/Origin/Running.c **** 			break;
+ 345:Core/Src/Main/Running.c **** 			break;
  1472              		.loc 1 345 4 view .LVU338
  1473 03ea 42E6     		b	.L58
  1474              	.L64:
- 346:Core/Src/Origin/Running.c **** 		case R_135_FAST:
- 347:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 346:Core/Src/Main/Running.c **** 		case R_135_FAST:
+ 347:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1475              		.loc 1 347 4 view .LVU339
  1476 03ec 0021     		movs	r1, #0
  1477 03ee 0846     		mov	r0, r1
  1478 03f0 FFF7FEFF 		bl	PIDChangeFlag
  1479              	.LVL192:
- 348:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 348:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1480              		.loc 1 348 4 view .LVU340
  1481 03f4 0021     		movs	r1, #0
  1482 03f6 0320     		movs	r0, #3
  1483 03f8 FFF7FEFF 		bl	PIDChangeFlag
  1484              	.LVL193:
- 349:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 349:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1485              		.loc 1 349 4 view .LVU341
  1486 03fc 0021     		movs	r1, #0
  1487 03fe 0220     		movs	r0, #2
  1488 0400 FFF7FEFF 		bl	PIDChangeFlag
  1489              	.LVL194:
- 350:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 350:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1490              		.loc 1 350 4 view .LVU342
  1491 0404 0021     		movs	r1, #0
  1492 0406 0120     		movs	r0, #1
  1493 0408 FFF7FEFF 		bl	PIDChangeFlag
  1494              	.LVL195:
- 351:Core/Src/Origin/Running.c **** 			SlalomFastRight(&fast135);
+ 351:Core/Src/Main/Running.c **** 			SlalomFastRight(&fast135);
  1495              		.loc 1 351 4 view .LVU343
  1496 040c 0E48     		ldr	r0, .L85+4
  1497 040e FFF7FEFF 		bl	SlalomFastRight
  1498              	.LVL196:
- 352:Core/Src/Origin/Running.c **** 			break;
+ 352:Core/Src/Main/Running.c **** 			break;
  1499              		.loc 1 352 4 view .LVU344
  1500 0412 2EE6     		b	.L58
  1501              	.L59:
- 353:Core/Src/Origin/Running.c **** 		case R_135_FAST_REVERSE:
- 354:Core/Src/Origin/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
+ 353:Core/Src/Main/Running.c **** 		case R_135_FAST_REVERSE:
+ 354:Core/Src/Main/Running.c **** 			PIDChangeFlag(A_VELO_PID, 0);
  1502              		.loc 1 354 4 view .LVU345
  1503 0414 0021     		movs	r1, #0
  1504 0416 0846     		mov	r0, r1
  1505 0418 FFF7FEFF 		bl	PIDChangeFlag
  1506              	.LVL197:
- 355:Core/Src/Origin/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
+ 355:Core/Src/Main/Running.c **** 			PIDChangeFlag(R_WALL_PID, 0);
  1507              		.loc 1 355 4 view .LVU346
  1508 041c 0021     		movs	r1, #0
  1509 041e 0320     		movs	r0, #3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 35
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 35
 
 
  1510 0420 FFF7FEFF 		bl	PIDChangeFlag
  1511              	.LVL198:
- 356:Core/Src/Origin/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
+ 356:Core/Src/Main/Running.c **** 			PIDChangeFlag(L_WALL_PID, 0);
  1512              		.loc 1 356 4 view .LVU347
  1513 0424 0021     		movs	r1, #0
  1514 0426 0220     		movs	r0, #2
  1515 0428 FFF7FEFF 		bl	PIDChangeFlag
  1516              	.LVL199:
- 357:Core/Src/Origin/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
+ 357:Core/Src/Main/Running.c **** 			PIDChangeFlag(D_WALL_PID, 0);
  1517              		.loc 1 357 4 view .LVU348
  1518 042c 0021     		movs	r1, #0
  1519 042e 0120     		movs	r0, #1
  1520 0430 FFF7FEFF 		bl	PIDChangeFlag
  1521              	.LVL200:
- 358:Core/Src/Origin/Running.c **** 			SlalomFastRight(&fast135reverse);
+ 358:Core/Src/Main/Running.c **** 			SlalomFastRight(&fast135reverse);
  1522              		.loc 1 358 4 view .LVU349
  1523 0434 0348     		ldr	r0, .L85
  1524 0436 FFF7FEFF 		bl	SlalomFastRight
  1525              	.LVL201:
- 359:Core/Src/Origin/Running.c **** 			break;
+ 359:Core/Src/Main/Running.c **** 			break;
  1526              		.loc 1 359 4 view .LVU350
  1527 043a 1AE6     		b	.L58
  1528              	.L82:
  1529              	.LBE8:
- 360:Core/Src/Origin/Running.c **** 		default :
- 361:Core/Src/Origin/Running.c **** 			break;
- 362:Core/Src/Origin/Running.c **** 		}
- 363:Core/Src/Origin/Running.c **** 	}
- 364:Core/Src/Origin/Running.c **** }
+ 360:Core/Src/Main/Running.c **** 		default :
+ 361:Core/Src/Main/Running.c **** 			break;
+ 362:Core/Src/Main/Running.c **** 		}
+ 363:Core/Src/Main/Running.c **** 	}
+ 364:Core/Src/Main/Running.c **** }
  1530              		.loc 1 364 1 is_stmt 0 view .LVU351
  1531 043c BDEC028B 		vldm	sp!, {d8}
  1532              	.LCFI8:
@@ -2094,11 +2094,11 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1552              		.thumb_func
  1554              	Explore:
  1555              	.LFB241:
- 365:Core/Src/Origin/Running.c **** 
- 366:Core/Src/Origin/Running.c **** void Explore()
- 367:Core/Src/Origin/Running.c **** {
+ 365:Core/Src/Main/Running.c **** 
+ 366:Core/Src/Main/Running.c **** void Explore()
+ 367:Core/Src/Main/Running.c **** {
  1556              		.loc 1 367 1 is_stmt 1 view -0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 36
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 36
 
 
  1557              		.cfi_startproc
@@ -2116,207 +2116,207 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1569 0004 82B0     		sub	sp, sp, #8
  1570              	.LCFI10:
  1571              		.cfi_def_cfa_offset 32
- 368:Core/Src/Origin/Running.c **** 	IT_mode = EXPLORE;
+ 368:Core/Src/Main/Running.c **** 	IT_mode = EXPLORE;
  1572              		.loc 1 368 2 view .LVU354
  1573              		.loc 1 368 10 is_stmt 0 view .LVU355
  1574 0006 614B     		ldr	r3, .L97
  1575 0008 0622     		movs	r2, #6
  1576 000a 1A60     		str	r2, [r3]
- 369:Core/Src/Origin/Running.c **** 	//IT_mode = WRITINGFREE;
- 370:Core/Src/Origin/Running.c **** 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マッ�
- 371:Core/Src/Origin/Running.c **** 	//一回目で失敗していたら、flash消してram初期化
- 372:Core/Src/Origin/Running.c **** 	//一回目で成功したら、flashをramに移す
- 373:Core/Src/Origin/Running.c **** 
- 374:Core/Src/Origin/Running.c **** 	int8_t mode=1;
+ 369:Core/Src/Main/Running.c **** 	//IT_mode = WRITINGFREE;
+ 370:Core/Src/Main/Running.c **** 	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マッ�
+ 371:Core/Src/Main/Running.c **** 	//一回目で失敗していたら、flash消してram初期化
+ 372:Core/Src/Main/Running.c **** 	//一回目で成功したら、flashをramに移す
+ 373:Core/Src/Main/Running.c **** 
+ 374:Core/Src/Main/Running.c **** 	int8_t mode=1;
  1577              		.loc 1 374 2 is_stmt 1 view .LVU356
  1578              		.loc 1 374 9 is_stmt 0 view .LVU357
  1579 000c 0120     		movs	r0, #1
  1580 000e 8DF80700 		strb	r0, [sp, #7]
- 375:Core/Src/Origin/Running.c **** 	ModeSelect( 1, 2, &mode);
+ 375:Core/Src/Main/Running.c **** 	ModeSelect( 1, 2, &mode);
  1581              		.loc 1 375 2 is_stmt 1 view .LVU358
  1582 0012 0DF10702 		add	r2, sp, #7
  1583 0016 0221     		movs	r1, #2
  1584 0018 FFF7FEFF 		bl	ModeSelect
  1585              	.LVL203:
- 376:Core/Src/Origin/Running.c **** 	Signal( mode );
+ 376:Core/Src/Main/Running.c **** 	Signal( mode );
  1586              		.loc 1 376 2 view .LVU359
  1587 001c 9DF90700 		ldrsb	r0, [sp, #7]
  1588 0020 FFF7FEFF 		bl	Signal
  1589              	.LVL204:
- 377:Core/Src/Origin/Running.c **** 
- 378:Core/Src/Origin/Running.c **** 	char turn_mode = 'T';
+ 377:Core/Src/Main/Running.c **** 
+ 378:Core/Src/Main/Running.c **** 	char turn_mode = 'T';
  1590              		.loc 1 378 2 view .LVU360
- 379:Core/Src/Origin/Running.c **** 	if(mode == 1)
+ 379:Core/Src/Main/Running.c **** 	if(mode == 1)
  1591              		.loc 1 379 2 view .LVU361
  1592              		.loc 1 379 10 is_stmt 0 view .LVU362
  1593 0024 9DF90730 		ldrsb	r3, [sp, #7]
  1594              		.loc 1 379 4 view .LVU363
  1595 0028 012B     		cmp	r3, #1
  1596 002a 53D0     		beq	.L94
- 380:Core/Src/Origin/Running.c **** 	{
- 381:Core/Src/Origin/Running.c **** 		turn_mode = 'T';
- 382:Core/Src/Origin/Running.c **** 	}
- 383:Core/Src/Origin/Running.c **** 	else if(mode == 2)
+ 380:Core/Src/Main/Running.c **** 	{
+ 381:Core/Src/Main/Running.c **** 		turn_mode = 'T';
+ 382:Core/Src/Main/Running.c **** 	}
+ 383:Core/Src/Main/Running.c **** 	else if(mode == 2)
  1597              		.loc 1 383 7 is_stmt 1 view .LVU364
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 37
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 37
 
 
  1598              		.loc 1 383 9 is_stmt 0 view .LVU365
  1599 002c 022B     		cmp	r3, #2
  1600 002e 53D0     		beq	.L95
- 378:Core/Src/Origin/Running.c **** 	if(mode == 1)
+ 378:Core/Src/Main/Running.c **** 	if(mode == 1)
  1601              		.loc 1 378 7 view .LVU366
  1602 0030 5424     		movs	r4, #84
  1603              	.L88:
  1604              	.LVL205:
- 384:Core/Src/Origin/Running.c **** 	{
- 385:Core/Src/Origin/Running.c **** 		turn_mode = 'S';
- 386:Core/Src/Origin/Running.c **** 		
- 387:Core/Src/Origin/Running.c **** 	}
- 388:Core/Src/Origin/Running.c **** 
- 389:Core/Src/Origin/Running.c **** 	int8_t mode2=1;
+ 384:Core/Src/Main/Running.c **** 	{
+ 385:Core/Src/Main/Running.c **** 		turn_mode = 'S';
+ 386:Core/Src/Main/Running.c **** 		
+ 387:Core/Src/Main/Running.c **** 	}
+ 388:Core/Src/Main/Running.c **** 
+ 389:Core/Src/Main/Running.c **** 	int8_t mode2=1;
  1605              		.loc 1 389 2 is_stmt 1 view .LVU367
  1606              		.loc 1 389 9 is_stmt 0 view .LVU368
  1607 0032 0125     		movs	r5, #1
  1608 0034 8DF80650 		strb	r5, [sp, #6]
- 390:Core/Src/Origin/Running.c **** 	ModeSelect( 1, 4, &mode2);
+ 390:Core/Src/Main/Running.c **** 	ModeSelect( 1, 4, &mode2);
  1609              		.loc 1 390 2 is_stmt 1 view .LVU369
  1610 0038 0DF10602 		add	r2, sp, #6
  1611 003c 0421     		movs	r1, #4
  1612 003e 2846     		mov	r0, r5
  1613 0040 FFF7FEFF 		bl	ModeSelect
  1614              	.LVL206:
- 391:Core/Src/Origin/Running.c **** 	Signal( mode2 );
+ 391:Core/Src/Main/Running.c **** 	Signal( mode2 );
  1615              		.loc 1 391 2 view .LVU370
  1616 0044 9DF90600 		ldrsb	r0, [sp, #6]
  1617 0048 FFF7FEFF 		bl	Signal
  1618              	.LVL207:
- 392:Core/Src/Origin/Running.c **** 	PhotoSwitch();
+ 392:Core/Src/Main/Running.c **** 	PhotoSwitch();
  1619              		.loc 1 392 2 view .LVU371
  1620 004c FFF7FEFF 		bl	PhotoSwitch
  1621              	.LVL208:
- 393:Core/Src/Origin/Running.c **** 
- 394:Core/Src/Origin/Running.c **** 	setSearchTurnParam(mode2);
+ 393:Core/Src/Main/Running.c **** 
+ 394:Core/Src/Main/Running.c **** 	setSearchTurnParam(mode2);
  1622              		.loc 1 394 2 view .LVU372
  1623 0050 9DF90600 		ldrsb	r0, [sp, #6]
  1624 0054 FFF7FEFF 		bl	setSearchTurnParam
  1625              	.LVL209:
- 395:Core/Src/Origin/Running.c **** 	
- 396:Core/Src/Origin/Running.c **** 	MouseInit(); // マイクロマウス走行用のハードウェア、パラメータなど諸々�
+ 395:Core/Src/Main/Running.c **** 	
+ 396:Core/Src/Main/Running.c **** 	MouseInit(); // マイクロマウス走行用のハードウェア、パラメータなど諸々�
  1626              		.loc 1 396 2 view .LVU373
  1627 0058 FFF7FEFF 		bl	MouseInit
  1628              	.LVL210:
- 397:Core/Src/Origin/Running.c **** 
- 398:Core/Src/Origin/Running.c **** 	
- 399:Core/Src/Origin/Running.c **** 	//制御の初期化
- 400:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_VELO_PID, 1);
+ 397:Core/Src/Main/Running.c **** 
+ 398:Core/Src/Main/Running.c **** 	
+ 399:Core/Src/Main/Running.c **** 	//制御の初期化
+ 400:Core/Src/Main/Running.c **** 	PIDChangeFlag(L_VELO_PID, 1);
  1629              		.loc 1 400 2 view .LVU374
  1630 005c 2946     		mov	r1, r5
  1631 005e 0420     		movs	r0, #4
  1632 0060 FFF7FEFF 		bl	PIDChangeFlag
  1633              	.LVL211:
- 401:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_VELO_PID, 1);
+ 401:Core/Src/Main/Running.c **** 	PIDChangeFlag(R_VELO_PID, 1);
  1634              		.loc 1 401 2 view .LVU375
  1635 0064 2946     		mov	r1, r5
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 38
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 38
 
 
  1636 0066 0520     		movs	r0, #5
  1637 0068 FFF7FEFF 		bl	PIDChangeFlag
  1638              	.LVL212:
- 402:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 1);
+ 402:Core/Src/Main/Running.c **** 	PIDChangeFlag(A_VELO_PID, 1);
  1639              		.loc 1 402 2 view .LVU376
  1640 006c 2946     		mov	r1, r5
  1641 006e 0020     		movs	r0, #0
  1642 0070 FFF7FEFF 		bl	PIDChangeFlag
  1643              	.LVL213:
- 403:Core/Src/Origin/Running.c **** 	
- 404:Core/Src/Origin/Running.c **** 	// InitExplore(); // 探索用の初期化
- 405:Core/Src/Origin/Running.c **** 	// 探索手法に応じた初期化（深さ優先のみ、全探索、一回だけ、、ゴー�
- 406:Core/Src/Origin/Running.c **** 	goal_edge_num = one;
+ 403:Core/Src/Main/Running.c **** 	
+ 404:Core/Src/Main/Running.c **** 	// InitExplore(); // 探索用の初期化
+ 405:Core/Src/Main/Running.c **** 	// 探索手法に応じた初期化（深さ優先のみ、全探索、一回だけ、、ゴー�
+ 406:Core/Src/Main/Running.c **** 	goal_edge_num = one;
  1644              		.loc 1 406 2 view .LVU377
  1645              		.loc 1 406 16 is_stmt 0 view .LVU378
  1646 0074 DFF84481 		ldr	r8, .L97+48
  1647 0078 88F80050 		strb	r5, [r8]
- 407:Core/Src/Origin/Running.c **** 	VelocityMax = false;
+ 407:Core/Src/Main/Running.c **** 	VelocityMax = false;
  1648              		.loc 1 407 2 is_stmt 1 view .LVU379
  1649              		.loc 1 407 14 is_stmt 0 view .LVU380
  1650 007c 0023     		movs	r3, #0
  1651 007e 444A     		ldr	r2, .L97+4
  1652 0080 1370     		strb	r3, [r2]
- 408:Core/Src/Origin/Running.c **** 	SearchOrFast = 0;
+ 408:Core/Src/Main/Running.c **** 	SearchOrFast = 0;
  1653              		.loc 1 408 2 is_stmt 1 view .LVU381
  1654              		.loc 1 408 15 is_stmt 0 view .LVU382
  1655 0082 444A     		ldr	r2, .L97+8
  1656 0084 1360     		str	r3, [r2]
- 409:Core/Src/Origin/Running.c **** 	Calc = 0;
+ 409:Core/Src/Main/Running.c **** 	Calc = 0;
  1657              		.loc 1 409 2 is_stmt 1 view .LVU383
  1658              		.loc 1 409 7 is_stmt 0 view .LVU384
  1659 0086 444A     		ldr	r2, .L97+12
  1660 0088 1360     		str	r3, [r2]
- 410:Core/Src/Origin/Running.c **** 	WALL_MASK = 0x01;
+ 410:Core/Src/Main/Running.c **** 	WALL_MASK = 0x01;
  1661              		.loc 1 410 2 is_stmt 1 view .LVU385
  1662              		.loc 1 410 12 is_stmt 0 view .LVU386
  1663 008a 444B     		ldr	r3, .L97+16
  1664 008c 1D60     		str	r5, [r3]
- 411:Core/Src/Origin/Running.c **** 	LowDFSFlag();
+ 411:Core/Src/Main/Running.c **** 	LowDFSFlag();
  1665              		.loc 1 411 2 is_stmt 1 view .LVU387
  1666 008e FFF7FEFF 		bl	LowDFSFlag
  1667              	.LVL214:
- 412:Core/Src/Origin/Running.c **** 	LowStackFlag();
+ 412:Core/Src/Main/Running.c **** 	LowStackFlag();
  1668              		.loc 1 412 2 view .LVU388
  1669 0092 FFF7FEFF 		bl	LowStackFlag
  1670              	.LVL215:
- 413:Core/Src/Origin/Running.c **** 	InitMassStack();
+ 413:Core/Src/Main/Running.c **** 	InitMassStack();
  1671              		.loc 1 413 2 view .LVU389
  1672 0096 FFF7FEFF 		bl	InitMassStack
  1673              	.LVL216:
- 414:Core/Src/Origin/Running.c **** 	
- 415:Core/Src/Origin/Running.c **** 	initSearchData(&my_map, &my_mouse);
+ 414:Core/Src/Main/Running.c **** 	
+ 415:Core/Src/Main/Running.c **** 	initSearchData(&my_map, &my_mouse);
  1674              		.loc 1 415 2 view .LVU390
  1675 009a 414E     		ldr	r6, .L97+20
  1676 009c 414F     		ldr	r7, .L97+24
  1677 009e 3146     		mov	r1, r6
  1678 00a0 3846     		mov	r0, r7
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 39
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 39
 
 
  1679 00a2 FFF7FEFF 		bl	initSearchData
  1680              	.LVL217:
- 416:Core/Src/Origin/Running.c **** 	InitVisit();
+ 416:Core/Src/Main/Running.c **** 	InitVisit();
  1681              		.loc 1 416 2 view .LVU391
  1682 00a6 FFF7FEFF 		bl	InitVisit
  1683              	.LVL218:
- 417:Core/Src/Origin/Running.c **** 	dbc = 1;
+ 417:Core/Src/Main/Running.c **** 	dbc = 1;
  1684              		.loc 1 417 2 view .LVU392
  1685              		.loc 1 417 6 is_stmt 0 view .LVU393
  1686 00aa 3F4B     		ldr	r3, .L97+28
  1687 00ac 1D60     		str	r5, [r3]
- 418:Core/Src/Origin/Running.c **** 
- 419:Core/Src/Origin/Running.c **** // position first_target = {0,1};
- 420:Core/Src/Origin/Running.c **** 	position first_target = my_mouse.goal_lesser;;
+ 418:Core/Src/Main/Running.c **** 
+ 419:Core/Src/Main/Running.c **** // position first_target = {0,1};
+ 420:Core/Src/Main/Running.c **** 	position first_target = my_mouse.goal_lesser;;
  1688              		.loc 1 420 2 is_stmt 1 view .LVU394
  1689              		.loc 1 420 11 is_stmt 0 view .LVU395
  1690 00ae 3388     		ldrh	r3, [r6]
  1691 00b0 ADF80430 		strh	r3, [sp, #4]	@ movhi
  1692              		.loc 1 420 47 is_stmt 1 view .LVU396
- 421:Core/Src/Origin/Running.c **** 	my_mouse.target.pos = first_target;
+ 421:Core/Src/Main/Running.c **** 	my_mouse.target.pos = first_target;
  1693              		.loc 1 421 2 view .LVU397
  1694              		.loc 1 421 22 is_stmt 0 view .LVU398
  1695 00b4 3384     		strh	r3, [r6, #32]	@ movhi
- 422:Core/Src/Origin/Running.c **** 	my_mouse.target_size = goal_edge_num;
+ 422:Core/Src/Main/Running.c **** 	my_mouse.target_size = goal_edge_num;
  1696              		.loc 1 422 2 is_stmt 1 view .LVU399
  1697              		.loc 1 422 23 is_stmt 0 view .LVU400
  1698 00b6 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
  1699 00ba 3371     		strb	r3, [r6, #4]
- 423:Core/Src/Origin/Running.c **** 
- 424:Core/Src/Origin/Running.c **** 	//まず足立法でゴールに向かい、その後深さ優先探索をし、0,0に戻ってく
- 425:Core/Src/Origin/Running.c **** 	InitStackNum();
+ 423:Core/Src/Main/Running.c **** 
+ 424:Core/Src/Main/Running.c **** 	//まず足立法でゴールに向かい、その後深さ優先探索をし、0,0に戻ってく
+ 425:Core/Src/Main/Running.c **** 	InitStackNum();
  1700              		.loc 1 425 2 is_stmt 1 view .LVU401
  1701 00bc FFF7FEFF 		bl	InitStackNum
  1702              	.LVL219:
- 426:Core/Src/Origin/Running.c **** #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= 
- 427:Core/Src/Origin/Running.c **** 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
+ 426:Core/Src/Main/Running.c **** #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x <= 
+ 427:Core/Src/Main/Running.c **** 	Accel(61.5, ExploreVelocity, &my_map, &my_mouse);
  1703              		.loc 1 427 2 view .LVU402
  1704 00c0 3146     		mov	r1, r6
  1705 00c2 3846     		mov	r0, r7
@@ -2325,27 +2325,27 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1708 00ca 9FED390A 		vldr.32	s0, .L97+36
  1709 00ce FFF7FEFF 		bl	Accel
  1710              	.LVL220:
- 428:Core/Src/Origin/Running.c **** 	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.g
+ 428:Core/Src/Main/Running.c **** 	while( !IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.g
  1711              		.loc 1 428 2 view .LVU403
  1712              		.loc 1 428 7 is_stmt 0 view .LVU404
  1713 00d2 0AE0     		b	.L89
  1714              	.LVL221:
  1715              	.L94:
- 381:Core/Src/Origin/Running.c **** 	}
+ 381:Core/Src/Main/Running.c **** 	}
  1716              		.loc 1 381 13 view .LVU405
  1717 00d4 5424     		movs	r4, #84
  1718 00d6 ACE7     		b	.L88
  1719              	.L95:
- 385:Core/Src/Origin/Running.c **** 		
+ 385:Core/Src/Main/Running.c **** 		
  1720              		.loc 1 385 13 view .LVU406
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 40
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 40
 
 
  1721 00d8 5324     		movs	r4, #83
  1722 00da AAE7     		b	.L88
  1723              	.LVL222:
  1724              	.L90:
- 429:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 429:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1725              		.loc 1 429 3 is_stmt 1 view .LVU407
  1726 00dc 2F4B     		ldr	r3, .L97+16
  1727 00de 1B68     		ldr	r3, [r3]
@@ -2355,50 +2355,50 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1731 00e6 FFF7FEFF 		bl	getNextDirection
  1732              	.LVL223:
  1733              	.L89:
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1734              		.loc 1 428 7 view .LVU408
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1735              		.loc 1 428 10 is_stmt 0 view .LVU409
  1736 00ea 2D4B     		ldr	r3, .L97+20
  1737 00ec 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
  1738 00ee 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1739              		.loc 1 428 7 view .LVU410
  1740 00f0 9A42     		cmp	r2, r3
  1741 00f2 F3D8     		bhi	.L90
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1742              		.loc 1 428 10 discriminator 1 view .LVU411
  1743 00f4 2A4A     		ldr	r2, .L97+20
  1744 00f6 9278     		ldrb	r2, [r2, #2]	@ zero_extendqisi2
  1745 00f8 9342     		cmp	r3, r2
  1746 00fa EFD8     		bhi	.L90
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1747              		.loc 1 428 10 discriminator 2 view .LVU412
  1748 00fc 284B     		ldr	r3, .L97+20
  1749 00fe 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
  1750 0100 5B7A     		ldrb	r3, [r3, #9]	@ zero_extendqisi2
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1751              		.loc 1 428 9 discriminator 2 view .LVU413
  1752 0102 9A42     		cmp	r2, r3
  1753 0104 EAD8     		bhi	.L90
- 428:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 428:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
  1754              		.loc 1 428 10 discriminator 3 view .LVU414
  1755 0106 264A     		ldr	r2, .L97+20
  1756 0108 D278     		ldrb	r2, [r2, #3]	@ zero_extendqisi2
  1757 010a 9342     		cmp	r3, r2
  1758 010c E6D8     		bhi	.L90
- 430:Core/Src/Origin/Running.c **** 	}
- 431:Core/Src/Origin/Running.c **** 	HighStackFlag();
+ 430:Core/Src/Main/Running.c **** 	}
+ 431:Core/Src/Main/Running.c **** 	HighStackFlag();
  1759              		.loc 1 431 2 is_stmt 1 view .LVU415
  1760 010e FFF7FEFF 		bl	HighStackFlag
  1761              	.LVL224:
- 432:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 432:Core/Src/Main/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
  1762              		.loc 1 432 2 view .LVU416
  1763              		.loc 1 432 7 is_stmt 0 view .LVU417
  1764 0112 06E0     		b	.L91
  1765              	.L92:
- 433:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 41
+ 433:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 41
 
 
  1766              		.loc 1 433 3 is_stmt 1 view .LVU418
@@ -2410,36 +2410,36 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1772 011e FFF7FEFF 		bl	getNextDirection
  1773              	.LVL225:
  1774              	.L91:
- 432:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 432:Core/Src/Main/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
  1775              		.loc 1 432 7 view .LVU419
- 432:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 432:Core/Src/Main/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
  1776              		.loc 1 432 40 is_stmt 0 view .LVU420
  1777 0122 1F4B     		ldr	r3, .L97+20
  1778 0124 1B8C     		ldrh	r3, [r3, #32]
- 432:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 432:Core/Src/Main/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
  1779              		.loc 1 432 7 view .LVU421
  1780 0126 002B     		cmp	r3, #0
  1781 0128 F4D1     		bne	.L92
- 432:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 432:Core/Src/Main/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
  1782              		.loc 1 432 99 discriminator 1 view .LVU422
  1783 012a 1D4B     		ldr	r3, .L97+20
  1784 012c 1B89     		ldrh	r3, [r3, #8]
- 432:Core/Src/Origin/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
+ 432:Core/Src/Main/Running.c **** 	while( ! ((my_mouse.target.pos.x == 0 && my_mouse.target.pos.y == 0) && (my_mouse.now.pos.x == 0 &
  1785              		.loc 1 432 9 discriminator 1 view .LVU423
  1786 012e 002B     		cmp	r3, #0
  1787 0130 F0D1     		bne	.L92
- 434:Core/Src/Origin/Running.c **** 	}
- 435:Core/Src/Origin/Running.c **** 	Decel(45, 0);
+ 434:Core/Src/Main/Running.c **** 	}
+ 435:Core/Src/Main/Running.c **** 	Decel(45, 0);
  1788              		.loc 1 435 2 is_stmt 1 view .LVU424
  1789 0132 DFED200A 		vldr.32	s1, .L97+40
  1790 0136 9FED200A 		vldr.32	s0, .L97+44
  1791 013a FFF7FEFF 		bl	Decel
  1792              	.LVL226:
- 436:Core/Src/Origin/Running.c **** 	WaitStopAndReset();//これがないとガクンとなる.
+ 436:Core/Src/Main/Running.c **** 	WaitStopAndReset();//これがないとガクンとなる.
  1793              		.loc 1 436 2 view .LVU425
  1794 013e FFF7FEFF 		bl	WaitStopAndReset
  1795              	.LVL227:
- 437:Core/Src/Origin/Running.c **** 	shiftState(&my_mouse);
+ 437:Core/Src/Main/Running.c **** 	shiftState(&my_mouse);
  1796              		.loc 1 437 2 view .LVU426
  1797 0142 174C     		ldr	r4, .L97+20
  1798              	.LVL228:
@@ -2447,138 +2447,138 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1800 0144 2046     		mov	r0, r4
  1801 0146 FFF7FEFF 		bl	shiftState
  1802              	.LVL229:
- 438:Core/Src/Origin/Running.c **** 	VisitedMass(my_mouse.now.pos);
+ 438:Core/Src/Main/Running.c **** 	VisitedMass(my_mouse.now.pos);
  1803              		.loc 1 438 2 is_stmt 1 view .LVU428
  1804 014a A068     		ldr	r0, [r4, #8]
  1805 014c FFF7FEFF 		bl	VisitedMass
  1806              	.LVL230:
- 439:Core/Src/Origin/Running.c **** 
- 440:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 439:Core/Src/Main/Running.c **** 
+ 440:Core/Src/Main/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
  1807              		.loc 1 440 2 view .LVU429
  1808 0150 0021     		movs	r1, #0
  1809 0152 0846     		mov	r0, r1
  1810 0154 FFF7FEFF 		bl	PIDChangeFlag
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 42
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 42
 
 
  1811              	.LVL231:
- 441:Core/Src/Origin/Running.c **** 
- 442:Core/Src/Origin/Running.c **** 	//flashのクリア。
- 443:Core/Src/Origin/Running.c **** 	Flash_clear_sector1();
+ 441:Core/Src/Main/Running.c **** 
+ 442:Core/Src/Main/Running.c **** 	//flashのクリア。
+ 443:Core/Src/Main/Running.c **** 	Flash_clear_sector1();
  1812              		.loc 1 443 2 view .LVU430
  1813 0158 FFF7FEFF 		bl	Flash_clear_sector1
  1814              	.LVL232:
- 444:Core/Src/Origin/Running.c **** 		//完了の合図
- 445:Core/Src/Origin/Running.c **** 	Signal(7);
+ 444:Core/Src/Main/Running.c **** 		//完了の合図
+ 445:Core/Src/Main/Running.c **** 	Signal(7);
  1815              		.loc 1 445 2 view .LVU431
  1816 015c 0720     		movs	r0, #7
  1817 015e FFF7FEFF 		bl	Signal
  1818              	.LVL233:
- 446:Core/Src/Origin/Running.c **** 	//マップ書き込み
- 447:Core/Src/Origin/Running.c **** 	flashStoreNodes(&my_map);
+ 446:Core/Src/Main/Running.c **** 	//マップ書き込み
+ 447:Core/Src/Main/Running.c **** 	flashStoreNodes(&my_map);
  1819              		.loc 1 447 2 view .LVU432
  1820 0162 1048     		ldr	r0, .L97+24
  1821 0164 FFF7FEFF 		bl	flashStoreNodes
  1822              	.LVL234:
- 448:Core/Src/Origin/Running.c **** 		//完了の合図
- 449:Core/Src/Origin/Running.c **** 	Signal(1);
+ 448:Core/Src/Main/Running.c **** 		//完了の合図
+ 449:Core/Src/Main/Running.c **** 	Signal(1);
  1823              		.loc 1 449 2 view .LVU433
  1824 0168 0120     		movs	r0, #1
  1825 016a FFF7FEFF 		bl	Signal
  1826              	.LVL235:
  1827              	.L93:
- 450:Core/Src/Origin/Running.c **** 	
- 451:Core/Src/Origin/Running.c **** #if 0
- 452:Core/Src/Origin/Running.c **** 	while( ! IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.
- 453:Core/Src/Origin/Running.c **** 	{
- 454:Core/Src/Origin/Running.c **** 		//shiftState(&my_mouse); //アクションの中で呼舞踊に変更
- 455:Core/Src/Origin/Running.c **** 
- 456:Core/Src/Origin/Running.c **** //		//ChangeLED(Pos.Car);
- 457:Core/Src/Origin/Running.c **** //		KyushinJudge();
- 458:Core/Src/Origin/Running.c **** //		SelectAction(turn_mode);
- 459:Core/Src/Origin/Running.c **** //		shiftPos();
- 460:Core/Src/Origin/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
- 461:Core/Src/Origin/Running.c **** #if 0
- 462:Core/Src/Origin/Running.c **** 		static int cc =0;
- 463:Core/Src/Origin/Running.c **** 		cc ++;
- 464:Core/Src/Origin/Running.c **** 		if(cc == 1)
- 465:Core/Src/Origin/Running.c **** 		{
- 466:Core/Src/Origin/Running.c **** 			break;
- 467:Core/Src/Origin/Running.c **** 		}
- 468:Core/Src/Origin/Running.c **** #else
- 469:Core/Src/Origin/Running.c **** 		//break;
- 470:Core/Src/Origin/Running.c **** #endif
- 471:Core/Src/Origin/Running.c **** 	}
- 472:Core/Src/Origin/Running.c **** 	Decel(45, 0);
- 473:Core/Src/Origin/Running.c **** 	WaitStopAndReset();//これがないとガクンとなる.
- 474:Core/Src/Origin/Running.c **** 	shiftState(&my_mouse);
- 475:Core/Src/Origin/Running.c **** 	VisitedMass(my_mouse.now.pos);
- 476:Core/Src/Origin/Running.c **** 
- 477:Core/Src/Origin/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
- 478:Core/Src/Origin/Running.c **** 	//flashのクリア。
- 479:Core/Src/Origin/Running.c **** 	Flash_clear_sector1();
- 480:Core/Src/Origin/Running.c **** 	//マップ書き込み
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 43
+ 450:Core/Src/Main/Running.c **** 	
+ 451:Core/Src/Main/Running.c **** #if 0
+ 452:Core/Src/Main/Running.c **** 	while( ! IS_GOAL(my_mouse.goal_lesser.x, my_mouse.goal_lesser.y, my_mouse.goal_larger.x, my_mouse.
+ 453:Core/Src/Main/Running.c **** 	{
+ 454:Core/Src/Main/Running.c **** 		//shiftState(&my_mouse); //アクションの中で呼舞踊に変更
+ 455:Core/Src/Main/Running.c **** 
+ 456:Core/Src/Main/Running.c **** //		//ChangeLED(Pos.Car);
+ 457:Core/Src/Main/Running.c **** //		KyushinJudge();
+ 458:Core/Src/Main/Running.c **** //		SelectAction(turn_mode);
+ 459:Core/Src/Main/Running.c **** //		shiftPos();
+ 460:Core/Src/Main/Running.c **** 		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 461:Core/Src/Main/Running.c **** #if 0
+ 462:Core/Src/Main/Running.c **** 		static int cc =0;
+ 463:Core/Src/Main/Running.c **** 		cc ++;
+ 464:Core/Src/Main/Running.c **** 		if(cc == 1)
+ 465:Core/Src/Main/Running.c **** 		{
+ 466:Core/Src/Main/Running.c **** 			break;
+ 467:Core/Src/Main/Running.c **** 		}
+ 468:Core/Src/Main/Running.c **** #else
+ 469:Core/Src/Main/Running.c **** 		//break;
+ 470:Core/Src/Main/Running.c **** #endif
+ 471:Core/Src/Main/Running.c **** 	}
+ 472:Core/Src/Main/Running.c **** 	Decel(45, 0);
+ 473:Core/Src/Main/Running.c **** 	WaitStopAndReset();//これがないとガクンとなる.
+ 474:Core/Src/Main/Running.c **** 	shiftState(&my_mouse);
+ 475:Core/Src/Main/Running.c **** 	VisitedMass(my_mouse.now.pos);
+ 476:Core/Src/Main/Running.c **** 
+ 477:Core/Src/Main/Running.c **** 	PIDChangeFlag(A_VELO_PID, 0);
+ 478:Core/Src/Main/Running.c **** 	//flashのクリア。
+ 479:Core/Src/Main/Running.c **** 	Flash_clear_sector1();
+ 480:Core/Src/Main/Running.c **** 	//マップ書き込み
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 43
 
 
- 481:Core/Src/Origin/Running.c **** 	flashStoreNodes(&my_map);
- 482:Core/Src/Origin/Running.c **** 	//完了の合図
- 483:Core/Src/Origin/Running.c **** 	Signal(7);
- 484:Core/Src/Origin/Running.c **** 
- 485:Core/Src/Origin/Running.c **** 
- 486:Core/Src/Origin/Running.c **** 	//スタートへ
- 487:Core/Src/Origin/Running.c **** 	//最短走行で帰る
- 488:Core/Src/Origin/Running.c **** #if 0
- 489:Core/Src/Origin/Running.c **** 	updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
- 490:Core/Src/Origin/Running.c **** 
- 491:Core/Src/Origin/Running.c **** 		getPathNode(&my_map, &my_mouse);
- 492:Core/Src/Origin/Running.c **** 		getPathAction(&my_mouse);
- 493:Core/Src/Origin/Running.c **** 		HAL_Delay(200);
- 494:Core/Src/Origin/Running.c **** 
- 495:Core/Src/Origin/Running.c **** 		//リセット、再取得
- 496:Core/Src/Origin/Running.c **** 		initSearchData(&my_map, &my_mouse);
- 497:Core/Src/Origin/Running.c **** 		flashCopyNodesToRam(&my_map); //existenceだけ
- 498:Core/Src/Origin/Running.c **** 		updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
- 499:Core/Src/Origin/Running.c **** 
- 500:Core/Src/Origin/Running.c **** 		MaxParaRunTest(&my_map, &my_mouse);
- 501:Core/Src/Origin/Running.c **** #else
- 502:Core/Src/Origin/Running.c **** 		//ゴールエリアの制覇が必要？
- 503:Core/Src/Origin/Running.c **** 		HighDFSFlag();
- 504:Core/Src/Origin/Running.c **** 		HighStackFlag();
- 505:Core/Src/Origin/Running.c **** 		DFS_Running(turn_mode);
- 506:Core/Src/Origin/Running.c **** 		LowDFSFlag();
- 507:Core/Src/Origin/Running.c **** 		LowStackFlag();
- 508:Core/Src/Origin/Running.c **** 		//停止状態から帰還までの処理
- 509:Core/Src/Origin/Running.c **** 		//探索関数で、マップのアップデートしないとどうなるか. 既存のマップ
- 510:Core/Src/Origin/Running.c **** 
- 511:Core/Src/Origin/Running.c **** 
- 512:Core/Src/Origin/Running.c **** 
- 513:Core/Src/Origin/Running.c **** 		VelocityMax = false;
- 514:Core/Src/Origin/Running.c **** 		goal_edge_num = GOAL_SIZE_X;
- 515:Core/Src/Origin/Running.c **** 		SearchOrFast = 0;
- 516:Core/Src/Origin/Running.c **** 		Calc = SearchOrFast;
- 517:Core/Src/Origin/Running.c **** 		WALL_MASK = 0x03;
- 518:Core/Src/Origin/Running.c **** 		restart(turn_mode);
- 519:Core/Src/Origin/Running.c **** //		shiftState(&my_mouse);
- 520:Core/Src/Origin/Running.c **** 		while( ! IS_GOAL(0,0,0,0, my_mouse.now.pos.x, my_mouse.now.pos.y)  ){
- 521:Core/Src/Origin/Running.c **** 				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
- 522:Core/Src/Origin/Running.c **** //				shiftState(&my_mouse);
- 523:Core/Src/Origin/Running.c **** 		}
- 524:Core/Src/Origin/Running.c **** #endif
- 525:Core/Src/Origin/Running.c **** 		//ゴールしたら減速して、停止。
- 526:Core/Src/Origin/Running.c **** 		Decel(45,0);
- 527:Core/Src/Origin/Running.c **** 		shiftState(&my_mouse);
- 528:Core/Src/Origin/Running.c **** 		VisitedMass(my_mouse.now.pos);
- 529:Core/Src/Origin/Running.c **** 
- 530:Core/Src/Origin/Running.c **** 		//終了合図
- 531:Core/Src/Origin/Running.c **** 		Signal(7);
- 532:Core/Src/Origin/Running.c **** #endif
- 533:Core/Src/Origin/Running.c **** while(1)
+ 481:Core/Src/Main/Running.c **** 	flashStoreNodes(&my_map);
+ 482:Core/Src/Main/Running.c **** 	//完了の合図
+ 483:Core/Src/Main/Running.c **** 	Signal(7);
+ 484:Core/Src/Main/Running.c **** 
+ 485:Core/Src/Main/Running.c **** 
+ 486:Core/Src/Main/Running.c **** 	//スタートへ
+ 487:Core/Src/Main/Running.c **** 	//最短走行で帰る
+ 488:Core/Src/Main/Running.c **** #if 0
+ 489:Core/Src/Main/Running.c **** 	updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
+ 490:Core/Src/Main/Running.c **** 
+ 491:Core/Src/Main/Running.c **** 		getPathNode(&my_map, &my_mouse);
+ 492:Core/Src/Main/Running.c **** 		getPathAction(&my_mouse);
+ 493:Core/Src/Main/Running.c **** 		HAL_Delay(200);
+ 494:Core/Src/Main/Running.c **** 
+ 495:Core/Src/Main/Running.c **** 		//リセット、再取得
+ 496:Core/Src/Main/Running.c **** 		initSearchData(&my_map, &my_mouse);
+ 497:Core/Src/Main/Running.c **** 		flashCopyNodesToRam(&my_map); //existenceだけ
+ 498:Core/Src/Main/Running.c **** 		updateAllNodeWeight(&my_map, 0,0, 1,1, 0x03);
+ 499:Core/Src/Main/Running.c **** 
+ 500:Core/Src/Main/Running.c **** 		MaxParaRunTest(&my_map, &my_mouse);
+ 501:Core/Src/Main/Running.c **** #else
+ 502:Core/Src/Main/Running.c **** 		//ゴールエリアの制覇が必要？
+ 503:Core/Src/Main/Running.c **** 		HighDFSFlag();
+ 504:Core/Src/Main/Running.c **** 		HighStackFlag();
+ 505:Core/Src/Main/Running.c **** 		DFS_Running(turn_mode);
+ 506:Core/Src/Main/Running.c **** 		LowDFSFlag();
+ 507:Core/Src/Main/Running.c **** 		LowStackFlag();
+ 508:Core/Src/Main/Running.c **** 		//停止状態から帰還までの処理
+ 509:Core/Src/Main/Running.c **** 		//探索関数で、マップのアップデートしないとどうなるか. 既存のマップ
+ 510:Core/Src/Main/Running.c **** 
+ 511:Core/Src/Main/Running.c **** 
+ 512:Core/Src/Main/Running.c **** 
+ 513:Core/Src/Main/Running.c **** 		VelocityMax = false;
+ 514:Core/Src/Main/Running.c **** 		goal_edge_num = GOAL_SIZE_X;
+ 515:Core/Src/Main/Running.c **** 		SearchOrFast = 0;
+ 516:Core/Src/Main/Running.c **** 		Calc = SearchOrFast;
+ 517:Core/Src/Main/Running.c **** 		WALL_MASK = 0x03;
+ 518:Core/Src/Main/Running.c **** 		restart(turn_mode);
+ 519:Core/Src/Main/Running.c **** //		shiftState(&my_mouse);
+ 520:Core/Src/Main/Running.c **** 		while( ! IS_GOAL(0,0,0,0, my_mouse.now.pos.x, my_mouse.now.pos.y)  ){
+ 521:Core/Src/Main/Running.c **** 				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+ 522:Core/Src/Main/Running.c **** //				shiftState(&my_mouse);
+ 523:Core/Src/Main/Running.c **** 		}
+ 524:Core/Src/Main/Running.c **** #endif
+ 525:Core/Src/Main/Running.c **** 		//ゴールしたら減速して、停止。
+ 526:Core/Src/Main/Running.c **** 		Decel(45,0);
+ 527:Core/Src/Main/Running.c **** 		shiftState(&my_mouse);
+ 528:Core/Src/Main/Running.c **** 		VisitedMass(my_mouse.now.pos);
+ 529:Core/Src/Main/Running.c **** 
+ 530:Core/Src/Main/Running.c **** 		//終了合図
+ 531:Core/Src/Main/Running.c **** 		Signal(7);
+ 532:Core/Src/Main/Running.c **** #endif
+ 533:Core/Src/Main/Running.c **** while(1)
  1828              		.loc 1 533 1 discriminator 1 view .LVU434
- 534:Core/Src/Origin/Running.c **** {
- 535:Core/Src/Origin/Running.c **** 	//迷路データの出力
- 536:Core/Src/Origin/Running.c **** 	printAllNodeExistence(&my_map);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 44
+ 534:Core/Src/Main/Running.c **** {
+ 535:Core/Src/Main/Running.c **** 	//迷路データの出力
+ 536:Core/Src/Main/Running.c **** 	printAllNodeExistence(&my_map);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 44
 
 
  1829              		.loc 1 536 2 discriminator 1 view .LVU435
@@ -2586,23 +2586,23 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1831 0170 2046     		mov	r0, r4
  1832 0172 FFF7FEFF 		bl	printAllNodeExistence
  1833              	.LVL236:
- 537:Core/Src/Origin/Running.c **** 	//printAllNode(&my_map); //drawを読み出す
- 538:Core/Src/Origin/Running.c **** 	printMatrix16ValueFromNode(&my_map);
+ 537:Core/Src/Main/Running.c **** 	//printAllNode(&my_map); //drawを読み出す
+ 538:Core/Src/Main/Running.c **** 	printMatrix16ValueFromNode(&my_map);
  1834              		.loc 1 538 2 discriminator 1 view .LVU436
  1835 0176 2046     		mov	r0, r4
  1836 0178 FFF7FEFF 		bl	printMatrix16ValueFromNode
  1837              	.LVL237:
- 539:Core/Src/Origin/Running.c **** 	printAllWeight(&my_map, &(my_mouse.goal_lesser) );
+ 539:Core/Src/Main/Running.c **** 	printAllWeight(&my_map, &(my_mouse.goal_lesser) );
  1838              		.loc 1 539 2 discriminator 1 view .LVU437
  1839 017c 0849     		ldr	r1, .L97+20
  1840 017e 2046     		mov	r0, r4
  1841 0180 FFF7FEFF 		bl	printAllWeight
  1842              	.LVL238:
- 540:Core/Src/Origin/Running.c **** 	printVisited();
+ 540:Core/Src/Main/Running.c **** 	printVisited();
  1843              		.loc 1 540 2 discriminator 1 view .LVU438
  1844 0184 FFF7FEFF 		bl	printVisited
  1845              	.LVL239:
- 533:Core/Src/Origin/Running.c **** {
+ 533:Core/Src/Main/Running.c **** {
  1846              		.loc 1 533 6 discriminator 1 view .LVU439
  1847 0188 F1E7     		b	.L93
  1848              	.L98:
@@ -2638,7 +2638,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1872 0028 20524947 		.ascii	" RIGHT %d\015\012\000"
  1872      48542025 
  1872      640D0A00 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 45
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 45
 
 
  1873              		.section	.text.FastestRun,"ax",%progbits
@@ -2649,14 +2649,14 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1878              		.thumb_func
  1880              	FastestRun:
  1881              	.LFB242:
- 541:Core/Src/Origin/Running.c **** 
- 542:Core/Src/Origin/Running.c **** }
- 543:Core/Src/Origin/Running.c **** }
- 544:Core/Src/Origin/Running.c **** 
- 545:Core/Src/Origin/Running.c **** 
- 546:Core/Src/Origin/Running.c **** 
- 547:Core/Src/Origin/Running.c **** void FastestRun()
- 548:Core/Src/Origin/Running.c **** {
+ 541:Core/Src/Main/Running.c **** 
+ 542:Core/Src/Main/Running.c **** }
+ 543:Core/Src/Main/Running.c **** }
+ 544:Core/Src/Main/Running.c **** 
+ 545:Core/Src/Main/Running.c **** 
+ 546:Core/Src/Main/Running.c **** 
+ 547:Core/Src/Main/Running.c **** void FastestRun()
+ 548:Core/Src/Main/Running.c **** {
  1882              		.loc 1 548 1 view -0
  1883              		.cfi_startproc
  1884              		@ Volatile: function does not return.
@@ -2670,59 +2670,59 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1892 0002 84B0     		sub	sp, sp, #16
  1893              	.LCFI12:
  1894              		.cfi_def_cfa_offset 24
- 549:Core/Src/Origin/Running.c **** 	IT_mode = EXPLORE;
+ 549:Core/Src/Main/Running.c **** 	IT_mode = EXPLORE;
  1895              		.loc 1 549 2 view .LVU441
  1896              		.loc 1 549 10 is_stmt 0 view .LVU442
  1897 0004 414B     		ldr	r3, .L104
  1898 0006 0622     		movs	r2, #6
  1899 0008 1A60     		str	r2, [r3]
- 550:Core/Src/Origin/Running.c **** 	//IT_mode = WRITINGFREE;
- 551:Core/Src/Origin/Running.c **** 	//諸々の初期化
- 552:Core/Src/Origin/Running.c **** 	int8_t mode=1;
+ 550:Core/Src/Main/Running.c **** 	//IT_mode = WRITINGFREE;
+ 551:Core/Src/Main/Running.c **** 	//諸々の初期化
+ 552:Core/Src/Main/Running.c **** 	int8_t mode=1;
  1900              		.loc 1 552 2 is_stmt 1 view .LVU443
  1901              		.loc 1 552 9 is_stmt 0 view .LVU444
  1902 000a 0124     		movs	r4, #1
  1903 000c 8DF80F40 		strb	r4, [sp, #15]
- 553:Core/Src/Origin/Running.c **** 	ModeSelect( 1, 4, &mode);
+ 553:Core/Src/Main/Running.c **** 	ModeSelect( 1, 4, &mode);
  1904              		.loc 1 553 2 is_stmt 1 view .LVU445
  1905 0010 0DF10F02 		add	r2, sp, #15
  1906 0014 0421     		movs	r1, #4
  1907 0016 2046     		mov	r0, r4
  1908 0018 FFF7FEFF 		bl	ModeSelect
  1909              	.LVL240:
- 554:Core/Src/Origin/Running.c **** 	Signal( mode );
+ 554:Core/Src/Main/Running.c **** 	Signal( mode );
  1910              		.loc 1 554 2 view .LVU446
  1911 001c 9DF90F00 		ldrsb	r0, [sp, #15]
  1912 0020 FFF7FEFF 		bl	Signal
  1913              	.LVL241:
- 555:Core/Src/Origin/Running.c **** 
- 556:Core/Src/Origin/Running.c **** 	PhotoSwitch();
+ 555:Core/Src/Main/Running.c **** 
+ 556:Core/Src/Main/Running.c **** 	PhotoSwitch();
  1914              		.loc 1 556 2 view .LVU447
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 46
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 46
 
 
  1915 0024 FFF7FEFF 		bl	PhotoSwitch
  1916              	.LVL242:
- 557:Core/Src/Origin/Running.c **** 
- 558:Core/Src/Origin/Running.c **** 
- 559:Core/Src/Origin/Running.c **** 	MouseInit();
+ 557:Core/Src/Main/Running.c **** 
+ 558:Core/Src/Main/Running.c **** 
+ 559:Core/Src/Main/Running.c **** 	MouseInit();
  1917              		.loc 1 559 2 view .LVU448
  1918 0028 FFF7FEFF 		bl	MouseInit
  1919              	.LVL243:
- 560:Core/Src/Origin/Running.c **** 
- 561:Core/Src/Origin/Running.c **** 	PIDChangeFlag(L_VELO_PID, 1);
+ 560:Core/Src/Main/Running.c **** 
+ 561:Core/Src/Main/Running.c **** 	PIDChangeFlag(L_VELO_PID, 1);
  1920              		.loc 1 561 2 view .LVU449
  1921 002c 2146     		mov	r1, r4
  1922 002e 0420     		movs	r0, #4
  1923 0030 FFF7FEFF 		bl	PIDChangeFlag
  1924              	.LVL244:
- 562:Core/Src/Origin/Running.c **** 	PIDChangeFlag(R_VELO_PID, 1);
+ 562:Core/Src/Main/Running.c **** 	PIDChangeFlag(R_VELO_PID, 1);
  1925              		.loc 1 562 2 view .LVU450
  1926 0034 2146     		mov	r1, r4
  1927 0036 0520     		movs	r0, #5
  1928 0038 FFF7FEFF 		bl	PIDChangeFlag
  1929              	.LVL245:
- 563:Core/Src/Origin/Running.c **** 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],T
+ 563:Core/Src/Main/Running.c **** 	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],T
  1930              		.loc 1 563 2 view .LVU451
  1931 003c 344B     		ldr	r3, .L104+4
  1932 003e 9968     		ldr	r1, [r3, #8]
@@ -2731,34 +2731,34 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1935 0044 3348     		ldr	r0, .L104+8
  1936 0046 FFF7FEFF 		bl	printf
  1937              	.LVL246:
- 564:Core/Src/Origin/Running.c **** 
- 565:Core/Src/Origin/Running.c **** 
- 566:Core/Src/Origin/Running.c **** 
- 567:Core/Src/Origin/Running.c **** 	setFastDiagonalParam(0);
+ 564:Core/Src/Main/Running.c **** 
+ 565:Core/Src/Main/Running.c **** 
+ 566:Core/Src/Main/Running.c **** 
+ 567:Core/Src/Main/Running.c **** 	setFastDiagonalParam(0);
  1938              		.loc 1 567 2 view .LVU452
  1939 004a 0020     		movs	r0, #0
  1940 004c FFF7FEFF 		bl	setFastDiagonalParam
  1941              	.LVL247:
- 568:Core/Src/Origin/Running.c **** 	switch (mode)
+ 568:Core/Src/Main/Running.c **** 	switch (mode)
  1942              		.loc 1 568 2 view .LVU453
  1943 0050 9DF90F30 		ldrsb	r3, [sp, #15]
  1944 0054 A342     		cmp	r3, r4
  1945 0056 54D0     		beq	.L103
  1946              	.L100:
- 569:Core/Src/Origin/Running.c **** 	{
- 570:Core/Src/Origin/Running.c **** 	case 1:
- 571:Core/Src/Origin/Running.c **** 		ExploreVelocity = 300;
- 572:Core/Src/Origin/Running.c **** 		break;
- 573:Core/Src/Origin/Running.c **** 	
- 574:Core/Src/Origin/Running.c **** 	default:
- 575:Core/Src/Origin/Running.c **** 		break;
- 576:Core/Src/Origin/Running.c **** 	}
- 577:Core/Src/Origin/Running.c **** 	// setFastParam(mode2);
- 578:Core/Src/Origin/Running.c **** 	// initSlalomParam();
- 579:Core/Src/Origin/Running.c **** 	// Signal(4);
- 580:Core/Src/Origin/Running.c **** 
- 581:Core/Src/Origin/Running.c **** 	VelocityMax = false;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 47
+ 569:Core/Src/Main/Running.c **** 	{
+ 570:Core/Src/Main/Running.c **** 	case 1:
+ 571:Core/Src/Main/Running.c **** 		ExploreVelocity = 300;
+ 572:Core/Src/Main/Running.c **** 		break;
+ 573:Core/Src/Main/Running.c **** 	
+ 574:Core/Src/Main/Running.c **** 	default:
+ 575:Core/Src/Main/Running.c **** 		break;
+ 576:Core/Src/Main/Running.c **** 	}
+ 577:Core/Src/Main/Running.c **** 	// setFastParam(mode2);
+ 578:Core/Src/Main/Running.c **** 	// initSlalomParam();
+ 579:Core/Src/Main/Running.c **** 	// Signal(4);
+ 580:Core/Src/Main/Running.c **** 
+ 581:Core/Src/Main/Running.c **** 	VelocityMax = false;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 47
 
 
  1947              		.loc 1 581 2 view .LVU454
@@ -2766,59 +2766,59 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1949 0058 4FF00008 		mov	r8, #0
  1950 005c 2E4B     		ldr	r3, .L104+12
  1951 005e 83F80080 		strb	r8, [r3]
- 582:Core/Src/Origin/Running.c **** 
- 583:Core/Src/Origin/Running.c **** 	SearchOrFast = 1;
+ 582:Core/Src/Main/Running.c **** 
+ 583:Core/Src/Main/Running.c **** 	SearchOrFast = 1;
  1952              		.loc 1 583 2 is_stmt 1 view .LVU456
  1953              		.loc 1 583 15 is_stmt 0 view .LVU457
  1954 0062 2E4B     		ldr	r3, .L104+16
  1955 0064 0122     		movs	r2, #1
  1956 0066 1A60     		str	r2, [r3]
- 584:Core/Src/Origin/Running.c **** 	Calc = SearchOrFast;
+ 584:Core/Src/Main/Running.c **** 	Calc = SearchOrFast;
  1957              		.loc 1 584 2 is_stmt 1 view .LVU458
  1958              		.loc 1 584 7 is_stmt 0 view .LVU459
  1959 0068 1A68     		ldr	r2, [r3]
  1960 006a 2D4B     		ldr	r3, .L104+20
  1961 006c 1A60     		str	r2, [r3]
- 585:Core/Src/Origin/Running.c **** 	goal_edge_num = GOAL_SIZE_X;
+ 585:Core/Src/Main/Running.c **** 	goal_edge_num = GOAL_SIZE_X;
  1962              		.loc 1 585 2 is_stmt 1 view .LVU460
  1963              		.loc 1 585 16 is_stmt 0 view .LVU461
  1964 006e 0224     		movs	r4, #2
  1965 0070 2C4B     		ldr	r3, .L104+24
  1966 0072 1C70     		strb	r4, [r3]
- 586:Core/Src/Origin/Running.c **** 	my_mouse.target_size = goal_edge_num;
+ 586:Core/Src/Main/Running.c **** 	my_mouse.target_size = goal_edge_num;
  1967              		.loc 1 586 2 is_stmt 1 view .LVU462
  1968              		.loc 1 586 23 is_stmt 0 view .LVU463
  1969 0074 2C4E     		ldr	r6, .L104+28
  1970 0076 3471     		strb	r4, [r6, #4]
- 587:Core/Src/Origin/Running.c **** 
- 588:Core/Src/Origin/Running.c **** 
- 589:Core/Src/Origin/Running.c **** 	//迷路データの準備
- 590:Core/Src/Origin/Running.c **** 	initSearchData(&my_map, &my_mouse);
+ 587:Core/Src/Main/Running.c **** 
+ 588:Core/Src/Main/Running.c **** 
+ 589:Core/Src/Main/Running.c **** 	//迷路データの準備
+ 590:Core/Src/Main/Running.c **** 	initSearchData(&my_map, &my_mouse);
  1971              		.loc 1 590 2 is_stmt 1 view .LVU464
  1972 0078 2C4D     		ldr	r5, .L104+32
  1973 007a 3146     		mov	r1, r6
  1974 007c 2846     		mov	r0, r5
  1975 007e FFF7FEFF 		bl	initSearchData
  1976              	.LVL248:
- 591:Core/Src/Origin/Running.c **** 	InitVisit();
+ 591:Core/Src/Main/Running.c **** 	InitVisit();
  1977              		.loc 1 591 2 view .LVU465
  1978 0082 FFF7FEFF 		bl	InitVisit
  1979              	.LVL249:
- 592:Core/Src/Origin/Running.c **** //	printAllNodeExistence(&my_map);
- 593:Core/Src/Origin/Running.c **** 
- 594:Core/Src/Origin/Running.c **** 	// Flashから探索したマップをロード
- 595:Core/Src/Origin/Running.c **** 	flashCopyNodesToRam(&my_map); //existenceだけ
+ 592:Core/Src/Main/Running.c **** //	printAllNodeExistence(&my_map);
+ 593:Core/Src/Main/Running.c **** 
+ 594:Core/Src/Main/Running.c **** 	// Flashから探索したマップをロード
+ 595:Core/Src/Main/Running.c **** 	flashCopyNodesToRam(&my_map); //existenceだけ
  1980              		.loc 1 595 2 view .LVU466
  1981 0086 2846     		mov	r0, r5
  1982 0088 FFF7FEFF 		bl	flashCopyNodesToRam
  1983              	.LVL250:
- 596:Core/Src/Origin/Running.c **** //	printAllNodeExistence(&my_map);
- 597:Core/Src/Origin/Running.c **** 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
+ 596:Core/Src/Main/Running.c **** //	printAllNodeExistence(&my_map);
+ 597:Core/Src/Main/Running.c **** 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
  1984              		.loc 1 597 2 view .LVU467
  1985 008c 0327     		movs	r7, #3
  1986 008e 0197     		str	r7, [sp, #4]
  1987 0090 0094     		str	r4, [sp]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 48
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 48
 
 
  1988 0092 2346     		mov	r3, r4
@@ -2827,40 +2827,40 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  1991 0098 2846     		mov	r0, r5
  1992 009a FFF7FEFF 		bl	updateAllNodeWeight
  1993              	.LVL251:
- 598:Core/Src/Origin/Running.c **** 
- 599:Core/Src/Origin/Running.c **** 	// マップから経路を求める
- 600:Core/Src/Origin/Running.c **** 	getPathNode(&my_map, &my_mouse);
+ 598:Core/Src/Main/Running.c **** 
+ 599:Core/Src/Main/Running.c **** 	// マップから経路を求める
+ 600:Core/Src/Main/Running.c **** 	getPathNode(&my_map, &my_mouse);
  1994              		.loc 1 600 2 view .LVU468
  1995 009e 3146     		mov	r1, r6
  1996 00a0 2846     		mov	r0, r5
  1997 00a2 FFF7FEFF 		bl	getPathNode
  1998              	.LVL252:
- 601:Core/Src/Origin/Running.c **** 	// getPathAction(&my_mouse);
- 602:Core/Src/Origin/Running.c **** 	getPathActionDiagonal(&my_mouse);
+ 601:Core/Src/Main/Running.c **** 	// getPathAction(&my_mouse);
+ 602:Core/Src/Main/Running.c **** 	getPathActionDiagonal(&my_mouse);
  1999              		.loc 1 602 2 view .LVU469
  2000 00a6 3046     		mov	r0, r6
  2001 00a8 FFF7FEFF 		bl	getPathActionDiagonal
  2002              	.LVL253:
- 603:Core/Src/Origin/Running.c **** 	
- 604:Core/Src/Origin/Running.c **** 	// while(1){
- 605:Core/Src/Origin/Running.c **** 	// 	printPathAction();
- 606:Core/Src/Origin/Running.c **** 	// 	HAL_Delay(30000);
- 607:Core/Src/Origin/Running.c **** 	// }
- 608:Core/Src/Origin/Running.c **** 	
- 609:Core/Src/Origin/Running.c **** 
- 610:Core/Src/Origin/Running.c **** 	//リセット、再取得（naze)
- 611:Core/Src/Origin/Running.c **** 	initSearchData(&my_map, &my_mouse);
+ 603:Core/Src/Main/Running.c **** 	
+ 604:Core/Src/Main/Running.c **** 	// while(1){
+ 605:Core/Src/Main/Running.c **** 	// 	printPathAction();
+ 606:Core/Src/Main/Running.c **** 	// 	HAL_Delay(30000);
+ 607:Core/Src/Main/Running.c **** 	// }
+ 608:Core/Src/Main/Running.c **** 	
+ 609:Core/Src/Main/Running.c **** 
+ 610:Core/Src/Main/Running.c **** 	//リセット、再取得（naze)
+ 611:Core/Src/Main/Running.c **** 	initSearchData(&my_map, &my_mouse);
  2003              		.loc 1 611 2 view .LVU470
  2004 00ac 3146     		mov	r1, r6
  2005 00ae 2846     		mov	r0, r5
  2006 00b0 FFF7FEFF 		bl	initSearchData
  2007              	.LVL254:
- 612:Core/Src/Origin/Running.c **** 	flashCopyNodesToRam(&my_map); //existenceだけ
+ 612:Core/Src/Main/Running.c **** 	flashCopyNodesToRam(&my_map); //existenceだけ
  2008              		.loc 1 612 2 view .LVU471
  2009 00b4 2846     		mov	r0, r5
  2010 00b6 FFF7FEFF 		bl	flashCopyNodesToRam
  2011              	.LVL255:
- 613:Core/Src/Origin/Running.c **** 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
+ 613:Core/Src/Main/Running.c **** 	updateAllNodeWeight(&my_map, GOAL_X, GOAL_Y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x03);
  2012              		.loc 1 613 2 view .LVU472
  2013 00ba 0197     		str	r7, [sp, #4]
  2014 00bc 0094     		str	r4, [sp]
@@ -2870,89 +2870,89 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  2018 00c4 2846     		mov	r0, r5
  2019 00c6 FFF7FEFF 		bl	updateAllNodeWeight
  2020              	.LVL256:
- 614:Core/Src/Origin/Running.c **** 
- 615:Core/Src/Origin/Running.c **** 
- 616:Core/Src/Origin/Running.c **** 	//壁のあるなしと重みをprintしてチェック
- 617:Core/Src/Origin/Running.c **** //	printAllNodeExistence(&my_map);
- 618:Core/Src/Origin/Running.c **** //	while(1){
- 619:Core/Src/Origin/Running.c **** //		printAllWeight(&my_map, &(my_mouse.goal_lesser));
- 620:Core/Src/Origin/Running.c **** //		HAL_Delay(1000);
- 621:Core/Src/Origin/Running.c **** //	}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 49
+ 614:Core/Src/Main/Running.c **** 
+ 615:Core/Src/Main/Running.c **** 
+ 616:Core/Src/Main/Running.c **** 	//壁のあるなしと重みをprintしてチェック
+ 617:Core/Src/Main/Running.c **** //	printAllNodeExistence(&my_map);
+ 618:Core/Src/Main/Running.c **** //	while(1){
+ 619:Core/Src/Main/Running.c **** //		printAllWeight(&my_map, &(my_mouse.goal_lesser));
+ 620:Core/Src/Main/Running.c **** //		HAL_Delay(1000);
+ 621:Core/Src/Main/Running.c **** //	}
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 49
 
 
- 622:Core/Src/Origin/Running.c **** 
- 623:Core/Src/Origin/Running.c **** 	Signal(7);
+ 622:Core/Src/Main/Running.c **** 
+ 623:Core/Src/Main/Running.c **** 	Signal(7);
  2021              		.loc 1 623 2 view .LVU473
  2022 00ca 0720     		movs	r0, #7
  2023 00cc FFF7FEFF 		bl	Signal
  2024              	.LVL257:
- 624:Core/Src/Origin/Running.c **** 	// 走る
- 625:Core/Src/Origin/Running.c **** 	// MaxParaRunTest(&my_map, &my_mouse);
- 626:Core/Src/Origin/Running.c **** 	FastPath[0].path_action = START;
+ 624:Core/Src/Main/Running.c **** 	// 走る
+ 625:Core/Src/Main/Running.c **** 	// MaxParaRunTest(&my_map, &my_mouse);
+ 626:Core/Src/Main/Running.c **** 	FastPath[0].path_action = START;
  2025              		.loc 1 626 2 view .LVU474
  2026              		.loc 1 626 26 is_stmt 0 view .LVU475
  2027 00d0 174B     		ldr	r3, .L104+36
  2028 00d2 83F80C80 		strb	r8, [r3, #12]
- 627:Core/Src/Origin/Running.c **** 	FastPath[1].path_action = R_90_FAST;
+ 627:Core/Src/Main/Running.c **** 	FastPath[1].path_action = R_90_FAST;
  2029              		.loc 1 627 2 is_stmt 1 view .LVU476
  2030              		.loc 1 627 26 is_stmt 0 view .LVU477
  2031 00d6 0724     		movs	r4, #7
  2032 00d8 1C77     		strb	r4, [r3, #28]
- 628:Core/Src/Origin/Running.c **** 	FastPath[2].path_action = ACC_DEC_90;
+ 628:Core/Src/Main/Running.c **** 	FastPath[2].path_action = ACC_DEC_90;
  2033              		.loc 1 628 2 is_stmt 1 view .LVU478
  2034              		.loc 1 628 26 is_stmt 0 view .LVU479
  2035 00da 83F82C70 		strb	r7, [r3, #44]
- 629:Core/Src/Origin/Running.c **** 	FastPath[3].path_action = ACC_DEC_90;
+ 629:Core/Src/Main/Running.c **** 	FastPath[3].path_action = ACC_DEC_90;
  2036              		.loc 1 629 2 is_stmt 1 view .LVU480
  2037              		.loc 1 629 26 is_stmt 0 view .LVU481
  2038 00de 83F83C70 		strb	r7, [r3, #60]
- 630:Core/Src/Origin/Running.c **** 
- 631:Core/Src/Origin/Running.c **** 	DiagonalRunTest(); //斜め有
+ 630:Core/Src/Main/Running.c **** 
+ 631:Core/Src/Main/Running.c **** 	DiagonalRunTest(); //斜め有
  2039              		.loc 1 631 2 is_stmt 1 view .LVU482
  2040 00e2 FFF7FEFF 		bl	DiagonalRunTest
  2041              	.LVL258:
- 632:Core/Src/Origin/Running.c **** 
- 633:Core/Src/Origin/Running.c **** 	//ゴールしたら減速して、停止。
- 634:Core/Src/Origin/Running.c **** 	Decel(45,0);
+ 632:Core/Src/Main/Running.c **** 
+ 633:Core/Src/Main/Running.c **** 	//ゴールしたら減速して、停止。
+ 634:Core/Src/Main/Running.c **** 	Decel(45,0);
  2042              		.loc 1 634 2 view .LVU483
  2043 00e6 DFED130A 		vldr.32	s1, .L104+40
  2044 00ea 9FED130A 		vldr.32	s0, .L104+44
  2045 00ee FFF7FEFF 		bl	Decel
  2046              	.LVL259:
- 635:Core/Src/Origin/Running.c **** 	//終了合図
- 636:Core/Src/Origin/Running.c **** 	Signal(7);
+ 635:Core/Src/Main/Running.c **** 	//終了合図
+ 636:Core/Src/Main/Running.c **** 	Signal(7);
  2047              		.loc 1 636 2 view .LVU484
  2048 00f2 2046     		mov	r0, r4
  2049 00f4 FFF7FEFF 		bl	Signal
  2050              	.LVL260:
  2051              	.L101:
- 637:Core/Src/Origin/Running.c **** 
- 638:Core/Src/Origin/Running.c **** 	while(1)
+ 637:Core/Src/Main/Running.c **** 
+ 638:Core/Src/Main/Running.c **** 	while(1)
  2052              		.loc 1 638 2 discriminator 1 view .LVU485
- 639:Core/Src/Origin/Running.c **** 	{
- 640:Core/Src/Origin/Running.c **** 		// printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",Nu
- 641:Core/Src/Origin/Running.c **** 		printAllWeight(&my_map, &(my_mouse.now.pos));
+ 639:Core/Src/Main/Running.c **** 	{
+ 640:Core/Src/Main/Running.c **** 		// printf("最短走行終了: かかった歩数: %d, スタートノードの重み: %d\r\n",Nu
+ 641:Core/Src/Main/Running.c **** 		printAllWeight(&my_map, &(my_mouse.now.pos));
  2053              		.loc 1 641 3 discriminator 1 view .LVU486
  2054 00f8 1049     		ldr	r1, .L104+48
  2055 00fa 0C48     		ldr	r0, .L104+32
  2056 00fc FFF7FEFF 		bl	printAllWeight
  2057              	.LVL261:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 50
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 50
 
 
- 638:Core/Src/Origin/Running.c **** 	{
+ 638:Core/Src/Main/Running.c **** 	{
  2058              		.loc 1 638 7 discriminator 1 view .LVU487
  2059 0100 FAE7     		b	.L101
  2060              	.L103:
- 571:Core/Src/Origin/Running.c **** 		break;
+ 571:Core/Src/Main/Running.c **** 		break;
  2061              		.loc 1 571 3 view .LVU488
- 571:Core/Src/Origin/Running.c **** 		break;
+ 571:Core/Src/Main/Running.c **** 		break;
  2062              		.loc 1 571 19 is_stmt 0 view .LVU489
  2063 0102 0F4B     		ldr	r3, .L104+52
  2064 0104 0F4A     		ldr	r2, .L104+56
  2065 0106 1A60     		str	r2, [r3]	@ float
- 572:Core/Src/Origin/Running.c **** 	
+ 572:Core/Src/Main/Running.c **** 	
  2066              		.loc 1 572 3 is_stmt 1 view .LVU490
  2067 0108 A6E7     		b	.L100
  2068              	.L105:
@@ -2998,7 +2998,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  2105      00000000 
  2106              		.section	.bss.section_num.0,"aw",%nobits
  2107              		.align	2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 51
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 51
 
 
  2108              		.set	.LANCHOR0,. + 0
@@ -3012,53 +3012,53 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 1
  2120              	.Letext0:
  2121              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
  2122              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 2123              		.file 4 "Core/Inc/Origin/MazeLib.h"
- 2124              		.file 5 "Core/Inc/Origin/MicroMouse.h"
- 2125              		.file 6 "Core/Inc/Origin/Action.h"
- 2126              		.file 7 "Core/Inc/Origin/FastRun.h"
- 2127              		.file 8 "Core/Inc/Origin/Interrupt.h"
+ 2123              		.file 4 "Core/Inc/MazeLibrary/MazeLib.h"
+ 2124              		.file 5 "Core/Inc/Main/MicroMouse.h"
+ 2125              		.file 6 "Core/Inc/Main/Action.h"
+ 2126              		.file 7 "Core/Inc/MazeLibrary/FastRun.h"
+ 2127              		.file 8 "Core/Inc/Main/Interrupt.h"
  2128              		.file 9 "Core/Inc/Tools/UI.h"
  2129              		.file 10 "Core/Inc/Tools/PID_Control.h"
  2130              		.file 11 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
  2131              		.file 12 "Core/Inc/dfs.h"
- 2132              		.file 13 "Core/Inc/Origin/Record.h"
- 2133              		.file 14 "Core/Inc/Origin/Searching.h"
- 2134              		.file 15 "Core/Inc/Hw/Flash.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 52
+ 2132              		.file 13 "Core/Inc/Main/Record.h"
+ 2133              		.file 14 "Core/Inc/MazeLibrary/Searching.h"
+ 2134              		.file 15 "Core/Inc/HardWare/Flash.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 52
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Running.c
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:20     .text.FastStraight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:26     .text.FastStraight:00000000 FastStraight
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:505    .text.FastStraight:000002d4 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:525    .text.MaxParaRunTest:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:531    .text.MaxParaRunTest:00000000 MaxParaRunTest
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:651    .text.MaxParaRunTest:00000094 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:658    .text.MaxParaRunTest:000000ac $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:829    .text.MaxParaRunTest:000001a8 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:844    .text.DiagonalRunTest:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:850    .text.DiagonalRunTest:00000000 DiagonalRunTest
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:962    .text.DiagonalRunTest:0000008c $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:983    .text.DiagonalRunTest:000000dc $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1430   .text.DiagonalRunTest:00000380 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1449   .text.DiagonalRunTest:000003c4 $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1542   .text.DiagonalRunTest:00000444 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1548   .text.Explore:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1554   .text.Explore:00000000 Explore
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1851   .text.Explore:0000018c $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1868   .rodata.FastestRun.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1874   .text.FastestRun:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:1880   .text.FastestRun:00000000 FastestRun
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2071   .text.FastestRun:0000010c $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2117   .rodata.conv_pul:00000000 conv_pul
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2097   .bss.my_map:00000000 my_map
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2104   .bss.my_mouse:00000000 my_mouse
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2093   .bss.my_map:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2100   .bss.my_mouse:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2107   .bss.section_num.0:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2111   .bss.section_num.0:00000000 section_num.0
-C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s:2114   .rodata.conv_pul:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:20     .text.FastStraight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:26     .text.FastStraight:00000000 FastStraight
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:505    .text.FastStraight:000002d4 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:525    .text.MaxParaRunTest:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:531    .text.MaxParaRunTest:00000000 MaxParaRunTest
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:651    .text.MaxParaRunTest:00000094 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:658    .text.MaxParaRunTest:000000ac $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:829    .text.MaxParaRunTest:000001a8 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:844    .text.DiagonalRunTest:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:850    .text.DiagonalRunTest:00000000 DiagonalRunTest
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:962    .text.DiagonalRunTest:0000008c $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:983    .text.DiagonalRunTest:000000dc $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1430   .text.DiagonalRunTest:00000380 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1449   .text.DiagonalRunTest:000003c4 $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1542   .text.DiagonalRunTest:00000444 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1548   .text.Explore:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1554   .text.Explore:00000000 Explore
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1851   .text.Explore:0000018c $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1868   .rodata.FastestRun.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1874   .text.FastestRun:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:1880   .text.FastestRun:00000000 FastestRun
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2071   .text.FastestRun:0000010c $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2117   .rodata.conv_pul:00000000 conv_pul
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2097   .bss.my_map:00000000 my_map
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2104   .bss.my_mouse:00000000 my_mouse
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2093   .bss.my_map:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2100   .bss.my_mouse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2107   .bss.section_num.0:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2111   .bss.section_num.0:00000000 section_num.0
+C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s:2114   .rodata.conv_pul:00000000 $d
 
 UNDEFINED SYMBOLS
 PIDChangeFlag
@@ -3084,7 +3084,7 @@ SlalomFastRight
 fast90
 fast90diagonal
 fast45
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc5mza1S.s 			page 53
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccHiT9XJ.s 			page 53
 
 
 fast45reverse

@@ -1,6 +1,5 @@
-build/MicroMouse.o: Core/Src/Origin/MicroMouse.c \
- Core/Inc/Origin/MicroMouse.h Core/Inc/main.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+build/MicroMouse.o: Core/Src/Main/MicroMouse.c Core/Inc/Main/MicroMouse.h \
+ Core/Inc/main.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -30,12 +29,12 @@ build/MicroMouse.o: Core/Src/Origin/MicroMouse.c \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Inc/Origin/MazeLib.h Core/Inc/Hw/IEH2_4096.h \
- Core/Inc/Hw/mouse_ADC.h Core/Inc/Hw/LED_Driver.h \
- Core/Inc/Hw/IR_Emitter.h Core/Inc/Hw/Motor_Driver.h \
- Core/Inc/Hw/ICM_20648.h Core/Inc/Origin/Interrupt.h \
+ Core/Inc/MazeLibrary/MazeLib.h Core/Inc/HardWare/IEH2_4096.h \
+ Core/Inc/HardWare/mouse_ADC.h Core/Inc/HardWare/LED_Driver.h \
+ Core/Inc/HardWare/IR_Emitter.h Core/Inc/HardWare/Motor_Driver.h \
+ Core/Inc/HardWare/ICM_20648.h Core/Inc/Main/Interrupt.h \
  Core/Inc/Tools/PID_Control.h Core/Inc/Tools/Convert.h
-Core/Inc/Origin/MicroMouse.h:
+Core/Inc/Main/MicroMouse.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -69,13 +68,13 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-Core/Inc/Origin/MazeLib.h:
-Core/Inc/Hw/IEH2_4096.h:
-Core/Inc/Hw/mouse_ADC.h:
-Core/Inc/Hw/LED_Driver.h:
-Core/Inc/Hw/IR_Emitter.h:
-Core/Inc/Hw/Motor_Driver.h:
-Core/Inc/Hw/ICM_20648.h:
-Core/Inc/Origin/Interrupt.h:
+Core/Inc/MazeLibrary/MazeLib.h:
+Core/Inc/HardWare/IEH2_4096.h:
+Core/Inc/HardWare/mouse_ADC.h:
+Core/Inc/HardWare/LED_Driver.h:
+Core/Inc/HardWare/IR_Emitter.h:
+Core/Inc/HardWare/Motor_Driver.h:
+Core/Inc/HardWare/ICM_20648.h:
+Core/Inc/Main/Interrupt.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/Tools/Convert.h:

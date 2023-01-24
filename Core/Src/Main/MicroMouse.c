@@ -21,6 +21,8 @@
 #include "PID_Control.h"
 #include "Convert.h"
 
+#include "MazeLib.h"
+
 volatile _Bool VelocityMax;
 volatile int Calc;
 volatile int SearchOrFast;
@@ -148,4 +150,32 @@ void MouseInit(){
 	MousePIDResetAll();
 
 	MouseResetParameters();
+}
+
+slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
+
+void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, float theta2, float theta3, float alpha){
+	param->Pre = pre *2/MM_PER_PULSE;
+	param->Fol = fol *2/MM_PER_PULSE;
+	param->Theta1 = theta1 *M_PI/180;
+	param->Theta2 = theta2 *M_PI/180;
+	param->Theta3 = theta3 *M_PI/180;
+	param->Alpha = alpha *T1*M_PI/180;
+}
+
+void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
+	//300mm/sのパラメータ
+	switch(n){
+		case 0:
+			setTurnParam(&fast45, 			4, 22, 15,30,45,2750);
+			setTurnParam(&fast45reverse, 	22, 4, 15,30,45,2750);
+			setTurnParam(&fast90,  0, 3, 30,60,90,1485);
+			setTurnParam(&fast180, 0, 0, 60,120,180,1681.25);
+			setTurnParam(&fast135, 			15, 12, 65,70,135, 2700);
+			setTurnParam(&fast135reverse, 	12, 15, 65,70,135, 2700);
+			setTurnParam(&fast90diagonal, 	16, 16, 30,60,90, 5200);
+			break;
+		default:
+			break;
+	}
 }

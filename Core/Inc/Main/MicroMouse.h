@@ -208,5 +208,8 @@ typedef struct Slalom
 }slalom_parameter;
 
 extern slalom_parameter Sla;
+void setFastDiagonalParam(int n);
+
+extern slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
 
 #endif /* INC_MICROMOUSE_H_ */

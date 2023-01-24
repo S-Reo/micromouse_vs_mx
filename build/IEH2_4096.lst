@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -27,20 +27,20 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
   24              		.thumb_func
   26              	EncoderStart:
   27              	.LFB235:
-  28              		.file 1 "Core/Src/Hw/IEH2_4096.c"
-   1:Core/Src/Hw/IEH2_4096.c **** /*
-   2:Core/Src/Hw/IEH2_4096.c ****  * IEH2_4096.c
-   3:Core/Src/Hw/IEH2_4096.c ****  *
-   4:Core/Src/Hw/IEH2_4096.c ****  *  Created on: Feb 12, 2022
-   5:Core/Src/Hw/IEH2_4096.c ****  *      Author: leopi
-   6:Core/Src/Hw/IEH2_4096.c ****  */
-   7:Core/Src/Hw/IEH2_4096.c **** #include "IEH2_4096.h"
-   8:Core/Src/Hw/IEH2_4096.c **** 
-   9:Core/Src/Hw/IEH2_4096.c **** #include "tim_info.h"
-  10:Core/Src/Hw/IEH2_4096.c **** //TIM3_Left, TIM4_Right
-  11:Core/Src/Hw/IEH2_4096.c **** 
-  12:Core/Src/Hw/IEH2_4096.c **** void EncoderStart()
-  13:Core/Src/Hw/IEH2_4096.c **** {
+  28              		.file 1 "Core/Src/HardWare/IEH2_4096.c"
+   1:Core/Src/HardWare/IEH2_4096.c **** /*
+   2:Core/Src/HardWare/IEH2_4096.c ****  * IEH2_4096.c
+   3:Core/Src/HardWare/IEH2_4096.c ****  *
+   4:Core/Src/HardWare/IEH2_4096.c ****  *  Created on: Feb 12, 2022
+   5:Core/Src/HardWare/IEH2_4096.c ****  *      Author: leopi
+   6:Core/Src/HardWare/IEH2_4096.c ****  */
+   7:Core/Src/HardWare/IEH2_4096.c **** #include "IEH2_4096.h"
+   8:Core/Src/HardWare/IEH2_4096.c **** 
+   9:Core/Src/HardWare/IEH2_4096.c **** #include "tim_info.h"
+  10:Core/Src/HardWare/IEH2_4096.c **** //TIM3_Left, TIM4_Right
+  11:Core/Src/HardWare/IEH2_4096.c **** 
+  12:Core/Src/HardWare/IEH2_4096.c **** void EncoderStart()
+  13:Core/Src/HardWare/IEH2_4096.c **** {
   29              		.loc 1 13 1 view -0
   30              		.cfi_startproc
   31              		@ args = 0, pretend = 0, frame = 0
@@ -50,22 +50,22 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
   35              		.cfi_def_cfa_offset 8
   36              		.cfi_offset 3, -8
   37              		.cfi_offset 14, -4
-  14:Core/Src/Hw/IEH2_4096.c **** 	  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
+  14:Core/Src/HardWare/IEH2_4096.c **** 	  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
   38              		.loc 1 14 4 view .LVU1
   39 0002 3C21     		movs	r1, #60
   40 0004 0348     		ldr	r0, .L3
   41 0006 FFF7FEFF 		bl	HAL_TIM_Encoder_Start
   42              	.LVL0:
-  15:Core/Src/Hw/IEH2_4096.c **** 	  HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
+  15:Core/Src/HardWare/IEH2_4096.c **** 	  HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
   43              		.loc 1 15 4 view .LVU2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s 			page 2
 
 
   44 000a 3C21     		movs	r1, #60
   45 000c 0248     		ldr	r0, .L3+4
   46 000e FFF7FEFF 		bl	HAL_TIM_Encoder_Start
   47              	.LVL1:
-  16:Core/Src/Hw/IEH2_4096.c **** }
+  16:Core/Src/HardWare/IEH2_4096.c **** }
   48              		.loc 1 16 1 is_stmt 0 view .LVU3
   49 0012 08BD     		pop	{r3, pc}
   50              	.L4:
@@ -83,10 +83,10 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
   63              		.thumb_func
   65              	EncoderStop:
   66              	.LFB236:
-  17:Core/Src/Hw/IEH2_4096.c **** //PulseInit((int *) (&(TIM3->CNT) ), INITIAL_PULSE_L);
-  18:Core/Src/Hw/IEH2_4096.c **** //PulseInit((int *) (&(TIM4->CNT) ), INITIAL_PUSEL_R );
-  19:Core/Src/Hw/IEH2_4096.c **** void EncoderStop()
-  20:Core/Src/Hw/IEH2_4096.c **** {
+  17:Core/Src/HardWare/IEH2_4096.c **** //PulseInit((int *) (&(TIM3->CNT) ), INITIAL_PULSE_L);
+  18:Core/Src/HardWare/IEH2_4096.c **** //PulseInit((int *) (&(TIM4->CNT) ), INITIAL_PUSEL_R );
+  19:Core/Src/HardWare/IEH2_4096.c **** void EncoderStop()
+  20:Core/Src/HardWare/IEH2_4096.c **** {
   67              		.loc 1 20 1 is_stmt 1 view -0
   68              		.cfi_startproc
   69              		@ args = 0, pretend = 0, frame = 0
@@ -96,19 +96,19 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
   73              		.cfi_def_cfa_offset 8
   74              		.cfi_offset 3, -8
   75              		.cfi_offset 14, -4
-  21:Core/Src/Hw/IEH2_4096.c **** 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_ALL);
+  21:Core/Src/HardWare/IEH2_4096.c **** 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_ALL);
   76              		.loc 1 21 2 view .LVU5
   77 0002 3C21     		movs	r1, #60
   78 0004 0348     		ldr	r0, .L7
   79 0006 FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
   80              	.LVL2:
-  22:Core/Src/Hw/IEH2_4096.c **** 	HAL_TIM_Encoder_Stop(&htim4,TIM_CHANNEL_ALL);
+  22:Core/Src/HardWare/IEH2_4096.c **** 	HAL_TIM_Encoder_Stop(&htim4,TIM_CHANNEL_ALL);
   81              		.loc 1 22 2 view .LVU6
   82 000a 3C21     		movs	r1, #60
   83 000c 0248     		ldr	r0, .L7+4
   84 000e FFF7FEFF 		bl	HAL_TIM_Encoder_Stop
   85              	.LVL3:
-  23:Core/Src/Hw/IEH2_4096.c **** }
+  23:Core/Src/HardWare/IEH2_4096.c **** }
   86              		.loc 1 23 1 is_stmt 0 view .LVU7
   87 0012 08BD     		pop	{r3, pc}
   88              	.L8:
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
   92 0018 00000000 		.word	htim4
   93              		.cfi_endproc
   94              	.LFE236:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s 			page 3
 
 
   96              		.section	.text.EncoderPrintInfo,"ax",%progbits
@@ -129,8 +129,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
  101              		.thumb_func
  103              	EncoderPrintInfo:
  104              	.LFB237:
-  24:Core/Src/Hw/IEH2_4096.c **** 
-  25:Core/Src/Hw/IEH2_4096.c **** void EncoderPrintInfo(){
+  24:Core/Src/HardWare/IEH2_4096.c **** 
+  25:Core/Src/HardWare/IEH2_4096.c **** void EncoderPrintInfo(){
  105              		.loc 1 25 24 is_stmt 1 view -0
  106              		.cfi_startproc
  107              		@ args = 0, pretend = 0, frame = 0
@@ -140,21 +140,21 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
  111              		.cfi_def_cfa_offset 8
  112              		.cfi_offset 3, -8
  113              		.cfi_offset 14, -4
-  26:Core/Src/Hw/IEH2_4096.c **** 	printTIMinfo(&htim3);
+  26:Core/Src/HardWare/IEH2_4096.c **** 	printTIMinfo(&htim3);
  114              		.loc 1 26 2 view .LVU9
  115 0002 0348     		ldr	r0, .L11
  116 0004 FFF7FEFF 		bl	printTIMinfo
  117              	.LVL4:
-  27:Core/Src/Hw/IEH2_4096.c **** 	printTIMinfo(&htim4);
+  27:Core/Src/HardWare/IEH2_4096.c **** 	printTIMinfo(&htim4);
  118              		.loc 1 27 2 view .LVU10
  119 0008 0248     		ldr	r0, .L11+4
  120 000a FFF7FEFF 		bl	printTIMinfo
  121              	.LVL5:
-  28:Core/Src/Hw/IEH2_4096.c **** 	//パルス数なども表示したい
-  29:Core/Src/Hw/IEH2_4096.c **** 
-  30:Core/Src/Hw/IEH2_4096.c **** 	//動作確認もしたい
-  31:Core/Src/Hw/IEH2_4096.c **** 
-  32:Core/Src/Hw/IEH2_4096.c **** }
+  28:Core/Src/HardWare/IEH2_4096.c **** 	//パルス数なども表示したい
+  29:Core/Src/HardWare/IEH2_4096.c **** 
+  30:Core/Src/HardWare/IEH2_4096.c **** 	//動作確認もしたい
+  31:Core/Src/HardWare/IEH2_4096.c **** 
+  32:Core/Src/HardWare/IEH2_4096.c **** }
  122              		.loc 1 32 1 is_stmt 0 view .LVU11
  123 000e 08BD     		pop	{r3, pc}
  124              	.L12:
@@ -172,22 +172,22 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 1
  137              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
  138              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
  139              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 140              		.file 8 "Core/Inc/Hw/IEH2_4096.h"
+ 140              		.file 8 "Core/Inc/HardWare/IEH2_4096.h"
  141              		.file 9 "Core/Inc/Tools/tim_info.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s 			page 4
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 IEH2_4096.c
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:20     .text.EncoderStart:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:26     .text.EncoderStart:00000000 EncoderStart
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:53     .text.EncoderStart:00000014 $d
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:59     .text.EncoderStop:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:65     .text.EncoderStop:00000000 EncoderStop
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:91     .text.EncoderStop:00000014 $d
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:97     .text.EncoderPrintInfo:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:103    .text.EncoderPrintInfo:00000000 EncoderPrintInfo
-C:\Users\leopi\AppData\Local\Temp\ccgMZN6Y.s:127    .text.EncoderPrintInfo:00000010 $d
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:20     .text.EncoderStart:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:26     .text.EncoderStart:00000000 EncoderStart
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:53     .text.EncoderStart:00000014 $d
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:59     .text.EncoderStop:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:65     .text.EncoderStop:00000000 EncoderStop
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:91     .text.EncoderStop:00000014 $d
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:97     .text.EncoderPrintInfo:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:103    .text.EncoderPrintInfo:00000000 EncoderPrintInfo
+C:\Users\leopi\AppData\Local\Temp\ccQDqWxo.s:127    .text.EncoderPrintInfo:00000010 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_Encoder_Start

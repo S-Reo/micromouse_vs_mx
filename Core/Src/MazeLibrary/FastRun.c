@@ -1,20 +1,10 @@
-#include "../../Inc/Origin/FastRun.h"
+#include "FastRun.h"
 // #include "../../Inc/Origin/MicroMouse.h"
 // #include "../../Inc/Origin/Action.h"
 // #include "LED_Driver.h"
 // #include "../../Inc/Tools/UI.h"
 int Num_Nodes = 0;
 
-
-slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
-void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, float theta2, float theta3, float alpha){
-	param->Pre = pre *2/MM_PER_PULSE;
-	param->Fol = fol *2/MM_PER_PULSE;
-	param->Theta1 = theta1 *M_PI/180;
-	param->Theta2 = theta2 *M_PI/180;
-	param->Theta3 = theta3 *M_PI/180;
-	param->Alpha = alpha *T1*M_PI/180;
-}
 // void setFastParam(int n){
 // 	switch(n)
 // 	{
@@ -75,22 +65,7 @@ void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, f
 
 // 	}
 // }
-void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
-	//300mm/sのパラメータ
-	switch(n){
-		case 0:
-			setTurnParam(&fast45, 			4, 22, 15,30,45,2750);
-			setTurnParam(&fast45reverse, 	22, 4, 15,30,45,2750);
-			setTurnParam(&fast90,  0, 3, 30,60,90,1485);
-			setTurnParam(&fast180, 0, 0, 60,120,180,1681.25);
-			setTurnParam(&fast135, 			15, 12, 65,70,135, 2700);
-			setTurnParam(&fast135reverse, 	12, 15, 65,70,135, 2700);
-			setTurnParam(&fast90diagonal, 	16, 16, 30,60,90, 5200);
-			break;
-		default:
-			break;
-	}
-}
+
 //
 
 //付随して必要な処理として、機体のパラメータ、ターン速度、などから所要時間を見積もる処理。ターンの距離を求める処理。ターンの安全性を決める処理。

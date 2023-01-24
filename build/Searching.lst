@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -28,42 +28,42 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
   26              	FindUnwantedSquares:
   27              	.LVL0:
   28              	.LFB238:
-  29              		.file 1 "Core/Src/Origin/Searching.c"
-   1:Core/Src/Origin/Searching.c **** /*
-   2:Core/Src/Origin/Searching.c ****  * Search.c
-   3:Core/Src/Origin/Searching.c ****  *
-   4:Core/Src/Origin/Searching.c ****  *  Created on: 2022/10/28
-   5:Core/Src/Origin/Searching.c ****  *      Author: leopi
-   6:Core/Src/Origin/Searching.c ****  */
-   7:Core/Src/Origin/Searching.c **** 
-   8:Core/Src/Origin/Searching.c **** // SearchとFastRunで分けて、Runningで統合する
-   9:Core/Src/Origin/Searching.c **** 	//探索に必要な細かい処理はSearch
-  10:Core/Src/Origin/Searching.c **** 	//最短も同じ
-  11:Core/Src/Origin/Searching.c **** 	//これの組み合わせで、最終的な、探索と最短走行を組む（戦略化）
-  12:Core/Src/Origin/Searching.c **** #include "Searching.h"
-  13:Core/Src/Origin/Searching.c **** #include "MazeLib.h"
-  14:Core/Src/Origin/Searching.c ****  #include "MicroMouse.h"
-  15:Core/Src/Origin/Searching.c ****  #include "Action.h"
-  16:Core/Src/Origin/Searching.c **** #include "PID_Control.h"
-  17:Core/Src/Origin/Searching.c ****  #include "LED_Driver.h"
-  18:Core/Src/Origin/Searching.c **** #include "dfs.h"
-  19:Core/Src/Origin/Searching.c **** 
-  20:Core/Src/Origin/Searching.c **** // 探索に必要な迷路データ、プロフィールの処理
-  21:Core/Src/Origin/Searching.c **** // 迷路データ、プロフィールの更新用の関数など
-  22:Core/Src/Origin/Searching.c **** 
-  23:Core/Src/Origin/Searching.c **** void FindUnwantedSquares(maze_node *maze){
+  29              		.file 1 "Core/Src/MazeLibrary/Searching.c"
+   1:Core/Src/MazeLibrary/Searching.c **** /*
+   2:Core/Src/MazeLibrary/Searching.c ****  * Search.c
+   3:Core/Src/MazeLibrary/Searching.c ****  *
+   4:Core/Src/MazeLibrary/Searching.c ****  *  Created on: 2022/10/28
+   5:Core/Src/MazeLibrary/Searching.c ****  *      Author: leopi
+   6:Core/Src/MazeLibrary/Searching.c ****  */
+   7:Core/Src/MazeLibrary/Searching.c **** 
+   8:Core/Src/MazeLibrary/Searching.c **** // SearchとFastRunで分けて、Runningで統合する
+   9:Core/Src/MazeLibrary/Searching.c **** 	//探索に必要な細かい処理はSearch
+  10:Core/Src/MazeLibrary/Searching.c **** 	//最短も同じ
+  11:Core/Src/MazeLibrary/Searching.c **** 	//これの組み合わせで、最終的な、探索と最短走行を組む（戦略化）
+  12:Core/Src/MazeLibrary/Searching.c **** #include "Searching.h"
+  13:Core/Src/MazeLibrary/Searching.c **** #include "MazeLib.h"
+  14:Core/Src/MazeLibrary/Searching.c ****  #include "MicroMouse.h"
+  15:Core/Src/MazeLibrary/Searching.c ****  #include "Action.h"
+  16:Core/Src/MazeLibrary/Searching.c **** #include "PID_Control.h"
+  17:Core/Src/MazeLibrary/Searching.c ****  #include "LED_Driver.h"
+  18:Core/Src/MazeLibrary/Searching.c **** #include "dfs.h"
+  19:Core/Src/MazeLibrary/Searching.c **** 
+  20:Core/Src/MazeLibrary/Searching.c **** // 探索に必要な迷路データ、プロフィールの処理
+  21:Core/Src/MazeLibrary/Searching.c **** // 迷路データ、プロフィールの更新用の関数など
+  22:Core/Src/MazeLibrary/Searching.c **** 
+  23:Core/Src/MazeLibrary/Searching.c **** void FindUnwantedSquares(maze_node *maze){
   30              		.loc 1 23 42 view -0
   31              		.cfi_startproc
   32              		@ args = 0, pretend = 0, frame = 0
   33              		@ frame_needed = 0, uses_anonymous_args = 0
-  24:Core/Src/Origin/Searching.c **** 	//未訪問のマスをピックアップ
-  25:Core/Src/Origin/Searching.c **** 	//それぞれの四方のノードを確認
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 2
+  24:Core/Src/MazeLibrary/Searching.c **** 	//未訪問のマスをピックアップ
+  25:Core/Src/MazeLibrary/Searching.c **** 	//それぞれの四方のノードを確認
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 2
 
 
-  26:Core/Src/Origin/Searching.c **** 	//未探索がひとつもなければVisitedに
-  27:Core/Src/Origin/Searching.c **** 	//未探索が三つなら、全て壁があるのか見て、そうならVisitedに
-  28:Core/Src/Origin/Searching.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
+  26:Core/Src/MazeLibrary/Searching.c **** 	//未探索がひとつもなければVisitedに
+  27:Core/Src/MazeLibrary/Searching.c **** 	//未探索が三つなら、全て壁があるのか見て、そうならVisitedに
+  28:Core/Src/MazeLibrary/Searching.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
   34              		.loc 1 28 2 view .LVU1
   35              	.LBB2:
   36              		.loc 1 28 6 view .LVU2
@@ -79,22 +79,22 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
   46              		.cfi_offset 14, -4
   47              	.LBB3:
   48              	.LBB4:
-  29:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
-  30:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
-  31:Core/Src/Origin/Searching.c **** 				continue;
-  32:Core/Src/Origin/Searching.c **** 			uint8_t n = maze->RawNode[i][j+1].existence;	//北
-  33:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
-  34:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
-  35:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
-  36:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
-  37:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
-  38:Core/Src/Origin/Searching.c **** 				continue;
-  39:Core/Src/Origin/Searching.c **** 			}
-  40:Core/Src/Origin/Searching.c **** 			int known_check=0;
+  29:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  30:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
+  31:Core/Src/MazeLibrary/Searching.c **** 				continue;
+  32:Core/Src/MazeLibrary/Searching.c **** 			uint8_t n = maze->RawNode[i][j+1].existence;	//北
+  33:Core/Src/MazeLibrary/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+  34:Core/Src/MazeLibrary/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+  35:Core/Src/MazeLibrary/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
+  36:Core/Src/MazeLibrary/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+  37:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
+  38:Core/Src/MazeLibrary/Searching.c **** 				continue;
+  39:Core/Src/MazeLibrary/Searching.c **** 			}
+  40:Core/Src/MazeLibrary/Searching.c **** 			int known_check=0;
   49              		.loc 1 40 4 is_stmt 1 view .LVU5
-  41:Core/Src/Origin/Searching.c **** 			known_check += (n == WALL) ? true : false;
+  41:Core/Src/MazeLibrary/Searching.c **** 			known_check += (n == WALL) ? true : false;
   50              		.loc 1 41 4 view .LVU6
-  42:Core/Src/Origin/Searching.c **** 			known_check += (e == WALL) ? true : false;
+  42:Core/Src/MazeLibrary/Searching.c **** 			known_check += (e == WALL) ? true : false;
   51              		.loc 1 42 4 view .LVU7
   52              		.loc 1 42 38 is_stmt 0 view .LVU8
   53 0004 012A     		cmp	r2, #1
@@ -108,24 +108,24 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
   61 000e 08BF     		it	eq
   62 0010 0132     		addeq	r2, r2, #1
   63              	.LVL3:
-  43:Core/Src/Origin/Searching.c **** 			known_check += (w == WALL) ? true : false;
+  43:Core/Src/MazeLibrary/Searching.c **** 			known_check += (w == WALL) ? true : false;
   64              		.loc 1 43 4 is_stmt 1 view .LVU11
   65              		.loc 1 43 16 is_stmt 0 view .LVU12
   66 0012 BEF1010F 		cmp	lr, #1
   67 0016 08BF     		it	eq
   68 0018 0132     		addeq	r2, r2, #1
   69              	.LVL4:
-  44:Core/Src/Origin/Searching.c **** 			known_check += (s == WALL) ? true : false;
+  44:Core/Src/MazeLibrary/Searching.c **** 			known_check += (s == WALL) ? true : false;
   70              		.loc 1 44 4 is_stmt 1 view .LVU13
   71              		.loc 1 44 16 is_stmt 0 view .LVU14
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 3
 
 
   72 001a BCF1010F 		cmp	ip, #1
   73 001e 08BF     		it	eq
   74 0020 0132     		addeq	r2, r2, #1
   75              	.LVL5:
-  45:Core/Src/Origin/Searching.c **** 			if(known_check == 3){
+  45:Core/Src/MazeLibrary/Searching.c **** 			if(known_check == 3){
   76              		.loc 1 45 4 is_stmt 1 view .LVU15
   77              		.loc 1 45 6 is_stmt 0 view .LVU16
   78 0022 032A     		cmp	r2, #3
@@ -134,51 +134,51 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
   81              	.L3:
   82              		.loc 1 45 6 view .LVU17
   83              	.LBE4:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
   84              		.loc 1 29 41 is_stmt 1 discriminator 2 view .LVU18
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
   85              		.loc 1 29 42 is_stmt 0 discriminator 2 view .LVU19
   86 0026 0133     		adds	r3, r3, #1
   87              	.LVL7:
   88              	.L6:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
   89              		.loc 1 29 16 is_stmt 1 discriminator 1 view .LVU20
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
   90              		.loc 1 29 3 is_stmt 0 discriminator 1 view .LVU21
   91 0028 032B     		cmp	r3, #3
   92 002a 30DC     		bgt	.L18
   93              	.LBB5:
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
   94              		.loc 1 30 4 is_stmt 1 view .LVU22
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
   95              		.loc 1 30 15 is_stmt 0 view .LVU23
   96 002c 234A     		ldr	r2, .L23
   97 002e 02EB8102 		add	r2, r2, r1, lsl #2
   98 0032 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
   99              		.loc 1 30 6 view .LVU24
  100 0034 002A     		cmp	r2, #0
  101 0036 F6D1     		bne	.L3
  102              	.LVL8:
  103              	.L11:
-  32:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+  32:Core/Src/MazeLibrary/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
  104              		.loc 1 32 4 is_stmt 1 view .LVU25
-  32:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+  32:Core/Src/MazeLibrary/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
  105              		.loc 1 32 34 is_stmt 0 view .LVU26
  106 0038 5A1C     		adds	r2, r3, #1
-  32:Core/Src/Origin/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
+  32:Core/Src/MazeLibrary/Searching.c **** 			uint8_t e = maze->ColumnNode[i+1][j].existence;	//東
  107              		.loc 1 32 12 view .LVU27
  108 003a 01EB810C 		add	ip, r1, r1, lsl #2
  109 003e 6244     		add	r2, r2, ip
  110 0040 10F83240 		ldrb	r4, [r0, r2, lsl #3]	@ zero_extendqisi2
  111              	.LVL9:
-  33:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+  33:Core/Src/MazeLibrary/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
  112              		.loc 1 33 4 is_stmt 1 view .LVU28
-  33:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+  33:Core/Src/MazeLibrary/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
  113              		.loc 1 33 34 is_stmt 0 view .LVU29
  114 0044 4A1C     		adds	r2, r1, #1
-  33:Core/Src/Origin/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 4
+  33:Core/Src/MazeLibrary/Searching.c **** 			uint8_t w = maze->ColumnNode[i][j].existence;//西
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 4
 
 
  115              		.loc 1 33 12 view .LVU30
@@ -186,63 +186,63 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  117 004a 1432     		adds	r2, r2, #20
  118 004c 10F83220 		ldrb	r2, [r0, r2, lsl #3]	@ zero_extendqisi2
  119              	.LVL10:
-  34:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
+  34:Core/Src/MazeLibrary/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
  120              		.loc 1 34 4 is_stmt 1 view .LVU31
-  34:Core/Src/Origin/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
+  34:Core/Src/MazeLibrary/Searching.c **** 			uint8_t s = maze->RawNode[i][j].existence;	//南
  121              		.loc 1 34 12 is_stmt 0 view .LVU32
  122 0050 03EB810E 		add	lr, r3, r1, lsl #2
  123 0054 0EF1140E 		add	lr, lr, #20
  124 0058 10F83EE0 		ldrb	lr, [r0, lr, lsl #3]	@ zero_extendqisi2
  125              	.LVL11:
-  35:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+  35:Core/Src/MazeLibrary/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
  126              		.loc 1 35 4 is_stmt 1 view .LVU33
-  35:Core/Src/Origin/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
+  35:Core/Src/MazeLibrary/Searching.c **** 			if(n != UNKNOWN && e != UNKNOWN && w != UNKNOWN && s != UNKNOWN){
  127              		.loc 1 35 12 is_stmt 0 view .LVU34
  128 005c 9C44     		add	ip, ip, r3
  129 005e 10F83CC0 		ldrb	ip, [r0, ip, lsl #3]	@ zero_extendqisi2
  130              	.LVL12:
-  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  36:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
  131              		.loc 1 36 4 is_stmt 1 view .LVU35
-  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  36:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
  132              		.loc 1 36 6 is_stmt 0 view .LVU36
  133 0062 022C     		cmp	r4, #2
  134 0064 CED0     		beq	.L4
-  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  36:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
  135              		.loc 1 36 20 discriminator 1 view .LVU37
  136 0066 022A     		cmp	r2, #2
  137 0068 CCD0     		beq	.L4
-  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  36:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
  138              		.loc 1 36 36 discriminator 2 view .LVU38
  139 006a BEF1020F 		cmp	lr, #2
  140 006e C9D0     		beq	.L4
-  36:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  36:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
  141              		.loc 1 36 52 discriminator 3 view .LVU39
  142 0070 BCF1020F 		cmp	ip, #2
  143 0074 C6D0     		beq	.L4
-  37:Core/Src/Origin/Searching.c **** 				continue;
+  37:Core/Src/MazeLibrary/Searching.c **** 				continue;
  144              		.loc 1 37 5 is_stmt 1 view .LVU40
-  37:Core/Src/Origin/Searching.c **** 				continue;
+  37:Core/Src/MazeLibrary/Searching.c **** 				continue;
  145              		.loc 1 37 17 is_stmt 0 view .LVU41
  146 0076 114A     		ldr	r2, .L23
  147              	.LVL13:
-  37:Core/Src/Origin/Searching.c **** 				continue;
+  37:Core/Src/MazeLibrary/Searching.c **** 				continue;
  148              		.loc 1 37 17 view .LVU42
  149 0078 02EB8102 		add	r2, r2, r1, lsl #2
  150 007c 0124     		movs	r4, #1
  151              	.LVL14:
-  37:Core/Src/Origin/Searching.c **** 				continue;
+  37:Core/Src/MazeLibrary/Searching.c **** 				continue;
  152              		.loc 1 37 17 view .LVU43
  153 007e D454     		strb	r4, [r2, r3]
  154              	.LVL15:
-  38:Core/Src/Origin/Searching.c **** 			}
+  38:Core/Src/MazeLibrary/Searching.c **** 			}
  155              		.loc 1 38 5 is_stmt 1 view .LVU44
  156 0080 D1E7     		b	.L3
  157              	.LVL16:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 5
 
 
  158              	.L17:
-  46:Core/Src/Origin/Searching.c **** 				Visit[i][j] = true;
+  46:Core/Src/MazeLibrary/Searching.c **** 				Visit[i][j] = true;
  159              		.loc 1 46 5 view .LVU45
  160              		.loc 1 46 17 is_stmt 0 view .LVU46
  161 0082 0E4A     		ldr	r2, .L23
@@ -254,43 +254,43 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  167              		.loc 1 46 17 view .LVU48
  168 008a D454     		strb	r4, [r2, r3]
  169              	.LVL19:
-  47:Core/Src/Origin/Searching.c **** 				continue;
+  47:Core/Src/MazeLibrary/Searching.c **** 				continue;
  170              		.loc 1 47 5 is_stmt 1 view .LVU49
  171 008c CBE7     		b	.L3
  172              	.L18:
  173              		.loc 1 47 5 is_stmt 0 view .LVU50
  174              	.LBE5:
  175              	.LBE3:
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  176              		.loc 1 28 40 is_stmt 1 discriminator 2 view .LVU51
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  177              		.loc 1 28 41 is_stmt 0 discriminator 2 view .LVU52
  178 008e 0131     		adds	r1, r1, #1
  179              	.LVL20:
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  180              		.loc 1 28 15 is_stmt 1 discriminator 2 view .LVU53
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  181              		.loc 1 28 2 is_stmt 0 discriminator 2 view .LVU54
  182 0090 0329     		cmp	r1, #3
  183 0092 01DC     		bgt	.L19
  184              	.LBB7:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  185              		.loc 1 29 11 view .LVU55
  186 0094 0023     		movs	r3, #0
  187              	.LVL21:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  188              		.loc 1 29 11 view .LVU56
  189 0096 C7E7     		b	.L6
  190              	.LVL22:
  191              	.L19:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  192              		.loc 1 29 11 view .LVU57
  193              	.LBE7:
  194              	.LBE2:
-  48:Core/Src/Origin/Searching.c **** 			}
-  49:Core/Src/Origin/Searching.c **** 		}
-  50:Core/Src/Origin/Searching.c **** 	}
-  51:Core/Src/Origin/Searching.c **** }
+  48:Core/Src/MazeLibrary/Searching.c **** 			}
+  49:Core/Src/MazeLibrary/Searching.c **** 		}
+  50:Core/Src/MazeLibrary/Searching.c **** 	}
+  51:Core/Src/MazeLibrary/Searching.c **** }
  195              		.loc 1 51 1 view .LVU58
  196 0098 10BD     		pop	{r4, pc}
  197              	.LVL23:
@@ -298,43 +298,43 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  199              	.LCFI1:
  200              		.cfi_def_cfa_offset 0
  201              		.cfi_restore 4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 6
 
 
  202              		.cfi_restore 14
  203              	.LBB10:
  204              	.LBB8:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  205              		.loc 1 29 41 is_stmt 1 view .LVU59
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  206              		.loc 1 29 42 is_stmt 0 view .LVU60
  207 009a 0133     		adds	r3, r3, #1
  208              	.LVL24:
  209              	.L12:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  210              		.loc 1 29 16 is_stmt 1 view .LVU61
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  211              		.loc 1 29 3 is_stmt 0 view .LVU62
  212 009c 032B     		cmp	r3, #3
  213 009e 07DC     		bgt	.L20
  214              	.LBB6:
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
  215              		.loc 1 30 4 is_stmt 1 view .LVU63
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
  216              		.loc 1 30 15 is_stmt 0 view .LVU64
  217 00a0 064A     		ldr	r2, .L23
  218 00a2 02EB8102 		add	r2, r2, r1, lsl #2
  219 00a6 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
  220              		.loc 1 30 6 view .LVU65
  221 00a8 002A     		cmp	r2, #0
  222 00aa F6D1     		bne	.L21
-  30:Core/Src/Origin/Searching.c **** 				continue;
+  30:Core/Src/MazeLibrary/Searching.c **** 				continue;
  223              		.loc 1 30 6 view .LVU66
  224              	.LBE6:
  225              	.LBE8:
  226              	.LBE10:
-  23:Core/Src/Origin/Searching.c **** 	//未訪問のマスをピックアップ
+  23:Core/Src/MazeLibrary/Searching.c **** 	//未訪問のマスをピックアップ
  227              		.loc 1 23 42 view .LVU67
  228 00ac 10B5     		push	{r4, lr}
  229              	.LCFI2:
@@ -348,24 +348,24 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  237              		.cfi_restore 4
  238              		.cfi_restore 14
  239              	.LBB11:
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  240              		.loc 1 28 40 is_stmt 1 view .LVU68
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  241              		.loc 1 28 41 is_stmt 0 view .LVU69
  242 00b0 0131     		adds	r1, r1, #1
  243              	.LVL25:
  244              	.L9:
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  245              		.loc 1 28 15 is_stmt 1 view .LVU70
-  28:Core/Src/Origin/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 7
+  28:Core/Src/MazeLibrary/Searching.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 7
 
 
  246              		.loc 1 28 2 is_stmt 0 view .LVU71
  247 00b2 0329     		cmp	r1, #3
  248 00b4 01DC     		bgt	.L22
  249              	.LBB9:
-  29:Core/Src/Origin/Searching.c **** 			if(Visit[i][j] == true)
+  29:Core/Src/MazeLibrary/Searching.c **** 			if(Visit[i][j] == true)
  250              		.loc 1 29 11 view .LVU72
  251 00b6 0023     		movs	r3, #0
  252 00b8 F0E7     		b	.L12
@@ -391,11 +391,11 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  274              	setSearchTurnParam:
  275              	.LVL26:
  276              	.LFB239:
-  52:Core/Src/Origin/Searching.c **** //探索及び最短走行のロジック（制御ロジックは考慮しない）
-  53:Core/Src/Origin/Searching.c **** //後ろの方にはActionを含めた処理も. MazeSimulationでActionっぽい処理が書けれ
-  54:Core/Src/Origin/Searching.c **** 
-  55:Core/Src/Origin/Searching.c **** 
-  56:Core/Src/Origin/Searching.c **** void setSearchTurnParam(int8_t mode){
+  52:Core/Src/MazeLibrary/Searching.c **** //探索及び最短走行のロジック（制御ロジックは考慮しない）
+  53:Core/Src/MazeLibrary/Searching.c **** //後ろの方にはActionを含めた処理も. MazeSimulationでActionっぽい処理が書けれ
+  54:Core/Src/MazeLibrary/Searching.c **** 
+  55:Core/Src/MazeLibrary/Searching.c **** 
+  56:Core/Src/MazeLibrary/Searching.c **** void setSearchTurnParam(int8_t mode){
  277              		.loc 1 56 37 is_stmt 1 view -0
  278              		.cfi_startproc
  279              		@ args = 0, pretend = 0, frame = 0
@@ -406,8 +406,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  284              		.cfi_def_cfa_offset 8
  285              		.cfi_offset 4, -8
  286              		.cfi_offset 14, -4
-  57:Core/Src/Origin/Searching.c **** 	
-  58:Core/Src/Origin/Searching.c **** 	switch(mode)
+  57:Core/Src/MazeLibrary/Searching.c **** 	
+  58:Core/Src/MazeLibrary/Searching.c **** 	switch(mode)
  287              		.loc 1 58 2 is_stmt 1 view .LVU75
  288 0002 0138     		subs	r0, r0, #1
  289              	.LVL27:
@@ -418,105 +418,105 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  294              	.L28:
  295 000c 02       		.byte	(.L31-.L28)/2
  296 000d 4A       		.byte	(.L30-.L28)/2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 8
 
 
  297 000e 5C       		.byte	(.L29-.L28)/2
  298 000f 6E       		.byte	(.L27-.L28)/2
  299              		.p2align 1
  300              	.L31:
-  59:Core/Src/Origin/Searching.c **** 	{
-  60:Core/Src/Origin/Searching.c **** 	case 1:
-  61:Core/Src/Origin/Searching.c **** 		ExploreVelocity=90;
+  59:Core/Src/MazeLibrary/Searching.c **** 	{
+  60:Core/Src/MazeLibrary/Searching.c **** 	case 1:
+  61:Core/Src/MazeLibrary/Searching.c **** 		ExploreVelocity=90;
  301              		.loc 1 61 3 is_stmt 1 view .LVU77
  302              		.loc 1 61 18 is_stmt 0 view .LVU78
  303 0010 434A     		ldr	r2, .L33+16
  304 0012 444B     		ldr	r3, .L33+20
  305 0014 1A60     		str	r2, [r3]	@ float
-  62:Core/Src/Origin/Searching.c **** 		//未
-  63:Core/Src/Origin/Searching.c **** 		Sla.Pre = 9;
+  62:Core/Src/MazeLibrary/Searching.c **** 		//未
+  63:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 9;
  306              		.loc 1 63 3 is_stmt 1 view .LVU79
  307              		.loc 1 63 11 is_stmt 0 view .LVU80
  308 0016 444B     		ldr	r3, .L33+24
  309 0018 4449     		ldr	r1, .L33+28
  310 001a 1960     		str	r1, [r3]	@ float
-  64:Core/Src/Origin/Searching.c **** 		Sla.Fol = 20;
+  64:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 20;
  311              		.loc 1 64 3 is_stmt 1 view .LVU81
  312              		.loc 1 64 11 is_stmt 0 view .LVU82
  313 001c 4449     		ldr	r1, .L33+32
  314 001e 5960     		str	r1, [r3, #4]	@ float
-  65:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.014;
+  65:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.014;
  315              		.loc 1 65 3 is_stmt 1 view .LVU83
  316              		.loc 1 65 13 is_stmt 0 view .LVU84
  317 0020 4449     		ldr	r1, .L33+36
  318 0022 9960     		str	r1, [r3, #8]	@ float
-  66:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+  66:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  319              		.loc 1 66 3 is_stmt 1 view .LVU85
  320              		.loc 1 66 14 is_stmt 0 view .LVU86
  321 0024 4449     		ldr	r1, .L33+40
  322 0026 1961     		str	r1, [r3, #16]	@ float
-  67:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+  67:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
  323              		.loc 1 67 3 is_stmt 1 view .LVU87
  324              		.loc 1 67 14 is_stmt 0 view .LVU88
  325 0028 4449     		ldr	r1, .L33+44
  326 002a 5961     		str	r1, [r3, #20]	@ float
-  68:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+  68:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  327              		.loc 1 68 3 is_stmt 1 view .LVU89
  328              		.loc 1 68 14 is_stmt 0 view .LVU90
  329 002c 9A61     		str	r2, [r3, #24]	@ float
-  69:Core/Src/Origin/Searching.c **** 
-  70:Core/Src/Origin/Searching.c **** //		ExploreVelocity=180;//*40/1000
-  71:Core/Src/Origin/Searching.c **** //		Sla.Pre = 5;
-  72:Core/Src/Origin/Searching.c **** //		Sla.Fol = 12;
-  73:Core/Src/Origin/Searching.c **** //		Sla.Alalpha = 0.0007;
-  74:Core/Src/Origin/Searching.c **** //		Sla.Theta1 = 30;
-  75:Core/Src/Origin/Searching.c **** //		Sla.Theta2 = 60;
-  76:Core/Src/Origin/Searching.c **** //		Sla.Theta3 = 90;
-  77:Core/Src/Origin/Searching.c **** 		break;
+  69:Core/Src/MazeLibrary/Searching.c **** 
+  70:Core/Src/MazeLibrary/Searching.c **** //		ExploreVelocity=180;//*40/1000
+  71:Core/Src/MazeLibrary/Searching.c **** //		Sla.Pre = 5;
+  72:Core/Src/MazeLibrary/Searching.c **** //		Sla.Fol = 12;
+  73:Core/Src/MazeLibrary/Searching.c **** //		Sla.Alalpha = 0.0007;
+  74:Core/Src/MazeLibrary/Searching.c **** //		Sla.Theta1 = 30;
+  75:Core/Src/MazeLibrary/Searching.c **** //		Sla.Theta2 = 60;
+  76:Core/Src/MazeLibrary/Searching.c **** //		Sla.Theta3 = 90;
+  77:Core/Src/MazeLibrary/Searching.c **** 		break;
  330              		.loc 1 77 3 is_stmt 1 view .LVU91
  331              	.L26:
-  78:Core/Src/Origin/Searching.c **** 	case 2:
-  79:Core/Src/Origin/Searching.c **** 		//完
-  80:Core/Src/Origin/Searching.c **** //		ExploreVelocity=135;//*40/1000
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 9
+  78:Core/Src/MazeLibrary/Searching.c **** 	case 2:
+  79:Core/Src/MazeLibrary/Searching.c **** 		//完
+  80:Core/Src/MazeLibrary/Searching.c **** //		ExploreVelocity=135;//*40/1000
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 9
 
 
-  81:Core/Src/Origin/Searching.c **** //		Sla.Pre = 5;
-  82:Core/Src/Origin/Searching.c **** //		Sla.Fol = 10;
-  83:Core/Src/Origin/Searching.c **** //		Sla.Alpha = 0.0273;
-  84:Core/Src/Origin/Searching.c **** //		Sla.Theta1 = 30;
-  85:Core/Src/Origin/Searching.c **** //		Sla.Theta2 = 60;
-  86:Core/Src/Origin/Searching.c **** //		Sla.Theta3 = 90;
-  87:Core/Src/Origin/Searching.c **** 
-  88:Core/Src/Origin/Searching.c **** 		ExploreVelocity=180;
-  89:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
-  90:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12;
-  91:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.043;
-  92:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
-  93:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
-  94:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
-  95:Core/Src/Origin/Searching.c **** 		break;
-  96:Core/Src/Origin/Searching.c **** 	case 3:
-  97:Core/Src/Origin/Searching.c **** 		ExploreVelocity=240;
-  98:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
-  99:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12; //16
- 100:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.078;
- 101:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
- 102:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
- 103:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
- 104:Core/Src/Origin/Searching.c **** 		break;
- 105:Core/Src/Origin/Searching.c **** 	case 4:
- 106:Core/Src/Origin/Searching.c **** 		ExploreVelocity=300;
- 107:Core/Src/Origin/Searching.c **** 		Sla.Pre = 3;
- 108:Core/Src/Origin/Searching.c **** 		Sla.Fol = 5;
- 109:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.117;
- 110:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
- 111:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
- 112:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
- 113:Core/Src/Origin/Searching.c **** 		//		//未
- 114:Core/Src/Origin/Searching.c **** 		break;
- 115:Core/Src/Origin/Searching.c **** 	}
- 116:Core/Src/Origin/Searching.c **** 	Sla.Pre *=  2/MM_PER_PULSE;
+  81:Core/Src/MazeLibrary/Searching.c **** //		Sla.Pre = 5;
+  82:Core/Src/MazeLibrary/Searching.c **** //		Sla.Fol = 10;
+  83:Core/Src/MazeLibrary/Searching.c **** //		Sla.Alpha = 0.0273;
+  84:Core/Src/MazeLibrary/Searching.c **** //		Sla.Theta1 = 30;
+  85:Core/Src/MazeLibrary/Searching.c **** //		Sla.Theta2 = 60;
+  86:Core/Src/MazeLibrary/Searching.c **** //		Sla.Theta3 = 90;
+  87:Core/Src/MazeLibrary/Searching.c **** 
+  88:Core/Src/MazeLibrary/Searching.c **** 		ExploreVelocity=180;
+  89:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 8;//2;
+  90:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 12;
+  91:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.043;
+  92:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
+  93:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
+  94:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
+  95:Core/Src/MazeLibrary/Searching.c **** 		break;
+  96:Core/Src/MazeLibrary/Searching.c **** 	case 3:
+  97:Core/Src/MazeLibrary/Searching.c **** 		ExploreVelocity=240;
+  98:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 8;//2;
+  99:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 12; //16
+ 100:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.078;
+ 101:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
+ 102:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
+ 103:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
+ 104:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 105:Core/Src/MazeLibrary/Searching.c **** 	case 4:
+ 106:Core/Src/MazeLibrary/Searching.c **** 		ExploreVelocity=300;
+ 107:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 3;
+ 108:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 5;
+ 109:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.117;
+ 110:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
+ 111:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
+ 112:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
+ 113:Core/Src/MazeLibrary/Searching.c **** 		//		//未
+ 114:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 115:Core/Src/MazeLibrary/Searching.c **** 	}
+ 116:Core/Src/MazeLibrary/Searching.c **** 	Sla.Pre *=  2/MM_PER_PULSE;
  332              		.loc 1 116 2 view .LVU92
  333              		.loc 1 116 10 is_stmt 0 view .LVU93
  334 002e 3E4C     		ldr	r4, .L33+24
@@ -530,7 +530,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  342 0040 FFF7FEFF 		bl	__aeabi_d2f
  343              	.LVL30:
  344 0044 2060     		str	r0, [r4]	@ float
- 117:Core/Src/Origin/Searching.c **** 	Sla.Fol *=  2/MM_PER_PULSE;
+ 117:Core/Src/MazeLibrary/Searching.c **** 	Sla.Fol *=  2/MM_PER_PULSE;
  345              		.loc 1 117 2 is_stmt 1 view .LVU94
  346              		.loc 1 117 10 is_stmt 0 view .LVU95
  347 0046 6068     		ldr	r0, [r4, #4]	@ float
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  349              	.LVL31:
  350 004c 30A3     		adr	r3, .L33
  351 004e D3E90023 		ldrd	r2, [r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 10
 
 
  352 0052 FFF7FEFF 		bl	__aeabi_dmul
@@ -546,7 +546,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  354 0056 FFF7FEFF 		bl	__aeabi_d2f
  355              	.LVL33:
  356 005a 6060     		str	r0, [r4, #4]	@ float
- 118:Core/Src/Origin/Searching.c **** 	Sla.Theta1 *= M_PI/180;
+ 118:Core/Src/MazeLibrary/Searching.c **** 	Sla.Theta1 *= M_PI/180;
  357              		.loc 1 118 2 is_stmt 1 view .LVU96
  358              		.loc 1 118 13 is_stmt 0 view .LVU97
  359 005c 2069     		ldr	r0, [r4, #16]	@ float
@@ -559,7 +559,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  366 006c FFF7FEFF 		bl	__aeabi_d2f
  367              	.LVL36:
  368 0070 2061     		str	r0, [r4, #16]	@ float
- 119:Core/Src/Origin/Searching.c **** 	Sla.Theta2 *= M_PI/180;
+ 119:Core/Src/MazeLibrary/Searching.c **** 	Sla.Theta2 *= M_PI/180;
  369              		.loc 1 119 2 is_stmt 1 view .LVU98
  370              		.loc 1 119 13 is_stmt 0 view .LVU99
  371 0072 6069     		ldr	r0, [r4, #20]	@ float
@@ -572,7 +572,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  378 0082 FFF7FEFF 		bl	__aeabi_d2f
  379              	.LVL39:
  380 0086 6061     		str	r0, [r4, #20]	@ float
- 120:Core/Src/Origin/Searching.c **** 	Sla.Theta3 *= M_PI/180;
+ 120:Core/Src/MazeLibrary/Searching.c **** 	Sla.Theta3 *= M_PI/180;
  381              		.loc 1 120 2 is_stmt 1 view .LVU100
  382              		.loc 1 120 13 is_stmt 0 view .LVU101
  383 0088 A069     		ldr	r0, [r4, #24]	@ float
@@ -585,160 +585,160 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  390 0098 FFF7FEFF 		bl	__aeabi_d2f
  391              	.LVL42:
  392 009c A061     		str	r0, [r4, #24]	@ float
- 121:Core/Src/Origin/Searching.c **** }
+ 121:Core/Src/MazeLibrary/Searching.c **** }
  393              		.loc 1 121 1 view .LVU102
  394 009e 10BD     		pop	{r4, pc}
  395              	.L30:
-  88:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+  88:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 8;//2;
  396              		.loc 1 88 3 is_stmt 1 view .LVU103
-  88:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+  88:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 8;//2;
  397              		.loc 1 88 18 is_stmt 0 view .LVU104
  398 00a0 204B     		ldr	r3, .L33+20
  399 00a2 274A     		ldr	r2, .L33+48
  400 00a4 1A60     		str	r2, [r3]	@ float
-  89:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12;
+  89:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 12;
  401              		.loc 1 89 3 is_stmt 1 view .LVU105
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 11
 
 
-  89:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12;
+  89:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 12;
  402              		.loc 1 89 11 is_stmt 0 view .LVU106
  403 00a6 204B     		ldr	r3, .L33+24
  404 00a8 4FF08242 		mov	r2, #1090519040
  405 00ac 1A60     		str	r2, [r3]	@ float
-  90:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.043;
+  90:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.043;
  406              		.loc 1 90 3 is_stmt 1 view .LVU107
-  90:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.043;
+  90:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.043;
  407              		.loc 1 90 11 is_stmt 0 view .LVU108
  408 00ae 254A     		ldr	r2, .L33+52
  409 00b0 5A60     		str	r2, [r3, #4]	@ float
-  91:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+  91:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  410              		.loc 1 91 3 is_stmt 1 view .LVU109
-  91:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+  91:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  411              		.loc 1 91 13 is_stmt 0 view .LVU110
  412 00b2 254A     		ldr	r2, .L33+56
  413 00b4 9A60     		str	r2, [r3, #8]	@ float
-  92:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+  92:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
  414              		.loc 1 92 3 is_stmt 1 view .LVU111
-  92:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+  92:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
  415              		.loc 1 92 14 is_stmt 0 view .LVU112
  416 00b6 204A     		ldr	r2, .L33+40
  417 00b8 1A61     		str	r2, [r3, #16]	@ float
-  93:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+  93:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  418              		.loc 1 93 3 is_stmt 1 view .LVU113
-  93:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+  93:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  419              		.loc 1 93 14 is_stmt 0 view .LVU114
  420 00ba 204A     		ldr	r2, .L33+44
  421 00bc 5A61     		str	r2, [r3, #20]	@ float
-  94:Core/Src/Origin/Searching.c **** 		break;
+  94:Core/Src/MazeLibrary/Searching.c **** 		break;
  422              		.loc 1 94 3 is_stmt 1 view .LVU115
-  94:Core/Src/Origin/Searching.c **** 		break;
+  94:Core/Src/MazeLibrary/Searching.c **** 		break;
  423              		.loc 1 94 14 is_stmt 0 view .LVU116
  424 00be 184A     		ldr	r2, .L33+16
  425 00c0 9A61     		str	r2, [r3, #24]	@ float
-  95:Core/Src/Origin/Searching.c **** 	case 3:
+  95:Core/Src/MazeLibrary/Searching.c **** 	case 3:
  426              		.loc 1 95 3 is_stmt 1 view .LVU117
  427 00c2 B4E7     		b	.L26
  428              	.L29:
-  97:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+  97:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 8;//2;
  429              		.loc 1 97 3 view .LVU118
-  97:Core/Src/Origin/Searching.c **** 		Sla.Pre = 8;//2;
+  97:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 8;//2;
  430              		.loc 1 97 18 is_stmt 0 view .LVU119
  431 00c4 174B     		ldr	r3, .L33+20
  432 00c6 214A     		ldr	r2, .L33+60
  433 00c8 1A60     		str	r2, [r3]	@ float
-  98:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12; //16
+  98:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 12; //16
  434              		.loc 1 98 3 is_stmt 1 view .LVU120
-  98:Core/Src/Origin/Searching.c **** 		Sla.Fol = 12; //16
+  98:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 12; //16
  435              		.loc 1 98 11 is_stmt 0 view .LVU121
  436 00ca 174B     		ldr	r3, .L33+24
  437 00cc 4FF08242 		mov	r2, #1090519040
  438 00d0 1A60     		str	r2, [r3]	@ float
-  99:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.078;
+  99:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.078;
  439              		.loc 1 99 3 is_stmt 1 view .LVU122
-  99:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.078;
+  99:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.078;
  440              		.loc 1 99 11 is_stmt 0 view .LVU123
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 12
 
 
  441 00d2 1C4A     		ldr	r2, .L33+52
  442 00d4 5A60     		str	r2, [r3, #4]	@ float
- 100:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 100:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  443              		.loc 1 100 3 is_stmt 1 view .LVU124
- 100:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 100:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  444              		.loc 1 100 13 is_stmt 0 view .LVU125
  445 00d6 1E4A     		ldr	r2, .L33+64
  446 00d8 9A60     		str	r2, [r3, #8]	@ float
- 101:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 101:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
  447              		.loc 1 101 3 is_stmt 1 view .LVU126
- 101:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 101:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
  448              		.loc 1 101 14 is_stmt 0 view .LVU127
  449 00da 174A     		ldr	r2, .L33+40
  450 00dc 1A61     		str	r2, [r3, #16]	@ float
- 102:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 102:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  451              		.loc 1 102 3 is_stmt 1 view .LVU128
- 102:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 102:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  452              		.loc 1 102 14 is_stmt 0 view .LVU129
  453 00de 174A     		ldr	r2, .L33+44
  454 00e0 5A61     		str	r2, [r3, #20]	@ float
- 103:Core/Src/Origin/Searching.c **** 		break;
+ 103:Core/Src/MazeLibrary/Searching.c **** 		break;
  455              		.loc 1 103 3 is_stmt 1 view .LVU130
- 103:Core/Src/Origin/Searching.c **** 		break;
+ 103:Core/Src/MazeLibrary/Searching.c **** 		break;
  456              		.loc 1 103 14 is_stmt 0 view .LVU131
  457 00e2 0F4A     		ldr	r2, .L33+16
  458 00e4 9A61     		str	r2, [r3, #24]	@ float
- 104:Core/Src/Origin/Searching.c **** 	case 4:
+ 104:Core/Src/MazeLibrary/Searching.c **** 	case 4:
  459              		.loc 1 104 3 is_stmt 1 view .LVU132
  460 00e6 A2E7     		b	.L26
  461              	.L27:
- 106:Core/Src/Origin/Searching.c **** 		Sla.Pre = 3;
+ 106:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 3;
  462              		.loc 1 106 3 view .LVU133
- 106:Core/Src/Origin/Searching.c **** 		Sla.Pre = 3;
+ 106:Core/Src/MazeLibrary/Searching.c **** 		Sla.Pre = 3;
  463              		.loc 1 106 18 is_stmt 0 view .LVU134
  464 00e8 0E4B     		ldr	r3, .L33+20
  465 00ea 1A4A     		ldr	r2, .L33+68
  466 00ec 1A60     		str	r2, [r3]	@ float
- 107:Core/Src/Origin/Searching.c **** 		Sla.Fol = 5;
+ 107:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 5;
  467              		.loc 1 107 3 is_stmt 1 view .LVU135
- 107:Core/Src/Origin/Searching.c **** 		Sla.Fol = 5;
+ 107:Core/Src/MazeLibrary/Searching.c **** 		Sla.Fol = 5;
  468              		.loc 1 107 11 is_stmt 0 view .LVU136
  469 00ee 0E4B     		ldr	r3, .L33+24
  470 00f0 194A     		ldr	r2, .L33+72
  471 00f2 1A60     		str	r2, [r3]	@ float
- 108:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.117;
+ 108:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.117;
  472              		.loc 1 108 3 is_stmt 1 view .LVU137
- 108:Core/Src/Origin/Searching.c **** 		Sla.Alpha = 0.117;
+ 108:Core/Src/MazeLibrary/Searching.c **** 		Sla.Alpha = 0.117;
  473              		.loc 1 108 11 is_stmt 0 view .LVU138
  474 00f4 194A     		ldr	r2, .L33+76
  475 00f6 5A60     		str	r2, [r3, #4]	@ float
- 109:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 109:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  476              		.loc 1 109 3 is_stmt 1 view .LVU139
- 109:Core/Src/Origin/Searching.c **** 		Sla.Theta1 = 30;
+ 109:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta1 = 30;
  477              		.loc 1 109 13 is_stmt 0 view .LVU140
  478 00f8 194A     		ldr	r2, .L33+80
  479 00fa 9A60     		str	r2, [r3, #8]	@ float
- 110:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 13
+ 110:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 13
 
 
  480              		.loc 1 110 3 is_stmt 1 view .LVU141
- 110:Core/Src/Origin/Searching.c **** 		Sla.Theta2 = 60;
+ 110:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta2 = 60;
  481              		.loc 1 110 14 is_stmt 0 view .LVU142
  482 00fc 0E4A     		ldr	r2, .L33+40
  483 00fe 1A61     		str	r2, [r3, #16]	@ float
- 111:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 111:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  484              		.loc 1 111 3 is_stmt 1 view .LVU143
- 111:Core/Src/Origin/Searching.c **** 		Sla.Theta3 = 90;
+ 111:Core/Src/MazeLibrary/Searching.c **** 		Sla.Theta3 = 90;
  485              		.loc 1 111 14 is_stmt 0 view .LVU144
  486 0100 0E4A     		ldr	r2, .L33+44
  487 0102 5A61     		str	r2, [r3, #20]	@ float
- 112:Core/Src/Origin/Searching.c **** 		//		//未
+ 112:Core/Src/MazeLibrary/Searching.c **** 		//		//未
  488              		.loc 1 112 3 is_stmt 1 view .LVU145
- 112:Core/Src/Origin/Searching.c **** 		//		//未
+ 112:Core/Src/MazeLibrary/Searching.c **** 		//		//未
  489              		.loc 1 112 14 is_stmt 0 view .LVU146
  490 0104 064A     		ldr	r2, .L33+16
  491 0106 9A61     		str	r2, [r3, #24]	@ float
- 114:Core/Src/Origin/Searching.c **** 	}
+ 114:Core/Src/MazeLibrary/Searching.c **** 	}
  492              		.loc 1 114 3 is_stmt 1 view .LVU147
  493 0108 91E7     		b	.L26
  494              	.L34:
@@ -777,11 +777,11 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  528              	updateRealSearch:
  529              	.LVL43:
  530              	.LFB240:
- 122:Core/Src/Origin/Searching.c **** void updateRealSearch(maze_node *maze, profile *mouse)
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 14
+ 122:Core/Src/MazeLibrary/Searching.c **** void updateRealSearch(maze_node *maze, profile *mouse)
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 14
 
 
- 123:Core/Src/Origin/Searching.c **** {
+ 123:Core/Src/MazeLibrary/Searching.c **** {
  531              		.loc 1 123 1 view -0
  532              		.cfi_startproc
  533              		@ args = 0, pretend = 0, frame = 16
@@ -800,32 +800,32 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  546              		.cfi_def_cfa_offset 48
  547 0004 0546     		mov	r5, r0
  548 0006 0C46     		mov	r4, r1
- 124:Core/Src/Origin/Searching.c **** 	//壁情報は
- 125:Core/Src/Origin/Searching.c **** 	wall_state wall_dir[4]={0};
+ 124:Core/Src/MazeLibrary/Searching.c **** 	//壁情報は
+ 125:Core/Src/MazeLibrary/Searching.c **** 	wall_state wall_dir[4]={0};
  549              		.loc 1 125 2 is_stmt 1 view .LVU150
  550              		.loc 1 125 13 is_stmt 0 view .LVU151
  551 0008 0023     		movs	r3, #0
  552 000a 0593     		str	r3, [sp, #20]
- 126:Core/Src/Origin/Searching.c **** 	//wall_state wall_st[4]={0};
- 127:Core/Src/Origin/Searching.c **** 
- 128:Core/Src/Origin/Searching.c **** 	//壁センサ値を読んで、各方角の壁の有無を判定
- 129:Core/Src/Origin/Searching.c **** 		//区画進入直前なので、更新予定の方角と座標がNextに入っているはず
- 130:Core/Src/Origin/Searching.c **** 		//前後左右の値として入れる
- 131:Core/Src/Origin/Searching.c **** 
- 132:Core/Src/Origin/Searching.c **** 	shiftState(mouse);
+ 126:Core/Src/MazeLibrary/Searching.c **** 	//wall_state wall_st[4]={0};
+ 127:Core/Src/MazeLibrary/Searching.c **** 
+ 128:Core/Src/MazeLibrary/Searching.c **** 	//壁センサ値を読んで、各方角の壁の有無を判定
+ 129:Core/Src/MazeLibrary/Searching.c **** 		//区画進入直前なので、更新予定の方角と座標がNextに入っているはず
+ 130:Core/Src/MazeLibrary/Searching.c **** 		//前後左右の値として入れる
+ 131:Core/Src/MazeLibrary/Searching.c **** 
+ 132:Core/Src/MazeLibrary/Searching.c **** 	shiftState(mouse);
  553              		.loc 1 132 2 is_stmt 1 view .LVU152
  554 000c 0846     		mov	r0, r1
  555              	.LVL44:
  556              		.loc 1 132 2 is_stmt 0 view .LVU153
  557 000e FFF7FEFF 		bl	shiftState
  558              	.LVL45:
- 133:Core/Src/Origin/Searching.c **** 	VisitedMass(mouse->now.pos);
+ 133:Core/Src/MazeLibrary/Searching.c **** 	VisitedMass(mouse->now.pos);
  559              		.loc 1 133 2 is_stmt 1 view .LVU154
  560 0012 A068     		ldr	r0, [r4, #8]
  561 0014 FFF7FEFF 		bl	VisitedMass
  562              	.LVL46:
- 134:Core/Src/Origin/Searching.c **** 
- 135:Core/Src/Origin/Searching.c ****     switch (mouse->now.car%8)
+ 134:Core/Src/MazeLibrary/Searching.c **** 
+ 135:Core/Src/MazeLibrary/Searching.c ****     switch (mouse->now.car%8)
  563              		.loc 1 135 5 view .LVU155
  564              		.loc 1 135 23 is_stmt 0 view .LVU156
  565 0018 A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  572 0026 04       		.byte	(.L41-.L38)/2
  573 0027 34       		.byte	(.L36-.L38)/2
  574 0028 6C       		.byte	(.L40-.L38)/2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 15
 
 
  575 0029 34       		.byte	(.L36-.L38)/2
@@ -847,9 +847,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  578 002c CE       		.byte	(.L37-.L38)/2
  579 002d 00       		.p2align 1
  580              	.L41:
- 136:Core/Src/Origin/Searching.c ****     {
- 137:Core/Src/Origin/Searching.c ****     case north:
- 138:Core/Src/Origin/Searching.c ****     	wall_dir[0] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 136:Core/Src/MazeLibrary/Searching.c ****     {
+ 137:Core/Src/MazeLibrary/Searching.c ****     case north:
+ 138:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
  581              		.loc 1 138 6 is_stmt 1 view .LVU158
  582              		.loc 1 138 27 is_stmt 0 view .LVU159
  583 002e A34B     		ldr	r3, .L57
@@ -870,7 +870,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  598 0054 0022     		movle	r2, #0
  599              		.loc 1 138 18 view .LVU164
  600 0056 8DF81420 		strb	r2, [sp, #20]
- 139:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 139:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  601              		.loc 1 139 6 is_stmt 1 view .LVU165
  602              		.loc 1 139 25 is_stmt 0 view .LVU166
  603 005a 93ED017A 		vldr.32	s14, [r3, #4]
@@ -883,9 +883,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  610 006e 0022     		movle	r2, #0
  611              		.loc 1 139 18 view .LVU168
  612 0070 8DF81520 		strb	r2, [sp, #21]
- 140:Core/Src/Origin/Searching.c ****     	wall_dir[2] = NOWALL;
+ 140:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = NOWALL;
  613              		.loc 1 140 6 is_stmt 1 view .LVU169
- 141:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 141:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
  614              		.loc 1 141 6 view .LVU170
  615              		.loc 1 141 25 is_stmt 0 view .LVU171
  616 0074 93ED027A 		vldr.32	s14, [r3, #8]
@@ -898,48 +898,48 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  623 0088 0023     		movle	r3, #0
  624              		.loc 1 141 18 view .LVU173
  625 008a 8DF81730 		strb	r3, [sp, #23]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 16
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 16
 
 
- 142:Core/Src/Origin/Searching.c ****         break;
+ 142:Core/Src/MazeLibrary/Searching.c ****         break;
  626              		.loc 1 142 9 is_stmt 1 view .LVU174
  627              	.L36:
- 143:Core/Src/Origin/Searching.c ****     case east:
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[1] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
- 145:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
- 146:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
- 147:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 148:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
- 149:Core/Src/Origin/Searching.c **** //    		ChangeLED(7);
- 150:Core/Src/Origin/Searching.c **** //    	else if(wall_dir[1] == NOWALL  && wall_dir[2] == WALL && wall_dir[0] == WALL)
- 151:Core/Src/Origin/Searching.c **** //		{
- 152:Core/Src/Origin/Searching.c **** //    		ChangeLED(1);
- 153:Core/Src/Origin/Searching.c **** //    		//全て正常に認識している
- 154:Core/Src/Origin/Searching.c **** //		}
- 155:Core/Src/Origin/Searching.c ****         break;
- 156:Core/Src/Origin/Searching.c ****     case south:
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[2] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
- 158:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
- 159:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
- 160:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 161:Core/Src/Origin/Searching.c ****         break;
- 162:Core/Src/Origin/Searching.c ****     case west:
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[3] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
- 164:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
- 165:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
- 166:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
- 167:Core/Src/Origin/Searching.c ****         break;
- 168:Core/Src/Origin/Searching.c ****     default:
- 169:Core/Src/Origin/Searching.c ****         //万が一斜めの方角を向いているときに呼び出してしまったら、
- 170:Core/Src/Origin/Searching.c ****         break;
- 171:Core/Src/Origin/Searching.c ****     }
- 172:Core/Src/Origin/Searching.c **** 	//各方角の壁に壁の有無を代入
- 173:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].north = wall_dir[0];
- 174:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].east = wall_dir[1];
- 175:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].south = wall_dir[2];
- 176:Core/Src/Origin/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].west = wall_dir[3];
- 177:Core/Src/Origin/Searching.c ****     //アクションが終わるときがノードの上にいる状態なので、状態シフト
- 178:Core/Src/Origin/Searching.c ****     mouse->now.wall.north = wall_dir[0];
+ 143:Core/Src/MazeLibrary/Searching.c ****     case east:
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 145:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 146:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = NOWALL;
+ 147:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 148:Core/Src/MazeLibrary/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 149:Core/Src/MazeLibrary/Searching.c **** //    		ChangeLED(7);
+ 150:Core/Src/MazeLibrary/Searching.c **** //    	else if(wall_dir[1] == NOWALL  && wall_dir[2] == WALL && wall_dir[0] == WALL)
+ 151:Core/Src/MazeLibrary/Searching.c **** //		{
+ 152:Core/Src/MazeLibrary/Searching.c **** //    		ChangeLED(1);
+ 153:Core/Src/MazeLibrary/Searching.c **** //    		//全て正常に認識している
+ 154:Core/Src/MazeLibrary/Searching.c **** //		}
+ 155:Core/Src/MazeLibrary/Searching.c ****         break;
+ 156:Core/Src/MazeLibrary/Searching.c ****     case south:
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 158:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 159:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = NOWALL;
+ 160:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 161:Core/Src/MazeLibrary/Searching.c ****         break;
+ 162:Core/Src/MazeLibrary/Searching.c ****     case west:
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = ((Photo[FL] + Photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら
+ 164:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 165:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = NOWALL;
+ 166:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 167:Core/Src/MazeLibrary/Searching.c ****         break;
+ 168:Core/Src/MazeLibrary/Searching.c ****     default:
+ 169:Core/Src/MazeLibrary/Searching.c ****         //万が一斜めの方角を向いているときに呼び出してしまったら、
+ 170:Core/Src/MazeLibrary/Searching.c ****         break;
+ 171:Core/Src/MazeLibrary/Searching.c ****     }
+ 172:Core/Src/MazeLibrary/Searching.c **** 	//各方角の壁に壁の有無を代入
+ 173:Core/Src/MazeLibrary/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].north = wall_dir[0];
+ 174:Core/Src/MazeLibrary/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].east = wall_dir[1];
+ 175:Core/Src/MazeLibrary/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].south = wall_dir[2];
+ 176:Core/Src/MazeLibrary/Searching.c **** //	Wall[Pos.NextX][Pos.NextY].west = wall_dir[3];
+ 177:Core/Src/MazeLibrary/Searching.c ****     //アクションが終わるときがノードの上にいる状態なので、状態シフト
+ 178:Core/Src/MazeLibrary/Searching.c ****     mouse->now.wall.north = wall_dir[0];
  628              		.loc 1 178 5 view .LVU175
  629              		.loc 1 178 37 is_stmt 0 view .LVU176
  630 008e 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
@@ -947,7 +947,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  632 0092 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
  633 0094 62F30103 		bfi	r3, r2, #0, #2
  634 0098 2373     		strb	r3, [r4, #12]
- 179:Core/Src/Origin/Searching.c ****     mouse->now.wall.east = wall_dir[1];
+ 179:Core/Src/MazeLibrary/Searching.c ****     mouse->now.wall.east = wall_dir[1];
  635              		.loc 1 179 5 is_stmt 1 view .LVU178
  636              		.loc 1 179 36 is_stmt 0 view .LVU179
  637 009a 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
@@ -955,10 +955,10 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  639 009e DBB2     		uxtb	r3, r3
  640 00a0 62F38303 		bfi	r3, r2, #2, #2
  641 00a4 2373     		strb	r3, [r4, #12]
- 180:Core/Src/Origin/Searching.c ****     mouse->now.wall.south = wall_dir[2];
+ 180:Core/Src/MazeLibrary/Searching.c ****     mouse->now.wall.south = wall_dir[2];
  642              		.loc 1 180 5 is_stmt 1 view .LVU181
  643              		.loc 1 180 37 is_stmt 0 view .LVU182
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 17
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 17
 
 
  644 00a6 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
@@ -966,7 +966,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  646 00aa DBB2     		uxtb	r3, r3
  647 00ac 62F30513 		bfi	r3, r2, #4, #2
  648 00b0 2373     		strb	r3, [r4, #12]
- 181:Core/Src/Origin/Searching.c ****     mouse->now.wall.west = wall_dir[3];
+ 181:Core/Src/MazeLibrary/Searching.c ****     mouse->now.wall.west = wall_dir[3];
  649              		.loc 1 181 5 is_stmt 1 view .LVU184
  650              		.loc 1 181 36 is_stmt 0 view .LVU185
  651 00b2 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
@@ -974,12 +974,12 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  653 00b6 DBB2     		uxtb	r3, r3
  654 00b8 62F38713 		bfi	r3, r2, #6, #2
  655 00bc 2373     		strb	r3, [r4, #12]
- 182:Core/Src/Origin/Searching.c **** 
- 183:Core/Src/Origin/Searching.c **** 	//getWallNow(&(my_mouse->now), &wall[0]);
- 184:Core/Src/Origin/Searching.c **** 
- 185:Core/Src/Origin/Searching.c ****     //現在方角、壁は、合ってる。座標とノードは？
- 186:Core/Src/Origin/Searching.c ****     //ここで壁の存在を反映
- 187:Core/Src/Origin/Searching.c **** 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
+ 182:Core/Src/MazeLibrary/Searching.c **** 
+ 183:Core/Src/MazeLibrary/Searching.c **** 	//getWallNow(&(my_mouse->now), &wall[0]);
+ 184:Core/Src/MazeLibrary/Searching.c **** 
+ 185:Core/Src/MazeLibrary/Searching.c ****     //現在方角、壁は、合ってる。座標とノードは？
+ 186:Core/Src/MazeLibrary/Searching.c ****     //ここで壁の存在を反映
+ 187:Core/Src/MazeLibrary/Searching.c **** 	updateNodeThree(maze, &(mouse->now), mouse->now.pos.x, mouse->now.pos.y);
  656              		.loc 1 187 2 is_stmt 1 view .LVU187
  657 00be 04F10806 		add	r6, r4, #8
  658 00c2 637A     		ldrb	r3, [r4, #9]	@ zero_extendqisi2
@@ -988,17 +988,17 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  661 00c8 2846     		mov	r0, r5
  662 00ca FFF7FEFF 		bl	updateNodeThree
  663              	.LVL47:
- 188:Core/Src/Origin/Searching.c **** 
- 189:Core/Src/Origin/Searching.c **** 
- 190:Core/Src/Origin/Searching.c **** 	//これの前に、target.posに到達したかどうかが必要
- 191:Core/Src/Origin/Searching.c **** 			//到達していればStackを再開
- 192:Core/Src/Origin/Searching.c **** 	position start_pos = {0,0};
+ 188:Core/Src/MazeLibrary/Searching.c **** 
+ 189:Core/Src/MazeLibrary/Searching.c **** 
+ 190:Core/Src/MazeLibrary/Searching.c **** 	//これの前に、target.posに到達したかどうかが必要
+ 191:Core/Src/MazeLibrary/Searching.c **** 			//到達していればStackを再開
+ 192:Core/Src/MazeLibrary/Searching.c **** 	position start_pos = {0,0};
  664              		.loc 1 192 2 view .LVU188
  665              		.loc 1 192 11 is_stmt 0 view .LVU189
  666 00ce 0023     		movs	r3, #0
  667 00d0 8DF81030 		strb	r3, [sp, #16]
  668 00d4 8DF81130 		strb	r3, [sp, #17]
- 193:Core/Src/Origin/Searching.c **** 	if(GetStackFlag() == true){
+ 193:Core/Src/MazeLibrary/Searching.c **** 	if(GetStackFlag() == true){
  669              		.loc 1 193 2 is_stmt 1 view .LVU190
  670              		.loc 1 193 5 is_stmt 0 view .LVU191
  671 00d8 FFF7FEFF 		bl	GetStackFlag
@@ -1007,56 +1007,56 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  674 00dc 0028     		cmp	r0, #0
  675 00de 40F0A180 		bne	.L53
  676              	.L42:
- 194:Core/Src/Origin/Searching.c **** 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.p
- 195:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
- 196:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
- 197:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
- 198:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
- 199:Core/Src/Origin/Searching.c **** 
- 200:Core/Src/Origin/Searching.c **** 				int n = GetStackNum();
- 201:Core/Src/Origin/Searching.c **** 
- 202:Core/Src/Origin/Searching.c **** 				//0なら
- 203:Core/Src/Origin/Searching.c **** 				if(n == 0){
- 204:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 18
+ 194:Core/Src/MazeLibrary/Searching.c **** 			if(ComparePosition(&(mouse->target.pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target.p
+ 195:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
+ 196:Core/Src/MazeLibrary/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
+ 197:Core/Src/MazeLibrary/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
+ 198:Core/Src/MazeLibrary/Searching.c **** 				else ChangeLED(0);
+ 199:Core/Src/MazeLibrary/Searching.c **** 
+ 200:Core/Src/MazeLibrary/Searching.c **** 				int n = GetStackNum();
+ 201:Core/Src/MazeLibrary/Searching.c **** 
+ 202:Core/Src/MazeLibrary/Searching.c **** 				//0なら
+ 203:Core/Src/MazeLibrary/Searching.c **** 				if(n == 0){
+ 204:Core/Src/MazeLibrary/Searching.c **** 					WALL_MASK = 0x01;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 18
 
 
- 205:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
- 206:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
- 207:Core/Src/Origin/Searching.c **** 				}//0以外なら通常通り
- 208:Core/Src/Origin/Searching.c **** 				else{
- 209:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
- 210:Core/Src/Origin/Searching.c **** 					position pos;
- 211:Core/Src/Origin/Searching.c **** 					_Bool is_first = false;
- 212:Core/Src/Origin/Searching.c **** 					while( 1 ){
- 213:Core/Src/Origin/Searching.c **** 						pos = GetStackMass();
- 214:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
- 215:Core/Src/Origin/Searching.c **** 						if(n == 0){
- 216:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
- 217:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
- 218:Core/Src/Origin/Searching.c **** 							break;
- 219:Core/Src/Origin/Searching.c **** 						}
- 220:Core/Src/Origin/Searching.c **** 						else if(is_first == false){
- 221:Core/Src/Origin/Searching.c **** 
- 222:Core/Src/Origin/Searching.c **** 							mouse->target.pos =pos;
- 223:Core/Src/Origin/Searching.c **** 							--n;
- 224:Core/Src/Origin/Searching.c **** 							SetStackNum(n);
- 225:Core/Src/Origin/Searching.c **** 							break;
- 226:Core/Src/Origin/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
- 227:Core/Src/Origin/Searching.c **** 						else if(is_first == true){
- 228:Core/Src/Origin/Searching.c **** 							--n;
- 229:Core/Src/Origin/Searching.c **** 							SetStackNum(n); //0になったら
- 230:Core/Src/Origin/Searching.c **** 						}
- 231:Core/Src/Origin/Searching.c **** 						 //訪問済みであれば更に下を読む
- 232:Core/Src/Origin/Searching.c **** 					}
- 233:Core/Src/Origin/Searching.c **** 				}
- 234:Core/Src/Origin/Searching.c **** 
- 235:Core/Src/Origin/Searching.c **** 			}//到達していなければ、そのまま最短でtarget.posに向かう
- 236:Core/Src/Origin/Searching.c **** 	}
- 237:Core/Src/Origin/Searching.c **** 
- 238:Core/Src/Origin/Searching.c **** //	int WALL_MASK = 0x01;
- 239:Core/Src/Origin/Searching.c **** 	//壁の存在を基に重みマップを更新
- 240:Core/Src/Origin/Searching.c **** 	updateAllNodeWeight(maze, mouse->target.pos.x, mouse->target.pos.y, mouse->target_size, mouse->tar
+ 205:Core/Src/MazeLibrary/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+ 206:Core/Src/MazeLibrary/Searching.c **** 					SetStackNum(n);
+ 207:Core/Src/MazeLibrary/Searching.c **** 				}//0以外なら通常通り
+ 208:Core/Src/MazeLibrary/Searching.c **** 				else{
+ 209:Core/Src/MazeLibrary/Searching.c **** 					WALL_MASK = 0x01;
+ 210:Core/Src/MazeLibrary/Searching.c **** 					position pos;
+ 211:Core/Src/MazeLibrary/Searching.c **** 					_Bool is_first = false;
+ 212:Core/Src/MazeLibrary/Searching.c **** 					while( 1 ){
+ 213:Core/Src/MazeLibrary/Searching.c **** 						pos = GetStackMass();
+ 214:Core/Src/MazeLibrary/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
+ 215:Core/Src/MazeLibrary/Searching.c **** 						if(n == 0){
+ 216:Core/Src/MazeLibrary/Searching.c **** 							mouse->target.pos = pos;
+ 217:Core/Src/MazeLibrary/Searching.c **** 							ChangeLED(7);
+ 218:Core/Src/MazeLibrary/Searching.c **** 							break;
+ 219:Core/Src/MazeLibrary/Searching.c **** 						}
+ 220:Core/Src/MazeLibrary/Searching.c **** 						else if(is_first == false){
+ 221:Core/Src/MazeLibrary/Searching.c **** 
+ 222:Core/Src/MazeLibrary/Searching.c **** 							mouse->target.pos =pos;
+ 223:Core/Src/MazeLibrary/Searching.c **** 							--n;
+ 224:Core/Src/MazeLibrary/Searching.c **** 							SetStackNum(n);
+ 225:Core/Src/MazeLibrary/Searching.c **** 							break;
+ 226:Core/Src/MazeLibrary/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
+ 227:Core/Src/MazeLibrary/Searching.c **** 						else if(is_first == true){
+ 228:Core/Src/MazeLibrary/Searching.c **** 							--n;
+ 229:Core/Src/MazeLibrary/Searching.c **** 							SetStackNum(n); //0になったら
+ 230:Core/Src/MazeLibrary/Searching.c **** 						}
+ 231:Core/Src/MazeLibrary/Searching.c **** 						 //訪問済みであれば更に下を読む
+ 232:Core/Src/MazeLibrary/Searching.c **** 					}
+ 233:Core/Src/MazeLibrary/Searching.c **** 				}
+ 234:Core/Src/MazeLibrary/Searching.c **** 
+ 235:Core/Src/MazeLibrary/Searching.c **** 			}//到達していなければ、そのまま最短でtarget.posに向かう
+ 236:Core/Src/MazeLibrary/Searching.c **** 	}
+ 237:Core/Src/MazeLibrary/Searching.c **** 
+ 238:Core/Src/MazeLibrary/Searching.c **** //	int WALL_MASK = 0x01;
+ 239:Core/Src/MazeLibrary/Searching.c **** 	//壁の存在を基に重みマップを更新
+ 240:Core/Src/MazeLibrary/Searching.c **** 	updateAllNodeWeight(maze, mouse->target.pos.x, mouse->target.pos.y, mouse->target_size, mouse->tar
  677              		.loc 1 240 2 is_stmt 1 view .LVU193
  678 00e2 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
  679 00e4 794A     		ldr	r2, .L57+16
@@ -1068,8 +1068,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  685 00f4 2846     		mov	r0, r5
  686 00f6 FFF7FEFF 		bl	updateAllNodeWeight
  687              	.LVL49:
- 241:Core/Src/Origin/Searching.c **** 			//mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01); // goal_lesser_x,
- 242:Core/Src/Origin/Searching.c **** }
+ 241:Core/Src/MazeLibrary/Searching.c **** 			//mouse->goal_lesser.x, mouse->goal_lesser.y, GOAL_SIZE_X, GOAL_SIZE_Y, 0x01); // goal_lesser_x,
+ 242:Core/Src/MazeLibrary/Searching.c **** }
  688              		.loc 1 242 1 is_stmt 0 view .LVU194
  689 00fa 07B0     		add	sp, sp, #28
  690              	.LCFI7:
@@ -1078,29 +1078,29 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  693              		@ sp needed
  694 00fc F0BD     		pop	{r4, r5, r6, r7, pc}
  695              	.LVL50:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 19
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 19
 
 
  696              	.L40:
  697              	.LCFI8:
  698              		.cfi_restore_state
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  699              		.loc 1 144 6 is_stmt 1 view .LVU195
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  700              		.loc 1 144 27 is_stmt 0 view .LVU196
  701 00fe 6F4B     		ldr	r3, .L57
  702 0100 D3ED007A 		vldr.32	s15, [r3]
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  703              		.loc 1 144 39 view .LVU197
  704 0104 93ED037A 		vldr.32	s14, [r3, #12]
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  705              		.loc 1 144 32 view .LVU198
  706 0108 77EE877A 		vadd.f32	s15, s15, s14
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  707              		.loc 1 144 44 view .LVU199
  708 010c B6EE007A 		vmov.f32	s14, #5.0e-1
  709 0110 67EE877A 		vmul.f32	s15, s15, s14
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  710              		.loc 1 144 74 view .LVU200
  711 0114 9FED6A7A 		vldr.32	s14, .L57+4
  712 0118 F4EEC77A 		vcmpe.f32	s15, s14
@@ -1108,15 +1108,15 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  714 0120 CCBF     		ite	gt
  715 0122 0122     		movgt	r2, #1
  716 0124 0022     		movle	r2, #0
- 144:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 144:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  717              		.loc 1 144 18 view .LVU201
  718 0126 8DF81520 		strb	r2, [sp, #21]
- 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 145:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = NOWALL;
  719              		.loc 1 145 6 is_stmt 1 view .LVU202
- 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 145:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = NOWALL;
  720              		.loc 1 145 25 is_stmt 0 view .LVU203
  721 012a 93ED017A 		vldr.32	s14, [r3, #4]
- 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 145:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = NOWALL;
  722              		.loc 1 145 56 view .LVU204
  723 012e DFED657A 		vldr.32	s15, .L57+8
  724 0132 B4EEE77A 		vcmpe.f32	s14, s15
@@ -1124,51 +1124,51 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  726 013a CCBF     		ite	gt
  727 013c 0122     		movgt	r2, #1
  728 013e 0022     		movle	r2, #0
- 145:Core/Src/Origin/Searching.c ****     	wall_dir[3] = NOWALL;
+ 145:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = NOWALL;
  729              		.loc 1 145 18 view .LVU205
  730 0140 8DF81620 		strb	r2, [sp, #22]
- 146:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 146:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
  731              		.loc 1 146 6 is_stmt 1 view .LVU206
- 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 147:Core/Src/MazeLibrary/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
  732              		.loc 1 147 6 view .LVU207
- 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 147:Core/Src/MazeLibrary/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
  733              		.loc 1 147 25 is_stmt 0 view .LVU208
  734 0144 93ED027A 		vldr.32	s14, [r3, #8]
- 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 147:Core/Src/MazeLibrary/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
  735              		.loc 1 147 50 view .LVU209
  736 0148 DFED5F7A 		vldr.32	s15, .L57+12
  737 014c B4EEE77A 		vcmpe.f32	s14, s15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 20
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 20
 
 
  738 0150 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  739 0154 CCBF     		ite	gt
  740 0156 0123     		movgt	r3, #1
  741 0158 0023     		movle	r3, #0
- 147:Core/Src/Origin/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
+ 147:Core/Src/MazeLibrary/Searching.c **** //    	if(wall_dir[0] == NOWALL && wall_dir[2] == NOWALL) //右に無いと判断したのかどう
  742              		.loc 1 147 18 view .LVU210
  743 015a 8DF81430 		strb	r3, [sp, #20]
- 155:Core/Src/Origin/Searching.c ****     case south:
+ 155:Core/Src/MazeLibrary/Searching.c ****     case south:
  744              		.loc 1 155 9 is_stmt 1 view .LVU211
  745 015e 96E7     		b	.L36
  746              	.L39:
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  747              		.loc 1 157 6 view .LVU212
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  748              		.loc 1 157 27 is_stmt 0 view .LVU213
  749 0160 564B     		ldr	r3, .L57
  750 0162 D3ED007A 		vldr.32	s15, [r3]
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  751              		.loc 1 157 39 view .LVU214
  752 0166 93ED037A 		vldr.32	s14, [r3, #12]
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  753              		.loc 1 157 32 view .LVU215
  754 016a 77EE877A 		vadd.f32	s15, s15, s14
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  755              		.loc 1 157 44 view .LVU216
  756 016e B6EE007A 		vmov.f32	s14, #5.0e-1
  757 0172 67EE877A 		vmul.f32	s15, s15, s14
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  758              		.loc 1 157 74 view .LVU217
  759 0176 9FED527A 		vldr.32	s14, .L57+4
  760 017a F4EEC77A 		vcmpe.f32	s15, s14
@@ -1176,15 +1176,15 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  762 0182 CCBF     		ite	gt
  763 0184 0122     		movgt	r2, #1
  764 0186 0022     		movle	r2, #0
- 157:Core/Src/Origin/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 157:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[3] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  765              		.loc 1 157 18 view .LVU218
  766 0188 8DF81620 		strb	r2, [sp, #22]
- 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 158:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = NOWALL;
  767              		.loc 1 158 6 is_stmt 1 view .LVU219
- 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 158:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = NOWALL;
  768              		.loc 1 158 25 is_stmt 0 view .LVU220
  769 018c 93ED017A 		vldr.32	s14, [r3, #4]
- 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 158:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = NOWALL;
  770              		.loc 1 158 56 view .LVU221
  771 0190 DFED4C7A 		vldr.32	s15, .L57+8
  772 0194 B4EEE77A 		vcmpe.f32	s14, s15
@@ -1192,20 +1192,20 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  774 019c CCBF     		ite	gt
  775 019e 0122     		movgt	r2, #1
  776 01a0 0022     		movle	r2, #0
- 158:Core/Src/Origin/Searching.c ****     	wall_dir[0] = NOWALL;
+ 158:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = NOWALL;
  777              		.loc 1 158 18 view .LVU222
  778 01a2 8DF81720 		strb	r2, [sp, #23]
- 159:Core/Src/Origin/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 159:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
  779              		.loc 1 159 6 is_stmt 1 view .LVU223
- 160:Core/Src/Origin/Searching.c ****         break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 21
+ 160:Core/Src/MazeLibrary/Searching.c ****         break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 21
 
 
  780              		.loc 1 160 6 view .LVU224
- 160:Core/Src/Origin/Searching.c ****         break;
+ 160:Core/Src/MazeLibrary/Searching.c ****         break;
  781              		.loc 1 160 25 is_stmt 0 view .LVU225
  782 01a6 93ED027A 		vldr.32	s14, [r3, #8]
- 160:Core/Src/Origin/Searching.c ****         break;
+ 160:Core/Src/MazeLibrary/Searching.c ****         break;
  783              		.loc 1 160 50 view .LVU226
  784 01aa DFED477A 		vldr.32	s15, .L57+12
  785 01ae B4EEE77A 		vcmpe.f32	s14, s15
@@ -1213,30 +1213,30 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  787 01b6 CCBF     		ite	gt
  788 01b8 0123     		movgt	r3, #1
  789 01ba 0023     		movle	r3, #0
- 160:Core/Src/Origin/Searching.c ****         break;
+ 160:Core/Src/MazeLibrary/Searching.c ****         break;
  790              		.loc 1 160 18 view .LVU227
  791 01bc 8DF81530 		strb	r3, [sp, #21]
- 161:Core/Src/Origin/Searching.c ****     case west:
+ 161:Core/Src/MazeLibrary/Searching.c ****     case west:
  792              		.loc 1 161 9 is_stmt 1 view .LVU228
  793 01c0 65E7     		b	.L36
  794              	.L37:
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  795              		.loc 1 163 6 view .LVU229
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  796              		.loc 1 163 27 is_stmt 0 view .LVU230
  797 01c2 3E4B     		ldr	r3, .L57
  798 01c4 D3ED007A 		vldr.32	s15, [r3]
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  799              		.loc 1 163 39 view .LVU231
  800 01c8 93ED037A 		vldr.32	s14, [r3, #12]
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  801              		.loc 1 163 32 view .LVU232
  802 01cc 77EE877A 		vadd.f32	s15, s15, s14
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  803              		.loc 1 163 44 view .LVU233
  804 01d0 B6EE007A 		vmov.f32	s14, #5.0e-1
  805 01d4 67EE877A 		vmul.f32	s15, s15, s14
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  806              		.loc 1 163 74 view .LVU234
  807 01d8 9FED397A 		vldr.32	s14, .L57+4
  808 01dc F4EEC77A 		vcmpe.f32	s15, s14
@@ -1244,36 +1244,36 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  810 01e4 CCBF     		ite	gt
  811 01e6 0122     		movgt	r2, #1
  812 01e8 0022     		movle	r2, #0
- 163:Core/Src/Origin/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+ 163:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[0] = Photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  813              		.loc 1 163 18 view .LVU235
  814 01ea 8DF81720 		strb	r2, [sp, #23]
- 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 164:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = NOWALL;
  815              		.loc 1 164 6 is_stmt 1 view .LVU236
- 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 164:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = NOWALL;
  816              		.loc 1 164 25 is_stmt 0 view .LVU237
  817 01ee 93ED017A 		vldr.32	s14, [r3, #4]
- 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 164:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = NOWALL;
  818              		.loc 1 164 56 view .LVU238
  819 01f2 DFED347A 		vldr.32	s15, .L57+8
  820 01f6 B4EEE77A 		vcmpe.f32	s14, s15
  821 01fa F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  822 01fe CCBF     		ite	gt
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 22
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 22
 
 
  823 0200 0122     		movgt	r2, #1
  824 0202 0022     		movle	r2, #0
- 164:Core/Src/Origin/Searching.c ****     	wall_dir[1] = NOWALL;
+ 164:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[1] = NOWALL;
  825              		.loc 1 164 18 view .LVU239
  826 0204 8DF81420 		strb	r2, [sp, #20]
- 165:Core/Src/Origin/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+ 165:Core/Src/MazeLibrary/Searching.c ****     	wall_dir[2] = Photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
  827              		.loc 1 165 6 is_stmt 1 view .LVU240
- 166:Core/Src/Origin/Searching.c ****         break;
+ 166:Core/Src/MazeLibrary/Searching.c ****         break;
  828              		.loc 1 166 6 view .LVU241
- 166:Core/Src/Origin/Searching.c ****         break;
+ 166:Core/Src/MazeLibrary/Searching.c ****         break;
  829              		.loc 1 166 25 is_stmt 0 view .LVU242
  830 0208 93ED027A 		vldr.32	s14, [r3, #8]
- 166:Core/Src/Origin/Searching.c ****         break;
+ 166:Core/Src/MazeLibrary/Searching.c ****         break;
  831              		.loc 1 166 50 view .LVU243
  832 020c DFED2E7A 		vldr.32	s15, .L57+12
  833 0210 B4EEE77A 		vcmpe.f32	s14, s15
@@ -1281,180 +1281,180 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  835 0218 CCBF     		ite	gt
  836 021a 0123     		movgt	r3, #1
  837 021c 0023     		movle	r3, #0
- 166:Core/Src/Origin/Searching.c ****         break;
+ 166:Core/Src/MazeLibrary/Searching.c ****         break;
  838              		.loc 1 166 18 view .LVU244
  839 021e 8DF81630 		strb	r3, [sp, #22]
- 167:Core/Src/Origin/Searching.c ****     default:
+ 167:Core/Src/MazeLibrary/Searching.c ****     default:
  840              		.loc 1 167 9 is_stmt 1 view .LVU245
  841 0222 34E7     		b	.L36
  842              	.L53:
- 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 194:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
  843              		.loc 1 194 4 view .LVU246
- 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 194:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
  844              		.loc 1 194 23 is_stmt 0 view .LVU247
  845 0224 04F12007 		add	r7, r4, #32
- 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 194:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
  846              		.loc 1 194 7 view .LVU248
  847 0228 3146     		mov	r1, r6
  848 022a 3846     		mov	r0, r7
  849 022c FFF7FEFF 		bl	ComparePosition
  850              	.LVL51:
- 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 194:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
  851              		.loc 1 194 6 view .LVU249
  852 0230 30B9     		cbnz	r0, .L43
- 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 194:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
  853              		.loc 1 194 67 discriminator 1 view .LVU250
  854 0232 04A9     		add	r1, sp, #16
  855 0234 3846     		mov	r0, r7
  856 0236 FFF7FEFF 		bl	ComparePosition
  857              	.LVL52:
- 194:Core/Src/Origin/Searching.c **** 				mouse->target_size = 1;
+ 194:Core/Src/MazeLibrary/Searching.c **** 				mouse->target_size = 1;
  858              		.loc 1 194 64 discriminator 1 view .LVU251
  859 023a 0028     		cmp	r0, #0
  860 023c 3FF451AF 		beq	.L42
  861              	.L43:
  862              	.LBB12:
- 195:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
+ 195:Core/Src/MazeLibrary/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
  863              		.loc 1 195 5 is_stmt 1 view .LVU252
- 195:Core/Src/Origin/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
+ 195:Core/Src/MazeLibrary/Searching.c **** 				_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどう
  864              		.loc 1 195 24 is_stmt 0 view .LVU253
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 23
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 23
 
 
  865 0240 0123     		movs	r3, #1
  866 0242 2371     		strb	r3, [r4, #4]
- 196:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
+ 196:Core/Src/MazeLibrary/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
  867              		.loc 1 196 5 is_stmt 1 view .LVU254
- 196:Core/Src/Origin/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
+ 196:Core/Src/MazeLibrary/Searching.c **** 				if(stacked_one_or_more == 0) ChangeLED(7);
  868              		.loc 1 196 33 is_stmt 0 view .LVU255
  869 0244 3146     		mov	r1, r6
  870 0246 2846     		mov	r0, r5
  871 0248 FFF7FEFF 		bl	StackMass
  872              	.LVL53:
- 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 197:Core/Src/MazeLibrary/Searching.c **** 				else ChangeLED(0);
  873              		.loc 1 197 5 is_stmt 1 view .LVU256
- 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 197:Core/Src/MazeLibrary/Searching.c **** 				else ChangeLED(0);
  874              		.loc 1 197 7 is_stmt 0 view .LVU257
  875 024c C8B9     		cbnz	r0, .L44
- 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 197:Core/Src/MazeLibrary/Searching.c **** 				else ChangeLED(0);
  876              		.loc 1 197 34 is_stmt 1 discriminator 1 view .LVU258
  877 024e 0720     		movs	r0, #7
  878              	.LVL54:
- 197:Core/Src/Origin/Searching.c **** 				else ChangeLED(0);
+ 197:Core/Src/MazeLibrary/Searching.c **** 				else ChangeLED(0);
  879              		.loc 1 197 34 is_stmt 0 discriminator 1 view .LVU259
  880 0250 FFF7FEFF 		bl	ChangeLED
  881              	.LVL55:
  882              	.L45:
- 200:Core/Src/Origin/Searching.c **** 
+ 200:Core/Src/MazeLibrary/Searching.c **** 
  883              		.loc 1 200 5 is_stmt 1 view .LVU260
- 200:Core/Src/Origin/Searching.c **** 
+ 200:Core/Src/MazeLibrary/Searching.c **** 
  884              		.loc 1 200 13 is_stmt 0 view .LVU261
  885 0254 FFF7FEFF 		bl	GetStackNum
  886              	.LVL56:
- 203:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
+ 203:Core/Src/MazeLibrary/Searching.c **** 					WALL_MASK = 0x01;
  887              		.loc 1 203 5 is_stmt 1 view .LVU262
- 203:Core/Src/Origin/Searching.c **** 					WALL_MASK = 0x01;
+ 203:Core/Src/MazeLibrary/Searching.c **** 					WALL_MASK = 0x01;
  888              		.loc 1 203 7 is_stmt 0 view .LVU263
  889 0258 0646     		mov	r6, r0
  890 025a B0B1     		cbz	r0, .L54
  891              	.LBB13:
- 209:Core/Src/Origin/Searching.c **** 					position pos;
+ 209:Core/Src/MazeLibrary/Searching.c **** 					position pos;
  892              		.loc 1 209 6 is_stmt 1 view .LVU264
- 209:Core/Src/Origin/Searching.c **** 					position pos;
+ 209:Core/Src/MazeLibrary/Searching.c **** 					position pos;
  893              		.loc 1 209 16 is_stmt 0 view .LVU265
  894 025c 1B4B     		ldr	r3, .L57+16
  895 025e 0122     		movs	r2, #1
  896 0260 1A60     		str	r2, [r3]
- 210:Core/Src/Origin/Searching.c **** 					_Bool is_first = false;
+ 210:Core/Src/MazeLibrary/Searching.c **** 					_Bool is_first = false;
  897              		.loc 1 210 6 is_stmt 1 view .LVU266
- 211:Core/Src/Origin/Searching.c **** 					while( 1 ){
+ 211:Core/Src/MazeLibrary/Searching.c **** 					while( 1 ){
  898              		.loc 1 211 6 view .LVU267
  899              	.LVL57:
  900              	.L50:
- 212:Core/Src/Origin/Searching.c **** 						pos = GetStackMass();
+ 212:Core/Src/MazeLibrary/Searching.c **** 						pos = GetStackMass();
  901              		.loc 1 212 6 view .LVU268
- 213:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
+ 213:Core/Src/MazeLibrary/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
  902              		.loc 1 213 7 view .LVU269
- 213:Core/Src/Origin/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
+ 213:Core/Src/MazeLibrary/Searching.c **** 						is_first = GetVisited(&(pos)); //0なら未訪問
  903              		.loc 1 213 13 is_stmt 0 view .LVU270
  904 0262 FFF7FEFF 		bl	GetStackMass
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 24
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 24
 
 
  905              	.LVL58:
  906 0266 ADF80C00 		strh	r0, [sp, #12]	@ movhi
- 214:Core/Src/Origin/Searching.c **** 						if(n == 0){
+ 214:Core/Src/MazeLibrary/Searching.c **** 						if(n == 0){
  907              		.loc 1 214 7 is_stmt 1 view .LVU271
- 214:Core/Src/Origin/Searching.c **** 						if(n == 0){
+ 214:Core/Src/MazeLibrary/Searching.c **** 						if(n == 0){
  908              		.loc 1 214 18 is_stmt 0 view .LVU272
  909 026a 03A8     		add	r0, sp, #12
  910 026c FFF7FEFF 		bl	GetVisited
  911              	.LVL59:
- 215:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
+ 215:Core/Src/MazeLibrary/Searching.c **** 							mouse->target.pos = pos;
  912              		.loc 1 215 7 is_stmt 1 view .LVU273
- 215:Core/Src/Origin/Searching.c **** 							mouse->target.pos = pos;
+ 215:Core/Src/MazeLibrary/Searching.c **** 							mouse->target.pos = pos;
  913              		.loc 1 215 9 is_stmt 0 view .LVU274
  914 0270 AEB1     		cbz	r6, .L55
- 220:Core/Src/Origin/Searching.c **** 
+ 220:Core/Src/MazeLibrary/Searching.c **** 
  915              		.loc 1 220 12 is_stmt 1 view .LVU275
- 220:Core/Src/Origin/Searching.c **** 
+ 220:Core/Src/MazeLibrary/Searching.c **** 
  916              		.loc 1 220 14 is_stmt 0 view .LVU276
  917 0272 D8B1     		cbz	r0, .L56
- 227:Core/Src/Origin/Searching.c **** 							--n;
+ 227:Core/Src/MazeLibrary/Searching.c **** 							--n;
  918              		.loc 1 227 12 is_stmt 1 view .LVU277
- 227:Core/Src/Origin/Searching.c **** 							--n;
+ 227:Core/Src/MazeLibrary/Searching.c **** 							--n;
  919              		.loc 1 227 14 is_stmt 0 view .LVU278
  920 0274 0028     		cmp	r0, #0
  921 0276 F4D0     		beq	.L50
- 228:Core/Src/Origin/Searching.c **** 							SetStackNum(n); //0になったら
+ 228:Core/Src/MazeLibrary/Searching.c **** 							SetStackNum(n); //0になったら
  922              		.loc 1 228 8 is_stmt 1 view .LVU279
  923 0278 013E     		subs	r6, r6, #1
  924              	.LVL60:
- 229:Core/Src/Origin/Searching.c **** 						}
+ 229:Core/Src/MazeLibrary/Searching.c **** 						}
  925              		.loc 1 229 8 view .LVU280
  926 027a 3046     		mov	r0, r6
  927              	.LVL61:
- 229:Core/Src/Origin/Searching.c **** 						}
+ 229:Core/Src/MazeLibrary/Searching.c **** 						}
  928              		.loc 1 229 8 is_stmt 0 view .LVU281
  929 027c FFF7FEFF 		bl	SetStackNum
  930              	.LVL62:
  931 0280 EFE7     		b	.L50
  932              	.LVL63:
  933              	.L44:
- 229:Core/Src/Origin/Searching.c **** 						}
+ 229:Core/Src/MazeLibrary/Searching.c **** 						}
  934              		.loc 1 229 8 view .LVU282
  935              	.LBE13:
- 198:Core/Src/Origin/Searching.c **** 
+ 198:Core/Src/MazeLibrary/Searching.c **** 
  936              		.loc 1 198 10 is_stmt 1 view .LVU283
  937 0282 0020     		movs	r0, #0
  938              	.LVL64:
- 198:Core/Src/Origin/Searching.c **** 
+ 198:Core/Src/MazeLibrary/Searching.c **** 
  939              		.loc 1 198 10 is_stmt 0 view .LVU284
  940 0284 FFF7FEFF 		bl	ChangeLED
  941              	.LVL65:
  942 0288 E4E7     		b	.L45
  943              	.LVL66:
  944              	.L54:
- 204:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+ 204:Core/Src/MazeLibrary/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
  945              		.loc 1 204 6 is_stmt 1 view .LVU285
- 204:Core/Src/Origin/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 25
+ 204:Core/Src/MazeLibrary/Searching.c **** 					mouse->target.pos = GetStackMass(); //カウントは減らさない n = 0のまま
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 25
 
 
  946              		.loc 1 204 16 is_stmt 0 view .LVU286
  947 028a 104B     		ldr	r3, .L57+16
  948 028c 0122     		movs	r2, #1
  949 028e 1A60     		str	r2, [r3]
- 205:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 205:Core/Src/MazeLibrary/Searching.c **** 					SetStackNum(n);
  950              		.loc 1 205 6 is_stmt 1 view .LVU287
- 205:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 205:Core/Src/MazeLibrary/Searching.c **** 					SetStackNum(n);
  951              		.loc 1 205 26 is_stmt 0 view .LVU288
  952 0290 FFF7FEFF 		bl	GetStackMass
  953              	.LVL67:
- 205:Core/Src/Origin/Searching.c **** 					SetStackNum(n);
+ 205:Core/Src/MazeLibrary/Searching.c **** 					SetStackNum(n);
  954              		.loc 1 205 26 view .LVU289
  955 0294 2084     		strh	r0, [r4, #32]	@ movhi
- 206:Core/Src/Origin/Searching.c **** 				}//0以外なら通常通り
+ 206:Core/Src/MazeLibrary/Searching.c **** 				}//0以外なら通常通り
  956              		.loc 1 206 6 is_stmt 1 view .LVU290
  957 0296 3046     		mov	r0, r6
  958 0298 FFF7FEFF 		bl	SetStackNum
@@ -1463,46 +1463,46 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  961              	.LVL69:
  962              	.L55:
  963              	.LBB14:
- 216:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
+ 216:Core/Src/MazeLibrary/Searching.c **** 							ChangeLED(7);
  964              		.loc 1 216 8 view .LVU291
- 216:Core/Src/Origin/Searching.c **** 							ChangeLED(7);
+ 216:Core/Src/MazeLibrary/Searching.c **** 							ChangeLED(7);
  965              		.loc 1 216 26 is_stmt 0 view .LVU292
  966 029e BDF80C30 		ldrh	r3, [sp, #12]
  967 02a2 2384     		strh	r3, [r4, #32]	@ movhi
- 217:Core/Src/Origin/Searching.c **** 							break;
+ 217:Core/Src/MazeLibrary/Searching.c **** 							break;
  968              		.loc 1 217 8 is_stmt 1 view .LVU293
  969 02a4 0720     		movs	r0, #7
  970              	.LVL70:
- 217:Core/Src/Origin/Searching.c **** 							break;
+ 217:Core/Src/MazeLibrary/Searching.c **** 							break;
  971              		.loc 1 217 8 is_stmt 0 view .LVU294
  972 02a6 FFF7FEFF 		bl	ChangeLED
  973              	.LVL71:
- 218:Core/Src/Origin/Searching.c **** 						}
+ 218:Core/Src/MazeLibrary/Searching.c **** 						}
  974              		.loc 1 218 8 is_stmt 1 view .LVU295
  975 02aa 1AE7     		b	.L42
  976              	.LVL72:
  977              	.L56:
- 222:Core/Src/Origin/Searching.c **** 							--n;
+ 222:Core/Src/MazeLibrary/Searching.c **** 							--n;
  978              		.loc 1 222 8 view .LVU296
- 222:Core/Src/Origin/Searching.c **** 							--n;
+ 222:Core/Src/MazeLibrary/Searching.c **** 							--n;
  979              		.loc 1 222 26 is_stmt 0 view .LVU297
  980 02ac BDF80C30 		ldrh	r3, [sp, #12]
  981 02b0 2384     		strh	r3, [r4, #32]	@ movhi
- 223:Core/Src/Origin/Searching.c **** 							SetStackNum(n);
+ 223:Core/Src/MazeLibrary/Searching.c **** 							SetStackNum(n);
  982              		.loc 1 223 8 is_stmt 1 view .LVU298
  983              	.LVL73:
- 224:Core/Src/Origin/Searching.c **** 							break;
+ 224:Core/Src/MazeLibrary/Searching.c **** 							break;
  984              		.loc 1 224 8 view .LVU299
  985 02b2 701E     		subs	r0, r6, #1
  986              	.LVL74:
- 224:Core/Src/Origin/Searching.c **** 							break;
+ 224:Core/Src/MazeLibrary/Searching.c **** 							break;
  987              		.loc 1 224 8 is_stmt 0 view .LVU300
  988 02b4 FFF7FEFF 		bl	SetStackNum
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 26
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 26
 
 
  989              	.LVL75:
- 225:Core/Src/Origin/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
+ 225:Core/Src/MazeLibrary/Searching.c **** 						} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
  990              		.loc 1 225 8 is_stmt 1 view .LVU301
  991 02b8 13E7     		b	.L42
  992              	.L58:
@@ -1526,11 +1526,11 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1012              	getNextDirection:
  1013              	.LVL76:
  1014              	.LFB241:
- 243:Core/Src/Origin/Searching.c **** //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせ�
- 244:Core/Src/Origin/Searching.c **** //現情報と次情報から次の進行方向を得る処理
- 245:Core/Src/Origin/Searching.c **** 
- 246:Core/Src/Origin/Searching.c **** void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
- 247:Core/Src/Origin/Searching.c **** {
+ 243:Core/Src/MazeLibrary/Searching.c **** //↑と↓は新ノードに来た時の処理なので、アクションの区切りをずらせ�
+ 244:Core/Src/MazeLibrary/Searching.c **** //現情報と次情報から次の進行方向を得る処理
+ 245:Core/Src/MazeLibrary/Searching.c **** 
+ 246:Core/Src/MazeLibrary/Searching.c **** void getNextDirection(maze_node *maze, profile *Mouse, char turn_mode, int mask)
+ 247:Core/Src/MazeLibrary/Searching.c **** {
  1015              		.loc 1 247 1 view -0
  1016              		.cfi_startproc
  1017              		@ args = 0, pretend = 0, frame = 0
@@ -1548,17 +1548,17 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1029 0002 0546     		mov	r5, r0
  1030 0004 0C46     		mov	r4, r1
  1031 0006 1646     		mov	r6, r2
- 248:Core/Src/Origin/Searching.c **** 	//一回目の旋回後、東を向いている
- 249:Core/Src/Origin/Searching.c **** 	//選ぶノードがおかしい
- 250:Core/Src/Origin/Searching.c **** 	//重みが、壁がある方が小さくなってしまっている.
- 251:Core/Src/Origin/Searching.c **** 	//
- 252:Core/Src/Origin/Searching.c **** 
- 253:Core/Src/Origin/Searching.c **** 	//メインでノード選択
- 254:Core/Src/Origin/Searching.c **** 	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, mask);
+ 248:Core/Src/MazeLibrary/Searching.c **** 	//一回目の旋回後、東を向いている
+ 249:Core/Src/MazeLibrary/Searching.c **** 	//選ぶノードがおかしい
+ 250:Core/Src/MazeLibrary/Searching.c **** 	//重みが、壁がある方が小さくなってしまっている.
+ 251:Core/Src/MazeLibrary/Searching.c **** 	//
+ 252:Core/Src/MazeLibrary/Searching.c **** 
+ 253:Core/Src/MazeLibrary/Searching.c **** 	//メインでノード選択
+ 254:Core/Src/MazeLibrary/Searching.c **** 	Mouse->next.node = getNextNode(maze, Mouse->now.car, Mouse->now.node, mask);
  1032              		.loc 1 254 2 is_stmt 1 view .LVU304
  1033              		.loc 1 254 21 is_stmt 0 view .LVU305
  1034 0008 0A69     		ldr	r2, [r1, #16]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 27
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 27
 
 
  1035              	.LVL77:
@@ -1572,28 +1572,28 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1043 0010 0246     		mov	r2, r0
  1044              		.loc 1 254 19 view .LVU309
  1045 0012 E061     		str	r0, [r4, #28]
- 255:Core/Src/Origin/Searching.c **** 	getNextState(&(Mouse->now), &(Mouse->next), Mouse->next.node);
+ 255:Core/Src/MazeLibrary/Searching.c **** 	getNextState(&(Mouse->now), &(Mouse->next), Mouse->next.node);
  1046              		.loc 1 255 2 is_stmt 1 view .LVU310
  1047 0014 04F11401 		add	r1, r4, #20
  1048 0018 04F10800 		add	r0, r4, #8
  1049 001c FFF7FEFF 		bl	getNextState
  1050              	.LVL80:
- 256:Core/Src/Origin/Searching.c **** 
- 257:Core/Src/Origin/Searching.c **** 	//既知区間加速このswitch文中で書くかも
- 258:Core/Src/Origin/Searching.c **** 		//コマンドキューのときはここでコマンドを発行してキューに渡す
- 259:Core/Src/Origin/Searching.c **** 	AddVelocity = 0;
+ 256:Core/Src/MazeLibrary/Searching.c **** 
+ 257:Core/Src/MazeLibrary/Searching.c **** 	//既知区間加速このswitch文中で書くかも
+ 258:Core/Src/MazeLibrary/Searching.c **** 		//コマンドキューのときはここでコマンドを発行してキューに渡す
+ 259:Core/Src/MazeLibrary/Searching.c **** 	AddVelocity = 0;
  1051              		.loc 1 259 2 view .LVU311
  1052              		.loc 1 259 14 is_stmt 0 view .LVU312
  1053 0020 624B     		ldr	r3, .L77
  1054 0022 0022     		movs	r2, #0
  1055 0024 1A60     		str	r2, [r3]	@ float
- 260:Core/Src/Origin/Searching.c **** 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしま�
- 261:Core/Src/Origin/Searching.c **** 	_Bool accel_or_not = false;
+ 260:Core/Src/MazeLibrary/Searching.c **** 	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしま�
+ 261:Core/Src/MazeLibrary/Searching.c **** 	_Bool accel_or_not = false;
  1056              		.loc 1 261 2 is_stmt 1 view .LVU313
  1057              	.LVL81:
- 262:Core/Src/Origin/Searching.c **** 	int accel_or_decel = 0;
+ 262:Core/Src/MazeLibrary/Searching.c **** 	int accel_or_decel = 0;
  1058              		.loc 1 262 2 view .LVU314
- 263:Core/Src/Origin/Searching.c **** 	switch(Mouse->now.dir%8) //次の方角からアクションを選択
+ 263:Core/Src/MazeLibrary/Searching.c **** 	switch(Mouse->now.dir%8) //次の方角からアクションを選択
  1059              		.loc 1 263 2 view .LVU315
  1060              		.loc 1 263 19 is_stmt 0 view .LVU316
  1061 0026 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
@@ -1612,17 +1612,17 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1074 003a B1       		.byte	(.L61-.L62)/2
  1075 003b 00       		.p2align 1
  1076              	.L67:
- 264:Core/Src/Origin/Searching.c **** 	{
- 265:Core/Src/Origin/Searching.c **** 	case front:
- 266:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 267:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
- 268:Core/Src/Origin/Searching.c **** //		accel_or_decel = 0;
- 269:Core/Src/Origin/Searching.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 28
+ 264:Core/Src/MazeLibrary/Searching.c **** 	{
+ 265:Core/Src/MazeLibrary/Searching.c **** 	case front:
+ 266:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(0);
+ 267:Core/Src/MazeLibrary/Searching.c **** //		AddVelocity = 0;
+ 268:Core/Src/MazeLibrary/Searching.c **** //		accel_or_decel = 0;
+ 269:Core/Src/MazeLibrary/Searching.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 28
 
 
- 270:Core/Src/Origin/Searching.c **** 		//直進後の選択肢も見ておく
- 271:Core/Src/Origin/Searching.c **** 		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
+ 270:Core/Src/MazeLibrary/Searching.c **** 		//直進後の選択肢も見ておく
+ 271:Core/Src/MazeLibrary/Searching.c **** 		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
  1077              		.loc 1 271 3 is_stmt 1 view .LVU318
  1078              		.loc 1 271 18 is_stmt 0 view .LVU319
  1079 003c E269     		ldr	r2, [r4, #28]
@@ -1630,26 +1630,26 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1081 0040 2846     		mov	r0, r5
  1082 0042 FFF7FEFF 		bl	judgeAccelorNot
  1083              	.LVL82:
- 272:Core/Src/Origin/Searching.c **** 
- 273:Core/Src/Origin/Searching.c **** 		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.�
- 274:Core/Src/Origin/Searching.c **** 		if(accel_or_not == true) //既知で.直進
+ 272:Core/Src/MazeLibrary/Searching.c **** 
+ 273:Core/Src/MazeLibrary/Searching.c **** 		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.�
+ 274:Core/Src/MazeLibrary/Searching.c **** 		if(accel_or_not == true) //既知で.直進
  1084              		.loc 1 274 3 is_stmt 1 view .LVU320
  1085              		.loc 1 274 5 is_stmt 0 view .LVU321
  1086 0046 60B3     		cbz	r0, .L68
- 275:Core/Src/Origin/Searching.c **** 		{
- 276:Core/Src/Origin/Searching.c **** 			//加速かそのまま.
- 277:Core/Src/Origin/Searching.c **** 			//現在速度がマックスかどうか
- 278:Core/Src/Origin/Searching.c **** 			if(VelocityMax == true)
+ 275:Core/Src/MazeLibrary/Searching.c **** 		{
+ 276:Core/Src/MazeLibrary/Searching.c **** 			//加速かそのまま.
+ 277:Core/Src/MazeLibrary/Searching.c **** 			//現在速度がマックスかどうか
+ 278:Core/Src/MazeLibrary/Searching.c **** 			if(VelocityMax == true)
  1087              		.loc 1 278 4 is_stmt 1 view .LVU322
  1088              		.loc 1 278 19 is_stmt 0 view .LVU323
  1089 0048 594B     		ldr	r3, .L77+4
  1090 004a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  1091              		.loc 1 278 6 view .LVU324
  1092 004c EBB1     		cbz	r3, .L69
- 279:Core/Src/Origin/Searching.c **** 			{
- 280:Core/Src/Origin/Searching.c **** 				accel_or_decel = 0; //そのまま
+ 279:Core/Src/MazeLibrary/Searching.c **** 			{
+ 280:Core/Src/MazeLibrary/Searching.c **** 				accel_or_decel = 0; //そのまま
  1093              		.loc 1 280 5 is_stmt 1 view .LVU325
- 281:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 281:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
  1094              		.loc 1 281 5 view .LVU326
  1095              		.loc 1 281 34 is_stmt 0 view .LVU327
  1096 004e 594B     		ldr	r3, .L77+8
@@ -1659,57 +1659,57 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1100              		.loc 1 281 17 view .LVU328
  1101 005c 534B     		ldr	r3, .L77
  1102 005e C3ED007A 		vstr.32	s15, [r3]
- 280:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 280:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
  1103              		.loc 1 280 20 view .LVU329
  1104 0062 0020     		movs	r0, #0
  1105              	.LVL83:
  1106              	.L70:
- 282:Core/Src/Origin/Searching.c **** //				ChangeLED(0);
- 283:Core/Src/Origin/Searching.c **** 			}
- 284:Core/Src/Origin/Searching.c **** 			else
- 285:Core/Src/Origin/Searching.c **** 			{
- 286:Core/Src/Origin/Searching.c **** 				accel_or_decel = 1; //加速
- 287:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
- 288:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
- 289:Core/Src/Origin/Searching.c **** 			}
- 290:Core/Src/Origin/Searching.c **** 		}
- 291:Core/Src/Origin/Searching.c **** 		else
- 292:Core/Src/Origin/Searching.c **** 		{
- 293:Core/Src/Origin/Searching.c **** 			//未知もしくは、既知でも直進で無ければ.減速かそのまま
- 294:Core/Src/Origin/Searching.c **** 			//現在速度がマックスかどうか
- 295:Core/Src/Origin/Searching.c **** 			if(VelocityMax == true)
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 29
+ 282:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(0);
+ 283:Core/Src/MazeLibrary/Searching.c **** 			}
+ 284:Core/Src/MazeLibrary/Searching.c **** 			else
+ 285:Core/Src/MazeLibrary/Searching.c **** 			{
+ 286:Core/Src/MazeLibrary/Searching.c **** 				accel_or_decel = 1; //加速
+ 287:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 288:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(7);
+ 289:Core/Src/MazeLibrary/Searching.c **** 			}
+ 290:Core/Src/MazeLibrary/Searching.c **** 		}
+ 291:Core/Src/MazeLibrary/Searching.c **** 		else
+ 292:Core/Src/MazeLibrary/Searching.c **** 		{
+ 293:Core/Src/MazeLibrary/Searching.c **** 			//未知もしくは、既知でも直進で無ければ.減速かそのまま
+ 294:Core/Src/MazeLibrary/Searching.c **** 			//現在速度がマックスかどうか
+ 295:Core/Src/MazeLibrary/Searching.c **** 			if(VelocityMax == true)
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 29
 
 
- 296:Core/Src/Origin/Searching.c **** 			{
- 297:Core/Src/Origin/Searching.c **** 				accel_or_decel = -1; //減速
- 298:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
- 299:Core/Src/Origin/Searching.c **** //				ChangeLED(cnt);
- 300:Core/Src/Origin/Searching.c **** 				cnt += 2;
- 301:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 302:Core/Src/Origin/Searching.c **** 			}
- 303:Core/Src/Origin/Searching.c **** 			else //マックスでない
- 304:Core/Src/Origin/Searching.c **** 			{
- 305:Core/Src/Origin/Searching.c **** 				accel_or_decel = 0; //そのまま
- 306:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
- 307:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
- 308:Core/Src/Origin/Searching.c **** 			}
- 309:Core/Src/Origin/Searching.c **** 		}
- 310:Core/Src/Origin/Searching.c **** 
- 311:Core/Src/Origin/Searching.c **** 
- 312:Core/Src/Origin/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速す�
- 313:Core/Src/Origin/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのま�
- 314:Core/Src/Origin/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索�
- 315:Core/Src/Origin/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度�
- 316:Core/Src/Origin/Searching.c **** 		//ただ直進
- 317:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 296:Core/Src/MazeLibrary/Searching.c **** 			{
+ 297:Core/Src/MazeLibrary/Searching.c **** 				accel_or_decel = -1; //減速
+ 298:Core/Src/MazeLibrary/Searching.c **** 				static int cnt = 1;
+ 299:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(cnt);
+ 300:Core/Src/MazeLibrary/Searching.c **** 				cnt += 2;
+ 301:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
+ 302:Core/Src/MazeLibrary/Searching.c **** 			}
+ 303:Core/Src/MazeLibrary/Searching.c **** 			else //マックスでない
+ 304:Core/Src/MazeLibrary/Searching.c **** 			{
+ 305:Core/Src/MazeLibrary/Searching.c **** 				accel_or_decel = 0; //そのまま
+ 306:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
+ 307:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(2);
+ 308:Core/Src/MazeLibrary/Searching.c **** 			}
+ 309:Core/Src/MazeLibrary/Searching.c **** 		}
+ 310:Core/Src/MazeLibrary/Searching.c **** 
+ 311:Core/Src/MazeLibrary/Searching.c **** 
+ 312:Core/Src/MazeLibrary/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速す�
+ 313:Core/Src/MazeLibrary/Searching.c **** 		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのま�
+ 314:Core/Src/MazeLibrary/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索�
+ 315:Core/Src/MazeLibrary/Searching.c **** 		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度�
+ 316:Core/Src/MazeLibrary/Searching.c **** 		//ただ直進
+ 317:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
  1107              		.loc 1 317 3 is_stmt 1 view .LVU330
  1108              		.loc 1 317 8 is_stmt 0 view .LVU331
  1109 0064 544B     		ldr	r3, .L77+12
  1110 0066 1A68     		ldr	r2, [r3]
  1111 0068 544B     		ldr	r3, .L77+16
  1112 006a 1A60     		str	r2, [r3]
- 318:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
+ 318:Core/Src/MazeLibrary/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
  1113              		.loc 1 318 3 is_stmt 1 view .LVU332
  1114 006c 514B     		ldr	r3, .L77+8
  1115 006e D3ED000A 		vldr.32	s1, [r3]
@@ -1721,204 +1721,204 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1121 0080 9FED4F0A 		vldr.32	s0, .L77+20
  1122 0084 FFF7FEFF 		bl	GoStraight
  1123              	.LVL84:
- 319:Core/Src/Origin/Searching.c **** 		break;
+ 319:Core/Src/MazeLibrary/Searching.c **** 		break;
  1124              		.loc 1 319 3 view .LVU333
  1125              	.L59:
- 320:Core/Src/Origin/Searching.c **** 	case right:
- 321:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 322:Core/Src/Origin/Searching.c **** 		//右旋回
- 323:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 324:Core/Src/Origin/Searching.c **** 
- 325:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
- 326:Core/Src/Origin/Searching.c **** 		break;
- 327:Core/Src/Origin/Searching.c **** 	case backright:
- 328:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 329:Core/Src/Origin/Searching.c **** 		//Uターンして右旋回
- 330:Core/Src/Origin/Searching.c **** 		//壁の更新の処理を呼ばない
- 331:Core/Src/Origin/Searching.c **** //		SearchOrFast = 1;
- 332:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
- 333:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 30
+ 320:Core/Src/MazeLibrary/Searching.c **** 	case right:
+ 321:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(0);
+ 322:Core/Src/MazeLibrary/Searching.c **** 		//右旋回
+ 323:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
+ 324:Core/Src/MazeLibrary/Searching.c **** 
+ 325:Core/Src/MazeLibrary/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 326:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 327:Core/Src/MazeLibrary/Searching.c **** 	case backright:
+ 328:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(0);
+ 329:Core/Src/MazeLibrary/Searching.c **** 		//Uターンして右旋回
+ 330:Core/Src/MazeLibrary/Searching.c **** 		//壁の更新の処理を呼ばない
+ 331:Core/Src/MazeLibrary/Searching.c **** //		SearchOrFast = 1;
+ 332:Core/Src/MazeLibrary/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
+ 333:Core/Src/MazeLibrary/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 30
 
 
- 334:Core/Src/Origin/Searching.c **** 		//1ノード、アクションごとに行動を更新したい.
- 335:Core/Src/Origin/Searching.c **** 		//方角の更新は基本加減算でない
- 336:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse); //間の座標変動を
- 337:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 338:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
- 339:Core/Src/Origin/Searching.c **** 
- 340:Core/Src/Origin/Searching.c **** 
- 341:Core/Src/Origin/Searching.c **** 		break;
- 342:Core/Src/Origin/Searching.c **** 	case back:
- 343:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 344:Core/Src/Origin/Searching.c **** 		//Uターンして直進.加速できる
- 345:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
- 346:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 347:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
- 348:Core/Src/Origin/Searching.c **** //		accel_or_decel = 0;
- 349:Core/Src/Origin/Searching.c **** 		//直進後の選択肢も見ておく
- 350:Core/Src/Origin/Searching.c **** 				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
- 351:Core/Src/Origin/Searching.c **** 
- 352:Core/Src/Origin/Searching.c **** 				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか
- 353:Core/Src/Origin/Searching.c **** 				if(accel_or_not == true) //既知で.直進
- 354:Core/Src/Origin/Searching.c **** 				{
- 355:Core/Src/Origin/Searching.c **** 					//加速かそのまま.
- 356:Core/Src/Origin/Searching.c **** 					//現在速度がマックスかどうか
- 357:Core/Src/Origin/Searching.c **** 					if(VelocityMax == true)
- 358:Core/Src/Origin/Searching.c **** 					{
- 359:Core/Src/Origin/Searching.c **** 						accel_or_decel = 0; //そのまま
- 360:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 361:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
- 362:Core/Src/Origin/Searching.c **** 					}
- 363:Core/Src/Origin/Searching.c **** 					else
- 364:Core/Src/Origin/Searching.c **** 					{
- 365:Core/Src/Origin/Searching.c **** 						accel_or_decel = 1; //加速
- 366:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
- 367:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
- 368:Core/Src/Origin/Searching.c **** 					}
- 369:Core/Src/Origin/Searching.c **** 				}
- 370:Core/Src/Origin/Searching.c **** 				else
- 371:Core/Src/Origin/Searching.c **** 				{
- 372:Core/Src/Origin/Searching.c **** 					//未知もしくは、既知でも直進で無ければ.減速かそのまま
- 373:Core/Src/Origin/Searching.c **** 					//現在速度がマックスかどうか
- 374:Core/Src/Origin/Searching.c **** 					if(VelocityMax == true)
- 375:Core/Src/Origin/Searching.c **** 					{
- 376:Core/Src/Origin/Searching.c **** 						accel_or_decel = -1; //減速
- 377:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
- 378:Core/Src/Origin/Searching.c **** //						ChangeLED(cnt);
- 379:Core/Src/Origin/Searching.c **** 						cnt += 2;
- 380:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 381:Core/Src/Origin/Searching.c **** 					}
- 382:Core/Src/Origin/Searching.c **** 					else //マックスでない
- 383:Core/Src/Origin/Searching.c **** 					{
- 384:Core/Src/Origin/Searching.c **** 						accel_or_decel = 0; //そのまま
- 385:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
- 386:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
- 387:Core/Src/Origin/Searching.c **** 					}
- 388:Core/Src/Origin/Searching.c **** 				}
- 389:Core/Src/Origin/Searching.c **** 				//壁と座標の更新が要りそう
- 390:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 31
+ 334:Core/Src/MazeLibrary/Searching.c **** 		//1ノード、アクションごとに行動を更新したい.
+ 335:Core/Src/MazeLibrary/Searching.c **** 		//方角の更新は基本加減算でない
+ 336:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse); //間の座標変動を
+ 337:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
+ 338:Core/Src/MazeLibrary/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 339:Core/Src/MazeLibrary/Searching.c **** 
+ 340:Core/Src/MazeLibrary/Searching.c **** 
+ 341:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 342:Core/Src/MazeLibrary/Searching.c **** 	case back:
+ 343:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(0);
+ 344:Core/Src/MazeLibrary/Searching.c **** 		//Uターンして直進.加速できる
+ 345:Core/Src/MazeLibrary/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
+ 346:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse);
+ 347:Core/Src/MazeLibrary/Searching.c **** //		AddVelocity = 0;
+ 348:Core/Src/MazeLibrary/Searching.c **** //		accel_or_decel = 0;
+ 349:Core/Src/MazeLibrary/Searching.c **** 		//直進後の選択肢も見ておく
+ 350:Core/Src/MazeLibrary/Searching.c **** 				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
+ 351:Core/Src/MazeLibrary/Searching.c **** 
+ 352:Core/Src/MazeLibrary/Searching.c **** 				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか
+ 353:Core/Src/MazeLibrary/Searching.c **** 				if(accel_or_not == true) //既知で.直進
+ 354:Core/Src/MazeLibrary/Searching.c **** 				{
+ 355:Core/Src/MazeLibrary/Searching.c **** 					//加速かそのまま.
+ 356:Core/Src/MazeLibrary/Searching.c **** 					//現在速度がマックスかどうか
+ 357:Core/Src/MazeLibrary/Searching.c **** 					if(VelocityMax == true)
+ 358:Core/Src/MazeLibrary/Searching.c **** 					{
+ 359:Core/Src/MazeLibrary/Searching.c **** 						accel_or_decel = 0; //そのまま
+ 360:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
+ 361:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(0);
+ 362:Core/Src/MazeLibrary/Searching.c **** 					}
+ 363:Core/Src/MazeLibrary/Searching.c **** 					else
+ 364:Core/Src/MazeLibrary/Searching.c **** 					{
+ 365:Core/Src/MazeLibrary/Searching.c **** 						accel_or_decel = 1; //加速
+ 366:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
+ 367:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(7);
+ 368:Core/Src/MazeLibrary/Searching.c **** 					}
+ 369:Core/Src/MazeLibrary/Searching.c **** 				}
+ 370:Core/Src/MazeLibrary/Searching.c **** 				else
+ 371:Core/Src/MazeLibrary/Searching.c **** 				{
+ 372:Core/Src/MazeLibrary/Searching.c **** 					//未知もしくは、既知でも直進で無ければ.減速かそのまま
+ 373:Core/Src/MazeLibrary/Searching.c **** 					//現在速度がマックスかどうか
+ 374:Core/Src/MazeLibrary/Searching.c **** 					if(VelocityMax == true)
+ 375:Core/Src/MazeLibrary/Searching.c **** 					{
+ 376:Core/Src/MazeLibrary/Searching.c **** 						accel_or_decel = -1; //減速
+ 377:Core/Src/MazeLibrary/Searching.c **** 						static int cnt = 1;
+ 378:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(cnt);
+ 379:Core/Src/MazeLibrary/Searching.c **** 						cnt += 2;
+ 380:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
+ 381:Core/Src/MazeLibrary/Searching.c **** 					}
+ 382:Core/Src/MazeLibrary/Searching.c **** 					else //マックスでない
+ 383:Core/Src/MazeLibrary/Searching.c **** 					{
+ 384:Core/Src/MazeLibrary/Searching.c **** 						accel_or_decel = 0; //そのまま
+ 385:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
+ 386:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(2);
+ 387:Core/Src/MazeLibrary/Searching.c **** 					}
+ 388:Core/Src/MazeLibrary/Searching.c **** 				}
+ 389:Core/Src/MazeLibrary/Searching.c **** 				//壁と座標の更新が要りそう
+ 390:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 31
 
 
- 391:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
- 392:Core/Src/Origin/Searching.c **** 		break;
- 393:Core/Src/Origin/Searching.c **** 	case backleft:
- 394:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 395:Core/Src/Origin/Searching.c **** 		//Uターンして左旋回
- 396:Core/Src/Origin/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
- 397:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
- 398:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 399:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
- 400:Core/Src/Origin/Searching.c **** 		break;
- 401:Core/Src/Origin/Searching.c **** 	case left:
- 402:Core/Src/Origin/Searching.c **** //		ChangeLED(0);
- 403:Core/Src/Origin/Searching.c **** 		//左旋回
- 404:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
- 405:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
- 406:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
- 407:Core/Src/Origin/Searching.c **** 		break;
- 408:Core/Src/Origin/Searching.c **** 	}
- 409:Core/Src/Origin/Searching.c **** 
- 410:Core/Src/Origin/Searching.c **** }
+ 391:Core/Src/MazeLibrary/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 392:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 393:Core/Src/MazeLibrary/Searching.c **** 	case backleft:
+ 394:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(0);
+ 395:Core/Src/MazeLibrary/Searching.c **** 		//Uターンして左旋回
+ 396:Core/Src/MazeLibrary/Searching.c **** 		Calc = 1;//マップ更新したくないときは1を代入。
+ 397:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse);
+ 398:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
+ 399:Core/Src/MazeLibrary/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 400:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 401:Core/Src/MazeLibrary/Searching.c **** 	case left:
+ 402:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(0);
+ 403:Core/Src/MazeLibrary/Searching.c **** 		//左旋回
+ 404:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
+ 405:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(4);
+ 406:Core/Src/MazeLibrary/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 407:Core/Src/MazeLibrary/Searching.c **** 		break;
+ 408:Core/Src/MazeLibrary/Searching.c **** 	}
+ 409:Core/Src/MazeLibrary/Searching.c **** 
+ 410:Core/Src/MazeLibrary/Searching.c **** }
  1126              		.loc 1 410 1 is_stmt 0 view .LVU334
  1127 0088 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
  1128              	.LVL85:
  1129              	.L69:
- 286:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 286:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
  1130              		.loc 1 286 5 is_stmt 1 view .LVU335
- 287:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 287:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(7);
  1131              		.loc 1 287 5 view .LVU336
- 287:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 287:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(7);
  1132              		.loc 1 287 34 is_stmt 0 view .LVU337
  1133 008a 4A4B     		ldr	r3, .L77+8
  1134 008c D3ED007A 		vldr.32	s15, [r3]
  1135 0090 B7EE087A 		vmov.f32	s14, #1.5e+0
  1136 0094 67EE877A 		vmul.f32	s15, s15, s14
- 287:Core/Src/Origin/Searching.c **** //				ChangeLED(7);
+ 287:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(7);
  1137              		.loc 1 287 17 view .LVU338
  1138 0098 444B     		ldr	r3, .L77
  1139 009a C3ED007A 		vstr.32	s15, [r3]
- 286:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 286:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
  1140              		.loc 1 286 20 view .LVU339
  1141 009e 0120     		movs	r0, #1
  1142              	.LVL86:
- 286:Core/Src/Origin/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
+ 286:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = ExploreVelocity*1.5f;
  1143              		.loc 1 286 20 view .LVU340
  1144 00a0 E0E7     		b	.L70
  1145              	.LVL87:
  1146              	.L68:
- 295:Core/Src/Origin/Searching.c **** 			{
+ 295:Core/Src/MazeLibrary/Searching.c **** 			{
  1147              		.loc 1 295 4 is_stmt 1 view .LVU341
- 295:Core/Src/Origin/Searching.c **** 			{
+ 295:Core/Src/MazeLibrary/Searching.c **** 			{
  1148              		.loc 1 295 19 is_stmt 0 view .LVU342
  1149 00a2 434B     		ldr	r3, .L77+4
  1150 00a4 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 295:Core/Src/Origin/Searching.c **** 			{
+ 295:Core/Src/MazeLibrary/Searching.c **** 			{
  1151              		.loc 1 295 6 view .LVU343
  1152 00a6 4BB1     		cbz	r3, .L71
  1153              	.LBB15:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 32
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 32
 
 
- 297:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 297:Core/Src/MazeLibrary/Searching.c **** 				static int cnt = 1;
  1154              		.loc 1 297 5 is_stmt 1 view .LVU344
  1155              	.LVL88:
- 298:Core/Src/Origin/Searching.c **** //				ChangeLED(cnt);
+ 298:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(cnt);
  1156              		.loc 1 298 5 view .LVU345
- 300:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 300:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
  1157              		.loc 1 300 5 view .LVU346
- 300:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 300:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
  1158              		.loc 1 300 9 is_stmt 0 view .LVU347
  1159 00a8 464A     		ldr	r2, .L77+24
  1160 00aa 1368     		ldr	r3, [r2]
  1161 00ac 0233     		adds	r3, r3, #2
  1162 00ae 1360     		str	r3, [r2]
- 301:Core/Src/Origin/Searching.c **** 			}
+ 301:Core/Src/MazeLibrary/Searching.c **** 			}
  1163              		.loc 1 301 5 is_stmt 1 view .LVU348
- 301:Core/Src/Origin/Searching.c **** 			}
+ 301:Core/Src/MazeLibrary/Searching.c **** 			}
  1164              		.loc 1 301 17 is_stmt 0 view .LVU349
  1165 00b0 3E4B     		ldr	r3, .L77
  1166 00b2 0022     		movs	r2, #0
  1167 00b4 1A60     		str	r2, [r3]	@ float
- 297:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 297:Core/Src/MazeLibrary/Searching.c **** 				static int cnt = 1;
  1168              		.loc 1 297 20 view .LVU350
  1169 00b6 4FF0FF30 		mov	r0, #-1
  1170              	.LVL89:
- 297:Core/Src/Origin/Searching.c **** 				static int cnt = 1;
+ 297:Core/Src/MazeLibrary/Searching.c **** 				static int cnt = 1;
  1171              		.loc 1 297 20 view .LVU351
  1172              	.LBE15:
  1173 00ba D3E7     		b	.L70
  1174              	.LVL90:
  1175              	.L71:
- 305:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 305:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
  1176              		.loc 1 305 5 is_stmt 1 view .LVU352
- 306:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
+ 306:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(2);
  1177              		.loc 1 306 5 view .LVU353
- 306:Core/Src/Origin/Searching.c **** //				ChangeLED(2);
+ 306:Core/Src/MazeLibrary/Searching.c **** //				ChangeLED(2);
  1178              		.loc 1 306 17 is_stmt 0 view .LVU354
  1179 00bc 3B4B     		ldr	r3, .L77
  1180 00be 0022     		movs	r2, #0
  1181 00c0 1A60     		str	r2, [r3]	@ float
- 305:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 305:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
  1182              		.loc 1 305 20 view .LVU355
  1183 00c2 0020     		movs	r0, #0
  1184              	.LVL91:
- 305:Core/Src/Origin/Searching.c **** 				AddVelocity = 0;
+ 305:Core/Src/MazeLibrary/Searching.c **** 				AddVelocity = 0;
  1185              		.loc 1 305 20 view .LVU356
  1186 00c4 CEE7     		b	.L70
  1187              	.LVL92:
  1188              	.L66:
- 323:Core/Src/Origin/Searching.c **** 
+ 323:Core/Src/MazeLibrary/Searching.c **** 
  1189              		.loc 1 323 3 is_stmt 1 view .LVU357
- 323:Core/Src/Origin/Searching.c **** 
+ 323:Core/Src/MazeLibrary/Searching.c **** 
  1190              		.loc 1 323 8 is_stmt 0 view .LVU358
  1191 00c6 3C4B     		ldr	r3, .L77+12
  1192 00c8 1A68     		ldr	r2, [r3]
  1193 00ca 3C4B     		ldr	r3, .L77+16
  1194 00cc 1A60     		str	r2, [r3]
- 325:Core/Src/Origin/Searching.c **** 		break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 33
+ 325:Core/Src/MazeLibrary/Searching.c **** 		break;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 33
 
 
  1195              		.loc 1 325 3 is_stmt 1 view .LVU359
@@ -1927,58 +1927,58 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1198 00d2 3046     		mov	r0, r6
  1199 00d4 FFF7FEFF 		bl	TurnRight
  1200              	.LVL93:
- 326:Core/Src/Origin/Searching.c **** 	case backright:
+ 326:Core/Src/MazeLibrary/Searching.c **** 	case backright:
  1201              		.loc 1 326 3 view .LVU360
  1202 00d8 D6E7     		b	.L59
  1203              	.L65:
- 332:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
+ 332:Core/Src/MazeLibrary/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
  1204              		.loc 1 332 3 view .LVU361
- 332:Core/Src/Origin/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
+ 332:Core/Src/MazeLibrary/Searching.c **** 		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態�
  1205              		.loc 1 332 8 is_stmt 0 view .LVU362
  1206 00da 384F     		ldr	r7, .L77+16
  1207 00dc 0123     		movs	r3, #1
  1208 00de 3B60     		str	r3, [r7]
- 336:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 336:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
  1209              		.loc 1 336 3 is_stmt 1 view .LVU363
  1210 00e0 2146     		mov	r1, r4
  1211 00e2 2846     		mov	r0, r5
  1212 00e4 FFF7FEFF 		bl	GoBack
  1213              	.LVL94:
- 337:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 337:Core/Src/MazeLibrary/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
  1214              		.loc 1 337 3 view .LVU364
- 337:Core/Src/Origin/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
+ 337:Core/Src/MazeLibrary/Searching.c **** 		TurnRight(turn_mode, maze, Mouse);
  1215              		.loc 1 337 8 is_stmt 0 view .LVU365
  1216 00e8 334B     		ldr	r3, .L77+12
  1217 00ea 1B68     		ldr	r3, [r3]
  1218 00ec 3B60     		str	r3, [r7]
- 338:Core/Src/Origin/Searching.c **** 
+ 338:Core/Src/MazeLibrary/Searching.c **** 
  1219              		.loc 1 338 3 is_stmt 1 view .LVU366
  1220 00ee 2246     		mov	r2, r4
  1221 00f0 2946     		mov	r1, r5
  1222 00f2 3046     		mov	r0, r6
  1223 00f4 FFF7FEFF 		bl	TurnRight
  1224              	.LVL95:
- 341:Core/Src/Origin/Searching.c **** 	case back:
+ 341:Core/Src/MazeLibrary/Searching.c **** 	case back:
  1225              		.loc 1 341 3 view .LVU367
  1226 00f8 C6E7     		b	.L59
  1227              	.L64:
- 345:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 345:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse);
  1228              		.loc 1 345 3 view .LVU368
- 345:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 345:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse);
  1229              		.loc 1 345 8 is_stmt 0 view .LVU369
  1230 00fa 304B     		ldr	r3, .L77+16
  1231 00fc 0122     		movs	r2, #1
  1232 00fe 1A60     		str	r2, [r3]
- 346:Core/Src/Origin/Searching.c **** //		AddVelocity = 0;
+ 346:Core/Src/MazeLibrary/Searching.c **** //		AddVelocity = 0;
  1233              		.loc 1 346 3 is_stmt 1 view .LVU370
  1234 0100 2146     		mov	r1, r4
  1235 0102 2846     		mov	r0, r5
  1236 0104 FFF7FEFF 		bl	GoBack
  1237              	.LVL96:
- 350:Core/Src/Origin/Searching.c **** 
+ 350:Core/Src/MazeLibrary/Searching.c **** 
  1238              		.loc 1 350 5 view .LVU371
- 350:Core/Src/Origin/Searching.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 34
+ 350:Core/Src/MazeLibrary/Searching.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 34
 
 
  1239              		.loc 1 350 20 is_stmt 0 view .LVU372
@@ -1987,43 +1987,43 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1242 010c 2846     		mov	r0, r5
  1243 010e FFF7FEFF 		bl	judgeAccelorNot
  1244              	.LVL97:
- 353:Core/Src/Origin/Searching.c **** 				{
+ 353:Core/Src/MazeLibrary/Searching.c **** 				{
  1245              		.loc 1 353 5 is_stmt 1 view .LVU373
- 353:Core/Src/Origin/Searching.c **** 				{
+ 353:Core/Src/MazeLibrary/Searching.c **** 				{
  1246              		.loc 1 353 7 is_stmt 0 view .LVU374
  1247 0112 F0B1     		cbz	r0, .L72
- 357:Core/Src/Origin/Searching.c **** 					{
+ 357:Core/Src/MazeLibrary/Searching.c **** 					{
  1248              		.loc 1 357 6 is_stmt 1 view .LVU375
- 357:Core/Src/Origin/Searching.c **** 					{
+ 357:Core/Src/MazeLibrary/Searching.c **** 					{
  1249              		.loc 1 357 21 is_stmt 0 view .LVU376
  1250 0114 264B     		ldr	r3, .L77+4
  1251 0116 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 357:Core/Src/Origin/Searching.c **** 					{
+ 357:Core/Src/MazeLibrary/Searching.c **** 					{
  1252              		.loc 1 357 8 view .LVU377
  1253 0118 B3B1     		cbz	r3, .L73
- 359:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 359:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
  1254              		.loc 1 359 7 is_stmt 1 view .LVU378
- 360:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
+ 360:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(0);
  1255              		.loc 1 360 7 view .LVU379
- 360:Core/Src/Origin/Searching.c **** //						ChangeLED(0);
+ 360:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(0);
  1256              		.loc 1 360 19 is_stmt 0 view .LVU380
  1257 011a 244B     		ldr	r3, .L77
  1258 011c 2A4A     		ldr	r2, .L77+28
  1259 011e 1A60     		str	r2, [r3]	@ float
- 359:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 359:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
  1260              		.loc 1 359 22 view .LVU381
  1261 0120 0020     		movs	r0, #0
  1262              	.LVL98:
  1263              	.L74:
- 390:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 390:Core/Src/MazeLibrary/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
  1264              		.loc 1 390 3 is_stmt 1 view .LVU382
- 390:Core/Src/Origin/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+ 390:Core/Src/MazeLibrary/Searching.c **** 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
  1265              		.loc 1 390 8 is_stmt 0 view .LVU383
  1266 0122 254B     		ldr	r3, .L77+12
  1267 0124 1A68     		ldr	r2, [r3]
  1268 0126 254B     		ldr	r3, .L77+16
  1269 0128 1A60     		str	r2, [r3]
- 391:Core/Src/Origin/Searching.c **** 		break;
+ 391:Core/Src/MazeLibrary/Searching.c **** 		break;
  1270              		.loc 1 391 3 is_stmt 1 view .LVU384
  1271 012a 224B     		ldr	r3, .L77+8
  1272 012c D3ED000A 		vldr.32	s1, [r3]
@@ -2035,143 +2035,143 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1278 013e 9FED200A 		vldr.32	s0, .L77+20
  1279 0142 FFF7FEFF 		bl	GoStraight
  1280              	.LVL99:
- 392:Core/Src/Origin/Searching.c **** 	case backleft:
+ 392:Core/Src/MazeLibrary/Searching.c **** 	case backleft:
  1281              		.loc 1 392 3 view .LVU385
  1282 0146 9FE7     		b	.L59
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 35
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 35
 
 
  1283              	.LVL100:
  1284              	.L73:
- 365:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 365:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
  1285              		.loc 1 365 7 view .LVU386
- 366:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
+ 366:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(7);
  1286              		.loc 1 366 7 view .LVU387
- 366:Core/Src/Origin/Searching.c **** //						ChangeLED(7);
+ 366:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(7);
  1287              		.loc 1 366 19 is_stmt 0 view .LVU388
  1288 0148 184B     		ldr	r3, .L77
  1289 014a 1F4A     		ldr	r2, .L77+28
  1290 014c 1A60     		str	r2, [r3]	@ float
- 365:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 365:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
  1291              		.loc 1 365 22 view .LVU389
  1292 014e 0120     		movs	r0, #1
  1293              	.LVL101:
- 365:Core/Src/Origin/Searching.c **** 						AddVelocity = 245;
+ 365:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 245;
  1294              		.loc 1 365 22 view .LVU390
  1295 0150 E7E7     		b	.L74
  1296              	.LVL102:
  1297              	.L72:
- 374:Core/Src/Origin/Searching.c **** 					{
+ 374:Core/Src/MazeLibrary/Searching.c **** 					{
  1298              		.loc 1 374 6 is_stmt 1 view .LVU391
- 374:Core/Src/Origin/Searching.c **** 					{
+ 374:Core/Src/MazeLibrary/Searching.c **** 					{
  1299              		.loc 1 374 21 is_stmt 0 view .LVU392
  1300 0152 174B     		ldr	r3, .L77+4
  1301 0154 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 374:Core/Src/Origin/Searching.c **** 					{
+ 374:Core/Src/MazeLibrary/Searching.c **** 					{
  1302              		.loc 1 374 8 view .LVU393
  1303 0156 4BB1     		cbz	r3, .L75
  1304              	.LBB16:
- 376:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 376:Core/Src/MazeLibrary/Searching.c **** 						static int cnt = 1;
  1305              		.loc 1 376 7 is_stmt 1 view .LVU394
  1306              	.LVL103:
- 377:Core/Src/Origin/Searching.c **** //						ChangeLED(cnt);
+ 377:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(cnt);
  1307              		.loc 1 377 7 view .LVU395
- 379:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 379:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
  1308              		.loc 1 379 7 view .LVU396
- 379:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 379:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
  1309              		.loc 1 379 11 is_stmt 0 view .LVU397
  1310 0158 1C4A     		ldr	r2, .L77+32
  1311 015a 1368     		ldr	r3, [r2]
  1312 015c 0233     		adds	r3, r3, #2
  1313 015e 1360     		str	r3, [r2]
- 380:Core/Src/Origin/Searching.c **** 					}
+ 380:Core/Src/MazeLibrary/Searching.c **** 					}
  1314              		.loc 1 380 7 is_stmt 1 view .LVU398
- 380:Core/Src/Origin/Searching.c **** 					}
+ 380:Core/Src/MazeLibrary/Searching.c **** 					}
  1315              		.loc 1 380 19 is_stmt 0 view .LVU399
  1316 0160 124B     		ldr	r3, .L77
  1317 0162 0022     		movs	r2, #0
  1318 0164 1A60     		str	r2, [r3]	@ float
- 376:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 376:Core/Src/MazeLibrary/Searching.c **** 						static int cnt = 1;
  1319              		.loc 1 376 22 view .LVU400
  1320 0166 4FF0FF30 		mov	r0, #-1
  1321              	.LVL104:
- 376:Core/Src/Origin/Searching.c **** 						static int cnt = 1;
+ 376:Core/Src/MazeLibrary/Searching.c **** 						static int cnt = 1;
  1322              		.loc 1 376 22 view .LVU401
  1323              	.LBE16:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 36
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 36
 
 
  1324 016a DAE7     		b	.L74
  1325              	.LVL105:
  1326              	.L75:
- 384:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 384:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
  1327              		.loc 1 384 7 is_stmt 1 view .LVU402
- 385:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
+ 385:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(2);
  1328              		.loc 1 385 7 view .LVU403
- 385:Core/Src/Origin/Searching.c **** //						ChangeLED(2);
+ 385:Core/Src/MazeLibrary/Searching.c **** //						ChangeLED(2);
  1329              		.loc 1 385 19 is_stmt 0 view .LVU404
  1330 016c 0F4B     		ldr	r3, .L77
  1331 016e 0022     		movs	r2, #0
  1332 0170 1A60     		str	r2, [r3]	@ float
- 384:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 384:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
  1333              		.loc 1 384 22 view .LVU405
  1334 0172 0020     		movs	r0, #0
  1335              	.LVL106:
- 384:Core/Src/Origin/Searching.c **** 						AddVelocity = 0;
+ 384:Core/Src/MazeLibrary/Searching.c **** 						AddVelocity = 0;
  1336              		.loc 1 384 22 view .LVU406
  1337 0174 D5E7     		b	.L74
  1338              	.LVL107:
  1339              	.L63:
- 396:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 396:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse);
  1340              		.loc 1 396 3 is_stmt 1 view .LVU407
- 396:Core/Src/Origin/Searching.c **** 		GoBack(maze, Mouse);
+ 396:Core/Src/MazeLibrary/Searching.c **** 		GoBack(maze, Mouse);
  1341              		.loc 1 396 8 is_stmt 0 view .LVU408
  1342 0176 114F     		ldr	r7, .L77+16
  1343 0178 0123     		movs	r3, #1
  1344 017a 3B60     		str	r3, [r7]
- 397:Core/Src/Origin/Searching.c **** 		Calc = SearchOrFast;
+ 397:Core/Src/MazeLibrary/Searching.c **** 		Calc = SearchOrFast;
  1345              		.loc 1 397 3 is_stmt 1 view .LVU409
  1346 017c 2146     		mov	r1, r4
  1347 017e 2846     		mov	r0, r5
  1348 0180 FFF7FEFF 		bl	GoBack
  1349              	.LVL108:
- 398:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 398:Core/Src/MazeLibrary/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
  1350              		.loc 1 398 3 view .LVU410
- 398:Core/Src/Origin/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
+ 398:Core/Src/MazeLibrary/Searching.c **** 		TurnLeft(turn_mode, maze, Mouse);
  1351              		.loc 1 398 8 is_stmt 0 view .LVU411
  1352 0184 0C4B     		ldr	r3, .L77+12
  1353 0186 1B68     		ldr	r3, [r3]
  1354 0188 3B60     		str	r3, [r7]
- 399:Core/Src/Origin/Searching.c **** 		break;
+ 399:Core/Src/MazeLibrary/Searching.c **** 		break;
  1355              		.loc 1 399 3 is_stmt 1 view .LVU412
  1356 018a 2246     		mov	r2, r4
  1357 018c 2946     		mov	r1, r5
  1358 018e 3046     		mov	r0, r6
  1359 0190 FFF7FEFF 		bl	TurnLeft
  1360              	.LVL109:
- 400:Core/Src/Origin/Searching.c **** 	case left:
+ 400:Core/Src/MazeLibrary/Searching.c **** 	case left:
  1361              		.loc 1 400 3 view .LVU413
  1362 0194 78E7     		b	.L59
  1363              	.L61:
- 404:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
+ 404:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(4);
  1364              		.loc 1 404 3 view .LVU414
- 404:Core/Src/Origin/Searching.c **** //		ChangeLED(4);
+ 404:Core/Src/MazeLibrary/Searching.c **** //		ChangeLED(4);
  1365              		.loc 1 404 8 is_stmt 0 view .LVU415
  1366 0196 084B     		ldr	r3, .L77+12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 37
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 37
 
 
  1367 0198 1A68     		ldr	r2, [r3]
  1368 019a 084B     		ldr	r3, .L77+16
  1369 019c 1A60     		str	r2, [r3]
- 406:Core/Src/Origin/Searching.c **** 		break;
+ 406:Core/Src/MazeLibrary/Searching.c **** 		break;
  1370              		.loc 1 406 3 is_stmt 1 view .LVU416
  1371 019e 2246     		mov	r2, r4
  1372 01a0 2946     		mov	r1, r5
  1373 01a2 3046     		mov	r0, r6
  1374 01a4 FFF7FEFF 		bl	TurnLeft
  1375              	.LVL110:
- 407:Core/Src/Origin/Searching.c **** 	}
+ 407:Core/Src/MazeLibrary/Searching.c **** 	}
  1376              		.loc 1 407 3 view .LVU417
  1377              		.loc 1 410 1 is_stmt 0 view .LVU418
  1378 01a8 6EE7     		b	.L59
@@ -2203,40 +2203,40 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 1
  1409              	.Letext0:
  1410              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
  1411              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 1412              		.file 4 "Core/Inc/Origin/MazeLib.h"
- 1413              		.file 5 "Core/Inc/Origin/MicroMouse.h"
+ 1412              		.file 4 "Core/Inc/MazeLibrary/MazeLib.h"
+ 1413              		.file 5 "Core/Inc/Main/MicroMouse.h"
  1414              		.file 6 "Core/Inc/dfs.h"
- 1415              		.file 7 "Core/Inc/Origin/Action.h"
- 1416              		.file 8 "Core/Inc/Hw/LED_Driver.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 38
+ 1415              		.file 7 "Core/Inc/Main/Action.h"
+ 1416              		.file 8 "Core/Inc/HardWare/LED_Driver.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 38
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Searching.c
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:20     .text.FindUnwantedSquares:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:26     .text.FindUnwantedSquares:00000000 FindUnwantedSquares
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:258    .text.FindUnwantedSquares:000000bc $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:268    .text.setSearchTurnParam:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:274    .text.setSearchTurnParam:00000000 setSearchTurnParam
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:295    .text.setSearchTurnParam:0000000c $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:299    .text.setSearchTurnParam:00000010 $t
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:497    .text.setSearchTurnParam:00000110 $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:522    .text.updateRealSearch:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:528    .text.updateRealSearch:00000000 updateRealSearch
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:572    .text.updateRealSearch:00000026 $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:995    .text.updateRealSearch:000002bc $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1006   .text.getNextDirection:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1012   .text.getNextDirection:00000000 getNextDirection
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1068   .text.getNextDirection:00000034 $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1382   .text.getNextDirection:000001ac $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1395   .data.cnt.0:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1399   .data.cnt.0:00000000 cnt.0
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1402   .data.cnt.1:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1406   .data.cnt.1:00000000 cnt.1
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:579    .text.updateRealSearch:0000002d $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:579    .text.updateRealSearch:0000002e $t
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1075   .text.getNextDirection:0000003b $d
-C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s:1075   .text.getNextDirection:0000003c $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:20     .text.FindUnwantedSquares:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:26     .text.FindUnwantedSquares:00000000 FindUnwantedSquares
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:258    .text.FindUnwantedSquares:000000bc $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:268    .text.setSearchTurnParam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:274    .text.setSearchTurnParam:00000000 setSearchTurnParam
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:295    .text.setSearchTurnParam:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:299    .text.setSearchTurnParam:00000010 $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:497    .text.setSearchTurnParam:00000110 $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:522    .text.updateRealSearch:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:528    .text.updateRealSearch:00000000 updateRealSearch
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:572    .text.updateRealSearch:00000026 $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:995    .text.updateRealSearch:000002bc $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1006   .text.getNextDirection:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1012   .text.getNextDirection:00000000 getNextDirection
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1068   .text.getNextDirection:00000034 $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1382   .text.getNextDirection:000001ac $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1395   .data.cnt.0:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1399   .data.cnt.0:00000000 cnt.0
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1402   .data.cnt.1:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1406   .data.cnt.1:00000000 cnt.1
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:579    .text.updateRealSearch:0000002d $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:579    .text.updateRealSearch:0000002e $t
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1075   .text.getNextDirection:0000003b $d
+C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s:1075   .text.getNextDirection:0000003c $t
 
 UNDEFINED SYMBOLS
 Visit
@@ -2268,7 +2268,7 @@ GoBack
 TurnLeft
 AddVelocity
 VelocityMax
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccmJ3tev.s 			page 39
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccF8Sk7f.s 			page 39
 
 
 SearchOrFast

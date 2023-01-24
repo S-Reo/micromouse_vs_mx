@@ -32,6 +32,47 @@ const float angle_range = 3*M_PI/180;  //領域
 #define SLA_CALIB_FR	230
 /* バックエンドでコマンドとして処理する */
 
+// アクション中に必要な更新処理（ハードウェア依存は切り離してActionに持っていく）
+// ハードウェア依存部（フォトセンサの値）
+
+void getWallState(profile *mouse, float *photo){
+
+	wall_existence wall_dir; //ロボットの前後左右の値として取得
+	// 分岐先が同じ式なのでうまく入れ替えて短くしたい
+    switch (mouse->next.car%8) //壁センサ値を取得、方角毎に壁の有無を判定（nextでよい）
+    {
+    case north:
+    	wall_dir.north = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.east = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir.south = NOWALL;
+    	wall_dir.west = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+        break;
+    case east:
+    	wall_dir.east = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.south = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir.west = NOWALL;
+    	wall_dir.north = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+        break;
+    case south:
+    	wall_dir.south = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.west = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir.north = NOWALL;
+    	wall_dir.east = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+        break;
+    case west:
+    	wall_dir.west = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.north = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
+    	wall_dir.east = NOWALL;
+    	wall_dir.south = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
+        break;
+    default:
+        //万が一斜めの方角を向いているときに呼び出してしまったら、
+        break;
+    }
+	mouse->next.wall = wall_dir; //各方角の壁に壁の有無を代入
+
+	//アクションが終わるときがノードの上にいる状態なので、状態シフト済みとする（この関数はアクション中に呼び出される想定）
+}
 int GetWallCtrlDirection(profile *mouse)
 {
 		//新ライブラリ用に変更
