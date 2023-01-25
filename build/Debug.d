@@ -33,8 +33,7 @@ build/Debug.o: Core/Src/Tools/Debug.c Core/Inc/Tools/Debug.h \
  Core/Inc/Tools/Convert.h Core/Inc/HardWare/IEH2_4096.h \
  Core/Inc/HardWare/mouse_ADC.h Core/Inc/HardWare/LED_Driver.h \
  Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/ICM_20648.h \
- Core/Inc/Tools/UI.h Core/Inc/Main/MicroMouse.h \
- Core/Inc/MazeLibrary/MazeLib.h Core/Inc/Main/Interrupt.h \
+ Core/Inc/Tools/UI.h Core/Inc/Main/MicroMouse.h Core/Inc/Main/Interrupt.h \
  Core/Inc/Tools/tim_info.h
 Core/Inc/Tools/Debug.h:
 Core/Inc/main.h:
@@ -80,6 +79,5 @@ Core/Inc/HardWare/Motor_Driver.h:
 Core/Inc/HardWare/ICM_20648.h:
 Core/Inc/Tools/UI.h:
 Core/Inc/Main/MicroMouse.h:
-Core/Inc/MazeLibrary/MazeLib.h:
 Core/Inc/Main/Interrupt.h:
 Core/Inc/Tools/tim_info.h:

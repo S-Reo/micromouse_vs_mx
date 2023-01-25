@@ -60,11 +60,10 @@ Core/Src/Main/MicroMouse.c \
 Core/Src/Main/Mode.c \
 Core/Src/Main/Record.c \
 Core/Src/Main/Running.c \
-Core/Src/MazeLibrary/dfs.c \
-Core/Src/MazeLibrary/FastRun.c \
-Core/Src/MazeLibrary/MazeLib.c \
-Core/Src/MazeLibrary/MazeSimulation.c \
-Core/Src/MazeLibrary/Searching.c \
+C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.c \
+C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.c \
+C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.c \
+C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.c \
 Core/Src/gpio.c \
 Core/Src/adc.c \
 Core/Src/dma.c \
@@ -93,6 +92,11 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c
 
+# Core/Src/MazeLibrary/dfs.c \
+# Core/Src/MazeLibrary/FastRun.c \
+# Core/Src/MazeLibrary/MazeLib.c \
+# Core/Src/MazeLibrary/MazeSimulation.c \
+# Core/Src/MazeLibrary/Searching.c \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -150,15 +154,14 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
--ICore/Inc/MazeLibrary \
 -ICore/Inc/Main \
 -ICore/Inc/HardWare \
 -ICore/Inc/Tools \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
--IDrivers/CMSIS/Include
-
+-IDrivers/CMSIS/Include \
+-I/Users/leopi/Documents/vs/S-Reo/MazeLibrary
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

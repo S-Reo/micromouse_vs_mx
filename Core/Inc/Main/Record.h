@@ -8,13 +8,11 @@
 #ifndef INC_RECORD_H_
 #define INC_RECORD_H_
 
-
-#include <main.h>
-
+#include "MazeLib.h"
 //フラッシュもしくはRAMに各種データを記録するための関数群
 
 void wall_flash_print();
-void flashStoreNodes();
-void flashCopyNodesToRam();
+void flashStoreNodes(maze_node *maze);
+void flashCopyNodesToRam(maze_node *maze);
 
 #endif /* INC_RECORD_H_ */

@@ -32,8 +32,10 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Core/Inc/main.h Core/Inc/dma.h Core/Inc/spi.h Core/Inc/tim.h \
  Core/Inc/usart.h Core/Inc/gpio.h Core/Inc/HardWare/mouse_ADC.h \
  Core/Inc/Tools/UI.h Core/Inc/Main/Mode.h Core/Inc/Tools/PID_Control.h \
- Core/Inc/Main/MicroMouse.h Core/Inc/MazeLibrary/MazeLib.h \
- Core/Inc/Main/Running.h
+ Core/Inc/Main/MicroMouse.h Core/Inc/Main/Running.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -79,5 +81,7 @@ Core/Inc/Tools/UI.h:
 Core/Inc/Main/Mode.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/Main/MicroMouse.h:
-Core/Inc/MazeLibrary/MazeLib.h:
 Core/Inc/Main/Running.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:

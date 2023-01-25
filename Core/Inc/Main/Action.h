@@ -10,6 +10,7 @@
 
 //#include <main.h>
 #include "MazeLib.h"
+#include "Searching.h"
 #include "MicroMouse.h"
 
 // 基本動作の関数
@@ -22,37 +23,13 @@ typedef struct {
 	float KD;
 }PID_Control;
 
-//最短走行用のアクションに番号を振る
-typedef enum {
-	START,
-	ACC_DEC,
-	ACC_DEC_45,
-	ACC_DEC_90,
-	L_90_SEARCH,
-	R_90_SEARCH,
-	L_90_FAST,
-	R_90_FAST,
-    //前距離と後距離は同じで設定しておく
-    L_180_FAST,
-    R_180_FAST,
-    L_90_FAST_DIAGONAL,
-    R_90_FAST_DIAGONAL,
 
-    // 前距離と後距離を入れ替える必要がある
-    L_45_FAST,
-    R_45_FAST,
-    L_135_FAST,
-    R_135_FAST,
-    L_45_FAST_REVERSE,
-    R_45_FAST_REVERSE,
-    L_135_FAST_REVERSE,
-    R_135_FAST_REVERSE
-}Action;
 
 //extern PID_Control wall, Velocity, imu ;
 
 extern uint8_t alpha_flag;
 extern float alpha_turn;  //スラローム時の角加速度
+void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask);
 
 void WaitStopAndReset();
 void SlalomRight(maze_node *, profile *);

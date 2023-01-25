@@ -11,10 +11,13 @@
 #include <main.h>
 extern TIM_HandleTypeDef htim1; //割込みタイマ
 
+#include <stdio.h>
+#include <stdbool.h>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include "MazeLib.h"
+// #include "MazeLib.h"
 
 #define T1 0.001f
 #define T2 0.0238095238095238000 //ms
@@ -49,10 +52,10 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 #define INITIAL_PULSE	(30000 - 1)
 //壁の有無
 
-#define NOWALL 0
-#define WALL 1
-#define VIRTUAL	3
-#define UNKNOWN 2
+// #define NOWALL 0
+// #define WALL 1
+// #define UNKNOWN 2
+// #define VIRTUAL	3
 //壁の閾値(走行中に変更できるようにしたい)
 #define FRONT_WALL 50//70  //２つの和/2 //1700 になるように前壁制御
 #define RIGHT_WALL 90//90 //380
@@ -158,13 +161,6 @@ typedef enum Action	//区画の境界に来た時の状態表現だから
 						//斜めで4種類追加
 }action;
 
-typedef enum WallStatus
-{
-	nowall 		= 0,
-	wall 			= 1,
-	unknown	= 2,
-	vir		= 3
-}wall_status;
 typedef enum WallSafety
 {
 	wall_safe,
@@ -208,8 +204,10 @@ typedef struct Slalom
 }slalom_parameter;
 
 extern slalom_parameter Sla;
-void setFastDiagonalParam(int n);
+void setSearchTurnParam(int8_t mode);
 
 extern slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
+
+void setFastDiagonalParam(int n);
 
 #endif /* INC_MICROMOUSE_H_ */

@@ -11,13 +11,14 @@
 #include <main.h>
 
 #include "MazeLib.h"
+#include "Searching.h"
 
 extern profile my_mouse;
 extern maze_node my_map;
 
 void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed);
 void MaxParaRunTest(maze_node *, profile *);
-void DiagonalRunTest();
+void DiagonalRunTest(int action_num);
 void Explore();
 void FastestRun();
 //マイクロマウスの探索モードのプログラム。自律と最速走行も含める。ひな形を書く。中身は後。

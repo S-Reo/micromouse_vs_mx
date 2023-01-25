@@ -1,5 +1,9 @@
-build/Running.o: Core/Src/Main/Running.c Core/Inc/MazeLibrary/Searching.h \
- Core/Inc/Main/MicroMouse.h Core/Inc/main.h \
+build/Running.o: Core/Src/Main/Running.c \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
+ Core/Inc/Tools/UI.h Core/Inc/Main/Interrupt.h Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -30,14 +34,18 @@ build/Running.o: Core/Src/Main/Running.c Core/Inc/MazeLibrary/Searching.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Inc/MazeLibrary/MazeLib.h Core/Inc/MazeLibrary/FastRun.h \
- Core/Inc/MazeLibrary/MazeLib.h Core/Inc/Main/Action.h \
- Core/Inc/Main/MicroMouse.h Core/Inc/Tools/UI.h Core/Inc/Main/Interrupt.h \
- Core/Inc/dfs.h Core/Inc/Main/Mode.h Core/Inc/Tools/PID_Control.h \
- Core/Inc/HardWare/ICM_20648.h Core/Inc/HardWare/Flash.h \
- Core/Inc/Main/Record.h
-Core/Inc/MazeLibrary/Searching.h:
-Core/Inc/Main/MicroMouse.h:
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h \
+ Core/Inc/Main/MicroMouse.h Core/Inc/Main/Mode.h Core/Inc/Main/Action.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
+ Core/Inc/Main/MicroMouse.h Core/Inc/Main/Record.h \
+ Core/Inc/Tools/PID_Control.h Core/Inc/HardWare/ICM_20648.h \
+ Core/Inc/HardWare/Flash.h Core/Inc/HardWare/LED_Driver.h
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
+Core/Inc/Tools/UI.h:
+Core/Inc/Main/Interrupt.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -71,16 +79,14 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-Core/Inc/MazeLibrary/MazeLib.h:
-Core/Inc/MazeLibrary/FastRun.h:
-Core/Inc/MazeLibrary/MazeLib.h:
-Core/Inc/Main/Action.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h:
 Core/Inc/Main/MicroMouse.h:
-Core/Inc/Tools/UI.h:
-Core/Inc/Main/Interrupt.h:
-Core/Inc/dfs.h:
 Core/Inc/Main/Mode.h:
+Core/Inc/Main/Action.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
+Core/Inc/Main/MicroMouse.h:
+Core/Inc/Main/Record.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/HardWare/ICM_20648.h:
 Core/Inc/HardWare/Flash.h:
-Core/Inc/Main/Record.h:
+Core/Inc/HardWare/LED_Driver.h:

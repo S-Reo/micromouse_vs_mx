@@ -5,7 +5,8 @@
  *      Author: leopi
  */
 
-#include <MicroMouse.h>
+#include "MicroMouse.h"
+
 // ハードウェアと機体の状態の橋渡し。ハードウェア構成に依存するので、MicroMouseとしている
 // センサ値、センサから得る今の状態
 // Flashにログを残す処理は担うか否か
@@ -20,8 +21,7 @@
 #include "Interrupt.h"
 #include "PID_Control.h"
 #include "Convert.h"
-
-#include "MazeLib.h"
+// #include "MazeLib.h"
 
 volatile _Bool VelocityMax;
 volatile int Calc;
@@ -76,6 +76,75 @@ goal_edge goal_edge_num;
 
 
 slalom_parameter Sla;
+
+#if 1
+void setSearchTurnParam(int8_t mode){
+	
+	switch(mode)
+	{
+	case 1:
+		ExploreVelocity=90;
+		//未
+		Sla.Pre = 9;
+		Sla.Fol = 20;
+		Sla.Alpha = 0.014;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+
+//		ExploreVelocity=180;//*40/1000
+//		Sla.Pre = 5;
+//		Sla.Fol = 12;
+//		Sla.Alalpha = 0.0007;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+		break;
+	case 2:
+		//完
+//		ExploreVelocity=135;//*40/1000
+//		Sla.Pre = 5;
+//		Sla.Fol = 10;
+//		Sla.Alpha = 0.0273;
+//		Sla.Theta1 = 30;
+//		Sla.Theta2 = 60;
+//		Sla.Theta3 = 90;
+
+		ExploreVelocity=180;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 12;
+		Sla.Alpha = 0.043;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 3:
+		ExploreVelocity=240;
+		Sla.Pre = 8;//2;
+		Sla.Fol = 12; //16
+		Sla.Alpha = 0.078;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		break;
+	case 4:
+		ExploreVelocity=300;
+		Sla.Pre = 3;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.117;
+		Sla.Theta1 = 30;
+		Sla.Theta2 = 60;
+		Sla.Theta3 = 90;
+		//		//未
+		break;
+	}
+	Sla.Pre *=  2/MM_PER_PULSE;
+	Sla.Fol *=  2/MM_PER_PULSE;
+	Sla.Theta1 *= M_PI/180;
+	Sla.Theta2 *= M_PI/180;
+	Sla.Theta3 *= M_PI/180;
+}
+#endif
 
 void MouseStartAll(){
 

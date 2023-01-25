@@ -229,7 +229,7 @@ static void restart(char turn_mode){
 	PIDReset(D_WALL_PID);
 
 	//マップ22
-	updateAllNodeWeight(&my_map, my_mouse.target.pos.x, my_mouse.target.pos.y, my_mouse.target_size, my_mouse.target_size, WALL_MASK);
+	updateAllNodeWeight(&my_map, &my_mouse.target_pos, &my_mouse.target_size, WALL_MASK);
 //	int stack_num=0; //stackはマップを更新してから求める
 
 	//最小ノードを選択
@@ -241,8 +241,8 @@ static void restart(char turn_mode){
 	//前なら45mm加速
 //	while(1){
 //		//ゴールとスタックと今と次
-//		printf("%u, %u\r\n",my_mouse.target.pos.x, my_mouse.target.pos.y);
-//		printAllWeight(&my_map, &(my_mouse.target.pos));
+//		printf("%u, %u\r\n",my_mouse.target_pos.x, my_mouse.target_pos.y);
+//		printAllWeight(&my_map, &(my_mouse.target_pos));
 //		printState(&(my_mouse.now));
 //		printState(&(my_mouse.next));
 //	}
@@ -324,9 +324,10 @@ void DFS_Running(char turn_mode){
 			//stack_numをどうするか
 			StackMass(&my_map, &(my_mouse.now));
 			int stack_num=GetStackNum(); //stackでゴールしたマスの周辺が次のマスになる
-			my_mouse.target.pos.x = mass_stack[stack_num].x;
-			my_mouse.target.pos.y = mass_stack[stack_num].y;
-			my_mouse.target_size = 1;
+			my_mouse.target_pos.x = mass_stack[stack_num].x;
+			my_mouse.target_pos.y = mass_stack[stack_num].y;
+			my_mouse.target_size.x = 1;
+			my_mouse.target_size.y = 1;
 			stack_num--; //n=2から1へ
 			SetStackNum(stack_num);
 			restart(turn_mode); //次ノードの重みが0なのはなぜか⇒壁を認識しているのに重みは0

@@ -22,6 +22,7 @@
 #include "MazeLib.h"
 //#include "test.h"
 #include "Searching.h"
+
 #include <stdbool.h>
 const float TO_PULSE = 2/MM_PER_PULSE;
 #define WALL_CUT_VAL 34
@@ -35,7 +36,7 @@ const float angle_range = 3*M_PI/180;  //領域
 // アクション中に必要な更新処理（ハードウェア依存は切り離してActionに持っていく）
 // ハードウェア依存部（フォトセンサの値）
 
-void getWallState(profile *mouse, float *photo){
+static void getWallState(profile *mouse, float *photo){
 
 	wall_existence wall_dir; //ロボットの前後左右の値として取得
 	// 分岐先が同じ式なのでうまく入れ替えて短くしたい
@@ -73,6 +74,170 @@ void getWallState(profile *mouse, float *photo){
 
 	//アクションが終わるときがノードの上にいる状態なので、状態シフト済みとする（この関数はアクション中に呼び出される想定）
 }
+#if 1
+// 最終的にアクションを決めるロジックは
+// 物理的条件に基づくロジックと連携させる（走行計画のため）
+// よってSearchingでは符号を返すのみにとどめる
+// Actionで分岐をつくる（以下はほぼActionでやる
+
+void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask){
+	//既知区間加速このswitch文中で書くかも
+		//コマンドキューのときはここでコマンドを発行してキューに渡す
+	AddVelocity = 0;
+	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
+	_Bool accel_or_not = false;
+	int accel_or_decel = 0;
+	switch(Mouse->now.dir%8) //次の方角からアクションを選択
+	{
+	case front:
+//		ChangeLED(0);
+//		AddVelocity = 0;
+//		accel_or_decel = 0;
+
+		//直進後の選択肢も見ておく
+		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
+
+		//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
+		if(accel_or_not == true) //既知で.直進
+		{
+			//加速かそのまま.
+			//現在速度がマックスかどうか
+			if(VelocityMax == true)
+			{
+				accel_or_decel = 0; //そのまま
+				AddVelocity = ExploreVelocity*1.5f;
+//				ChangeLED(0);
+			}
+			else
+			{
+				accel_or_decel = 1; //加速
+				AddVelocity = ExploreVelocity*1.5f;
+//				ChangeLED(7);
+			}
+		}
+		else
+		{
+			//未知もしくは、既知でも直進で無ければ.減速かそのまま
+			//現在速度がマックスかどうか
+			if(VelocityMax == true)
+			{
+				accel_or_decel = -1; //減速
+				static int cnt = 1;
+//				ChangeLED(cnt);
+				cnt += 2;
+				AddVelocity = 0;
+			}
+			else //マックスでない
+			{
+				accel_or_decel = 0; //そのまま
+				AddVelocity = 0;
+//				ChangeLED(2);
+			}
+		}
+
+
+		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速する
+		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのまま
+		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索速度であればそのまま
+		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度がマックスなら減速
+		//ただ直進
+		Calc = SearchOrFast;
+		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
+		break;
+	case right:
+//		ChangeLED(0);
+		//右旋回
+		Calc = SearchOrFast;
+
+		TurnRight(turn_mode, maze, Mouse);
+		break;
+	case backright:
+//		ChangeLED(0);
+		//Uターンして右旋回
+		//壁の更新の処理を呼ばない
+//		SearchOrFast = 1;
+		Calc = 1;//マップ更新したくないときは1を代入。
+		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態だけを更新したい.加速した後、旋回直前のノードと向きに合わせたい 目標ノードはその左後ろ
+		//1ノード、アクションごとに行動を更新したい.
+		//方角の更新は基本加減算でない
+		GoBack(maze, Mouse); //間の座標変動を
+		Calc = SearchOrFast;
+		TurnRight(turn_mode, maze, Mouse);
+
+
+		break;
+	case back:
+//		ChangeLED(0);
+		//Uターンして直進.加速できる
+		Calc = 1;//マップ更新したくないときは1を代入。
+		GoBack(maze, Mouse);
+//		AddVelocity = 0;
+//		accel_or_decel = 0;
+		//直進後の選択肢も見ておく
+				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
+
+				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか.すべて既知なら直進かどうかも見る
+				if(accel_or_not == true) //既知で.直進
+				{
+					//加速かそのまま.
+					//現在速度がマックスかどうか
+					if(VelocityMax == true)
+					{
+						accel_or_decel = 0; //そのまま
+						AddVelocity = 245;
+//						ChangeLED(0);
+					}
+					else
+					{
+						accel_or_decel = 1; //加速
+						AddVelocity = 245;
+//						ChangeLED(7);
+					}
+				}
+				else
+				{
+					//未知もしくは、既知でも直進で無ければ.減速かそのまま
+					//現在速度がマックスかどうか
+					if(VelocityMax == true)
+					{
+						accel_or_decel = -1; //減速
+						static int cnt = 1;
+//						ChangeLED(cnt);
+						cnt += 2;
+						AddVelocity = 0;
+					}
+					else //マックスでない
+					{
+						accel_or_decel = 0; //そのまま
+						AddVelocity = 0;
+//						ChangeLED(2);
+					}
+				}
+				//壁と座標の更新が要りそう
+		Calc = SearchOrFast;
+		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
+		break;
+	case backleft:
+//		ChangeLED(0);
+		//Uターンして左旋回
+		Calc = 1;//マップ更新したくないときは1を代入。
+		GoBack(maze, Mouse);
+		Calc = SearchOrFast;
+		TurnLeft(turn_mode, maze, Mouse);
+		break;
+	case left:
+//		ChangeLED(0);
+		//左旋回
+		Calc = SearchOrFast;
+//		ChangeLED(4);
+		TurnLeft(turn_mode, maze, Mouse);
+		break;
+	}
+
+}
+#endif
+
+
 int GetWallCtrlDirection(profile *mouse)
 {
 		//新ライブラリ用に変更
@@ -80,19 +245,19 @@ int GetWallCtrlDirection(profile *mouse)
 		switch(mouse->now.car%8)
 		{
 		case north:
-			if(mouse->now.wall.north == wall) //現在の方角と、座標から、壁の存在を確認する処理
+			if(mouse->now.wall.north == WALL) //現在の方角と、座標から、壁の存在を確認する処理
 			{
 				return F_WALL_PID;
 			}
-			else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
+			else if(mouse->now.wall.east == WALL && mouse->now.wall.west == WALL)
 			{
 				return D_WALL_PID;
 			}
-			else if(mouse->now.wall.east == wall)
+			else if(mouse->now.wall.east == WALL)
 			{
 				return R_WALL_PID;
 			}
-			else if(mouse->now.wall.west == wall)
+			else if(mouse->now.wall.west == WALL)
 			{
 				return L_WALL_PID;
 			}
@@ -103,19 +268,19 @@ int GetWallCtrlDirection(profile *mouse)
 			break;
 
 		case east:
-			if(mouse->now.wall.east == wall)
+			if(mouse->now.wall.east == WALL)
 			{
 				return F_WALL_PID;
 			}
-			else if(mouse->now.wall.north == wall && mouse->now.wall.south == wall)//south)
+			else if(mouse->now.wall.north == WALL && mouse->now.wall.south == WALL)//south)
 			{
 				return D_WALL_PID;
 			}
-			else if(mouse->now.wall.north == wall)
+			else if(mouse->now.wall.north == WALL)
 			{
 				return L_WALL_PID;
 			}
-			else if(mouse->now.wall.south == wall)
+			else if(mouse->now.wall.south == WALL)
 			{
 				return R_WALL_PID;
 			}
@@ -125,19 +290,19 @@ int GetWallCtrlDirection(profile *mouse)
 			}
 			break;
 		case south:
-			if(mouse->now.wall.south == wall)
+			if(mouse->now.wall.south == WALL)
 			{
 				return F_WALL_PID;
 			}
-			else if(mouse->now.wall.east == wall && mouse->now.wall.west == wall)
+			else if(mouse->now.wall.east == WALL && mouse->now.wall.west == WALL)
 			{
 				return D_WALL_PID;
 			}
-			else if(mouse->now.wall.east == wall)
+			else if(mouse->now.wall.east == WALL)
 			{
 				return L_WALL_PID;
 			}
-			else if(mouse->now.wall.west == wall)
+			else if(mouse->now.wall.west == WALL)
 			{
 				return R_WALL_PID;
 			}
@@ -147,19 +312,19 @@ int GetWallCtrlDirection(profile *mouse)
 			}
 			break;
 		case west:
-			if(mouse->now.wall.west == wall)
+			if(mouse->now.wall.west == WALL)
 			{
 				return F_WALL_PID;
 			}
-			else if ( mouse->now.wall.north == wall && mouse->now.wall.south == wall)//.westになってた。あと == south )で意味わからない処理に。
+			else if ( mouse->now.wall.north == WALL && mouse->now.wall.south == WALL)//.westになってた。あと == south )で意味わからない処理に。
 			{
 				return D_WALL_PID;
 			}
-			else if ( mouse->now.wall.north == wall )
+			else if ( mouse->now.wall.north == WALL )
 			{
 				return R_WALL_PID;
 			}
-			else if ( mouse->now.wall.south == wall )
+			else if ( mouse->now.wall.south == WALL )
 			{
 				return L_WALL_PID;
 			}
@@ -404,7 +569,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			TargetVelocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
-				updateRealSearch(maze, mouse);
+				getWallState(mouse, &Photo[0]);
 				Calc = 1;
 			}
 	}
@@ -489,7 +654,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			TargetVelocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
-				updateRealSearch(maze, mouse);
+				getWallState(mouse, &Photo[0]);
 				Calc = 1;
 			}
 	}
@@ -618,7 +783,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 		{
-			updateRealSearch(maze, mouse);
+			getWallState(mouse, &Photo[0]);
 			Calc = 1;
 		}
 		if(TargetVelocity[BODY] > explore_speed)
@@ -767,7 +932,7 @@ float AjustCenter(profile *mouse){
 	switch(mouse->now.car%8)
 	{
 	case north: //use west or north wall
-			if (mouse->now.wall.north == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.north == WALL) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-5);
@@ -781,7 +946,7 @@ float AjustCenter(profile *mouse){
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
 
 			}
-			else if (mouse->now.wall.south == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.south == WALL) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -795,7 +960,7 @@ float AjustCenter(profile *mouse){
 			}
 		break;
 	case east:
-			if (mouse->now.wall.east == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.east == WALL) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-5);
@@ -807,7 +972,7 @@ float AjustCenter(profile *mouse){
 //					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (mouse->now.wall.west == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.west == WALL) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -820,7 +985,7 @@ float AjustCenter(profile *mouse){
 			}
 		break;
 	case south:
-			if (mouse->now.wall.south == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.south == WALL) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-5);
@@ -832,7 +997,7 @@ float AjustCenter(profile *mouse){
 //						ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (mouse->now.wall.north == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.north == WALL) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -845,7 +1010,7 @@ float AjustCenter(profile *mouse){
 			}
 		break;
 	case west:
-			if (mouse->now.wall.west == wall) //前に壁があれば前で調整
+			if (mouse->now.wall.west == WALL) //前に壁があれば前で調整
 			{
 				//前壁調整
 				Calib(-5);
@@ -857,7 +1022,7 @@ float AjustCenter(profile *mouse){
 //					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
-			else if (mouse->now.wall.east == wall) //後ろに壁があるときはバック
+			else if (mouse->now.wall.east == WALL) //後ろに壁があるときはバック
 			{
 //				Control_Mode = wall_ctrl;
 //				Pid[Control_Mode].flag = 1;
@@ -882,42 +1047,42 @@ int GetWallCompensateDir(profile *mouse)
 			{
 			case north:
 
-				if(mouse->now.wall.east == wall)
+				if(mouse->now.wall.east == WALL)
 				{
 					return R_WALL_PID;
 				}
-				else if(mouse->now.wall.west == wall)
+				else if(mouse->now.wall.west == WALL)
 				{
 					return L_WALL_PID;
 				}
 				break;
 
 			case east:
-				if(mouse->now.wall.north == wall)
+				if(mouse->now.wall.north == WALL)
 				{
 					return L_WALL_PID;
 				}
-				else if(mouse->now.wall.south == wall)
+				else if(mouse->now.wall.south == WALL)
 				{
 					return R_WALL_PID;
 				}
 				break;
 			case south:
-				if(mouse->now.wall.east == wall)
+				if(mouse->now.wall.east == WALL)
 				{
 					return L_WALL_PID;
 				}
-				else if(mouse->now.wall.west == wall)
+				else if(mouse->now.wall.west == WALL)
 				{
 					return R_WALL_PID;
 				}
 				break;
 			case west:
-				if ( mouse->now.wall.north == wall )
+				if ( mouse->now.wall.north == WALL )
 				{
 					return R_WALL_PID;
 				}
-				else if ( mouse->now.wall.south == wall )
+				else if ( mouse->now.wall.south == WALL )
 				{
 					return L_WALL_PID;
 				}
@@ -957,7 +1122,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 		{
 			if(Calc == 0)//減速終了後直ぐにマップ更新
 			{
-				updateRealSearch(maze, mouse);
+				getWallState(mouse, &Photo[0]);
 				//ChangeLED(7);
 				Calc = 1;
 			}
@@ -997,7 +1162,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 			//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
-				updateRealSearch(maze, mouse);
+				getWallState(mouse, &Photo[0]);
 				Calc = 1;
 			}
 			//壁切れ補正

@@ -11,7 +11,7 @@
 //#include "MicroMouse.h"
 //マップデータをフラッシュに書き込む処理
 #include "Flash.h"
-#include "MazeLib.h"
+
 void flashStoreNodes(maze_node *maze)
 {
 	uint32_t address=start_adress_sector1;
