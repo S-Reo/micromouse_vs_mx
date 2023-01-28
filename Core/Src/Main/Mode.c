@@ -26,7 +26,6 @@
 #include "Interrupt.h"
 #include "Action.h"
 #include "MazeLib.h"
-//#include "test.h"
 #include "Searching.h"
 #include "Record.h"
 #include "dfs.h"
@@ -36,7 +35,47 @@
 #include <main.h>
 #include <stdio.h>
 //実環境処理用に、グローバルなマップデータとプロフィールを作成
+#define LOG_NUM_VELOCITY 500
+static void loggingMotorVelocityValue(logger_f *log_velocity, float target_velocity){
+	
+	float data_veloctiy[LOG_NUM_VELOCITY]={0};
+	initFloatLog(log_velocity, &data_veloctiy[0], false, LOG_NUM_VELOCITY);
 
+	MouseResetParameters();
+	TargetVelocity[BODY] = 0;
+	VelocityLeftOut=VelocityRightOut=0;
+	MousePIDFlagAll(false);
+	MousePIDResetAll();
+	EncoderStart();
+	Motor_PWM_Start();
+
+	PIDChangeFlag(L_VELO_PID, 1);
+	PIDChangeFlag(R_VELO_PID, 1);
+	IT_mode = EXPLORE;
+	HAL_TIM_Base_Start_IT(&htim1);
+	
+	int hoge = 0;
+	// printf("サンプル開始\r\n");
+	Signal(7);
+	TargetVelocity[BODY] = target_velocity;
+	setLoggerFlag(&(log_velocity->f), true);
+	// Motor_Switch( 60,60);
+	while(getLoggerFlag(&(log_velocity->f)) == true){
+		// 無限ループしないか不安: printf入れないと無限ループ？よくわからない現象
+		hoge++;
+	}
+	TargetVelocity[BODY] = 0;
+	// Motor_Switch( 0,0);
+	Motor_PWM_Stop();
+	EncoderStop();
+	MousePIDFlagAll(false);
+	HAL_TIM_Base_Stop_IT(&htim1);
+	// printf("サンプル終了\r\n");
+	// printf("hoge: %d\r\n",hoge);
+	HAL_Delay(10000);
+	Signal(7);
+	printFloatLog(log_velocity);
+}
 void Debug()
 {
 	//モード選択でデバッグ対象を選択（個別デバッグは各ソースで記述？）
@@ -53,6 +92,10 @@ void Debug()
 		ChangeLED(mode);		
 		printPhotoSampleValue();
 		ChangeLED(0);
+		break;
+	case 2:
+		
+		loggingMotorVelocityValue(&log_velocity, 240);
 		break;
 	default:
 		break;
@@ -141,8 +184,6 @@ int GainSetting(int n){
 
 }
 
-//一つの関数で記述する
-
 // 調整対象を選択
 void GainTest(){
 	// モード選択
@@ -176,16 +217,6 @@ void WritingFree()
 	dbc = 0;
 	MouseInit();
 
-	printf("3\r\n");
-
-
-
-	printf("4\r\n");
-
-	TotalPulse[RIGHT] = 0;
-	TotalPulse[LEFT] = 0;
-	TotalPulse[BODY] = 0;
-
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 
@@ -213,47 +244,26 @@ void WritingFree()
 }
 
 static void restart(char turn_mode){
-	//停止状態から帰還までの処理
-	//探索関数で、マップのアップデートしないとどうなるか. 既存のマップデータのみで行動決定. 壁制御が効かない.
-
+	
 	TargetVelocity[BODY] = 0;
 	Acceleration = 0;
 	TargetAngularV = 0;
 	TargetAngle = 0;
 	Angle = 0;
-	PIDReset(L_VELO_PID);
-	PIDReset(R_VELO_PID);
-	PIDReset(A_VELO_PID);
-	PIDReset(L_WALL_PID);
-	PIDReset(R_WALL_PID);
-	PIDReset(D_WALL_PID);
+	MousePIDResetAll();
 
-	//マップ22
 	updateAllNodeWeight(&my_map, &my_mouse.target_pos, &my_mouse.target_size, WALL_MASK);
-//	int stack_num=0; //stackはマップを更新してから求める
 
 	//最小ノードを選択
 	my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node, WALL_MASK); //周囲ノードを見て重み最小を選択
 	getNextState(&(my_mouse.now), &(my_mouse.next), my_mouse.next.node);
 
-
-	//そのノードに行くための準備
-	//前なら45mm加速
-//	while(1){
-//		//ゴールとスタックと今と次
-//		printf("%u, %u\r\n",my_mouse.target_pos.x, my_mouse.target_pos.y);
-//		printAllWeight(&my_map, &(my_mouse.target_pos));
-//		printState(&(my_mouse.now));
-//		printState(&(my_mouse.next));
-//	}
 	switch(my_mouse.now.dir%8){
 	case front:
-	//		ChangeLED(0);
 			AddVelocity = 0;
 			//ただ直進
 			Calc = SearchOrFast;
 			Accel(45, ExploreVelocity, &my_map, &my_mouse);
-//				GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, my_map, my_mouse);
 			break;
 		case right:
 			ChangeLED(0);
@@ -261,12 +271,10 @@ static void restart(char turn_mode){
 			Calc = SearchOrFast;
 			Rotate(90, M_PI);
 			Accel(45, ExploreVelocity, &my_map, &my_mouse);
-//				TurnRight(turn_mode, &my_map, &my_mouse);
 			break;
 		case backright:
 			ChangeLED(0);
 			Calc = 1;//マップ更新したくないときは1を代入。
-//				GoBack(my_map, my_mouse); //間の座標変動を
 			Rotate(180, M_PI);
 			Accel(45, ExploreVelocity, &my_map, &my_mouse);
 			Calc = SearchOrFast;
@@ -275,8 +283,7 @@ static void restart(char turn_mode){
 		case back:
 			ChangeLED(0);
 			//Uターンして直進.加速できる
-			Calc = 1;//マップ更新したくないときは1を代入。
-//				GoBack(my_map, my_mouse);
+			Calc = 1;
 			Rotate(180, M_PI);
 			Accel(45, ExploreVelocity, &my_map, &my_mouse);
 			AddVelocity = 0;
@@ -286,8 +293,7 @@ static void restart(char turn_mode){
 		case backleft:
 			ChangeLED(0);
 			//Uターンして左旋回
-			Calc = 1;//マップ更新したくないときは1を代入。
-//				GoBack(my_map, my_mouse);
+			Calc = 1;
 			Rotate(180, -M_PI);
 			Accel(45, ExploreVelocity, &my_map, &my_mouse);
 			Calc = SearchOrFast;
@@ -297,93 +303,55 @@ static void restart(char turn_mode){
 			ChangeLED(0);
 			//左旋回
 			Calc = SearchOrFast;
-	//		ChangeLED(4);
 			Rotate(90, -M_PI);
 			Accel(45, ExploreVelocity, &my_map, &my_mouse);
-//				TurnLeft(turn_mode, &my_map, &my_mouse);
 			break;
 		default:
 			break;
 	}
 }
 
-//一回目に通常の探索 + 二回目で最短 + 三回目で残りの探索 + 四回目で更に最短
-//一回目で全探索(DFS) + 失敗したら通常の探索と最短 + 成功すれば最短1回以上
-
 
 void DFS_Running(char turn_mode){
 	//全探索（深さ優先探索）
-			WALL_MASK = 0x01;
-			VelocityMax = false;
-			goal_edge_num = 1;
-			SearchOrFast = 0; //search
-			Calc = SearchOrFast;
+	WALL_MASK = 0x01;
+	VelocityMax = false;
+	goal_edge_num = 1;
+	SearchOrFast = 0; //search
+	Calc = SearchOrFast;
 
-			//0,0をゴールとして深さ優先探索すればいい
-			InitStackNum();
-			//stack_numをどうするか
-			StackMass(&my_map, &(my_mouse.now));
-			int stack_num=GetStackNum(); //stackでゴールしたマスの周辺が次のマスになる
-			my_mouse.target_pos.x = mass_stack[stack_num].x;
-			my_mouse.target_pos.y = mass_stack[stack_num].y;
-			my_mouse.target_size.x = 1;
-			my_mouse.target_size.y = 1;
-			stack_num--; //n=2から1へ
-			SetStackNum(stack_num);
-			restart(turn_mode); //次ノードの重みが0なのはなぜか⇒壁を認識しているのに重みは0
-//			Decel(45, 0);
-//						WaitStopAndReset();//これがないとガクンとなる.
-//						shiftState(&my_mouse);
-//						VisitedMass(my_mouse.now.pos);
-//
-//						PIDChangeFlag(A_VELO_PID, 0);
-//						PIDChangeFlag(L_VELO_PID, 0);
-//						PIDChangeFlag(R_VELO_PID, 0);
-//			while(1){
-//				printf("バッファ確認\r\n");
-//				Buffering();
-//				//どこをゴールとしているか
-//				//マップはどうなって、何に基づいて次の座標を決めているか
-//				//停止状態からstackを積み、左に行った。座標と向きは合っている
-//
-////				HAL_TIM_Base_Stop_IT(&htim1);
-////				HAL_TIM_Base_Stop_IT(&htim8);
-//				HAL_Delay(1000);
-//				printState(&(my_mouse.now));
-//				printState(&(my_mouse.next));
-//				printVisited();
-//				printAllWeight(&my_map, &(my_mouse.now.pos));
-//			}
-			//動き出して、壁を更新、重みマップを更新してからStackを取らないと..restartの中の加速後にやっているはず
-			//壁を読んで重みをUpdateしたからこそ次のスタックを積めるのか、
-			//重みマップのUpdateの前にstackから引っ張り出していないから、行先が決まらずノード更新されない
-	//		stack_num = StackMass(&my_map, &(my_mouse.now), stack_num);
-			while(stack_num != 0){
-//				if(stack_num == 0)
-//					break;
-				//目標ノードのx,yを更新
-				//現在ノードと目標ノードが一致しても特に何もない. stackを見るだけ
-				//ノードを確認したときの向き
 
-				//アクション
-				getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK); //壁があるのに、ゴールエリアだから重みが0になっている？
-				stack_num = GetStackNum();
-//				ChangeLED(stack_num);
-				//			stack_num = StackMass(&my_map, &(my_mouse.now), stack_num);
-			}
-			//減速停止
-			Decel(45, 0);
-			WaitStopAndReset();//これがないとガクンとなる.
-			shiftState(&my_mouse);
-			VisitedMass(my_mouse.now.pos);
+	InitStackNum();
+	
+	StackMass(&my_map, &(my_mouse.now));
+	int stack_num=GetStackNum();
+	my_mouse.target_pos.x = mass_stack[stack_num].x;
+	my_mouse.target_pos.y = mass_stack[stack_num].y;
+	my_mouse.target_size.x = 1;
+	my_mouse.target_size.y = 1;
+	stack_num--; //n=2から1へ
+	SetStackNum(stack_num);
+	restart(turn_mode);
 
-			PIDChangeFlag(A_VELO_PID, 0);
-			//flashのクリア。
-			Flash_clear_sector1();
-			//マップ書き込み
-			flashStoreNodes(&my_map);
-			//完了の合図
-			Signal(7);
+	while(stack_num != 0){
+
+		//アクション
+		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+		stack_num = GetStackNum();
+	}
+	//減速停止
+	Decel(45, 0);
+	WaitStopAndReset();//これがないとガクンとなる.
+	shiftState(&my_mouse);
+	VisitedMass(my_mouse.now.pos);
+
+	PIDChangeFlag(A_VELO_PID, 0);
+	//flashのクリア。
+	Flash_clear_sector1();
+	//マップ書き込み
+	flashStoreNodes(&my_map);
+	//完了の合図
+	Signal(7);
 }
 
 
@@ -473,9 +441,6 @@ void TestIMU()
 
 		ZGyro = ReadIMU(0x37, 0x38);
 		printf("gyro : %f\r\n",ZGyro);
-
-//		printf("%d, %hd, %f, %f, %f\r\n", m,ZGFilterd,  ZGyro, AngularV, Angle);
-
 		timer1 = 0;
 		t = 1;
 		//割り込みを有効化
@@ -487,17 +452,13 @@ void TestIMU()
 			printf("\r\n");
 		}
 
-//		ag = Angle;
 		t = 0;
 		HAL_TIM_Base_Stop_IT(&htim1);
 		HAL_Delay(1000);
-
-
-
 			for(int i=0; i < 5000; i++) //0.007495 / 5000;
 //				printf("%d, %f\r\n",i, debugVL[i]); //-0.001331
 			while(1)
-					{
-		}
+			{
+			}
 
 }

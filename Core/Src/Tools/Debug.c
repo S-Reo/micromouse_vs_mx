@@ -17,7 +17,7 @@
 #include "IEH2_4096.h"
 #include "mouse_ADC.h"
 #include "LED_Driver.h"
-
+#include "IR_Emitter.h"
 #include "Motor_Driver.h"
 #include "ICM_20648.h"
 #include "UI.h"
@@ -44,56 +44,6 @@ void printHardWareInformation(){
 }
 
 
-// アクションのチェック
-#if 0
-void testMotion(){
-		//テストする
-	MouseInit();
-
-	PIDChangeFlag(L_VELO_PID, 1);
-	PIDChangeFlag(R_VELO_PID, 1);
-	printf("パルスチェック: BODY %d, LEFT %d, RIGHT %d\r\n",TotalPulse[BODY],TotalPulse[LEFT],TotalPulse[RIGHT]);
-	//PIDChangeFlagStraight(N_WALL_PID);
-	PIDChangeFlag(D_WALL_PID, 0);
-	PIDChangeFlag(L_WALL_PID, 0);
-	PIDChangeFlag(R_WALL_PID, 0);
-	PIDChangeFlag(A_VELO_PID, 1);
-	ExploreVelocity=0;
-	Signal(mode);
-	//HAL_Delay(500);
-
-	//IT_mode = WRITINGFREE;
-	IT_mode = EXPLORE;
-
-	
-	// //直線距離の計測
-	// //加減速
-	// FastStraight(0.5, (61.5+90*7)/90, 1.00, -1.00/*2.89, -2.89*/, 240, 0);
-
-	// 45度ターンなど試す
-	ExploreVelocity=300;
-	setFastDiagonalParam(0);
-		// Accel(61.5-45, ExploreVelocity, &my_map, &my_mouse);
-		FastStraight(1,2+((61.5-45)/90),2.89,-2.89,4000,ExploreVelocity);
-		// SlalomFastRight(&fast45);
-		SlalomFastRight(&fast135);
-		// PIDChangeFlag(A_VELO_PID, 0);
-		Decel(45, 0);
-	while(1){
-		// PIDChangeFlag(L_VELO_PID, 0);
-		// PIDChangeFlag(R_VELO_PID, 0);
-		// PIDChangeFlag(A_VELO_PID, 0);
-	}
-}
-#endif
-
-
-//領域を指定
-	//マップ
-	//区画ごとのログ(デバッグ用)
-	//パラメータ保存
-//ひとまずこれだけ
-//パラメータ保存
 //uint32_t StartAddressParameter = start_adress_sector9;	//開始アドレス
 //uint32_t EndAddressParameter = end_adress_sector9;		//終了アドレス
 //区画ごとのログ

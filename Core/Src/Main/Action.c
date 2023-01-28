@@ -5,7 +5,6 @@
  *      Author: leopi
  */
 
-//動作を定義する //割り込みで呼ぶ。
 #include "Action.h"
 #include <main.h>
 #include <math.h>
@@ -19,49 +18,48 @@
 #include "Interrupt.h"
 #include "Motor_Driver.h"
 #include "IR_Emitter.h"
+
 #include "MazeLib.h"
-//#include "test.h"
+#include "dfs.h"
 #include "Searching.h"
 
 #include <stdbool.h>
 const float TO_PULSE = 2/MM_PER_PULSE;
 #define WALL_CUT_VAL 34
 //const float Wall_Cut_Val = 38;
-const float angle_range = 3*M_PI/180;  //領域
+const float angle_range = 3*M_PI/180;
 
 #define SLA_CALIB_FL 180
 #define SLA_CALIB_FR	230
-/* バックエンドでコマンドとして処理する */
 
-// アクション中に必要な更新処理（ハードウェア依存は切り離してActionに持っていく）
-// ハードウェア依存部（フォトセンサの値）
-
-static void getWallState(profile *mouse, float *photo){
+static void getWallState(profile *mouse, float *photo, maze_node *maze){
 
 	wall_existence wall_dir; //ロボットの前後左右の値として取得
-	// 分岐先が同じ式なのでうまく入れ替えて短くしたい
-    switch (mouse->next.car%8) //壁センサ値を取得、方角毎に壁の有無を判定（nextでよい）
+
+	shiftState(mouse); //区画進入直前なので、更新予定の方角と座標がNextに入っている
+	VisitedMass(mouse->now.pos); //訪問したマスを訪問済み配列に登録
+    switch (mouse->now.car%8) //壁センサ値を取得、方角毎に壁の有無を判定
     {
     case north:
-    	wall_dir.north = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.north = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;
     	wall_dir.east = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir.south = NOWALL;
     	wall_dir.west = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case east:
-    	wall_dir.east = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.east = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	
     	wall_dir.south = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir.west = NOWALL;
     	wall_dir.north = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case south:
-    	wall_dir.south = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.south = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;
     	wall_dir.west = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir.north = NOWALL;
     	wall_dir.east = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
         break;
     case west:
-    	wall_dir.west = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	//70超えたら壁あり。
+    	wall_dir.west = ((photo[FL] + photo[FR])*0.5f > FRONT_WALL)  ?   WALL : NOWALL;	
     	wall_dir.north = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
     	wall_dir.east = NOWALL;
     	wall_dir.south = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
@@ -70,30 +68,70 @@ static void getWallState(profile *mouse, float *photo){
         //万が一斜めの方角を向いているときに呼び出してしまったら、
         break;
     }
-	mouse->next.wall = wall_dir; //各方角の壁に壁の有無を代入
+	mouse->now.wall = wall_dir; //各方角の壁に壁の有無を代入
 
-	//アクションが終わるときがノードの上にいる状態なので、状態シフト済みとする（この関数はアクション中に呼び出される想定）
+	updateNodeThree(maze, &(mouse->now.wall), mouse->now.pos.x, mouse->now.pos.y); // ノードに反映
+
+	position start_pos = {0,0}; //ゴールエリアに一度入ったら（target.posに到達したら）深さ優先探索を開始
+	if(GetStackFlag() == true){
+		if(ComparePosition(&(mouse->target_pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target_pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
+			position target_size = {1,1};
+			mouse->target_size = target_size;
+			_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
+			if(stacked_one_or_more == 0) printf("スタックが無い\r\n");//ChangeLED(7);
+			else printf("スタックが何かしらある\r\n");//ChangeLED(0);
+
+			int n = GetStackNum();
+
+			//0なら
+			if(n == 0){
+				WALL_MASK = 0x01;
+				mouse->target_pos = GetStackMass(); //カウントは減らさない n = 0のまま
+				SetStackNum(n);
+			}//0以外なら通常通り
+			else{
+				WALL_MASK = 0x01;
+				position pos;
+				_Bool is_first = false;
+				while( 1 ){
+					pos = GetStackMass();
+					is_first = GetVisited(&(pos)); //0なら未訪問
+					if(n == 0){
+						mouse->target_pos = pos;
+						printf("未訪問\r\n");
+						break;
+					}
+					else if(is_first == false){
+
+						mouse->target_pos =pos;
+						--n;
+						SetStackNum(n);
+						break;
+					} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルート
+					else if(is_first == true){
+						--n;
+						SetStackNum(n); //0になったら
+					}
+					//訪問済みであれば更に下を読む
+				}
+			}
+
+		}//到達していなければ、そのまま最短でtarget.posに向かう
+	}
+	//壁の存在を基に重みマップを更新
+	updateAllNodeWeight(maze, &(mouse->target_pos), &(mouse->target_size), WALL_MASK);
 }
 #if 1
-// 最終的にアクションを決めるロジックは
-// 物理的条件に基づくロジックと連携させる（走行計画のため）
-// よってSearchingでは符号を返すのみにとどめる
-// Actionで分岐をつくる（以下はほぼActionでやる
 
 void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask){
-	//既知区間加速このswitch文中で書くかも
-		//コマンドキューのときはここでコマンドを発行してキューに渡す
+	//既知区間加速このswitch文中で書く
 	AddVelocity = 0;
-	//2つのアクションを組み合わせたときに壁とマップの更新が入ってしまわないようにする
+	
 	_Bool accel_or_not = false;
 	int accel_or_decel = 0;
-	switch(Mouse->now.dir%8) //次の方角からアクションを選択
+	switch(Mouse->now.dir%8) //次の進行方向からアクションを選択
 	{
 	case front:
-//		ChangeLED(0);
-//		AddVelocity = 0;
-//		accel_or_decel = 0;
-
 		//直進後の選択肢も見ておく
 		accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
 
@@ -134,45 +172,28 @@ void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask
 //				ChangeLED(2);
 			}
 		}
-
-
-		//既知ノードしか無くまた直進でかつ速度が探索速度であれば、加速する
-		//既知ノードしか無くまた直進でかつ速度がマックスであれば、そのまま
-		//既知ノードしか無く直進で無い、または未知ノードがある場合、探索速度であればそのまま
-		//既知ノードしか無く直進で無い、または未知ノードがある場合、速度がマックスなら減速
-		//ただ直進
 		Calc = SearchOrFast;
 		GoStraight(90, ExploreVelocity +AddVelocity , accel_or_decel, maze, Mouse);
 		break;
 	case right:
-//		ChangeLED(0);
-		//右旋回
 		Calc = SearchOrFast;
 
 		TurnRight(turn_mode, maze, Mouse);
 		break;
 	case backright:
-//		ChangeLED(0);
 		//Uターンして右旋回
 		//壁の更新の処理を呼ばない
 //		SearchOrFast = 1;
 		Calc = 1;//マップ更新したくないときは1を代入。
-		//現在ノードは、袋小路の入り口, xyは合っている。旋回時に現在の状態だけを更新したい.加速した後、旋回直前のノードと向きに合わせたい 目標ノードはその左後ろ
-		//1ノード、アクションごとに行動を更新したい.
-		//方角の更新は基本加減算でない
-		GoBack(maze, Mouse); //間の座標変動を
+		
+		GoBack(maze, Mouse); 
 		Calc = SearchOrFast;
 		TurnRight(turn_mode, maze, Mouse);
-
-
 		break;
 	case back:
-//		ChangeLED(0);
-		//Uターンして直進.加速できる
+		//Uターンして直進.加速
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack(maze, Mouse);
-//		AddVelocity = 0;
-//		accel_or_decel = 0;
 		//直進後の選択肢も見ておく
 				accel_or_not = judgeAccelorNot(maze, Mouse->next.car, Mouse->next.node);
 
@@ -218,7 +239,6 @@ void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask
 		GoStraight(90, ExploreVelocity +AddVelocity, accel_or_decel, maze, Mouse);
 		break;
 	case backleft:
-//		ChangeLED(0);
 		//Uターンして左旋回
 		Calc = 1;//マップ更新したくないときは1を代入。
 		GoBack(maze, Mouse);
@@ -226,22 +246,17 @@ void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask
 		TurnLeft(turn_mode, maze, Mouse);
 		break;
 	case left:
-//		ChangeLED(0);
 		//左旋回
 		Calc = SearchOrFast;
-//		ChangeLED(4);
 		TurnLeft(turn_mode, maze, Mouse);
 		break;
 	}
-
 }
 #endif
 
 
 int GetWallCtrlDirection(profile *mouse)
 {
-		//新ライブラリ用に変更
-
 		switch(mouse->now.car%8)
 		{
 		case north:
@@ -371,27 +386,24 @@ void Rotate(float deg, float ang_v)
 			64*T1*ang_v*ang_v / (2*decel_deg)
 	};
 	float move_angle[3] = {
-			accel_deg * M_PI/ 180, //ラジアンに直してる
+			accel_deg * M_PI/ 180, //ラジアンに
 			const_deg * M_PI/ 180,
 			decel_deg * M_PI/ 180,
 	};
 
 	if( ang_v > 0)	//右回転
 	{
-		TargetAngle += move_angle[0];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
+		TargetAngle += move_angle[0];
 		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
-			//最短走行の時だけ、Angleが大きくならない、もしくは目標角度がかなり大きい。初期化？最初の旋回なので、0radから90度ぶん目標角度がズレている必要がある。Angleが積算できていないかも。
-			AngularAcceleration = angular_acceleration[0]; //ここまで
+			AngularAcceleration = angular_acceleration[0];
 		}
-		TargetAngle += move_angle[1];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
+		TargetAngle += move_angle[1];
 		while(TargetAngle > Angle)
 		{
-			AngularAcceleration = angular_acceleration[1];//0
+			AngularAcceleration = angular_acceleration[1];
 		}
-		TargetAngle += move_angle[2];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
+		TargetAngle += move_angle[2];
 		while(TargetAngle > Angle)
 		{
 			 AngularAcceleration = -angular_acceleration[2];
@@ -404,21 +416,17 @@ void Rotate(float deg, float ang_v)
 	}
 	else if( ang_v < 0)
 	{
-		TargetAngle -= move_angle[0];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
-		//ここのwhileが抜けないことがある
-		while( (TargetAngle < Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
+		TargetAngle -= move_angle[0];
+		while( (TargetAngle < Angle) )
 		{
 			AngularAcceleration = -angular_acceleration[0]; //ここまで
 		}
-		TargetAngle -= move_angle[1];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
+		TargetAngle -= move_angle[1];
 		while(TargetAngle < Angle)
 		{
 			AngularAcceleration = angular_acceleration[1];//0
 		}
-		TargetAngle -= move_angle[2];//回転量がおかしい問題 : 現在の角度+移動量 = 目標角度 になっていたので回転開始時のブレが影響する
-
+		TargetAngle -= move_angle[2];
 		while(TargetAngle < Angle)
 		{
 			 AngularAcceleration = angular_acceleration[2];
@@ -450,7 +458,7 @@ void Rotate(float deg, float ang_v)
 int getFrontWall(profile *mouse)
 {
 
-	switch(mouse->now.car%8)//方角に合わせて、
+	switch(mouse->now.car%8)
 	{
 
 	case north:
@@ -488,21 +496,10 @@ int getFrontWall(profile *mouse)
 void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
 	Pid[A_VELO_PID].flag = 1;
-	//毎回変数のコピーするの無駄
-//	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-//	float pre = Sla.Pre;         //スラローム前距離
-//	float fol = Sla.Fol;         //スラローム後距離
-//	float alpha_turn = Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度
-//	//float alalpha_turn = Sla.Alalpha;
-//	float ang1 = Sla.Theta1;         //角速度が上がるのは0からang1まで
-//	float ang2 = Sla.Theta2;         //角速度が一定なのはang1からang2まで
-//	float ang3 = Sla.Theta3;         //角速度が下がるのはang2からang3まで
-	//このあたりのパラメータをどう調整、設計するかが鍵
-//	float now_angv = AngularV;
 	int now_pulse;
 
-	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
-	if (0)//getFrontWall(mouse) == WALL /*前に壁があれば、*/) //Uターン後にスラロームするときは、壁の情報が間違っている.壁の情報を毎回正しくする
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
+	if (0)//getFrontWall(mouse) == WALL /*前に壁があれば、*/) 
 	{
 		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
@@ -510,7 +507,6 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = ExploreVelocity;
-//			ChangeLED(4);
 		}
 
 	}
@@ -518,17 +514,12 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	{
 		while( now_pulse + Sla.Pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
-				//velocity_ctrl_flag = 1;
 				TargetAngularV = 0;
 				AngularLeapsity = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = ExploreVelocity;
-//				ChangeLED(2);
-				////printf("直進1\r\n");
 		}
 	}
-//	now_angv = AngularV;
-//	ChangeLED(0);
 	float start_angle = Angle;
 	Pid[A_VELO_PID].flag = 0;
 	while(start_angle + Sla.Theta1 > Angle)
@@ -539,8 +530,6 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	}
 	AngularAcceleration = 0;
 	AngularLeapsity = 0;
-//	now_angv = AngularV;
-	//alpha_flag = 0;
 
 	while(start_angle + Sla.Theta2 > Angle)
 	{
@@ -548,7 +537,6 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			TargetVelocity[BODY] = ExploreVelocity;
 	}
 
-//	now_angv = AngularV;
 	while( start_angle + Sla.Theta3 > Angle)
 	{
 			AngularAcceleration = -Sla.Alpha;
@@ -569,7 +557,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			TargetVelocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
-				getWallState(mouse, &Photo[0]);
+				getWallState(mouse, &Photo[0], maze);
 				Calc = 1;
 			}
 	}
@@ -580,16 +568,6 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
 	Pid[A_VELO_PID].flag = 1;
-	//ここの値コピーとその他計算を事前に行う
-//	float v_turn = ExploreVelocity;       //スラローム時の重心速度
-//	float pre = Sla.Pre;         //スラローム前距離
-//	float fol = Sla.Fol;         //スラローム後距離
-//	float alpha_turn = -Sla.Alpha;//046;//125;//16;//0.015*13;  //スラローム時の角加速度s
-//	//float alalpha_turn = -Sla.Alalpha;
-//	float ang1 = Sla.Theta1;         //角速度が上がるのは0からang1まで
-//	float ang2 = Sla.Theta2;         //角速度が一定なのはang1からang2まで
-//	float ang3 = Sla.Theta3;         //角速度が下がるのはang2からang3まで
-	//このあたりのパラメータをどう調整、設計するかが鍵
 
 	int now_pulse;
 
@@ -602,7 +580,6 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
 			TargetVelocity[BODY] = ExploreVelocity;
-//			ChangeLED(4);
 		}
 
 
@@ -614,10 +591,8 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 				TargetAngularV = 0;
 				AngularAcceleration = 0;
 				TargetVelocity[BODY] = ExploreVelocity;
-//				ChangeLED(2);
 		}
 	}
-//	ChangeLED(0);
 	Pid[A_VELO_PID].flag = 0;
 	float start_angle = Angle;
 	while(start_angle - Sla.Theta1 < Angle)
@@ -654,7 +629,7 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 			TargetVelocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
-				getWallState(mouse, &Photo[0]);
+				getWallState(mouse, &Photo[0], maze);
 				Calc = 1;
 			}
 	}
@@ -666,10 +641,9 @@ void SlalomFastRight(slalom_parameter *param)	//現在の速度から、最適�
 	Pid[A_VELO_PID].flag = 1;
 	int now_pulse;
 
-	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + param->Pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 	{
-			//velocity_ctrl_flag = 1;
 			TargetAngularV = 0;
 			AngularLeapsity = 0;
 			AngularAcceleration = 0;
@@ -714,12 +688,12 @@ void SlalomFastRight(slalom_parameter *param)	//現在の速度から、最適�
 
 }
 void SlalomFastLeft(slalom_parameter *param)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
-{//leftがコピー元
+{
 	Pid[A_VELO_PID].flag = 1;
-	//一旦前壁補正なしでかいてみよう
+	//一旦前壁補正なしで
 	int now_pulse;
 
-	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
+	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 		while( now_pulse + param->Pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
 				TargetAngularV = 0;
@@ -783,7 +757,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 		{
-			getWallState(mouse, &Photo[0]);
+			getWallState(mouse, &Photo[0], maze);
 			Calc = 1;
 		}
 		if(TargetVelocity[BODY] > explore_speed)
@@ -791,7 +765,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 			Acceleration = 0;
 			TargetVelocity[BODY] = explore_speed;
 		}
-		//壁切れも一旦なし
+		//壁切れ一旦なし
 //		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
 //		{
 //			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-(WALL_CUT_VAL*TO_PULSE));
@@ -803,7 +777,6 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 	}
 
 	Acceleration = 0;
-//	ChangeLED(0);
 //	wall_cut = false;
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse*0.5f;
@@ -811,7 +784,6 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 }
 void Decel(float dec_distance, float end_speed)
 {
-//	Pos.Act = decel;
 	float down_speed=0;
 #if 0
 	down_speed = CurrentVelocity[BODY] - end_speed; //end_speedが0かそうでないか
@@ -822,7 +794,6 @@ void Decel(float dec_distance, float end_speed)
 #else
 	Acceleration = -2.89;
 #endif
-	//ここより下を分けて書くべきかはあとで考える
 	int target_pulse = (int)(dec_distance*TO_PULSE);
 
 	while( (	(Photo[FR]+Photo[FL]) < 2500) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
@@ -860,13 +831,10 @@ void Decel(float dec_distance, float end_speed)
 
 
 }
-//色々な処理を合わせて先に関数を作ってしまう方がいいかも。
-//加速だけ、減速だけ、定速で、などを組み合わせて台形加減速で一区画走る、とか数区画走れる、途中で壁を見る、とか。
+
 void Calib(int distance)
 {
-	//Pos.を考え中
 	int target_pulse = (int)(distance*TO_PULSE);
-	//int keep_pulse = TotalPulse[BODY]+target_pulse;
 	if(target_pulse > 0)
 	{
 		while( KeepPulse[BODY] + target_pulse > TotalPulse[BODY] )
@@ -891,44 +859,32 @@ void Calib(int distance)
 }
 void Compensate()
 {
-	//誤差補正する
-	//Pos.を考え中
+	//誤差補正
 #if 0
 	//前壁補正
 	TargetPhoto[FL];
 
 #else
-	//バック補正
-	//ControlWall();
+	//バック
 	PIDChangeFlag(A_VELO_PID, 1);
 	Calib(-25);
 	PIDChangeFlag(A_VELO_PID, 0);
-	//Calib(15);
-
-//	Accel(7,-70);
-//	Decel(7,0);
 #endif
 
 }
 float AjustCenter(profile *mouse){
-	//x,y,lrfb
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag( A_VELO_PID, 0);
 	int wall_ctrl = GetWallCtrlDirection(mouse);
-//	if(wall_ctrl == 0)
-////		ChangeLED(7);
-//	else ChangeLED(0);
-//	Control_Mode = NOT_CTRL_PID;
-	//HAL_Delay(100);
 	float photo_threshold[2]=
 	{
 			3600,
 			4000
 			//3300,
 			//4500
-	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さく。狭めると位置が安定するが環境しだいで怪しい挙動に。
+	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さく。狭めると位置が安定するが、環境しだいで怪しい挙動に。
 	switch(mouse->now.car%8)
 	{
 	case north: //use west or north wall
@@ -936,20 +892,14 @@ float AjustCenter(profile *mouse){
 			{
 				//前壁調整
 				Calib(-5);
-//				Control_Mode = wall_ctrl;
 				PIDChangeFlag(wall_ctrl, 1);
 				while( !( (photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
 				{
-//					ChangeLED(Pid[F_WALL_PID].flag);
 				}
-
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
-
 			}
 			else if (mouse->now.wall.south == WALL) //後ろに壁があるときはバック
 			{
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();	//後ろ壁調整
 
@@ -964,18 +914,13 @@ float AjustCenter(profile *mouse){
 			{
 				//前壁調整
 				Calib(-5);
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				while( !(( (photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1]))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
-//					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (mouse->now.wall.west == WALL) //後ろに壁があるときはバック
 			{
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
 				Pid[wall_ctrl].flag = 0;
@@ -989,18 +934,13 @@ float AjustCenter(profile *mouse){
 			{
 				//前壁調整
 				Calib(-5);
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				while( !((photo_threshold[0]< Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
-//						ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (mouse->now.wall.north == WALL) //後ろに壁があるときはバック
 			{
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
 				Pid[wall_ctrl].flag = 0;
@@ -1014,18 +954,13 @@ float AjustCenter(profile *mouse){
 			{
 				//前壁調整
 				Calib(-5);
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				while( !((photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
 					{
-//					ChangeLED(Pid[F_WALL_PID].flag);
 					}
 			}
 			else if (mouse->now.wall.east == WALL) //後ろに壁があるときはバック
 			{
-//				Control_Mode = wall_ctrl;
-//				Pid[Control_Mode].flag = 1;
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
 				Pid[wall_ctrl].flag = 0;
@@ -1036,7 +971,6 @@ float AjustCenter(profile *mouse){
 	default:
 		break;
 	}
-//	Control_Mode = NOT_CTRL_PID;
 	Pid[wall_ctrl].flag = 0;
 	TargetAngularV = 0;
 	return 45;
@@ -1099,31 +1033,22 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 {
 	//斜め走行時の直進は別で作る
 
-	//v = v0 + at
-	//x = v0t + 0.5*at^2
-	//壁の有無をすべて知っている区間は更新する必要がないので一気に加速させて座標を二つ更新
-//	Control_Mode = A_VELO_PID;
 	Pid[A_VELO_PID].flag = 1;
-	//加減速時は角度制御だけにしておいてあとで困ったら追加
 	int target_pulse = (int)(move_distance*TO_PULSE);
 	if(accel_or_decel == 1) //加速するとき
 	{
-		//explore_speed += AddVelocity;
 		VelocityMax = true;
-		Accel( move_distance , explore_speed, maze, mouse);	//要計算	//現在の制御目標速度がexploreに近ければ加速度は小さくなるし、差が限りなく小さければほぼ加速しない。つまり定速にもなる。微妙なズレを埋めることができる。切り捨てるけど。
+		Accel( move_distance , explore_speed, maze, mouse);
 	}
 	else if(accel_or_decel == -1) //探索速度までの減速. ターン速度までの減速も後で入れる
 	{
 		VelocityMax = false;
-		//ChangeLED(5);
 		Decel( move_distance*0.75f, explore_speed); //0.8で減速
-//		ChangeLED(6);
 		while( ( KeepPulse[BODY] +(target_pulse*0.25f)) > ( TotalPulse[BODY]) ) //残り0.2でマップの更新
 		{
 			if(Calc == 0)//減速終了後直ぐにマップ更新
 			{
-				getWallState(mouse, &Photo[0]);
-				//ChangeLED(7);
+				getWallState(mouse, &Photo[0], maze);
 				Calc = 1;
 			}
 		}
@@ -1141,15 +1066,13 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 		int ctrl_mode=A_VELO_PID;
 		direction dir = mouse->now.dir;
 		if(!(dir%8 == backright || dir%8 == backleft || dir%8 == back)){
-			ctrl_mode = GetWallCtrlDirection(mouse); //一個前の情報を使っているかも（Uターン時のプログラムでは位置の更新がない）
+			ctrl_mode = GetWallCtrlDirection(mouse);
 		}
-		//両壁がなければ, 角度制御しつつ柱を見たい. 細かすぎるかも.　今は角度制御
 		if (ctrl_mode == N_WALL_PID )//|| ctrl_mode == F_WALL_PID)
 			ctrl_mode = A_VELO_PID;
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
 			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
-//				Control_Mode = A_VELO_PID;
 				Pid[A_VELO_PID].flag = 1;
 				Pid[ctrl_mode].flag = 0;
 			}
@@ -1157,12 +1080,9 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 				Pid[A_VELO_PID].flag = 0;
 				Pid[ctrl_mode].flag = 1;//壁見る
 			}
-			//ControlWall();
-			//探索目標速度 <= 制御目標速度  となったら、加速をやめる。
-			//右か左の壁のセンサ値を見て、閾値を下回ったら、TotalPulseかKeepPulseを補正する
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
-				getWallState(mouse, &Photo[0]);
+				getWallState(mouse, &Photo[0], maze);
 				Calc = 1;
 			}
 			//壁切れ補正
@@ -1183,7 +1103,6 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 		Pid[ctrl_mode].flag = 0;//壁見る
 		wall_cut = false;
 		Acceleration = 0;
-//		ChangeLED(0);
 		KeepPulse[BODY] += target_pulse;
 		KeepPulse[LEFT] += target_pulse*0.5f;
 		KeepPulse[RIGHT] += target_pulse*0.5f;
@@ -1192,65 +1111,18 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 }
 void TurnRight(char mode, maze_node *maze, profile *mouse)
 {
-	//関数呼び出しと判定処理が多いと遅い。
-
 	switch( mode )
 	{
 	case 'T' :
-
 		Decel(45, 0);
 		WaitStopAndReset();
-//		ChangeLED(5);
-		//AjustCenter();
 		EmitterOFF();
-//		Pid[Control_Mode].flag = 0;
-//		PIDReset(Control_Mode);
-//		Control_Mode = NOT_CTRL_PID;
 		Pid[A_VELO_PID].flag = 0;
-//		Pid[Control_Mode].flag = 1;
-
-		//二回目の減速ではマップが完全におかし
-		//一回目のターン時の減速終了時は正しい
-		//二回目のターン時の減速後までにマップが狂ってる
-
-//		PIDChangeFlag(A_VELO_PID, 0);
 		Rotate( 90 , 2*M_PI);//1.5
 		mouse->now.car += 2;
-		//方角+2
-		//
-		//ここより後ろで
-		//回転直後は問題なし
-
-
-//		ChangeLED(0);
-		//RotateTest(90);
-
-//		float acc = AjustCenter();
 		EmitterON();
-
-//		PIDReset(L_VELO_PID);
-//		PIDReset(R_VELO_PID);
-//		PIDReset(A_VELO_PID);
 		HAL_Delay(100);
-//		Pid[Control_Mode].flag = 0;
-//		PIDReset(Control_Mode);
-
-//		PIDChangeFlag( A_VELO_PID , 1);
-
-//		Control_Mode = A_VELO_PID; //ゴールを破壊してるのはこれ
 		Pid[A_VELO_PID].flag = 1;
-//							static int cc = 0;
-//									if(cc == 0)//東を向いている状態での更新がおかしい
-//												{
-//													while(1)
-//													{
-//														//マップと壁情報などもろもろを見たい
-//														printAllNodeExistence(&my_map);
-//														printProfile(&my_mouse);
-//														printAllWeight(&my_map, &(my_mouse.goal_lesser));
-//													}
-//												}
-//												cc ++;
 		Accel(45, ExploreVelocity, maze, mouse);
 		break;
 	case 'S':
@@ -1260,8 +1132,6 @@ void TurnRight(char mode, maze_node *maze, profile *mouse)
 	default :
 		break;
 	}
-
-
 }
 void TurnLeft(char mode, maze_node *maze, profile *mouse)
 {
@@ -1271,26 +1141,13 @@ void TurnLeft(char mode, maze_node *maze, profile *mouse)
 		//超信地旋回
 		Decel(45, 0);
 		WaitStopAndReset();
-		//ChangeLED(5);
-
-		//AjustCenter();
 		EmitterOFF();
-//		PIDChangeFlag(A_VELO_PID, 0);
-//		Control_Mode = NOT_CTRL_PID;
 		Pid[A_VELO_PID].flag = 0;
 		Rotate( 90 , -2*M_PI);//-1.5
 		mouse->now.car -= 2;
-		//RotateTest(-90);
-//		PIDReset(L_VELO_PID);
-//		PIDReset(R_VELO_PID);
-//		PIDReset(A_VELO_PID);
 		EmitterON();
 		HAL_Delay(100);
-//		float acc = AjustCenter();
-		HAL_Delay(100);
-//		Control_Mode = A_VELO_PID;
 		Pid[A_VELO_PID].flag = 1;
-//		PIDChangeFlag( A_VELO_PID , 1);
 		Accel(45, ExploreVelocity, maze, mouse);
 		break;
 	case 'S':
@@ -1308,32 +1165,26 @@ void GoBack(maze_node *maze, profile *mouse)
 	Decel(45, 0);
 	float acc = AjustCenter(mouse);
 	WaitStopAndReset();
-//	ChangeLED(5);
-#if 1
-//	Control_Mode = NOT_CTRL_PID;
+
 	int wall_comp = GetWallCompensateDir(mouse);
 		//右か左かそれ以外か
 		if(wall_comp == L_WALL_PID)
 		{
-			Rotate(90, -2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+			Rotate(90, -2*M_PI);
 			mouse->now.car = (mouse->now.car - 2) %8;
 			acc = AjustCenter(mouse);
 			WaitStopAndReset();
-//			Pos.Dir = left;
 			Rotate(90, -2*M_PI);
 			mouse->now.car = (mouse->now.car - 2) %8;
-//			Pos.Dir = back;
 		}
 		else if(wall_comp == R_WALL_PID)
 		{
-			Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
+			Rotate(90, 2*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
 			acc = AjustCenter(mouse);
 			WaitStopAndReset();
-//			Pos.Dir = right;
 			Rotate(90, 2*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
-//			Pos.Dir = back;
 		}
 		else if(wall_comp == N_WALL_PID)
 		{
@@ -1341,23 +1192,6 @@ void GoBack(maze_node *maze, profile *mouse)
 			mouse->now.car = (mouse->now.car + 2) %8;
 			WaitStopAndReset();
 		}
-//		Control_Mode = A_VELO_PID;
-#else
-	Pos.Dir = right;
-	Control_Mode = NOT_CTRL_PID;
-//	PIDChangeFlag(A_VELO_PID, 0);
-	Rotate(90, 2*M_PI);//もしくは二回とも左。ここの加速でバグ。 //
-	mouse->now.car = (mouse->now.car + 2) %8;
-	//acc = AjustCenter();
-	Pos.Dir = right;
-	Rotate(90, 2*M_PI);
-	mouse->now.car = (mouse->now.car + 2) %8;
-	Control_Mode = A_VELO_PID;
-//	PIDChangeFlag(A_VELO_PID, 1);
-	Pos.Dir = back;
-
-#endif
-
 
 	acc = AjustCenter(mouse);
 

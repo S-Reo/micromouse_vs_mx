@@ -17,11 +17,14 @@ typedef struct PhotoSample{
 	uint32_t val[PHOTO_NUM][SAMPLE_NUM];
 	float fval[PHOTO_NUM][SAMPLE_NUM];
 }photo_sample;
+
+
 static photo_sample ps={
 	false,
 	0,
 	{{0}}
 };
+
 static void printAllValue_uint32(){
 	for(int i=0; i < SAMPLE_NUM; i++){
 		printf("%d, ",i);
@@ -76,7 +79,6 @@ void getPhotoSampleValue_float(float *photo_value)
 	}
 }
 
-
 // フロントエンドで呼ぶ関数（ハードウェア依存）
 void printPhotoSampleValue(){
 	// 発光と受光、割込みの準備（各ペリフェラルは初期化はされている前提
@@ -102,3 +104,46 @@ void printPhotoSampleValue(){
 	// printAllValue_float();
 }
 /* ---------------------------- */
+
+/* float型のログ取得ライブラリ （一次元配列）*/
+
+// ログ変数の登録
+void initFloatLog(logger_f *lg, float *log_value, _Bool flag, int data_num){
+	lg->data = log_value;
+	lg->f.flag = flag;
+	lg->f.count = 0;
+	lg->f.data_num = data_num;
+}
+// 割込み内で呼ぶ関数
+void getFloatLog(logger_f *lg, float external_value){
+	if(lg->f.flag == false){
+		lg->f.count = 0;
+	}
+	else {
+		lg->data[lg->f.count] = external_value;
+		
+		lg->f.count ++;
+
+		if(lg->f.count == lg->f.data_num){
+			lg->f.flag = false;
+		}
+	}
+}
+// フロントエンドで呼ぶ関数
+void printFloatLog(logger_f *lg){
+	for(int i=0; i < lg->f.data_num; i++){
+		// double dbl = (double)i;
+		char c='5';
+		printf("%c\r\n ",c);
+		// printf("%d\r\n ",(int)(10*(lg->data[i])));
+		// printf("%f\r\n ",lg->data[i]);
+		// printf("%d, %f\r\n ",i,lg->data[i]);
+	}
+}
+// フラグの取得と設定
+_Bool getLoggerFlag(logger *lg){
+	return lg->flag;
+}
+void setLoggerFlag(logger *lg, _Bool logic){
+	lg->flag = logic;
+}

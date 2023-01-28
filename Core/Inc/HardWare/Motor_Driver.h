@@ -23,7 +23,9 @@
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim5;
 
-#define OUTPUT_MAX 4200*0.6 //840*0.6//
+// #define OUTPUT_MAX 4200*0.7 //840*0.6//
+#define OUTPUT_MAX 840*0.7 //*0.6 //
+// #define OUTPUT_MAX 210*0.6
 
 void Motor_PWM_Start();
 void Motor_PWM_Stop();
@@ -31,5 +33,5 @@ void Motor_PWM_Stop();
 //出力反転処理してそのまま出力
 void Motor_Switch(int left, int right);
 
-void Motor_Buzzer(float helz, int ms);
+// void Motor_Buzzer(float helz, int ms);
 #endif /* INC_MOTOR_DRIVER_H_ */

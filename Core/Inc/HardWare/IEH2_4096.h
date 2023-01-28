@@ -17,6 +17,6 @@ extern TIM_HandleTypeDef htim4;
 
 void EncoderStart();
 void EncoderStop();
-void EncoderPrintInfo();
+// void EncoderPrintInfo();
 
 #endif /* INC_IEH2_4096_H_ */

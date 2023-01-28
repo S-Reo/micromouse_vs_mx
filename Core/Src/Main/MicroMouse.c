@@ -21,7 +21,6 @@
 #include "Interrupt.h"
 #include "PID_Control.h"
 #include "Convert.h"
-// #include "MazeLib.h"
 
 volatile _Bool VelocityMax;
 volatile int Calc;
@@ -29,20 +28,12 @@ volatile int SearchOrFast;
 float Photo[4];
 volatile float TargetPhoto[4];
 volatile float PhotoDiff;
-//int PulseDisplacement;//[2]={0};
-int KeepCounter;//
-/*[2]={
-		INITIAL_PULSE,
-		INITIAL_PULSE
-};*/
+
+int KeepCounter;
 volatile float CurrentVelocity[3];	//速度 mm/s
 volatile float TargetVelocity[3];
 volatile float ControlTargetVelocity;
-//float CurrentPulseDisplacementLeft,CurrentPulseDisplacementRight;
-//float TargetPulseDisplacementLeft, TargetPulseDisplacementRight;
-//float TotalPulseBody;	//移動量 mm/msを積算
-//float TotalPulseLeft;
-//float TotalPulseRight;
+
 volatile int KeepPulse[3];
 int PulseDisplacement[3];
 volatile int TotalPulse[3];
@@ -52,11 +43,7 @@ volatile float Angle=0;				//角度 rad/msを積算
 //ここまでがエンコーダからのUpdate
 
 //ここからは目標値と現在値を用いた制御。
-//タイヤ目標値計算
-//float TargetVelocity[3]={0};
-//float TargetVelocityBody;
-//float TargetVelocityLeft;
-//float TargetVelocityRight;
+
 float ExploreVelocity;
 float AddVelocity;
 volatile float Acceleration=0;
@@ -66,12 +53,10 @@ float AngularLeapsity=0;
 volatile float TargetAngle=0;
 float ImuAngV,ImuAngle;
 float ImuAccel=0, ImuVelocity=0, ImuMileage=0;
-int VelocityLeftOut, VelocityRightOut;
+int VelocityLeftOut=0, VelocityRightOut=0;
 int WallRightOut, WallLeftOut;
 int L_motor, R_motor;
 
-
-//direction my_direction = north;
 goal_edge goal_edge_num;
 
 
@@ -188,14 +173,20 @@ void MousePIDFlagAll(_Bool high_or_low){
 	PIDChangeFlag(A_VELO_PID, high_or_low);
 }
 void MouseResetTotalPulses(){
+	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
 	TotalPulse[BODY] = 0;
 	TotalPulse[LEFT] = 0;
 	TotalPulse[RIGHT] = 0;
+
 }
 
 void MouseResetParameters(){
 	MouseResetTotalPulses();
+
 	TargetVelocity[BODY] = 0;
+	TargetVelocity[LEFT] = 0;
+	TargetVelocity[RIGHT] = 0;
 	TargetAngularV = 0;
 	Acceleration = 0;
 	AngularAcceleration = 0;

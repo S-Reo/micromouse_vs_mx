@@ -17,7 +17,6 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-// #include "MazeLib.h"
 
 #define T1 0.001f
 #define T2 0.0238095238095238000 //ms
@@ -52,11 +51,6 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 #define INITIAL_PULSE	(30000 - 1)
 //壁の有無
 
-// #define NOWALL 0
-// #define WALL 1
-// #define UNKNOWN 2
-// #define VIRTUAL	3
-//壁の閾値(走行中に変更できるようにしたい)
 #define FRONT_WALL 50//70  //２つの和/2 //1700 になるように前壁制御
 #define RIGHT_WALL 90//90 //380
 #define LEFT_WALL 100//90 //420
@@ -75,8 +69,6 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 #define TREAD_WIDTH 34.4f //37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
-//別のとこ
-//この設定はここじゃない方が使いやすいかも。
 #define ENCODER_PULSE 			4096.0f*4.0f//8192  //  モータ//エンコーダ値をプリスケーラで1/4倍中
 #define REDUCATION_RATIO 		4.0f  //
 //エンコーダパルスの基準値

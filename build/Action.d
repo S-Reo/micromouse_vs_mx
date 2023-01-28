@@ -35,8 +35,10 @@ build/Action.o: Core/Src/Main/Action.c Core/Inc/Main/Action.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  Core/Inc/Tools/Convert.h Core/Inc/Tools/PID_Control.h \
  Core/Inc/Main/MicroMouse.h Core/Inc/HardWare/ICM_20648.h \
- Core/Inc/Tools/UI.h Core/Inc/Main/Interrupt.h \
- Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/IR_Emitter.h
+ Core/Inc/Tools/UI.h Core/Inc/Main/Interrupt.h Core/Inc/Tools/Sampling.h \
+ Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/IR_Emitter.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h
 Core/Inc/Main/Action.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
@@ -81,5 +83,8 @@ Core/Inc/Main/MicroMouse.h:
 Core/Inc/HardWare/ICM_20648.h:
 Core/Inc/Tools/UI.h:
 Core/Inc/Main/Interrupt.h:
+Core/Inc/Tools/Sampling.h:
 Core/Inc/HardWare/Motor_Driver.h:
 Core/Inc/HardWare/IR_Emitter.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:

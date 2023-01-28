@@ -32,8 +32,8 @@ build/MicroMouse.o: Core/Src/Main/MicroMouse.c Core/Inc/Main/MicroMouse.h \
  Core/Inc/HardWare/IEH2_4096.h Core/Inc/HardWare/mouse_ADC.h \
  Core/Inc/HardWare/LED_Driver.h Core/Inc/HardWare/IR_Emitter.h \
  Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/ICM_20648.h \
- Core/Inc/Main/Interrupt.h Core/Inc/Tools/PID_Control.h \
- Core/Inc/Tools/Convert.h
+ Core/Inc/Main/Interrupt.h Core/Inc/Tools/Sampling.h \
+ Core/Inc/Tools/PID_Control.h Core/Inc/Tools/Convert.h
 Core/Inc/Main/MicroMouse.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -75,5 +75,6 @@ Core/Inc/HardWare/IR_Emitter.h:
 Core/Inc/HardWare/Motor_Driver.h:
 Core/Inc/HardWare/ICM_20648.h:
 Core/Inc/Main/Interrupt.h:
+Core/Inc/Tools/Sampling.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/Tools/Convert.h:

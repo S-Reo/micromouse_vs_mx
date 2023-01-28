@@ -29,7 +29,7 @@ build/Interrupt.o: Core/Src/Main/Interrupt.c Core/Inc/Main/Interrupt.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Core/Inc/Main/Action.h \
+ Core/Inc/Tools/Sampling.h Core/Inc/Main/Action.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
@@ -37,7 +37,7 @@ build/Interrupt.o: Core/Src/Main/Interrupt.c Core/Inc/Main/Interrupt.h \
  Core/Inc/Tools/Convert.h Core/Inc/Tools/PID_Control.h \
  Core/Inc/HardWare/mouse_ADC.h Core/Inc/HardWare/IR_Emitter.h \
  Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/ICM_20648.h \
- Core/Inc/Main/Mode.h Core/Inc/Tools/Sampling.h
+ Core/Inc/Main/Mode.h
 Core/Inc/Main/Interrupt.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -72,6 +72,7 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+Core/Inc/Tools/Sampling.h:
 Core/Inc/Main/Action.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
@@ -85,4 +86,3 @@ Core/Inc/HardWare/IR_Emitter.h:
 Core/Inc/HardWare/Motor_Driver.h:
 Core/Inc/HardWare/ICM_20648.h:
 Core/Inc/Main/Mode.h:
-Core/Inc/Tools/Sampling.h:

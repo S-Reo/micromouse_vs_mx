@@ -86,9 +86,6 @@ void FastStraight(float cut, float num, float accel, float decel, float top_spee
 				PIDChangeFlag(A_VELO_PID, 1);
 				ChangeLED(0);
 			}
-				//壁の存在を閾値で確認
-				//3パターンに該当すれば壁制御を一瞬だけ入れる
-				//割込みのタイマを使ってタイミングを決める. （また複雑に...）
 
 
 		}
@@ -153,8 +150,6 @@ void MaxParaRunTest(maze_node *maze, profile *mouse)
 			break;
 		case ACC_DEC:
 			//加減速が続く回数を数える
-
-//			ChangeLED(4);
 			start_cnt = count;
 			while(FastPath[count].path_action == ACC_DEC)
 			{
@@ -292,6 +287,22 @@ void DiagonalRunTest(int action_num)
 			PIDChangeFlag(D_WALL_PID, 0);
 			SlalomFastRight(&fast90);
 			break;
+		case L_180_FAST:
+//			ChangeLED(2);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastLeft(&fast180);
+			break;
+		case R_180_FAST:
+//			ChangeLED(3);
+			PIDChangeFlag(A_VELO_PID, 0);
+			PIDChangeFlag(R_WALL_PID, 0);
+			PIDChangeFlag(L_WALL_PID, 0);
+			PIDChangeFlag(D_WALL_PID, 0);
+			SlalomFastRight(&fast180);
+			break;
 
 		case L_90_FAST_DIAGONAL:
 			PIDChangeFlag(A_VELO_PID, 0);
@@ -375,10 +386,6 @@ void DiagonalRunTest(int action_num)
 void Explore()
 {
 	IT_mode = EXPLORE;
-	//IT_mode = WRITINGFREE;
-	//7で探索へ、0~6でデータ操作。マップを消す、マップをRAMに移す、マップを初期化する。
-	//一回目で失敗していたら、flash消してram初期化
-	//一回目で成功したら、flashをramに移す
 
 	int8_t mode=1;
 	ModeSelect( 1, 2, &mode);
@@ -410,8 +417,6 @@ void Explore()
 	PIDChangeFlag(R_VELO_PID, 1);
 	PIDChangeFlag(A_VELO_PID, 1);
 	
-	// InitExplore(); // 探索用の初期化
-	// 探索手法に応じた初期化（深さ優先のみ、全探索、一回だけ、、ゴールサイズ..）
 	goal_edge_num = one;
 	VelocityMax = false;
 	SearchOrFast = 0;
@@ -435,64 +440,27 @@ void Explore()
 	InitStackNum();
 #define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x < large_x) && (less_y <= next_y && next_y < large_y) )
 	Accel(61.5, ExploreVelocity, &maze, &mouse);
+	
 	while( !IS_GOAL(GOAL_X, GOAL_Y, (GOAL_X+GOAL_SIZE_X), (GOAL_Y+GOAL_SIZE_Y), mouse.now.pos.x, mouse.now.pos.y)/*! ((mouse.target_pos.x == 0 && mouse.target_pos.y == 0) && (mouse.now.pos.x == 0 && mouse.now.pos.y == 0)) */){
-		shiftState(&mouse); //区画進入直前なので、更新予定の方角と座標がNextに入っている
-        VisitedMass(mouse.now.pos); //訪問したマスを訪問済み配列に登録
-        updateNodeThree(&maze, &(mouse.now.wall), mouse.now.pos.x, mouse.now.pos.y); // ノードに反映
-
-        // ここの深さ優先探索の中身は改善対象（while文を分けるかどうかも考える）
-        position start_pos = {0,0}; //ゴールエリアに一度入ったら（target.posに到達したら）深さ優先探索を開始
-        if(GetStackFlag() == true){
-                if(ComparePosition(&(mouse.target_pos), &(mouse.now.pos)) || ComparePosition(&(mouse.target_pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
-                    position target_size = {1,1};
-                    mouse.target_size = target_size;
-                    _Bool stacked_one_or_more = StackMass(&maze, &(mouse.now)); //何も積んでいないかどうかの情報が必要
-                    if(stacked_one_or_more == 0) printf("スタックが無い\r\n");//ChangeLED(7);
-                    else printf("スタックが何かしらある\r\n");//ChangeLED(0);
-
-                    int n = GetStackNum();
-
-                    //0なら
-                    if(n == 0){
-                        WALL_MASK = 0x01;
-                        mouse.target_pos = GetStackMass(); //カウントは減らさない n = 0のまま
-                        SetStackNum(n);
-                    }//0以外なら通常通り
-                    else{
-                        WALL_MASK = 0x01;
-                        position pos;
-                        _Bool is_first = false;
-                        while( 1 ){
-                            pos = GetStackMass();
-                            is_first = GetVisited(&(pos)); //0なら未訪問
-                            if(n == 0){
-                                mouse.target_pos = pos;
-                                printf("未訪問\r\n"); //コード読む気が失せる。何やってるかわからない
-                                //ChangeLED(7);
-                                break;
-                            }
-                            else if(is_first == false){
-
-                                mouse.target_pos =pos;
-                                --n;
-                                SetStackNum(n);
-                                break;
-                            } //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルート
-                            else if(is_first == true){
-                                --n;
-                                SetStackNum(n); //0になったら
-                            }
-                            //訪問済みであれば更に下を読む
-                        }
-                    }
-
-                }//到達していなければ、そのまま最短でtarget.posに向かう
-        }
-
-        //	int WALL_MASK = 0x01;
-        //壁の存在を基に重みマップを更新
-        updateAllNodeWeight(&maze, &(mouse.target_pos), &(mouse.target_size), WALL_MASK);
+		
+        mouse.next.node = getNextNode(&maze, mouse.now.car, mouse.now.node, WALL_MASK); // 次のノードを選択
+        getNextState(&(mouse.now), &(mouse.next), mouse.next.node); // 現ノードと次ノードをもとに、次の状態を取得（更新はしない）
         
+        #if 0 //センサ値の更新
+        wall_state wall[4]={0};
+        convert16ValueToWallDirection_Simulation(&test, &(mouse.next), &wall[0]); //前右左
+        getWallNow(&(mouse.next), &wall[0]);
+        #else
+			readActionCommand(&maze, &mouse, turn_mode, WALL_MASK);
+        // この関数をアクションの終盤で呼ぶ
+        //getWallState(&mouse,&Photo); //4方角の壁の有無を取得. リアル走行用.（Nextにすればシンプルになるのでは？） ハードウェア依存 or シミュレーション用データ
+        #endif
+
+	} // ゴールサイズが1マスのときに、Uターンするという選択肢がない
+	HighStackFlag();
+	while( ! ((mouse.target_pos.x == 0 && mouse.target_pos.y == 0) && (mouse.now.pos.x == 0 && mouse.now.pos.y == 0)) ){
+		// getNextDirection(&maze, &mouse, turn_mode, WALL_MASK);
+		
         mouse.next.node = getNextNode(&maze, mouse.now.car, mouse.now.node, WALL_MASK); // 次のノードを選択
         getNextState(&(mouse.now), &(mouse.next), mouse.next.node); // 現ノードと次ノードをもとに、次の状態を取得（更新はしない）
         
@@ -512,10 +480,7 @@ void Explore()
         #endif
 		// getNextDirection(&maze, &mouse, turn_mode, WALL_MASK);
 	}
-	HighStackFlag();
-	while( ! ((mouse.target_pos.x == 0 && mouse.target_pos.y == 0) && (mouse.now.pos.x == 0 && mouse.now.pos.y == 0)) ){
-		getNextDirection(&maze, &mouse, turn_mode, WALL_MASK);
-	}
+	ChangeLED(7);
 	Decel(45, 0);
 	WaitStopAndReset();//これがないとガクンとなる.
 	shiftState(&mouse);
@@ -532,88 +497,6 @@ void Explore()
 		//完了の合図
 	Signal(1);
 	
-#if 0
-	while( ! IS_GOAL(GOAL_X, GOAL_Y, (GOAL_X+GOAL_SIZE_X), (GOAL_Y+GOAL_SIZE_Y), mouse.now.pos.x, mouse.now.pos.y)  ) //&&  (1/*ゴール座標の壁をすべて知っているフラグが0)*/ //ゴール区画内に入っていてかつゴールの区画をすべて知っていれば。
-	{
-		//shiftState(&mouse); //アクションの中で呼舞踊に変更
-
-//		//ChangeLED(Pos.Car);
-//		KyushinJudge();
-//		SelectAction(turn_mode);
-//		shiftPos();
-		getNextDirection(&maze, &mouse, turn_mode, WALL_MASK);
-#if 0
-		static int cc =0;
-		cc ++;
-		if(cc == 1)
-		{
-			break;
-		}
-#else
-		//break;
-#endif
-	}
-	Decel(45, 0);
-	WaitStopAndReset();//これがないとガクンとなる.
-	shiftState(&mouse);
-	VisitedMass(mouse.now.pos);
-
-	PIDChangeFlag(A_VELO_PID, 0);
-	//flashのクリア。
-	Flash_clear_sector1();
-	//マップ書き込み
-	flashStoreNodes(&maze);
-	//完了の合図
-	Signal(7);
-
-
-	//スタートへ
-	//最短走行で帰る
-#if 0
-	updateAllNodeWeight(&maze, 0,0, 1,1, 0x03);
-
-		getPathNode(&maze, &mouse);
-		getPathAction(&mouse);
-		HAL_Delay(200);
-
-		//リセット、再取得
-		initSearchData(&maze, &mouse);
-		flashCopyNodesToRam(&maze); //existenceだけ
-		updateAllNodeWeight(&maze, 0,0, 1,1, 0x03);
-
-		MaxParaRunTest(&maze, &mouse);
-#else
-		//ゴールエリアの制覇が必要？
-		HighDFSFlag();
-		HighStackFlag();
-		DFS_Running(turn_mode);
-		LowDFSFlag();
-		LowStackFlag();
-		//停止状態から帰還までの処理
-		//探索関数で、マップのアップデートしないとどうなるか. 既存のマップデータのみで行動決定. 壁制御が効かない.
-
-
-
-		VelocityMax = false;
-		goal_edge_num = GOAL_SIZE_X;
-		SearchOrFast = 0;
-		Calc = SearchOrFast;
-		WALL_MASK = 0x03;
-		restart(turn_mode);
-//		shiftState(&mouse);
-		while( ! IS_GOAL(0,0,0,0, mouse.now.pos.x, mouse.now.pos.y)  ){
-				getNextDirection(&maze, &mouse, turn_mode, WALL_MASK);
-//				shiftState(&mouse);
-		}
-#endif
-		//ゴールしたら減速して、停止。
-		Decel(45,0);
-		shiftState(&mouse);
-		VisitedMass(mouse.now.pos);
-
-		//終了合図
-		Signal(7);
-#endif
 while(1)
 {
 	//迷路データの出力
@@ -654,9 +537,6 @@ void FastestRun()
 	default:
 		break;
 	}
-	// setFastParam(mode2);
-	// initSlalomParam();
-	// Signal(4);
 
 	VelocityMax = false;
 
@@ -684,38 +564,28 @@ void FastestRun()
 	// getPathAction(&mouse);
 	int action_num = getPathActionDiagonal(&mouse);
 	
-	// while(1){
-	// 	printPathAction();
-	// 	HAL_Delay(30000);
-	// }
-	
-
-	//リセット、再取得（nmaze)
+	//リセット、再取得（maze)
 	initSearchData(&maze, &mouse);
 	flashCopyNodesToRam(&maze); //existenceだけ
 	updateAllNodeWeight(&maze, &(mouse.target_pos), &(mouse.target_size), 0x03);
 
-
+	// while(1){
+	// 	printPathAction();
+	// 	HAL_Delay(10000);
+	// }
 	//壁のあるなしと重みをprintしてチェック
-//	printAllNodeExistence(&maze);
-//	while(1){
-//		printAllWeight(&maze, &(mouse.goal_lesser));
-//		HAL_Delay(1000);
-//	}
+	//	printAllNodeExistence(&maze);
+	//	while(1){
+	//		printAllWeight(&maze, &(mouse.goal_lesser));
+	//		HAL_Delay(1000);
+	//	}
 
 	Signal(7);
 	// 走る
 	// MaxParaRunTest(&maze, &mouse);
-	// FastPath[0].path_action = START;
-	// FastPath[1].path_action = R_90_FAST;
-	// FastPath[2].path_action = ACC_DEC_90;
-	// FastPath[3].path_action = ACC_DEC_90;
-
 	//action読み出しで最後の動作を決める
 	DiagonalRunTest(action_num); //斜め有
 
-	//ゴールしたら減速して、停止。
-	Decel(45,0); 
 	//終了合図
 	Signal(7);
 

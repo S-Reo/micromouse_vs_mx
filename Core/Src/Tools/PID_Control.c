@@ -36,6 +36,10 @@ void PIDReset(int n)
 	Pid[n].ed = 0;
 	Pid[n].elast = 0;
 	Pid[n].out = 0;
+
+	Pid[n].target = 0;
+	Pid[n].current = 0;
+
 }
 
 inline int PIDControl(int n, float target, float current)
