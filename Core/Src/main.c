@@ -192,6 +192,8 @@ int main(void)
   // PIDSetGain(A_VELO_PID, 3.2113, 38.4531, 0.00046009); //42 //P=14.6
   
   #endif
+
+  // hogehoge
   // while(1){
   //   printf("ok! buf: %u\r\n", buf[0]);
   //   HAL_Delay(1000);
