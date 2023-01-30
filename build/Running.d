@@ -3,8 +3,8 @@ build/Running.o: Core/Src/Main/Running.c \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
- Core/Inc/Tools/UI.h Core/Inc/Main/Interrupt.h Core/Inc/main.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ Core/Inc/Tools/UI.h Core/Inc/Tools/Convert.h Core/Inc/Main/Interrupt.h \
+ Core/Inc/main.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -46,6 +46,7 @@ build/Running.o: Core/Src/Main/Running.c \
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
 Core/Inc/Tools/UI.h:
+Core/Inc/Tools/Convert.h:
 Core/Inc/Main/Interrupt.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:

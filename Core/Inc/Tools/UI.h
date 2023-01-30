@@ -9,7 +9,7 @@
 #define INC_UI_H_
 
 // #include <main.h>
-
+#include "Convert.h"
 //led gpio設定
 //enc timer設定
 //photo adc設定

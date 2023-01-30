@@ -26,9 +26,9 @@ maze_node maze;
 
 // Actionを含めた処理はここ
 const float conv_pul = 2/MM_PER_PULSE;
-void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed)//加減速を切り替える割合と、マス数の指定
+void FastStraight(float cut, float num, float distance_block, float accel, float decel, float top_speed, float end_speed)//加減速を切り替える割合と、マス数の指定
 {
-		float add_distance = cut*90*num;//スタート時の加速では61.5になるようにnumをかける
+		float add_distance = cut*distance_block*num;//スタート時の加速では61.5になるようにnumをかける
 		TargetAngularV = 0;
 		int target_pulse = (int)(add_distance*conv_pul);
 //		dbc = 1;
@@ -46,37 +46,36 @@ void FastStraight(float cut, float num, float accel, float decel, float top_spee
 			//壁の値を見て一瞬だけ制御オン
 				//90mm毎に左右を見る
 
-			if(  ( (TotalPulse[BODY] ) >= ( KeepPulse[BODY] + (int)(0.95f*90.0f*conv_pul)*section_num)) && (( TotalPulse[BODY] ) <= ( KeepPulse[BODY] + (int)(1.05*90.0f*conv_pul)*section_num) ) ){ //90 mm毎に一回だけ壁を見る
-				if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
-					PIDChangeFlag(D_WALL_PID, 1);
-					PIDChangeFlag(A_VELO_PID, 0);
-					PIDChangeFlag(R_WALL_PID, 0);
-					PIDChangeFlag(L_WALL_PID, 0);
-					ChangeLED(5);
-				}
-				else if(Photo[SL] >= LEFT_WALL ){
-					PIDChangeFlag(L_WALL_PID, 1);
-					PIDChangeFlag(A_VELO_PID, 0);
-					PIDChangeFlag(R_WALL_PID, 0);
-					PIDChangeFlag(D_WALL_PID, 0);
-					ChangeLED(4);
+			if(  ( (TotalPulse[BODY] ) >= ( KeepPulse[BODY] + (int)(0.95f*distance_block*conv_pul)*section_num)) && (( TotalPulse[BODY] ) <= ( KeepPulse[BODY] + (int)(1.05*90.0f*conv_pul)*section_num) ) ){ //90 mm毎に一回だけ壁を見る
+				// if(Photo[SL] >= LEFT_WALL && Photo[SIDE_R] >= RIGHT_WALL){
+				// 	PIDChangeFlag(D_WALL_PID, 1);
+				// 	PIDChangeFlag(A_VELO_PID, 0);
+				// 	PIDChangeFlag(R_WALL_PID, 0);
+				// 	PIDChangeFlag(L_WALL_PID, 0);
+				// 	ChangeLED(5);
+				// }
+				// else if(Photo[SL] >= LEFT_WALL ){
+				// 	PIDChangeFlag(L_WALL_PID, 1);
+				// 	PIDChangeFlag(A_VELO_PID, 0);
+				// 	PIDChangeFlag(R_WALL_PID, 0);
+				// 	PIDChangeFlag(D_WALL_PID, 0);
+				// 	ChangeLED(4);
 
-				}
-				else if(Photo[SIDE_R] >= RIGHT_WALL){
-					PIDChangeFlag(R_WALL_PID, 1);
-					PIDChangeFlag(A_VELO_PID,0);
-					PIDChangeFlag(D_WALL_PID, 0);
-					PIDChangeFlag(L_WALL_PID, 0);
-					ChangeLED(1);
-				}
-				else {
+				// }
+				// else if(Photo[SIDE_R] >= RIGHT_WALL){
+				// 	PIDChangeFlag(R_WALL_PID, 1);
+				// 	PIDChangeFlag(A_VELO_PID,0);
+				// 	PIDChangeFlag(D_WALL_PID, 0);
+				// 	PIDChangeFlag(L_WALL_PID, 0);
+				// 	ChangeLED(1);
+				// }
+				// else {
 					PIDChangeFlag(A_VELO_PID, 1);
 					PIDChangeFlag(R_WALL_PID, 0);
 					PIDChangeFlag(L_WALL_PID, 0);
 					PIDChangeFlag(D_WALL_PID, 0);
 					ChangeLED(2);
-				}
-//				ChangeLED(section_num);
+				// }
 			}
 			else {
 				section_num++;
@@ -100,7 +99,7 @@ void FastStraight(float cut, float num, float accel, float decel, float top_spee
 		KeepPulse[LEFT] += target_pulse*0.5f;
 		KeepPulse[RIGHT] += target_pulse*0.5f;
 
-		float dec_distance = (1-cut)*90*num;
+		float dec_distance = (1-cut)*distance_block*num;
 		target_pulse = (int)(dec_distance *conv_pul);
 
 		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
@@ -142,7 +141,7 @@ void MaxParaRunTest(maze_node *maze, profile *mouse)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(1, 61.5/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+			FastStraight(1, 61.5/90, 90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
@@ -165,7 +164,7 @@ void MaxParaRunTest(maze_node *maze, profile *mouse)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			FastStraight(0.5, straight_num,  90, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
 			count--;
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
@@ -212,7 +211,7 @@ void DiagonalRunTest(int action_num)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(1, (61.5-45)/90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
+			FastStraight(1, (61.5-45)/90, 90, /*1.00, -1.00*/2.89, -2.89, ExploreVelocity, ExploreVelocity);
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
@@ -242,7 +241,7 @@ void DiagonalRunTest(int action_num)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num, /*1.00, -1.00*/2.89, -2.89, 4000, end_speed);
+			FastStraight(0.5, straight_num, 90, /*1.00, -1.00*/2.89, -2.89, 4000, end_speed);
 			count--;
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
@@ -264,7 +263,7 @@ void DiagonalRunTest(int action_num)
 			PIDChangeFlag(R_WALL_PID, 0);
 			PIDChangeFlag(L_WALL_PID, 0);
 			PIDChangeFlag(D_WALL_PID, 0);
-			FastStraight(0.5, straight_num*0.5*1.41421, /*1.00, -1.00*/2.89, -2.89, 4000, ExploreVelocity);
+			FastStraight(0.5, straight_num, 90*0.5*1.41421,/*1.00, -1.00*/2.89, -2.89, ExploreVelocity+45, ExploreVelocity);
 			count--;
 			PIDChangeFlag(A_VELO_PID, 0);
 			PIDChangeFlag(R_WALL_PID, 0);
@@ -385,7 +384,7 @@ void DiagonalRunTest(int action_num)
 
 void Explore()
 {
-	IT_mode = EXPLORE;
+	IT_mode = IT_EXPLORE;
 
 	int8_t mode=1;
 	ModeSelect( 1, 2, &mode);
@@ -513,7 +512,7 @@ while(1)
 
 void FastestRun()
 {
-	IT_mode = EXPLORE;
+	IT_mode = IT_EXPLORE;
 	//IT_mode = WRITINGFREE;
 	//諸々の初期化
 	int8_t mode=1;

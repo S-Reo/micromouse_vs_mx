@@ -6,6 +6,10 @@
 #define PHOTO_NUM 4
 #define SAMPLE_NUM 100
 
+
+#define MSIG_NUM 1270
+#define IDENTIFY_SAMPLE_N MSIG_NUM*2
+
 void getPhotoSampleValue_uint32(uint32_t *photo_value);
 void getPhotoSampleValue_float(float *photo_value);
 void printPhotoSampleValue();
@@ -30,4 +34,8 @@ void printFloatLog(logger_f *lg);
 _Bool getLoggerFlag(logger *lg);
 void setLoggerFlag(logger *lg, _Bool logic);
 
+void initIdentifyMode(_Bool mode);
+_Bool getIdentifyMode();
+void initMsignal(float translate_voltage, float rotate_voltage);
+void getIdentifyInputCount(int count, float *output_value_box, _Bool v_or_angv);
 #endif //INC_SAMPLING_H_

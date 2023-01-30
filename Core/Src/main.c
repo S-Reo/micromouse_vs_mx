@@ -187,6 +187,10 @@ int main(void)
   PIDSetGain(L_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
   PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
 
+  // システム同定から得たゲイン
+  // 制御周期とか合ってないのでは?
+  // PIDSetGain(A_VELO_PID, 3.2113, 38.4531, 0.00046009); //42 //P=14.6
+  
   #endif
   // while(1){
   //   printf("ok! buf: %u\r\n", buf[0]);

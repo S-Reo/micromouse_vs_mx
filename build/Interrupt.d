@@ -34,10 +34,10 @@ build/Interrupt.o: Core/Src/Main/Interrupt.c Core/Inc/Main/Interrupt.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
  Core/Inc/Main/MicroMouse.h Core/Inc/Main/MicroMouse.h \
- Core/Inc/Tools/Convert.h Core/Inc/Tools/PID_Control.h \
- Core/Inc/HardWare/mouse_ADC.h Core/Inc/HardWare/IR_Emitter.h \
- Core/Inc/HardWare/Motor_Driver.h Core/Inc/HardWare/ICM_20648.h \
- Core/Inc/Main/Mode.h
+ Core/Inc/Tools/UI.h Core/Inc/Tools/Convert.h \
+ Core/Inc/Tools/PID_Control.h Core/Inc/HardWare/mouse_ADC.h \
+ Core/Inc/HardWare/IR_Emitter.h Core/Inc/HardWare/Motor_Driver.h \
+ Core/Inc/HardWare/ICM_20648.h Core/Inc/Main/Mode.h
 Core/Inc/Main/Interrupt.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -79,6 +79,7 @@ Core/Inc/Main/Action.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
 Core/Inc/Main/MicroMouse.h:
 Core/Inc/Main/MicroMouse.h:
+Core/Inc/Tools/UI.h:
 Core/Inc/Tools/Convert.h:
 Core/Inc/Tools/PID_Control.h:
 Core/Inc/HardWare/mouse_ADC.h:

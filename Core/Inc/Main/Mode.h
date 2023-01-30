@@ -18,6 +18,13 @@
 #define EXPLORE				6
 #define WRITINGFREE 		7
 
+#define IT_EXPLORE 0
+#define IT_FREE 1
+#define IT_IMU_TEST 2
+#define IT_IDENTIFY 3
+#define IT_STEP_RESPONSE 4
+#define IT_CONTROL_TEST 5
+
 void Debug();
 void ParameterSetting();
 

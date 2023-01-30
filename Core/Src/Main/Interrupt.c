@@ -10,7 +10,8 @@
 #include "MicroMouse.h"
 
 #include <math.h>
-#include "Convert.h"
+// #include "Convert.h"
+#include "UI.h"
 #include "PID_Control.h"
 
 #include "mouse_ADC.h"
@@ -24,20 +25,20 @@
 int timer1,timer8, t;
 int IT_mode;
 int velodebug_flag=0;
-float debugVL[2000]={0};
-float debugVR[2000] = {0};
+float debugVL[20]={0};
+float debugVR[20] = {0};
 int dbc = 0;
-
+logger_f identify[2];
 
 const float convert_to_velocity = MM_PER_PULSE/T1;
 const float convert_to_angularv = 1/TREAD_WIDTH;
 //const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
 const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんちゃらg×9.80392157 = mm/s^2
+// const float maintain_output_valtage = 1/(BATTERY_MAX;
+// PIDで計算した値 = 電圧値、を、カウンタ値に変換する処理が要る
 
 logger_f log_velocity;
-
-static void Explore_IT()
-{
+static void SystemIdentify_IT(){
 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
 	TIM3->CNT = INITIAL_PULSE;
 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
@@ -47,7 +48,51 @@ static void Explore_IT()
 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
-	getFloatLog(&log_velocity, CurrentVelocity[LEFT]);
+
+	Update_IMU(&AngularV, &Angle);
+
+	static int identify_count=0;
+	static int count=0;
+	float output[2] ={
+		CurrentVelocity[BODY],
+		AngularV
+	};
+	float input[2]={0};
+	_Bool identify_mode_v_or_angv = getIdentifyMode();
+	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+	float convert_to_reg_counter = 840/battery_voltage;;
+	if(getLoggerFlag(&(identify[identify_mode_v_or_angv].f)) == true){
+		if( (count%20) == 0 ){
+			getFloatLog(&identify[identify_mode_v_or_angv], output[identify_mode_v_or_angv]);
+		}
+		if( (count%40) == 0 ){ //15をいじれるようにする
+			getIdentifyInputCount(identify_count, &input[0] ,identify_mode_v_or_angv);
+			input[0] *= convert_to_reg_counter;
+			input[1] *= convert_to_reg_counter;
+			Motor_Switch(input[0], input[1]);
+			identify_count++;
+			
+		}
+		count++;
+	}
+	else{
+		Motor_Switch(0,0);
+		count = 0;
+	}
+	
+}
+static void ControlTest_IT(){
+	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+	TIM3->CNT = INITIAL_PULSE;
+	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+	TIM4->CNT = INITIAL_PULSE;
+
+	//速度 mm/s
+	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
+	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+	
 	//移動量 mm/msを積算
 
 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
@@ -68,6 +113,84 @@ static void Explore_IT()
 
 #else
 	Update_IMU(&AngularV, &Angle); //メディアンフィルタとオフセットだけで何とかした.
+	// getFloatLog(&log_velocity, AngularV);
+//	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+//	Angle += AngularV * T1;
+
+#endif
+	int wall_d =0,wall_l =0,wall_r =0, wall_f=0;
+		int ang_out=0;
+
+
+	// if( PIDGetFlag(A_VELO_PID) == true )
+	// {
+		// ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+		// TargetAngularV = (float)ang_out;
+		ang_out = PIDControl( A_VELO_PID,  TargetAngularV, AngularV); //電圧値
+		// TargetAngularV = (float)ang_out;
+	// }
+	// TargetVelocity[BODY] += Acceleration;
+	// TargetAngularV += AngularAcceleration;
+	// TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
+	// TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
+
+	#if 0
+			// VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[BODY], CurrentVelocity[LEFT]);
+			// VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+
+			float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+			float duty = 1/ battery_voltage;
+
+			VelocityLeftOut = (((float)ang_out)) * 840*duty;
+			VelocityRightOut = (((float)ang_out))* 840 *duty * (-1);
+	#else
+		VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[BODY], CurrentVelocity[LEFT]);
+		VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+		float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+		float duty = 1/ battery_voltage;
+		// VelocityLeftOut = voltage_maintainer * PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+		// VelocityRightOut = voltage_maintainer * PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+		VelocityLeftOut = ((float)(VelocityLeftOut + ang_out)) * 840 * duty;
+		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+
+	#endif
+	//モータに出力
+	Motor_Switch( VelocityLeftOut, VelocityRightOut );
+}
+static void Explore_IT()
+{
+	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+	TIM3->CNT = INITIAL_PULSE;
+	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+	TIM4->CNT = INITIAL_PULSE;
+
+	//速度 mm/s
+	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
+	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+	
+	//移動量 mm/msを積算
+
+	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+	//角速度 rad/s
+
+#if 0
+	//static float angle=0;
+	volatile static float zg_last=0;
+	volatile float zg_law;
+	//uint8_t zgb,zgf;
+	ZGyro = ReadIMU(0x37, 0x38);
+    zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
+    AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
+    zg_last = zg_law;
+	Angle += AngularV * T1;
+
+#else
+	Update_IMU(&AngularV, &Angle); //メディアンフィルタとオフセットだけで何とかした.
+	// getFloatLog(&log_velocity, AngularV);
 //	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
 //	Angle += AngularV * T1;
 
@@ -146,9 +269,15 @@ static void Explore_IT()
 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
 
-	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
-	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+	float voltage_maintainer = BATTERY_MAX/battery_voltage;
+	
+	VelocityLeftOut = voltage_maintainer * PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+	VelocityRightOut = voltage_maintainer * PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+	// VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+	// VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
 
+	
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
 }
@@ -211,13 +340,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 
 		switch(IT_mode){
-		case EXPLORE:
+		case IT_EXPLORE:
 			Explore_IT();
 			break;
-		case WRITINGFREE:
+		case IT_FREE:
 			WritingFree_IT();
 			break;
-		case IMU_TEST:
+		case IT_IMU_TEST:
 
 			if(timer1 < 5000)
 			{
@@ -228,6 +357,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			}
 			else t = 0;
 			break;
+		case IT_IDENTIFY:
+			SystemIdentify_IT();
+			break;
+		case IT_STEP_RESPONSE:
+
+			break;
+		case IT_CONTROL_TEST:
+			ControlTest_IT();
+			break;
+
 		default :
 			break;
 		}

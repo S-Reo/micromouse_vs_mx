@@ -16,7 +16,7 @@
 extern profile my_mouse;
 extern maze_node my_map;
 
-void FastStraight(float cut, float num, float accel, float decel, float top_speed, float end_speed);
+void FastStraight(float cut, float num, float distance_block, float accel, float decel, float top_speed, float end_speed);
 void MaxParaRunTest(maze_node *, profile *);
 void DiagonalRunTest(int action_num);
 void Explore();

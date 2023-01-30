@@ -10,7 +10,7 @@
 #include "UI.h"
 
 //ハードウェアを操作する処理からユーザインタフェースを組み立てる
-#include "Convert.h"
+
 
 
 #include "IEH2_4096.h"		//エンコーダ

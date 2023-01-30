@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -22,14 +22,15 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 1
   19              		.global	__aeabi_f2d
   20              		.global	__aeabi_dmul
   21              		.global	__aeabi_d2f
-  22              		.section	.text.Explore_IT,"ax",%progbits
-  23              		.align	1
-  24              		.syntax unified
-  25              		.thumb
-  26              		.thumb_func
-  28              	Explore_IT:
-  29              	.LFB238:
-  30              		.file 1 "Core/Src/Main/Interrupt.c"
+  22              		.global	__aeabi_ddiv
+  23              		.section	.text.Explore_IT,"ax",%progbits
+  24              		.align	1
+  25              		.syntax unified
+  26              		.thumb
+  27              		.thumb_func
+  29              	Explore_IT:
+  30              	.LFB240:
+  31              		.file 1 "Core/Src/Main/Interrupt.c"
    1:Core/Src/Main/Interrupt.c **** /*
    2:Core/Src/Main/Interrupt.c ****  * Interrupt.c
    3:Core/Src/Main/Interrupt.c ****  *
@@ -42,1418 +43,2310 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 1
   10:Core/Src/Main/Interrupt.c **** #include "MicroMouse.h"
   11:Core/Src/Main/Interrupt.c **** 
   12:Core/Src/Main/Interrupt.c **** #include <math.h>
-  13:Core/Src/Main/Interrupt.c **** #include "Convert.h"
-  14:Core/Src/Main/Interrupt.c **** #include "PID_Control.h"
-  15:Core/Src/Main/Interrupt.c **** 
-  16:Core/Src/Main/Interrupt.c **** #include "mouse_ADC.h"
-  17:Core/Src/Main/Interrupt.c **** //#include "LED_Driver.h"
-  18:Core/Src/Main/Interrupt.c **** #include "IR_Emitter.h"
-  19:Core/Src/Main/Interrupt.c **** #include "Motor_Driver.h"
-  20:Core/Src/Main/Interrupt.c **** #include "ICM_20648.h"
-  21:Core/Src/Main/Interrupt.c **** #include "Mode.h"
-  22:Core/Src/Main/Interrupt.c **** // #include "Sampling.h"
-  23:Core/Src/Main/Interrupt.c **** 
-  24:Core/Src/Main/Interrupt.c **** int timer1,timer8, t;
-  25:Core/Src/Main/Interrupt.c **** int IT_mode;
-  26:Core/Src/Main/Interrupt.c **** int velodebug_flag=0;
-  27:Core/Src/Main/Interrupt.c **** float debugVL[2000]={0};
-  28:Core/Src/Main/Interrupt.c **** float debugVR[2000] = {0};
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 2
+  13:Core/Src/Main/Interrupt.c **** // #include "Convert.h"
+  14:Core/Src/Main/Interrupt.c **** #include "UI.h"
+  15:Core/Src/Main/Interrupt.c **** #include "PID_Control.h"
+  16:Core/Src/Main/Interrupt.c **** 
+  17:Core/Src/Main/Interrupt.c **** #include "mouse_ADC.h"
+  18:Core/Src/Main/Interrupt.c **** //#include "LED_Driver.h"
+  19:Core/Src/Main/Interrupt.c **** #include "IR_Emitter.h"
+  20:Core/Src/Main/Interrupt.c **** #include "Motor_Driver.h"
+  21:Core/Src/Main/Interrupt.c **** #include "ICM_20648.h"
+  22:Core/Src/Main/Interrupt.c **** #include "Mode.h"
+  23:Core/Src/Main/Interrupt.c **** // #include "Sampling.h"
+  24:Core/Src/Main/Interrupt.c **** 
+  25:Core/Src/Main/Interrupt.c **** int timer1,timer8, t;
+  26:Core/Src/Main/Interrupt.c **** int IT_mode;
+  27:Core/Src/Main/Interrupt.c **** int velodebug_flag=0;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 2
 
 
-  29:Core/Src/Main/Interrupt.c **** int dbc = 0;
-  30:Core/Src/Main/Interrupt.c **** 
-  31:Core/Src/Main/Interrupt.c **** 
-  32:Core/Src/Main/Interrupt.c **** const float convert_to_velocity = MM_PER_PULSE/T1;
-  33:Core/Src/Main/Interrupt.c **** const float convert_to_angularv = 1/TREAD_WIDTH;
-  34:Core/Src/Main/Interrupt.c **** //const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
-  35:Core/Src/Main/Interrupt.c **** const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんちゃらg×9.80392157
-  36:Core/Src/Main/Interrupt.c **** 
-  37:Core/Src/Main/Interrupt.c **** logger_f log_velocity;
-  38:Core/Src/Main/Interrupt.c **** 
-  39:Core/Src/Main/Interrupt.c **** static void Explore_IT()
-  40:Core/Src/Main/Interrupt.c **** {
-  31              		.loc 1 40 1 view -0
-  32              		.cfi_startproc
-  33              		@ args = 0, pretend = 0, frame = 0
-  34              		@ frame_needed = 0, uses_anonymous_args = 0
-  35 0000 70B5     		push	{r4, r5, r6, lr}
-  36              	.LCFI0:
-  37              		.cfi_def_cfa_offset 16
-  38              		.cfi_offset 4, -16
-  39              		.cfi_offset 5, -12
-  40              		.cfi_offset 6, -8
-  41              		.cfi_offset 14, -4
-  41:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
-  42              		.loc 1 41 2 view .LVU1
-  43              		.loc 1 41 35 is_stmt 0 view .LVU2
-  44 0002 9D4B     		ldr	r3, .L13+8
-  45 0004 5A6A     		ldr	r2, [r3, #36]
-  46              		.loc 1 41 28 view .LVU3
-  47 0006 47F22F51 		movw	r1, #29999
-  48 000a 8A1A     		subs	r2, r1, r2
-  49              		.loc 1 41 26 view .LVU4
-  50 000c 9B4C     		ldr	r4, .L13+12
-  51 000e 2260     		str	r2, [r4]
-  42:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
-  52              		.loc 1 42 2 is_stmt 1 view .LVU5
-  53              		.loc 1 42 12 is_stmt 0 view .LVU6
-  54 0010 5962     		str	r1, [r3, #36]
-  43:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
-  55              		.loc 1 43 2 is_stmt 1 view .LVU7
-  56              		.loc 1 43 36 is_stmt 0 view .LVU8
-  57 0012 9B48     		ldr	r0, .L13+16
-  58 0014 436A     		ldr	r3, [r0, #36]
-  59              		.loc 1 43 29 view .LVU9
-  60 0016 CB1A     		subs	r3, r1, r3
-  61              		.loc 1 43 27 view .LVU10
-  62 0018 6360     		str	r3, [r4, #4]
-  44:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
-  63              		.loc 1 44 2 is_stmt 1 view .LVU11
-  64              		.loc 1 44 12 is_stmt 0 view .LVU12
-  65 001a 4162     		str	r1, [r0, #36]
-  45:Core/Src/Main/Interrupt.c **** 
-  46:Core/Src/Main/Interrupt.c **** 	//速度 mm/s
-  47:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
-  66              		.loc 1 47 2 is_stmt 1 view .LVU13
-  67              		.loc 1 47 27 is_stmt 0 view .LVU14
-  68 001c 07EE902A 		vmov	s15, r2	@ int
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 3
+  28:Core/Src/Main/Interrupt.c **** float debugVL[20]={0};
+  29:Core/Src/Main/Interrupt.c **** float debugVR[20] = {0};
+  30:Core/Src/Main/Interrupt.c **** int dbc = 0;
+  31:Core/Src/Main/Interrupt.c **** logger_f identify[2];
+  32:Core/Src/Main/Interrupt.c **** 
+  33:Core/Src/Main/Interrupt.c **** const float convert_to_velocity = MM_PER_PULSE/T1;
+  34:Core/Src/Main/Interrupt.c **** const float convert_to_angularv = 1/TREAD_WIDTH;
+  35:Core/Src/Main/Interrupt.c **** //const float convert_to_imu_angv = M_PI/(16.4f*180.0f);
+  36:Core/Src/Main/Interrupt.c **** const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんちゃらg×9.80392157
+  37:Core/Src/Main/Interrupt.c **** // const float maintain_output_valtage = 1/(BATTERY_MAX;
+  38:Core/Src/Main/Interrupt.c **** // PIDで計算した値 = 電圧値、を、カウンタ値に変換する処理が要る
+  39:Core/Src/Main/Interrupt.c **** 
+  40:Core/Src/Main/Interrupt.c **** logger_f log_velocity;
+  41:Core/Src/Main/Interrupt.c **** static void SystemIdentify_IT(){
+  42:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+  43:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+  44:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+  45:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+  46:Core/Src/Main/Interrupt.c **** 
+  47:Core/Src/Main/Interrupt.c **** 	//速度 mm/s
+  48:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
+  49:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+  50:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+  51:Core/Src/Main/Interrupt.c **** 
+  52:Core/Src/Main/Interrupt.c **** 	Update_IMU(&AngularV, &Angle);
+  53:Core/Src/Main/Interrupt.c **** 
+  54:Core/Src/Main/Interrupt.c **** 	static int identify_count=0;
+  55:Core/Src/Main/Interrupt.c **** 	static int count=0;
+  56:Core/Src/Main/Interrupt.c **** 	float output[2] ={
+  57:Core/Src/Main/Interrupt.c **** 		CurrentVelocity[BODY],
+  58:Core/Src/Main/Interrupt.c **** 		AngularV
+  59:Core/Src/Main/Interrupt.c **** 	};
+  60:Core/Src/Main/Interrupt.c **** 	float input[2]={0};
+  61:Core/Src/Main/Interrupt.c **** 	_Bool identify_mode_v_or_angv = getIdentifyMode();
+  62:Core/Src/Main/Interrupt.c **** 	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+  63:Core/Src/Main/Interrupt.c **** 	float convert_to_reg_counter = 840/battery_voltage;;
+  64:Core/Src/Main/Interrupt.c **** 	if(getLoggerFlag(&(identify[identify_mode_v_or_angv].f)) == true){
+  65:Core/Src/Main/Interrupt.c **** 		if( (count%20) == 0 ){
+  66:Core/Src/Main/Interrupt.c **** 			getFloatLog(&identify[identify_mode_v_or_angv], output[identify_mode_v_or_angv]);
+  67:Core/Src/Main/Interrupt.c **** 		}
+  68:Core/Src/Main/Interrupt.c **** 		if( (count%40) == 0 ){ //15をいじれるようにする
+  69:Core/Src/Main/Interrupt.c **** 			getIdentifyInputCount(identify_count, &input[0] ,identify_mode_v_or_angv);
+  70:Core/Src/Main/Interrupt.c **** 			input[0] *= convert_to_reg_counter;
+  71:Core/Src/Main/Interrupt.c **** 			input[1] *= convert_to_reg_counter;
+  72:Core/Src/Main/Interrupt.c **** 			Motor_Switch(input[0], input[1]);
+  73:Core/Src/Main/Interrupt.c **** 			identify_count++;
+  74:Core/Src/Main/Interrupt.c **** 			
+  75:Core/Src/Main/Interrupt.c **** 		}
+  76:Core/Src/Main/Interrupt.c **** 		count++;
+  77:Core/Src/Main/Interrupt.c **** 	}
+  78:Core/Src/Main/Interrupt.c **** 	else{
+  79:Core/Src/Main/Interrupt.c **** 		Motor_Switch(0,0);
+  80:Core/Src/Main/Interrupt.c **** 		count = 0;
+  81:Core/Src/Main/Interrupt.c **** 	}
+  82:Core/Src/Main/Interrupt.c **** 	
+  83:Core/Src/Main/Interrupt.c **** }
+  84:Core/Src/Main/Interrupt.c **** static void ControlTest_IT(){
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 3
 
 
-  69 0020 B8EEE77A 		vcvt.f32.s32	s14, s15
-  70              		.loc 1 47 58 view .LVU15
-  71 0024 DFED976A 		vldr.32	s13, .L13+20
-  72 0028 27EE267A 		vmul.f32	s14, s14, s13
-  73              		.loc 1 47 24 view .LVU16
-  74 002c 964A     		ldr	r2, .L13+24
-  75 002e 82ED007A 		vstr.32	s14, [r2]
-  48:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
-  76              		.loc 1 48 2 is_stmt 1 view .LVU17
-  77              		.loc 1 48 28 is_stmt 0 view .LVU18
-  78 0032 07EE903A 		vmov	s15, r3	@ int
-  79 0036 F8EEE77A 		vcvt.f32.s32	s15, s15
-  80              		.loc 1 48 60 view .LVU19
-  81 003a 67EEA67A 		vmul.f32	s15, s15, s13
-  82              		.loc 1 48 25 view .LVU20
-  83 003e C2ED017A 		vstr.32	s15, [r2, #4]
-  49:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
-  84              		.loc 1 49 2 is_stmt 1 view .LVU21
-  85              		.loc 1 49 42 is_stmt 0 view .LVU22
-  86 0042 D2ED007A 		vldr.32	s15, [r2]
-  87              		.loc 1 49 66 view .LVU23
-  88 0046 92ED017A 		vldr.32	s14, [r2, #4]
-  89              		.loc 1 49 49 view .LVU24
-  90 004a 77EE877A 		vadd.f32	s15, s15, s14
-  91              		.loc 1 49 75 view .LVU25
-  92 004e B6EE007A 		vmov.f32	s14, #5.0e-1
-  93 0052 67EE877A 		vmul.f32	s15, s15, s14
-  94              		.loc 1 49 24 view .LVU26
-  95 0056 C2ED027A 		vstr.32	s15, [r2, #8]
-  50:Core/Src/Main/Interrupt.c **** 	getFloatLog(&log_velocity, CurrentVelocity[LEFT]);
-  96              		.loc 1 50 2 is_stmt 1 view .LVU27
-  97 005a 92ED000A 		vldr.32	s0, [r2]
-  98 005e 8B48     		ldr	r0, .L13+28
-  99 0060 FFF7FEFF 		bl	getFloatLog
- 100              	.LVL0:
-  51:Core/Src/Main/Interrupt.c **** 	//移動量 mm/msを積算
-  52:Core/Src/Main/Interrupt.c **** 
-  53:Core/Src/Main/Interrupt.c **** 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
- 101              		.loc 1 53 2 view .LVU28
- 102              		.loc 1 53 19 is_stmt 0 view .LVU29
- 103 0064 8A4B     		ldr	r3, .L13+32
- 104 0066 1A68     		ldr	r2, [r3]
- 105              		.loc 1 53 39 view .LVU30
- 106 0068 2168     		ldr	r1, [r4]
- 107              		.loc 1 53 19 view .LVU31
- 108 006a 0A44     		add	r2, r2, r1
- 109 006c 1A60     		str	r2, [r3]
-  54:Core/Src/Main/Interrupt.c **** 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
- 110              		.loc 1 54 2 is_stmt 1 view .LVU32
- 111              		.loc 1 54 20 is_stmt 0 view .LVU33
- 112 006e 5A68     		ldr	r2, [r3, #4]
- 113              		.loc 1 54 40 view .LVU34
- 114 0070 6168     		ldr	r1, [r4, #4]
- 115              		.loc 1 54 20 view .LVU35
- 116 0072 0A44     		add	r2, r2, r1
- 117 0074 5A60     		str	r2, [r3, #4]
-  55:Core/Src/Main/Interrupt.c **** 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 4
+  85:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+  86:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+  87:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+  88:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+  89:Core/Src/Main/Interrupt.c **** 
+  90:Core/Src/Main/Interrupt.c **** 	//速度 mm/s
+  91:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
+  92:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+  93:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+  94:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+  95:Core/Src/Main/Interrupt.c **** 	
+  96:Core/Src/Main/Interrupt.c **** 	//移動量 mm/msを積算
+  97:Core/Src/Main/Interrupt.c **** 
+  98:Core/Src/Main/Interrupt.c **** 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+  99:Core/Src/Main/Interrupt.c **** 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+ 100:Core/Src/Main/Interrupt.c **** 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+ 101:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 102:Core/Src/Main/Interrupt.c **** 
+ 103:Core/Src/Main/Interrupt.c **** #if 0
+ 104:Core/Src/Main/Interrupt.c **** 	//static float angle=0;
+ 105:Core/Src/Main/Interrupt.c **** 	volatile static float zg_last=0;
+ 106:Core/Src/Main/Interrupt.c **** 	volatile float zg_law;
+ 107:Core/Src/Main/Interrupt.c **** 	//uint8_t zgb,zgf;
+ 108:Core/Src/Main/Interrupt.c **** 	ZGyro = ReadIMU(0x37, 0x38);
+ 109:Core/Src/Main/Interrupt.c ****     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
+ 110:Core/Src/Main/Interrupt.c ****     AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
+ 111:Core/Src/Main/Interrupt.c ****     zg_last = zg_law;
+ 112:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
+ 113:Core/Src/Main/Interrupt.c **** 
+ 114:Core/Src/Main/Interrupt.c **** #else
+ 115:Core/Src/Main/Interrupt.c **** 	Update_IMU(&AngularV, &Angle); //メディアンフィルタとオフセットだけで何とか�
+ 116:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, AngularV);
+ 117:Core/Src/Main/Interrupt.c **** //	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+ 118:Core/Src/Main/Interrupt.c **** //	Angle += AngularV * T1;
+ 119:Core/Src/Main/Interrupt.c **** 
+ 120:Core/Src/Main/Interrupt.c **** #endif
+ 121:Core/Src/Main/Interrupt.c **** 	int wall_d =0,wall_l =0,wall_r =0, wall_f=0;
+ 122:Core/Src/Main/Interrupt.c **** 		int ang_out=0;
+ 123:Core/Src/Main/Interrupt.c **** 
+ 124:Core/Src/Main/Interrupt.c **** 
+ 125:Core/Src/Main/Interrupt.c **** 	// if( PIDGetFlag(A_VELO_PID) == true )
+ 126:Core/Src/Main/Interrupt.c **** 	// {
+ 127:Core/Src/Main/Interrupt.c **** 		// ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 128:Core/Src/Main/Interrupt.c **** 		// TargetAngularV = (float)ang_out;
+ 129:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngularV, AngularV); //電圧値
+ 130:Core/Src/Main/Interrupt.c **** 		// TargetAngularV = (float)ang_out;
+ 131:Core/Src/Main/Interrupt.c **** 	// }
+ 132:Core/Src/Main/Interrupt.c **** 	// TargetVelocity[BODY] += Acceleration;
+ 133:Core/Src/Main/Interrupt.c **** 	// TargetAngularV += AngularAcceleration;
+ 134:Core/Src/Main/Interrupt.c **** 	// TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
+ 135:Core/Src/Main/Interrupt.c **** 	// TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
+ 136:Core/Src/Main/Interrupt.c **** 
+ 137:Core/Src/Main/Interrupt.c **** 	#if 0
+ 138:Core/Src/Main/Interrupt.c **** 			// VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[BODY], CurrentVelocity[LEFT]);
+ 139:Core/Src/Main/Interrupt.c **** 			// VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+ 140:Core/Src/Main/Interrupt.c **** 
+ 141:Core/Src/Main/Interrupt.c **** 			float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 4
 
 
- 118              		.loc 1 55 2 is_stmt 1 view .LVU36
- 119              		.loc 1 55 31 is_stmt 0 view .LVU37
- 120 0076 1A68     		ldr	r2, [r3]
- 121              		.loc 1 55 48 view .LVU38
- 122 0078 5968     		ldr	r1, [r3, #4]
- 123              		.loc 1 55 37 view .LVU39
- 124 007a 0A44     		add	r2, r2, r1
- 125              		.loc 1 55 19 view .LVU40
- 126 007c 9A60     		str	r2, [r3, #8]
-  56:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
-  57:Core/Src/Main/Interrupt.c **** 
-  58:Core/Src/Main/Interrupt.c **** #if 0
-  59:Core/Src/Main/Interrupt.c **** 	//static float angle=0;
-  60:Core/Src/Main/Interrupt.c **** 	volatile static float zg_last=0;
-  61:Core/Src/Main/Interrupt.c **** 	volatile float zg_law;
-  62:Core/Src/Main/Interrupt.c **** 	//uint8_t zgb,zgf;
-  63:Core/Src/Main/Interrupt.c **** 	ZGyro = ReadIMU(0x37, 0x38);
-  64:Core/Src/Main/Interrupt.c ****     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
-  65:Core/Src/Main/Interrupt.c ****     AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
-  66:Core/Src/Main/Interrupt.c ****     zg_last = zg_law;
-  67:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
-  68:Core/Src/Main/Interrupt.c **** 
-  69:Core/Src/Main/Interrupt.c **** #else
-  70:Core/Src/Main/Interrupt.c **** 	Update_IMU(&AngularV, &Angle); //メディアンフィルタとオフセットだけで何とか�
- 127              		.loc 1 70 2 is_stmt 1 view .LVU41
- 128 007e 8549     		ldr	r1, .L13+36
- 129 0080 8548     		ldr	r0, .L13+40
- 130 0082 FFF7FEFF 		bl	Update_IMU
- 131              	.LVL1:
-  71:Core/Src/Main/Interrupt.c **** //	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
-  72:Core/Src/Main/Interrupt.c **** //	Angle += AngularV * T1;
-  73:Core/Src/Main/Interrupt.c **** 
-  74:Core/Src/Main/Interrupt.c **** #endif
-  75:Core/Src/Main/Interrupt.c **** 	int wall_d =0,wall_l =0,wall_r =0, wall_f=0;
- 132              		.loc 1 75 2 view .LVU42
-  76:Core/Src/Main/Interrupt.c **** 		int ang_out=0;
- 133              		.loc 1 76 3 view .LVU43
-  77:Core/Src/Main/Interrupt.c **** #if 1
-  78:Core/Src/Main/Interrupt.c **** 
-  79:Core/Src/Main/Interrupt.c **** 	if( Pid[A_VELO_PID].flag == 1 )
- 134              		.loc 1 79 2 view .LVU44
- 135              		.loc 1 79 21 is_stmt 0 view .LVU45
- 136 0086 854B     		ldr	r3, .L13+44
- 137 0088 9B6A     		ldr	r3, [r3, #40]
- 138              		.loc 1 79 4 view .LVU46
- 139 008a 012B     		cmp	r3, #1
- 140 008c 5BD0     		beq	.L8
-  80:Core/Src/Main/Interrupt.c **** 	{
-  81:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
-  82:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
-  83:Core/Src/Main/Interrupt.c **** 	}
-  84:Core/Src/Main/Interrupt.c **** 	else if( Pid[D_WALL_PID].flag == 1 )
- 141              		.loc 1 84 7 is_stmt 1 view .LVU47
- 142              		.loc 1 84 26 is_stmt 0 view .LVU48
- 143 008e 834B     		ldr	r3, .L13+44
- 144 0090 5B6D     		ldr	r3, [r3, #84]
- 145              		.loc 1 84 9 view .LVU49
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 5
+ 142:Core/Src/Main/Interrupt.c **** 			float duty = 1/ battery_voltage;
+ 143:Core/Src/Main/Interrupt.c **** 
+ 144:Core/Src/Main/Interrupt.c **** 			VelocityLeftOut = (((float)ang_out)) * 840*duty;
+ 145:Core/Src/Main/Interrupt.c **** 			VelocityRightOut = (((float)ang_out))* 840 *duty * (-1);
+ 146:Core/Src/Main/Interrupt.c **** 	#else
+ 147:Core/Src/Main/Interrupt.c **** 		VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[BODY], CurrentVelocity[LEFT]);
+ 148:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+ 149:Core/Src/Main/Interrupt.c **** 		float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 150:Core/Src/Main/Interrupt.c **** 		float duty = 1/ battery_voltage;
+ 151:Core/Src/Main/Interrupt.c **** 		// VelocityLeftOut = voltage_maintainer * PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVe
+ 152:Core/Src/Main/Interrupt.c **** 		// VelocityRightOut = voltage_maintainer * PIDControl( R_VELO_PID, TargetVelocity[RIGHT], Current
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityLeftOut = ((float)(VelocityLeftOut + ang_out)) * 840 * duty;
+ 154:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 155:Core/Src/Main/Interrupt.c **** 
+ 156:Core/Src/Main/Interrupt.c **** 	#endif
+ 157:Core/Src/Main/Interrupt.c **** 	//モータに出力
+ 158:Core/Src/Main/Interrupt.c **** 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
+ 159:Core/Src/Main/Interrupt.c **** }
+ 160:Core/Src/Main/Interrupt.c **** static void Explore_IT()
+ 161:Core/Src/Main/Interrupt.c **** {
+  32              		.loc 1 161 1 view -0
+  33              		.cfi_startproc
+  34              		@ args = 0, pretend = 0, frame = 0
+  35              		@ frame_needed = 0, uses_anonymous_args = 0
+  36 0000 70B5     		push	{r4, r5, r6, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 16
+  39              		.cfi_offset 4, -16
+  40              		.cfi_offset 5, -12
+  41              		.cfi_offset 6, -8
+  42              		.cfi_offset 14, -4
+  43 0002 2DED028B 		vpush.64	{d8}
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_offset 24
+  46              		.cfi_offset 80, -24
+  47              		.cfi_offset 81, -20
+ 162:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+  48              		.loc 1 162 2 view .LVU1
+  49              		.loc 1 162 35 is_stmt 0 view .LVU2
+  50 0006 B44A     		ldr	r2, .L13+16
+  51 0008 516A     		ldr	r1, [r2, #36]
+  52              		.loc 1 162 28 view .LVU3
+  53 000a 47F22F53 		movw	r3, #29999
+  54 000e 591A     		subs	r1, r3, r1
+  55              		.loc 1 162 26 view .LVU4
+  56 0010 B24C     		ldr	r4, .L13+20
+  57 0012 2160     		str	r1, [r4]
+ 163:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+  58              		.loc 1 163 2 is_stmt 1 view .LVU5
+  59              		.loc 1 163 12 is_stmt 0 view .LVU6
+  60 0014 5362     		str	r3, [r2, #36]
+ 164:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+  61              		.loc 1 164 2 is_stmt 1 view .LVU7
+  62              		.loc 1 164 36 is_stmt 0 view .LVU8
+  63 0016 B248     		ldr	r0, .L13+24
+  64 0018 426A     		ldr	r2, [r0, #36]
+  65              		.loc 1 164 29 view .LVU9
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 5
 
 
- 146 0092 012B     		cmp	r3, #1
- 147 0094 68D0     		beq	.L9
-  85:Core/Src/Main/Interrupt.c **** 	{
-  86:Core/Src/Main/Interrupt.c **** 		wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SIDE_R]+PhotoDiff);
-  87:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
-  88:Core/Src/Main/Interrupt.c **** 	}
-  89:Core/Src/Main/Interrupt.c **** 	else if( Pid[L_WALL_PID].flag == 1 )
- 148              		.loc 1 89 7 is_stmt 1 view .LVU50
- 149              		.loc 1 89 26 is_stmt 0 view .LVU51
- 150 0096 814B     		ldr	r3, .L13+44
- 151 0098 D3F88030 		ldr	r3, [r3, #128]
- 152              		.loc 1 89 9 view .LVU52
- 153 009c 012B     		cmp	r3, #1
- 154 009e 00F08280 		beq	.L10
-  90:Core/Src/Main/Interrupt.c **** 	{
-  91:Core/Src/Main/Interrupt.c **** 		wall_l = PIDControl( L_WALL_PID,  Photo[SL], TargetPhoto[SL]);
-  92:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;
-  93:Core/Src/Main/Interrupt.c **** 	}
-  94:Core/Src/Main/Interrupt.c **** 	else if( Pid[R_WALL_PID].flag == 1 )
- 155              		.loc 1 94 7 is_stmt 1 view .LVU53
- 156              		.loc 1 94 26 is_stmt 0 view .LVU54
- 157 00a2 7E4B     		ldr	r3, .L13+44
- 158 00a4 D3F8AC30 		ldr	r3, [r3, #172]
- 159              		.loc 1 94 9 view .LVU55
- 160 00a8 012B     		cmp	r3, #1
- 161 00aa 00F09780 		beq	.L11
-  95:Core/Src/Main/Interrupt.c **** 	{
-  96:Core/Src/Main/Interrupt.c **** 		wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SIDE_R], Photo[SIDE_R]);
-  97:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;
-  98:Core/Src/Main/Interrupt.c **** 	}
-  99:Core/Src/Main/Interrupt.c **** 	else if( Pid[F_WALL_PID].flag == 1)
- 162              		.loc 1 99 7 is_stmt 1 view .LVU56
- 163              		.loc 1 99 26 is_stmt 0 view .LVU57
- 164 00ae 7B4B     		ldr	r3, .L13+44
- 165 00b0 D3F88831 		ldr	r3, [r3, #392]
- 166              		.loc 1 99 9 view .LVU58
- 167 00b4 012B     		cmp	r3, #1
- 168 00b6 00F0AC80 		beq	.L12
- 169              	.LVL2:
- 170              	.L3:
- 100:Core/Src/Main/Interrupt.c **** 	{
- 101:Core/Src/Main/Interrupt.c **** 		wall_f = PIDControl( F_WALL_PID,   3800, (	(Photo[FR]+Photo[FL])));
- 102:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
- 103:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
- 104:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
- 105:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
- 106:Core/Src/Main/Interrupt.c **** 	}
- 107:Core/Src/Main/Interrupt.c **** #else
- 108:Core/Src/Main/Interrupt.c **** 	switch(Control_Mode)
- 109:Core/Src/Main/Interrupt.c **** 	{
- 110:Core/Src/Main/Interrupt.c **** 	case A_VELO_PID:
- 111:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( Control_Mode,  TargetAngle, Angle);
- 112:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。�
- 113:Core/Src/Main/Interrupt.c **** 		ChangeLED(7);
- 114:Core/Src/Main/Interrupt.c **** 		break;
- 115:Core/Src/Main/Interrupt.c **** 	case D_WALL_PID:
- 116:Core/Src/Main/Interrupt.c **** 		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SIDE_R]+PhotoDiff);	//左に寄ってたら+�
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 6
-
-
- 117:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが�
- 118:Core/Src/Main/Interrupt.c **** 		ChangeLED(5);
- 119:Core/Src/Main/Interrupt.c **** 		break;
- 120:Core/Src/Main/Interrupt.c **** 	case L_WALL_PID:
- 121:Core/Src/Main/Interrupt.c **** 		wall_l = PIDControl( Control_Mode,  Photo[SL], TargetPhoto[SL]);
- 122:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが�
- 123:Core/Src/Main/Interrupt.c **** 		ChangeLED(4);
- 124:Core/Src/Main/Interrupt.c **** 		break;
- 125:Core/Src/Main/Interrupt.c **** 	case R_WALL_PID :
- 126:Core/Src/Main/Interrupt.c **** 		wall_r = PIDControl( Control_Mode,  TargetPhoto[SIDE_R], Photo[SIDE_R]);			//右に寄ってた�
- 127:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが�
- 128:Core/Src/Main/Interrupt.c **** 		ChangeLED(1);
- 129:Core/Src/Main/Interrupt.c **** 		break;
- 130:Core/Src/Main/Interrupt.c **** 	case F_WALL_PID : //前壁補正のための制御. ミックスはよくない.
- 131:Core/Src/Main/Interrupt.c **** 		wall_f = PIDControl( Control_Mode,   3500, (	(Photo[FR]+Photo[FL])));
- 132:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
- 133:Core/Src/Main/Interrupt.c **** 		ChangeLED(2);
- 134:Core/Src/Main/Interrupt.c **** 
- 135:Core/Src/Main/Interrupt.c **** 		break;
- 136:Core/Src/Main/Interrupt.c **** 	case NOT_CTRL_PID:
- 137:Core/Src/Main/Interrupt.c **** 		break;
- 138:Core/Src/Main/Interrupt.c **** 	default :
- 139:Core/Src/Main/Interrupt.c **** 		break;
- 140:Core/Src/Main/Interrupt.c **** 	}
- 141:Core/Src/Main/Interrupt.c **** #endif
- 142:Core/Src/Main/Interrupt.c **** 	TargetVelocity[BODY] += Acceleration;
- 171              		.loc 1 142 2 is_stmt 1 view .LVU59
- 172 00ba 794B     		ldr	r3, .L13+48
- 173 00bc 93ED007A 		vldr.32	s14, [r3]
- 174              		.loc 1 142 23 is_stmt 0 view .LVU60
- 175 00c0 784C     		ldr	r4, .L13+52
- 176 00c2 D4ED027A 		vldr.32	s15, [r4, #8]
- 177 00c6 77EE877A 		vadd.f32	s15, s15, s14
- 178 00ca C4ED027A 		vstr.32	s15, [r4, #8]
- 143:Core/Src/Main/Interrupt.c **** 	//AngularAcceleration += AngularLeapsity;
- 144:Core/Src/Main/Interrupt.c **** 	TargetAngularV += AngularAcceleration;
- 179              		.loc 1 144 2 is_stmt 1 view .LVU61
- 180 00ce 764B     		ldr	r3, .L13+56
- 181 00d0 93ED007A 		vldr.32	s14, [r3]
- 182              		.loc 1 144 17 is_stmt 0 view .LVU62
- 183 00d4 754B     		ldr	r3, .L13+60
- 184 00d6 D3ED007A 		vldr.32	s15, [r3]
- 185 00da 77EE877A 		vadd.f32	s15, s15, s14
- 186 00de C3ED007A 		vstr.32	s15, [r3]
- 145:Core/Src/Main/Interrupt.c **** 	//TargetAngularV += AngularAcceleration;
- 146:Core/Src/Main/Interrupt.c **** 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
- 187              		.loc 1 146 2 is_stmt 1 view .LVU63
- 188              		.loc 1 146 42 is_stmt 0 view .LVU64
- 189 00e2 D4ED026A 		vldr.32	s13, [r4, #8]
- 190              		.loc 1 146 66 view .LVU65
- 191 00e6 93ED007A 		vldr.32	s14, [r3]
- 192 00ea 9FED716A 		vldr.32	s12, .L13+64
- 193 00ee 27EE067A 		vmul.f32	s14, s14, s12
- 194              		.loc 1 146 80 view .LVU66
- 195 00f2 F6EE007A 		vmov.f32	s15, #5.0e-1
- 196 00f6 27EE277A 		vmul.f32	s14, s14, s15
- 197              		.loc 1 146 49 view .LVU67
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 7
-
-
- 198 00fa 36EEC77A 		vsub.f32	s14, s13, s14
- 199              		.loc 1 146 24 view .LVU68
- 200 00fe 84ED017A 		vstr.32	s14, [r4, #4]
- 147:Core/Src/Main/Interrupt.c **** 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
- 201              		.loc 1 147 2 is_stmt 1 view .LVU69
- 202              		.loc 1 147 42 is_stmt 0 view .LVU70
- 203 0102 D3ED007A 		vldr.32	s15, [r3]
- 204 0106 67EE867A 		vmul.f32	s15, s15, s12
- 205              		.loc 1 147 73 view .LVU71
- 206 010a 94ED017A 		vldr.32	s14, [r4, #4]
- 207              		.loc 1 147 57 view .LVU72
- 208 010e 77EE877A 		vadd.f32	s15, s15, s14
- 209              		.loc 1 147 23 view .LVU73
- 210 0112 C4ED007A 		vstr.32	s15, [r4]
- 148:Core/Src/Main/Interrupt.c **** 
- 149:Core/Src/Main/Interrupt.c **** 	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
- 211              		.loc 1 149 2 is_stmt 1 view .LVU74
- 212              		.loc 1 149 20 is_stmt 0 view .LVU75
- 213 0116 94ED000A 		vldr.32	s0, [r4]
- 214 011a 5B4E     		ldr	r6, .L13+24
- 215 011c D6ED000A 		vldr.32	s1, [r6]
- 216 0120 0420     		movs	r0, #4
- 217 0122 FFF7FEFF 		bl	PIDControl
- 218              	.LVL3:
- 219              		.loc 1 149 18 view .LVU76
- 220 0126 634D     		ldr	r5, .L13+68
- 221 0128 2860     		str	r0, [r5]
- 150:Core/Src/Main/Interrupt.c **** 	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
- 222              		.loc 1 150 2 is_stmt 1 view .LVU77
- 223              		.loc 1 150 21 is_stmt 0 view .LVU78
- 224 012a 94ED010A 		vldr.32	s0, [r4, #4]
- 225 012e D6ED010A 		vldr.32	s1, [r6, #4]
- 226 0132 0520     		movs	r0, #5
- 227 0134 FFF7FEFF 		bl	PIDControl
- 228              	.LVL4:
- 229 0138 0146     		mov	r1, r0
- 230              		.loc 1 150 19 view .LVU79
- 231 013a 5F4B     		ldr	r3, .L13+72
- 232 013c 1860     		str	r0, [r3]
- 151:Core/Src/Main/Interrupt.c **** 
- 152:Core/Src/Main/Interrupt.c **** 	//モータに出力
- 153:Core/Src/Main/Interrupt.c **** 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
- 233              		.loc 1 153 2 is_stmt 1 view .LVU80
- 234 013e 2868     		ldr	r0, [r5]
- 235 0140 FFF7FEFF 		bl	Motor_Switch
- 236              	.LVL5:
- 154:Core/Src/Main/Interrupt.c **** }
- 237              		.loc 1 154 1 is_stmt 0 view .LVU81
- 238 0144 70BD     		pop	{r4, r5, r6, pc}
- 239              	.LVL6:
- 240              	.L8:
-  81:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
- 241              		.loc 1 81 3 is_stmt 1 view .LVU82
-  81:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
- 242              		.loc 1 81 13 is_stmt 0 view .LVU83
- 243 0146 5D4B     		ldr	r3, .L13+76
- 244 0148 93ED000A 		vldr.32	s0, [r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 8
-
-
- 245 014c 514B     		ldr	r3, .L13+36
- 246 014e D3ED000A 		vldr.32	s1, [r3]
- 247 0152 0020     		movs	r0, #0
- 248 0154 FFF7FEFF 		bl	PIDControl
- 249              	.LVL7:
- 250 0158 07EE900A 		vmov	s15, r0	@ int
- 251              	.LVL8:
-  82:Core/Src/Main/Interrupt.c **** 	}
- 252              		.loc 1 82 3 is_stmt 1 view .LVU84
-  82:Core/Src/Main/Interrupt.c **** 	}
- 253              		.loc 1 82 20 is_stmt 0 view .LVU85
- 254 015c F8EEE77A 		vcvt.f32.s32	s15, s15
-  82:Core/Src/Main/Interrupt.c **** 	}
- 255              		.loc 1 82 18 view .LVU86
- 256 0160 524B     		ldr	r3, .L13+60
- 257 0162 C3ED007A 		vstr.32	s15, [r3]
- 258 0166 A8E7     		b	.L3
- 259              	.LVL9:
- 260              	.L9:
-  86:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
- 261              		.loc 1 86 3 is_stmt 1 view .LVU87
-  86:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
- 262              		.loc 1 86 52 is_stmt 0 view .LVU88
- 263 0168 554B     		ldr	r3, .L13+80
- 264 016a D3ED010A 		vldr.32	s1, [r3, #4]
-  86:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
- 265              		.loc 1 86 12 view .LVU89
- 266 016e 554A     		ldr	r2, .L13+84
- 267 0170 D2ED007A 		vldr.32	s15, [r2]
- 268 0174 70EEA70A 		vadd.f32	s1, s1, s15
- 269 0178 93ED020A 		vldr.32	s0, [r3, #8]
- 270 017c 0120     		movs	r0, #1
- 271 017e FFF7FEFF 		bl	PIDControl
- 272              	.LVL10:
- 273 0182 07EE900A 		vmov	s15, r0	@ int
- 274              	.LVL11:
-  87:Core/Src/Main/Interrupt.c **** 	}
- 275              		.loc 1 87 3 is_stmt 1 view .LVU90
-  87:Core/Src/Main/Interrupt.c **** 	}
- 276              		.loc 1 87 20 is_stmt 0 view .LVU91
- 277 0186 F8EEE77A 		vcvt.f32.s32	s15, s15
- 278 018a 17EE900A 		vmov	r0, s15
- 279              	.LVL12:
-  87:Core/Src/Main/Interrupt.c **** 	}
- 280              		.loc 1 87 20 view .LVU92
- 281 018e FFF7FEFF 		bl	__aeabi_f2d
- 282              	.LVL13:
-  87:Core/Src/Main/Interrupt.c **** 	}
- 283              		.loc 1 87 33 view .LVU93
- 284 0192 37A3     		adr	r3, .L13
- 285 0194 D3E90023 		ldrd	r2, [r3]
- 286 0198 FFF7FEFF 		bl	__aeabi_dmul
- 287              	.LVL14:
- 288 019c FFF7FEFF 		bl	__aeabi_d2f
- 289              	.LVL15:
-  87:Core/Src/Main/Interrupt.c **** 	}
- 290              		.loc 1 87 18 view .LVU94
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 9
-
-
- 291 01a0 424B     		ldr	r3, .L13+60
- 292 01a2 1860     		str	r0, [r3]	@ float
- 293 01a4 89E7     		b	.L3
- 294              	.LVL16:
- 295              	.L10:
-  91:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;
- 296              		.loc 1 91 3 is_stmt 1 view .LVU95
-  91:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;
- 297              		.loc 1 91 12 is_stmt 0 view .LVU96
- 298 01a6 484B     		ldr	r3, .L13+88
- 299 01a8 D3ED020A 		vldr.32	s1, [r3, #8]
- 300 01ac 444B     		ldr	r3, .L13+80
- 301 01ae 93ED020A 		vldr.32	s0, [r3, #8]
- 302 01b2 0220     		movs	r0, #2
- 303 01b4 FFF7FEFF 		bl	PIDControl
- 304              	.LVL17:
- 305 01b8 07EE900A 		vmov	s15, r0	@ int
- 306              	.LVL18:
-  92:Core/Src/Main/Interrupt.c **** 	}
- 307              		.loc 1 92 3 is_stmt 1 view .LVU97
-  92:Core/Src/Main/Interrupt.c **** 	}
- 308              		.loc 1 92 20 is_stmt 0 view .LVU98
- 309 01bc F8EEE77A 		vcvt.f32.s32	s15, s15
- 310 01c0 17EE900A 		vmov	r0, s15
- 311              	.LVL19:
-  92:Core/Src/Main/Interrupt.c **** 	}
- 312              		.loc 1 92 20 view .LVU99
- 313 01c4 FFF7FEFF 		bl	__aeabi_f2d
- 314              	.LVL20:
-  92:Core/Src/Main/Interrupt.c **** 	}
- 315              		.loc 1 92 33 view .LVU100
- 316 01c8 29A3     		adr	r3, .L13
- 317 01ca D3E90023 		ldrd	r2, [r3]
- 318 01ce FFF7FEFF 		bl	__aeabi_dmul
- 319              	.LVL21:
- 320 01d2 FFF7FEFF 		bl	__aeabi_d2f
- 321              	.LVL22:
-  92:Core/Src/Main/Interrupt.c **** 	}
- 322              		.loc 1 92 18 view .LVU101
- 323 01d6 354B     		ldr	r3, .L13+60
- 324 01d8 1860     		str	r0, [r3]	@ float
- 325 01da 6EE7     		b	.L3
- 326              	.LVL23:
- 327              	.L11:
-  96:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;
- 328              		.loc 1 96 3 is_stmt 1 view .LVU102
-  96:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;
- 329              		.loc 1 96 12 is_stmt 0 view .LVU103
- 330 01dc 3A4B     		ldr	r3, .L13+88
- 331 01de 93ED010A 		vldr.32	s0, [r3, #4]
- 332 01e2 374B     		ldr	r3, .L13+80
- 333 01e4 D3ED010A 		vldr.32	s1, [r3, #4]
- 334 01e8 0320     		movs	r0, #3
- 335 01ea FFF7FEFF 		bl	PIDControl
- 336              	.LVL24:
- 337 01ee 07EE900A 		vmov	s15, r0	@ int
- 338              	.LVL25:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 10
-
-
-  97:Core/Src/Main/Interrupt.c **** 	}
- 339              		.loc 1 97 3 is_stmt 1 view .LVU104
-  97:Core/Src/Main/Interrupt.c **** 	}
- 340              		.loc 1 97 20 is_stmt 0 view .LVU105
- 341 01f2 F8EEE77A 		vcvt.f32.s32	s15, s15
- 342 01f6 17EE900A 		vmov	r0, s15
- 343              	.LVL26:
-  97:Core/Src/Main/Interrupt.c **** 	}
- 344              		.loc 1 97 20 view .LVU106
- 345 01fa FFF7FEFF 		bl	__aeabi_f2d
- 346              	.LVL27:
-  97:Core/Src/Main/Interrupt.c **** 	}
- 347              		.loc 1 97 33 view .LVU107
- 348 01fe 1CA3     		adr	r3, .L13
- 349 0200 D3E90023 		ldrd	r2, [r3]
- 350 0204 FFF7FEFF 		bl	__aeabi_dmul
- 351              	.LVL28:
- 352 0208 FFF7FEFF 		bl	__aeabi_d2f
- 353              	.LVL29:
-  97:Core/Src/Main/Interrupt.c **** 	}
- 354              		.loc 1 97 18 view .LVU108
- 355 020c 274B     		ldr	r3, .L13+60
- 356 020e 1860     		str	r0, [r3]	@ float
- 357 0210 53E7     		b	.L3
- 358              	.LVL30:
- 359              	.L12:
- 101:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
- 360              		.loc 1 101 3 is_stmt 1 view .LVU109
- 101:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
- 361              		.loc 1 101 52 is_stmt 0 view .LVU110
- 362 0212 2B4B     		ldr	r3, .L13+80
- 363 0214 D3ED030A 		vldr.32	s1, [r3, #12]
- 101:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
- 364              		.loc 1 101 62 view .LVU111
- 365 0218 D3ED007A 		vldr.32	s15, [r3]
- 101:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
- 366              		.loc 1 101 12 view .LVU112
- 367 021c 70EEA70A 		vadd.f32	s1, s1, s15
- 368 0220 9FED2A0A 		vldr.32	s0, .L13+92
- 369 0224 0820     		movs	r0, #8
- 370 0226 FFF7FEFF 		bl	PIDControl
- 371              	.LVL31:
- 372 022a 07EE900A 		vmov	s15, r0	@ int
- 373              	.LVL32:
- 102:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
- 374              		.loc 1 102 3 is_stmt 1 view .LVU113
- 102:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
- 375              		.loc 1 102 26 is_stmt 0 view .LVU114
- 376 022e F8EEE77A 		vcvt.f32.s32	s15, s15
- 377 0232 17EE900A 		vmov	r0, s15
- 378              	.LVL33:
- 102:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
- 379              		.loc 1 102 26 view .LVU115
- 380 0236 FFF7FEFF 		bl	__aeabi_f2d
- 381              	.LVL34:
- 102:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
- 382              		.loc 1 102 39 view .LVU116
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 11
-
-
- 383 023a 0DA3     		adr	r3, .L13
- 384 023c D3E90023 		ldrd	r2, [r3]
- 385 0240 FFF7FEFF 		bl	__aeabi_dmul
- 386              	.LVL35:
- 387 0244 FFF7FEFF 		bl	__aeabi_d2f
- 388              	.LVL36:
- 102:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
- 389              		.loc 1 102 24 view .LVU117
- 390 0248 164B     		ldr	r3, .L13+52
- 391 024a 9860     		str	r0, [r3, #8]	@ float
- 103:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
- 392              		.loc 1 103 3 is_stmt 1 view .LVU118
- 103:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
- 393              		.loc 1 103 13 is_stmt 0 view .LVU119
- 394 024c 1B4B     		ldr	r3, .L13+76
- 395 024e 93ED000A 		vldr.32	s0, [r3]
- 396 0252 104B     		ldr	r3, .L13+36
- 397 0254 D3ED000A 		vldr.32	s1, [r3]
- 398 0258 0020     		movs	r0, #0
- 399 025a FFF7FEFF 		bl	PIDControl
- 400              	.LVL37:
- 401 025e 07EE900A 		vmov	s15, r0	@ int
- 402              	.LVL38:
- 104:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
- 403              		.loc 1 104 3 is_stmt 1 view .LVU120
- 104:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
- 404              		.loc 1 104 20 is_stmt 0 view .LVU121
- 405 0262 F8EEE77A 		vcvt.f32.s32	s15, s15
- 104:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
- 406              		.loc 1 104 18 view .LVU122
- 407 0266 114B     		ldr	r3, .L13+60
- 408 0268 C3ED007A 		vstr.32	s15, [r3]
- 409 026c 25E7     		b	.L3
- 410              	.L14:
- 411 026e 00BF     		.align	3
- 412              	.L13:
- 413 0270 FCA9F1D2 		.word	-755914244
- 414 0274 4D62503F 		.word	1062232653
- 415 0278 00040040 		.word	1073742848
- 416 027c 00000000 		.word	PulseDisplacement
- 417 0280 00080040 		.word	1073743872
- 418 0284 CD77813F 		.word	1065449421
- 419 0288 00000000 		.word	CurrentVelocity
- 420 028c 00000000 		.word	.LANCHOR0
- 421 0290 00000000 		.word	TotalPulse
- 422 0294 00000000 		.word	Angle
- 423 0298 00000000 		.word	AngularV
- 424 029c 00000000 		.word	Pid
- 425 02a0 00000000 		.word	Acceleration
- 426 02a4 00000000 		.word	TargetVelocity
- 427 02a8 00000000 		.word	AngularAcceleration
- 428 02ac 00000000 		.word	TargetAngularV
- 429 02b0 9A990942 		.word	1107925402
- 430 02b4 00000000 		.word	VelocityLeftOut
- 431 02b8 00000000 		.word	VelocityRightOut
- 432 02bc 00000000 		.word	TargetAngle
- 433 02c0 00000000 		.word	Photo
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 12
-
-
- 434 02c4 00000000 		.word	PhotoDiff
- 435 02c8 00000000 		.word	TargetPhoto
- 436 02cc 00806D45 		.word	1164804096
- 437              		.cfi_endproc
- 438              	.LFE238:
- 440              		.global	__aeabi_dadd
- 441              		.section	.text.WritingFree_IT,"ax",%progbits
- 442              		.align	1
- 443              		.syntax unified
- 444              		.thumb
- 445              		.thumb_func
- 447              	WritingFree_IT:
- 448              	.LFB239:
- 155:Core/Src/Main/Interrupt.c **** static void WritingFree_IT()
- 156:Core/Src/Main/Interrupt.c **** {
- 449              		.loc 1 156 1 is_stmt 1 view -0
- 450              		.cfi_startproc
- 451              		@ args = 0, pretend = 0, frame = 0
- 452              		@ frame_needed = 0, uses_anonymous_args = 0
- 453 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 454              	.LCFI1:
- 455              		.cfi_def_cfa_offset 24
- 456              		.cfi_offset 3, -24
- 457              		.cfi_offset 4, -20
- 458              		.cfi_offset 5, -16
- 459              		.cfi_offset 6, -12
- 460              		.cfi_offset 7, -8
- 461              		.cfi_offset 14, -4
- 462 0002 2DED028B 		vpush.64	{d8}
- 463              	.LCFI2:
- 464              		.cfi_def_cfa_offset 32
- 465              		.cfi_offset 80, -32
- 466              		.cfi_offset 81, -28
- 157:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
- 467              		.loc 1 157 2 view .LVU124
- 468              		.loc 1 157 35 is_stmt 0 view .LVU125
- 469 0006 6A4A     		ldr	r2, .L17+16
- 470 0008 516A     		ldr	r1, [r2, #36]
- 471              		.loc 1 157 28 view .LVU126
- 472 000a 47F22F53 		movw	r3, #29999
- 473 000e 591A     		subs	r1, r3, r1
- 474              		.loc 1 157 26 view .LVU127
- 475 0010 684C     		ldr	r4, .L17+20
- 476 0012 2160     		str	r1, [r4]
- 158:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
- 477              		.loc 1 158 2 is_stmt 1 view .LVU128
- 478              		.loc 1 158 12 is_stmt 0 view .LVU129
- 479 0014 5362     		str	r3, [r2, #36]
- 159:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
- 480              		.loc 1 159 2 is_stmt 1 view .LVU130
- 481              		.loc 1 159 36 is_stmt 0 view .LVU131
- 482 0016 6848     		ldr	r0, .L17+24
- 483 0018 426A     		ldr	r2, [r0, #36]
- 484              		.loc 1 159 29 view .LVU132
- 485 001a 9A1A     		subs	r2, r3, r2
- 486              		.loc 1 159 27 view .LVU133
- 487 001c 6260     		str	r2, [r4, #4]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 13
-
-
- 160:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
- 488              		.loc 1 160 2 is_stmt 1 view .LVU134
- 489              		.loc 1 160 12 is_stmt 0 view .LVU135
- 490 001e 4362     		str	r3, [r0, #36]
- 161:Core/Src/Main/Interrupt.c **** 
- 162:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
- 491              		.loc 1 162 2 is_stmt 1 view .LVU136
- 492              		.loc 1 162 27 is_stmt 0 view .LVU137
- 493 0020 07EE901A 		vmov	s15, r1	@ int
- 494 0024 B8EEE77A 		vcvt.f32.s32	s14, s15
- 495              		.loc 1 162 58 view .LVU138
- 496 0028 DFED646A 		vldr.32	s13, .L17+28
- 497 002c 27EE267A 		vmul.f32	s14, s14, s13
- 498              		.loc 1 162 24 view .LVU139
- 499 0030 634D     		ldr	r5, .L17+32
- 500 0032 85ED007A 		vstr.32	s14, [r5]
- 163:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
- 501              		.loc 1 163 2 is_stmt 1 view .LVU140
- 502              		.loc 1 163 28 is_stmt 0 view .LVU141
- 503 0036 07EE902A 		vmov	s15, r2	@ int
- 504 003a F8EEE77A 		vcvt.f32.s32	s15, s15
- 505              		.loc 1 163 60 view .LVU142
- 506 003e 67EEA67A 		vmul.f32	s15, s15, s13
- 507              		.loc 1 163 25 view .LVU143
- 508 0042 C5ED017A 		vstr.32	s15, [r5, #4]
- 164:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
- 509              		.loc 1 164 2 is_stmt 1 view .LVU144
- 510              		.loc 1 164 42 is_stmt 0 view .LVU145
- 511 0046 D5ED007A 		vldr.32	s15, [r5]
- 512              		.loc 1 164 66 view .LVU146
- 513 004a 95ED017A 		vldr.32	s14, [r5, #4]
- 514              		.loc 1 164 49 view .LVU147
- 515 004e 77EE877A 		vadd.f32	s15, s15, s14
- 516              		.loc 1 164 75 view .LVU148
- 517 0052 F6EE008A 		vmov.f32	s17, #5.0e-1
- 518 0056 67EEA87A 		vmul.f32	s15, s15, s17
- 519              		.loc 1 164 24 view .LVU149
- 520 005a C5ED027A 		vstr.32	s15, [r5, #8]
- 165:Core/Src/Main/Interrupt.c **** #if 0
- 166:Core/Src/Main/Interrupt.c **** 	static int count=0;
- 167:Core/Src/Main/Interrupt.c **** 
- 168:Core/Src/Main/Interrupt.c **** 	if(count < 2000)
- 169:Core/Src/Main/Interrupt.c **** 	{
- 170:Core/Src/Main/Interrupt.c **** 		data[count] = CurrentVelocity[LEFT];
- 171:Core/Src/Main/Interrupt.c **** 	}
- 172:Core/Src/Main/Interrupt.c **** 	count ++;
- 173:Core/Src/Main/Interrupt.c **** #endif
- 174:Core/Src/Main/Interrupt.c **** 	//移動量 mm/msを積算
+  66 001a 9A1A     		subs	r2, r3, r2
+  67              		.loc 1 164 27 view .LVU10
+  68 001c 6260     		str	r2, [r4, #4]
+ 165:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+  69              		.loc 1 165 2 is_stmt 1 view .LVU11
+  70              		.loc 1 165 12 is_stmt 0 view .LVU12
+  71 001e 4362     		str	r3, [r0, #36]
+ 166:Core/Src/Main/Interrupt.c **** 
+ 167:Core/Src/Main/Interrupt.c **** 	//速度 mm/s
+ 168:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
+  72              		.loc 1 168 2 is_stmt 1 view .LVU13
+  73              		.loc 1 168 27 is_stmt 0 view .LVU14
+  74 0020 07EE901A 		vmov	s15, r1	@ int
+  75 0024 B8EEE77A 		vcvt.f32.s32	s14, s15
+  76              		.loc 1 168 58 view .LVU15
+  77 0028 DFEDAE6A 		vldr.32	s13, .L13+28
+  78 002c 27EE267A 		vmul.f32	s14, s14, s13
+  79              		.loc 1 168 24 view .LVU16
+  80 0030 AD4B     		ldr	r3, .L13+32
+  81 0032 83ED007A 		vstr.32	s14, [r3]
+ 169:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+  82              		.loc 1 169 2 is_stmt 1 view .LVU17
+  83              		.loc 1 169 28 is_stmt 0 view .LVU18
+  84 0036 07EE902A 		vmov	s15, r2	@ int
+  85 003a F8EEE77A 		vcvt.f32.s32	s15, s15
+  86              		.loc 1 169 60 view .LVU19
+  87 003e 67EEA67A 		vmul.f32	s15, s15, s13
+  88              		.loc 1 169 25 view .LVU20
+  89 0042 C3ED017A 		vstr.32	s15, [r3, #4]
+ 170:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+  90              		.loc 1 170 2 is_stmt 1 view .LVU21
+  91              		.loc 1 170 42 is_stmt 0 view .LVU22
+  92 0046 D3ED007A 		vldr.32	s15, [r3]
+  93              		.loc 1 170 66 view .LVU23
+  94 004a 93ED017A 		vldr.32	s14, [r3, #4]
+  95              		.loc 1 170 49 view .LVU24
+  96 004e 77EE877A 		vadd.f32	s15, s15, s14
+  97              		.loc 1 170 75 view .LVU25
+  98 0052 B6EE007A 		vmov.f32	s14, #5.0e-1
+  99 0056 67EE877A 		vmul.f32	s15, s15, s14
+ 100              		.loc 1 170 24 view .LVU26
+ 101 005a C3ED027A 		vstr.32	s15, [r3, #8]
+ 171:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 172:Core/Src/Main/Interrupt.c **** 	
+ 173:Core/Src/Main/Interrupt.c **** 	//移動量 mm/msを積算
+ 174:Core/Src/Main/Interrupt.c **** 
  175:Core/Src/Main/Interrupt.c **** 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
- 521              		.loc 1 175 2 is_stmt 1 view .LVU150
- 522              		.loc 1 175 19 is_stmt 0 view .LVU151
- 523 005e 594B     		ldr	r3, .L17+36
- 524 0060 1868     		ldr	r0, [r3]
- 525 0062 0144     		add	r1, r1, r0
- 526 0064 1960     		str	r1, [r3]
+ 102              		.loc 1 175 2 is_stmt 1 view .LVU27
+ 103              		.loc 1 175 19 is_stmt 0 view .LVU28
+ 104 005e A34B     		ldr	r3, .L13+36
+ 105 0060 1868     		ldr	r0, [r3]
+ 106 0062 0144     		add	r1, r1, r0
+ 107 0064 1960     		str	r1, [r3]
  176:Core/Src/Main/Interrupt.c **** 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
- 527              		.loc 1 176 2 is_stmt 1 view .LVU152
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 14
+ 108              		.loc 1 176 2 is_stmt 1 view .LVU29
+ 109              		.loc 1 176 20 is_stmt 0 view .LVU30
+ 110 0066 5968     		ldr	r1, [r3, #4]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 6
 
 
- 528              		.loc 1 176 20 is_stmt 0 view .LVU153
- 529 0066 5968     		ldr	r1, [r3, #4]
- 530 0068 0A44     		add	r2, r2, r1
- 531 006a 5A60     		str	r2, [r3, #4]
+ 111 0068 0A44     		add	r2, r2, r1
+ 112 006a 5A60     		str	r2, [r3, #4]
  177:Core/Src/Main/Interrupt.c **** 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
- 532              		.loc 1 177 2 is_stmt 1 view .LVU154
- 533              		.loc 1 177 31 is_stmt 0 view .LVU155
- 534 006c 1A68     		ldr	r2, [r3]
- 535              		.loc 1 177 48 view .LVU156
- 536 006e 5968     		ldr	r1, [r3, #4]
- 537              		.loc 1 177 37 view .LVU157
- 538 0070 0A44     		add	r2, r2, r1
- 539              		.loc 1 177 19 view .LVU158
- 540 0072 9A60     		str	r2, [r3, #8]
- 178:Core/Src/Main/Interrupt.c **** 
- 179:Core/Src/Main/Interrupt.c **** #if 1
- 180:Core/Src/Main/Interrupt.c **** 
- 181:Core/Src/Main/Interrupt.c **** 	static float zg_last=0;
- 541              		.loc 1 181 2 is_stmt 1 view .LVU159
- 182:Core/Src/Main/Interrupt.c **** 	float zg_law;
- 542              		.loc 1 182 2 view .LVU160
- 183:Core/Src/Main/Interrupt.c **** 	//uint8_t zgb,zgf;
- 184:Core/Src/Main/Interrupt.c **** 	ZGyro = ReadIMU(0x37, 0x38);
- 543              		.loc 1 184 2 view .LVU161
- 544              		.loc 1 184 10 is_stmt 0 view .LVU162
- 545 0074 3821     		movs	r1, #56
- 546 0076 3720     		movs	r0, #55
- 547 0078 FFF7FEFF 		bl	ReadIMU
- 548              	.LVL39:
- 549              		.loc 1 184 8 view .LVU163
- 550 007c 524B     		ldr	r3, .L17+40
- 551 007e 83ED000A 		vstr.32	s0, [r3]
- 185:Core/Src/Main/Interrupt.c ****     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
- 552              		.loc 1 185 5 is_stmt 1 view .LVU164
- 553              		.loc 1 185 23 is_stmt 0 view .LVU165
- 554 0082 93ED008A 		vldr.32	s16, [r3]
- 555 0086 514B     		ldr	r3, .L17+44
- 556 0088 D3ED007A 		vldr.32	s15, [r3]
- 557 008c 38EE678A 		vsub.f32	s16, s16, s15
- 558              		.loc 1 185 36 view .LVU166
- 559 0090 4F4B     		ldr	r3, .L17+48
- 560 0092 D3ED007A 		vldr.32	s15, [r3]
- 561              		.loc 1 185 12 view .LVU167
- 562 0096 28EE278A 		vmul.f32	s16, s16, s15
- 563              	.LVL40:
- 186:Core/Src/Main/Interrupt.c ****     AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
- 564              		.loc 1 186 5 is_stmt 1 view .LVU168
- 565              		.loc 1 186 23 is_stmt 0 view .LVU169
- 566 009a 18EE100A 		vmov	r0, s16
- 567 009e FFF7FEFF 		bl	__aeabi_f2d
- 568              	.LVL41:
- 569 00a2 3FA3     		adr	r3, .L17
- 570 00a4 D3E90023 		ldrd	r2, [r3]
- 571 00a8 FFF7FEFF 		bl	__aeabi_dmul
- 572              	.LVL42:
- 573 00ac 0646     		mov	r6, r0
- 574 00ae 0F46     		mov	r7, r1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 15
-
-
- 575              		.loc 1 186 40 view .LVU170
- 576 00b0 484C     		ldr	r4, .L17+52
- 577 00b2 2068     		ldr	r0, [r4]	@ float
- 578 00b4 FFF7FEFF 		bl	__aeabi_f2d
- 579              	.LVL43:
- 580 00b8 3BA3     		adr	r3, .L17+8
- 581 00ba D3E90023 		ldrd	r2, [r3]
- 582 00be FFF7FEFF 		bl	__aeabi_dmul
- 583              	.LVL44:
- 584 00c2 0246     		mov	r2, r0
- 585 00c4 0B46     		mov	r3, r1
- 586              		.loc 1 186 32 view .LVU171
- 587 00c6 3046     		mov	r0, r6
- 588 00c8 3946     		mov	r1, r7
- 589 00ca FFF7FEFF 		bl	__aeabi_dadd
- 590              	.LVL45:
- 591 00ce FFF7FEFF 		bl	__aeabi_d2f
- 592              	.LVL46:
- 593              		.loc 1 186 14 view .LVU172
- 594 00d2 07EE900A 		vmov	s15, r0
- 595 00d6 F1EE677A 		vneg.f32	s15, s15
- 596 00da 3F4B     		ldr	r3, .L17+56
- 597 00dc C3ED007A 		vstr.32	s15, [r3]
- 187:Core/Src/Main/Interrupt.c ****     zg_last = zg_law;
- 598              		.loc 1 187 5 is_stmt 1 view .LVU173
- 599              		.loc 1 187 13 is_stmt 0 view .LVU174
- 600 00e0 84ED008A 		vstr.32	s16, [r4]
- 188:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
- 601              		.loc 1 188 2 is_stmt 1 view .LVU175
- 602              		.loc 1 188 20 is_stmt 0 view .LVU176
- 603 00e4 D3ED007A 		vldr.32	s15, [r3]
- 604 00e8 9FED3C7A 		vldr.32	s14, .L17+60
- 605 00ec 27EE877A 		vmul.f32	s14, s15, s14
- 606              		.loc 1 188 8 view .LVU177
- 607 00f0 3B4B     		ldr	r3, .L17+64
- 608 00f2 D3ED007A 		vldr.32	s15, [r3]
- 609 00f6 77EE877A 		vadd.f32	s15, s15, s14
- 610 00fa C3ED007A 		vstr.32	s15, [r3]
- 189:Core/Src/Main/Interrupt.c **** 
- 190:Core/Src/Main/Interrupt.c **** #else
- 191:Core/Src/Main/Interrupt.c **** 	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
- 192:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
- 193:Core/Src/Main/Interrupt.c **** 
- 194:Core/Src/Main/Interrupt.c **** #endif
- 195:Core/Src/Main/Interrupt.c **** 	AngularAcceleration += AngularLeapsity;
- 611              		.loc 1 195 2 is_stmt 1 view .LVU178
- 612              		.loc 1 195 22 is_stmt 0 view .LVU179
- 613 00fe 394B     		ldr	r3, .L17+68
- 614 0100 D3ED007A 		vldr.32	s15, [r3]
- 615 0104 384A     		ldr	r2, .L17+72
- 616 0106 92ED007A 		vldr.32	s14, [r2]
- 617 010a 77EE877A 		vadd.f32	s15, s15, s14
- 618 010e C3ED007A 		vstr.32	s15, [r3]
- 196:Core/Src/Main/Interrupt.c **** 	TargetVelocity[BODY] += Acceleration;
- 619              		.loc 1 196 2 is_stmt 1 view .LVU180
- 620 0112 364A     		ldr	r2, .L17+76
- 621 0114 92ED007A 		vldr.32	s14, [r2]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 16
-
-
- 622              		.loc 1 196 23 is_stmt 0 view .LVU181
- 623 0118 354C     		ldr	r4, .L17+80
- 624 011a D4ED027A 		vldr.32	s15, [r4, #8]
- 625 011e 77EE877A 		vadd.f32	s15, s15, s14
- 626 0122 C4ED027A 		vstr.32	s15, [r4, #8]
- 197:Core/Src/Main/Interrupt.c **** 	TargetAngularV += AngularAcceleration;
- 627              		.loc 1 197 2 is_stmt 1 view .LVU182
- 628 0126 93ED007A 		vldr.32	s14, [r3]
- 629              		.loc 1 197 17 is_stmt 0 view .LVU183
- 630 012a 324B     		ldr	r3, .L17+84
- 631 012c D3ED007A 		vldr.32	s15, [r3]
- 632 0130 77EE877A 		vadd.f32	s15, s15, s14
- 633 0134 C3ED007A 		vstr.32	s15, [r3]
- 198:Core/Src/Main/Interrupt.c **** 
- 199:Core/Src/Main/Interrupt.c **** 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
- 634              		.loc 1 199 2 is_stmt 1 view .LVU184
- 635              		.loc 1 199 42 is_stmt 0 view .LVU185
- 636 0138 D4ED026A 		vldr.32	s13, [r4, #8]
- 637              		.loc 1 199 66 view .LVU186
- 638 013c 93ED007A 		vldr.32	s14, [r3]
- 639 0140 9FED2D6A 		vldr.32	s12, .L17+88
- 640 0144 27EE067A 		vmul.f32	s14, s14, s12
- 641              		.loc 1 199 80 view .LVU187
- 642 0148 27EE287A 		vmul.f32	s14, s14, s17
- 643              		.loc 1 199 49 view .LVU188
- 644 014c 36EEC77A 		vsub.f32	s14, s13, s14
- 645              		.loc 1 199 24 view .LVU189
- 646 0150 84ED017A 		vstr.32	s14, [r4, #4]
- 200:Core/Src/Main/Interrupt.c **** 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
- 647              		.loc 1 200 2 is_stmt 1 view .LVU190
- 648              		.loc 1 200 42 is_stmt 0 view .LVU191
- 649 0154 D3ED007A 		vldr.32	s15, [r3]
- 650 0158 67EE867A 		vmul.f32	s15, s15, s12
- 651              		.loc 1 200 73 view .LVU192
- 652 015c 94ED017A 		vldr.32	s14, [r4, #4]
- 653              		.loc 1 200 57 view .LVU193
- 654 0160 77EE877A 		vadd.f32	s15, s15, s14
- 655              		.loc 1 200 23 view .LVU194
- 656 0164 C4ED007A 		vstr.32	s15, [r4]
+ 113              		.loc 1 177 2 is_stmt 1 view .LVU31
+ 114              		.loc 1 177 31 is_stmt 0 view .LVU32
+ 115 006c 1A68     		ldr	r2, [r3]
+ 116              		.loc 1 177 48 view .LVU33
+ 117 006e 5968     		ldr	r1, [r3, #4]
+ 118              		.loc 1 177 37 view .LVU34
+ 119 0070 0A44     		add	r2, r2, r1
+ 120              		.loc 1 177 19 view .LVU35
+ 121 0072 9A60     		str	r2, [r3, #8]
+ 178:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 179:Core/Src/Main/Interrupt.c **** 
+ 180:Core/Src/Main/Interrupt.c **** #if 0
+ 181:Core/Src/Main/Interrupt.c **** 	//static float angle=0;
+ 182:Core/Src/Main/Interrupt.c **** 	volatile static float zg_last=0;
+ 183:Core/Src/Main/Interrupt.c **** 	volatile float zg_law;
+ 184:Core/Src/Main/Interrupt.c **** 	//uint8_t zgb,zgf;
+ 185:Core/Src/Main/Interrupt.c **** 	ZGyro = ReadIMU(0x37, 0x38);
+ 186:Core/Src/Main/Interrupt.c ****     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
+ 187:Core/Src/Main/Interrupt.c ****     AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
+ 188:Core/Src/Main/Interrupt.c ****     zg_last = zg_law;
+ 189:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
+ 190:Core/Src/Main/Interrupt.c **** 
+ 191:Core/Src/Main/Interrupt.c **** #else
+ 192:Core/Src/Main/Interrupt.c **** 	Update_IMU(&AngularV, &Angle); //メディアンフィルタとオフセットだけで何とか�
+ 122              		.loc 1 192 2 is_stmt 1 view .LVU36
+ 123 0074 9E49     		ldr	r1, .L13+40
+ 124 0076 9F48     		ldr	r0, .L13+44
+ 125 0078 FFF7FEFF 		bl	Update_IMU
+ 126              	.LVL0:
+ 193:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, AngularV);
+ 194:Core/Src/Main/Interrupt.c **** //	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+ 195:Core/Src/Main/Interrupt.c **** //	Angle += AngularV * T1;
+ 196:Core/Src/Main/Interrupt.c **** 
+ 197:Core/Src/Main/Interrupt.c **** #endif
+ 198:Core/Src/Main/Interrupt.c **** 	int wall_d =0,wall_l =0,wall_r =0, wall_f=0;
+ 127              		.loc 1 198 2 view .LVU37
+ 199:Core/Src/Main/Interrupt.c **** 		int ang_out=0;
+ 128              		.loc 1 199 3 view .LVU38
+ 200:Core/Src/Main/Interrupt.c **** #if 1
  201:Core/Src/Main/Interrupt.c **** 
- 202:Core/Src/Main/Interrupt.c **** 	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
- 657              		.loc 1 202 2 is_stmt 1 view .LVU195
- 658              		.loc 1 202 20 is_stmt 0 view .LVU196
- 659 0168 94ED000A 		vldr.32	s0, [r4]
- 660 016c D5ED000A 		vldr.32	s1, [r5]
- 661 0170 0420     		movs	r0, #4
- 662 0172 FFF7FEFF 		bl	PIDControl
- 663              	.LVL47:
- 664              		.loc 1 202 18 view .LVU197
- 665 0176 214E     		ldr	r6, .L17+92
- 666 0178 3060     		str	r0, [r6]
- 203:Core/Src/Main/Interrupt.c **** 	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
- 667              		.loc 1 203 2 is_stmt 1 view .LVU198
- 668              		.loc 1 203 21 is_stmt 0 view .LVU199
- 669 017a 94ED010A 		vldr.32	s0, [r4, #4]
- 670 017e D5ED010A 		vldr.32	s1, [r5, #4]
- 671 0182 0520     		movs	r0, #5
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 17
+ 202:Core/Src/Main/Interrupt.c **** 	if( Pid[A_VELO_PID].flag == 1 )
+ 129              		.loc 1 202 2 view .LVU39
+ 130              		.loc 1 202 21 is_stmt 0 view .LVU40
+ 131 007c 9E4B     		ldr	r3, .L13+48
+ 132 007e 9B6A     		ldr	r3, [r3, #40]
+ 133              		.loc 1 202 4 view .LVU41
+ 134 0080 012B     		cmp	r3, #1
+ 135 0082 00F08B80 		beq	.L8
+ 203:Core/Src/Main/Interrupt.c **** 	{
+ 204:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 205:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
+ 206:Core/Src/Main/Interrupt.c **** 	}
+ 207:Core/Src/Main/Interrupt.c **** 	else if( Pid[D_WALL_PID].flag == 1 )
+ 136              		.loc 1 207 7 is_stmt 1 view .LVU42
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 7
 
 
- 672 0184 FFF7FEFF 		bl	PIDControl
- 673              	.LVL48:
- 674 0188 0146     		mov	r1, r0
- 675              		.loc 1 203 19 view .LVU200
- 676 018a 1D4B     		ldr	r3, .L17+96
- 677 018c 1860     		str	r0, [r3]
- 204:Core/Src/Main/Interrupt.c **** 
- 205:Core/Src/Main/Interrupt.c **** 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
- 678              		.loc 1 205 2 is_stmt 1 view .LVU201
- 679 018e 3068     		ldr	r0, [r6]
- 680 0190 FFF7FEFF 		bl	Motor_Switch
- 681              	.LVL49:
- 206:Core/Src/Main/Interrupt.c **** }
- 682              		.loc 1 206 1 is_stmt 0 view .LVU202
- 683 0194 BDEC028B 		vldm	sp!, {d8}
- 684              	.LCFI3:
- 685              		.cfi_restore 80
- 686              		.cfi_restore 81
- 687              		.cfi_def_cfa_offset 24
- 688              	.LVL50:
- 689              		.loc 1 206 1 view .LVU203
- 690 0198 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 691              	.L18:
- 692 019a 00BFAFF3 		.align	3
- 692      0080
- 693              	.L17:
- 694 01a0 7B14AE47 		.word	1202590843
- 695 01a4 E17A843F 		.word	1065646817
- 696 01a8 AE47E17A 		.word	2061584302
- 697 01ac 14AEEF3F 		.word	1072672276
- 698 01b0 00040040 		.word	1073742848
- 699 01b4 00000000 		.word	PulseDisplacement
- 700 01b8 00080040 		.word	1073743872
- 701 01bc CD77813F 		.word	1065449421
- 702 01c0 00000000 		.word	CurrentVelocity
- 703 01c4 00000000 		.word	TotalPulse
- 704 01c8 00000000 		.word	ZGyro
- 705 01cc 00000000 		.word	zg_offset
- 706 01d0 00000000 		.word	convert_to_imu_angv
- 707 01d4 00000000 		.word	.LANCHOR1
- 708 01d8 00000000 		.word	AngularV
- 709 01dc 6F12833A 		.word	981668463
- 710 01e0 00000000 		.word	Angle
- 711 01e4 00000000 		.word	AngularAcceleration
- 712 01e8 00000000 		.word	AngularLeapsity
- 713 01ec 00000000 		.word	Acceleration
- 714 01f0 00000000 		.word	TargetVelocity
- 715 01f4 00000000 		.word	TargetAngularV
- 716 01f8 9A990942 		.word	1107925402
- 717 01fc 00000000 		.word	VelocityLeftOut
- 718 0200 00000000 		.word	VelocityRightOut
- 719              		.cfi_endproc
- 720              	.LFE239:
- 722              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
- 723              		.align	1
- 724              		.global	HAL_TIM_PeriodElapsedCallback
- 725              		.syntax unified
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 18
+ 137              		.loc 1 207 26 is_stmt 0 view .LVU43
+ 138 0086 9C4B     		ldr	r3, .L13+48
+ 139 0088 5B6D     		ldr	r3, [r3, #84]
+ 140              		.loc 1 207 9 view .LVU44
+ 141 008a 012B     		cmp	r3, #1
+ 142 008c 00F09780 		beq	.L9
+ 208:Core/Src/Main/Interrupt.c **** 	{
+ 209:Core/Src/Main/Interrupt.c **** 		wall_d = PIDControl( D_WALL_PID, Photo[SL], Photo[SIDE_R]+PhotoDiff);
+ 210:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
+ 211:Core/Src/Main/Interrupt.c **** 	}
+ 212:Core/Src/Main/Interrupt.c **** 	else if( Pid[L_WALL_PID].flag == 1 )
+ 143              		.loc 1 212 7 is_stmt 1 view .LVU45
+ 144              		.loc 1 212 26 is_stmt 0 view .LVU46
+ 145 0090 994B     		ldr	r3, .L13+48
+ 146 0092 D3F88030 		ldr	r3, [r3, #128]
+ 147              		.loc 1 212 9 view .LVU47
+ 148 0096 012B     		cmp	r3, #1
+ 149 0098 00F0B080 		beq	.L10
+ 213:Core/Src/Main/Interrupt.c **** 	{
+ 214:Core/Src/Main/Interrupt.c **** 		wall_l = PIDControl( L_WALL_PID,  Photo[SL], TargetPhoto[SL]);
+ 215:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;
+ 216:Core/Src/Main/Interrupt.c **** 	}
+ 217:Core/Src/Main/Interrupt.c **** 	else if( Pid[R_WALL_PID].flag == 1 )
+ 150              		.loc 1 217 7 is_stmt 1 view .LVU48
+ 151              		.loc 1 217 26 is_stmt 0 view .LVU49
+ 152 009c 964B     		ldr	r3, .L13+48
+ 153 009e D3F8AC30 		ldr	r3, [r3, #172]
+ 154              		.loc 1 217 9 view .LVU50
+ 155 00a2 012B     		cmp	r3, #1
+ 156 00a4 00F0C580 		beq	.L11
+ 218:Core/Src/Main/Interrupt.c **** 	{
+ 219:Core/Src/Main/Interrupt.c **** 		wall_r = PIDControl( R_WALL_PID,  TargetPhoto[SIDE_R], Photo[SIDE_R]);
+ 220:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;
+ 221:Core/Src/Main/Interrupt.c **** 	}
+ 222:Core/Src/Main/Interrupt.c **** 	else if( Pid[F_WALL_PID].flag == 1)
+ 157              		.loc 1 222 7 is_stmt 1 view .LVU51
+ 158              		.loc 1 222 26 is_stmt 0 view .LVU52
+ 159 00a8 934B     		ldr	r3, .L13+48
+ 160 00aa D3F88831 		ldr	r3, [r3, #392]
+ 161              		.loc 1 222 9 view .LVU53
+ 162 00ae 012B     		cmp	r3, #1
+ 163 00b0 00F0DA80 		beq	.L12
+ 164              	.LVL1:
+ 165              	.L3:
+ 223:Core/Src/Main/Interrupt.c **** 	{
+ 224:Core/Src/Main/Interrupt.c **** 		wall_f = PIDControl( F_WALL_PID,   3800, (	(Photo[FR]+Photo[FL])));
+ 225:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
+ 226:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 227:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
+ 228:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
+ 229:Core/Src/Main/Interrupt.c **** 	}
+ 230:Core/Src/Main/Interrupt.c **** #else
+ 231:Core/Src/Main/Interrupt.c **** 	switch(Control_Mode)
+ 232:Core/Src/Main/Interrupt.c **** 	{
+ 233:Core/Src/Main/Interrupt.c **** 	case A_VELO_PID:
+ 234:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( Control_Mode,  TargetAngle, Angle);
+ 235:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;	//ひとまずこの辺の値の微調整は置いておく。�
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 8
 
 
- 726              		.thumb
- 727              		.thumb_func
- 729              	HAL_TIM_PeriodElapsedCallback:
- 730              	.LVL51:
- 731              	.LFB240:
- 207:Core/Src/Main/Interrupt.c **** 
- 208:Core/Src/Main/Interrupt.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
- 209:Core/Src/Main/Interrupt.c **** {
- 732              		.loc 1 209 1 is_stmt 1 view -0
- 733              		.cfi_startproc
- 734              		@ args = 0, pretend = 0, frame = 16
- 735              		@ frame_needed = 0, uses_anonymous_args = 0
- 736              		.loc 1 209 1 is_stmt 0 view .LVU205
- 737 0000 70B5     		push	{r4, r5, r6, lr}
- 738              	.LCFI4:
- 739              		.cfi_def_cfa_offset 16
- 740              		.cfi_offset 4, -16
- 741              		.cfi_offset 5, -12
- 742              		.cfi_offset 6, -8
- 743              		.cfi_offset 14, -4
- 744 0002 84B0     		sub	sp, sp, #16
- 745              	.LCFI5:
- 746              		.cfi_def_cfa_offset 32
- 747 0004 0446     		mov	r4, r0
- 210:Core/Src/Main/Interrupt.c **** 	if( htim == &htim1)
- 748              		.loc 1 210 2 is_stmt 1 view .LVU206
- 749              		.loc 1 210 4 is_stmt 0 view .LVU207
- 750 0006 2B4B     		ldr	r3, .L30
- 751 0008 9842     		cmp	r0, r3
- 752 000a 04D0     		beq	.L27
- 753              	.LVL52:
- 754              	.L20:
- 211:Core/Src/Main/Interrupt.c **** 	{
- 212:Core/Src/Main/Interrupt.c **** 
- 213:Core/Src/Main/Interrupt.c **** 		switch(IT_mode){
- 214:Core/Src/Main/Interrupt.c **** 		case EXPLORE:
- 215:Core/Src/Main/Interrupt.c **** 			Explore_IT();
- 216:Core/Src/Main/Interrupt.c **** 			break;
- 217:Core/Src/Main/Interrupt.c **** 		case WRITINGFREE:
- 218:Core/Src/Main/Interrupt.c **** 			WritingFree_IT();
- 219:Core/Src/Main/Interrupt.c **** 			break;
- 220:Core/Src/Main/Interrupt.c **** 		case IMU_TEST:
- 221:Core/Src/Main/Interrupt.c **** 
- 222:Core/Src/Main/Interrupt.c **** 			if(timer1 < 5000)
- 223:Core/Src/Main/Interrupt.c **** 			{
- 224:Core/Src/Main/Interrupt.c **** 
- 225:Core/Src/Main/Interrupt.c **** 				Update_IMU(&AngularV, &Angle);
- 226:Core/Src/Main/Interrupt.c **** //				debugVL[timer1] = Angle;
- 227:Core/Src/Main/Interrupt.c **** 				timer1 += t;
- 228:Core/Src/Main/Interrupt.c **** 			}
- 229:Core/Src/Main/Interrupt.c **** 			else t = 0;
- 230:Core/Src/Main/Interrupt.c **** 			break;
- 231:Core/Src/Main/Interrupt.c **** 		default :
- 232:Core/Src/Main/Interrupt.c **** 			break;
- 233:Core/Src/Main/Interrupt.c **** 		}
- 234:Core/Src/Main/Interrupt.c **** 	}
- 235:Core/Src/Main/Interrupt.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 19
+ 236:Core/Src/Main/Interrupt.c **** 		ChangeLED(7);
+ 237:Core/Src/Main/Interrupt.c **** 		break;
+ 238:Core/Src/Main/Interrupt.c **** 	case D_WALL_PID:
+ 239:Core/Src/Main/Interrupt.c **** 		wall_d = PIDControl( Control_Mode, Photo[SL], Photo[SIDE_R]+PhotoDiff);	//左に寄ってたら+�
+ 240:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;//0.002 だと速さはちょうどいいけど細かさが�
+ 241:Core/Src/Main/Interrupt.c **** 		ChangeLED(5);
+ 242:Core/Src/Main/Interrupt.c **** 		break;
+ 243:Core/Src/Main/Interrupt.c **** 	case L_WALL_PID:
+ 244:Core/Src/Main/Interrupt.c **** 		wall_l = PIDControl( Control_Mode,  Photo[SL], TargetPhoto[SL]);
+ 245:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;//0.002 だと速さはちょうどいいけど細かさが�
+ 246:Core/Src/Main/Interrupt.c **** 		ChangeLED(4);
+ 247:Core/Src/Main/Interrupt.c **** 		break;
+ 248:Core/Src/Main/Interrupt.c **** 	case R_WALL_PID :
+ 249:Core/Src/Main/Interrupt.c **** 		wall_r = PIDControl( Control_Mode,  TargetPhoto[SIDE_R], Photo[SIDE_R]);			//右に寄ってた�
+ 250:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;//0.002 だと速さはちょうどいいけど細かさが�
+ 251:Core/Src/Main/Interrupt.c **** 		ChangeLED(1);
+ 252:Core/Src/Main/Interrupt.c **** 		break;
+ 253:Core/Src/Main/Interrupt.c **** 	case F_WALL_PID : //前壁補正のための制御. ミックスはよくない.
+ 254:Core/Src/Main/Interrupt.c **** 		wall_f = PIDControl( Control_Mode,   3500, (	(Photo[FR]+Photo[FL])));
+ 255:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
+ 256:Core/Src/Main/Interrupt.c **** 		ChangeLED(2);
+ 257:Core/Src/Main/Interrupt.c **** 
+ 258:Core/Src/Main/Interrupt.c **** 		break;
+ 259:Core/Src/Main/Interrupt.c **** 	case NOT_CTRL_PID:
+ 260:Core/Src/Main/Interrupt.c **** 		break;
+ 261:Core/Src/Main/Interrupt.c **** 	default :
+ 262:Core/Src/Main/Interrupt.c **** 		break;
+ 263:Core/Src/Main/Interrupt.c **** 	}
+ 264:Core/Src/Main/Interrupt.c **** #endif
+ 265:Core/Src/Main/Interrupt.c **** 	TargetVelocity[BODY] += Acceleration;
+ 166              		.loc 1 265 2 is_stmt 1 view .LVU54
+ 167 00b4 914B     		ldr	r3, .L13+52
+ 168 00b6 93ED007A 		vldr.32	s14, [r3]
+ 169              		.loc 1 265 23 is_stmt 0 view .LVU55
+ 170 00ba 914C     		ldr	r4, .L13+56
+ 171 00bc D4ED027A 		vldr.32	s15, [r4, #8]
+ 172 00c0 77EE877A 		vadd.f32	s15, s15, s14
+ 173 00c4 C4ED027A 		vstr.32	s15, [r4, #8]
+ 266:Core/Src/Main/Interrupt.c **** 	//AngularAcceleration += AngularLeapsity;
+ 267:Core/Src/Main/Interrupt.c **** 	TargetAngularV += AngularAcceleration;
+ 174              		.loc 1 267 2 is_stmt 1 view .LVU56
+ 175 00c8 8E4B     		ldr	r3, .L13+60
+ 176 00ca 93ED007A 		vldr.32	s14, [r3]
+ 177              		.loc 1 267 17 is_stmt 0 view .LVU57
+ 178 00ce 8E4B     		ldr	r3, .L13+64
+ 179 00d0 D3ED007A 		vldr.32	s15, [r3]
+ 180 00d4 77EE877A 		vadd.f32	s15, s15, s14
+ 181 00d8 C3ED007A 		vstr.32	s15, [r3]
+ 268:Core/Src/Main/Interrupt.c **** 	//TargetAngularV += AngularAcceleration;
+ 269:Core/Src/Main/Interrupt.c **** 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
+ 182              		.loc 1 269 2 is_stmt 1 view .LVU58
+ 183              		.loc 1 269 42 is_stmt 0 view .LVU59
+ 184 00dc D4ED026A 		vldr.32	s13, [r4, #8]
+ 185              		.loc 1 269 66 view .LVU60
+ 186 00e0 93ED007A 		vldr.32	s14, [r3]
+ 187 00e4 9FED896A 		vldr.32	s12, .L13+68
+ 188 00e8 27EE067A 		vmul.f32	s14, s14, s12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 9
 
 
- 236:Core/Src/Main/Interrupt.c **** 	if( htim == &htim8)
- 755              		.loc 1 236 2 is_stmt 1 view .LVU208
- 756              		.loc 1 236 4 is_stmt 0 view .LVU209
- 757 000c 2A4B     		ldr	r3, .L30+4
- 758 000e 9C42     		cmp	r4, r3
- 759 0010 24D0     		beq	.L28
- 760              	.LVL53:
- 761              	.L19:
- 237:Core/Src/Main/Interrupt.c **** 	{
- 238:Core/Src/Main/Interrupt.c **** 		//timer8 += t;
- 239:Core/Src/Main/Interrupt.c **** 
- 240:Core/Src/Main/Interrupt.c **** 		//壁センサデータの更新
- 241:Core/Src/Main/Interrupt.c **** 		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
- 242:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
- 243:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
- 244:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
- 245:Core/Src/Main/Interrupt.c **** 		#if 1
- 246:Core/Src/Main/Interrupt.c **** 			uint32_t sample[4]={
- 247:Core/Src/Main/Interrupt.c **** 				adc2[0],
- 248:Core/Src/Main/Interrupt.c **** 				adc1[0],
- 249:Core/Src/Main/Interrupt.c **** 				adc2[1],
- 250:Core/Src/Main/Interrupt.c **** 				adc1[1]
- 251:Core/Src/Main/Interrupt.c **** 			};
- 252:Core/Src/Main/Interrupt.c **** 			getPhotoSampleValue_uint32(&sample[0]);
- 253:Core/Src/Main/Interrupt.c **** 		#else
- 254:Core/Src/Main/Interrupt.c **** 			getPhotoSampleValue_float(&Photo[0]);
- 255:Core/Src/Main/Interrupt.c **** 		#endif
- 256:Core/Src/Main/Interrupt.c **** 	}
- 257:Core/Src/Main/Interrupt.c **** }
- 762              		.loc 1 257 1 view .LVU210
- 763 0012 04B0     		add	sp, sp, #16
- 764              	.LCFI6:
- 765              		.cfi_remember_state
- 766              		.cfi_def_cfa_offset 16
- 767              		@ sp needed
- 768 0014 70BD     		pop	{r4, r5, r6, pc}
- 769              	.LVL54:
- 770              	.L27:
- 771              	.LCFI7:
- 772              		.cfi_restore_state
- 213:Core/Src/Main/Interrupt.c **** 		case EXPLORE:
- 773              		.loc 1 213 3 is_stmt 1 view .LVU211
- 774 0016 294B     		ldr	r3, .L30+8
- 775 0018 1B68     		ldr	r3, [r3]
- 776 001a 062B     		cmp	r3, #6
- 777 001c 0DD0     		beq	.L21
- 778 001e 072B     		cmp	r3, #7
- 779 0020 0ED0     		beq	.L22
- 780 0022 052B     		cmp	r3, #5
- 781 0024 F2D1     		bne	.L20
- 222:Core/Src/Main/Interrupt.c **** 			{
- 782              		.loc 1 222 4 view .LVU212
- 222:Core/Src/Main/Interrupt.c **** 			{
- 783              		.loc 1 222 14 is_stmt 0 view .LVU213
- 784 0026 264B     		ldr	r3, .L30+12
- 785 0028 1A68     		ldr	r2, [r3]
- 222:Core/Src/Main/Interrupt.c **** 			{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 20
+ 189              		.loc 1 269 80 view .LVU61
+ 190 00ec F6EE007A 		vmov.f32	s15, #5.0e-1
+ 191 00f0 27EE277A 		vmul.f32	s14, s14, s15
+ 192              		.loc 1 269 49 view .LVU62
+ 193 00f4 36EEC77A 		vsub.f32	s14, s13, s14
+ 194              		.loc 1 269 24 view .LVU63
+ 195 00f8 84ED017A 		vstr.32	s14, [r4, #4]
+ 270:Core/Src/Main/Interrupt.c **** 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
+ 196              		.loc 1 270 2 is_stmt 1 view .LVU64
+ 197              		.loc 1 270 42 is_stmt 0 view .LVU65
+ 198 00fc D3ED007A 		vldr.32	s15, [r3]
+ 199 0100 67EE867A 		vmul.f32	s15, s15, s12
+ 200              		.loc 1 270 73 view .LVU66
+ 201 0104 94ED017A 		vldr.32	s14, [r4, #4]
+ 202              		.loc 1 270 57 view .LVU67
+ 203 0108 77EE877A 		vadd.f32	s15, s15, s14
+ 204              		.loc 1 270 23 view .LVU68
+ 205 010c C4ED007A 		vstr.32	s15, [r4]
+ 271:Core/Src/Main/Interrupt.c **** 
+ 272:Core/Src/Main/Interrupt.c **** 	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 206              		.loc 1 272 2 is_stmt 1 view .LVU69
+ 207              		.loc 1 272 26 is_stmt 0 view .LVU70
+ 208 0110 9FED7F1A 		vldr.32	s2, .L13+72
+ 209 0114 DFED7F0A 		vldr.32	s1, .L13+76
+ 210 0118 B0EE080A 		vmov.f32	s0, #3.0e+0
+ 211 011c 7E4B     		ldr	r3, .L13+80
+ 212 011e 9868     		ldr	r0, [r3, #8]
+ 213 0120 FFF7FEFF 		bl	ADCToBatteryVoltage
+ 214              	.LVL2:
+ 215 0124 10EE100A 		vmov	r0, s0
+ 216              	.LVL3:
+ 273:Core/Src/Main/Interrupt.c **** 	float voltage_maintainer = BATTERY_MAX/battery_voltage;
+ 217              		.loc 1 273 2 is_stmt 1 view .LVU71
+ 218              		.loc 1 273 40 is_stmt 0 view .LVU72
+ 219 0128 FFF7FEFF 		bl	__aeabi_f2d
+ 220              	.LVL4:
+ 221              		.loc 1 273 40 view .LVU73
+ 222 012c 0246     		mov	r2, r0
+ 223 012e 0B46     		mov	r3, r1
+ 224 0130 65A1     		adr	r1, .L13
+ 225 0132 D1E90001 		ldrd	r0, [r1]
+ 226 0136 FFF7FEFF 		bl	__aeabi_ddiv
+ 227              	.LVL5:
+ 228              		.loc 1 273 8 view .LVU74
+ 229 013a FFF7FEFF 		bl	__aeabi_d2f
+ 230              	.LVL6:
+ 231 013e 08EE100A 		vmov	s16, r0
+ 232              	.LVL7:
+ 274:Core/Src/Main/Interrupt.c **** 	
+ 275:Core/Src/Main/Interrupt.c **** 	VelocityLeftOut = voltage_maintainer * PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVeloci
+ 233              		.loc 1 275 2 is_stmt 1 view .LVU75
+ 234              		.loc 1 275 41 is_stmt 0 view .LVU76
+ 235 0142 94ED000A 		vldr.32	s0, [r4]
+ 236 0146 684E     		ldr	r6, .L13+32
+ 237 0148 D6ED000A 		vldr.32	s1, [r6]
+ 238 014c 0420     		movs	r0, #4
+ 239              	.LVL8:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 10
 
 
- 786              		.loc 1 222 6 view .LVU214
- 787 002a 41F28733 		movw	r3, #4999
- 788 002e 9A42     		cmp	r2, r3
- 789 0030 09DD     		ble	.L29
- 229:Core/Src/Main/Interrupt.c **** 			break;
- 790              		.loc 1 229 9 is_stmt 1 view .LVU215
- 229:Core/Src/Main/Interrupt.c **** 			break;
- 791              		.loc 1 229 11 is_stmt 0 view .LVU216
- 792 0032 244B     		ldr	r3, .L30+16
- 793 0034 0022     		movs	r2, #0
- 794 0036 1A60     		str	r2, [r3]
- 795 0038 E8E7     		b	.L20
- 796              	.L21:
- 215:Core/Src/Main/Interrupt.c **** 			break;
- 797              		.loc 1 215 4 is_stmt 1 view .LVU217
- 798 003a FFF7FEFF 		bl	Explore_IT
- 799              	.LVL55:
- 216:Core/Src/Main/Interrupt.c **** 		case WRITINGFREE:
- 800              		.loc 1 216 4 view .LVU218
- 801 003e E5E7     		b	.L20
- 802              	.LVL56:
- 803              	.L22:
- 218:Core/Src/Main/Interrupt.c **** 			break;
- 804              		.loc 1 218 4 view .LVU219
- 805 0040 FFF7FEFF 		bl	WritingFree_IT
- 806              	.LVL57:
- 219:Core/Src/Main/Interrupt.c **** 		case IMU_TEST:
- 807              		.loc 1 219 4 view .LVU220
- 808 0044 E2E7     		b	.L20
- 809              	.LVL58:
- 810              	.L29:
- 225:Core/Src/Main/Interrupt.c **** //				debugVL[timer1] = Angle;
- 811              		.loc 1 225 5 view .LVU221
- 812 0046 2049     		ldr	r1, .L30+20
- 813 0048 2048     		ldr	r0, .L30+24
- 814              	.LVL59:
- 225:Core/Src/Main/Interrupt.c **** //				debugVL[timer1] = Angle;
- 815              		.loc 1 225 5 is_stmt 0 view .LVU222
- 816 004a FFF7FEFF 		bl	Update_IMU
- 817              	.LVL60:
- 227:Core/Src/Main/Interrupt.c **** 			}
- 818              		.loc 1 227 5 is_stmt 1 view .LVU223
- 227:Core/Src/Main/Interrupt.c **** 			}
- 819              		.loc 1 227 12 is_stmt 0 view .LVU224
- 820 004e 1C4A     		ldr	r2, .L30+12
- 821 0050 1368     		ldr	r3, [r2]
- 822 0052 1C49     		ldr	r1, .L30+16
- 823 0054 0968     		ldr	r1, [r1]
- 824 0056 0B44     		add	r3, r3, r1
- 825 0058 1360     		str	r3, [r2]
- 826 005a D7E7     		b	.L20
- 827              	.L28:
- 828              	.LBB2:
- 241:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
- 829              		.loc 1 241 3 is_stmt 1 view .LVU225
- 241:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
- 830              		.loc 1 241 42 is_stmt 0 view .LVU226
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 21
+ 240              		.loc 1 275 41 view .LVU77
+ 241 014e FFF7FEFF 		bl	PIDControl
+ 242              	.LVL9:
+ 243 0152 07EE900A 		vmov	s15, r0	@ int
+ 244              		.loc 1 275 39 view .LVU78
+ 245 0156 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 246 015a 67EE887A 		vmul.f32	s15, s15, s16
+ 247              		.loc 1 275 18 view .LVU79
+ 248 015e 6F4D     		ldr	r5, .L13+84
+ 249 0160 FDEEE77A 		vcvt.s32.f32	s15, s15
+ 250 0164 C5ED007A 		vstr.32	s15, [r5]	@ int
+ 276:Core/Src/Main/Interrupt.c **** 	VelocityRightOut = voltage_maintainer * PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelo
+ 251              		.loc 1 276 2 is_stmt 1 view .LVU80
+ 252              		.loc 1 276 42 is_stmt 0 view .LVU81
+ 253 0168 94ED010A 		vldr.32	s0, [r4, #4]
+ 254 016c D6ED010A 		vldr.32	s1, [r6, #4]
+ 255 0170 0520     		movs	r0, #5
+ 256 0172 FFF7FEFF 		bl	PIDControl
+ 257              	.LVL10:
+ 258 0176 07EE900A 		vmov	s15, r0	@ int
+ 259              		.loc 1 276 40 view .LVU82
+ 260 017a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 261 017e 67EE887A 		vmul.f32	s15, s15, s16
+ 262              		.loc 1 276 19 view .LVU83
+ 263 0182 FDEEE77A 		vcvt.s32.f32	s15, s15
+ 264 0186 17EE901A 		vmov	r1, s15	@ int
+ 265 018a 654B     		ldr	r3, .L13+88
+ 266 018c C3ED007A 		vstr.32	s15, [r3]	@ int
+ 277:Core/Src/Main/Interrupt.c **** 	// VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+ 278:Core/Src/Main/Interrupt.c **** 	// VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+ 279:Core/Src/Main/Interrupt.c **** 
+ 280:Core/Src/Main/Interrupt.c **** 	
+ 281:Core/Src/Main/Interrupt.c **** 	//モータに出力
+ 282:Core/Src/Main/Interrupt.c **** 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
+ 267              		.loc 1 282 2 is_stmt 1 view .LVU84
+ 268 0190 2868     		ldr	r0, [r5]
+ 269 0192 FFF7FEFF 		bl	Motor_Switch
+ 270              	.LVL11:
+ 283:Core/Src/Main/Interrupt.c **** }
+ 271              		.loc 1 283 1 is_stmt 0 view .LVU85
+ 272 0196 BDEC028B 		vldm	sp!, {d8}
+ 273              	.LCFI2:
+ 274              		.cfi_remember_state
+ 275              		.cfi_restore 80
+ 276              		.cfi_restore 81
+ 277              		.cfi_def_cfa_offset 16
+ 278              	.LVL12:
+ 279              		.loc 1 283 1 view .LVU86
+ 280 019a 70BD     		pop	{r4, r5, r6, pc}
+ 281              	.LVL13:
+ 282              	.L8:
+ 283              	.LCFI3:
+ 284              		.cfi_restore_state
+ 204:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
+ 285              		.loc 1 204 3 is_stmt 1 view .LVU87
+ 204:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
+ 286              		.loc 1 204 13 is_stmt 0 view .LVU88
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 11
 
 
- 831 005c 1C4C     		ldr	r4, .L30+28
- 832              	.LVL61:
- 241:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
- 833              		.loc 1 241 15 view .LVU227
- 834 005e 0022     		movs	r2, #0
- 835 0060 2168     		ldr	r1, [r4]
- 836 0062 0A20     		movs	r0, #10
- 837 0064 FFF7FEFF 		bl	GetWallDataAverage
- 838              	.LVL62:
- 241:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
- 839              		.loc 1 241 13 view .LVU228
- 840 0068 1A4E     		ldr	r6, .L30+32
- 841 006a 86ED000A 		vstr.32	s0, [r6]
- 242:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
- 842              		.loc 1 242 3 is_stmt 1 view .LVU229
- 242:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
- 843              		.loc 1 242 19 is_stmt 0 view .LVU230
- 844 006e 0122     		movs	r2, #1
- 845 0070 6168     		ldr	r1, [r4, #4]
- 846 0072 0A20     		movs	r0, #10
- 847 0074 FFF7FEFF 		bl	GetWallDataAverage
- 848              	.LVL63:
- 242:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
- 849              		.loc 1 242 17 view .LVU231
- 850 0078 86ED010A 		vstr.32	s0, [r6, #4]
- 243:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
- 851              		.loc 1 243 3 is_stmt 1 view .LVU232
- 243:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
- 852              		.loc 1 243 42 is_stmt 0 view .LVU233
- 853 007c 164D     		ldr	r5, .L30+36
- 243:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
- 854              		.loc 1 243 15 view .LVU234
- 855 007e 0222     		movs	r2, #2
- 856 0080 2968     		ldr	r1, [r5]
- 857 0082 0A20     		movs	r0, #10
- 858 0084 FFF7FEFF 		bl	GetWallDataAverage
- 859              	.LVL64:
- 243:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
- 860              		.loc 1 243 13 view .LVU235
- 861 0088 86ED020A 		vstr.32	s0, [r6, #8]
- 244:Core/Src/Main/Interrupt.c **** 		#if 1
- 862              		.loc 1 244 3 is_stmt 1 view .LVU236
- 244:Core/Src/Main/Interrupt.c **** 		#if 1
- 863              		.loc 1 244 15 is_stmt 0 view .LVU237
- 864 008c 0322     		movs	r2, #3
- 865 008e 6968     		ldr	r1, [r5, #4]
- 866 0090 0A20     		movs	r0, #10
- 867 0092 FFF7FEFF 		bl	GetWallDataAverage
- 868              	.LVL65:
- 244:Core/Src/Main/Interrupt.c **** 		#if 1
- 869              		.loc 1 244 13 view .LVU238
- 870 0096 86ED030A 		vstr.32	s0, [r6, #12]
- 246:Core/Src/Main/Interrupt.c **** 				adc2[0],
- 871              		.loc 1 246 4 is_stmt 1 view .LVU239
- 247:Core/Src/Main/Interrupt.c **** 				adc1[0],
- 872              		.loc 1 247 9 is_stmt 0 view .LVU240
- 873 009a 2B68     		ldr	r3, [r5]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 22
+ 287 019c 614B     		ldr	r3, .L13+92
+ 288 019e 93ED000A 		vldr.32	s0, [r3]
+ 289 01a2 534B     		ldr	r3, .L13+40
+ 290 01a4 D3ED000A 		vldr.32	s1, [r3]
+ 291 01a8 0020     		movs	r0, #0
+ 292 01aa FFF7FEFF 		bl	PIDControl
+ 293              	.LVL14:
+ 294 01ae 07EE900A 		vmov	s15, r0	@ int
+ 295              	.LVL15:
+ 205:Core/Src/Main/Interrupt.c **** 	}
+ 296              		.loc 1 205 3 is_stmt 1 view .LVU89
+ 205:Core/Src/Main/Interrupt.c **** 	}
+ 297              		.loc 1 205 20 is_stmt 0 view .LVU90
+ 298 01b2 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 205:Core/Src/Main/Interrupt.c **** 	}
+ 299              		.loc 1 205 18 view .LVU91
+ 300 01b6 544B     		ldr	r3, .L13+64
+ 301 01b8 C3ED007A 		vstr.32	s15, [r3]
+ 302 01bc 7AE7     		b	.L3
+ 303              	.LVL16:
+ 304              	.L9:
+ 209:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
+ 305              		.loc 1 209 3 is_stmt 1 view .LVU92
+ 209:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
+ 306              		.loc 1 209 52 is_stmt 0 view .LVU93
+ 307 01be 5A4B     		ldr	r3, .L13+96
+ 308 01c0 D3ED010A 		vldr.32	s1, [r3, #4]
+ 209:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_d*0.001;
+ 309              		.loc 1 209 12 view .LVU94
+ 310 01c4 594A     		ldr	r2, .L13+100
+ 311 01c6 D2ED007A 		vldr.32	s15, [r2]
+ 312 01ca 70EEA70A 		vadd.f32	s1, s1, s15
+ 313 01ce 93ED020A 		vldr.32	s0, [r3, #8]
+ 314 01d2 0120     		movs	r0, #1
+ 315 01d4 FFF7FEFF 		bl	PIDControl
+ 316              	.LVL17:
+ 317 01d8 07EE900A 		vmov	s15, r0	@ int
+ 318              	.LVL18:
+ 210:Core/Src/Main/Interrupt.c **** 	}
+ 319              		.loc 1 210 3 is_stmt 1 view .LVU95
+ 210:Core/Src/Main/Interrupt.c **** 	}
+ 320              		.loc 1 210 20 is_stmt 0 view .LVU96
+ 321 01dc F8EEE77A 		vcvt.f32.s32	s15, s15
+ 322 01e0 17EE900A 		vmov	r0, s15
+ 323              	.LVL19:
+ 210:Core/Src/Main/Interrupt.c **** 	}
+ 324              		.loc 1 210 20 view .LVU97
+ 325 01e4 FFF7FEFF 		bl	__aeabi_f2d
+ 326              	.LVL20:
+ 210:Core/Src/Main/Interrupt.c **** 	}
+ 327              		.loc 1 210 33 view .LVU98
+ 328 01e8 39A3     		adr	r3, .L13+8
+ 329 01ea D3E90023 		ldrd	r2, [r3]
+ 330 01ee FFF7FEFF 		bl	__aeabi_dmul
+ 331              	.LVL21:
+ 332 01f2 FFF7FEFF 		bl	__aeabi_d2f
+ 333              	.LVL22:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 12
 
 
- 246:Core/Src/Main/Interrupt.c **** 				adc2[0],
- 874              		.loc 1 246 13 view .LVU241
- 875 009c 0093     		str	r3, [sp]
- 248:Core/Src/Main/Interrupt.c **** 				adc2[1],
- 876              		.loc 1 248 9 view .LVU242
- 877 009e 2368     		ldr	r3, [r4]
- 246:Core/Src/Main/Interrupt.c **** 				adc2[0],
- 878              		.loc 1 246 13 view .LVU243
- 879 00a0 0193     		str	r3, [sp, #4]
- 249:Core/Src/Main/Interrupt.c **** 				adc1[1]
- 880              		.loc 1 249 9 view .LVU244
- 881 00a2 6B68     		ldr	r3, [r5, #4]
- 246:Core/Src/Main/Interrupt.c **** 				adc2[0],
- 882              		.loc 1 246 13 view .LVU245
- 883 00a4 0293     		str	r3, [sp, #8]
- 250:Core/Src/Main/Interrupt.c **** 			};
- 884              		.loc 1 250 9 view .LVU246
- 885 00a6 6368     		ldr	r3, [r4, #4]
- 246:Core/Src/Main/Interrupt.c **** 				adc2[0],
- 886              		.loc 1 246 13 view .LVU247
- 887 00a8 0393     		str	r3, [sp, #12]
- 252:Core/Src/Main/Interrupt.c **** 		#else
- 888              		.loc 1 252 4 is_stmt 1 view .LVU248
- 889 00aa 6846     		mov	r0, sp
- 890 00ac FFF7FEFF 		bl	getPhotoSampleValue_uint32
- 891              	.LVL66:
- 892              	.LBE2:
- 893              		.loc 1 257 1 is_stmt 0 view .LVU249
- 894 00b0 AFE7     		b	.L19
- 895              	.L31:
- 896 00b2 00BF     		.align	2
- 897              	.L30:
- 898 00b4 00000000 		.word	htim1
- 899 00b8 00000000 		.word	htim8
- 900 00bc 00000000 		.word	.LANCHOR2
- 901 00c0 00000000 		.word	.LANCHOR3
- 902 00c4 00000000 		.word	.LANCHOR4
- 903 00c8 00000000 		.word	Angle
- 904 00cc 00000000 		.word	AngularV
- 905 00d0 00000000 		.word	adc1
- 906 00d4 00000000 		.word	Photo
- 907 00d8 00000000 		.word	adc2
- 908              		.cfi_endproc
- 909              	.LFE240:
- 911              		.global	log_velocity
- 912              		.global	convert_to_imu_yaccel
- 913              		.global	convert_to_angularv
- 914              		.global	convert_to_velocity
- 915              		.global	dbc
- 916              		.global	debugVR
- 917              		.global	debugVL
- 918              		.global	velodebug_flag
- 919              		.global	IT_mode
- 920              		.global	t
- 921              		.global	timer8
- 922              		.global	timer1
- 923              		.section	.bss.IT_mode,"aw",%nobits
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 23
+ 210:Core/Src/Main/Interrupt.c **** 	}
+ 334              		.loc 1 210 18 view .LVU99
+ 335 01f6 444B     		ldr	r3, .L13+64
+ 336 01f8 1860     		str	r0, [r3]	@ float
+ 337 01fa 5BE7     		b	.L3
+ 338              	.LVL23:
+ 339              	.L10:
+ 214:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;
+ 340              		.loc 1 214 3 is_stmt 1 view .LVU100
+ 214:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_l*0.001;
+ 341              		.loc 1 214 12 is_stmt 0 view .LVU101
+ 342 01fc 4C4B     		ldr	r3, .L13+104
+ 343 01fe D3ED020A 		vldr.32	s1, [r3, #8]
+ 344 0202 494B     		ldr	r3, .L13+96
+ 345 0204 93ED020A 		vldr.32	s0, [r3, #8]
+ 346 0208 0220     		movs	r0, #2
+ 347 020a FFF7FEFF 		bl	PIDControl
+ 348              	.LVL24:
+ 349 020e 07EE900A 		vmov	s15, r0	@ int
+ 350              	.LVL25:
+ 215:Core/Src/Main/Interrupt.c **** 	}
+ 351              		.loc 1 215 3 is_stmt 1 view .LVU102
+ 215:Core/Src/Main/Interrupt.c **** 	}
+ 352              		.loc 1 215 20 is_stmt 0 view .LVU103
+ 353 0212 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 354 0216 17EE900A 		vmov	r0, s15
+ 355              	.LVL26:
+ 215:Core/Src/Main/Interrupt.c **** 	}
+ 356              		.loc 1 215 20 view .LVU104
+ 357 021a FFF7FEFF 		bl	__aeabi_f2d
+ 358              	.LVL27:
+ 215:Core/Src/Main/Interrupt.c **** 	}
+ 359              		.loc 1 215 33 view .LVU105
+ 360 021e 2CA3     		adr	r3, .L13+8
+ 361 0220 D3E90023 		ldrd	r2, [r3]
+ 362 0224 FFF7FEFF 		bl	__aeabi_dmul
+ 363              	.LVL28:
+ 364 0228 FFF7FEFF 		bl	__aeabi_d2f
+ 365              	.LVL29:
+ 215:Core/Src/Main/Interrupt.c **** 	}
+ 366              		.loc 1 215 18 view .LVU106
+ 367 022c 364B     		ldr	r3, .L13+64
+ 368 022e 1860     		str	r0, [r3]	@ float
+ 369 0230 40E7     		b	.L3
+ 370              	.LVL30:
+ 371              	.L11:
+ 219:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;
+ 372              		.loc 1 219 3 is_stmt 1 view .LVU107
+ 219:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)wall_r*0.001;
+ 373              		.loc 1 219 12 is_stmt 0 view .LVU108
+ 374 0232 3F4B     		ldr	r3, .L13+104
+ 375 0234 93ED010A 		vldr.32	s0, [r3, #4]
+ 376 0238 3B4B     		ldr	r3, .L13+96
+ 377 023a D3ED010A 		vldr.32	s1, [r3, #4]
+ 378 023e 0320     		movs	r0, #3
+ 379 0240 FFF7FEFF 		bl	PIDControl
+ 380              	.LVL31:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 13
 
 
- 924              		.align	2
- 925              		.set	.LANCHOR2,. + 0
- 928              	IT_mode:
- 929 0000 00000000 		.space	4
- 930              		.section	.bss.dbc,"aw",%nobits
- 931              		.align	2
- 934              	dbc:
- 935 0000 00000000 		.space	4
- 936              		.section	.bss.debugVL,"aw",%nobits
- 937              		.align	2
- 940              	debugVL:
- 941 0000 00000000 		.space	8000
- 941      00000000 
- 941      00000000 
- 941      00000000 
- 941      00000000 
- 942              		.section	.bss.debugVR,"aw",%nobits
- 943              		.align	2
- 946              	debugVR:
- 947 0000 00000000 		.space	8000
- 947      00000000 
- 947      00000000 
- 947      00000000 
- 947      00000000 
- 948              		.section	.bss.log_velocity,"aw",%nobits
- 949              		.align	2
- 950              		.set	.LANCHOR0,. + 0
- 953              	log_velocity:
- 954 0000 00000000 		.space	16
- 954      00000000 
- 954      00000000 
- 954      00000000 
- 955              		.section	.bss.t,"aw",%nobits
- 956              		.align	2
- 957              		.set	.LANCHOR4,. + 0
- 960              	t:
- 961 0000 00000000 		.space	4
- 962              		.section	.bss.timer1,"aw",%nobits
- 963              		.align	2
- 964              		.set	.LANCHOR3,. + 0
- 967              	timer1:
- 968 0000 00000000 		.space	4
- 969              		.section	.bss.timer8,"aw",%nobits
- 970              		.align	2
- 973              	timer8:
- 974 0000 00000000 		.space	4
- 975              		.section	.bss.velodebug_flag,"aw",%nobits
- 976              		.align	2
- 979              	velodebug_flag:
- 980 0000 00000000 		.space	4
- 981              		.section	.bss.zg_last.0,"aw",%nobits
- 982              		.align	2
- 983              		.set	.LANCHOR1,. + 0
- 986              	zg_last.0:
- 987 0000 00000000 		.space	4
- 988              		.section	.rodata.convert_to_angularv,"a"
- 989              		.align	2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 24
+ 381 0244 07EE900A 		vmov	s15, r0	@ int
+ 382              	.LVL32:
+ 220:Core/Src/Main/Interrupt.c **** 	}
+ 383              		.loc 1 220 3 is_stmt 1 view .LVU109
+ 220:Core/Src/Main/Interrupt.c **** 	}
+ 384              		.loc 1 220 20 is_stmt 0 view .LVU110
+ 385 0248 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 386 024c 17EE900A 		vmov	r0, s15
+ 387              	.LVL33:
+ 220:Core/Src/Main/Interrupt.c **** 	}
+ 388              		.loc 1 220 20 view .LVU111
+ 389 0250 FFF7FEFF 		bl	__aeabi_f2d
+ 390              	.LVL34:
+ 220:Core/Src/Main/Interrupt.c **** 	}
+ 391              		.loc 1 220 33 view .LVU112
+ 392 0254 1EA3     		adr	r3, .L13+8
+ 393 0256 D3E90023 		ldrd	r2, [r3]
+ 394 025a FFF7FEFF 		bl	__aeabi_dmul
+ 395              	.LVL35:
+ 396 025e FFF7FEFF 		bl	__aeabi_d2f
+ 397              	.LVL36:
+ 220:Core/Src/Main/Interrupt.c **** 	}
+ 398              		.loc 1 220 18 view .LVU113
+ 399 0262 294B     		ldr	r3, .L13+64
+ 400 0264 1860     		str	r0, [r3]	@ float
+ 401 0266 25E7     		b	.L3
+ 402              	.LVL37:
+ 403              	.L12:
+ 224:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
+ 404              		.loc 1 224 3 is_stmt 1 view .LVU114
+ 224:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
+ 405              		.loc 1 224 52 is_stmt 0 view .LVU115
+ 406 0268 2F4B     		ldr	r3, .L13+96
+ 407 026a D3ED030A 		vldr.32	s1, [r3, #12]
+ 224:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
+ 408              		.loc 1 224 62 view .LVU116
+ 409 026e D3ED007A 		vldr.32	s15, [r3]
+ 224:Core/Src/Main/Interrupt.c **** 		TargetVelocity[BODY] = (float)wall_f*0.001;
+ 410              		.loc 1 224 12 view .LVU117
+ 411 0272 70EEA70A 		vadd.f32	s1, s1, s15
+ 412 0276 9FED2F0A 		vldr.32	s0, .L13+108
+ 413 027a 0820     		movs	r0, #8
+ 414 027c FFF7FEFF 		bl	PIDControl
+ 415              	.LVL38:
+ 416 0280 07EE900A 		vmov	s15, r0	@ int
+ 417              	.LVL39:
+ 225:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 418              		.loc 1 225 3 is_stmt 1 view .LVU118
+ 225:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 419              		.loc 1 225 26 is_stmt 0 view .LVU119
+ 420 0284 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 421 0288 17EE900A 		vmov	r0, s15
+ 422              	.LVL40:
+ 225:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 423              		.loc 1 225 26 view .LVU120
+ 424 028c FFF7FEFF 		bl	__aeabi_f2d
+ 425              	.LVL41:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 14
 
 
- 992              	convert_to_angularv:
- 993 0000 B823EE3C 		.word	1022239672
- 994              		.section	.rodata.convert_to_imu_yaccel,"a"
- 995              		.align	2
- 998              	convert_to_imu_yaccel:
- 999 0000 B02F9940 		.word	1083781040
- 1000              		.section	.rodata.convert_to_velocity,"a"
- 1001              		.align	2
- 1004              	convert_to_velocity:
- 1005 0000 CD77813F 		.word	1065449421
- 1006              		.text
- 1007              	.Letext0:
- 1008              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
- 1009              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 1010              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 1011              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 1012              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 1013              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 1014              		.file 8 "Core/Inc/Tools/Sampling.h"
- 1015              		.file 9 "Core/Inc/Main/Interrupt.h"
- 1016              		.file 10 "Core/Inc/Main/MicroMouse.h"
- 1017              		.file 11 "Core/Inc/Tools/PID_Control.h"
- 1018              		.file 12 "Core/Inc/HardWare/mouse_ADC.h"
- 1019              		.file 13 "Core/Inc/HardWare/ICM_20648.h"
- 1020              		.file 14 "Core/Inc/Tools/Convert.h"
- 1021              		.file 15 "Core/Inc/HardWare/Motor_Driver.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 25
+ 225:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 426              		.loc 1 225 39 view .LVU121
+ 427 0290 0FA3     		adr	r3, .L13+8
+ 428 0292 D3E90023 		ldrd	r2, [r3]
+ 429 0296 FFF7FEFF 		bl	__aeabi_dmul
+ 430              	.LVL42:
+ 431 029a FFF7FEFF 		bl	__aeabi_d2f
+ 432              	.LVL43:
+ 225:Core/Src/Main/Interrupt.c **** 		ang_out = PIDControl( A_VELO_PID,  TargetAngle, Angle);
+ 433              		.loc 1 225 24 view .LVU122
+ 434 029e 184B     		ldr	r3, .L13+56
+ 435 02a0 9860     		str	r0, [r3, #8]	@ float
+ 226:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
+ 436              		.loc 1 226 3 is_stmt 1 view .LVU123
+ 226:Core/Src/Main/Interrupt.c **** 		TargetAngularV = (float)ang_out;
+ 437              		.loc 1 226 13 is_stmt 0 view .LVU124
+ 438 02a2 204B     		ldr	r3, .L13+92
+ 439 02a4 93ED000A 		vldr.32	s0, [r3]
+ 440 02a8 114B     		ldr	r3, .L13+40
+ 441 02aa D3ED000A 		vldr.32	s1, [r3]
+ 442 02ae 0020     		movs	r0, #0
+ 443 02b0 FFF7FEFF 		bl	PIDControl
+ 444              	.LVL44:
+ 445 02b4 07EE900A 		vmov	s15, r0	@ int
+ 446              	.LVL45:
+ 227:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
+ 447              		.loc 1 227 3 is_stmt 1 view .LVU125
+ 227:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
+ 448              		.loc 1 227 20 is_stmt 0 view .LVU126
+ 449 02b8 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 227:Core/Src/Main/Interrupt.c **** 		//TargetVelocity[BODY] = 0.1*PIDControl( FD_WALL_PID,   Photo[FR]+Photo[FL],4000);
+ 450              		.loc 1 227 18 view .LVU127
+ 451 02bc 124B     		ldr	r3, .L13+64
+ 452 02be C3ED007A 		vstr.32	s15, [r3]
+ 453 02c2 F7E6     		b	.L3
+ 454              	.L14:
+ 455 02c4 AFF30080 		.align	3
+ 456              	.L13:
+ 457 02c8 CDCCCCCC 		.word	-858993459
+ 458 02cc CCCC2040 		.word	1075891404
+ 459 02d0 FCA9F1D2 		.word	-755914244
+ 460 02d4 4D62503F 		.word	1062232653
+ 461 02d8 00040040 		.word	1073742848
+ 462 02dc 00000000 		.word	PulseDisplacement
+ 463 02e0 00080040 		.word	1073743872
+ 464 02e4 CD77813F 		.word	1065449421
+ 465 02e8 00000000 		.word	CurrentVelocity
+ 466 02ec 00000000 		.word	TotalPulse
+ 467 02f0 00000000 		.word	Angle
+ 468 02f4 00000000 		.word	AngularV
+ 469 02f8 00000000 		.word	Pid
+ 470 02fc 00000000 		.word	Acceleration
+ 471 0300 00000000 		.word	TargetVelocity
+ 472 0304 00000000 		.word	AngularAcceleration
+ 473 0308 00000000 		.word	TargetAngularV
+ 474 030c 9A990942 		.word	1107925402
+ 475 0310 00008045 		.word	1166016512
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 15
+
+
+ 476 0314 33335340 		.word	1079194419
+ 477 0318 00000000 		.word	adc1
+ 478 031c 00000000 		.word	VelocityLeftOut
+ 479 0320 00000000 		.word	VelocityRightOut
+ 480 0324 00000000 		.word	TargetAngle
+ 481 0328 00000000 		.word	Photo
+ 482 032c 00000000 		.word	PhotoDiff
+ 483 0330 00000000 		.word	TargetPhoto
+ 484 0334 00806D45 		.word	1164804096
+ 485              		.cfi_endproc
+ 486              	.LFE240:
+ 488              		.section	.text.ControlTest_IT,"ax",%progbits
+ 489              		.align	1
+ 490              		.syntax unified
+ 491              		.thumb
+ 492              		.thumb_func
+ 494              	ControlTest_IT:
+ 495              	.LFB239:
+  84:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+ 496              		.loc 1 84 29 is_stmt 1 view -0
+ 497              		.cfi_startproc
+ 498              		@ args = 0, pretend = 0, frame = 0
+ 499              		@ frame_needed = 0, uses_anonymous_args = 0
+ 500 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 501              	.LCFI4:
+ 502              		.cfi_def_cfa_offset 24
+ 503              		.cfi_offset 3, -24
+ 504              		.cfi_offset 4, -20
+ 505              		.cfi_offset 5, -16
+ 506              		.cfi_offset 6, -12
+ 507              		.cfi_offset 7, -8
+ 508              		.cfi_offset 14, -4
+  85:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 509              		.loc 1 85 2 view .LVU129
+  85:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 510              		.loc 1 85 35 is_stmt 0 view .LVU130
+ 511 0002 454A     		ldr	r2, .L17
+ 512 0004 516A     		ldr	r1, [r2, #36]
+  85:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 513              		.loc 1 85 28 view .LVU131
+ 514 0006 47F22F53 		movw	r3, #29999
+ 515 000a 591A     		subs	r1, r3, r1
+  85:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 516              		.loc 1 85 26 view .LVU132
+ 517 000c 434C     		ldr	r4, .L17+4
+ 518 000e 2160     		str	r1, [r4]
+  86:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+ 519              		.loc 1 86 2 is_stmt 1 view .LVU133
+  86:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+ 520              		.loc 1 86 12 is_stmt 0 view .LVU134
+ 521 0010 5362     		str	r3, [r2, #36]
+  87:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 522              		.loc 1 87 2 is_stmt 1 view .LVU135
+  87:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 523              		.loc 1 87 36 is_stmt 0 view .LVU136
+ 524 0012 4348     		ldr	r0, .L17+8
+ 525 0014 426A     		ldr	r2, [r0, #36]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 16
+
+
+  87:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 526              		.loc 1 87 29 view .LVU137
+ 527 0016 9A1A     		subs	r2, r3, r2
+  87:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 528              		.loc 1 87 27 view .LVU138
+ 529 0018 6260     		str	r2, [r4, #4]
+  88:Core/Src/Main/Interrupt.c **** 
+ 530              		.loc 1 88 2 is_stmt 1 view .LVU139
+  88:Core/Src/Main/Interrupt.c **** 
+ 531              		.loc 1 88 12 is_stmt 0 view .LVU140
+ 532 001a 4362     		str	r3, [r0, #36]
+  91:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 533              		.loc 1 91 2 is_stmt 1 view .LVU141
+  91:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 534              		.loc 1 91 27 is_stmt 0 view .LVU142
+ 535 001c 07EE901A 		vmov	s15, r1	@ int
+ 536 0020 B8EEE77A 		vcvt.f32.s32	s14, s15
+  91:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 537              		.loc 1 91 58 view .LVU143
+ 538 0024 DFED3F6A 		vldr.32	s13, .L17+12
+ 539 0028 27EE267A 		vmul.f32	s14, s14, s13
+  91:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 540              		.loc 1 91 24 view .LVU144
+ 541 002c 3E4C     		ldr	r4, .L17+16
+ 542 002e 84ED007A 		vstr.32	s14, [r4]
+  92:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 543              		.loc 1 92 2 is_stmt 1 view .LVU145
+  92:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 544              		.loc 1 92 28 is_stmt 0 view .LVU146
+ 545 0032 07EE902A 		vmov	s15, r2	@ int
+ 546 0036 F8EEE77A 		vcvt.f32.s32	s15, s15
+  92:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 547              		.loc 1 92 60 view .LVU147
+ 548 003a 67EEA67A 		vmul.f32	s15, s15, s13
+  92:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 549              		.loc 1 92 25 view .LVU148
+ 550 003e C4ED017A 		vstr.32	s15, [r4, #4]
+  93:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 551              		.loc 1 93 2 is_stmt 1 view .LVU149
+  93:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 552              		.loc 1 93 42 is_stmt 0 view .LVU150
+ 553 0042 D4ED007A 		vldr.32	s15, [r4]
+  93:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 554              		.loc 1 93 66 view .LVU151
+ 555 0046 94ED017A 		vldr.32	s14, [r4, #4]
+  93:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 556              		.loc 1 93 49 view .LVU152
+ 557 004a 77EE877A 		vadd.f32	s15, s15, s14
+  93:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 558              		.loc 1 93 75 view .LVU153
+ 559 004e B6EE007A 		vmov.f32	s14, #5.0e-1
+ 560 0052 67EE877A 		vmul.f32	s15, s15, s14
+  93:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
+ 561              		.loc 1 93 24 view .LVU154
+ 562 0056 C4ED027A 		vstr.32	s15, [r4, #8]
+  98:Core/Src/Main/Interrupt.c **** 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+ 563              		.loc 1 98 2 is_stmt 1 view .LVU155
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 17
+
+
+  98:Core/Src/Main/Interrupt.c **** 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+ 564              		.loc 1 98 19 is_stmt 0 view .LVU156
+ 565 005a 344B     		ldr	r3, .L17+20
+ 566 005c 1868     		ldr	r0, [r3]
+ 567 005e 0144     		add	r1, r1, r0
+ 568 0060 1960     		str	r1, [r3]
+  99:Core/Src/Main/Interrupt.c **** 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+ 569              		.loc 1 99 2 is_stmt 1 view .LVU157
+  99:Core/Src/Main/Interrupt.c **** 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+ 570              		.loc 1 99 20 is_stmt 0 view .LVU158
+ 571 0062 5968     		ldr	r1, [r3, #4]
+ 572 0064 0A44     		add	r2, r2, r1
+ 573 0066 5A60     		str	r2, [r3, #4]
+ 100:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 574              		.loc 1 100 2 is_stmt 1 view .LVU159
+ 100:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 575              		.loc 1 100 31 is_stmt 0 view .LVU160
+ 576 0068 1A68     		ldr	r2, [r3]
+ 100:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 577              		.loc 1 100 48 view .LVU161
+ 578 006a 5968     		ldr	r1, [r3, #4]
+ 100:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 579              		.loc 1 100 37 view .LVU162
+ 580 006c 0A44     		add	r2, r2, r1
+ 100:Core/Src/Main/Interrupt.c **** 	//角速度 rad/s
+ 581              		.loc 1 100 19 view .LVU163
+ 582 006e 9A60     		str	r2, [r3, #8]
+ 115:Core/Src/Main/Interrupt.c **** 	// getFloatLog(&log_velocity, AngularV);
+ 583              		.loc 1 115 2 is_stmt 1 view .LVU164
+ 584 0070 2F4D     		ldr	r5, .L17+24
+ 585 0072 3049     		ldr	r1, .L17+28
+ 586 0074 2846     		mov	r0, r5
+ 587 0076 FFF7FEFF 		bl	Update_IMU
+ 588              	.LVL46:
+ 121:Core/Src/Main/Interrupt.c **** 		int ang_out=0;
+ 589              		.loc 1 121 2 view .LVU165
+ 122:Core/Src/Main/Interrupt.c **** 
+ 590              		.loc 1 122 3 view .LVU166
+ 129:Core/Src/Main/Interrupt.c **** 		// TargetAngularV = (float)ang_out;
+ 591              		.loc 1 129 3 view .LVU167
+ 129:Core/Src/Main/Interrupt.c **** 		// TargetAngularV = (float)ang_out;
+ 592              		.loc 1 129 13 is_stmt 0 view .LVU168
+ 593 007a 2F4B     		ldr	r3, .L17+32
+ 594 007c 93ED000A 		vldr.32	s0, [r3]
+ 595 0080 D5ED000A 		vldr.32	s1, [r5]
+ 596 0084 0020     		movs	r0, #0
+ 597 0086 FFF7FEFF 		bl	PIDControl
+ 598              	.LVL47:
+ 599 008a 0546     		mov	r5, r0
+ 600              	.LVL48:
+ 147:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+ 601              		.loc 1 147 3 is_stmt 1 view .LVU169
+ 147:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+ 602              		.loc 1 147 21 is_stmt 0 view .LVU170
+ 603 008c 2B4F     		ldr	r7, .L17+36
+ 604 008e 97ED020A 		vldr.32	s0, [r7, #8]
+ 605 0092 D4ED000A 		vldr.32	s1, [r4]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 18
+
+
+ 606 0096 0420     		movs	r0, #4
+ 607              	.LVL49:
+ 147:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+ 608              		.loc 1 147 21 view .LVU171
+ 609 0098 FFF7FEFF 		bl	PIDControl
+ 610              	.LVL50:
+ 147:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[BODY], CurrentVelocity[RIGHT]);
+ 611              		.loc 1 147 19 view .LVU172
+ 612 009c 284E     		ldr	r6, .L17+40
+ 613 009e 3060     		str	r0, [r6]
+ 148:Core/Src/Main/Interrupt.c **** 		float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 614              		.loc 1 148 3 is_stmt 1 view .LVU173
+ 148:Core/Src/Main/Interrupt.c **** 		float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 615              		.loc 1 148 22 is_stmt 0 view .LVU174
+ 616 00a0 97ED020A 		vldr.32	s0, [r7, #8]
+ 617 00a4 D4ED010A 		vldr.32	s1, [r4, #4]
+ 618 00a8 0520     		movs	r0, #5
+ 619 00aa FFF7FEFF 		bl	PIDControl
+ 620              	.LVL51:
+ 148:Core/Src/Main/Interrupt.c **** 		float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 621              		.loc 1 148 20 view .LVU175
+ 622 00ae 254C     		ldr	r4, .L17+44
+ 623 00b0 2060     		str	r0, [r4]
+ 149:Core/Src/Main/Interrupt.c **** 		float duty = 1/ battery_voltage;
+ 624              		.loc 1 149 3 is_stmt 1 view .LVU176
+ 149:Core/Src/Main/Interrupt.c **** 		float duty = 1/ battery_voltage;
+ 625              		.loc 1 149 27 is_stmt 0 view .LVU177
+ 626 00b2 9FED251A 		vldr.32	s2, .L17+48
+ 627 00b6 DFED250A 		vldr.32	s1, .L17+52
+ 628 00ba B0EE080A 		vmov.f32	s0, #3.0e+0
+ 629 00be 244B     		ldr	r3, .L17+56
+ 630 00c0 9868     		ldr	r0, [r3, #8]
+ 631 00c2 FFF7FEFF 		bl	ADCToBatteryVoltage
+ 632              	.LVL52:
+ 150:Core/Src/Main/Interrupt.c **** 		// VelocityLeftOut = voltage_maintainer * PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVe
+ 633              		.loc 1 150 3 is_stmt 1 view .LVU178
+ 150:Core/Src/Main/Interrupt.c **** 		// VelocityLeftOut = voltage_maintainer * PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVe
+ 634              		.loc 1 150 9 is_stmt 0 view .LVU179
+ 635 00c6 F7EE007A 		vmov.f32	s15, #1.0e+0
+ 636 00ca 87EE807A 		vdiv.f32	s14, s15, s0
+ 637              	.LVL53:
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 638              		.loc 1 153 3 is_stmt 1 view .LVU180
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 639              		.loc 1 153 46 is_stmt 0 view .LVU181
+ 640 00ce 3368     		ldr	r3, [r6]
+ 641 00d0 EB18     		adds	r3, r5, r3
+ 642 00d2 07EE903A 		vmov	s15, r3	@ int
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 643              		.loc 1 153 22 view .LVU182
+ 644 00d6 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 645              		.loc 1 153 58 view .LVU183
+ 646 00da DFED1E6A 		vldr.32	s13, .L17+60
+ 647 00de 67EEA67A 		vmul.f32	s15, s15, s13
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 648              		.loc 1 153 64 view .LVU184
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 19
+
+
+ 649 00e2 67EE877A 		vmul.f32	s15, s15, s14
+ 153:Core/Src/Main/Interrupt.c **** 		VelocityRightOut = ((float)(VelocityRightOut+ (ang_out* (-1)) ))* 840 * duty;
+ 650              		.loc 1 153 19 view .LVU185
+ 651 00e6 FDEEE77A 		vcvt.s32.f32	s15, s15
+ 652 00ea 17EE900A 		vmov	r0, s15	@ int
+ 653 00ee C6ED007A 		vstr.32	s15, [r6]	@ int
+ 154:Core/Src/Main/Interrupt.c **** 
+ 654              		.loc 1 154 3 is_stmt 1 view .LVU186
+ 154:Core/Src/Main/Interrupt.c **** 
+ 655              		.loc 1 154 47 is_stmt 0 view .LVU187
+ 656 00f2 2368     		ldr	r3, [r4]
+ 657 00f4 5B1B     		subs	r3, r3, r5
+ 658 00f6 07EE903A 		vmov	s15, r3	@ int
+ 154:Core/Src/Main/Interrupt.c **** 
+ 659              		.loc 1 154 23 view .LVU188
+ 660 00fa F8EEE77A 		vcvt.f32.s32	s15, s15
+ 154:Core/Src/Main/Interrupt.c **** 
+ 661              		.loc 1 154 67 view .LVU189
+ 662 00fe 67EEA67A 		vmul.f32	s15, s15, s13
+ 154:Core/Src/Main/Interrupt.c **** 
+ 663              		.loc 1 154 73 view .LVU190
+ 664 0102 67EE877A 		vmul.f32	s15, s15, s14
+ 154:Core/Src/Main/Interrupt.c **** 
+ 665              		.loc 1 154 20 view .LVU191
+ 666 0106 FDEEE77A 		vcvt.s32.f32	s15, s15
+ 667 010a 17EE901A 		vmov	r1, s15	@ int
+ 668 010e C4ED007A 		vstr.32	s15, [r4]	@ int
+ 158:Core/Src/Main/Interrupt.c **** }
+ 669              		.loc 1 158 2 is_stmt 1 view .LVU192
+ 670 0112 FFF7FEFF 		bl	Motor_Switch
+ 671              	.LVL54:
+ 159:Core/Src/Main/Interrupt.c **** static void Explore_IT()
+ 672              		.loc 1 159 1 is_stmt 0 view .LVU193
+ 673 0116 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 674              	.LVL55:
+ 675              	.L18:
+ 159:Core/Src/Main/Interrupt.c **** static void Explore_IT()
+ 676              		.loc 1 159 1 view .LVU194
+ 677              		.align	2
+ 678              	.L17:
+ 679 0118 00040040 		.word	1073742848
+ 680 011c 00000000 		.word	PulseDisplacement
+ 681 0120 00080040 		.word	1073743872
+ 682 0124 CD77813F 		.word	1065449421
+ 683 0128 00000000 		.word	CurrentVelocity
+ 684 012c 00000000 		.word	TotalPulse
+ 685 0130 00000000 		.word	AngularV
+ 686 0134 00000000 		.word	Angle
+ 687 0138 00000000 		.word	TargetAngularV
+ 688 013c 00000000 		.word	TargetVelocity
+ 689 0140 00000000 		.word	VelocityLeftOut
+ 690 0144 00000000 		.word	VelocityRightOut
+ 691 0148 00008045 		.word	1166016512
+ 692 014c 33335340 		.word	1079194419
+ 693 0150 00000000 		.word	adc1
+ 694 0154 00005244 		.word	1146224640
+ 695              		.cfi_endproc
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 20
+
+
+ 696              	.LFE239:
+ 698              		.global	__aeabi_dadd
+ 699              		.section	.text.WritingFree_IT,"ax",%progbits
+ 700              		.align	1
+ 701              		.syntax unified
+ 702              		.thumb
+ 703              		.thumb_func
+ 705              	WritingFree_IT:
+ 706              	.LFB241:
+ 284:Core/Src/Main/Interrupt.c **** static void WritingFree_IT()
+ 285:Core/Src/Main/Interrupt.c **** {
+ 707              		.loc 1 285 1 is_stmt 1 view -0
+ 708              		.cfi_startproc
+ 709              		@ args = 0, pretend = 0, frame = 0
+ 710              		@ frame_needed = 0, uses_anonymous_args = 0
+ 711 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 712              	.LCFI5:
+ 713              		.cfi_def_cfa_offset 24
+ 714              		.cfi_offset 3, -24
+ 715              		.cfi_offset 4, -20
+ 716              		.cfi_offset 5, -16
+ 717              		.cfi_offset 6, -12
+ 718              		.cfi_offset 7, -8
+ 719              		.cfi_offset 14, -4
+ 720 0002 2DED028B 		vpush.64	{d8}
+ 721              	.LCFI6:
+ 722              		.cfi_def_cfa_offset 32
+ 723              		.cfi_offset 80, -32
+ 724              		.cfi_offset 81, -28
+ 286:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+ 725              		.loc 1 286 2 view .LVU196
+ 726              		.loc 1 286 35 is_stmt 0 view .LVU197
+ 727 0006 6A4A     		ldr	r2, .L21+16
+ 728 0008 516A     		ldr	r1, [r2, #36]
+ 729              		.loc 1 286 28 view .LVU198
+ 730 000a 47F22F53 		movw	r3, #29999
+ 731 000e 591A     		subs	r1, r3, r1
+ 732              		.loc 1 286 26 view .LVU199
+ 733 0010 684C     		ldr	r4, .L21+20
+ 734 0012 2160     		str	r1, [r4]
+ 287:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 735              		.loc 1 287 2 is_stmt 1 view .LVU200
+ 736              		.loc 1 287 12 is_stmt 0 view .LVU201
+ 737 0014 5362     		str	r3, [r2, #36]
+ 288:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+ 738              		.loc 1 288 2 is_stmt 1 view .LVU202
+ 739              		.loc 1 288 36 is_stmt 0 view .LVU203
+ 740 0016 6848     		ldr	r0, .L21+24
+ 741 0018 426A     		ldr	r2, [r0, #36]
+ 742              		.loc 1 288 29 view .LVU204
+ 743 001a 9A1A     		subs	r2, r3, r2
+ 744              		.loc 1 288 27 view .LVU205
+ 745 001c 6260     		str	r2, [r4, #4]
+ 289:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 746              		.loc 1 289 2 is_stmt 1 view .LVU206
+ 747              		.loc 1 289 12 is_stmt 0 view .LVU207
+ 748 001e 4362     		str	r3, [r0, #36]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 21
+
+
+ 290:Core/Src/Main/Interrupt.c **** 
+ 291:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
+ 749              		.loc 1 291 2 is_stmt 1 view .LVU208
+ 750              		.loc 1 291 27 is_stmt 0 view .LVU209
+ 751 0020 07EE901A 		vmov	s15, r1	@ int
+ 752 0024 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 753              		.loc 1 291 58 view .LVU210
+ 754 0028 DFED646A 		vldr.32	s13, .L21+28
+ 755 002c 27EE267A 		vmul.f32	s14, s14, s13
+ 756              		.loc 1 291 24 view .LVU211
+ 757 0030 634D     		ldr	r5, .L21+32
+ 758 0032 85ED007A 		vstr.32	s14, [r5]
+ 292:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 759              		.loc 1 292 2 is_stmt 1 view .LVU212
+ 760              		.loc 1 292 28 is_stmt 0 view .LVU213
+ 761 0036 07EE902A 		vmov	s15, r2	@ int
+ 762 003a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 763              		.loc 1 292 60 view .LVU214
+ 764 003e 67EEA67A 		vmul.f32	s15, s15, s13
+ 765              		.loc 1 292 25 view .LVU215
+ 766 0042 C5ED017A 		vstr.32	s15, [r5, #4]
+ 293:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 767              		.loc 1 293 2 is_stmt 1 view .LVU216
+ 768              		.loc 1 293 42 is_stmt 0 view .LVU217
+ 769 0046 D5ED007A 		vldr.32	s15, [r5]
+ 770              		.loc 1 293 66 view .LVU218
+ 771 004a 95ED017A 		vldr.32	s14, [r5, #4]
+ 772              		.loc 1 293 49 view .LVU219
+ 773 004e 77EE877A 		vadd.f32	s15, s15, s14
+ 774              		.loc 1 293 75 view .LVU220
+ 775 0052 F6EE008A 		vmov.f32	s17, #5.0e-1
+ 776 0056 67EEA87A 		vmul.f32	s15, s15, s17
+ 777              		.loc 1 293 24 view .LVU221
+ 778 005a C5ED027A 		vstr.32	s15, [r5, #8]
+ 294:Core/Src/Main/Interrupt.c **** #if 0
+ 295:Core/Src/Main/Interrupt.c **** 	static int count=0;
+ 296:Core/Src/Main/Interrupt.c **** 
+ 297:Core/Src/Main/Interrupt.c **** 	if(count < 2000)
+ 298:Core/Src/Main/Interrupt.c **** 	{
+ 299:Core/Src/Main/Interrupt.c **** 		data[count] = CurrentVelocity[LEFT];
+ 300:Core/Src/Main/Interrupt.c **** 	}
+ 301:Core/Src/Main/Interrupt.c **** 	count ++;
+ 302:Core/Src/Main/Interrupt.c **** #endif
+ 303:Core/Src/Main/Interrupt.c **** 	//移動量 mm/msを積算
+ 304:Core/Src/Main/Interrupt.c **** 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+ 779              		.loc 1 304 2 is_stmt 1 view .LVU222
+ 780              		.loc 1 304 19 is_stmt 0 view .LVU223
+ 781 005e 594B     		ldr	r3, .L21+36
+ 782 0060 1868     		ldr	r0, [r3]
+ 783 0062 0144     		add	r1, r1, r0
+ 784 0064 1960     		str	r1, [r3]
+ 305:Core/Src/Main/Interrupt.c **** 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+ 785              		.loc 1 305 2 is_stmt 1 view .LVU224
+ 786              		.loc 1 305 20 is_stmt 0 view .LVU225
+ 787 0066 5968     		ldr	r1, [r3, #4]
+ 788 0068 0A44     		add	r2, r2, r1
+ 789 006a 5A60     		str	r2, [r3, #4]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 22
+
+
+ 306:Core/Src/Main/Interrupt.c **** 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+ 790              		.loc 1 306 2 is_stmt 1 view .LVU226
+ 791              		.loc 1 306 31 is_stmt 0 view .LVU227
+ 792 006c 1A68     		ldr	r2, [r3]
+ 793              		.loc 1 306 48 view .LVU228
+ 794 006e 5968     		ldr	r1, [r3, #4]
+ 795              		.loc 1 306 37 view .LVU229
+ 796 0070 0A44     		add	r2, r2, r1
+ 797              		.loc 1 306 19 view .LVU230
+ 798 0072 9A60     		str	r2, [r3, #8]
+ 307:Core/Src/Main/Interrupt.c **** 
+ 308:Core/Src/Main/Interrupt.c **** #if 1
+ 309:Core/Src/Main/Interrupt.c **** 
+ 310:Core/Src/Main/Interrupt.c **** 	static float zg_last=0;
+ 799              		.loc 1 310 2 is_stmt 1 view .LVU231
+ 311:Core/Src/Main/Interrupt.c **** 	float zg_law;
+ 800              		.loc 1 311 2 view .LVU232
+ 312:Core/Src/Main/Interrupt.c **** 	//uint8_t zgb,zgf;
+ 313:Core/Src/Main/Interrupt.c **** 	ZGyro = ReadIMU(0x37, 0x38);
+ 801              		.loc 1 313 2 view .LVU233
+ 802              		.loc 1 313 10 is_stmt 0 view .LVU234
+ 803 0074 3821     		movs	r1, #56
+ 804 0076 3720     		movs	r0, #55
+ 805 0078 FFF7FEFF 		bl	ReadIMU
+ 806              	.LVL56:
+ 807              		.loc 1 313 8 view .LVU235
+ 808 007c 524B     		ldr	r3, .L21+40
+ 809 007e 83ED000A 		vstr.32	s0, [r3]
+ 314:Core/Src/Main/Interrupt.c ****     zg_law =  ( ZGyro - zg_offset )*convert_to_imu_angv;//16.4 * 180;//rad/s or rad/0.001s
+ 810              		.loc 1 314 5 is_stmt 1 view .LVU236
+ 811              		.loc 1 314 23 is_stmt 0 view .LVU237
+ 812 0082 93ED008A 		vldr.32	s16, [r3]
+ 813 0086 514B     		ldr	r3, .L21+44
+ 814 0088 D3ED007A 		vldr.32	s15, [r3]
+ 815 008c 38EE678A 		vsub.f32	s16, s16, s15
+ 816              		.loc 1 314 36 view .LVU238
+ 817 0090 4F4B     		ldr	r3, .L21+48
+ 818 0092 D3ED007A 		vldr.32	s15, [r3]
+ 819              		.loc 1 314 12 view .LVU239
+ 820 0096 28EE278A 		vmul.f32	s16, s16, s15
+ 821              	.LVL57:
+ 315:Core/Src/Main/Interrupt.c ****     AngularV = -((0.01*zg_law) + (0.99)* (zg_last));
+ 822              		.loc 1 315 5 is_stmt 1 view .LVU240
+ 823              		.loc 1 315 23 is_stmt 0 view .LVU241
+ 824 009a 18EE100A 		vmov	r0, s16
+ 825 009e FFF7FEFF 		bl	__aeabi_f2d
+ 826              	.LVL58:
+ 827 00a2 3FA3     		adr	r3, .L21
+ 828 00a4 D3E90023 		ldrd	r2, [r3]
+ 829 00a8 FFF7FEFF 		bl	__aeabi_dmul
+ 830              	.LVL59:
+ 831 00ac 0646     		mov	r6, r0
+ 832 00ae 0F46     		mov	r7, r1
+ 833              		.loc 1 315 40 view .LVU242
+ 834 00b0 484C     		ldr	r4, .L21+52
+ 835 00b2 2068     		ldr	r0, [r4]	@ float
+ 836 00b4 FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 23
+
+
+ 837              	.LVL60:
+ 838 00b8 3BA3     		adr	r3, .L21+8
+ 839 00ba D3E90023 		ldrd	r2, [r3]
+ 840 00be FFF7FEFF 		bl	__aeabi_dmul
+ 841              	.LVL61:
+ 842 00c2 0246     		mov	r2, r0
+ 843 00c4 0B46     		mov	r3, r1
+ 844              		.loc 1 315 32 view .LVU243
+ 845 00c6 3046     		mov	r0, r6
+ 846 00c8 3946     		mov	r1, r7
+ 847 00ca FFF7FEFF 		bl	__aeabi_dadd
+ 848              	.LVL62:
+ 849 00ce FFF7FEFF 		bl	__aeabi_d2f
+ 850              	.LVL63:
+ 851              		.loc 1 315 14 view .LVU244
+ 852 00d2 07EE900A 		vmov	s15, r0
+ 853 00d6 F1EE677A 		vneg.f32	s15, s15
+ 854 00da 3F4B     		ldr	r3, .L21+56
+ 855 00dc C3ED007A 		vstr.32	s15, [r3]
+ 316:Core/Src/Main/Interrupt.c ****     zg_last = zg_law;
+ 856              		.loc 1 316 5 is_stmt 1 view .LVU245
+ 857              		.loc 1 316 13 is_stmt 0 view .LVU246
+ 858 00e0 84ED008A 		vstr.32	s16, [r4]
+ 317:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
+ 859              		.loc 1 317 2 is_stmt 1 view .LVU247
+ 860              		.loc 1 317 20 is_stmt 0 view .LVU248
+ 861 00e4 D3ED007A 		vldr.32	s15, [r3]
+ 862 00e8 9FED3C7A 		vldr.32	s14, .L21+60
+ 863 00ec 27EE877A 		vmul.f32	s14, s15, s14
+ 864              		.loc 1 317 8 view .LVU249
+ 865 00f0 3B4B     		ldr	r3, .L21+64
+ 866 00f2 D3ED007A 		vldr.32	s15, [r3]
+ 867 00f6 77EE877A 		vadd.f32	s15, s15, s14
+ 868 00fa C3ED007A 		vstr.32	s15, [r3]
+ 318:Core/Src/Main/Interrupt.c **** 
+ 319:Core/Src/Main/Interrupt.c **** #else
+ 320:Core/Src/Main/Interrupt.c **** 	AngularV = ( CurrentVelocity[LEFT] - CurrentVelocity[RIGHT] ) *convert_to_angularv;
+ 321:Core/Src/Main/Interrupt.c **** 	Angle += AngularV * T1;
+ 322:Core/Src/Main/Interrupt.c **** 
+ 323:Core/Src/Main/Interrupt.c **** #endif
+ 324:Core/Src/Main/Interrupt.c **** 	AngularAcceleration += AngularLeapsity;
+ 869              		.loc 1 324 2 is_stmt 1 view .LVU250
+ 870              		.loc 1 324 22 is_stmt 0 view .LVU251
+ 871 00fe 394B     		ldr	r3, .L21+68
+ 872 0100 D3ED007A 		vldr.32	s15, [r3]
+ 873 0104 384A     		ldr	r2, .L21+72
+ 874 0106 92ED007A 		vldr.32	s14, [r2]
+ 875 010a 77EE877A 		vadd.f32	s15, s15, s14
+ 876 010e C3ED007A 		vstr.32	s15, [r3]
+ 325:Core/Src/Main/Interrupt.c **** 	TargetVelocity[BODY] += Acceleration;
+ 877              		.loc 1 325 2 is_stmt 1 view .LVU252
+ 878 0112 364A     		ldr	r2, .L21+76
+ 879 0114 92ED007A 		vldr.32	s14, [r2]
+ 880              		.loc 1 325 23 is_stmt 0 view .LVU253
+ 881 0118 354C     		ldr	r4, .L21+80
+ 882 011a D4ED027A 		vldr.32	s15, [r4, #8]
+ 883 011e 77EE877A 		vadd.f32	s15, s15, s14
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 24
+
+
+ 884 0122 C4ED027A 		vstr.32	s15, [r4, #8]
+ 326:Core/Src/Main/Interrupt.c **** 	TargetAngularV += AngularAcceleration;
+ 885              		.loc 1 326 2 is_stmt 1 view .LVU254
+ 886 0126 93ED007A 		vldr.32	s14, [r3]
+ 887              		.loc 1 326 17 is_stmt 0 view .LVU255
+ 888 012a 324B     		ldr	r3, .L21+84
+ 889 012c D3ED007A 		vldr.32	s15, [r3]
+ 890 0130 77EE877A 		vadd.f32	s15, s15, s14
+ 891 0134 C3ED007A 		vstr.32	s15, [r3]
+ 327:Core/Src/Main/Interrupt.c **** 
+ 328:Core/Src/Main/Interrupt.c **** 	TargetVelocity[RIGHT] = ( TargetVelocity[BODY] - TargetAngularV * TREAD_WIDTH * 0.5f );
+ 892              		.loc 1 328 2 is_stmt 1 view .LVU256
+ 893              		.loc 1 328 42 is_stmt 0 view .LVU257
+ 894 0138 D4ED026A 		vldr.32	s13, [r4, #8]
+ 895              		.loc 1 328 66 view .LVU258
+ 896 013c 93ED007A 		vldr.32	s14, [r3]
+ 897 0140 9FED2D6A 		vldr.32	s12, .L21+88
+ 898 0144 27EE067A 		vmul.f32	s14, s14, s12
+ 899              		.loc 1 328 80 view .LVU259
+ 900 0148 27EE287A 		vmul.f32	s14, s14, s17
+ 901              		.loc 1 328 49 view .LVU260
+ 902 014c 36EEC77A 		vsub.f32	s14, s13, s14
+ 903              		.loc 1 328 24 view .LVU261
+ 904 0150 84ED017A 		vstr.32	s14, [r4, #4]
+ 329:Core/Src/Main/Interrupt.c **** 	TargetVelocity[LEFT] = ( TargetAngularV *TREAD_WIDTH ) + TargetVelocity[RIGHT];
+ 905              		.loc 1 329 2 is_stmt 1 view .LVU262
+ 906              		.loc 1 329 42 is_stmt 0 view .LVU263
+ 907 0154 D3ED007A 		vldr.32	s15, [r3]
+ 908 0158 67EE867A 		vmul.f32	s15, s15, s12
+ 909              		.loc 1 329 73 view .LVU264
+ 910 015c 94ED017A 		vldr.32	s14, [r4, #4]
+ 911              		.loc 1 329 57 view .LVU265
+ 912 0160 77EE877A 		vadd.f32	s15, s15, s14
+ 913              		.loc 1 329 23 view .LVU266
+ 914 0164 C4ED007A 		vstr.32	s15, [r4]
+ 330:Core/Src/Main/Interrupt.c **** 
+ 331:Core/Src/Main/Interrupt.c **** 	VelocityLeftOut = PIDControl( L_VELO_PID, TargetVelocity[LEFT], CurrentVelocity[LEFT]);
+ 915              		.loc 1 331 2 is_stmt 1 view .LVU267
+ 916              		.loc 1 331 20 is_stmt 0 view .LVU268
+ 917 0168 94ED000A 		vldr.32	s0, [r4]
+ 918 016c D5ED000A 		vldr.32	s1, [r5]
+ 919 0170 0420     		movs	r0, #4
+ 920 0172 FFF7FEFF 		bl	PIDControl
+ 921              	.LVL64:
+ 922              		.loc 1 331 18 view .LVU269
+ 923 0176 214E     		ldr	r6, .L21+92
+ 924 0178 3060     		str	r0, [r6]
+ 332:Core/Src/Main/Interrupt.c **** 	VelocityRightOut = PIDControl( R_VELO_PID, TargetVelocity[RIGHT], CurrentVelocity[RIGHT]);
+ 925              		.loc 1 332 2 is_stmt 1 view .LVU270
+ 926              		.loc 1 332 21 is_stmt 0 view .LVU271
+ 927 017a 94ED010A 		vldr.32	s0, [r4, #4]
+ 928 017e D5ED010A 		vldr.32	s1, [r5, #4]
+ 929 0182 0520     		movs	r0, #5
+ 930 0184 FFF7FEFF 		bl	PIDControl
+ 931              	.LVL65:
+ 932 0188 0146     		mov	r1, r0
+ 933              		.loc 1 332 19 view .LVU272
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 25
+
+
+ 934 018a 1D4B     		ldr	r3, .L21+96
+ 935 018c 1860     		str	r0, [r3]
+ 333:Core/Src/Main/Interrupt.c **** 
+ 334:Core/Src/Main/Interrupt.c **** 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
+ 936              		.loc 1 334 2 is_stmt 1 view .LVU273
+ 937 018e 3068     		ldr	r0, [r6]
+ 938 0190 FFF7FEFF 		bl	Motor_Switch
+ 939              	.LVL66:
+ 335:Core/Src/Main/Interrupt.c **** }
+ 940              		.loc 1 335 1 is_stmt 0 view .LVU274
+ 941 0194 BDEC028B 		vldm	sp!, {d8}
+ 942              	.LCFI7:
+ 943              		.cfi_restore 80
+ 944              		.cfi_restore 81
+ 945              		.cfi_def_cfa_offset 24
+ 946              	.LVL67:
+ 947              		.loc 1 335 1 view .LVU275
+ 948 0198 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 949              	.L22:
+ 950 019a 00BFAFF3 		.align	3
+ 950      0080
+ 951              	.L21:
+ 952 01a0 7B14AE47 		.word	1202590843
+ 953 01a4 E17A843F 		.word	1065646817
+ 954 01a8 AE47E17A 		.word	2061584302
+ 955 01ac 14AEEF3F 		.word	1072672276
+ 956 01b0 00040040 		.word	1073742848
+ 957 01b4 00000000 		.word	PulseDisplacement
+ 958 01b8 00080040 		.word	1073743872
+ 959 01bc CD77813F 		.word	1065449421
+ 960 01c0 00000000 		.word	CurrentVelocity
+ 961 01c4 00000000 		.word	TotalPulse
+ 962 01c8 00000000 		.word	ZGyro
+ 963 01cc 00000000 		.word	zg_offset
+ 964 01d0 00000000 		.word	convert_to_imu_angv
+ 965 01d4 00000000 		.word	.LANCHOR0
+ 966 01d8 00000000 		.word	AngularV
+ 967 01dc 6F12833A 		.word	981668463
+ 968 01e0 00000000 		.word	Angle
+ 969 01e4 00000000 		.word	AngularAcceleration
+ 970 01e8 00000000 		.word	AngularLeapsity
+ 971 01ec 00000000 		.word	Acceleration
+ 972 01f0 00000000 		.word	TargetVelocity
+ 973 01f4 00000000 		.word	TargetAngularV
+ 974 01f8 9A990942 		.word	1107925402
+ 975 01fc 00000000 		.word	VelocityLeftOut
+ 976 0200 00000000 		.word	VelocityRightOut
+ 977              		.cfi_endproc
+ 978              	.LFE241:
+ 980              		.section	.text.SystemIdentify_IT,"ax",%progbits
+ 981              		.align	1
+ 982              		.syntax unified
+ 983              		.thumb
+ 984              		.thumb_func
+ 986              	SystemIdentify_IT:
+ 987              	.LFB238:
+  41:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 26
+
+
+ 988              		.loc 1 41 32 is_stmt 1 view -0
+ 989              		.cfi_startproc
+ 990              		@ args = 0, pretend = 0, frame = 16
+ 991              		@ frame_needed = 0, uses_anonymous_args = 0
+ 992 0000 30B5     		push	{r4, r5, lr}
+ 993              	.LCFI8:
+ 994              		.cfi_def_cfa_offset 12
+ 995              		.cfi_offset 4, -12
+ 996              		.cfi_offset 5, -8
+ 997              		.cfi_offset 14, -4
+ 998 0002 2DED028B 		vpush.64	{d8}
+ 999              	.LCFI9:
+ 1000              		.cfi_def_cfa_offset 20
+ 1001              		.cfi_offset 80, -20
+ 1002              		.cfi_offset 81, -16
+ 1003 0006 85B0     		sub	sp, sp, #20
+ 1004              	.LCFI10:
+ 1005              		.cfi_def_cfa_offset 40
+  42:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 1006              		.loc 1 42 2 view .LVU277
+  42:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 1007              		.loc 1 42 35 is_stmt 0 view .LVU278
+ 1008 0008 524B     		ldr	r3, .L31
+ 1009 000a 5A6A     		ldr	r2, [r3, #36]
+  42:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 1010              		.loc 1 42 28 view .LVU279
+ 1011 000c 47F22F51 		movw	r1, #29999
+ 1012 0010 8A1A     		subs	r2, r1, r2
+  42:Core/Src/Main/Interrupt.c **** 	TIM3->CNT = INITIAL_PULSE;
+ 1013              		.loc 1 42 26 view .LVU280
+ 1014 0012 514C     		ldr	r4, .L31+4
+ 1015 0014 2260     		str	r2, [r4]
+  43:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+ 1016              		.loc 1 43 2 is_stmt 1 view .LVU281
+  43:Core/Src/Main/Interrupt.c **** 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
+ 1017              		.loc 1 43 12 is_stmt 0 view .LVU282
+ 1018 0016 5962     		str	r1, [r3, #36]
+  44:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 1019              		.loc 1 44 2 is_stmt 1 view .LVU283
+  44:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 1020              		.loc 1 44 36 is_stmt 0 view .LVU284
+ 1021 0018 5048     		ldr	r0, .L31+8
+ 1022 001a 436A     		ldr	r3, [r0, #36]
+  44:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 1023              		.loc 1 44 29 view .LVU285
+ 1024 001c CB1A     		subs	r3, r1, r3
+  44:Core/Src/Main/Interrupt.c **** 	TIM4->CNT = INITIAL_PULSE;
+ 1025              		.loc 1 44 27 view .LVU286
+ 1026 001e 6360     		str	r3, [r4, #4]
+  45:Core/Src/Main/Interrupt.c **** 
+ 1027              		.loc 1 45 2 is_stmt 1 view .LVU287
+  45:Core/Src/Main/Interrupt.c **** 
+ 1028              		.loc 1 45 12 is_stmt 0 view .LVU288
+ 1029 0020 4162     		str	r1, [r0, #36]
+  48:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 1030              		.loc 1 48 2 is_stmt 1 view .LVU289
+  48:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 27
+
+
+ 1031              		.loc 1 48 27 is_stmt 0 view .LVU290
+ 1032 0022 07EE902A 		vmov	s15, r2	@ int
+ 1033 0026 B8EEE77A 		vcvt.f32.s32	s14, s15
+  48:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 1034              		.loc 1 48 58 view .LVU291
+ 1035 002a DFED4D6A 		vldr.32	s13, .L31+12
+ 1036 002e 27EE267A 		vmul.f32	s14, s14, s13
+  48:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
+ 1037              		.loc 1 48 24 view .LVU292
+ 1038 0032 4C4C     		ldr	r4, .L31+16
+ 1039 0034 84ED007A 		vstr.32	s14, [r4]
+  49:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 1040              		.loc 1 49 2 is_stmt 1 view .LVU293
+  49:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 1041              		.loc 1 49 28 is_stmt 0 view .LVU294
+ 1042 0038 07EE903A 		vmov	s15, r3	@ int
+ 1043 003c F8EEE77A 		vcvt.f32.s32	s15, s15
+  49:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 1044              		.loc 1 49 60 view .LVU295
+ 1045 0040 67EEA67A 		vmul.f32	s15, s15, s13
+  49:Core/Src/Main/Interrupt.c **** 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+ 1046              		.loc 1 49 25 view .LVU296
+ 1047 0044 C4ED017A 		vstr.32	s15, [r4, #4]
+  50:Core/Src/Main/Interrupt.c **** 
+ 1048              		.loc 1 50 2 is_stmt 1 view .LVU297
+  50:Core/Src/Main/Interrupt.c **** 
+ 1049              		.loc 1 50 42 is_stmt 0 view .LVU298
+ 1050 0048 D4ED007A 		vldr.32	s15, [r4]
+  50:Core/Src/Main/Interrupt.c **** 
+ 1051              		.loc 1 50 66 view .LVU299
+ 1052 004c 94ED017A 		vldr.32	s14, [r4, #4]
+  50:Core/Src/Main/Interrupt.c **** 
+ 1053              		.loc 1 50 49 view .LVU300
+ 1054 0050 77EE877A 		vadd.f32	s15, s15, s14
+  50:Core/Src/Main/Interrupt.c **** 
+ 1055              		.loc 1 50 75 view .LVU301
+ 1056 0054 B6EE007A 		vmov.f32	s14, #5.0e-1
+ 1057 0058 67EE877A 		vmul.f32	s15, s15, s14
+  50:Core/Src/Main/Interrupt.c **** 
+ 1058              		.loc 1 50 24 view .LVU302
+ 1059 005c C4ED027A 		vstr.32	s15, [r4, #8]
+  52:Core/Src/Main/Interrupt.c **** 
+ 1060              		.loc 1 52 2 is_stmt 1 view .LVU303
+ 1061 0060 414D     		ldr	r5, .L31+20
+ 1062 0062 4249     		ldr	r1, .L31+24
+ 1063 0064 2846     		mov	r0, r5
+ 1064 0066 FFF7FEFF 		bl	Update_IMU
+ 1065              	.LVL68:
+  54:Core/Src/Main/Interrupt.c **** 	static int count=0;
+ 1066              		.loc 1 54 2 view .LVU304
+  55:Core/Src/Main/Interrupt.c **** 	float output[2] ={
+ 1067              		.loc 1 55 2 view .LVU305
+  56:Core/Src/Main/Interrupt.c **** 		CurrentVelocity[BODY],
+ 1068              		.loc 1 56 2 view .LVU306
+  57:Core/Src/Main/Interrupt.c **** 		AngularV
+ 1069              		.loc 1 57 18 is_stmt 0 view .LVU307
+ 1070 006a A368     		ldr	r3, [r4, #8]	@ float
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 28
+
+
+  56:Core/Src/Main/Interrupt.c **** 		CurrentVelocity[BODY],
+ 1071              		.loc 1 56 8 view .LVU308
+ 1072 006c 0293     		str	r3, [sp, #8]	@ float
+ 1073 006e 2B68     		ldr	r3, [r5]	@ float
+ 1074 0070 0393     		str	r3, [sp, #12]	@ float
+  60:Core/Src/Main/Interrupt.c **** 	_Bool identify_mode_v_or_angv = getIdentifyMode();
+ 1075              		.loc 1 60 2 is_stmt 1 view .LVU309
+  60:Core/Src/Main/Interrupt.c **** 	_Bool identify_mode_v_or_angv = getIdentifyMode();
+ 1076              		.loc 1 60 8 is_stmt 0 view .LVU310
+ 1077 0072 0023     		movs	r3, #0
+ 1078 0074 0093     		str	r3, [sp]
+ 1079 0076 0193     		str	r3, [sp, #4]
+  61:Core/Src/Main/Interrupt.c **** 	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 1080              		.loc 1 61 2 is_stmt 1 view .LVU311
+  61:Core/Src/Main/Interrupt.c **** 	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+ 1081              		.loc 1 61 34 is_stmt 0 view .LVU312
+ 1082 0078 FFF7FEFF 		bl	getIdentifyMode
+ 1083              	.LVL69:
+ 1084 007c 0446     		mov	r4, r0
+ 1085              	.LVL70:
+  62:Core/Src/Main/Interrupt.c **** 	float convert_to_reg_counter = 840/battery_voltage;;
+ 1086              		.loc 1 62 2 is_stmt 1 view .LVU313
+  62:Core/Src/Main/Interrupt.c **** 	float convert_to_reg_counter = 840/battery_voltage;;
+ 1087              		.loc 1 62 26 is_stmt 0 view .LVU314
+ 1088 007e 9FED3C1A 		vldr.32	s2, .L31+28
+ 1089 0082 DFED3C0A 		vldr.32	s1, .L31+32
+ 1090 0086 B0EE080A 		vmov.f32	s0, #3.0e+0
+ 1091 008a 3B4B     		ldr	r3, .L31+36
+ 1092 008c 9868     		ldr	r0, [r3, #8]
+ 1093 008e FFF7FEFF 		bl	ADCToBatteryVoltage
+ 1094              	.LVL71:
+  63:Core/Src/Main/Interrupt.c **** 	if(getLoggerFlag(&(identify[identify_mode_v_or_angv].f)) == true){
+ 1095              		.loc 1 63 2 is_stmt 1 view .LVU315
+  63:Core/Src/Main/Interrupt.c **** 	if(getLoggerFlag(&(identify[identify_mode_v_or_angv].f)) == true){
+ 1096              		.loc 1 63 8 is_stmt 0 view .LVU316
+ 1097 0092 DFED3A7A 		vldr.32	s15, .L31+40
+ 1098 0096 87EE808A 		vdiv.f32	s16, s15, s0
+ 1099              	.LVL72:
+  63:Core/Src/Main/Interrupt.c **** 	if(getLoggerFlag(&(identify[identify_mode_v_or_angv].f)) == true){
+ 1100              		.loc 1 63 53 is_stmt 1 view .LVU317
+  64:Core/Src/Main/Interrupt.c **** 		if( (count%20) == 0 ){
+ 1101              		.loc 1 64 2 view .LVU318
+  64:Core/Src/Main/Interrupt.c **** 		if( (count%20) == 0 ){
+ 1102              		.loc 1 64 5 is_stmt 0 view .LVU319
+ 1103 009a 3948     		ldr	r0, .L31+44
+ 1104 009c 00EB0410 		add	r0, r0, r4, lsl #4
+ 1105 00a0 FFF7FEFF 		bl	getLoggerFlag
+ 1106              	.LVL73:
+  64:Core/Src/Main/Interrupt.c **** 		if( (count%20) == 0 ){
+ 1107              		.loc 1 64 4 view .LVU320
+ 1108 00a4 0028     		cmp	r0, #0
+ 1109 00a6 4CD0     		beq	.L24
+  65:Core/Src/Main/Interrupt.c **** 			getFloatLog(&identify[identify_mode_v_or_angv], output[identify_mode_v_or_angv]);
+ 1110              		.loc 1 65 3 is_stmt 1 view .LVU321
+  65:Core/Src/Main/Interrupt.c **** 			getFloatLog(&identify[identify_mode_v_or_angv], output[identify_mode_v_or_angv]);
+ 1111              		.loc 1 65 13 is_stmt 0 view .LVU322
+ 1112 00a8 364B     		ldr	r3, .L31+48
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 29
+
+
+ 1113 00aa 1A68     		ldr	r2, [r3]
+ 1114 00ac 3649     		ldr	r1, .L31+52
+ 1115 00ae 81FB0231 		smull	r3, r1, r1, r2
+ 1116 00b2 D317     		asrs	r3, r2, #31
+ 1117 00b4 C3EBE103 		rsb	r3, r3, r1, asr #3
+ 1118 00b8 03EB8303 		add	r3, r3, r3, lsl #2
+  65:Core/Src/Main/Interrupt.c **** 			getFloatLog(&identify[identify_mode_v_or_angv], output[identify_mode_v_or_angv]);
+ 1119              		.loc 1 65 5 view .LVU323
+ 1120 00bc B2EB830F 		cmp	r2, r3, lsl #2
+ 1121 00c0 14D0     		beq	.L29
+ 1122              	.L25:
+  68:Core/Src/Main/Interrupt.c **** 			getIdentifyInputCount(identify_count, &input[0] ,identify_mode_v_or_angv);
+ 1123              		.loc 1 68 3 is_stmt 1 view .LVU324
+  68:Core/Src/Main/Interrupt.c **** 			getIdentifyInputCount(identify_count, &input[0] ,identify_mode_v_or_angv);
+ 1124              		.loc 1 68 13 is_stmt 0 view .LVU325
+ 1125 00c2 304B     		ldr	r3, .L31+48
+ 1126 00c4 1A68     		ldr	r2, [r3]
+ 1127 00c6 3049     		ldr	r1, .L31+52
+ 1128 00c8 81FB0231 		smull	r3, r1, r1, r2
+ 1129 00cc D317     		asrs	r3, r2, #31
+ 1130 00ce C3EB2113 		rsb	r3, r3, r1, asr #4
+ 1131 00d2 03EB8303 		add	r3, r3, r3, lsl #2
+  68:Core/Src/Main/Interrupt.c **** 			getIdentifyInputCount(identify_count, &input[0] ,identify_mode_v_or_angv);
+ 1132              		.loc 1 68 5 view .LVU326
+ 1133 00d6 B2EBC30F 		cmp	r2, r3, lsl #3
+ 1134 00da 12D0     		beq	.L30
+ 1135              	.LVL74:
+ 1136              	.L26:
+  76:Core/Src/Main/Interrupt.c **** 	}
+ 1137              		.loc 1 76 3 is_stmt 1 view .LVU327
+  76:Core/Src/Main/Interrupt.c **** 	}
+ 1138              		.loc 1 76 8 is_stmt 0 view .LVU328
+ 1139 00dc 294A     		ldr	r2, .L31+48
+ 1140 00de 1368     		ldr	r3, [r2]
+ 1141 00e0 0133     		adds	r3, r3, #1
+ 1142 00e2 1360     		str	r3, [r2]
+ 1143              	.L23:
+  83:Core/Src/Main/Interrupt.c **** static void ControlTest_IT(){
+ 1144              		.loc 1 83 1 view .LVU329
+ 1145 00e4 05B0     		add	sp, sp, #20
+ 1146              	.LCFI11:
+ 1147              		.cfi_remember_state
+ 1148              		.cfi_def_cfa_offset 20
+ 1149              		@ sp needed
+ 1150 00e6 BDEC028B 		vldm	sp!, {d8}
+ 1151              	.LCFI12:
+ 1152              		.cfi_restore 80
+ 1153              		.cfi_restore 81
+ 1154              		.cfi_def_cfa_offset 12
+ 1155 00ea 30BD     		pop	{r4, r5, pc}
+ 1156              	.LVL75:
+ 1157              	.L29:
+ 1158              	.LCFI13:
+ 1159              		.cfi_restore_state
+  66:Core/Src/Main/Interrupt.c **** 		}
+ 1160              		.loc 1 66 4 is_stmt 1 view .LVU330
+ 1161 00ec 04AB     		add	r3, sp, #16
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 30
+
+
+ 1162 00ee 03EB8403 		add	r3, r3, r4, lsl #2
+ 1163 00f2 13ED020A 		vldr.32	s0, [r3, #-8]
+ 1164 00f6 2248     		ldr	r0, .L31+44
+ 1165 00f8 00EB0410 		add	r0, r0, r4, lsl #4
+ 1166 00fc FFF7FEFF 		bl	getFloatLog
+ 1167              	.LVL76:
+ 1168 0100 DFE7     		b	.L25
+ 1169              	.L30:
+  69:Core/Src/Main/Interrupt.c **** 			input[0] *= convert_to_reg_counter;
+ 1170              		.loc 1 69 4 view .LVU331
+ 1171 0102 224D     		ldr	r5, .L31+56
+ 1172 0104 2246     		mov	r2, r4
+ 1173 0106 6946     		mov	r1, sp
+ 1174 0108 2868     		ldr	r0, [r5]
+ 1175 010a FFF7FEFF 		bl	getIdentifyInputCount
+ 1176              	.LVL77:
+  70:Core/Src/Main/Interrupt.c **** 			input[1] *= convert_to_reg_counter;
+ 1177              		.loc 1 70 4 view .LVU332
+  70:Core/Src/Main/Interrupt.c **** 			input[1] *= convert_to_reg_counter;
+ 1178              		.loc 1 70 13 is_stmt 0 view .LVU333
+ 1179 010e DDED007A 		vldr.32	s15, [sp]
+ 1180 0112 68EE277A 		vmul.f32	s15, s16, s15
+ 1181 0116 CDED007A 		vstr.32	s15, [sp]
+  71:Core/Src/Main/Interrupt.c **** 			Motor_Switch(input[0], input[1]);
+ 1182              		.loc 1 71 4 is_stmt 1 view .LVU334
+  71:Core/Src/Main/Interrupt.c **** 			Motor_Switch(input[0], input[1]);
+ 1183              		.loc 1 71 13 is_stmt 0 view .LVU335
+ 1184 011a 9DED017A 		vldr.32	s14, [sp, #4]
+ 1185 011e 28EE078A 		vmul.f32	s16, s16, s14
+ 1186              	.LVL78:
+  71:Core/Src/Main/Interrupt.c **** 			Motor_Switch(input[0], input[1]);
+ 1187              		.loc 1 71 13 view .LVU336
+ 1188 0122 8DED018A 		vstr.32	s16, [sp, #4]
+  72:Core/Src/Main/Interrupt.c **** 			identify_count++;
+ 1189              		.loc 1 72 4 is_stmt 1 view .LVU337
+ 1190 0126 BDEEC87A 		vcvt.s32.f32	s14, s16
+ 1191 012a 17EE101A 		vmov	r1, s14	@ int
+ 1192 012e FDEEE77A 		vcvt.s32.f32	s15, s15
+ 1193 0132 17EE900A 		vmov	r0, s15	@ int
+ 1194 0136 FFF7FEFF 		bl	Motor_Switch
+ 1195              	.LVL79:
+  73:Core/Src/Main/Interrupt.c **** 			
+ 1196              		.loc 1 73 4 view .LVU338
+  73:Core/Src/Main/Interrupt.c **** 			
+ 1197              		.loc 1 73 18 is_stmt 0 view .LVU339
+ 1198 013a 2B68     		ldr	r3, [r5]
+ 1199 013c 0133     		adds	r3, r3, #1
+ 1200 013e 2B60     		str	r3, [r5]
+ 1201 0140 CCE7     		b	.L26
+ 1202              	.LVL80:
+ 1203              	.L24:
+  79:Core/Src/Main/Interrupt.c **** 		count = 0;
+ 1204              		.loc 1 79 3 is_stmt 1 view .LVU340
+ 1205 0142 0021     		movs	r1, #0
+ 1206 0144 0846     		mov	r0, r1
+ 1207 0146 FFF7FEFF 		bl	Motor_Switch
+ 1208              	.LVL81:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 31
+
+
+  80:Core/Src/Main/Interrupt.c **** 	}
+ 1209              		.loc 1 80 3 view .LVU341
+  80:Core/Src/Main/Interrupt.c **** 	}
+ 1210              		.loc 1 80 9 is_stmt 0 view .LVU342
+ 1211 014a 0E4B     		ldr	r3, .L31+48
+ 1212 014c 0022     		movs	r2, #0
+ 1213 014e 1A60     		str	r2, [r3]
+  83:Core/Src/Main/Interrupt.c **** static void ControlTest_IT(){
+ 1214              		.loc 1 83 1 view .LVU343
+ 1215 0150 C8E7     		b	.L23
+ 1216              	.L32:
+ 1217 0152 00BF     		.align	2
+ 1218              	.L31:
+ 1219 0154 00040040 		.word	1073742848
+ 1220 0158 00000000 		.word	PulseDisplacement
+ 1221 015c 00080040 		.word	1073743872
+ 1222 0160 CD77813F 		.word	1065449421
+ 1223 0164 00000000 		.word	CurrentVelocity
+ 1224 0168 00000000 		.word	AngularV
+ 1225 016c 00000000 		.word	Angle
+ 1226 0170 00008045 		.word	1166016512
+ 1227 0174 33335340 		.word	1079194419
+ 1228 0178 00000000 		.word	adc1
+ 1229 017c 00005244 		.word	1146224640
+ 1230 0180 00000000 		.word	.LANCHOR1
+ 1231 0184 00000000 		.word	.LANCHOR2
+ 1232 0188 67666666 		.word	1717986919
+ 1233 018c 00000000 		.word	.LANCHOR3
+ 1234              		.cfi_endproc
+ 1235              	.LFE238:
+ 1237              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 1238              		.align	1
+ 1239              		.global	HAL_TIM_PeriodElapsedCallback
+ 1240              		.syntax unified
+ 1241              		.thumb
+ 1242              		.thumb_func
+ 1244              	HAL_TIM_PeriodElapsedCallback:
+ 1245              	.LVL82:
+ 1246              	.LFB242:
+ 336:Core/Src/Main/Interrupt.c **** 
+ 337:Core/Src/Main/Interrupt.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 338:Core/Src/Main/Interrupt.c **** {
+ 1247              		.loc 1 338 1 is_stmt 1 view -0
+ 1248              		.cfi_startproc
+ 1249              		@ args = 0, pretend = 0, frame = 16
+ 1250              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1251              		.loc 1 338 1 is_stmt 0 view .LVU345
+ 1252 0000 70B5     		push	{r4, r5, r6, lr}
+ 1253              	.LCFI14:
+ 1254              		.cfi_def_cfa_offset 16
+ 1255              		.cfi_offset 4, -16
+ 1256              		.cfi_offset 5, -12
+ 1257              		.cfi_offset 6, -8
+ 1258              		.cfi_offset 14, -4
+ 1259 0002 84B0     		sub	sp, sp, #16
+ 1260              	.LCFI15:
+ 1261              		.cfi_def_cfa_offset 32
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 32
+
+
+ 1262 0004 0446     		mov	r4, r0
+ 339:Core/Src/Main/Interrupt.c **** 	if( htim == &htim1)
+ 1263              		.loc 1 339 2 is_stmt 1 view .LVU346
+ 1264              		.loc 1 339 4 is_stmt 0 view .LVU347
+ 1265 0006 334B     		ldr	r3, .L47
+ 1266 0008 9842     		cmp	r0, r3
+ 1267 000a 04D0     		beq	.L44
+ 1268              	.LVL83:
+ 1269              	.L34:
+ 340:Core/Src/Main/Interrupt.c **** 	{
+ 341:Core/Src/Main/Interrupt.c **** 
+ 342:Core/Src/Main/Interrupt.c **** 		switch(IT_mode){
+ 343:Core/Src/Main/Interrupt.c **** 		case IT_EXPLORE:
+ 344:Core/Src/Main/Interrupt.c **** 			Explore_IT();
+ 345:Core/Src/Main/Interrupt.c **** 			break;
+ 346:Core/Src/Main/Interrupt.c **** 		case IT_FREE:
+ 347:Core/Src/Main/Interrupt.c **** 			WritingFree_IT();
+ 348:Core/Src/Main/Interrupt.c **** 			break;
+ 349:Core/Src/Main/Interrupt.c **** 		case IT_IMU_TEST:
+ 350:Core/Src/Main/Interrupt.c **** 
+ 351:Core/Src/Main/Interrupt.c **** 			if(timer1 < 5000)
+ 352:Core/Src/Main/Interrupt.c **** 			{
+ 353:Core/Src/Main/Interrupt.c **** 
+ 354:Core/Src/Main/Interrupt.c **** 				Update_IMU(&AngularV, &Angle);
+ 355:Core/Src/Main/Interrupt.c **** //				debugVL[timer1] = Angle;
+ 356:Core/Src/Main/Interrupt.c **** 				timer1 += t;
+ 357:Core/Src/Main/Interrupt.c **** 			}
+ 358:Core/Src/Main/Interrupt.c **** 			else t = 0;
+ 359:Core/Src/Main/Interrupt.c **** 			break;
+ 360:Core/Src/Main/Interrupt.c **** 		case IT_IDENTIFY:
+ 361:Core/Src/Main/Interrupt.c **** 			SystemIdentify_IT();
+ 362:Core/Src/Main/Interrupt.c **** 			break;
+ 363:Core/Src/Main/Interrupt.c **** 		case IT_STEP_RESPONSE:
+ 364:Core/Src/Main/Interrupt.c **** 
+ 365:Core/Src/Main/Interrupt.c **** 			break;
+ 366:Core/Src/Main/Interrupt.c **** 		case IT_CONTROL_TEST:
+ 367:Core/Src/Main/Interrupt.c **** 			ControlTest_IT();
+ 368:Core/Src/Main/Interrupt.c **** 			break;
+ 369:Core/Src/Main/Interrupt.c **** 
+ 370:Core/Src/Main/Interrupt.c **** 		default :
+ 371:Core/Src/Main/Interrupt.c **** 			break;
+ 372:Core/Src/Main/Interrupt.c **** 		}
+ 373:Core/Src/Main/Interrupt.c **** 	}
+ 374:Core/Src/Main/Interrupt.c **** 
+ 375:Core/Src/Main/Interrupt.c **** 	if( htim == &htim8)
+ 1270              		.loc 1 375 2 is_stmt 1 view .LVU348
+ 1271              		.loc 1 375 4 is_stmt 0 view .LVU349
+ 1272 000c 324B     		ldr	r3, .L47+4
+ 1273 000e 9C42     		cmp	r4, r3
+ 1274 0010 35D0     		beq	.L45
+ 1275              	.LVL84:
+ 1276              	.L33:
+ 376:Core/Src/Main/Interrupt.c **** 	{
+ 377:Core/Src/Main/Interrupt.c **** 		//timer8 += t;
+ 378:Core/Src/Main/Interrupt.c **** 
+ 379:Core/Src/Main/Interrupt.c **** 		//壁センサデータの更新
+ 380:Core/Src/Main/Interrupt.c **** 		Photo[FL] = GetWallDataAverage(10, adc1[0], FL);	//adc1_IN10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 33
+
+
+ 381:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
+ 382:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+ 383:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+ 384:Core/Src/Main/Interrupt.c **** 		#if 1
+ 385:Core/Src/Main/Interrupt.c **** 			uint32_t sample[4]={
+ 386:Core/Src/Main/Interrupt.c **** 				adc2[0],
+ 387:Core/Src/Main/Interrupt.c **** 				adc1[0],
+ 388:Core/Src/Main/Interrupt.c **** 				adc2[1],
+ 389:Core/Src/Main/Interrupt.c **** 				adc1[1]
+ 390:Core/Src/Main/Interrupt.c **** 			};
+ 391:Core/Src/Main/Interrupt.c **** 			getPhotoSampleValue_uint32(&sample[0]);
+ 392:Core/Src/Main/Interrupt.c **** 		#else
+ 393:Core/Src/Main/Interrupt.c **** 			getPhotoSampleValue_float(&Photo[0]);
+ 394:Core/Src/Main/Interrupt.c **** 		#endif
+ 395:Core/Src/Main/Interrupt.c **** 	}
+ 396:Core/Src/Main/Interrupt.c **** }
+ 1277              		.loc 1 396 1 view .LVU350
+ 1278 0012 04B0     		add	sp, sp, #16
+ 1279              	.LCFI16:
+ 1280              		.cfi_remember_state
+ 1281              		.cfi_def_cfa_offset 16
+ 1282              		@ sp needed
+ 1283 0014 70BD     		pop	{r4, r5, r6, pc}
+ 1284              	.LVL85:
+ 1285              	.L44:
+ 1286              	.LCFI17:
+ 1287              		.cfi_restore_state
+ 342:Core/Src/Main/Interrupt.c **** 		case IT_EXPLORE:
+ 1288              		.loc 1 342 3 is_stmt 1 view .LVU351
+ 1289 0016 314B     		ldr	r3, .L47+8
+ 1290 0018 1B68     		ldr	r3, [r3]
+ 1291 001a 052B     		cmp	r3, #5
+ 1292 001c F6D8     		bhi	.L34
+ 1293 001e 01A2     		adr	r2, .L36
+ 1294 0020 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 1295              		.p2align 2
+ 1296              	.L36:
+ 1297 0024 3D000000 		.word	.L40+1
+ 1298 0028 43000000 		.word	.L39+1
+ 1299 002c 49000000 		.word	.L38+1
+ 1300 0030 73000000 		.word	.L37+1
+ 1301 0034 0D000000 		.word	.L34+1
+ 1302 0038 79000000 		.word	.L35+1
+ 1303              		.p2align 1
+ 1304              	.L40:
+ 344:Core/Src/Main/Interrupt.c **** 			break;
+ 1305              		.loc 1 344 4 view .LVU352
+ 1306 003c FFF7FEFF 		bl	Explore_IT
+ 1307              	.LVL86:
+ 345:Core/Src/Main/Interrupt.c **** 		case IT_FREE:
+ 1308              		.loc 1 345 4 view .LVU353
+ 1309 0040 E4E7     		b	.L34
+ 1310              	.LVL87:
+ 1311              	.L39:
+ 347:Core/Src/Main/Interrupt.c **** 			break;
+ 1312              		.loc 1 347 4 view .LVU354
+ 1313 0042 FFF7FEFF 		bl	WritingFree_IT
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 34
+
+
+ 1314              	.LVL88:
+ 348:Core/Src/Main/Interrupt.c **** 		case IT_IMU_TEST:
+ 1315              		.loc 1 348 4 view .LVU355
+ 1316 0046 E1E7     		b	.L34
+ 1317              	.LVL89:
+ 1318              	.L38:
+ 351:Core/Src/Main/Interrupt.c **** 			{
+ 1319              		.loc 1 351 4 view .LVU356
+ 351:Core/Src/Main/Interrupt.c **** 			{
+ 1320              		.loc 1 351 14 is_stmt 0 view .LVU357
+ 1321 0048 254B     		ldr	r3, .L47+12
+ 1322 004a 1A68     		ldr	r2, [r3]
+ 351:Core/Src/Main/Interrupt.c **** 			{
+ 1323              		.loc 1 351 6 view .LVU358
+ 1324 004c 41F28733 		movw	r3, #4999
+ 1325 0050 9A42     		cmp	r2, r3
+ 1326 0052 03DD     		ble	.L46
+ 358:Core/Src/Main/Interrupt.c **** 			break;
+ 1327              		.loc 1 358 9 is_stmt 1 view .LVU359
+ 358:Core/Src/Main/Interrupt.c **** 			break;
+ 1328              		.loc 1 358 11 is_stmt 0 view .LVU360
+ 1329 0054 234B     		ldr	r3, .L47+16
+ 1330 0056 0022     		movs	r2, #0
+ 1331 0058 1A60     		str	r2, [r3]
+ 1332 005a D7E7     		b	.L34
+ 1333              	.L46:
+ 354:Core/Src/Main/Interrupt.c **** //				debugVL[timer1] = Angle;
+ 1334              		.loc 1 354 5 is_stmt 1 view .LVU361
+ 1335 005c 2249     		ldr	r1, .L47+20
+ 1336 005e 2348     		ldr	r0, .L47+24
+ 1337              	.LVL90:
+ 354:Core/Src/Main/Interrupt.c **** //				debugVL[timer1] = Angle;
+ 1338              		.loc 1 354 5 is_stmt 0 view .LVU362
+ 1339 0060 FFF7FEFF 		bl	Update_IMU
+ 1340              	.LVL91:
+ 356:Core/Src/Main/Interrupt.c **** 			}
+ 1341              		.loc 1 356 5 is_stmt 1 view .LVU363
+ 356:Core/Src/Main/Interrupt.c **** 			}
+ 1342              		.loc 1 356 12 is_stmt 0 view .LVU364
+ 1343 0064 1E4A     		ldr	r2, .L47+12
+ 1344 0066 1368     		ldr	r3, [r2]
+ 1345 0068 1E49     		ldr	r1, .L47+16
+ 1346 006a 0968     		ldr	r1, [r1]
+ 1347 006c 0B44     		add	r3, r3, r1
+ 1348 006e 1360     		str	r3, [r2]
+ 1349 0070 CCE7     		b	.L34
+ 1350              	.LVL92:
+ 1351              	.L37:
+ 361:Core/Src/Main/Interrupt.c **** 			break;
+ 1352              		.loc 1 361 4 is_stmt 1 view .LVU365
+ 1353 0072 FFF7FEFF 		bl	SystemIdentify_IT
+ 1354              	.LVL93:
+ 362:Core/Src/Main/Interrupt.c **** 		case IT_STEP_RESPONSE:
+ 1355              		.loc 1 362 4 view .LVU366
+ 1356 0076 C9E7     		b	.L34
+ 1357              	.LVL94:
+ 1358              	.L35:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 35
+
+
+ 367:Core/Src/Main/Interrupt.c **** 			break;
+ 1359              		.loc 1 367 4 view .LVU367
+ 1360 0078 FFF7FEFF 		bl	ControlTest_IT
+ 1361              	.LVL95:
+ 368:Core/Src/Main/Interrupt.c **** 
+ 1362              		.loc 1 368 4 view .LVU368
+ 1363 007c C6E7     		b	.L34
+ 1364              	.L45:
+ 1365              	.LBB2:
+ 380:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
+ 1366              		.loc 1 380 3 view .LVU369
+ 380:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
+ 1367              		.loc 1 380 42 is_stmt 0 view .LVU370
+ 1368 007e 1C4C     		ldr	r4, .L47+28
+ 1369              	.LVL96:
+ 380:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
+ 1370              		.loc 1 380 15 view .LVU371
+ 1371 0080 0022     		movs	r2, #0
+ 1372 0082 2168     		ldr	r1, [r4]
+ 1373 0084 0A20     		movs	r0, #10
+ 1374 0086 FFF7FEFF 		bl	GetWallDataAverage
+ 1375              	.LVL97:
+ 380:Core/Src/Main/Interrupt.c **** 		Photo[SIDE_R] = GetWallDataAverage(10, adc1[1], SIDE_R);	//adc1_IN14
+ 1376              		.loc 1 380 13 view .LVU372
+ 1377 008a 1A4E     		ldr	r6, .L47+32
+ 1378 008c 86ED000A 		vstr.32	s0, [r6]
+ 381:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+ 1379              		.loc 1 381 3 is_stmt 1 view .LVU373
+ 381:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+ 1380              		.loc 1 381 19 is_stmt 0 view .LVU374
+ 1381 0090 0122     		movs	r2, #1
+ 1382 0092 6168     		ldr	r1, [r4, #4]
+ 1383 0094 0A20     		movs	r0, #10
+ 1384 0096 FFF7FEFF 		bl	GetWallDataAverage
+ 1385              	.LVL98:
+ 381:Core/Src/Main/Interrupt.c **** 		Photo[SL] = GetWallDataAverage(10, adc2[0], SL);	//adc2_IN11
+ 1386              		.loc 1 381 17 view .LVU375
+ 1387 009a 86ED010A 		vstr.32	s0, [r6, #4]
+ 382:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+ 1388              		.loc 1 382 3 is_stmt 1 view .LVU376
+ 382:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+ 1389              		.loc 1 382 42 is_stmt 0 view .LVU377
+ 1390 009e 164D     		ldr	r5, .L47+36
+ 382:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+ 1391              		.loc 1 382 15 view .LVU378
+ 1392 00a0 0222     		movs	r2, #2
+ 1393 00a2 2968     		ldr	r1, [r5]
+ 1394 00a4 0A20     		movs	r0, #10
+ 1395 00a6 FFF7FEFF 		bl	GetWallDataAverage
+ 1396              	.LVL99:
+ 382:Core/Src/Main/Interrupt.c **** 		Photo[FR] = GetWallDataAverage(10, adc2[1], FR);	//adc2_IN15
+ 1397              		.loc 1 382 13 view .LVU379
+ 1398 00aa 86ED020A 		vstr.32	s0, [r6, #8]
+ 383:Core/Src/Main/Interrupt.c **** 		#if 1
+ 1399              		.loc 1 383 3 is_stmt 1 view .LVU380
+ 383:Core/Src/Main/Interrupt.c **** 		#if 1
+ 1400              		.loc 1 383 15 is_stmt 0 view .LVU381
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 36
+
+
+ 1401 00ae 0322     		movs	r2, #3
+ 1402 00b0 6968     		ldr	r1, [r5, #4]
+ 1403 00b2 0A20     		movs	r0, #10
+ 1404 00b4 FFF7FEFF 		bl	GetWallDataAverage
+ 1405              	.LVL100:
+ 383:Core/Src/Main/Interrupt.c **** 		#if 1
+ 1406              		.loc 1 383 13 view .LVU382
+ 1407 00b8 86ED030A 		vstr.32	s0, [r6, #12]
+ 385:Core/Src/Main/Interrupt.c **** 				adc2[0],
+ 1408              		.loc 1 385 4 is_stmt 1 view .LVU383
+ 386:Core/Src/Main/Interrupt.c **** 				adc1[0],
+ 1409              		.loc 1 386 9 is_stmt 0 view .LVU384
+ 1410 00bc 2B68     		ldr	r3, [r5]
+ 385:Core/Src/Main/Interrupt.c **** 				adc2[0],
+ 1411              		.loc 1 385 13 view .LVU385
+ 1412 00be 0093     		str	r3, [sp]
+ 387:Core/Src/Main/Interrupt.c **** 				adc2[1],
+ 1413              		.loc 1 387 9 view .LVU386
+ 1414 00c0 2368     		ldr	r3, [r4]
+ 385:Core/Src/Main/Interrupt.c **** 				adc2[0],
+ 1415              		.loc 1 385 13 view .LVU387
+ 1416 00c2 0193     		str	r3, [sp, #4]
+ 388:Core/Src/Main/Interrupt.c **** 				adc1[1]
+ 1417              		.loc 1 388 9 view .LVU388
+ 1418 00c4 6B68     		ldr	r3, [r5, #4]
+ 385:Core/Src/Main/Interrupt.c **** 				adc2[0],
+ 1419              		.loc 1 385 13 view .LVU389
+ 1420 00c6 0293     		str	r3, [sp, #8]
+ 389:Core/Src/Main/Interrupt.c **** 			};
+ 1421              		.loc 1 389 9 view .LVU390
+ 1422 00c8 6368     		ldr	r3, [r4, #4]
+ 385:Core/Src/Main/Interrupt.c **** 				adc2[0],
+ 1423              		.loc 1 385 13 view .LVU391
+ 1424 00ca 0393     		str	r3, [sp, #12]
+ 391:Core/Src/Main/Interrupt.c **** 		#else
+ 1425              		.loc 1 391 4 is_stmt 1 view .LVU392
+ 1426 00cc 6846     		mov	r0, sp
+ 1427 00ce FFF7FEFF 		bl	getPhotoSampleValue_uint32
+ 1428              	.LVL101:
+ 1429              	.LBE2:
+ 1430              		.loc 1 396 1 is_stmt 0 view .LVU393
+ 1431 00d2 9EE7     		b	.L33
+ 1432              	.L48:
+ 1433              		.align	2
+ 1434              	.L47:
+ 1435 00d4 00000000 		.word	htim1
+ 1436 00d8 00000000 		.word	htim8
+ 1437 00dc 00000000 		.word	.LANCHOR4
+ 1438 00e0 00000000 		.word	.LANCHOR5
+ 1439 00e4 00000000 		.word	.LANCHOR6
+ 1440 00e8 00000000 		.word	Angle
+ 1441 00ec 00000000 		.word	AngularV
+ 1442 00f0 00000000 		.word	adc1
+ 1443 00f4 00000000 		.word	Photo
+ 1444 00f8 00000000 		.word	adc2
+ 1445              		.cfi_endproc
+ 1446              	.LFE242:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 37
+
+
+ 1448              		.global	log_velocity
+ 1449              		.global	convert_to_imu_yaccel
+ 1450              		.global	convert_to_angularv
+ 1451              		.global	convert_to_velocity
+ 1452              		.global	identify
+ 1453              		.global	dbc
+ 1454              		.global	debugVR
+ 1455              		.global	debugVL
+ 1456              		.global	velodebug_flag
+ 1457              		.global	IT_mode
+ 1458              		.global	t
+ 1459              		.global	timer8
+ 1460              		.global	timer1
+ 1461              		.section	.bss.IT_mode,"aw",%nobits
+ 1462              		.align	2
+ 1463              		.set	.LANCHOR4,. + 0
+ 1466              	IT_mode:
+ 1467 0000 00000000 		.space	4
+ 1468              		.section	.bss.count.1,"aw",%nobits
+ 1469              		.align	2
+ 1470              		.set	.LANCHOR2,. + 0
+ 1473              	count.1:
+ 1474 0000 00000000 		.space	4
+ 1475              		.section	.bss.dbc,"aw",%nobits
+ 1476              		.align	2
+ 1479              	dbc:
+ 1480 0000 00000000 		.space	4
+ 1481              		.section	.bss.debugVL,"aw",%nobits
+ 1482              		.align	2
+ 1485              	debugVL:
+ 1486 0000 00000000 		.space	80
+ 1486      00000000 
+ 1486      00000000 
+ 1486      00000000 
+ 1486      00000000 
+ 1487              		.section	.bss.debugVR,"aw",%nobits
+ 1488              		.align	2
+ 1491              	debugVR:
+ 1492 0000 00000000 		.space	80
+ 1492      00000000 
+ 1492      00000000 
+ 1492      00000000 
+ 1492      00000000 
+ 1493              		.section	.bss.identify,"aw",%nobits
+ 1494              		.align	2
+ 1495              		.set	.LANCHOR1,. + 0
+ 1498              	identify:
+ 1499 0000 00000000 		.space	32
+ 1499      00000000 
+ 1499      00000000 
+ 1499      00000000 
+ 1499      00000000 
+ 1500              		.section	.bss.identify_count.0,"aw",%nobits
+ 1501              		.align	2
+ 1502              		.set	.LANCHOR3,. + 0
+ 1505              	identify_count.0:
+ 1506 0000 00000000 		.space	4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 38
+
+
+ 1507              		.section	.bss.log_velocity,"aw",%nobits
+ 1508              		.align	2
+ 1511              	log_velocity:
+ 1512 0000 00000000 		.space	16
+ 1512      00000000 
+ 1512      00000000 
+ 1512      00000000 
+ 1513              		.section	.bss.t,"aw",%nobits
+ 1514              		.align	2
+ 1515              		.set	.LANCHOR6,. + 0
+ 1518              	t:
+ 1519 0000 00000000 		.space	4
+ 1520              		.section	.bss.timer1,"aw",%nobits
+ 1521              		.align	2
+ 1522              		.set	.LANCHOR5,. + 0
+ 1525              	timer1:
+ 1526 0000 00000000 		.space	4
+ 1527              		.section	.bss.timer8,"aw",%nobits
+ 1528              		.align	2
+ 1531              	timer8:
+ 1532 0000 00000000 		.space	4
+ 1533              		.section	.bss.velodebug_flag,"aw",%nobits
+ 1534              		.align	2
+ 1537              	velodebug_flag:
+ 1538 0000 00000000 		.space	4
+ 1539              		.section	.bss.zg_last.2,"aw",%nobits
+ 1540              		.align	2
+ 1541              		.set	.LANCHOR0,. + 0
+ 1544              	zg_last.2:
+ 1545 0000 00000000 		.space	4
+ 1546              		.section	.rodata.convert_to_angularv,"a"
+ 1547              		.align	2
+ 1550              	convert_to_angularv:
+ 1551 0000 B823EE3C 		.word	1022239672
+ 1552              		.section	.rodata.convert_to_imu_yaccel,"a"
+ 1553              		.align	2
+ 1556              	convert_to_imu_yaccel:
+ 1557 0000 B02F9940 		.word	1083781040
+ 1558              		.section	.rodata.convert_to_velocity,"a"
+ 1559              		.align	2
+ 1562              	convert_to_velocity:
+ 1563 0000 CD77813F 		.word	1065449421
+ 1564              		.text
+ 1565              	.Letext0:
+ 1566              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 1567              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1568              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1569              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1570              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1571              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 1572              		.file 8 "Core/Inc/Tools/Sampling.h"
+ 1573              		.file 9 "Core/Inc/Main/Interrupt.h"
+ 1574              		.file 10 "Core/Inc/Main/MicroMouse.h"
+ 1575              		.file 11 "Core/Inc/Tools/PID_Control.h"
+ 1576              		.file 12 "Core/Inc/HardWare/mouse_ADC.h"
+ 1577              		.file 13 "Core/Inc/HardWare/ICM_20648.h"
+ 1578              		.file 14 "Core/Inc/Tools/Convert.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 39
+
+
+ 1579              		.file 15 "Core/Inc/HardWare/Motor_Driver.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 40
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Interrupt.c
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:23     .text.Explore_IT:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:28     .text.Explore_IT:00000000 Explore_IT
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:413    .text.Explore_IT:00000270 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:442    .text.WritingFree_IT:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:447    .text.WritingFree_IT:00000000 WritingFree_IT
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:694    .text.WritingFree_IT:000001a0 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:723    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:729    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:898    .text.HAL_TIM_PeriodElapsedCallback:000000b4 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:953    .bss.log_velocity:00000000 log_velocity
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:998    .rodata.convert_to_imu_yaccel:00000000 convert_to_imu_yaccel
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:992    .rodata.convert_to_angularv:00000000 convert_to_angularv
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:1004   .rodata.convert_to_velocity:00000000 convert_to_velocity
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:934    .bss.dbc:00000000 dbc
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:946    .bss.debugVR:00000000 debugVR
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:940    .bss.debugVL:00000000 debugVL
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:979    .bss.velodebug_flag:00000000 velodebug_flag
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:928    .bss.IT_mode:00000000 IT_mode
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:960    .bss.t:00000000 t
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:973    .bss.timer8:00000000 timer8
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:967    .bss.timer1:00000000 timer1
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:924    .bss.IT_mode:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:931    .bss.dbc:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:937    .bss.debugVL:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:943    .bss.debugVR:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:949    .bss.log_velocity:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:956    .bss.t:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:963    .bss.timer1:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:970    .bss.timer8:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:976    .bss.velodebug_flag:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:982    .bss.zg_last.0:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:986    .bss.zg_last.0:00000000 zg_last.0
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:989    .rodata.convert_to_angularv:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:995    .rodata.convert_to_imu_yaccel:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s:1001   .rodata.convert_to_velocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:24     .text.Explore_IT:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:29     .text.Explore_IT:00000000 Explore_IT
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:457    .text.Explore_IT:000002c8 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:489    .text.ControlTest_IT:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:494    .text.ControlTest_IT:00000000 ControlTest_IT
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:679    .text.ControlTest_IT:00000118 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:700    .text.WritingFree_IT:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:705    .text.WritingFree_IT:00000000 WritingFree_IT
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:952    .text.WritingFree_IT:000001a0 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:981    .text.SystemIdentify_IT:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:986    .text.SystemIdentify_IT:00000000 SystemIdentify_IT
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1219   .text.SystemIdentify_IT:00000154 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1238   .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1244   .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1297   .text.HAL_TIM_PeriodElapsedCallback:00000024 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1303   .text.HAL_TIM_PeriodElapsedCallback:0000003c $t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1435   .text.HAL_TIM_PeriodElapsedCallback:000000d4 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1511   .bss.log_velocity:00000000 log_velocity
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1556   .rodata.convert_to_imu_yaccel:00000000 convert_to_imu_yaccel
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1550   .rodata.convert_to_angularv:00000000 convert_to_angularv
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1562   .rodata.convert_to_velocity:00000000 convert_to_velocity
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1498   .bss.identify:00000000 identify
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1479   .bss.dbc:00000000 dbc
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1491   .bss.debugVR:00000000 debugVR
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1485   .bss.debugVL:00000000 debugVL
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1537   .bss.velodebug_flag:00000000 velodebug_flag
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1466   .bss.IT_mode:00000000 IT_mode
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1518   .bss.t:00000000 t
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1531   .bss.timer8:00000000 timer8
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1525   .bss.timer1:00000000 timer1
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1462   .bss.IT_mode:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1469   .bss.count.1:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1473   .bss.count.1:00000000 count.1
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1476   .bss.dbc:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1482   .bss.debugVL:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1488   .bss.debugVR:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1494   .bss.identify:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1501   .bss.identify_count.0:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1505   .bss.identify_count.0:00000000 identify_count.0
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1508   .bss.log_velocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1514   .bss.t:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1521   .bss.timer1:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1528   .bss.timer8:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1534   .bss.velodebug_flag:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1540   .bss.zg_last.2:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1544   .bss.zg_last.2:00000000 zg_last.2
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1547   .rodata.convert_to_angularv:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1553   .rodata.convert_to_imu_yaccel:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s:1559   .rodata.convert_to_velocity:00000000 $d
 
 UNDEFINED SYMBOLS
 __aeabi_f2d
 __aeabi_dmul
 __aeabi_d2f
-getFloatLog
+__aeabi_ddiv
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccIOyUFD.s 			page 41
+
+
 Update_IMU
+ADCToBatteryVoltage
 PIDControl
 Motor_Switch
 PulseDisplacement
@@ -1466,10 +2359,8 @@ Acceleration
 TargetVelocity
 AngularAcceleration
 TargetAngularV
+adc1
 VelocityLeftOut
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccoyz4uI.s 			page 26
-
-
 VelocityRightOut
 TargetAngle
 Photo
@@ -1481,9 +2372,12 @@ ZGyro
 zg_offset
 convert_to_imu_angv
 AngularLeapsity
+getIdentifyMode
+getLoggerFlag
+getFloatLog
+getIdentifyInputCount
 GetWallDataAverage
 getPhotoSampleValue_uint32
 htim1
 htim8
-adc1
 adc2

@@ -35,7 +35,7 @@
 #include <main.h>
 #include <stdio.h>
 //実環境処理用に、グローバルなマップデータとプロフィールを作成
-#define LOG_NUM_VELOCITY 500
+#define LOG_NUM_VELOCITY 1 //1000 //使わないときは1（メモリ）
 static void loggingMotorVelocityValue(logger_f *log_velocity, float target_velocity){
 	
 	float data_veloctiy[LOG_NUM_VELOCITY]={0};
@@ -44,14 +44,16 @@ static void loggingMotorVelocityValue(logger_f *log_velocity, float target_veloc
 	MouseResetParameters();
 	TargetVelocity[BODY] = 0;
 	VelocityLeftOut=VelocityRightOut=0;
+
+	MouseStartAll();
 	MousePIDFlagAll(false);
 	MousePIDResetAll();
-	EncoderStart();
-	Motor_PWM_Start();
+	// EncoderStart();
+	// Motor_PWM_Start();
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
-	IT_mode = EXPLORE;
+	IT_mode = IT_EXPLORE;
 	HAL_TIM_Base_Start_IT(&htim1);
 	
 	int hoge = 0;
@@ -59,13 +61,14 @@ static void loggingMotorVelocityValue(logger_f *log_velocity, float target_veloc
 	Signal(7);
 	TargetVelocity[BODY] = target_velocity;
 	setLoggerFlag(&(log_velocity->f), true);
-	// Motor_Switch( 60,60);
+
+	Motor_Switch( 84,84); //10%
 	while(getLoggerFlag(&(log_velocity->f)) == true){
 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからない現象
 		hoge++;
 	}
 	TargetVelocity[BODY] = 0;
-	// Motor_Switch( 0,0);
+	Motor_Switch( 0,0);
 	Motor_PWM_Stop();
 	EncoderStop();
 	MousePIDFlagAll(false);
@@ -75,6 +78,41 @@ static void loggingMotorVelocityValue(logger_f *log_velocity, float target_veloc
 	HAL_Delay(10000);
 	Signal(7);
 	printFloatLog(log_velocity);
+}
+static _Bool startIdentify(_Bool v_or_angv){
+	initIdentifyMode(v_or_angv);
+	float log_value[IDENTIFY_SAMPLE_N]={0};
+	initFloatLog(&identify[v_or_angv], &log_value[0],false,IDENTIFY_SAMPLE_N);
+	initMsignal(0.55, 0.55);
+
+	// 諸々のハードウェアの準備
+	IT_mode = IT_IDENTIFY;
+	MouseResetParameters();
+	MouseStartAll();
+	EmitterOFF();
+	MousePIDFlagAll(false);
+	MousePIDResetAll();
+	HAL_TIM_Base_Start_IT(&htim1);
+	
+	// 同定開始
+	Signal(7);
+	int dast=0;
+	setLoggerFlag(&(identify[v_or_angv].f), true);
+	while (getLoggerFlag(&(identify[v_or_angv].f)) == true)
+	{
+		dast++;
+	}
+	Motor_Switch( 0,0);
+	Motor_PWM_Stop();
+	EncoderStop();
+	MousePIDFlagAll(false);
+	HAL_TIM_Base_Stop_IT(&htim1);
+	HAL_Delay(10000);
+	Signal(7);
+	printf("\r\n");
+	printFloatLog(&(identify[v_or_angv]));
+
+	return true;
 }
 void Debug()
 {
@@ -95,8 +133,13 @@ void Debug()
 		break;
 	case 2:
 		
-		loggingMotorVelocityValue(&log_velocity, 240);
+		loggingMotorVelocityValue(&log_velocity, 0);
 		break;
+	case 3:
+		startIdentify(1);
+		break;
+	case 4:
+		startIdentify(0);
 	default:
 		break;
 	}
@@ -188,31 +231,40 @@ int GainSetting(int n){
 void GainTest(){
 	// モード選択
 	// 共通部分の実行
-	IT_mode = EXPLORE;
+	IT_mode = IT_CONTROL_TEST;
+	// IT_mode = IT_EXPLORE;
 	MouseInit();
+
+	PIDSetGain(A_VELO_PID, 0.100709849176355, 3.40260123333282, 0.0000762222699372798);//0.100439617090338, 3.52845932518105,0.00010586150147275);
+	PIDSetGain(L_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
+	PIDSetGain(R_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	// モード毎の処理
 
-	PIDChangeFlag(A_VELO_PID, 0);
+	PIDChangeFlag(A_VELO_PID, 1);
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
+
+	
+
 	ExploreVelocity=0;
 	ChangeLED(5);
 	while(1)
 	{
-		TargetVelocity[BODY] = 0;
+		TargetVelocity[BODY] = 240;
+		TargetAngularV = 0;
 		float a=10.56;
 		//printf("%f, %f\r\n", AngularV, Angle);
-		printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f, a: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SIDE_R], a);
+		printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f, a: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SIDE_R],a);
 	}
 }
 
 void WritingFree()
 {
-	IT_mode = WRITINGFREE;
+	IT_mode = IT_FREE;
 
 	dbc = 0;
 	MouseInit();
@@ -223,13 +275,13 @@ void WritingFree()
 	PIDChangeFlag(D_WALL_PID, 0);
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
-	IT_mode = EXPLORE;
+	IT_mode = IT_EXPLORE;
 	PIDChangeFlag(A_VELO_PID, 1);
 	ExploreVelocity=0;
 	ChangeLED(7);
 	//データ取り（速度、角速度）
 	dbc = 1;
-	FastStraight(0.5, 8, 0.5, -0.5, 4000, 10);
+	FastStraight(0.5, 8, 90, 0.5, -0.5, 4000, 10);
 	dbc = 0;
 
 	while(1)
@@ -428,7 +480,7 @@ void Simu()
 
 void TestIMU()
 {
-	IT_mode = IMU_TEST;
+	IT_mode = IT_IMU_TEST;
 
 	uint8_t imu_check;
 		imu_check = IMU_init();
