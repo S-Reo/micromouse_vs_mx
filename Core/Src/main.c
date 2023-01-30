@@ -193,7 +193,7 @@ int main(void)
   
   #endif
 
-  // hogehoge
+  // hogehoge2
   // while(1){
   //   printf("ok! buf: %u\r\n", buf[0]);
   //   HAL_Delay(1000);
