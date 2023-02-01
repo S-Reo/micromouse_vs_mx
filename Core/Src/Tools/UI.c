@@ -131,9 +131,3 @@ void ModeSelect(int8_t min, int8_t max, int8_t *pMode)
 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_1);
 	HAL_TIM_Encoder_Stop(&htim3,TIM_CHANNEL_2);
 }
-
-void EmergencyStop()
-{
-	//モータ出力の停止
-	//
-}

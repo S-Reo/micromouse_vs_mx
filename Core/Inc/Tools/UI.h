@@ -29,7 +29,6 @@ void Signal(int8_t mode);
 void BatteryCheck(int adc_data);
 void PhotoSwitch();
 void ModeSelect(int8_t min, int8_t max, int8_t *pMode);
-void EmergencyStop();
 
 
 
