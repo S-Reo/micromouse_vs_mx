@@ -25,8 +25,6 @@
 int timer1,timer8, t;
 int IT_mode;
 int velodebug_flag=0;
-float debugVL[20]={0};
-float debugVR[20] = {0};
 int dbc = 0;
 logger_f identify[2];
 
@@ -38,7 +36,7 @@ const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんち
 // PIDで計算した値 = 電圧値、を、カウンタ値に変換する処理が要る
 
 logger_f log_velocity;
-static void SystemIdentify_IT(){
+inline void calcVelocity(){
 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
 	TIM3->CNT = INITIAL_PULSE;
 	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
@@ -48,6 +46,19 @@ static void SystemIdentify_IT(){
 	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
 	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
 	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+
+	//移動量 mm/msを積算
+	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+	TotalPulse[LEFT] += PulseDisplacement[LEFT];
+	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
+	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+}
+
+static void SystemIdentify_IT(){
+	
+	calcVelocity();
 
 	Update_IMU(&AngularV, &Angle);
 
@@ -82,22 +93,11 @@ static void SystemIdentify_IT(){
 	
 }
 static void ControlTest_IT(){
-	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
-	TIM3->CNT = INITIAL_PULSE;
-	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
-	TIM4->CNT = INITIAL_PULSE;
 
-	//速度 mm/s
-	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
-	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
-	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+	calcVelocity();
 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
 	
-	//移動量 mm/msを積算
-
-	TotalPulse[LEFT] += PulseDisplacement[LEFT];
-	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
-	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+	
 	//角速度 rad/s
 
 #if 0
@@ -159,22 +159,12 @@ static void ControlTest_IT(){
 }
 static void Explore_IT()
 {
-	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
-	TIM3->CNT = INITIAL_PULSE;
-	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
-	TIM4->CNT = INITIAL_PULSE;
-
-	//速度 mm/s
-	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
-	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
-	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
+	calcVelocity();
 	// getFloatLog(&log_velocity, CurrentVelocity[BODY]);
 	
 	//移動量 mm/msを積算
 
-	TotalPulse[LEFT] += PulseDisplacement[LEFT];
-	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
-	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
+
 	//角速度 rad/s
 
 #if 0
@@ -283,14 +273,8 @@ static void Explore_IT()
 }
 static void WritingFree_IT()
 {
-	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
-	TIM3->CNT = INITIAL_PULSE;
-	PulseDisplacement[RIGHT] = - (TIM4->CNT - INITIAL_PULSE);
-	TIM4->CNT = INITIAL_PULSE;
+	calcVelocity();
 
-	CurrentVelocity[LEFT] =  (float)PulseDisplacement[LEFT] * convert_to_velocity;
-	CurrentVelocity[RIGHT] =  (float)PulseDisplacement[RIGHT] * convert_to_velocity;
-	CurrentVelocity[BODY] = (CurrentVelocity[LEFT] + CurrentVelocity[RIGHT] )*0.5f;
 #if 0
 	static int count=0;
 
@@ -300,10 +284,6 @@ static void WritingFree_IT()
 	}
 	count ++;
 #endif
-	//移動量 mm/msを積算
-	TotalPulse[LEFT] += PulseDisplacement[LEFT];
-	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
-	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 
 #if 1
 
