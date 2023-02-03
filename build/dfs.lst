@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -45,7 +45,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
   15:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** // 積むときは、周囲のノードを順番に。重複を避けて積むか、取り出しで
   16:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 
   17:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** //node *nd_stack[STACK_NUM]={0};
-  18:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** position mass_stack[STACK_NUM]={0};
+  18:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** position mass_stack[STACK_NUM]={0}; //ここがあふれるとバグる
   19:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** static int Stack_Num;
   20:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** _Bool Visit[NUMBER_OF_SQUARES_X][NUMBER_OF_SQUARES_Y];
   21:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** static _Bool DFS_Flag;
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
   33              		@ link register save eliminated.
   24:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	DFS_Flag = true;
   34              		.loc 1 24 2 view .LVU1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 2
 
 
   35              		.loc 1 24 11 is_stmt 0 view .LVU2
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
   88              		@ frame_needed = 0, uses_anonymous_args = 0
   89              		@ link register save eliminated.
   30:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	return DFS_Flag;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 3
 
 
   90              		.loc 1 30 2 view .LVU9
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  142              		@ frame_needed = 0, uses_anonymous_args = 0
  143              		@ link register save eliminated.
   37:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	Stack_Flag = false;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 4
 
 
  144              		.loc 1 37 2 view .LVU16
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  196              		@ frame_needed = 0, uses_anonymous_args = 0
  197              		@ link register save eliminated.
   44:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	Stack_Num = 0;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 5
 
 
  198              		.loc 1 44 2 view .LVU23
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  251              		@ args = 0, pretend = 0, frame = 0
  252              		@ frame_needed = 0, uses_anonymous_args = 0
  253              		@ link register save eliminated.
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 6
 
 
   50:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	return Stack_Num;
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  304 0028 00000000 		.word	.LANCHOR2
  305 002c 00000000 		.word	.LANCHOR3
  306              		.cfi_endproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 7
 
 
  307              	.LFE12:
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  361              		.align	1
  362              		.global	InitVisit
  363              		.syntax unified
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 8
 
 
  364              		.thumb
@@ -449,7 +449,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  385              		.loc 1 63 4 is_stmt 1 discriminator 3 view .LVU55
  386              		.loc 1 63 16 is_stmt 0 discriminator 3 view .LVU56
  387 0004 084A     		ldr	r2, .L43
- 388 0006 02EB0012 		add	r2, r2, r0, lsl #4
+ 388 0006 02EB4012 		add	r2, r2, r0, lsl #5
  389 000a 0021     		movs	r1, #0
  390 000c D154     		strb	r1, [r2, r3]
   62:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
@@ -463,7 +463,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  396              		.loc 1 62 16 is_stmt 1 discriminator 1 view .LVU59
   62:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		for(int j=0; j < NUMBER_OF_SQUARES_Y; j++){
  397              		.loc 1 62 3 is_stmt 0 discriminator 1 view .LVU60
- 398 0010 0F2B     		cmp	r3, #15
+ 398 0010 1F2B     		cmp	r3, #31
  399 0012 F7DD     		ble	.L39
  400              	.LBE3:
   61:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
@@ -477,8 +477,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  406              		.loc 1 61 15 is_stmt 1 discriminator 1 view .LVU63
   61:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
  407              		.loc 1 61 2 is_stmt 0 discriminator 1 view .LVU64
- 408 0016 0F28     		cmp	r0, #15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 9
+ 408 0016 1F28     		cmp	r0, #31
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 9
 
 
  409 0018 01DC     		bgt	.L42
@@ -538,12 +538,12 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  458              		.loc 1 69 2 view .LVU70
  459              	.LBB5:
  460              		.loc 1 69 6 view .LVU71
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 10
 
 
  461              	.LVL11:
  462              		.loc 1 69 10 is_stmt 0 view .LVU72
- 463 0002 0F25     		movs	r5, #15
+ 463 0002 1F25     		movs	r5, #31
  464              		.loc 1 69 2 view .LVU73
  465 0004 0DE0     		b	.L46
  466              	.LVL12:
@@ -553,11 +553,11 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
   71:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			printf("%d ",Visit[i][j]);
  469              		.loc 1 71 4 is_stmt 1 discriminator 3 view .LVU74
  470              		.loc 1 71 25 is_stmt 0 discriminator 3 view .LVU75
- 471 0006 094B     		ldr	r3, .L52
- 472 0008 03EB0413 		add	r3, r3, r4, lsl #4
+ 471 0006 0B4B     		ldr	r3, .L52
+ 472 0008 03EB4413 		add	r3, r3, r4, lsl #5
  473              		.loc 1 71 4 discriminator 3 view .LVU76
  474 000c 595D     		ldrb	r1, [r3, r5]	@ zero_extendqisi2
- 475 000e 0848     		ldr	r0, .L52+4
+ 475 000e 0A48     		ldr	r0, .L52+4
  476 0010 FFF7FEFF 		bl	printf
  477              	.LVL13:
   70:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
@@ -571,13 +571,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  483              		.loc 1 70 16 is_stmt 1 discriminator 1 view .LVU79
   70:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
  484              		.loc 1 70 3 is_stmt 0 discriminator 1 view .LVU80
- 485 0016 0F2C     		cmp	r4, #15
+ 485 0016 1F2C     		cmp	r4, #31
  486 0018 F5DD     		ble	.L47
  487              	.LBE6:
   72:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		}
   73:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		printf("\r\n");
  488              		.loc 1 73 3 is_stmt 1 discriminator 2 view .LVU81
- 489 001a 0648     		ldr	r0, .L52+8
+ 489 001a 0848     		ldr	r0, .L52+8
  490 001c FFF7FEFF 		bl	puts
  491              	.LVL15:
   69:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		for(int i=0; i < NUMBER_OF_SQUARES_X; i++){
@@ -598,172 +598,176 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  502              		.loc 1 70 11 view .LVU86
  503 0026 0024     		movs	r4, #0
  504 0028 F5E7     		b	.L48
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 11
 
 
  505              	.L51:
  506              	.LBE7:
  507              	.LBE5:
-  74:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	}
+  74:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	}printf("\r\n");
+ 508              		.loc 1 74 3 is_stmt 1 view .LVU87
+ 509 002a 0448     		ldr	r0, .L52+8
+ 510 002c FFF7FEFF 		bl	puts
+ 511              	.LVL17:
   75:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** }
- 508              		.loc 1 75 1 view .LVU87
- 509 002a 38BD     		pop	{r3, r4, r5, pc}
- 510              	.LVL17:
- 511              	.L53:
- 512              		.loc 1 75 1 view .LVU88
- 513              		.align	2
- 514              	.L52:
- 515 002c 00000000 		.word	.LANCHOR4
- 516 0030 00000000 		.word	.LC0
- 517 0034 04000000 		.word	.LC1
- 518              		.cfi_endproc
- 519              	.LFE15:
- 521              		.section	.text.VisitedMass,"ax",%progbits
- 522              		.align	1
- 523              		.global	VisitedMass
- 524              		.syntax unified
- 525              		.thumb
- 526              		.thumb_func
- 528              	VisitedMass:
- 529              	.LFB16:
+ 512              		.loc 1 75 1 is_stmt 0 view .LVU88
+ 513 0030 38BD     		pop	{r3, r4, r5, pc}
+ 514              	.LVL18:
+ 515              	.L53:
+ 516              		.loc 1 75 1 view .LVU89
+ 517 0032 00BF     		.align	2
+ 518              	.L52:
+ 519 0034 00000000 		.word	.LANCHOR4
+ 520 0038 00000000 		.word	.LC0
+ 521 003c 04000000 		.word	.LC1
+ 522              		.cfi_endproc
+ 523              	.LFE15:
+ 525              		.section	.text.VisitedMass,"ax",%progbits
+ 526              		.align	1
+ 527              		.global	VisitedMass
+ 528              		.syntax unified
+ 529              		.thumb
+ 530              		.thumb_func
+ 532              	VisitedMass:
+ 533              	.LFB16:
   76:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** void VisitedMass(position pos){
- 530              		.loc 1 76 31 is_stmt 1 view -0
- 531              		.cfi_startproc
- 532              		@ args = 0, pretend = 0, frame = 8
- 533              		@ frame_needed = 0, uses_anonymous_args = 0
- 534              		@ link register save eliminated.
- 535 0000 82B0     		sub	sp, sp, #8
- 536              	.LCFI3:
- 537              		.cfi_def_cfa_offset 8
- 538 0002 ADF80400 		strh	r0, [sp, #4]	@ movhi
+ 534              		.loc 1 76 31 is_stmt 1 view -0
+ 535              		.cfi_startproc
+ 536              		@ args = 0, pretend = 0, frame = 8
+ 537              		@ frame_needed = 0, uses_anonymous_args = 0
+ 538              		@ link register save eliminated.
+ 539 0000 82B0     		sub	sp, sp, #8
+ 540              	.LCFI3:
+ 541              		.cfi_def_cfa_offset 8
+ 542 0002 ADF80400 		strh	r0, [sp, #4]	@ movhi
   77:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	Visit[pos.x][pos.y] = true;
- 539              		.loc 1 77 2 view .LVU90
- 540              		.loc 1 77 11 is_stmt 0 view .LVU91
- 541 0006 9DF80410 		ldrb	r1, [sp, #4]	@ zero_extendqisi2
- 542              		.loc 1 77 18 view .LVU92
- 543 000a 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
- 544              		.loc 1 77 22 view .LVU93
- 545 000e 034B     		ldr	r3, .L56
- 546 0010 03EB0113 		add	r3, r3, r1, lsl #4
- 547 0014 0121     		movs	r1, #1
- 548 0016 9954     		strb	r1, [r3, r2]
+ 543              		.loc 1 77 2 view .LVU91
+ 544              		.loc 1 77 11 is_stmt 0 view .LVU92
+ 545 0006 9DF80410 		ldrb	r1, [sp, #4]	@ zero_extendqisi2
+ 546              		.loc 1 77 18 view .LVU93
+ 547 000a 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
+ 548              		.loc 1 77 22 view .LVU94
+ 549 000e 034B     		ldr	r3, .L56
+ 550 0010 03EB4113 		add	r3, r3, r1, lsl #5
+ 551 0014 0121     		movs	r1, #1
+ 552 0016 9954     		strb	r1, [r3, r2]
   78:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** }
- 549              		.loc 1 78 1 view .LVU94
- 550 0018 02B0     		add	sp, sp, #8
- 551              	.LCFI4:
- 552              		.cfi_def_cfa_offset 0
- 553              		@ sp needed
- 554 001a 7047     		bx	lr
- 555              	.L57:
- 556              		.align	2
- 557              	.L56:
- 558 001c 00000000 		.word	.LANCHOR4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 12
+ 553              		.loc 1 78 1 view .LVU95
+ 554 0018 02B0     		add	sp, sp, #8
+ 555              	.LCFI4:
+ 556              		.cfi_def_cfa_offset 0
+ 557              		@ sp needed
+ 558 001a 7047     		bx	lr
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 12
 
 
- 559              		.cfi_endproc
- 560              	.LFE16:
- 562              		.section	.text.GetVisited,"ax",%progbits
- 563              		.align	1
- 564              		.global	GetVisited
- 565              		.syntax unified
- 566              		.thumb
- 567              		.thumb_func
- 569              	GetVisited:
- 570              	.LVL18:
- 571              	.LFB17:
+ 559              	.L57:
+ 560              		.align	2
+ 561              	.L56:
+ 562 001c 00000000 		.word	.LANCHOR4
+ 563              		.cfi_endproc
+ 564              	.LFE16:
+ 566              		.section	.text.GetVisited,"ax",%progbits
+ 567              		.align	1
+ 568              		.global	GetVisited
+ 569              		.syntax unified
+ 570              		.thumb
+ 571              		.thumb_func
+ 573              	GetVisited:
+ 574              	.LVL19:
+ 575              	.LFB17:
   79:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** _Bool GetVisited(position *pos){
- 572              		.loc 1 79 32 is_stmt 1 view -0
- 573              		.cfi_startproc
- 574              		@ args = 0, pretend = 0, frame = 0
- 575              		@ frame_needed = 0, uses_anonymous_args = 0
- 576              		@ link register save eliminated.
+ 576              		.loc 1 79 32 is_stmt 1 view -0
+ 577              		.cfi_startproc
+ 578              		@ args = 0, pretend = 0, frame = 0
+ 579              		@ frame_needed = 0, uses_anonymous_args = 0
+ 580              		@ link register save eliminated.
   80:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	return Visit[pos->x][pos->y];
- 577              		.loc 1 80 2 view .LVU96
- 578              		.loc 1 80 18 is_stmt 0 view .LVU97
- 579 0000 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
- 580              		.loc 1 80 26 view .LVU98
- 581 0002 4278     		ldrb	r2, [r0, #1]	@ zero_extendqisi2
- 582              		.loc 1 80 22 view .LVU99
- 583 0004 024B     		ldr	r3, .L59
- 584 0006 03EB0113 		add	r3, r3, r1, lsl #4
+ 581              		.loc 1 80 2 view .LVU97
+ 582              		.loc 1 80 18 is_stmt 0 view .LVU98
+ 583 0000 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 584              		.loc 1 80 26 view .LVU99
+ 585 0002 4278     		ldrb	r2, [r0, #1]	@ zero_extendqisi2
+ 586              		.loc 1 80 22 view .LVU100
+ 587 0004 024B     		ldr	r3, .L59
+ 588 0006 03EB4113 		add	r3, r3, r1, lsl #5
   81:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** }
- 585              		.loc 1 81 1 view .LVU100
- 586 000a 985C     		ldrb	r0, [r3, r2]	@ zero_extendqisi2
- 587              	.LVL19:
- 588              		.loc 1 81 1 view .LVU101
- 589 000c 7047     		bx	lr
- 590              	.L60:
- 591 000e 00BF     		.align	2
- 592              	.L59:
- 593 0010 00000000 		.word	.LANCHOR4
- 594              		.cfi_endproc
- 595              	.LFE17:
- 597              		.section	.text.InitMassStack,"ax",%progbits
- 598              		.align	1
- 599              		.global	InitMassStack
- 600              		.syntax unified
- 601              		.thumb
- 602              		.thumb_func
- 604              	InitMassStack:
- 605              	.LFB18:
+ 589              		.loc 1 81 1 view .LVU101
+ 590 000a 985C     		ldrb	r0, [r3, r2]	@ zero_extendqisi2
+ 591              	.LVL20:
+ 592              		.loc 1 81 1 view .LVU102
+ 593 000c 7047     		bx	lr
+ 594              	.L60:
+ 595 000e 00BF     		.align	2
+ 596              	.L59:
+ 597 0010 00000000 		.word	.LANCHOR4
+ 598              		.cfi_endproc
+ 599              	.LFE17:
+ 601              		.section	.text.InitMassStack,"ax",%progbits
+ 602              		.align	1
+ 603              		.global	InitMassStack
+ 604              		.syntax unified
+ 605              		.thumb
+ 606              		.thumb_func
+ 608              	InitMassStack:
+ 609              	.LFB18:
   82:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 
   83:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** void InitMassStack(){
- 606              		.loc 1 83 21 is_stmt 1 view -0
- 607              		.cfi_startproc
- 608              		@ args = 0, pretend = 0, frame = 0
- 609              		@ frame_needed = 0, uses_anonymous_args = 0
- 610              		@ link register save eliminated.
+ 610              		.loc 1 83 21 is_stmt 1 view -0
+ 611              		.cfi_startproc
+ 612              		@ args = 0, pretend = 0, frame = 0
+ 613              		@ frame_needed = 0, uses_anonymous_args = 0
+ 614              		@ link register save eliminated.
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 13
+
+
   84:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	mass_stack[0].x = 0;
- 611              		.loc 1 84 2 view .LVU103
- 612              		.loc 1 84 18 is_stmt 0 view .LVU104
- 613 0000 024B     		ldr	r3, .L62
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 13
-
-
- 614 0002 0022     		movs	r2, #0
- 615 0004 1A70     		strb	r2, [r3]
+ 615              		.loc 1 84 2 view .LVU104
+ 616              		.loc 1 84 18 is_stmt 0 view .LVU105
+ 617 0000 024B     		ldr	r3, .L62
+ 618 0002 0022     		movs	r2, #0
+ 619 0004 1A70     		strb	r2, [r3]
   85:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	mass_stack[0].y = 0;
- 616              		.loc 1 85 2 is_stmt 1 view .LVU105
- 617              		.loc 1 85 18 is_stmt 0 view .LVU106
- 618 0006 5A70     		strb	r2, [r3, #1]
+ 620              		.loc 1 85 2 is_stmt 1 view .LVU106
+ 621              		.loc 1 85 18 is_stmt 0 view .LVU107
+ 622 0006 5A70     		strb	r2, [r3, #1]
   86:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** }
- 619              		.loc 1 86 1 view .LVU107
- 620 0008 7047     		bx	lr
- 621              	.L63:
- 622 000a 00BF     		.align	2
- 623              	.L62:
- 624 000c 00000000 		.word	.LANCHOR3
- 625              		.cfi_endproc
- 626              	.LFE18:
- 628              		.section	.text.StackMass,"ax",%progbits
- 629              		.align	1
- 630              		.global	StackMass
- 631              		.syntax unified
- 632              		.thumb
- 633              		.thumb_func
- 635              	StackMass:
- 636              	.LVL20:
- 637              	.LFB19:
+ 623              		.loc 1 86 1 view .LVU108
+ 624 0008 7047     		bx	lr
+ 625              	.L63:
+ 626 000a 00BF     		.align	2
+ 627              	.L62:
+ 628 000c 00000000 		.word	.LANCHOR3
+ 629              		.cfi_endproc
+ 630              	.LFE18:
+ 632              		.section	.text.StackMass,"ax",%progbits
+ 633              		.align	1
+ 634              		.global	StackMass
+ 635              		.syntax unified
+ 636              		.thumb
+ 637              		.thumb_func
+ 639              	StackMass:
+ 640              	.LVL21:
+ 641              	.LFB19:
   87:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** _Bool StackMass(maze_node *maze, state *now_st){
- 638              		.loc 1 87 48 is_stmt 1 view -0
- 639              		.cfi_startproc
- 640              		@ args = 0, pretend = 0, frame = 0
- 641              		@ frame_needed = 0, uses_anonymous_args = 0
- 642              		.loc 1 87 48 is_stmt 0 view .LVU109
- 643 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
- 644              	.LCFI5:
- 645              		.cfi_def_cfa_offset 32
- 646              		.cfi_offset 4, -32
- 647              		.cfi_offset 5, -28
- 648              		.cfi_offset 6, -24
- 649              		.cfi_offset 7, -20
- 650              		.cfi_offset 8, -16
- 651              		.cfi_offset 9, -12
- 652              		.cfi_offset 10, -8
- 653              		.cfi_offset 14, -4
- 654 0004 0746     		mov	r7, r0
- 655 0006 0C46     		mov	r4, r1
+ 642              		.loc 1 87 48 is_stmt 1 view -0
+ 643              		.cfi_startproc
+ 644              		@ args = 0, pretend = 0, frame = 0
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646              		.loc 1 87 48 is_stmt 0 view .LVU110
+ 647 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 648              	.LCFI5:
+ 649              		.cfi_def_cfa_offset 32
+ 650              		.cfi_offset 4, -32
+ 651              		.cfi_offset 5, -28
+ 652              		.cfi_offset 6, -24
+ 653              		.cfi_offset 7, -20
+ 654              		.cfi_offset 8, -16
+ 655              		.cfi_offset 9, -12
+ 656              		.cfi_offset 10, -8
+ 657              		.cfi_offset 14, -4
+ 658 0004 0746     		mov	r7, r0
+ 659 0006 0C46     		mov	r4, r1
   88:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 
   89:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//壁の更新後
   90:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//4方向のノードを見て、行けるところ、未訪問
@@ -773,262 +777,262 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
   94:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 
   95:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//xyの大きさ制限の条件式
   96:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	uint8_t x = now_st->pos.x;
- 656              		.loc 1 96 2 is_stmt 1 view .LVU110
- 657              		.loc 1 96 10 is_stmt 0 view .LVU111
- 658 0008 91F80090 		ldrb	r9, [r1]	@ zero_extendqisi2
- 659              	.LVL21:
-  97:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	uint8_t y = now_st->pos.y;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 14
+ 660              		.loc 1 96 2 is_stmt 1 view .LVU111
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 14
 
 
- 660              		.loc 1 97 2 is_stmt 1 view .LVU112
- 661              		.loc 1 97 10 is_stmt 0 view .LVU113
- 662 000c 91F801A0 		ldrb	r10, [r1, #1]	@ zero_extendqisi2
+ 661              		.loc 1 96 10 is_stmt 0 view .LVU112
+ 662 0008 91F80090 		ldrb	r9, [r1]	@ zero_extendqisi2
  663              	.LVL22:
+  97:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	uint8_t y = now_st->pos.y;
+ 664              		.loc 1 97 2 is_stmt 1 view .LVU113
+ 665              		.loc 1 97 10 is_stmt 0 view .LVU114
+ 666 000c 91F801A0 		ldrb	r10, [r1, #1]	@ zero_extendqisi2
+ 667              	.LVL23:
   98:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 
   99:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	uint8_t nd_x = now_st->node->pos.x;
- 664              		.loc 1 99 2 is_stmt 1 view .LVU114
- 665              		.loc 1 99 23 is_stmt 0 view .LVU115
- 666 0010 8B68     		ldr	r3, [r1, #8]
- 667              		.loc 1 99 10 view .LVU116
- 668 0012 9D79     		ldrb	r5, [r3, #6]	@ zero_extendqisi2
- 669              	.LVL23:
- 100:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	uint8_t nd_y = now_st->node->pos.y;
- 670              		.loc 1 100 2 is_stmt 1 view .LVU117
- 671              		.loc 1 100 10 is_stmt 0 view .LVU118
- 672 0014 93F80780 		ldrb	r8, [r3, #7]	@ zero_extendqisi2
+ 668              		.loc 1 99 2 is_stmt 1 view .LVU115
+ 669              		.loc 1 99 23 is_stmt 0 view .LVU116
+ 670 0010 8B68     		ldr	r3, [r1, #8]
+ 671              		.loc 1 99 10 view .LVU117
+ 672 0012 9D79     		ldrb	r5, [r3, #6]	@ zero_extendqisi2
  673              	.LVL24:
+ 100:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	uint8_t nd_y = now_st->node->pos.y;
+ 674              		.loc 1 100 2 is_stmt 1 view .LVU118
+ 675              		.loc 1 100 10 is_stmt 0 view .LVU119
+ 676 0014 93F80780 		ldrb	r8, [r3, #7]	@ zero_extendqisi2
+ 677              	.LVL25:
  101:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** //	_Bool rc = now_st->node->rc;
  102:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	cardinal car = now_st->car;
- 674              		.loc 1 102 2 is_stmt 1 view .LVU119
- 675              		.loc 1 102 11 is_stmt 0 view .LVU120
- 676 0018 8E78     		ldrb	r6, [r1, #2]	@ zero_extendqisi2
- 677              	.LVL25:
+ 678              		.loc 1 102 2 is_stmt 1 view .LVU120
+ 679              		.loc 1 102 11 is_stmt 0 view .LVU121
+ 680 0018 8E78     		ldrb	r6, [r1, #2]	@ zero_extendqisi2
+ 681              	.LVL26:
  103:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 
  104:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	int n = GetStackNum();
- 678              		.loc 1 104 2 is_stmt 1 view .LVU121
- 679              		.loc 1 104 10 is_stmt 0 view .LVU122
- 680 001a FFF7FEFF 		bl	GetStackNum
- 681              	.LVL26:
+ 682              		.loc 1 104 2 is_stmt 1 view .LVU122
+ 683              		.loc 1 104 10 is_stmt 0 view .LVU123
+ 684 001a FFF7FEFF 		bl	GetStackNum
+ 685              	.LVL27:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	int cnt = 0;
- 682              		.loc 1 105 2 is_stmt 1 view .LVU123
+ 686              		.loc 1 105 2 is_stmt 1 view .LVU124
  106:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  107:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//n=0になった時点で減速、停止。目標ノードを（0,0）に切り替え
  108:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//積む座標があれば++nで1から開始
  109:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//積み終わった時点のnがreturnされる
  110:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//
  111:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	switch(car%8){
- 683              		.loc 1 111 2 view .LVU124
- 684 001e 06F00703 		and	r3, r6, #7
- 685 0022 062B     		cmp	r3, #6
- 686 0024 00F2CB81 		bhi	.L80
- 687 0028 DFE813F0 		tbh	[pc, r3, lsl #1]
- 688              	.L67:
- 689 002c 0700     		.2byte	(.L70-.L67)/2
- 690 002e C901     		.2byte	(.L80-.L67)/2
- 691 0030 7700     		.2byte	(.L69-.L67)/2
- 692 0032 C901     		.2byte	(.L80-.L67)/2
- 693 0034 DB00     		.2byte	(.L68-.L67)/2
- 694 0036 C901     		.2byte	(.L80-.L67)/2
- 695 0038 5401     		.2byte	(.L66-.L67)/2
- 696              		.p2align 1
- 697              	.L70:
+ 687              		.loc 1 111 2 view .LVU125
+ 688 001e 06F00703 		and	r3, r6, #7
+ 689 0022 062B     		cmp	r3, #6
+ 690 0024 00F2CB81 		bhi	.L80
+ 691 0028 DFE813F0 		tbh	[pc, r3, lsl #1]
+ 692              	.L67:
+ 693 002c 0700     		.2byte	(.L70-.L67)/2
+ 694 002e C901     		.2byte	(.L80-.L67)/2
+ 695 0030 7700     		.2byte	(.L69-.L67)/2
+ 696 0032 C901     		.2byte	(.L80-.L67)/2
+ 697 0034 DB00     		.2byte	(.L68-.L67)/2
+ 698 0036 C901     		.2byte	(.L80-.L67)/2
+ 699 0038 5401     		.2byte	(.L66-.L67)/2
+ 700              		.p2align 1
+ 701              	.L70:
  112:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	case north:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 15
+
+
  113:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** //		if(rc == true){ //列ノードにいる
  114:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//yのサイズ
  115:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//右
- 116:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_x <= NUMBER_OF_SQUARES_X-1){
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 15
-
-
- 698              		.loc 1 116 3 view .LVU125
- 699              		.loc 1 116 5 is_stmt 0 view .LVU126
- 700 003a 0F2D     		cmp	r5, #15
- 701 003c 20D8     		bhi	.L81
+ 116:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_x <= (NUMBER_OF_SQUARES_X-1)){
+ 702              		.loc 1 116 3 view .LVU126
+ 703              		.loc 1 116 5 is_stmt 0 view .LVU127
+ 704 003a 1F2D     		cmp	r5, #31
+ 705 003c 20D8     		bhi	.L81
  117:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
- 702              		.loc 1 117 4 is_stmt 1 view .LVU127
- 703              		.loc 1 117 29 is_stmt 0 view .LVU128
- 704 003e 6B1C     		adds	r3, r5, #1
- 705              		.loc 1 117 38 view .LVU129
- 706 0040 08EB0313 		add	r3, r8, r3, lsl #4
- 707 0044 03F58873 		add	r3, r3, #272
- 708 0048 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
- 709              		.loc 1 117 6 view .LVU130
- 710 004c 002B     		cmp	r3, #0
- 711 004e 5ED1     		bne	.L82
- 118:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X-1 ){
- 712              		.loc 1 118 5 is_stmt 1 view .LVU131
- 713              		.loc 1 118 7 is_stmt 0 view .LVU132
- 714 0050 B9F10E0F 		cmp	r9, #14
- 715 0054 5DD8     		bhi	.L83
+ 706              		.loc 1 117 4 is_stmt 1 view .LVU128
+ 707              		.loc 1 117 29 is_stmt 0 view .LVU129
+ 708 003e 6B1C     		adds	r3, r5, #1
+ 709              		.loc 1 117 38 view .LVU130
+ 710 0040 08EB4313 		add	r3, r8, r3, lsl #5
+ 711 0044 03F58463 		add	r3, r3, #1056
+ 712 0048 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 713              		.loc 1 117 6 view .LVU131
+ 714 004c 002B     		cmp	r3, #0
+ 715 004e 5ED1     		bne	.L82
+ 118:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X-1) ){
+ 716              		.loc 1 118 5 is_stmt 1 view .LVU132
+ 717              		.loc 1 118 7 is_stmt 0 view .LVU133
+ 718 0050 B9F11E0F 		cmp	r9, #30
+ 719 0054 5DD8     		bhi	.L83
  119:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
- 716              		.loc 1 119 6 is_stmt 1 view .LVU133
- 717              		.loc 1 119 17 is_stmt 0 view .LVU134
- 718 0056 09F10103 		add	r3, r9, #1
- 719              		.loc 1 119 20 view .LVU135
- 720 005a B04A     		ldr	r2, .L98
- 721 005c 02EB0313 		add	r3, r2, r3, lsl #4
- 722 0060 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
- 723              		.loc 1 119 8 view .LVU136
- 724 0064 002B     		cmp	r3, #0
- 725 0066 56D1     		bne	.L84
+ 720              		.loc 1 119 6 is_stmt 1 view .LVU134
+ 721              		.loc 1 119 17 is_stmt 0 view .LVU135
+ 722 0056 09F10103 		add	r3, r9, #1
+ 723              		.loc 1 119 20 view .LVU136
+ 724 005a B04A     		ldr	r2, .L98
+ 725 005c 02EB4313 		add	r3, r2, r3, lsl #5
+ 726 0060 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 727              		.loc 1 119 8 view .LVU137
+ 728 0064 002B     		cmp	r3, #0
+ 729 0066 56D1     		bne	.L84
  120:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 726              		.loc 1 120 7 is_stmt 1 view .LVU137
- 727              	.LVL27:
+ 730              		.loc 1 120 7 is_stmt 1 view .LVU138
+ 731              	.LVL28:
  121:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
- 728              		.loc 1 121 7 view .LVU138
- 729              		.loc 1 121 19 is_stmt 0 view .LVU139
- 730 0068 421C     		adds	r2, r0, #1
- 731              		.loc 1 121 42 view .LVU140
- 732 006a 09F10101 		add	r1, r9, #1
- 733              		.loc 1 121 27 view .LVU141
- 734 006e AC4B     		ldr	r3, .L98+4
- 735 0070 03F81210 		strb	r1, [r3, r2, lsl #1]
+ 732              		.loc 1 121 7 view .LVU139
+ 733              		.loc 1 121 19 is_stmt 0 view .LVU140
+ 734 0068 421C     		adds	r2, r0, #1
+ 735              		.loc 1 121 42 view .LVU141
+ 736 006a 09F10101 		add	r1, r9, #1
+ 737              		.loc 1 121 27 view .LVU142
+ 738 006e AC4B     		ldr	r3, .L98+4
+ 739 0070 03F81210 		strb	r1, [r3, r2, lsl #1]
  122:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 736              		.loc 1 122 7 is_stmt 1 view .LVU142
- 737              		.loc 1 122 40 is_stmt 0 view .LVU143
- 738 0074 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
- 739              		.loc 1 122 27 view .LVU144
- 740 0076 03EB4203 		add	r3, r3, r2, lsl #1
- 741 007a 5970     		strb	r1, [r3, #1]
+ 740              		.loc 1 122 7 is_stmt 1 view .LVU143
+ 741              		.loc 1 122 40 is_stmt 0 view .LVU144
+ 742 0074 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 743              		.loc 1 122 27 view .LVU145
+ 744 0076 03EB4203 		add	r3, r3, r2, lsl #1
+ 745 007a 5970     		strb	r1, [r3, #1]
  120:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 742              		.loc 1 120 7 view .LVU145
- 743 007c 0126     		movs	r6, #1
- 744              	.LVL28:
- 120:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 745              		.loc 1 120 7 view .LVU146
- 746 007e 00E0     		b	.L71
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 16
+ 746              		.loc 1 120 7 view .LVU146
+ 747 007c 0126     		movs	r6, #1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 16
 
 
- 747              	.LVL29:
- 748              	.L81:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 749              		.loc 1 105 6 view .LVU147
- 750 0080 0026     		movs	r6, #0
+ 748              	.LVL29:
+ 120:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 749              		.loc 1 120 7 view .LVU147
+ 750 007e 00E0     		b	.L71
  751              	.LVL30:
- 752              	.L71:
+ 752              	.L81:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 753              		.loc 1 105 6 view .LVU148
+ 754 0080 0026     		movs	r6, #0
+ 755              	.LVL31:
+ 756              	.L71:
  123:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
  124:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
  125:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			}//前方の三方向だけ. 後ろは積まない. これを積むと重複
  126:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		}
  127:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//左
  128:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if( maze->ColumnNode[nd_x][nd_y].existence == NOWALL ){ //行ける
- 753              		.loc 1 128 3 is_stmt 1 view .LVU148
- 754              		.loc 1 128 35 is_stmt 0 view .LVU149
- 755 0082 08EB0513 		add	r3, r8, r5, lsl #4
- 756 0086 03F58873 		add	r3, r3, #272
- 757 008a 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
- 758              		.loc 1 128 5 view .LVU150
- 759 008e ABB9     		cbnz	r3, .L72
+ 757              		.loc 1 128 3 is_stmt 1 view .LVU149
+ 758              		.loc 1 128 35 is_stmt 0 view .LVU150
+ 759 0082 08EB4513 		add	r3, r8, r5, lsl #5
+ 760 0086 03F58463 		add	r3, r3, #1056
+ 761 008a 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 762              		.loc 1 128 5 view .LVU151
+ 763 008e ABB9     		cbnz	r3, .L72
  129:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( 1 <= x ){
- 760              		.loc 1 129 4 is_stmt 1 view .LVU151
- 761              		.loc 1 129 6 is_stmt 0 view .LVU152
- 762 0090 B9F1000F 		cmp	r9, #0
- 763 0094 12D0     		beq	.L72
+ 764              		.loc 1 129 4 is_stmt 1 view .LVU152
+ 765              		.loc 1 129 6 is_stmt 0 view .LVU153
+ 766 0090 B9F1000F 		cmp	r9, #0
+ 767 0094 12D0     		beq	.L72
  130:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( Visit[x-1][y] == false){ //未訪問
- 764              		.loc 1 130 5 is_stmt 1 view .LVU153
- 765              		.loc 1 130 16 is_stmt 0 view .LVU154
- 766 0096 09F1FF33 		add	r3, r9, #-1
- 767              		.loc 1 130 19 view .LVU155
- 768 009a A04A     		ldr	r2, .L98
- 769 009c 02EB0313 		add	r3, r2, r3, lsl #4
- 770 00a0 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
- 771              		.loc 1 130 7 view .LVU156
- 772 00a4 53B9     		cbnz	r3, .L72
+ 768              		.loc 1 130 5 is_stmt 1 view .LVU154
+ 769              		.loc 1 130 16 is_stmt 0 view .LVU155
+ 770 0096 09F1FF33 		add	r3, r9, #-1
+ 771              		.loc 1 130 19 view .LVU156
+ 772 009a A04A     		ldr	r2, .L98
+ 773 009c 02EB4313 		add	r3, r2, r3, lsl #5
+ 774 00a0 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 775              		.loc 1 130 7 view .LVU157
+ 776 00a4 53B9     		cbnz	r3, .L72
  131:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					++cnt;
- 773              		.loc 1 131 6 is_stmt 1 view .LVU157
- 774 00a6 0136     		adds	r6, r6, #1
- 775              	.LVL31:
+ 777              		.loc 1 131 6 is_stmt 1 view .LVU158
+ 778 00a6 0136     		adds	r6, r6, #1
+ 779              	.LVL32:
  132:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x-1;
- 776              		.loc 1 132 6 view .LVU158
- 777              		.loc 1 132 39 is_stmt 0 view .LVU159
- 778 00a8 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
- 779              		.loc 1 132 18 view .LVU160
- 780 00aa 8119     		adds	r1, r0, r6
- 781              		.loc 1 132 41 view .LVU161
- 782 00ac 013A     		subs	r2, r2, #1
- 783              		.loc 1 132 26 view .LVU162
- 784 00ae 9C4B     		ldr	r3, .L98+4
- 785 00b0 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 780              		.loc 1 132 6 view .LVU159
+ 781              		.loc 1 132 39 is_stmt 0 view .LVU160
+ 782 00a8 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 783              		.loc 1 132 18 view .LVU161
+ 784 00aa 8119     		adds	r1, r0, r6
+ 785              		.loc 1 132 41 view .LVU162
+ 786 00ac 013A     		subs	r2, r2, #1
+ 787              		.loc 1 132 26 view .LVU163
+ 788 00ae 9C4B     		ldr	r3, .L98+4
+ 789 00b0 03F81120 		strb	r2, [r3, r1, lsl #1]
  133:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].y = now_st->pos.y;
- 786              		.loc 1 133 6 is_stmt 1 view .LVU163
- 787              		.loc 1 133 39 is_stmt 0 view .LVU164
- 788 00b4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
- 789              		.loc 1 133 26 view .LVU165
- 790 00b6 03EB4103 		add	r3, r3, r1, lsl #1
- 791 00ba 5A70     		strb	r2, [r3, #1]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 17
+ 790              		.loc 1 133 6 is_stmt 1 view .LVU164
+ 791              		.loc 1 133 39 is_stmt 0 view .LVU165
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 17
 
 
- 792              	.L72:
+ 792 00b4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 793              		.loc 1 133 26 view .LVU166
+ 794 00b6 03EB4103 		add	r3, r3, r1, lsl #1
+ 795 00ba 5A70     		strb	r2, [r3, #1]
+ 796              	.L72:
  134:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
  135:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			}
  136:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		}
  137:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//前
- 138:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_y <= NUMBER_OF_SQUARES_Y-1){
- 793              		.loc 1 138 3 is_stmt 1 view .LVU166
- 794              		.loc 1 138 5 is_stmt 0 view .LVU167
- 795 00bc B8F10F0F 		cmp	r8, #15
- 796 00c0 1DD8     		bhi	.L73
+ 138:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_y <= (NUMBER_OF_SQUARES_Y-1)){
+ 797              		.loc 1 138 3 is_stmt 1 view .LVU167
+ 798              		.loc 1 138 5 is_stmt 0 view .LVU168
+ 799 00bc B8F11F0F 		cmp	r8, #31
+ 800 00c0 1DD8     		bhi	.L73
  139:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
- 797              		.loc 1 139 4 is_stmt 1 view .LVU168
- 798              		.loc 1 139 32 is_stmt 0 view .LVU169
- 799 00c2 08F10108 		add	r8, r8, #1
- 800              	.LVL32:
- 801              		.loc 1 139 35 view .LVU170
- 802 00c6 05EB0515 		add	r5, r5, r5, lsl #4
- 803              	.LVL33:
- 804              		.loc 1 139 35 view .LVU171
- 805 00ca 4544     		add	r5, r5, r8
- 806 00cc 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
- 807              		.loc 1 139 6 view .LVU172
- 808 00d0 ABB9     		cbnz	r3, .L73
- 140:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
- 809              		.loc 1 140 5 is_stmt 1 view .LVU173
- 810              		.loc 1 140 7 is_stmt 0 view .LVU174
- 811 00d2 BAF10E0F 		cmp	r10, #14
- 812 00d6 12D8     		bhi	.L73
+ 801              		.loc 1 139 4 is_stmt 1 view .LVU169
+ 802              		.loc 1 139 32 is_stmt 0 view .LVU170
+ 803 00c2 08F10108 		add	r8, r8, #1
+ 804              	.LVL33:
+ 805              		.loc 1 139 35 view .LVU171
+ 806 00c6 05EB4515 		add	r5, r5, r5, lsl #5
+ 807              	.LVL34:
+ 808              		.loc 1 139 35 view .LVU172
+ 809 00ca 4544     		add	r5, r5, r8
+ 810 00cc 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
+ 811              		.loc 1 139 6 view .LVU173
+ 812 00d0 ABB9     		cbnz	r3, .L73
+ 140:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y - 1)){
+ 813              		.loc 1 140 5 is_stmt 1 view .LVU174
+ 814              		.loc 1 140 7 is_stmt 0 view .LVU175
+ 815 00d2 BAF11E0F 		cmp	r10, #30
+ 816 00d6 12D8     		bhi	.L73
  141:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
- 813              		.loc 1 141 6 is_stmt 1 view .LVU175
- 814              		.loc 1 141 20 is_stmt 0 view .LVU176
- 815 00d8 0AF1010A 		add	r10, r10, #1
- 816              	.LVL34:
- 817              		.loc 1 141 18 view .LVU177
- 818 00dc 8F4B     		ldr	r3, .L98
- 819 00de 03EB0919 		add	r9, r3, r9, lsl #4
+ 817              		.loc 1 141 6 is_stmt 1 view .LVU176
+ 818              		.loc 1 141 20 is_stmt 0 view .LVU177
+ 819 00d8 0AF1010A 		add	r10, r10, #1
  820              	.LVL35:
  821              		.loc 1 141 18 view .LVU178
- 822 00e2 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
- 823              		.loc 1 141 8 view .LVU179
- 824 00e6 53B9     		cbnz	r3, .L73
+ 822 00dc 8F4B     		ldr	r3, .L98
+ 823 00de 03EB4919 		add	r9, r3, r9, lsl #5
+ 824              	.LVL36:
+ 825              		.loc 1 141 18 view .LVU179
+ 826 00e2 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 827              		.loc 1 141 8 view .LVU180
+ 828 00e6 53B9     		cbnz	r3, .L73
  142:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 825              		.loc 1 142 7 is_stmt 1 view .LVU180
- 826 00e8 0136     		adds	r6, r6, #1
- 827              	.LVL36:
+ 829              		.loc 1 142 7 is_stmt 1 view .LVU181
+ 830 00e8 0136     		adds	r6, r6, #1
+ 831              	.LVL37:
  143:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 828              		.loc 1 143 7 view .LVU181
- 829              		.loc 1 143 19 is_stmt 0 view .LVU182
- 830 00ea 8119     		adds	r1, r0, r6
- 831              		.loc 1 143 40 view .LVU183
- 832 00ec 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
- 833              		.loc 1 143 27 view .LVU184
- 834 00ee 8C4B     		ldr	r3, .L98+4
- 835 00f0 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 832              		.loc 1 143 7 view .LVU182
+ 833              		.loc 1 143 19 is_stmt 0 view .LVU183
+ 834 00ea 8119     		adds	r1, r0, r6
+ 835              		.loc 1 143 40 view .LVU184
+ 836 00ec 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 837              		.loc 1 143 27 view .LVU185
+ 838 00ee 8C4B     		ldr	r3, .L98+4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 18
+
+
+ 839 00f0 03F81120 		strb	r2, [r3, r1, lsl #1]
  144:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y ) + 1;
- 836              		.loc 1 144 7 is_stmt 1 view .LVU185
- 837              		.loc 1 144 41 is_stmt 0 view .LVU186
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 18
-
-
- 838 00f4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
- 839              		.loc 1 144 46 view .LVU187
- 840 00f6 0132     		adds	r2, r2, #1
- 841              		.loc 1 144 27 view .LVU188
- 842 00f8 03EB4103 		add	r3, r3, r1, lsl #1
- 843 00fc 5A70     		strb	r2, [r3, #1]
- 844              	.LVL37:
- 845              	.L73:
+ 840              		.loc 1 144 7 is_stmt 1 view .LVU186
+ 841              		.loc 1 144 41 is_stmt 0 view .LVU187
+ 842 00f4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 843              		.loc 1 144 46 view .LVU188
+ 844 00f6 0132     		adds	r2, r2, #1
+ 845              		.loc 1 144 27 view .LVU189
+ 846 00f8 03EB4103 		add	r3, r3, r1, lsl #1
+ 847 00fc 5A70     		strb	r2, [r3, #1]
+ 848              	.LVL38:
+ 849              	.L73:
  145:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
  146:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
  147:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			}
@@ -1048,9 +1052,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  161:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			}
  162:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		}//前方の三方向だけ. 後ろは積まない. これを積むと重複
  163:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//左
- 164:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_y <= NUMBER_OF_SQUARES_Y-1){
+ 164:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_y <= (NUMBER_OF_SQUARES_Y-1)){
  165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
- 166:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
+ 166:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y - 1)){
  167:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
  168:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  169:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
@@ -1060,9 +1064,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  173:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			}
  174:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		}
  175:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//前
- 176:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_x <= NUMBER_OF_SQUARES_X-1){
+ 176:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(nd_x <= (NUMBER_OF_SQUARES_X-1)){
  177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
- 178:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
+ 178:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1)){
  179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
  180:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  181:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
@@ -1074,13 +1078,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  187:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		break;
  188:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	case south:
  189:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//右
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 19
+
+
  190:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if( 1 <= nd_y ){
  191:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
  192:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
  193:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 19
-
-
  194:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
  196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
@@ -1134,13 +1138,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  244:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
  245:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  246:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 20
+
+
  247:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
  248:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
  249:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
  250:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 20
-
-
  251:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		}
  252:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		//前
  253:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		if(1 <= nd_x){
@@ -1158,990 +1162,990 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 1
  265:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	default :
  266:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		return false; //エラー
  267:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 		break;
- 846              		.loc 1 267 3 is_stmt 1 view .LVU189
+ 850              		.loc 1 267 3 is_stmt 1 view .LVU190
  268:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	}
  269:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	SetStackNum(n+cnt);
- 847              		.loc 1 269 2 view .LVU190
- 848 00fe 3044     		add	r0, r0, r6
- 849              	.LVL38:
- 850              		.loc 1 269 2 is_stmt 0 view .LVU191
- 851 0100 FFF7FEFF 		bl	SetStackNum
- 852              	.LVL39:
+ 851              		.loc 1 269 2 view .LVU191
+ 852 00fe 3044     		add	r0, r0, r6
+ 853              	.LVL39:
+ 854              		.loc 1 269 2 is_stmt 0 view .LVU192
+ 855 0100 FFF7FEFF 		bl	SetStackNum
+ 856              	.LVL40:
  270:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	return (cnt == 0) ? false : true; //何も積まれなかったらfalse
- 853              		.loc 1 270 2 is_stmt 1 view .LVU192
- 854              		.loc 1 270 28 is_stmt 0 view .LVU193
- 855 0104 301E     		subs	r0, r6, #0
- 856 0106 18BF     		it	ne
- 857 0108 0120     		movne	r0, #1
- 858              	.LVL40:
- 859              	.L65:
+ 857              		.loc 1 270 2 is_stmt 1 view .LVU193
+ 858              		.loc 1 270 28 is_stmt 0 view .LVU194
+ 859 0104 301E     		subs	r0, r6, #0
+ 860 0106 18BF     		it	ne
+ 861 0108 0120     		movne	r0, #1
+ 862              	.LVL41:
+ 863              	.L65:
  271:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** //	return n;
  272:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** //	}
  273:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** }
- 860              		.loc 1 273 1 view .LVU194
- 861 010a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
- 862              	.LVL41:
- 863              	.L82:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 864              		.loc 1 105 6 view .LVU195
- 865 010e 0026     		movs	r6, #0
+ 864              		.loc 1 273 1 view .LVU195
+ 865 010a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
  866              	.LVL42:
+ 867              	.L82:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 867              		.loc 1 105 6 view .LVU196
- 868 0110 B7E7     		b	.L71
- 869              	.LVL43:
- 870              	.L83:
+ 868              		.loc 1 105 6 view .LVU196
+ 869 010e 0026     		movs	r6, #0
+ 870              	.LVL43:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  871              		.loc 1 105 6 view .LVU197
- 872 0112 0026     		movs	r6, #0
+ 872 0110 B7E7     		b	.L71
  873              	.LVL44:
+ 874              	.L83:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 874              		.loc 1 105 6 view .LVU198
- 875 0114 B5E7     		b	.L71
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 21
+ 875              		.loc 1 105 6 view .LVU198
+ 876 0112 0026     		movs	r6, #0
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 21
 
 
- 876              	.LVL45:
- 877              	.L84:
+ 877              	.LVL45:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  878              		.loc 1 105 6 view .LVU199
- 879 0116 0026     		movs	r6, #0
+ 879 0114 B5E7     		b	.L71
  880              	.LVL46:
+ 881              	.L84:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 881              		.loc 1 105 6 view .LVU200
- 882 0118 B3E7     		b	.L71
- 883              	.LVL47:
- 884              	.L69:
+ 882              		.loc 1 105 6 view .LVU200
+ 883 0116 0026     		movs	r6, #0
+ 884              	.LVL47:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 885              		.loc 1 105 6 view .LVU201
+ 886 0118 B3E7     		b	.L71
+ 887              	.LVL48:
+ 888              	.L69:
  154:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( 1 <= y){
- 885              		.loc 1 154 3 is_stmt 1 view .LVU201
+ 889              		.loc 1 154 3 is_stmt 1 view .LVU202
  154:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( 1 <= y){
- 886              		.loc 1 154 32 is_stmt 0 view .LVU202
- 887 011a 05EB0513 		add	r3, r5, r5, lsl #4
- 888 011e 4344     		add	r3, r3, r8
- 889 0120 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 890              		.loc 1 154 32 is_stmt 0 view .LVU203
+ 891 011a 05EB4513 		add	r3, r5, r5, lsl #5
+ 892 011e 4344     		add	r3, r3, r8
+ 893 0120 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  154:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( 1 <= y){
- 890              		.loc 1 154 5 view .LVU203
- 891 0124 ABB9     		cbnz	r3, .L85
+ 894              		.loc 1 154 5 view .LVU204
+ 895 0124 ABB9     		cbnz	r3, .L85
  155:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( Visit[x][y-1] == false ){ //未訪問
- 892              		.loc 1 155 4 is_stmt 1 view .LVU204
+ 896              		.loc 1 155 4 is_stmt 1 view .LVU205
  155:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( Visit[x][y-1] == false ){ //未訪問
- 893              		.loc 1 155 6 is_stmt 0 view .LVU205
- 894 0126 BAF1000F 		cmp	r10, #0
- 895 012a 56D0     		beq	.L86
+ 897              		.loc 1 155 6 is_stmt 0 view .LVU206
+ 898 0126 BAF1000F 		cmp	r10, #0
+ 899 012a 56D0     		beq	.L86
  156:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					++cnt;
- 896              		.loc 1 156 5 is_stmt 1 view .LVU206
+ 900              		.loc 1 156 5 is_stmt 1 view .LVU207
  156:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					++cnt;
- 897              		.loc 1 156 19 is_stmt 0 view .LVU207
- 898 012c 0AF1FF33 		add	r3, r10, #-1
+ 901              		.loc 1 156 19 is_stmt 0 view .LVU208
+ 902 012c 0AF1FF33 		add	r3, r10, #-1
  156:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					++cnt;
- 899              		.loc 1 156 17 view .LVU208
- 900 0130 7A4A     		ldr	r2, .L98
- 901 0132 02EB0912 		add	r2, r2, r9, lsl #4
- 902 0136 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 903              		.loc 1 156 17 view .LVU209
+ 904 0130 7A4A     		ldr	r2, .L98
+ 905 0132 02EB4912 		add	r2, r2, r9, lsl #5
+ 906 0136 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
  156:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					++cnt;
- 903              		.loc 1 156 7 view .LVU209
- 904 0138 002B     		cmp	r3, #0
- 905 013a 50D1     		bne	.L87
+ 907              		.loc 1 156 7 view .LVU210
+ 908 0138 002B     		cmp	r3, #0
+ 909 013a 50D1     		bne	.L87
  157:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x;
- 906              		.loc 1 157 6 is_stmt 1 view .LVU210
- 907              	.LVL48:
+ 910              		.loc 1 157 6 is_stmt 1 view .LVU211
+ 911              	.LVL49:
  158:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].y = (now_st->pos.y ) - 1;
- 908              		.loc 1 158 6 view .LVU211
+ 912              		.loc 1 158 6 view .LVU212
  158:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].y = (now_st->pos.y ) - 1;
- 909              		.loc 1 158 18 is_stmt 0 view .LVU212
- 910 013c 421C     		adds	r2, r0, #1
+ 913              		.loc 1 158 18 is_stmt 0 view .LVU213
+ 914 013c 421C     		adds	r2, r0, #1
  158:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].y = (now_st->pos.y ) - 1;
- 911              		.loc 1 158 26 view .LVU213
- 912 013e 784B     		ldr	r3, .L98+4
- 913 0140 03F81290 		strb	r9, [r3, r2, lsl #1]
- 159:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
- 914              		.loc 1 159 6 is_stmt 1 view .LVU214
- 159:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
- 915              		.loc 1 159 40 is_stmt 0 view .LVU215
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 22
+ 915              		.loc 1 158 26 view .LVU214
+ 916 013e 784B     		ldr	r3, .L98+4
+ 917 0140 03F81290 		strb	r9, [r3, r2, lsl #1]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 22
 
 
- 916 0144 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
  159:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
- 917              		.loc 1 159 45 view .LVU216
- 918 0146 0139     		subs	r1, r1, #1
+ 918              		.loc 1 159 6 is_stmt 1 view .LVU215
  159:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
- 919              		.loc 1 159 26 view .LVU217
- 920 0148 03EB4203 		add	r3, r3, r2, lsl #1
- 921 014c 5970     		strb	r1, [r3, #1]
+ 919              		.loc 1 159 40 is_stmt 0 view .LVU216
+ 920 0144 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 159:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
+ 921              		.loc 1 159 45 view .LVU217
+ 922 0146 0139     		subs	r1, r1, #1
+ 159:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				}
+ 923              		.loc 1 159 26 view .LVU218
+ 924 0148 03EB4203 		add	r3, r3, r2, lsl #1
+ 925 014c 5970     		strb	r1, [r3, #1]
  157:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x;
- 922              		.loc 1 157 6 view .LVU218
- 923 014e 0126     		movs	r6, #1
- 924              	.LVL49:
+ 926              		.loc 1 157 6 view .LVU219
+ 927 014e 0126     		movs	r6, #1
+ 928              	.LVL50:
  157:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					mass_stack[n+cnt].x = now_st->pos.x;
- 925              		.loc 1 157 6 view .LVU219
- 926 0150 00E0     		b	.L74
- 927              	.LVL50:
- 928              	.L85:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 929              		.loc 1 105 6 view .LVU220
- 930 0152 0026     		movs	r6, #0
+ 929              		.loc 1 157 6 view .LVU220
+ 930 0150 00E0     		b	.L74
  931              	.LVL51:
- 932              	.L74:
+ 932              	.L85:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 933              		.loc 1 105 6 view .LVU221
+ 934 0152 0026     		movs	r6, #0
+ 935              	.LVL52:
+ 936              	.L74:
  164:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
- 933              		.loc 1 164 3 is_stmt 1 view .LVU221
+ 937              		.loc 1 164 3 is_stmt 1 view .LVU222
  164:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y+1].existence == NOWALL ){ //行ける
- 934              		.loc 1 164 5 is_stmt 0 view .LVU222
- 935 0154 B8F10F0F 		cmp	r8, #15
- 936 0158 1CD8     		bhi	.L75
- 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
- 937              		.loc 1 165 4 is_stmt 1 view .LVU223
- 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
- 938              		.loc 1 165 32 is_stmt 0 view .LVU224
- 939 015a 08F10103 		add	r3, r8, #1
- 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
- 940              		.loc 1 165 35 view .LVU225
- 941 015e 05EB0512 		add	r2, r5, r5, lsl #4
- 942 0162 1344     		add	r3, r3, r2
- 943 0164 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
- 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < NUMBER_OF_SQUARES_Y - 1){
- 944              		.loc 1 165 6 view .LVU226
- 945 0168 A3B9     		cbnz	r3, .L75
+ 938              		.loc 1 164 5 is_stmt 0 view .LVU223
+ 939 0154 B8F11F0F 		cmp	r8, #31
+ 940 0158 1CD8     		bhi	.L75
+ 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y - 1)){
+ 941              		.loc 1 165 4 is_stmt 1 view .LVU224
+ 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y - 1)){
+ 942              		.loc 1 165 32 is_stmt 0 view .LVU225
+ 943 015a 08F10103 		add	r3, r8, #1
+ 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y - 1)){
+ 944              		.loc 1 165 35 view .LVU226
+ 945 015e 05EB4512 		add	r2, r5, r5, lsl #5
+ 946 0162 1344     		add	r3, r3, r2
+ 947 0164 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 165:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y - 1)){
+ 948              		.loc 1 165 6 view .LVU227
+ 949 0168 A3B9     		cbnz	r3, .L75
  166:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
- 946              		.loc 1 166 5 is_stmt 1 view .LVU227
+ 950              		.loc 1 166 5 is_stmt 1 view .LVU228
  166:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false){ //未訪問
- 947              		.loc 1 166 7 is_stmt 0 view .LVU228
- 948 016a BAF10E0F 		cmp	r10, #14
- 949 016e 11D8     		bhi	.L75
+ 951              		.loc 1 166 7 is_stmt 0 view .LVU229
+ 952 016a BAF11E0F 		cmp	r10, #30
+ 953 016e 11D8     		bhi	.L75
  167:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 950              		.loc 1 167 6 is_stmt 1 view .LVU229
+ 954              		.loc 1 167 6 is_stmt 1 view .LVU230
  167:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 951              		.loc 1 167 20 is_stmt 0 view .LVU230
- 952 0170 0AF10103 		add	r3, r10, #1
+ 955              		.loc 1 167 20 is_stmt 0 view .LVU231
+ 956 0170 0AF10103 		add	r3, r10, #1
  167:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 953              		.loc 1 167 18 view .LVU231
- 954 0174 694A     		ldr	r2, .L98
- 955 0176 02EB0912 		add	r2, r2, r9, lsl #4
- 956 017a D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 23
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 23
 
 
+ 957              		.loc 1 167 18 view .LVU232
+ 958 0174 694A     		ldr	r2, .L98
+ 959 0176 02EB4912 		add	r2, r2, r9, lsl #5
+ 960 017a D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
  167:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 957              		.loc 1 167 8 view .LVU232
- 958 017c 53B9     		cbnz	r3, .L75
+ 961              		.loc 1 167 8 view .LVU233
+ 962 017c 53B9     		cbnz	r3, .L75
  168:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 959              		.loc 1 168 7 is_stmt 1 view .LVU233
- 960 017e 0136     		adds	r6, r6, #1
- 961              	.LVL52:
+ 963              		.loc 1 168 7 is_stmt 1 view .LVU234
+ 964 017e 0136     		adds	r6, r6, #1
+ 965              	.LVL53:
  169:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
- 962              		.loc 1 169 7 view .LVU234
+ 966              		.loc 1 169 7 view .LVU235
  169:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
- 963              		.loc 1 169 19 is_stmt 0 view .LVU235
- 964 0180 8119     		adds	r1, r0, r6
+ 967              		.loc 1 169 19 is_stmt 0 view .LVU236
+ 968 0180 8119     		adds	r1, r0, r6
  169:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
- 965              		.loc 1 169 40 view .LVU236
- 966 0182 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 969              		.loc 1 169 40 view .LVU237
+ 970 0182 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  169:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = (now_st->pos.y) + 1;
- 967              		.loc 1 169 27 view .LVU237
- 968 0184 664B     		ldr	r3, .L98+4
- 969 0186 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 971              		.loc 1 169 27 view .LVU238
+ 972 0184 664B     		ldr	r3, .L98+4
+ 973 0186 03F81120 		strb	r2, [r3, r1, lsl #1]
  170:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 970              		.loc 1 170 7 is_stmt 1 view .LVU238
+ 974              		.loc 1 170 7 is_stmt 1 view .LVU239
  170:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 971              		.loc 1 170 41 is_stmt 0 view .LVU239
- 972 018a 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 975              		.loc 1 170 41 is_stmt 0 view .LVU240
+ 976 018a 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  170:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 973              		.loc 1 170 45 view .LVU240
- 974 018c 0132     		adds	r2, r2, #1
+ 977              		.loc 1 170 45 view .LVU241
+ 978 018c 0132     		adds	r2, r2, #1
  170:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 975              		.loc 1 170 27 view .LVU241
- 976 018e 03EB4103 		add	r3, r3, r1, lsl #1
- 977 0192 5A70     		strb	r2, [r3, #1]
- 978              	.L75:
+ 979              		.loc 1 170 27 view .LVU242
+ 980 018e 03EB4103 		add	r3, r3, r1, lsl #1
+ 981 0192 5A70     		strb	r2, [r3, #1]
+ 982              	.L75:
  176:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
- 979              		.loc 1 176 3 is_stmt 1 view .LVU242
+ 983              		.loc 1 176 3 is_stmt 1 view .LVU243
  176:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y].existence == NOWALL ){ //行ける
- 980              		.loc 1 176 5 is_stmt 0 view .LVU243
- 981 0194 0F2D     		cmp	r5, #15
- 982 0196 B2D8     		bhi	.L73
- 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
- 983              		.loc 1 177 4 is_stmt 1 view .LVU244
- 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
- 984              		.loc 1 177 29 is_stmt 0 view .LVU245
- 985 0198 0135     		adds	r5, r5, #1
- 986              	.LVL53:
- 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
- 987              		.loc 1 177 38 view .LVU246
- 988 019a 08EB0518 		add	r8, r8, r5, lsl #4
- 989              	.LVL54:
- 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
- 990              		.loc 1 177 38 view .LVU247
- 991 019e 08F58878 		add	r8, r8, #272
- 992 01a2 17F83830 		ldrb	r3, [r7, r8, lsl #3]	@ zero_extendqisi2
- 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < NUMBER_OF_SQUARES_X - 1){
- 993              		.loc 1 177 6 view .LVU248
- 994 01a6 002B     		cmp	r3, #0
- 995 01a8 A9D1     		bne	.L73
- 178:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 24
+ 984              		.loc 1 176 5 is_stmt 0 view .LVU244
+ 985 0194 1F2D     		cmp	r5, #31
+ 986 0196 B2D8     		bhi	.L73
+ 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1)){
+ 987              		.loc 1 177 4 is_stmt 1 view .LVU245
+ 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1)){
+ 988              		.loc 1 177 29 is_stmt 0 view .LVU246
+ 989 0198 0135     		adds	r5, r5, #1
+ 990              	.LVL54:
+ 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1)){
+ 991              		.loc 1 177 38 view .LVU247
+ 992 019a 08EB4518 		add	r8, r8, r5, lsl #5
+ 993              	.LVL55:
+ 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1)){
+ 994              		.loc 1 177 38 view .LVU248
+ 995 019e 08F58468 		add	r8, r8, #1056
+ 996 01a2 17F83830 		ldrb	r3, [r7, r8, lsl #3]	@ zero_extendqisi2
+ 177:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1)){
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 24
 
 
- 996              		.loc 1 178 5 is_stmt 1 view .LVU249
+ 997              		.loc 1 177 6 view .LVU249
+ 998 01a6 002B     		cmp	r3, #0
+ 999 01a8 A9D1     		bne	.L73
  178:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
- 997              		.loc 1 178 7 is_stmt 0 view .LVU250
- 998 01aa B9F10E0F 		cmp	r9, #14
- 999 01ae A6D8     		bhi	.L73
+ 1000              		.loc 1 178 5 is_stmt 1 view .LVU250
+ 178:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
+ 1001              		.loc 1 178 7 is_stmt 0 view .LVU251
+ 1002 01aa B9F11E0F 		cmp	r9, #30
+ 1003 01ae A6D8     		bhi	.L73
  179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1000              		.loc 1 179 6 is_stmt 1 view .LVU251
+ 1004              		.loc 1 179 6 is_stmt 1 view .LVU252
  179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1001              		.loc 1 179 17 is_stmt 0 view .LVU252
- 1002 01b0 09F10109 		add	r9, r9, #1
- 1003              	.LVL55:
- 179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1004              		.loc 1 179 20 view .LVU253
- 1005 01b4 594B     		ldr	r3, .L98
- 1006 01b6 03EB0919 		add	r9, r3, r9, lsl #4
+ 1005              		.loc 1 179 17 is_stmt 0 view .LVU253
+ 1006 01b0 09F10109 		add	r9, r9, #1
  1007              	.LVL56:
  179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  1008              		.loc 1 179 20 view .LVU254
- 1009 01ba 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 1009 01b4 594B     		ldr	r3, .L98
+ 1010 01b6 03EB4919 		add	r9, r3, r9, lsl #5
+ 1011              	.LVL57:
  179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1010              		.loc 1 179 8 view .LVU255
- 1011 01be 002B     		cmp	r3, #0
- 1012 01c0 9DD1     		bne	.L73
+ 1012              		.loc 1 179 20 view .LVU255
+ 1013 01ba 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 179:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1014              		.loc 1 179 8 view .LVU256
+ 1015 01be 002B     		cmp	r3, #0
+ 1016 01c0 9DD1     		bne	.L73
  180:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
- 1013              		.loc 1 180 7 is_stmt 1 view .LVU256
- 1014 01c2 0136     		adds	r6, r6, #1
- 1015              	.LVL57:
+ 1017              		.loc 1 180 7 is_stmt 1 view .LVU257
+ 1018 01c2 0136     		adds	r6, r6, #1
+ 1019              	.LVL58:
  181:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1016              		.loc 1 181 7 view .LVU257
+ 1020              		.loc 1 181 7 view .LVU258
  181:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1017              		.loc 1 181 40 is_stmt 0 view .LVU258
- 1018 01c4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1021              		.loc 1 181 40 is_stmt 0 view .LVU259
+ 1022 01c4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  181:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1019              		.loc 1 181 19 view .LVU259
- 1020 01c6 8119     		adds	r1, r0, r6
+ 1023              		.loc 1 181 19 view .LVU260
+ 1024 01c6 8119     		adds	r1, r0, r6
  181:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1021              		.loc 1 181 42 view .LVU260
- 1022 01c8 0132     		adds	r2, r2, #1
+ 1025              		.loc 1 181 42 view .LVU261
+ 1026 01c8 0132     		adds	r2, r2, #1
  181:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1023              		.loc 1 181 27 view .LVU261
- 1024 01ca 554B     		ldr	r3, .L98+4
- 1025 01cc 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1027              		.loc 1 181 27 view .LVU262
+ 1028 01ca 554B     		ldr	r3, .L98+4
+ 1029 01cc 03F81120 		strb	r2, [r3, r1, lsl #1]
  182:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1026              		.loc 1 182 7 is_stmt 1 view .LVU262
+ 1030              		.loc 1 182 7 is_stmt 1 view .LVU263
  182:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1027              		.loc 1 182 40 is_stmt 0 view .LVU263
- 1028 01d0 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1031              		.loc 1 182 40 is_stmt 0 view .LVU264
+ 1032 01d0 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  182:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1029              		.loc 1 182 27 view .LVU264
- 1030 01d2 03EB4103 		add	r3, r3, r1, lsl #1
- 1031 01d6 5A70     		strb	r2, [r3, #1]
- 1032 01d8 91E7     		b	.L73
- 1033              	.LVL58:
- 1034              	.L86:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1035              		.loc 1 105 6 view .LVU265
- 1036 01da 0026     		movs	r6, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 25
-
-
+ 1033              		.loc 1 182 27 view .LVU265
+ 1034 01d2 03EB4103 		add	r3, r3, r1, lsl #1
+ 1035 01d6 5A70     		strb	r2, [r3, #1]
+ 1036 01d8 91E7     		b	.L73
  1037              	.LVL59:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 25
+
+
+ 1038              	.L86:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1038              		.loc 1 105 6 view .LVU266
- 1039 01dc BAE7     		b	.L74
- 1040              	.LVL60:
- 1041              	.L87:
+ 1039              		.loc 1 105 6 view .LVU266
+ 1040 01da 0026     		movs	r6, #0
+ 1041              	.LVL60:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  1042              		.loc 1 105 6 view .LVU267
- 1043 01de 0026     		movs	r6, #0
+ 1043 01dc BAE7     		b	.L74
  1044              	.LVL61:
+ 1045              	.L87:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1045              		.loc 1 105 6 view .LVU268
- 1046 01e0 B8E7     		b	.L74
- 1047              	.LVL62:
- 1048              	.L68:
+ 1046              		.loc 1 105 6 view .LVU268
+ 1047 01de 0026     		movs	r6, #0
+ 1048              	.LVL62:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 1049              		.loc 1 105 6 view .LVU269
+ 1050 01e0 B8E7     		b	.L74
+ 1051              	.LVL63:
+ 1052              	.L68:
  190:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
- 1049              		.loc 1 190 3 is_stmt 1 view .LVU269
+ 1053              		.loc 1 190 3 is_stmt 1 view .LVU270
  190:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
- 1050              		.loc 1 190 5 is_stmt 0 view .LVU270
- 1051 01e2 B8F1000F 		cmp	r8, #0
- 1052 01e6 21D0     		beq	.L88
+ 1054              		.loc 1 190 5 is_stmt 0 view .LVU271
+ 1055 01e2 B8F1000F 		cmp	r8, #0
+ 1056 01e6 21D0     		beq	.L88
  191:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1053              		.loc 1 191 4 is_stmt 1 view .LVU271
+ 1057              		.loc 1 191 4 is_stmt 1 view .LVU272
  191:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1054              		.loc 1 191 35 is_stmt 0 view .LVU272
- 1055 01e8 08F1FF33 		add	r3, r8, #-1
+ 1058              		.loc 1 191 35 is_stmt 0 view .LVU273
+ 1059 01e8 08F1FF33 		add	r3, r8, #-1
  191:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1056              		.loc 1 191 38 view .LVU273
- 1057 01ec 03EB0513 		add	r3, r3, r5, lsl #4
- 1058 01f0 03F58873 		add	r3, r3, #272
- 1059 01f4 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1060              		.loc 1 191 38 view .LVU274
+ 1061 01ec 03EB4513 		add	r3, r3, r5, lsl #5
+ 1062 01f0 03F58463 		add	r3, r3, #1056
+ 1063 01f4 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  191:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1060              		.loc 1 191 6 view .LVU274
- 1061 01f8 002B     		cmp	r3, #0
- 1062 01fa 65D1     		bne	.L89
+ 1064              		.loc 1 191 6 view .LVU275
+ 1065 01f8 002B     		cmp	r3, #0
+ 1066 01fa 65D1     		bne	.L89
  192:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
- 1063              		.loc 1 192 5 is_stmt 1 view .LVU275
+ 1067              		.loc 1 192 5 is_stmt 1 view .LVU276
  192:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
- 1064              		.loc 1 192 7 is_stmt 0 view .LVU276
- 1065 01fc B9F1000F 		cmp	r9, #0
- 1066 0200 64D0     		beq	.L90
+ 1068              		.loc 1 192 7 is_stmt 0 view .LVU277
+ 1069 01fc B9F1000F 		cmp	r9, #0
+ 1070 0200 64D0     		beq	.L90
  193:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1067              		.loc 1 193 6 is_stmt 1 view .LVU277
+ 1071              		.loc 1 193 6 is_stmt 1 view .LVU278
  193:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1068              		.loc 1 193 17 is_stmt 0 view .LVU278
- 1069 0202 09F1FF33 		add	r3, r9, #-1
+ 1072              		.loc 1 193 17 is_stmt 0 view .LVU279
+ 1073 0202 09F1FF33 		add	r3, r9, #-1
  193:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1070              		.loc 1 193 20 view .LVU279
- 1071 0206 454A     		ldr	r2, .L98
- 1072 0208 02EB0313 		add	r3, r2, r3, lsl #4
- 1073 020c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 1074              		.loc 1 193 20 view .LVU280
+ 1075 0206 454A     		ldr	r2, .L98
+ 1076 0208 02EB4313 		add	r3, r2, r3, lsl #5
+ 1077 020c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
  193:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1074              		.loc 1 193 8 view .LVU280
- 1075 0210 002B     		cmp	r3, #0
- 1076 0212 5DD1     		bne	.L91
- 194:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
- 1077              		.loc 1 194 7 is_stmt 1 view .LVU281
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 26
+ 1078              		.loc 1 193 8 view .LVU281
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 26
 
 
- 1078              	.LVL63:
- 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1079              		.loc 1 195 7 view .LVU282
- 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1080              		.loc 1 195 19 is_stmt 0 view .LVU283
- 1081 0214 421C     		adds	r2, r0, #1
- 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1082              		.loc 1 195 42 view .LVU284
- 1083 0216 09F1FF31 		add	r1, r9, #-1
- 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1084              		.loc 1 195 27 view .LVU285
- 1085 021a 414B     		ldr	r3, .L98+4
- 1086 021c 03F81210 		strb	r1, [r3, r2, lsl #1]
- 196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1087              		.loc 1 196 7 is_stmt 1 view .LVU286
- 196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1088              		.loc 1 196 40 is_stmt 0 view .LVU287
- 1089 0220 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
- 196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1090              		.loc 1 196 27 view .LVU288
- 1091 0222 03EB4203 		add	r3, r3, r2, lsl #1
- 1092 0226 5970     		strb	r1, [r3, #1]
+ 1079 0210 002B     		cmp	r3, #0
+ 1080 0212 5DD1     		bne	.L91
  194:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
- 1093              		.loc 1 194 7 view .LVU289
- 1094 0228 0126     		movs	r6, #1
- 1095              	.LVL64:
+ 1081              		.loc 1 194 7 is_stmt 1 view .LVU282
+ 1082              	.LVL64:
+ 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
+ 1083              		.loc 1 195 7 view .LVU283
+ 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
+ 1084              		.loc 1 195 19 is_stmt 0 view .LVU284
+ 1085 0214 421C     		adds	r2, r0, #1
+ 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
+ 1086              		.loc 1 195 42 view .LVU285
+ 1087 0216 09F1FF31 		add	r1, r9, #-1
+ 195:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
+ 1088              		.loc 1 195 27 view .LVU286
+ 1089 021a 414B     		ldr	r3, .L98+4
+ 1090 021c 03F81210 		strb	r1, [r3, r2, lsl #1]
+ 196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1091              		.loc 1 196 7 is_stmt 1 view .LVU287
+ 196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1092              		.loc 1 196 40 is_stmt 0 view .LVU288
+ 1093 0220 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 196:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1094              		.loc 1 196 27 view .LVU289
+ 1095 0222 03EB4203 		add	r3, r3, r2, lsl #1
+ 1096 0226 5970     		strb	r1, [r3, #1]
  194:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
- 1096              		.loc 1 194 7 view .LVU290
- 1097 022a 00E0     		b	.L76
- 1098              	.LVL65:
- 1099              	.L88:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1100              		.loc 1 105 6 view .LVU291
- 1101 022c 0026     		movs	r6, #0
+ 1097              		.loc 1 194 7 view .LVU290
+ 1098 0228 0126     		movs	r6, #1
+ 1099              	.LVL65:
+ 194:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
+ 1100              		.loc 1 194 7 view .LVU291
+ 1101 022a 00E0     		b	.L76
  1102              	.LVL66:
- 1103              	.L76:
+ 1103              	.L88:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 1104              		.loc 1 105 6 view .LVU292
+ 1105 022c 0026     		movs	r6, #0
+ 1106              	.LVL67:
+ 1107              	.L76:
  202:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y-1].existence == NOWALL ){ //行ける
- 1104              		.loc 1 202 3 is_stmt 1 view .LVU292
+ 1108              		.loc 1 202 3 is_stmt 1 view .LVU293
  202:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y-1].existence == NOWALL ){ //行ける
- 1105              		.loc 1 202 5 is_stmt 0 view .LVU293
- 1106 022e 0F2D     		cmp	r5, #15
- 1107 0230 22D8     		bhi	.L77
+ 1109              		.loc 1 202 5 is_stmt 0 view .LVU294
+ 1110 022e 1F2D     		cmp	r5, #31
+ 1111 0230 22D8     		bhi	.L77
  202:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x+1][nd_y-1].existence == NOWALL ){ //行ける
- 1108              		.loc 1 202 38 discriminator 1 view .LVU294
- 1109 0232 B8F1000F 		cmp	r8, #0
- 1110 0236 1FD0     		beq	.L77
+ 1112              		.loc 1 202 38 discriminator 1 view .LVU295
+ 1113 0232 B8F1000F 		cmp	r8, #0
+ 1114 0236 1FD0     		beq	.L77
  203:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
- 1111              		.loc 1 203 4 is_stmt 1 view .LVU295
+ 1115              		.loc 1 203 4 is_stmt 1 view .LVU296
  203:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
- 1112              		.loc 1 203 29 is_stmt 0 view .LVU296
- 1113 0238 6B1C     		adds	r3, r5, #1
+ 1116              		.loc 1 203 29 is_stmt 0 view .LVU297
+ 1117 0238 6B1C     		adds	r3, r5, #1
  203:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
- 1114              		.loc 1 203 37 view .LVU297
- 1115 023a 08F1FF32 		add	r2, r8, #-1
- 203:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
- 1116              		.loc 1 203 40 view .LVU298
- 1117 023e 02EB0313 		add	r3, r2, r3, lsl #4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 27
+ 1118              		.loc 1 203 37 view .LVU298
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 27
 
 
- 1118 0242 03F58873 		add	r3, r3, #272
- 1119 0246 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1119 023a 08F1FF32 		add	r2, r8, #-1
  203:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
- 1120              		.loc 1 203 6 view .LVU299
- 1121 024a ABB9     		cbnz	r3, .L77
+ 1120              		.loc 1 203 40 view .LVU299
+ 1121 023e 02EB4313 		add	r3, r2, r3, lsl #5
+ 1122 0242 03F58463 		add	r3, r3, #1056
+ 1123 0246 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 203:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( x < (NUMBER_OF_SQUARES_X - 1) ){
+ 1124              		.loc 1 203 6 view .LVU300
+ 1125 024a ABB9     		cbnz	r3, .L77
  204:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
- 1122              		.loc 1 204 5 is_stmt 1 view .LVU300
+ 1126              		.loc 1 204 5 is_stmt 1 view .LVU301
  204:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x+1][y] == false ){ //未訪問
- 1123              		.loc 1 204 7 is_stmt 0 view .LVU301
- 1124 024c B9F10E0F 		cmp	r9, #14
- 1125 0250 12D8     		bhi	.L77
+ 1127              		.loc 1 204 7 is_stmt 0 view .LVU302
+ 1128 024c B9F11E0F 		cmp	r9, #30
+ 1129 0250 12D8     		bhi	.L77
  205:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1126              		.loc 1 205 6 is_stmt 1 view .LVU302
+ 1130              		.loc 1 205 6 is_stmt 1 view .LVU303
  205:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1127              		.loc 1 205 17 is_stmt 0 view .LVU303
- 1128 0252 09F10103 		add	r3, r9, #1
+ 1131              		.loc 1 205 17 is_stmt 0 view .LVU304
+ 1132 0252 09F10103 		add	r3, r9, #1
  205:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1129              		.loc 1 205 20 view .LVU304
- 1130 0256 314A     		ldr	r2, .L98
- 1131 0258 02EB0313 		add	r3, r2, r3, lsl #4
- 1132 025c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
+ 1133              		.loc 1 205 20 view .LVU305
+ 1134 0256 314A     		ldr	r2, .L98
+ 1135 0258 02EB4313 		add	r3, r2, r3, lsl #5
+ 1136 025c 13F80A30 		ldrb	r3, [r3, r10]	@ zero_extendqisi2
  205:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1133              		.loc 1 205 8 view .LVU305
- 1134 0260 53B9     		cbnz	r3, .L77
+ 1137              		.loc 1 205 8 view .LVU306
+ 1138 0260 53B9     		cbnz	r3, .L77
  206:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x+1;
- 1135              		.loc 1 206 7 is_stmt 1 view .LVU306
- 1136 0262 0136     		adds	r6, r6, #1
- 1137              	.LVL67:
+ 1139              		.loc 1 206 7 is_stmt 1 view .LVU307
+ 1140 0262 0136     		adds	r6, r6, #1
+ 1141              	.LVL68:
  207:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1138              		.loc 1 207 7 view .LVU307
+ 1142              		.loc 1 207 7 view .LVU308
  207:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1139              		.loc 1 207 40 is_stmt 0 view .LVU308
- 1140 0264 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1143              		.loc 1 207 40 is_stmt 0 view .LVU309
+ 1144 0264 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  207:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1141              		.loc 1 207 19 view .LVU309
- 1142 0266 8119     		adds	r1, r0, r6
+ 1145              		.loc 1 207 19 view .LVU310
+ 1146 0266 8119     		adds	r1, r0, r6
  207:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1143              		.loc 1 207 42 view .LVU310
- 1144 0268 0132     		adds	r2, r2, #1
+ 1147              		.loc 1 207 42 view .LVU311
+ 1148 0268 0132     		adds	r2, r2, #1
  207:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1145              		.loc 1 207 27 view .LVU311
- 1146 026a 2D4B     		ldr	r3, .L98+4
- 1147 026c 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1149              		.loc 1 207 27 view .LVU312
+ 1150 026a 2D4B     		ldr	r3, .L98+4
+ 1151 026c 03F81120 		strb	r2, [r3, r1, lsl #1]
  208:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1148              		.loc 1 208 7 is_stmt 1 view .LVU312
+ 1152              		.loc 1 208 7 is_stmt 1 view .LVU313
  208:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1149              		.loc 1 208 40 is_stmt 0 view .LVU313
- 1150 0270 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1153              		.loc 1 208 40 is_stmt 0 view .LVU314
+ 1154 0270 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  208:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1151              		.loc 1 208 27 view .LVU314
- 1152 0272 03EB4103 		add	r3, r3, r1, lsl #1
- 1153 0276 5A70     		strb	r2, [r3, #1]
- 1154              	.L77:
- 215:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
- 1155              		.loc 1 215 3 is_stmt 1 view .LVU315
- 215:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
- 1156              		.loc 1 215 5 is_stmt 0 view .LVU316
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 28
+ 1155              		.loc 1 208 27 view .LVU315
+ 1156 0272 03EB4103 		add	r3, r3, r1, lsl #1
+ 1157 0276 5A70     		strb	r2, [r3, #1]
+ 1158              	.L77:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 28
 
 
- 1157 0278 B8F1000F 		cmp	r8, #0
- 1158 027c 3FF43FAF 		beq	.L73
+ 215:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
+ 1159              		.loc 1 215 3 is_stmt 1 view .LVU316
+ 215:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x][nd_y-1].existence == NOWALL ){ //行ける
+ 1160              		.loc 1 215 5 is_stmt 0 view .LVU317
+ 1161 0278 B8F1000F 		cmp	r8, #0
+ 1162 027c 3FF43FAF 		beq	.L73
  216:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y){
- 1159              		.loc 1 216 4 is_stmt 1 view .LVU317
+ 1163              		.loc 1 216 4 is_stmt 1 view .LVU318
  216:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y){
- 1160              		.loc 1 216 32 is_stmt 0 view .LVU318
- 1161 0280 08F1FF38 		add	r8, r8, #-1
- 1162              	.LVL68:
+ 1164              		.loc 1 216 32 is_stmt 0 view .LVU319
+ 1165 0280 08F1FF38 		add	r8, r8, #-1
+ 1166              	.LVL69:
  216:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y){
- 1163              		.loc 1 216 35 view .LVU319
- 1164 0284 05EB0515 		add	r5, r5, r5, lsl #4
- 1165              	.LVL69:
+ 1167              		.loc 1 216 35 view .LVU320
+ 1168 0284 05EB4515 		add	r5, r5, r5, lsl #5
+ 1169              	.LVL70:
  216:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y){
- 1166              		.loc 1 216 35 view .LVU320
- 1167 0288 4544     		add	r5, r5, r8
- 1168 028a 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
+ 1170              		.loc 1 216 35 view .LVU321
+ 1171 0288 4544     		add	r5, r5, r8
+ 1172 028a 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
  216:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y){
- 1169              		.loc 1 216 6 view .LVU321
- 1170 028e 002B     		cmp	r3, #0
- 1171 0290 7FF435AF 		bne	.L73
+ 1173              		.loc 1 216 6 view .LVU322
+ 1174 028e 002B     		cmp	r3, #0
+ 1175 0290 7FF435AF 		bne	.L73
  217:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
- 1172              		.loc 1 217 5 is_stmt 1 view .LVU322
+ 1176              		.loc 1 217 5 is_stmt 1 view .LVU323
  217:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
- 1173              		.loc 1 217 7 is_stmt 0 view .LVU323
- 1174 0294 BAF1000F 		cmp	r10, #0
- 1175 0298 3FF431AF 		beq	.L73
+ 1177              		.loc 1 217 7 is_stmt 0 view .LVU324
+ 1178 0294 BAF1000F 		cmp	r10, #0
+ 1179 0298 3FF431AF 		beq	.L73
  218:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1176              		.loc 1 218 6 is_stmt 1 view .LVU324
+ 1180              		.loc 1 218 6 is_stmt 1 view .LVU325
  218:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1177              		.loc 1 218 20 is_stmt 0 view .LVU325
- 1178 029c 0AF1FF3A 		add	r10, r10, #-1
- 1179              	.LVL70:
- 218:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1180              		.loc 1 218 18 view .LVU326
- 1181 02a0 1E4B     		ldr	r3, .L98
- 1182 02a2 03EB0919 		add	r9, r3, r9, lsl #4
+ 1181              		.loc 1 218 20 is_stmt 0 view .LVU326
+ 1182 029c 0AF1FF3A 		add	r10, r10, #-1
  1183              	.LVL71:
  218:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  1184              		.loc 1 218 18 view .LVU327
- 1185 02a6 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 1185 02a0 1E4B     		ldr	r3, .L98
+ 1186 02a2 03EB4919 		add	r9, r3, r9, lsl #5
+ 1187              	.LVL72:
  218:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1186              		.loc 1 218 8 view .LVU328
- 1187 02aa 002B     		cmp	r3, #0
- 1188 02ac 7FF427AF 		bne	.L73
+ 1188              		.loc 1 218 18 view .LVU328
+ 1189 02a6 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 218:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1190              		.loc 1 218 8 view .LVU329
+ 1191 02aa 002B     		cmp	r3, #0
+ 1192 02ac 7FF427AF 		bne	.L73
  219:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 1189              		.loc 1 219 7 is_stmt 1 view .LVU329
- 1190 02b0 0136     		adds	r6, r6, #1
- 1191              	.LVL72:
+ 1193              		.loc 1 219 7 is_stmt 1 view .LVU330
+ 1194 02b0 0136     		adds	r6, r6, #1
+ 1195              	.LVL73:
  220:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1192              		.loc 1 220 7 view .LVU330
+ 1196              		.loc 1 220 7 view .LVU331
  220:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1193              		.loc 1 220 19 is_stmt 0 view .LVU331
- 1194 02b2 8119     		adds	r1, r0, r6
- 220:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1195              		.loc 1 220 40 view .LVU332
- 1196 02b4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
- 220:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 29
+ 1197              		.loc 1 220 19 is_stmt 0 view .LVU332
+ 1198 02b2 8119     		adds	r1, r0, r6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 29
 
 
- 1197              		.loc 1 220 27 view .LVU333
- 1198 02b6 1A4B     		ldr	r3, .L98+4
- 1199 02b8 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 220:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
+ 1199              		.loc 1 220 40 view .LVU333
+ 1200 02b4 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 220:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
+ 1201              		.loc 1 220 27 view .LVU334
+ 1202 02b6 1A4B     		ldr	r3, .L98+4
+ 1203 02b8 03F81120 		strb	r2, [r3, r1, lsl #1]
  221:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1200              		.loc 1 221 7 is_stmt 1 view .LVU334
+ 1204              		.loc 1 221 7 is_stmt 1 view .LVU335
  221:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1201              		.loc 1 221 40 is_stmt 0 view .LVU335
- 1202 02bc 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1205              		.loc 1 221 40 is_stmt 0 view .LVU336
+ 1206 02bc 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  221:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1203              		.loc 1 221 42 view .LVU336
- 1204 02be 013A     		subs	r2, r2, #1
+ 1207              		.loc 1 221 42 view .LVU337
+ 1208 02be 013A     		subs	r2, r2, #1
  221:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1205              		.loc 1 221 27 view .LVU337
- 1206 02c0 03EB4103 		add	r3, r3, r1, lsl #1
- 1207 02c4 5A70     		strb	r2, [r3, #1]
- 1208 02c6 1AE7     		b	.L73
- 1209              	.LVL73:
- 1210              	.L89:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1211              		.loc 1 105 6 view .LVU338
- 1212 02c8 0026     		movs	r6, #0
+ 1209              		.loc 1 221 27 view .LVU338
+ 1210 02c0 03EB4103 		add	r3, r3, r1, lsl #1
+ 1211 02c4 5A70     		strb	r2, [r3, #1]
+ 1212 02c6 1AE7     		b	.L73
  1213              	.LVL74:
+ 1214              	.L89:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1214              		.loc 1 105 6 view .LVU339
- 1215 02ca B0E7     		b	.L76
- 1216              	.LVL75:
- 1217              	.L90:
+ 1215              		.loc 1 105 6 view .LVU339
+ 1216 02c8 0026     		movs	r6, #0
+ 1217              	.LVL75:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  1218              		.loc 1 105 6 view .LVU340
- 1219 02cc 0026     		movs	r6, #0
+ 1219 02ca B0E7     		b	.L76
  1220              	.LVL76:
+ 1221              	.L90:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1221              		.loc 1 105 6 view .LVU341
- 1222 02ce AEE7     		b	.L76
- 1223              	.LVL77:
- 1224              	.L91:
+ 1222              		.loc 1 105 6 view .LVU341
+ 1223 02cc 0026     		movs	r6, #0
+ 1224              	.LVL77:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  1225              		.loc 1 105 6 view .LVU342
- 1226 02d0 0026     		movs	r6, #0
+ 1226 02ce AEE7     		b	.L76
  1227              	.LVL78:
+ 1228              	.L91:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1228              		.loc 1 105 6 view .LVU343
- 1229 02d2 ACE7     		b	.L76
- 1230              	.LVL79:
- 1231              	.L66:
- 229:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
- 1232              		.loc 1 229 3 is_stmt 1 view .LVU344
- 229:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
- 1233              		.loc 1 229 5 is_stmt 0 view .LVU345
- 1234 02d4 35B3     		cbz	r5, .L92
- 229:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
- 1235              		.loc 1 229 19 discriminator 1 view .LVU346
- 1236 02d6 B8F10F0F 		cmp	r8, #15
- 1237 02da 68D8     		bhi	.L93
- 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
- 1238              		.loc 1 230 4 is_stmt 1 view .LVU347
- 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 30
-
-
- 1239              		.loc 1 230 26 is_stmt 0 view .LVU348
- 1240 02dc 6B1E     		subs	r3, r5, #1
- 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
- 1241              		.loc 1 230 34 view .LVU349
- 1242 02de 08F10102 		add	r2, r8, #1
- 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
- 1243              		.loc 1 230 37 view .LVU350
- 1244 02e2 03EB0313 		add	r3, r3, r3, lsl #4
- 1245 02e6 1344     		add	r3, r3, r2
- 1246 02e8 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
- 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
- 1247              		.loc 1 230 6 view .LVU351
- 1248 02ec 002B     		cmp	r3, #0
- 1249 02ee 60D1     		bne	.L94
- 231:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false ){ //未訪問
- 1250              		.loc 1 231 5 is_stmt 1 view .LVU352
- 231:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false ){ //未訪問
- 1251              		.loc 1 231 7 is_stmt 0 view .LVU353
- 1252 02f0 BAF10E0F 		cmp	r10, #14
- 1253 02f4 5FD8     		bhi	.L95
- 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1254              		.loc 1 232 6 is_stmt 1 view .LVU354
- 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1255              		.loc 1 232 20 is_stmt 0 view .LVU355
- 1256 02f6 0AF10103 		add	r3, r10, #1
- 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1257              		.loc 1 232 18 view .LVU356
- 1258 02fa 084A     		ldr	r2, .L98
- 1259 02fc 02EB0912 		add	r2, r2, r9, lsl #4
- 1260 0300 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
- 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1261              		.loc 1 232 8 view .LVU357
- 1262 0302 002B     		cmp	r3, #0
- 1263 0304 59D1     		bne	.L96
- 233:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 1264              		.loc 1 233 7 is_stmt 1 view .LVU358
- 1265              	.LVL80:
- 234:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
- 1266              		.loc 1 234 7 view .LVU359
- 234:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
- 1267              		.loc 1 234 19 is_stmt 0 view .LVU360
- 1268 0306 421C     		adds	r2, r0, #1
- 234:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
- 1269              		.loc 1 234 27 view .LVU361
- 1270 0308 054B     		ldr	r3, .L98+4
- 1271 030a 03F81290 		strb	r9, [r3, r2, lsl #1]
- 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1272              		.loc 1 235 7 is_stmt 1 view .LVU362
- 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1273              		.loc 1 235 40 is_stmt 0 view .LVU363
- 1274 030e 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
- 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1275              		.loc 1 235 42 view .LVU364
- 1276 0310 0131     		adds	r1, r1, #1
- 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1277              		.loc 1 235 27 view .LVU365
- 1278 0312 03EB4203 		add	r3, r3, r2, lsl #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 31
-
-
- 1279 0316 5970     		strb	r1, [r3, #1]
- 233:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 1280              		.loc 1 233 7 view .LVU366
- 1281 0318 0126     		movs	r6, #1
- 1282              	.LVL81:
- 233:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 1283              		.loc 1 233 7 view .LVU367
- 1284 031a 04E0     		b	.L78
- 1285              	.L99:
- 1286              		.align	2
- 1287              	.L98:
- 1288 031c 00000000 		.word	.LANCHOR4
- 1289 0320 00000000 		.word	.LANCHOR3
- 1290              	.LVL82:
- 1291              	.L92:
+ 1229              		.loc 1 105 6 view .LVU343
+ 1230 02d0 0026     		movs	r6, #0
+ 1231              	.LVL79:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1292              		.loc 1 105 6 view .LVU368
- 1293 0324 0026     		movs	r6, #0
+ 1232              		.loc 1 105 6 view .LVU344
+ 1233 02d2 ACE7     		b	.L76
+ 1234              	.LVL80:
+ 1235              	.L66:
+ 229:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
+ 1236              		.loc 1 229 3 is_stmt 1 view .LVU345
+ 229:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
+ 1237              		.loc 1 229 5 is_stmt 0 view .LVU346
+ 1238 02d4 35B3     		cbz	r5, .L92
+ 229:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y+1].existence == NOWALL ){ //行ける
+ 1239              		.loc 1 229 19 discriminator 1 view .LVU347
+ 1240 02d6 B8F11F0F 		cmp	r8, #31
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 30
+
+
+ 1241 02da 68D8     		bhi	.L93
+ 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
+ 1242              		.loc 1 230 4 is_stmt 1 view .LVU348
+ 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
+ 1243              		.loc 1 230 26 is_stmt 0 view .LVU349
+ 1244 02dc 6B1E     		subs	r3, r5, #1
+ 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
+ 1245              		.loc 1 230 34 view .LVU350
+ 1246 02de 08F10102 		add	r2, r8, #1
+ 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
+ 1247              		.loc 1 230 37 view .LVU351
+ 1248 02e2 03EB4313 		add	r3, r3, r3, lsl #5
+ 1249 02e6 1344     		add	r3, r3, r2
+ 1250 02e8 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 230:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( y < (NUMBER_OF_SQUARES_Y -1) ){
+ 1251              		.loc 1 230 6 view .LVU352
+ 1252 02ec 002B     		cmp	r3, #0
+ 1253 02ee 60D1     		bne	.L94
+ 231:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false ){ //未訪問
+ 1254              		.loc 1 231 5 is_stmt 1 view .LVU353
+ 231:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y+1] == false ){ //未訪問
+ 1255              		.loc 1 231 7 is_stmt 0 view .LVU354
+ 1256 02f0 BAF11E0F 		cmp	r10, #30
+ 1257 02f4 5FD8     		bhi	.L95
+ 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1258              		.loc 1 232 6 is_stmt 1 view .LVU355
+ 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1259              		.loc 1 232 20 is_stmt 0 view .LVU356
+ 1260 02f6 0AF10103 		add	r3, r10, #1
+ 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1261              		.loc 1 232 18 view .LVU357
+ 1262 02fa 084A     		ldr	r2, .L98
+ 1263 02fc 02EB4912 		add	r2, r2, r9, lsl #5
+ 1264 0300 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 232:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1265              		.loc 1 232 8 view .LVU358
+ 1266 0302 002B     		cmp	r3, #0
+ 1267 0304 59D1     		bne	.L96
+ 233:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
+ 1268              		.loc 1 233 7 is_stmt 1 view .LVU359
+ 1269              	.LVL81:
+ 234:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
+ 1270              		.loc 1 234 7 view .LVU360
+ 234:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
+ 1271              		.loc 1 234 19 is_stmt 0 view .LVU361
+ 1272 0306 421C     		adds	r2, r0, #1
+ 234:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y+1;
+ 1273              		.loc 1 234 27 view .LVU362
+ 1274 0308 054B     		ldr	r3, .L98+4
+ 1275 030a 03F81290 		strb	r9, [r3, r2, lsl #1]
+ 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1276              		.loc 1 235 7 is_stmt 1 view .LVU363
+ 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1277              		.loc 1 235 40 is_stmt 0 view .LVU364
+ 1278 030e 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1279              		.loc 1 235 42 view .LVU365
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 31
+
+
+ 1280 0310 0131     		adds	r1, r1, #1
+ 235:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
+ 1281              		.loc 1 235 27 view .LVU366
+ 1282 0312 03EB4203 		add	r3, r3, r2, lsl #1
+ 1283 0316 5970     		strb	r1, [r3, #1]
+ 233:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
+ 1284              		.loc 1 233 7 view .LVU367
+ 1285 0318 0126     		movs	r6, #1
+ 1286              	.LVL82:
+ 233:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
+ 1287              		.loc 1 233 7 view .LVU368
+ 1288 031a 04E0     		b	.L78
+ 1289              	.L99:
+ 1290              		.align	2
+ 1291              	.L98:
+ 1292 031c 00000000 		.word	.LANCHOR4
+ 1293 0320 00000000 		.word	.LANCHOR3
  1294              	.LVL83:
- 1295              	.L78:
+ 1295              	.L92:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 1296              		.loc 1 105 6 view .LVU369
+ 1297 0324 0026     		movs	r6, #0
+ 1298              	.LVL84:
+ 1299              	.L78:
  241:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
- 1296              		.loc 1 241 3 is_stmt 1 view .LVU369
+ 1300              		.loc 1 241 3 is_stmt 1 view .LVU370
  241:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->RawNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
- 1297              		.loc 1 241 5 is_stmt 0 view .LVU370
- 1298 0326 DDB1     		cbz	r5, .L79
+ 1301              		.loc 1 241 5 is_stmt 0 view .LVU371
+ 1302 0326 DDB1     		cbz	r5, .L79
  242:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y ){
- 1299              		.loc 1 242 4 is_stmt 1 view .LVU371
+ 1303              		.loc 1 242 4 is_stmt 1 view .LVU372
  242:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y ){
- 1300              		.loc 1 242 26 is_stmt 0 view .LVU372
- 1301 0328 6B1E     		subs	r3, r5, #1
+ 1304              		.loc 1 242 26 is_stmt 0 view .LVU373
+ 1305 0328 6B1E     		subs	r3, r5, #1
  242:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y ){
- 1302              		.loc 1 242 35 view .LVU373
- 1303 032a 03EB0313 		add	r3, r3, r3, lsl #4
- 1304 032e 4344     		add	r3, r3, r8
- 1305 0330 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
+ 1306              		.loc 1 242 35 view .LVU374
+ 1307 032a 03EB4313 		add	r3, r3, r3, lsl #5
+ 1308 032e 4344     		add	r3, r3, r8
+ 1309 0330 17F83330 		ldrb	r3, [r7, r3, lsl #3]	@ zero_extendqisi2
  242:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= y ){
- 1306              		.loc 1 242 6 view .LVU374
- 1307 0334 A3B9     		cbnz	r3, .L79
+ 1310              		.loc 1 242 6 view .LVU375
+ 1311 0334 A3B9     		cbnz	r3, .L79
  243:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
- 1308              		.loc 1 243 5 is_stmt 1 view .LVU375
+ 1312              		.loc 1 243 5 is_stmt 1 view .LVU376
  243:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x][y-1] == false ){ //未訪問
- 1309              		.loc 1 243 7 is_stmt 0 view .LVU376
- 1310 0336 BAF1000F 		cmp	r10, #0
- 1311 033a 11D0     		beq	.L79
+ 1313              		.loc 1 243 7 is_stmt 0 view .LVU377
+ 1314 0336 BAF1000F 		cmp	r10, #0
+ 1315 033a 11D0     		beq	.L79
  244:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1312              		.loc 1 244 6 is_stmt 1 view .LVU377
+ 1316              		.loc 1 244 6 is_stmt 1 view .LVU378
  244:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1313              		.loc 1 244 20 is_stmt 0 view .LVU378
- 1314 033c 0AF1FF33 		add	r3, r10, #-1
+ 1317              		.loc 1 244 20 is_stmt 0 view .LVU379
+ 1318 033c 0AF1FF33 		add	r3, r10, #-1
  244:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1315              		.loc 1 244 18 view .LVU379
- 1316 0340 204A     		ldr	r2, .L100
- 1317 0342 02EB0912 		add	r2, r2, r9, lsl #4
- 1318 0346 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
- 244:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1319              		.loc 1 244 8 view .LVU380
- 1320 0348 53B9     		cbnz	r3, .L79
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 32
+ 1319              		.loc 1 244 18 view .LVU380
+ 1320 0340 204A     		ldr	r2, .L100
+ 1321 0342 02EB4912 		add	r2, r2, r9, lsl #5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 32
 
 
+ 1322 0346 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 244:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1323              		.loc 1 244 8 view .LVU381
+ 1324 0348 53B9     		cbnz	r3, .L79
  245:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x;
- 1321              		.loc 1 245 7 is_stmt 1 view .LVU381
- 1322 034a 0136     		adds	r6, r6, #1
- 1323              	.LVL84:
+ 1325              		.loc 1 245 7 is_stmt 1 view .LVU382
+ 1326 034a 0136     		adds	r6, r6, #1
+ 1327              	.LVL85:
  246:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1324              		.loc 1 246 7 view .LVU382
+ 1328              		.loc 1 246 7 view .LVU383
  246:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1325              		.loc 1 246 19 is_stmt 0 view .LVU383
- 1326 034c 8119     		adds	r1, r0, r6
+ 1329              		.loc 1 246 19 is_stmt 0 view .LVU384
+ 1330 034c 8119     		adds	r1, r0, r6
  246:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1327              		.loc 1 246 40 view .LVU384
- 1328 034e 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1331              		.loc 1 246 40 view .LVU385
+ 1332 034e 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  246:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y-1;
- 1329              		.loc 1 246 27 view .LVU385
- 1330 0350 1D4B     		ldr	r3, .L100+4
- 1331 0352 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1333              		.loc 1 246 27 view .LVU386
+ 1334 0350 1D4B     		ldr	r3, .L100+4
+ 1335 0352 03F81120 		strb	r2, [r3, r1, lsl #1]
  247:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1332              		.loc 1 247 7 is_stmt 1 view .LVU386
+ 1336              		.loc 1 247 7 is_stmt 1 view .LVU387
  247:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1333              		.loc 1 247 40 is_stmt 0 view .LVU387
- 1334 0356 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1337              		.loc 1 247 40 is_stmt 0 view .LVU388
+ 1338 0356 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  247:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1335              		.loc 1 247 42 view .LVU388
- 1336 0358 013A     		subs	r2, r2, #1
+ 1339              		.loc 1 247 42 view .LVU389
+ 1340 0358 013A     		subs	r2, r2, #1
  247:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1337              		.loc 1 247 27 view .LVU389
- 1338 035a 03EB4103 		add	r3, r3, r1, lsl #1
- 1339 035e 5A70     		strb	r2, [r3, #1]
- 1340              	.L79:
+ 1341              		.loc 1 247 27 view .LVU390
+ 1342 035a 03EB4103 		add	r3, r3, r1, lsl #1
+ 1343 035e 5A70     		strb	r2, [r3, #1]
+ 1344              	.L79:
  253:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
- 1341              		.loc 1 253 3 is_stmt 1 view .LVU390
+ 1345              		.loc 1 253 3 is_stmt 1 view .LVU391
  253:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 			if( maze->ColumnNode[nd_x-1][nd_y].existence == NOWALL ){ //行ける
- 1342              		.loc 1 253 5 is_stmt 0 view .LVU391
- 1343 0360 002D     		cmp	r5, #0
- 1344 0362 3FF4CCAE 		beq	.L73
+ 1346              		.loc 1 253 5 is_stmt 0 view .LVU392
+ 1347 0360 002D     		cmp	r5, #0
+ 1348 0362 3FF4CCAE 		beq	.L73
  254:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1345              		.loc 1 254 4 is_stmt 1 view .LVU392
+ 1349              		.loc 1 254 4 is_stmt 1 view .LVU393
  254:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1346              		.loc 1 254 29 is_stmt 0 view .LVU393
- 1347 0366 013D     		subs	r5, r5, #1
- 1348              	.LVL85:
+ 1350              		.loc 1 254 29 is_stmt 0 view .LVU394
+ 1351 0366 013D     		subs	r5, r5, #1
+ 1352              	.LVL86:
  254:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1349              		.loc 1 254 38 view .LVU394
- 1350 0368 08EB0515 		add	r5, r8, r5, lsl #4
- 1351              	.LVL86:
+ 1353              		.loc 1 254 38 view .LVU395
+ 1354 0368 08EB4515 		add	r5, r8, r5, lsl #5
+ 1355              	.LVL87:
  254:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1352              		.loc 1 254 38 view .LVU395
- 1353 036c 05F58875 		add	r5, r5, #272
- 1354 0370 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
+ 1356              		.loc 1 254 38 view .LVU396
+ 1357 036c 05F58465 		add	r5, r5, #1056
+ 1358 0370 17F83530 		ldrb	r3, [r7, r5, lsl #3]	@ zero_extendqisi2
  254:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 				if( 1 <= x){
- 1355              		.loc 1 254 6 view .LVU396
- 1356 0374 002B     		cmp	r3, #0
- 1357 0376 7FF4C2AE 		bne	.L73
- 255:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
- 1358              		.loc 1 255 5 is_stmt 1 view .LVU397
- 255:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
- 1359              		.loc 1 255 7 is_stmt 0 view .LVU398
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 33
+ 1359              		.loc 1 254 6 view .LVU397
+ 1360 0374 002B     		cmp	r3, #0
+ 1361 0376 7FF4C2AE 		bne	.L73
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 33
 
 
- 1360 037a B9F1000F 		cmp	r9, #0
- 1361 037e 3FF4BEAE 		beq	.L73
+ 255:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
+ 1362              		.loc 1 255 5 is_stmt 1 view .LVU398
+ 255:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					if( Visit[x-1][y] == false ){ //未訪問
+ 1363              		.loc 1 255 7 is_stmt 0 view .LVU399
+ 1364 037a B9F1000F 		cmp	r9, #0
+ 1365 037e 3FF4BEAE 		beq	.L73
  256:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1362              		.loc 1 256 6 is_stmt 1 view .LVU399
+ 1366              		.loc 1 256 6 is_stmt 1 view .LVU400
  256:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1363              		.loc 1 256 17 is_stmt 0 view .LVU400
- 1364 0382 09F1FF39 		add	r9, r9, #-1
- 1365              	.LVL87:
- 256:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1366              		.loc 1 256 20 view .LVU401
- 1367 0386 0F4B     		ldr	r3, .L100
- 1368 0388 03EB0919 		add	r9, r3, r9, lsl #4
+ 1367              		.loc 1 256 17 is_stmt 0 view .LVU401
+ 1368 0382 09F1FF39 		add	r9, r9, #-1
  1369              	.LVL88:
  256:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
  1370              		.loc 1 256 20 view .LVU402
- 1371 038c 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 1371 0386 0F4B     		ldr	r3, .L100
+ 1372 0388 03EB4919 		add	r9, r3, r9, lsl #5
+ 1373              	.LVL89:
  256:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
- 1372              		.loc 1 256 8 view .LVU403
- 1373 0390 002B     		cmp	r3, #0
- 1374 0392 7FF4B4AE 		bne	.L73
+ 1374              		.loc 1 256 20 view .LVU403
+ 1375 038c 19F80A30 		ldrb	r3, [r9, r10]	@ zero_extendqisi2
+ 256:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						++cnt;
+ 1376              		.loc 1 256 8 view .LVU404
+ 1377 0390 002B     		cmp	r3, #0
+ 1378 0392 7FF4B4AE 		bne	.L73
  257:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].x = now_st->pos.x-1;
- 1375              		.loc 1 257 7 is_stmt 1 view .LVU404
- 1376 0396 0136     		adds	r6, r6, #1
- 1377              	.LVL89:
+ 1379              		.loc 1 257 7 is_stmt 1 view .LVU405
+ 1380 0396 0136     		adds	r6, r6, #1
+ 1381              	.LVL90:
  258:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1378              		.loc 1 258 7 view .LVU405
+ 1382              		.loc 1 258 7 view .LVU406
  258:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1379              		.loc 1 258 40 is_stmt 0 view .LVU406
- 1380 0398 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1383              		.loc 1 258 40 is_stmt 0 view .LVU407
+ 1384 0398 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
  258:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1381              		.loc 1 258 19 view .LVU407
- 1382 039a 8119     		adds	r1, r0, r6
+ 1385              		.loc 1 258 19 view .LVU408
+ 1386 039a 8119     		adds	r1, r0, r6
  258:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1383              		.loc 1 258 42 view .LVU408
- 1384 039c 013A     		subs	r2, r2, #1
+ 1387              		.loc 1 258 42 view .LVU409
+ 1388 039c 013A     		subs	r2, r2, #1
  258:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 						mass_stack[n+cnt].y = now_st->pos.y;
- 1385              		.loc 1 258 27 view .LVU409
- 1386 039e 0A4B     		ldr	r3, .L100+4
- 1387 03a0 03F81120 		strb	r2, [r3, r1, lsl #1]
+ 1389              		.loc 1 258 27 view .LVU410
+ 1390 039e 0A4B     		ldr	r3, .L100+4
+ 1391 03a0 03F81120 		strb	r2, [r3, r1, lsl #1]
  259:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1388              		.loc 1 259 7 is_stmt 1 view .LVU410
+ 1392              		.loc 1 259 7 is_stmt 1 view .LVU411
  259:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1389              		.loc 1 259 40 is_stmt 0 view .LVU411
- 1390 03a4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 1393              		.loc 1 259 40 is_stmt 0 view .LVU412
+ 1394 03a4 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
  259:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 					}
- 1391              		.loc 1 259 27 view .LVU412
- 1392 03a6 03EB4103 		add	r3, r3, r1, lsl #1
- 1393 03aa 5A70     		strb	r2, [r3, #1]
- 1394 03ac A7E6     		b	.L73
- 1395              	.LVL90:
- 1396              	.L93:
- 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1397              		.loc 1 105 6 view .LVU413
- 1398 03ae 0026     		movs	r6, #0
+ 1395              		.loc 1 259 27 view .LVU413
+ 1396 03a6 03EB4103 		add	r3, r3, r1, lsl #1
+ 1397 03aa 5A70     		strb	r2, [r3, #1]
+ 1398 03ac A7E6     		b	.L73
  1399              	.LVL91:
+ 1400              	.L93:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1400              		.loc 1 105 6 view .LVU414
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 34
+ 1401              		.loc 1 105 6 view .LVU414
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 34
 
 
- 1401 03b0 B9E7     		b	.L78
- 1402              	.LVL92:
- 1403              	.L94:
+ 1402 03ae 0026     		movs	r6, #0
+ 1403              	.LVL92:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  1404              		.loc 1 105 6 view .LVU415
- 1405 03b2 0026     		movs	r6, #0
+ 1405 03b0 B9E7     		b	.L78
  1406              	.LVL93:
+ 1407              	.L94:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1407              		.loc 1 105 6 view .LVU416
- 1408 03b4 B7E7     		b	.L78
- 1409              	.LVL94:
- 1410              	.L95:
+ 1408              		.loc 1 105 6 view .LVU416
+ 1409 03b2 0026     		movs	r6, #0
+ 1410              	.LVL94:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  1411              		.loc 1 105 6 view .LVU417
- 1412 03b6 0026     		movs	r6, #0
+ 1412 03b4 B7E7     		b	.L78
  1413              	.LVL95:
+ 1414              	.L95:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1414              		.loc 1 105 6 view .LVU418
- 1415 03b8 B5E7     		b	.L78
- 1416              	.LVL96:
- 1417              	.L96:
+ 1415              		.loc 1 105 6 view .LVU418
+ 1416 03b6 0026     		movs	r6, #0
+ 1417              	.LVL96:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
  1418              		.loc 1 105 6 view .LVU419
- 1419 03ba 0026     		movs	r6, #0
+ 1419 03b8 B5E7     		b	.L78
  1420              	.LVL97:
+ 1421              	.L96:
  105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
- 1421              		.loc 1 105 6 view .LVU420
- 1422 03bc B3E7     		b	.L78
- 1423              	.LVL98:
- 1424              	.L80:
- 111:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	case north:
- 1425              		.loc 1 111 2 view .LVU421
- 1426 03be 0020     		movs	r0, #0
+ 1422              		.loc 1 105 6 view .LVU420
+ 1423 03ba 0026     		movs	r6, #0
+ 1424              	.LVL98:
+ 105:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	//スタックの流れ
+ 1425              		.loc 1 105 6 view .LVU421
+ 1426 03bc B3E7     		b	.L78
  1427              	.LVL99:
+ 1428              	.L80:
  111:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	case north:
- 1428              		.loc 1 111 2 view .LVU422
- 1429 03c0 A3E6     		b	.L65
- 1430              	.L101:
- 1431 03c2 00BF     		.align	2
- 1432              	.L100:
- 1433 03c4 00000000 		.word	.LANCHOR4
- 1434 03c8 00000000 		.word	.LANCHOR3
- 1435              		.cfi_endproc
- 1436              	.LFE19:
- 1438              		.global	Visit
- 1439              		.global	mass_stack
- 1440              		.section	.bss.DFS_Flag,"aw",%nobits
- 1441              		.set	.LANCHOR0,. + 0
- 1444              	DFS_Flag:
- 1445 0000 00       		.space	1
- 1446              		.section	.bss.Stack_Flag,"aw",%nobits
- 1447              		.set	.LANCHOR1,. + 0
- 1450              	Stack_Flag:
- 1451 0000 00       		.space	1
- 1452              		.section	.bss.Stack_Num,"aw",%nobits
- 1453              		.align	2
- 1454              		.set	.LANCHOR2,. + 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 35
+ 1429              		.loc 1 111 2 view .LVU422
+ 1430 03be 0020     		movs	r0, #0
+ 1431              	.LVL100:
+ 111:C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary\dfs.c **** 	case north:
+ 1432              		.loc 1 111 2 view .LVU423
+ 1433 03c0 A3E6     		b	.L65
+ 1434              	.L101:
+ 1435 03c2 00BF     		.align	2
+ 1436              	.L100:
+ 1437 03c4 00000000 		.word	.LANCHOR4
+ 1438 03c8 00000000 		.word	.LANCHOR3
+ 1439              		.cfi_endproc
+ 1440              	.LFE19:
+ 1442              		.global	Visit
+ 1443              		.global	mass_stack
+ 1444              		.section	.bss.DFS_Flag,"aw",%nobits
+ 1445              		.set	.LANCHOR0,. + 0
+ 1448              	DFS_Flag:
+ 1449 0000 00       		.space	1
+ 1450              		.section	.bss.Stack_Flag,"aw",%nobits
+ 1451              		.set	.LANCHOR1,. + 0
+ 1454              	Stack_Flag:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 35
 
 
- 1457              	Stack_Num:
- 1458 0000 00000000 		.space	4
- 1459              		.section	.bss.Visit,"aw",%nobits
- 1460              		.align	2
- 1461              		.set	.LANCHOR4,. + 0
- 1464              	Visit:
- 1465 0000 00000000 		.space	256
- 1465      00000000 
- 1465      00000000 
- 1465      00000000 
- 1465      00000000 
- 1466              		.section	.bss.mass_stack,"aw",%nobits
- 1467              		.align	2
- 1468              		.set	.LANCHOR3,. + 0
- 1471              	mass_stack:
- 1472 0000 00000000 		.space	648
- 1472      00000000 
- 1472      00000000 
- 1472      00000000 
- 1472      00000000 
- 1473              		.text
- 1474              	.Letext0:
- 1475              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stdint
- 1476              		.file 3 "C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h"
- 1477              		.file 4 "C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h"
- 1478              		.file 5 "C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h"
- 1479              		.file 6 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
- 1480              		.file 7 "<built-in>"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 36
+ 1455 0000 00       		.space	1
+ 1456              		.section	.bss.Stack_Num,"aw",%nobits
+ 1457              		.align	2
+ 1458              		.set	.LANCHOR2,. + 0
+ 1461              	Stack_Num:
+ 1462 0000 00000000 		.space	4
+ 1463              		.section	.bss.Visit,"aw",%nobits
+ 1464              		.align	2
+ 1465              		.set	.LANCHOR4,. + 0
+ 1468              	Visit:
+ 1469 0000 00000000 		.space	1024
+ 1469      00000000 
+ 1469      00000000 
+ 1469      00000000 
+ 1469      00000000 
+ 1470              		.section	.bss.mass_stack,"aw",%nobits
+ 1471              		.align	2
+ 1472              		.set	.LANCHOR3,. + 0
+ 1475              	mass_stack:
+ 1476 0000 00000000 		.space	2048
+ 1476      00000000 
+ 1476      00000000 
+ 1476      00000000 
+ 1476      00000000 
+ 1477              		.text
+ 1478              	.Letext0:
+ 1479              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stdint
+ 1480              		.file 3 "C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h"
+ 1481              		.file 4 "C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h"
+ 1482              		.file 5 "C:/Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h"
+ 1483              		.file 6 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 1484              		.file 7 "<built-in>"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 36
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 dfs.c
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:20     .text.HighDFSFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:26     .text.HighDFSFlag:00000000 HighDFSFlag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:44     .text.HighDFSFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:49     .text.LowDFSFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:55     .text.LowDFSFlag:00000000 LowDFSFlag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:72     .text.LowDFSFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:77     .text.GetDFSFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:83     .text.GetDFSFlag:00000000 GetDFSFlag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:98     .text.GetDFSFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:103    .text.HighStackFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:109    .text.HighStackFlag:00000000 HighStackFlag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:126    .text.HighStackFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:131    .text.LowStackFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:137    .text.LowStackFlag:00000000 LowStackFlag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:154    .text.LowStackFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:159    .text.GetStackFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:165    .text.GetStackFlag:00000000 GetStackFlag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:180    .text.GetStackFlag:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:185    .text.InitStackNum:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:191    .text.InitStackNum:00000000 InitStackNum
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:208    .text.InitStackNum:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:213    .text.SetStackNum:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:219    .text.SetStackNum:00000000 SetStackNum
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:236    .text.SetStackNum:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:241    .text.GetStackNum:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:247    .text.GetStackNum:00000000 GetStackNum
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:262    .text.GetStackNum:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:267    .text.GetStackMass:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:273    .text.GetStackMass:00000000 GetStackMass
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:304    .text.GetStackMass:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:310    .text.ComparePosition:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:316    .text.ComparePosition:00000000 ComparePosition
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:361    .text.InitVisit:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:367    .text.InitVisit:00000000 InitVisit
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:427    .text.InitVisit:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:432    .rodata.printVisited.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:439    .text.printVisited:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:445    .text.printVisited:00000000 printVisited
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:515    .text.printVisited:0000002c $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:522    .text.VisitedMass:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:528    .text.VisitedMass:00000000 VisitedMass
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:558    .text.VisitedMass:0000001c $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:563    .text.GetVisited:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:569    .text.GetVisited:00000000 GetVisited
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:593    .text.GetVisited:00000010 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:598    .text.InitMassStack:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:604    .text.InitMassStack:00000000 InitMassStack
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:624    .text.InitMassStack:0000000c $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:629    .text.StackMass:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:635    .text.StackMass:00000000 StackMass
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:689    .text.StackMass:0000002c $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:696    .text.StackMass:0000003a $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1288   .text.StackMass:0000031c $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1293   .text.StackMass:00000324 $t
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1433   .text.StackMass:000003c4 $d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s 			page 37
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:20     .text.HighDFSFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:26     .text.HighDFSFlag:00000000 HighDFSFlag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:44     .text.HighDFSFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:49     .text.LowDFSFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:55     .text.LowDFSFlag:00000000 LowDFSFlag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:72     .text.LowDFSFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:77     .text.GetDFSFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:83     .text.GetDFSFlag:00000000 GetDFSFlag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:98     .text.GetDFSFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:103    .text.HighStackFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:109    .text.HighStackFlag:00000000 HighStackFlag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:126    .text.HighStackFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:131    .text.LowStackFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:137    .text.LowStackFlag:00000000 LowStackFlag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:154    .text.LowStackFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:159    .text.GetStackFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:165    .text.GetStackFlag:00000000 GetStackFlag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:180    .text.GetStackFlag:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:185    .text.InitStackNum:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:191    .text.InitStackNum:00000000 InitStackNum
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:208    .text.InitStackNum:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:213    .text.SetStackNum:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:219    .text.SetStackNum:00000000 SetStackNum
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:236    .text.SetStackNum:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:241    .text.GetStackNum:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:247    .text.GetStackNum:00000000 GetStackNum
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:262    .text.GetStackNum:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:267    .text.GetStackMass:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:273    .text.GetStackMass:00000000 GetStackMass
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:304    .text.GetStackMass:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:310    .text.ComparePosition:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:316    .text.ComparePosition:00000000 ComparePosition
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:361    .text.InitVisit:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:367    .text.InitVisit:00000000 InitVisit
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:427    .text.InitVisit:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:432    .rodata.printVisited.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:439    .text.printVisited:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:445    .text.printVisited:00000000 printVisited
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:519    .text.printVisited:00000034 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:526    .text.VisitedMass:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:532    .text.VisitedMass:00000000 VisitedMass
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:562    .text.VisitedMass:0000001c $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:567    .text.GetVisited:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:573    .text.GetVisited:00000000 GetVisited
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:597    .text.GetVisited:00000010 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:602    .text.InitMassStack:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:608    .text.InitMassStack:00000000 InitMassStack
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:628    .text.InitMassStack:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:633    .text.StackMass:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:639    .text.StackMass:00000000 StackMass
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:693    .text.StackMass:0000002c $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:700    .text.StackMass:0000003a $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1292   .text.StackMass:0000031c $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1297   .text.StackMass:00000324 $t
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1437   .text.StackMass:000003c4 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s 			page 37
 
 
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1464   .bss.Visit:00000000 Visit
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1471   .bss.mass_stack:00000000 mass_stack
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1444   .bss.DFS_Flag:00000000 DFS_Flag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1445   .bss.DFS_Flag:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1450   .bss.Stack_Flag:00000000 Stack_Flag
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1451   .bss.Stack_Flag:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1453   .bss.Stack_Num:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1457   .bss.Stack_Num:00000000 Stack_Num
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1460   .bss.Visit:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\cczF8s0u.s:1467   .bss.mass_stack:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1468   .bss.Visit:00000000 Visit
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1475   .bss.mass_stack:00000000 mass_stack
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1448   .bss.DFS_Flag:00000000 DFS_Flag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1449   .bss.DFS_Flag:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1454   .bss.Stack_Flag:00000000 Stack_Flag
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1455   .bss.Stack_Flag:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1457   .bss.Stack_Num:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1461   .bss.Stack_Num:00000000 Stack_Num
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1464   .bss.Visit:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXke9qB.s:1471   .bss.mass_stack:00000000 $d
 
 UNDEFINED SYMBOLS
 printf

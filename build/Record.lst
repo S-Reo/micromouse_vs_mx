@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   40              		.cfi_offset 5, -16
   41              		.cfi_offset 6, -12
   42              		.cfi_offset 7, -8
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 2
 
 
   43              		.cfi_offset 14, -4
@@ -87,7 +87,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   23:Core/Src/Main/Record.c **** 				FLASH_Write_Word(address+0, maze->RawNode[i][j].existence);
   60              		.loc 1 23 5 is_stmt 1 discriminator 3 view .LVU8
   61              		.loc 1 23 52 is_stmt 0 discriminator 3 view .LVU9
-  62 000c 07EB0713 		add	r3, r7, r7, lsl #4
+  62 000c 07EB4713 		add	r3, r7, r7, lsl #5
   63 0010 2B44     		add	r3, r3, r5
   64              		.loc 1 23 5 discriminator 3 view .LVU10
   65 0012 16F83310 		ldrb	r1, [r6, r3, lsl #3]	@ zero_extendqisi2
@@ -110,7 +110,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   78              		.loc 1 21 17 is_stmt 1 discriminator 1 view .LVU15
   21:Core/Src/Main/Record.c **** 			{
   79              		.loc 1 21 4 is_stmt 0 discriminator 1 view .LVU16
-  80 0020 102D     		cmp	r5, #16
+  80 0020 202D     		cmp	r5, #32
   81 0022 F3DD     		ble	.L3
   21:Core/Src/Main/Record.c **** 			{
   82              		.loc 1 21 4 discriminator 1 view .LVU17
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   19:Core/Src/Main/Record.c **** 	{
   84              		.loc 1 19 40 is_stmt 1 discriminator 2 view .LVU18
   19:Core/Src/Main/Record.c **** 	{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 3
 
 
   85              		.loc 1 19 41 is_stmt 0 discriminator 2 view .LVU19
@@ -129,7 +129,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   89              		.loc 1 19 15 is_stmt 1 discriminator 1 view .LVU20
   19:Core/Src/Main/Record.c **** 	{
   90              		.loc 1 19 2 is_stmt 0 discriminator 1 view .LVU21
-  91 0026 0F2F     		cmp	r7, #15
+  91 0026 1F2F     		cmp	r7, #31
   92 0028 01DC     		bgt	.L11
   93              	.LBB4:
   21:Core/Src/Main/Record.c **** 			{
@@ -158,8 +158,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   32:Core/Src/Main/Record.c **** 				FLASH_Write_Word(address+0, maze->ColumnNode[i][j].existence);
  109              		.loc 1 32 5 is_stmt 1 discriminator 3 view .LVU25
  110              		.loc 1 32 55 is_stmt 0 discriminator 3 view .LVU26
- 111 0032 05EB0713 		add	r3, r5, r7, lsl #4
- 112 0036 03F58873 		add	r3, r3, #272
+ 111 0032 05EB4713 		add	r3, r5, r7, lsl #5
+ 112 0036 03F58463 		add	r3, r3, #1056
  113              		.loc 1 32 5 discriminator 3 view .LVU27
  114 003a 16F83310 		ldrb	r1, [r6, r3, lsl #3]	@ zero_extendqisi2
  115 003e 2046     		mov	r0, r4
@@ -178,13 +178,13 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  125              	.LVL11:
  126              	.L7:
   30:Core/Src/Main/Record.c **** 			{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 4
 
 
  127              		.loc 1 30 17 is_stmt 1 discriminator 1 view .LVU32
   30:Core/Src/Main/Record.c **** 			{
  128              		.loc 1 30 4 is_stmt 0 discriminator 1 view .LVU33
- 129 0048 0F2D     		cmp	r5, #15
+ 129 0048 1F2D     		cmp	r5, #31
  130 004a F2DD     		ble	.L6
   30:Core/Src/Main/Record.c **** 			{
  131              		.loc 1 30 4 discriminator 1 view .LVU34
@@ -200,7 +200,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  138              		.loc 1 28 15 is_stmt 1 discriminator 1 view .LVU37
   28:Core/Src/Main/Record.c **** 	{
  139              		.loc 1 28 2 is_stmt 0 discriminator 1 view .LVU38
- 140 004e 102F     		cmp	r7, #16
+ 140 004e 202F     		cmp	r7, #32
  141 0050 01DC     		bgt	.L12
  142              	.LBB7:
   30:Core/Src/Main/Record.c **** 			{
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  172              		.thumb_func
  174              	wall_flash_print:
  175              	.LFB239:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 5
 
 
   37:Core/Src/Main/Record.c **** 
@@ -267,7 +267,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   41:Core/Src/Main/Record.c **** 	address += (NUMBER_OF_SQUARES_X-1) * 16*NUMBER_OF_SQUARES_Y;
  195              		.loc 1 41 2 is_stmt 1 view .LVU45
  196              		.loc 1 41 10 is_stmt 0 view .LVU46
- 197 0008 05F57065 		add	r5, r5, #3840
+ 197 0008 05F57855 		add	r5, r5, #15872
  198              	.LVL15:
   42:Core/Src/Main/Record.c **** 
   43:Core/Src/Main/Record.c **** 	for(int i=0; i < NUMBER_OF_SQUARES_X ; i++)
@@ -296,9 +296,9 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   57:Core/Src/Main/Record.c **** 		address -= 2*16*NUMBER_OF_SQUARES_X;
  208              		.loc 1 57 3 is_stmt 1 discriminator 2 view .LVU51
  209              		.loc 1 57 11 is_stmt 0 discriminator 2 view .LVU52
- 210 0010 A5F50075 		sub	r5, r5, #512
+ 210 0010 A5F58065 		sub	r5, r5, #1024
  211              	.LVL17:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 6
 
 
   58:Core/Src/Main/Record.c **** 		printf("\r\n");
@@ -317,7 +317,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  221              		.loc 1 43 15 is_stmt 1 discriminator 1 view .LVU56
   43:Core/Src/Main/Record.c **** 	{
  222              		.loc 1 43 2 is_stmt 0 discriminator 1 view .LVU57
- 223 001c 0F2E     		cmp	r6, #15
+ 223 001c 1F2E     		cmp	r6, #31
  224 001e 15DC     		bgt	.L22
  225              	.LBB9:
   45:Core/Src/Main/Record.c **** 		{
@@ -329,7 +329,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  230              		.loc 1 45 16 is_stmt 1 discriminator 1 view .LVU59
   45:Core/Src/Main/Record.c **** 		{
  231              		.loc 1 45 3 is_stmt 0 discriminator 1 view .LVU60
- 232 0022 3F2C     		cmp	r4, #63
+ 232 0022 7F2C     		cmp	r4, #127
  233 0024 F4DC     		bgt	.L23
  234              	.LBB10:
   47:Core/Src/Main/Record.c **** 			//printf("%lu %lu\r\n",address,wall_data);
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  252              	.LVL23:
   52:Core/Src/Main/Record.c **** 			{
  253              		.loc 1 52 4 is_stmt 1 view .LVU67
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 7
 
 
   52:Core/Src/Main/Record.c **** 			{
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  296              		.cfi_endproc
  297              	.LFE239:
  299              		.section	.text.flashCopyNodesToRam,"ax",%progbits
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 8
 
 
  300              		.align	1
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  345 0010 0193     		str	r3, [sp, #4]
   75:Core/Src/Main/Record.c **** 				FLASH_Read_Word(address, &wall_data);
  346              		.loc 1 75 5 is_stmt 1 discriminator 3 view .LVU88
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 9
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 9
 
 
  347 0012 01A9     		add	r1, sp, #4
@@ -488,7 +488,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   76:Core/Src/Main/Record.c **** 				maze->RawNode[i][j].existence = wall_data;
  351              		.loc 1 76 5 discriminator 3 view .LVU89
  352              		.loc 1 76 35 is_stmt 0 discriminator 3 view .LVU90
- 353 001a 07EB0713 		add	r3, r7, r7, lsl #4
+ 353 001a 07EB4713 		add	r3, r7, r7, lsl #5
  354 001e 2B44     		add	r3, r3, r5
  355 0020 019A     		ldr	r2, [sp, #4]
  356 0022 06F83320 		strb	r2, [r6, r3, lsl #3]
@@ -510,7 +510,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  368              		.loc 1 72 17 is_stmt 1 discriminator 1 view .LVU96
   72:Core/Src/Main/Record.c **** 			{
  369              		.loc 1 72 4 is_stmt 0 discriminator 1 view .LVU97
- 370 002a 102D     		cmp	r5, #16
+ 370 002a 202D     		cmp	r5, #32
  371 002c EFDD     		ble	.L28
   72:Core/Src/Main/Record.c **** 			{
  372              		.loc 1 72 4 discriminator 1 view .LVU98
@@ -526,7 +526,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  379              		.loc 1 70 15 is_stmt 1 discriminator 1 view .LVU101
   70:Core/Src/Main/Record.c **** 	{
  380              		.loc 1 70 2 is_stmt 0 discriminator 1 view .LVU102
- 381 0030 0F2F     		cmp	r7, #15
+ 381 0030 1F2F     		cmp	r7, #31
  382 0032 01DC     		bgt	.L36
  383              	.LBB14:
   72:Core/Src/Main/Record.c **** 			{
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  389              	.LBE11:
  390              	.LBB15:
   78:Core/Src/Main/Record.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 10
 
 
   79:Core/Src/Main/Record.c **** 	}
@@ -569,8 +569,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
   86:Core/Src/Main/Record.c **** 				maze->ColumnNode[i][j].existence = wall_data;
  409              		.loc 1 86 5 discriminator 3 view .LVU109
  410              		.loc 1 86 38 is_stmt 0 discriminator 3 view .LVU110
- 411 0048 05EB0713 		add	r3, r5, r7, lsl #4
- 412 004c 03F58873 		add	r3, r3, #272
+ 411 0048 05EB4713 		add	r3, r5, r7, lsl #5
+ 412 004c 03F58463 		add	r3, r3, #1056
  413 0050 019A     		ldr	r2, [sp, #4]
  414 0052 06F83320 		strb	r2, [r6, r3, lsl #3]
   87:Core/Src/Main/Record.c **** 				address += sizeof(wall_data);
@@ -591,14 +591,14 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  426              		.loc 1 82 17 is_stmt 1 discriminator 1 view .LVU116
   82:Core/Src/Main/Record.c **** 			{
  427              		.loc 1 82 4 is_stmt 0 discriminator 1 view .LVU117
- 428 005a 0F2D     		cmp	r5, #15
+ 428 005a 1F2D     		cmp	r5, #31
  429 005c EEDD     		ble	.L31
   82:Core/Src/Main/Record.c **** 			{
  430              		.loc 1 82 4 discriminator 1 view .LVU118
  431              	.LBE16:
   80:Core/Src/Main/Record.c **** 	{
  432              		.loc 1 80 42 is_stmt 1 discriminator 2 view .LVU119
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 11
 
 
   80:Core/Src/Main/Record.c **** 	{
@@ -610,7 +610,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  437              		.loc 1 80 15 is_stmt 1 discriminator 1 view .LVU121
   80:Core/Src/Main/Record.c **** 	{
  438              		.loc 1 80 2 is_stmt 0 discriminator 1 view .LVU122
- 439 0060 102F     		cmp	r7, #16
+ 439 0060 202F     		cmp	r7, #32
  440 0062 01DC     		bgt	.L37
  441              	.LBB18:
   82:Core/Src/Main/Record.c **** 			{
@@ -644,21 +644,21 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 1
  467              		.file 4 "Core/Inc/HardWare/Flash.h"
  468              		.file 5 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
  469              		.file 6 "<built-in>"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s 			page 12
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Record.c
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:20     .text.flashStoreNodes:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:26     .text.flashStoreNodes:00000000 flashStoreNodes
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:156    .text.flashStoreNodes:00000058 $d
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:161    .rodata.wall_flash_print.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:168    .text.wall_flash_print:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:174    .text.wall_flash_print:00000000 wall_flash_print
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:293    .text.wall_flash_print:00000060 $d
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:300    .text.flashCopyNodesToRam:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:306    .text.flashCopyNodesToRam:00000000 flashCopyNodesToRam
-C:\Users\leopi\AppData\Local\Temp\ccwWvIGj.s:459    .text.flashCopyNodesToRam:0000006c $d
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:20     .text.flashStoreNodes:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:26     .text.flashStoreNodes:00000000 flashStoreNodes
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:156    .text.flashStoreNodes:00000058 $d
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:161    .rodata.wall_flash_print.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:168    .text.wall_flash_print:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:174    .text.wall_flash_print:00000000 wall_flash_print
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:293    .text.wall_flash_print:00000060 $d
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:300    .text.flashCopyNodesToRam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:306    .text.flashCopyNodesToRam:00000000 flashCopyNodesToRam
+C:\Users\leopi\AppData\Local\Temp\ccqwGzny.s:459    .text.flashCopyNodesToRam:0000006c $d
 
 UNDEFINED SYMBOLS
 FLASH_Write_Word
