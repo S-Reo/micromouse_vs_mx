@@ -422,7 +422,7 @@ void Explore()
 	Calc = 0;
 	WALL_MASK = 0x01;
 	LowDFSFlag();
-	LowStackFlag();
+	HighStackFlag();
 	InitMassStack();
 	
 	initSearchData(&maze, &mouse);
@@ -437,10 +437,10 @@ void Explore()
 
 	//まず足立法でゴールに向かい、その後深さ優先探索をし、0,0に戻ってくる
 	InitStackNum();
-#define IS_GOAL(less_x, less_y, large_x, large_y, next_x, next_y) ( (less_x <= next_x && next_x < large_x) && (less_y <= next_y && next_y < large_y) )
+	
 	Accel(61.5, ExploreVelocity, &maze, &mouse);
 	
-	while( !IS_GOAL(GOAL_X, GOAL_Y, (GOAL_X+GOAL_SIZE_X), (GOAL_Y+GOAL_SIZE_Y), mouse.now.pos.x, mouse.now.pos.y)/*! ((mouse.target_pos.x == 0 && mouse.target_pos.y == 0) && (mouse.now.pos.x == 0 && mouse.now.pos.y == 0)) */){
+	while( !IS_GOAL(mouse.now.pos.x, mouse.now.pos.y)/*! ((mouse.target_pos.x == 0 && mouse.target_pos.y == 0) && (mouse.now.pos.x == 0 && mouse.now.pos.y == 0)) */){
 		
         mouse.next.node = getNextNode(&maze, mouse.now.car, mouse.now.node, WALL_MASK); // 次のノードを選択
         getNextState(&(mouse.now), &(mouse.next), mouse.next.node); // 現ノードと次ノードをもとに、次の状態を取得（更新はしない）

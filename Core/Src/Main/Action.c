@@ -18,6 +18,7 @@
 #include "Interrupt.h"
 #include "Motor_Driver.h"
 #include "IR_Emitter.h"
+#include "LED_Driver.h"
 
 #include "MazeLib.h"
 #include "dfs.h"
@@ -29,8 +30,8 @@ const float TO_PULSE = 2/MM_PER_PULSE;
 //const float Wall_Cut_Val = 38;
 const float angle_range = 3*M_PI/180;
 
-#define SLA_CALIB_FL 180
-#define SLA_CALIB_FR	230
+#define SLA_CALIB_FL 220 //180
+#define SLA_CALIB_FR 270	//230
 
 static void getWallState(profile *mouse, float *photo, maze_node *maze){
 
@@ -72,18 +73,30 @@ static void getWallState(profile *mouse, float *photo, maze_node *maze){
 
 	updateNodeThree(maze, &(mouse->now.wall), mouse->now.pos.x, mouse->now.pos.y); // ノードに反映
 
+	if(IS_GOAL(mouse->now.pos.x, mouse->now.pos.y) == true) {
+		HighDFSFlag();
+		// HighStackFlag();	
+	}
 	position start_pos = {0,0}; //ゴールエリアに一度入ったら（target.posに到達したら）深さ優先探索を開始
-	if(GetStackFlag() == true){
-		if(ComparePosition(&(mouse->target_pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target_pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
-			position target_size = {1,1};
-			mouse->target_size = target_size;
-			_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
-			if(stacked_one_or_more == 0) printf("スタックが無い\r\n");//ChangeLED(7);
-			else printf("スタックが何かしらある\r\n");//ChangeLED(0);
+	if( (GetStackFlag() == true) ) {//ComparePosition(&(mouse->target_pos), &(mouse->now.pos)) || ComparePosition(&(mouse->target_pos), &(start_pos)) ){//帰ってくるときも一応スタックチェック
+            // HighStackFlag();
+		position target_size = {1,1};
+		mouse->target_size = target_size;
+		int n = GetStackNum();
+		if(!(mouse->now.pos.x == mouse->target_pos.x && mouse->now.pos.y == mouse->target_pos.y) ){ //取り出したスタックに到達していなければ
+			n++;
+			SetStackNum(n);
+		}
+		_Bool stacked_one_or_more = StackMass(maze, &(mouse->now)); //何も積んでいないかどうかの情報が必要
+		// if(stacked_one_or_more == 0) printf("スタックが無い\r\n");//ChangeLED(7);
+		// else printf("スタックが何かしらある\r\n");//ChangeLED(0);
 
-			int n = GetStackNum();
-
-			//0なら
+		n = GetStackNum();
+		
+		// _sleep(500);
+		//0なら
+		if(GetDFSFlag() == true){
+			
 			if(n == 0){
 				WALL_MASK = 0x01;
 				mouse->target_pos = GetStackMass(); //カウントは減らさない n = 0のまま
@@ -98,7 +111,8 @@ static void getWallState(profile *mouse, float *photo, maze_node *maze){
 					is_first = GetVisited(&(pos)); //0なら未訪問
 					if(n == 0){
 						mouse->target_pos = pos;
-						printf("未訪問\r\n");
+						// printf("未訪問\r\n"); //コード読む気が失せる。何やってるかわからない
+						//ChangeLED(7);
 						break;
 					}
 					else if(is_first == false){
@@ -115,9 +129,9 @@ static void getWallState(profile *mouse, float *photo, maze_node *maze){
 					//訪問済みであれば更に下を読む
 				}
 			}
+		}
 
-		}//到達していなければ、そのまま最短でtarget.posに向かう
-	}
+	}//到達していなければ、そのまま最短でtarget.posに向かう
 	//壁の存在を基に重みマップを更新
 	updateAllNodeWeight(maze, &(mouse->target_pos), &(mouse->target_size), WALL_MASK);
 }
@@ -499,7 +513,7 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
-	if (0)//getFrontWall(mouse) == WALL /*前に壁があれば、*/) 
+	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/) 
 	{
 		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
@@ -1194,7 +1208,12 @@ void GoBack(maze_node *maze, profile *mouse)
 		}
 
 	acc = AjustCenter(mouse);
-
+	if(44.5 <= acc && acc <= 45.5){
+		ChangeLED(7);
+	}
+	else{
+		ChangeLED(1);
+	}
 	WaitStopAndReset();
 	//マップの不要マスをつぶす
 	FindUnwantedSquares(maze);

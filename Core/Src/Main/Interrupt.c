@@ -51,9 +51,6 @@ inline void calcVelocity(){
 	TotalPulse[LEFT] += PulseDisplacement[LEFT];
 	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
 	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
-	TotalPulse[LEFT] += PulseDisplacement[LEFT];
-	TotalPulse[RIGHT] += PulseDisplacement[RIGHT];
-	TotalPulse[BODY] = TotalPulse[LEFT]+TotalPulse[RIGHT];
 }
 
 static void SystemIdentify_IT(){

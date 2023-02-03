@@ -37,7 +37,7 @@ build/Action.o: Core/Src/Main/Action.c Core/Inc/Main/Action.h \
  Core/Inc/Main/MicroMouse.h Core/Inc/HardWare/ICM_20648.h \
  Core/Inc/Tools/UI.h Core/Inc/Tools/Convert.h Core/Inc/Main/Interrupt.h \
  Core/Inc/Tools/Sampling.h Core/Inc/HardWare/Motor_Driver.h \
- Core/Inc/HardWare/IR_Emitter.h \
+ Core/Inc/HardWare/IR_Emitter.h Core/Inc/HardWare/LED_Driver.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h
 Core/Inc/Main/Action.h:
@@ -88,5 +88,6 @@ Core/Inc/Main/Interrupt.h:
 Core/Inc/Tools/Sampling.h:
 Core/Inc/HardWare/Motor_Driver.h:
 Core/Inc/HardWare/IR_Emitter.h:
+Core/Inc/HardWare/LED_Driver.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:

@@ -34,7 +34,7 @@ volatile float CurrentVelocity[3];	//速度 mm/s
 volatile float TargetVelocity[3];
 volatile float ControlTargetVelocity;
 
-volatile int KeepPulse[3];
+volatile int KeepPulse[3]={0};
 int PulseDisplacement[3];
 volatile int TotalPulse[3];
 volatile float AngularV=0;			//角速度 rad/s
@@ -96,7 +96,7 @@ void setSearchTurnParam(int8_t mode){
 //		Sla.Theta3 = 90;
 
 		ExploreVelocity=180;
-		Sla.Pre = 8;//2;
+		Sla.Pre = 16; //8;//2;
 		Sla.Fol = 12;
 		Sla.Alpha = 0.043;
 		Sla.Theta1 = 30;

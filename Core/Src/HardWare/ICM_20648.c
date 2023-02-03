@@ -102,7 +102,7 @@ int16_t median_filter(int16_t *new_data)
 	return sorted[1];
 }
 //割込み内で呼ぶセット
-void Update_IMU(float *angv, float *angle )
+inline void Update_IMU(float *angv, float *angle )
 {
 	uint8_t ret1, ret2,val1,val2;
 		uint8_t ret[2] = {
