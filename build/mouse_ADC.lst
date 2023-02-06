@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 1
   40 0002 0322     		movs	r2, #3
   41 0004 0849     		ldr	r1, .L7
   42 0006 0948     		ldr	r0, .L7+4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s 			page 2
 
 
   43 0008 FFF7FEFF 		bl	HAL_ADC_Start_DMA
@@ -109,169 +109,119 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 1
   77 0034 00000000 		.word	hadc2
   78              		.cfi_endproc
   79              	.LFE238:
-  81              		.section	.rodata.ADCStop.str1.4,"aMS",%progbits,1
-  82              		.align	2
-  83              	.LC0:
-  84 0000 E381AA0D 		.ascii	"\343\201\252\015\000"
-  84      00
-  85 0005 000000   		.align	2
-  86              	.LC1:
-  87 0008 E381AB0D 		.ascii	"\343\201\253\015\000"
-  87      00
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 3
-
-
-  88 000d 000000   		.align	2
-  89              	.LC2:
-  90 0010 E381AC0D 		.ascii	"\343\201\254\015\000"
-  90      00
-  91 0015 000000   		.align	2
-  92              	.LC3:
-  93 0018 E381AD0D 		.ascii	"\343\201\255\015\000"
-  93      00
-  94              		.section	.text.ADCStop,"ax",%progbits
-  95              		.align	1
-  96              		.global	ADCStop
-  97              		.syntax unified
-  98              		.thumb
-  99              		.thumb_func
- 101              	ADCStop:
- 102              	.LFB239:
+  81              		.section	.text.ADCStop,"ax",%progbits
+  82              		.align	1
+  83              		.global	ADCStop
+  84              		.syntax unified
+  85              		.thumb
+  86              		.thumb_func
+  88              	ADCStop:
+  89              	.LFB239:
   26:Core/Src/HardWare/mouse_ADC.c **** void ADCStop()
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s 			page 3
+
+
   27:Core/Src/HardWare/mouse_ADC.c **** {
- 103              		.loc 1 27 1 is_stmt 1 view -0
- 104              		.cfi_startproc
- 105              		@ args = 0, pretend = 0, frame = 0
- 106              		@ frame_needed = 0, uses_anonymous_args = 0
- 107 0000 08B5     		push	{r3, lr}
- 108              	.LCFI1:
- 109              		.cfi_def_cfa_offset 8
- 110              		.cfi_offset 3, -8
- 111              		.cfi_offset 14, -4
+  90              		.loc 1 27 1 is_stmt 1 view -0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94 0000 08B5     		push	{r3, lr}
+  95              	.LCFI1:
+  96              		.cfi_def_cfa_offset 8
+  97              		.cfi_offset 3, -8
+  98              		.cfi_offset 14, -4
   28:Core/Src/HardWare/mouse_ADC.c **** 	if (HAL_ADC_Stop_DMA(&hadc1) != HAL_OK)
- 112              		.loc 1 28 2 view .LVU12
- 113              		.loc 1 28 6 is_stmt 0 view .LVU13
- 114 0002 0D48     		ldr	r0, .L15
- 115 0004 FFF7FEFF 		bl	HAL_ADC_Stop_DMA
- 116              	.LVL4:
- 117              		.loc 1 28 5 view .LVU14
- 118 0008 20B9     		cbnz	r0, .L13
- 119              	.L10:
+  99              		.loc 1 28 2 view .LVU12
+ 100              		.loc 1 28 6 is_stmt 0 view .LVU13
+ 101 0002 0748     		ldr	r0, .L15
+ 102 0004 FFF7FEFF 		bl	HAL_ADC_Stop_DMA
+ 103              	.LVL4:
+ 104              		.loc 1 28 5 view .LVU14
+ 105 0008 20B9     		cbnz	r0, .L13
+ 106              	.L10:
   29:Core/Src/HardWare/mouse_ADC.c **** 	{
-  30:Core/Src/HardWare/mouse_ADC.c **** 		printf("な\r\n");
-  31:Core/Src/HardWare/mouse_ADC.c **** 		Error_Handler();
-  32:Core/Src/HardWare/mouse_ADC.c **** 		printf("に\r\n");
-  33:Core/Src/HardWare/mouse_ADC.c **** 	}
-  34:Core/Src/HardWare/mouse_ADC.c **** 	if (HAL_ADC_Stop_DMA(&hadc2) != HAL_OK)
- 120              		.loc 1 34 2 is_stmt 1 view .LVU15
- 121              		.loc 1 34 6 is_stmt 0 view .LVU16
- 122 000a 0C48     		ldr	r0, .L15+4
- 123 000c FFF7FEFF 		bl	HAL_ADC_Stop_DMA
- 124              	.LVL5:
- 125              		.loc 1 34 5 view .LVU17
- 126 0010 48B9     		cbnz	r0, .L14
- 127              	.L9:
-  35:Core/Src/HardWare/mouse_ADC.c **** 	{
-  36:Core/Src/HardWare/mouse_ADC.c **** 		printf("ぬ\r\n");
-  37:Core/Src/HardWare/mouse_ADC.c **** 		Error_Handler();
-  38:Core/Src/HardWare/mouse_ADC.c **** 		printf("ね\r\n");
-  39:Core/Src/HardWare/mouse_ADC.c **** 	}
-  40:Core/Src/HardWare/mouse_ADC.c **** }
- 128              		.loc 1 40 1 view .LVU18
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 4
-
-
- 129 0012 08BD     		pop	{r3, pc}
- 130              	.L13:
   30:Core/Src/HardWare/mouse_ADC.c **** 		Error_Handler();
- 131              		.loc 1 30 3 is_stmt 1 view .LVU19
- 132 0014 0A48     		ldr	r0, .L15+8
- 133 0016 FFF7FEFF 		bl	puts
- 134              	.LVL6:
-  31:Core/Src/HardWare/mouse_ADC.c **** 		printf("に\r\n");
- 135              		.loc 1 31 3 view .LVU20
- 136 001a FFF7FEFF 		bl	Error_Handler
- 137              	.LVL7:
-  32:Core/Src/HardWare/mouse_ADC.c **** 	}
- 138              		.loc 1 32 3 view .LVU21
- 139 001e 0948     		ldr	r0, .L15+12
- 140 0020 FFF7FEFF 		bl	puts
- 141              	.LVL8:
- 142 0024 F1E7     		b	.L10
- 143              	.L14:
-  36:Core/Src/HardWare/mouse_ADC.c **** 		Error_Handler();
- 144              		.loc 1 36 3 view .LVU22
- 145 0026 0848     		ldr	r0, .L15+16
- 146 0028 FFF7FEFF 		bl	puts
- 147              	.LVL9:
-  37:Core/Src/HardWare/mouse_ADC.c **** 		printf("ね\r\n");
- 148              		.loc 1 37 3 view .LVU23
- 149 002c FFF7FEFF 		bl	Error_Handler
- 150              	.LVL10:
-  38:Core/Src/HardWare/mouse_ADC.c **** 	}
- 151              		.loc 1 38 3 view .LVU24
- 152 0030 0648     		ldr	r0, .L15+20
- 153 0032 FFF7FEFF 		bl	puts
- 154              	.LVL11:
- 155              		.loc 1 40 1 is_stmt 0 view .LVU25
- 156 0036 ECE7     		b	.L9
- 157              	.L16:
- 158              		.align	2
- 159              	.L15:
- 160 0038 00000000 		.word	hadc1
- 161 003c 00000000 		.word	hadc2
- 162 0040 00000000 		.word	.LC0
- 163 0044 08000000 		.word	.LC1
- 164 0048 10000000 		.word	.LC2
- 165 004c 18000000 		.word	.LC3
- 166              		.cfi_endproc
- 167              	.LFE239:
- 169              		.global	adc2
- 170              		.global	adc1
- 171              		.section	.bss.adc1,"aw",%nobits
- 172              		.align	2
- 173              		.set	.LANCHOR0,. + 0
- 176              	adc1:
- 177 0000 00000000 		.space	12
- 177      00000000 
- 177      00000000 
- 178              		.section	.bss.adc2,"aw",%nobits
- 179              		.align	2
- 180              		.set	.LANCHOR1,. + 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 5
+  31:Core/Src/HardWare/mouse_ADC.c **** 	}
+  32:Core/Src/HardWare/mouse_ADC.c **** 	if (HAL_ADC_Stop_DMA(&hadc2) != HAL_OK)
+ 107              		.loc 1 32 2 is_stmt 1 view .LVU15
+ 108              		.loc 1 32 6 is_stmt 0 view .LVU16
+ 109 000a 0648     		ldr	r0, .L15+4
+ 110 000c FFF7FEFF 		bl	HAL_ADC_Stop_DMA
+ 111              	.LVL5:
+ 112              		.loc 1 32 5 view .LVU17
+ 113 0010 18B9     		cbnz	r0, .L14
+ 114              	.L9:
+  33:Core/Src/HardWare/mouse_ADC.c **** 	{
+  34:Core/Src/HardWare/mouse_ADC.c **** 		Error_Handler();
+  35:Core/Src/HardWare/mouse_ADC.c **** 	}
+  36:Core/Src/HardWare/mouse_ADC.c **** }
+ 115              		.loc 1 36 1 view .LVU18
+ 116 0012 08BD     		pop	{r3, pc}
+ 117              	.L13:
+  30:Core/Src/HardWare/mouse_ADC.c **** 	}
+ 118              		.loc 1 30 3 is_stmt 1 view .LVU19
+ 119 0014 FFF7FEFF 		bl	Error_Handler
+ 120              	.LVL6:
+ 121 0018 F7E7     		b	.L10
+ 122              	.L14:
+  34:Core/Src/HardWare/mouse_ADC.c **** 	}
+ 123              		.loc 1 34 3 view .LVU20
+ 124 001a FFF7FEFF 		bl	Error_Handler
+ 125              	.LVL7:
+ 126              		.loc 1 36 1 is_stmt 0 view .LVU21
+ 127 001e F8E7     		b	.L9
+ 128              	.L16:
+ 129              		.align	2
+ 130              	.L15:
+ 131 0020 00000000 		.word	hadc1
+ 132 0024 00000000 		.word	hadc2
+ 133              		.cfi_endproc
+ 134              	.LFE239:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s 			page 4
 
 
- 183              	adc2:
- 184 0000 00000000 		.space	8
- 184      00000000 
- 185              		.text
- 186              	.Letext0:
- 187              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
- 188              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 189              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 190              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
- 191              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 192              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 193              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h"
- 194              		.file 9 "Core/Inc/HardWare/mouse_ADC.h"
- 195              		.file 10 "Core/Inc/main.h"
- 196              		.file 11 "<built-in>"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s 			page 6
+ 136              		.global	adc2
+ 137              		.global	adc1
+ 138              		.section	.bss.adc1,"aw",%nobits
+ 139              		.align	2
+ 140              		.set	.LANCHOR0,. + 0
+ 143              	adc1:
+ 144 0000 00000000 		.space	12
+ 144      00000000 
+ 144      00000000 
+ 145              		.section	.bss.adc2,"aw",%nobits
+ 146              		.align	2
+ 147              		.set	.LANCHOR1,. + 0
+ 150              	adc2:
+ 151 0000 00000000 		.space	8
+ 151      00000000 
+ 152              		.text
+ 153              	.Letext0:
+ 154              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 155              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 156              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 157              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 158              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 159              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 160              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h"
+ 161              		.file 9 "Core/Inc/HardWare/mouse_ADC.h"
+ 162              		.file 10 "Core/Inc/main.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 mouse_ADC.c
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:20     .text.ADCStart:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:26     .text.ADCStart:00000000 ADCStart
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:74     .text.ADCStart:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:82     .rodata.ADCStop.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:95     .text.ADCStop:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:101    .text.ADCStop:00000000 ADCStop
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:160    .text.ADCStop:00000038 $d
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:183    .bss.adc2:00000000 adc2
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:176    .bss.adc1:00000000 adc1
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:172    .bss.adc1:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccd8oLvJ.s:179    .bss.adc2:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:20     .text.ADCStart:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:26     .text.ADCStart:00000000 ADCStart
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:74     .text.ADCStart:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:82     .text.ADCStop:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:88     .text.ADCStop:00000000 ADCStop
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:131    .text.ADCStop:00000020 $d
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:150    .bss.adc2:00000000 adc2
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:143    .bss.adc1:00000000 adc1
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:139    .bss.adc1:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccz7ypkB.s:146    .bss.adc2:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_ADC_Start_DMA
@@ -279,4 +229,3 @@ Error_Handler
 hadc1
 hadc2
 HAL_ADC_Stop_DMA
-puts

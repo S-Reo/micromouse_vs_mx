@@ -29,19 +29,19 @@ const float conv_pul = 2/MM_PER_PULSE;
 void FastStraight(float cut, float num, float distance_block, float accel, float decel, float top_speed, float end_speed)//加減速を切り替える割合と、マス数の指定
 {
 		float add_distance = cut*distance_block*num;//スタート時の加速では61.5になるようにnumをかける
-		TargetAngularV = 0;
+		Target.AngularV = 0;
 		int target_pulse = (int)(add_distance*conv_pul);
-//		dbc = 1;
+
 		static int section_num=0;
 		while( ( TotalPulse[BODY] )  < ( KeepPulse[BODY] + target_pulse) )
 		{
-			if(TargetVelocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
+			if(Target.Velocity[BODY] >= top_speed) //直線の加速時は、充分大きな値を設定
 			{
-				Acceleration = 0;
+				Target.Acceleration = 0;
 			}
 			else
 			{
-				Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
+				Target.Acceleration = accel;//2.89000f; //2.70f;//1.0000f;//
 			}
 			//壁の値を見て一瞬だけ制御オン
 				//90mm毎に左右を見る
@@ -94,7 +94,7 @@ void FastStraight(float cut, float num, float distance_block, float accel, float
 		PIDChangeFlag(A_VELO_PID, 1);
 		ChangeLED(0);
 		section_num = 0;
-		Acceleration = 0;
+		Target.Acceleration = 0;
 		KeepPulse[BODY] += target_pulse;
 		KeepPulse[LEFT] += target_pulse*0.5f;
 		KeepPulse[RIGHT] += target_pulse*0.5f;
@@ -102,23 +102,23 @@ void FastStraight(float cut, float num, float distance_block, float accel, float
 		float dec_distance = (1-cut)*distance_block*num;
 		target_pulse = (int)(dec_distance *conv_pul);
 
-		while( 	((Photo[FR]+Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+		while( 	((Current.Photo[FR]+Current.Photo[FL]) < 3800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 		{
-			if(TargetVelocity[BODY] <= end_speed) //
+			if(Target.Velocity[BODY] <= end_speed) //
 			{
-				Acceleration = 0;
-//				TargetVelocity[BODY] = end_speed;
+				Target.Acceleration = 0;
+//				Target.Velocity[BODY] = end_speed;
 			}
 			else
 			{
-				Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
+				Target.Acceleration = decel;//2.89000f; //2.70f;//1.0000f;//
 			}
-			//Acceleration = decel;//-2.89;//1.0000f;//
-//			if(TargetVelocity[BODY] <= 240)
-//				Acceleration = 0;
+			//Target.Acceleration = decel;//-2.89;//1.0000f;//
+//			if(Target.Velocity[BODY] <= 240)
+//				Target.Acceleration = 0;
 		}
-		Acceleration = 0;
-//		TargetVelocity[BODY] = end_speed;
+		Target.Acceleration = 0;
+//		Target.Velocity[BODY] = end_speed;
 		KeepPulse[BODY] += target_pulse;
 		KeepPulse[LEFT] += target_pulse*0.5f;
 		KeepPulse[RIGHT] += target_pulse*0.5f;
@@ -379,7 +379,7 @@ void DiagonalRunTest(int action_num)
 		}
 	}
 	// 速度0制御
-	TargetVelocity[BODY] = 0;
+	Target.Velocity[BODY] = 0;
 }
 
 void Explore()
@@ -415,8 +415,15 @@ void Explore()
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	PIDChangeFlag(A_VELO_PID, 1);
-	
-	goal_edge_num = one;
+
+	// PIDSetGain(A_VELO_PID, 0.100709849176355, 3.40260123333282, 0.0000762222699372798);
+	// PIDSetGain(L_VELO_PID, 0.013221, 0.49007, 4.1461e-05);
+	// PIDSetGain(R_VELO_PID, 0.013221, 0.49007, 4.1461e-05);
+
+	// PIDSetGain(A_VELO_PID, 1.3177, 72.6753, 0.0016302);
+	// PIDSetGain(L_VELO_PID, 0.013221, 0.49007, 4.1461e-05);
+	// PIDSetGain(R_VELO_PID, 0.013221, 0.49007, 4.1461e-05);
+
 	VelocityMax = false;
 	SearchOrFast = 0;
 	Calc = 0;
@@ -427,13 +434,11 @@ void Explore()
 	
 	initSearchData(&maze, &mouse);
 	InitVisit();
-	dbc = 1;
 
-// position first_target = {0,1};
 	position first_target = {GOAL_X, GOAL_Y};
+	position first_target_size = {GOAL_SIZE_X, GOAL_SIZE_Y};
 	mouse.target_pos = first_target;
-	mouse.target_size.x = goal_edge_num;
-	mouse.target_size.y = goal_edge_num;
+	mouse.target_size = first_target_size;
 
 	//まず足立法でゴールに向かい、その後深さ優先探索をし、0,0に戻ってくる
 	InitStackNum();
@@ -541,11 +546,10 @@ void FastestRun()
 
 	SearchOrFast = 1;
 	Calc = SearchOrFast;
-	goal_edge_num = GOAL_SIZE_X;
-	position target_pos = {GOAL_X, GOAL_Y};
-	mouse.target_pos = target_pos;
-	mouse.target_size.x = goal_edge_num;
-	mouse.target_size.y = goal_edge_num;
+	position first_target = {GOAL_X, GOAL_Y};
+	position first_target_size = {GOAL_SIZE_X, GOAL_SIZE_Y};
+	mouse.target_pos = first_target;
+	mouse.target_size = first_target_size;
 
 
 	//迷路データの準備

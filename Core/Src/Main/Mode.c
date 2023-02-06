@@ -42,7 +42,7 @@ static void loggingMotorVelocityValue(logger_f *log_velocity, float target_veloc
 	initFloatLog(log_velocity, &data_veloctiy[0], false, LOG_NUM_VELOCITY);
 
 	MouseResetParameters();
-	TargetVelocity[BODY] = 0;
+	setVelocity(&Target,0);
 	VelocityLeftOut=VelocityRightOut=0;
 
 	MouseStartAll();
@@ -59,7 +59,7 @@ static void loggingMotorVelocityValue(logger_f *log_velocity, float target_veloc
 	int hoge = 0;
 	// printf("サンプル開始\r\n");
 	Signal(7);
-	TargetVelocity[BODY] = target_velocity;
+	setVelocity(&Target, target_velocity);
 	setLoggerFlag(&(log_velocity->f), true);
 
 	Motor_Switch( 84,84); //10%
@@ -67,7 +67,7 @@ static void loggingMotorVelocityValue(logger_f *log_velocity, float target_veloc
 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからない現象
 		hoge++;
 	}
-	TargetVelocity[BODY] = 0;
+	setVelocity(&Target,0);
 	Motor_Switch( 0,0);
 	Motor_PWM_Stop();
 	EncoderStop();
@@ -247,6 +247,12 @@ void GainTest(){
 	PIDSetGain(L_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
 	PIDSetGain(R_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
 
+	// PIDSetGain(A_VELO_PID, 0.44502, 19.6986, 0.0014496); // 自分で調整した
+	PIDSetGain(A_VELO_PID, 1.3177, 72.6753, 0.0016302);
+	PIDSetGain(L_VELO_PID, 0.046058, 3.2238, 3.4222e-05); 
+	PIDSetGain(L_VELO_PID, 0.046058, 3.2238, 3.4222e-05);
+	
+
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
 	// モード毎の処理
@@ -262,11 +268,11 @@ void GainTest(){
 	ChangeLED(5);
 	while(1)
 	{
-		TargetVelocity[BODY] = 240;
-		TargetAngularV = 0;
+		setVelocity(&Target,240);
+		Target.AngularV = 0;
 		float a=10.56;
 		//printf("%f, %f\r\n", AngularV, Angle);
-		printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f, a: %f\r\n",Photo[FL],Photo[FR],Photo[FL]+Photo[FR],Photo[SL],Photo[SIDE_R],a);
+		// printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f, a: %f\r\n",Current.Photo[FL],Current.Photo[FR],Current.Photo[FL]+Current.Photo[FR],Current.Photo[SL],Current.Photo[SIDE_R],a);
 	}
 }
 
@@ -274,7 +280,6 @@ void WritingFree()
 {
 	IT_mode = IT_FREE;
 
-	dbc = 0;
 	MouseInit();
 
 	PIDChangeFlag(L_VELO_PID, 1);
@@ -288,14 +293,12 @@ void WritingFree()
 	ExploreVelocity=0;
 	ChangeLED(7);
 	//データ取り（速度、角速度）
-	dbc = 1;
 	FastStraight(0.5, 8, 90, 0.5, -0.5, 4000, 10);
-	dbc = 0;
 
 	while(1)
 	{
 		PIDChangeFlag(A_VELO_PID, 0);
-		TargetVelocity[BODY] = 0;
+		setVelocity(&Target,0);
 		HAL_Delay(5000);
 		for(int i=0; i < 600; i++){
 			// printf("%d, %lf, %lf\r\n", i, debugVL[i], debugVR[i]);
@@ -305,11 +308,11 @@ void WritingFree()
 
 static void restart(char turn_mode){
 	
-	TargetVelocity[BODY] = 0;
-	Acceleration = 0;
-	TargetAngularV = 0;
-	TargetAngle = 0;
-	Angle = 0;
+	setVelocity(&Target,0);
+	Target.Acceleration = 0;
+	Target.AngularV = 0;
+	Target.Angle = 0;
+	Current.Angle = 0;
 	MousePIDResetAll();
 
 	updateAllNodeWeight(&my_map, &my_mouse.target_pos, &my_mouse.target_size, WALL_MASK);
@@ -376,7 +379,6 @@ void DFS_Running(char turn_mode){
 	//全探索（深さ優先探索）
 	WALL_MASK = 0x01;
 	VelocityMax = false;
-	goal_edge_num = 1;
 	SearchOrFast = 0; //search
 	Calc = SearchOrFast;
 
@@ -505,7 +507,7 @@ void TestIMU()
 		t = 1;
 		//割り込みを有効化
 
-		printf("timer1 : %d, 角度 : %f\r\n",timer1, Angle);
+		printf("timer1 : %d, 角度 : %f\r\n",timer1, Current.Angle);
 		HAL_TIM_Base_Start_IT(&htim1);
 		while(t == 1) //10s
 		{

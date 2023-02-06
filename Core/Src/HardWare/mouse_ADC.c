@@ -27,15 +27,11 @@ void ADCStop()
 {
 	if (HAL_ADC_Stop_DMA(&hadc1) != HAL_OK)
 	{
-		printf("な\r\n");
 		Error_Handler();
-		printf("に\r\n");
 	}
 	if (HAL_ADC_Stop_DMA(&hadc2) != HAL_OK)
 	{
-		printf("ぬ\r\n");
 		Error_Handler();
-		printf("ね\r\n");
 	}
 }
 

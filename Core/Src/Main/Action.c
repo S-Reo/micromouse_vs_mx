@@ -30,8 +30,8 @@ const float TO_PULSE = 2/MM_PER_PULSE;
 //const float Wall_Cut_Val = 38;
 const float angle_range = 3*M_PI/180;
 
-#define SLA_CALIB_FL 220 //180
-#define SLA_CALIB_FR 270	//230
+#define SLA_CALIB_FL 180
+#define SLA_CALIB_FR 230
 
 static void getWallState(profile *mouse, float *photo, maze_node *maze){
 
@@ -375,21 +375,21 @@ void WaitStopAndReset()
 {
 	do
 	{
-		TargetVelocity[BODY] = 0;
-		Acceleration = 0;
-		TargetAngularV = 0;
-		AngularAcceleration = 0;
+		Target.Velocity[BODY] = 0;
+		Target.Acceleration = 0;
+		Target.AngularV = 0;
+		Target.AngularAcceleration = 0;
 		PIDReset(L_VELO_PID);
 		PIDReset(R_VELO_PID);
 		PIDReset(A_VELO_PID);
 
-	}while(CurrentVelocity[BODY] != 0);
+	}while(Current.Velocity[BODY] != 0);
 	HAL_Delay(100);
 }
 void Rotate(float deg, float ang_v)
 {
-	TargetAngularV = 0;
-	Pid[A_VELO_PID].flag = 0;
+	Target.AngularV = 0;
+	PIDChangeFlag(A_VELO_PID, 0);;
 
 	float accel_deg = deg*30/90;
 	float const_deg = deg*30/90;
@@ -407,21 +407,21 @@ void Rotate(float deg, float ang_v)
 
 	if( ang_v > 0)	//右回転
 	{
-		TargetAngle += move_angle[0];
-		while( (TargetAngle > Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
+		Target.Angle += move_angle[0];
+		while( (Target.Angle > Current.Angle) /*&& (( ( keep_pulse[LEFT]+move_pulse ) > ( TotalPulse[LEFT] ) ) && ( ( keep_pulse[RIGHT]-move_pulse ) < ( TotalPulse[RIGHT] ) ) )*/)
 		{
-			AngularAcceleration = angular_acceleration[0];
+			Target.AngularAcceleration = angular_acceleration[0];
 		}
-		TargetAngle += move_angle[1];
-		while(TargetAngle > Angle)
+		Target.Angle += move_angle[1];
+		while(Target.Angle > Current.Angle)
 		{
-			AngularAcceleration = angular_acceleration[1];
+			Target.AngularAcceleration = angular_acceleration[1];
 		}
-		TargetAngle += move_angle[2];
-		while(TargetAngle > Angle)
+		Target.Angle += move_angle[2];
+		while(Target.Angle > Current.Angle)
 		{
-			 AngularAcceleration = -angular_acceleration[2];
-			 if( AngularV <= 0)
+			 Target.AngularAcceleration = -angular_acceleration[2];
+			 if( Current.AngularV <= 0)
 			 {
 				 break;
 			 }
@@ -430,28 +430,28 @@ void Rotate(float deg, float ang_v)
 	}
 	else if( ang_v < 0)
 	{
-		TargetAngle -= move_angle[0];
-		while( (TargetAngle < Angle) )
+		Target.Angle -= move_angle[0];
+		while( (Target.Angle < Current.Angle) )
 		{
-			AngularAcceleration = -angular_acceleration[0]; //ここまで
+			Target.AngularAcceleration = -angular_acceleration[0]; //ここまで
 		}
-		TargetAngle -= move_angle[1];
-		while(TargetAngle < Angle)
+		Target.Angle -= move_angle[1];
+		while(Target.Angle < Current.Angle)
 		{
-			AngularAcceleration = angular_acceleration[1];//0
+			Target.AngularAcceleration = angular_acceleration[1];//0
 		}
-		TargetAngle -= move_angle[2];
-		while(TargetAngle < Angle)
+		Target.Angle -= move_angle[2];
+		while(Target.Angle < Current.Angle)
 		{
-			 AngularAcceleration = angular_acceleration[2];
-			 if( AngularV >= 0)
+			 Target.AngularAcceleration = angular_acceleration[2];
+			 if( Current.AngularV >= 0)
 			 {
 			 		break;
 			 }
 		}
 
 	}
-	AngularAcceleration = 0;
+	Target.AngularAcceleration = 0;
 	WaitStopAndReset();
 	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
 	if(ang_v < 0)
@@ -509,18 +509,18 @@ int getFrontWall(profile *mouse)
 
 void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
-	Pid[A_VELO_PID].flag = 1;
+	PIDChangeFlag(A_VELO_PID, 1);;
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/) 
 	{
-		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Current.Photo[FL] < SLA_CALIB_FL || Current.Photo[FR] < SLA_CALIB_FR)//Current.Photo[FL] < 200 || Current.Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
-			TargetAngularV = 0;
-			AngularLeapsity = 0;
-			AngularAcceleration = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			
+			Target.AngularAcceleration = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 		}
 
 	}
@@ -528,72 +528,75 @@ void SlalomRight(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	{
 		while( now_pulse + Sla.Pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
-				TargetAngularV = 0;
-				AngularLeapsity = 0;
-				AngularAcceleration = 0;
-				TargetVelocity[BODY] = ExploreVelocity;
+				Target.AngularV = 0;
+				
+				Target.AngularAcceleration = 0;
+				Target.Velocity[BODY] = ExploreVelocity;
 		}
 	}
-	float start_angle = Angle;
-	Pid[A_VELO_PID].flag = 0;
-	while(start_angle + Sla.Theta1 > Angle)
+	float start_angle = Current.Angle;
+	PIDChangeFlag(A_VELO_PID, 0);;
+	while(start_angle + Sla.Theta1 > Current.Angle)
 	{
-			AngularAcceleration = Sla.Alpha;
-			TargetVelocity[BODY] = ExploreVelocity;
-
+			Target.AngularAcceleration = Sla.Alpha;
+			Target.Velocity[BODY] = ExploreVelocity;
+			ChangeLED(1);
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
+	Target.AngularAcceleration = 0;
+	
 
-	while(start_angle + Sla.Theta2 > Angle)
+	while(start_angle + Sla.Theta2 > Current.Angle)
 	{
-			TargetAngularV = TargetAngularV;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = Target.AngularV;
+			Target.Velocity[BODY] = ExploreVelocity;
+			ChangeLED(2);
 	}
 
-	while( start_angle + Sla.Theta3 > Angle)
+	while( start_angle + Sla.Theta3 > Current.Angle)
 	{
-			AngularAcceleration = -Sla.Alpha;
-			if(TargetAngularV < 0)
+			Target.AngularAcceleration = -Sla.Alpha;
+			if(Current.AngularV < 0)
 			{
-				TargetAngularV = 0;
+				Target.AngularV = 0;
+				ChangeLED(3);
 				break;
 			}
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.Velocity[BODY] = ExploreVelocity;
+			ChangeLED(4);
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	TargetAngularV = 0;
+	Target.AngularAcceleration = 0;
+	
+	Target.AngularV = 0;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + Sla.Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
-			TargetAngularV = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
-				getWallState(mouse, &Photo[0], maze);
+				getWallState(mouse, &Current.Photo[0], maze);
 				Calc = 1;
 			}
 	}
-	TargetAngle += 0.5f*M_PI;//90*M_PI/180;
+	Target.Angle += 0.5f*M_PI;//90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 
 }
 void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
-	Pid[A_VELO_PID].flag = 1;
+	PIDChangeFlag(A_VELO_PID, 1);;
 
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];	//汎用的に書いておく
 	if (getFrontWall(mouse) == WALL /*前に壁があれば、*/)
 	{
-		while(Photo[FL] < SLA_CALIB_FL || Photo[FR] < SLA_CALIB_FR)//Photo[FL] < 200 || Photo[FR] < 250/*前壁の閾値より低い間*/)
+		while(Current.Photo[FL] < SLA_CALIB_FL || Current.Photo[FR] < SLA_CALIB_FR)//Current.Photo[FL] < 200 || Current.Photo[FR] < 250/*前壁の閾値より低い間*/)
 		{
-			TargetAngularV = 0;
-			AngularLeapsity = 0;
-			AngularAcceleration = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			
+			Target.AngularAcceleration = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 		}
 
 
@@ -602,185 +605,189 @@ void SlalomLeft(maze_node *maze, profile *mouse)	//現在の速度から、最�
 	{
 		while( now_pulse + Sla.Pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
-				TargetAngularV = 0;
-				AngularAcceleration = 0;
-				TargetVelocity[BODY] = ExploreVelocity;
+				Target.AngularV = 0;
+				Target.AngularAcceleration = 0;
+				Target.Velocity[BODY] = ExploreVelocity;
 		}
 	}
-	Pid[A_VELO_PID].flag = 0;
-	float start_angle = Angle;
-	while(start_angle - Sla.Theta1 < Angle)
+	PIDChangeFlag(A_VELO_PID, 0);;
+	float start_angle = Current.Angle;
+	while(start_angle - Sla.Theta1 < Current.Angle)
 	{
-			AngularAcceleration = -Sla.Alpha;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularAcceleration = -Sla.Alpha;
+			Target.Velocity[BODY] = ExploreVelocity;
+			ChangeLED(1);
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	while(start_angle - Sla.Theta2 < Angle)
+	Target.AngularAcceleration = 0;
+	
+	while(start_angle - Sla.Theta2 < Current.Angle)
 	{
-			TargetAngularV = TargetAngularV;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = Target.AngularV;
+			Target.Velocity[BODY] = ExploreVelocity;
+			ChangeLED(2);
 	}
 
-	while( start_angle - Sla.Theta3 < Angle)
+	while( start_angle - Sla.Theta3 < Current.Angle)
 	{
-			AngularAcceleration = Sla.Alpha;
-			if(TargetAngularV > 0)
+			Target.AngularAcceleration = Sla.Alpha;
+			if(Current.AngularV > 0)
 			{
-				TargetAngularV = 0;
+				Target.AngularV = 0;
+				ChangeLED(3);
 				break;
 			}
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.Velocity[BODY] = ExploreVelocity;
+			ChangeLED(4);
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	TargetAngularV = 0;
+	Target.AngularAcceleration = 0;
+	
+	Target.AngularV = 0;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + Sla.Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
-			TargetAngularV = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 			if(Calc == 0)
 			{
-				getWallState(mouse, &Photo[0], maze);
+				getWallState(mouse, &Current.Photo[0], maze);
 				Calc = 1;
 			}
 	}
-	TargetAngle += -0.5f*M_PI;//-90*M_PI/180;
+	Target.Angle += -0.5f*M_PI;//-90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 }
 void SlalomFastRight(slalom_parameter *param)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
-	Pid[A_VELO_PID].flag = 1;
+	PIDChangeFlag(A_VELO_PID, 1);;
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + param->Pre > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 	{
-			TargetAngularV = 0;
-			AngularLeapsity = 0;
-			AngularAcceleration = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			
+			Target.AngularAcceleration = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	float start_angle = Angle;
-	Pid[A_VELO_PID].flag = 0;
-	while(start_angle + param->Theta1 > Angle)
+	float start_angle = Current.Angle;
+	PIDChangeFlag(A_VELO_PID, 0);;
+	while(start_angle + param->Theta1 > Current.Angle)
 	{
-			AngularAcceleration = param->Alpha;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularAcceleration = param->Alpha;
+			Target.Velocity[BODY] = ExploreVelocity;
 
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	while(start_angle + param->Theta2 > Angle)
+	Target.AngularAcceleration = 0;
+	
+	while(start_angle + param->Theta2 > Current.Angle)
 	{
-			TargetAngularV = TargetAngularV;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = Target.AngularV;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	while( start_angle + param->Theta3 > Angle)
+	while( start_angle + param->Theta3 > Current.Angle)
 	{
-			AngularAcceleration = -param->Alpha;
-			if(TargetAngularV < 0)
+			Target.AngularAcceleration = -param->Alpha;
+			if(Current.AngularV < 0)
 			{
-				TargetAngularV = 0;
+				Target.AngularV = 0;
 				break;
 			}
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	TargetAngularV = 0;
+	Target.AngularAcceleration = 0;
+	
+	Target.AngularV = 0;
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + param->Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
-			TargetAngularV = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	TargetAngle += param->Theta3;//90*M_PI/180; rad
+	Target.Angle += param->Theta3;//90*M_PI/180; rad
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 
 }
 void SlalomFastLeft(slalom_parameter *param)	//現在の速度から、最適な角加速度と、移動量、目標角度などを変更する。
 {
-	Pid[A_VELO_PID].flag = 1;
+	PIDChangeFlag(A_VELO_PID, 1);;
 	//一旦前壁補正なしで
 	int now_pulse;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 		while( now_pulse + param->Pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直進
 		{
-				TargetAngularV = 0;
-				AngularAcceleration = 0;
-				TargetVelocity[BODY] = ExploreVelocity;
+				Target.AngularV = 0;
+				Target.AngularAcceleration = 0;
+				Target.Velocity[BODY] = ExploreVelocity;
 		}
-	Pid[A_VELO_PID].flag = 0;
-	float start_angle = Angle;
-	while(start_angle - param->Theta1 < Angle)
+	PIDChangeFlag(A_VELO_PID, 0);;
+	float start_angle = Current.Angle;
+	while(start_angle - param->Theta1 < Current.Angle)
 	{
-			AngularAcceleration = -param->Alpha;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularAcceleration = -param->Alpha;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	while(start_angle - param->Theta2 < Angle)
+	Target.AngularAcceleration = 0;
+	
+	while(start_angle - param->Theta2 < Current.Angle)
 	{
-			TargetAngularV = TargetAngularV;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = Target.AngularV;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
 
-	while( start_angle - param->Theta3 < Angle)
+	while( start_angle - param->Theta3 < Current.Angle)
 	{
-			AngularAcceleration = param->Alpha;
-			if(TargetAngularV > 0)
+			Target.AngularAcceleration = param->Alpha;
+			if(Current.AngularV > 0)
 			{
-				TargetAngularV = 0;
+				Target.AngularV = 0;
 				break;
 			}
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	AngularAcceleration = 0;
-	AngularLeapsity = 0;
-	TargetAngularV = 0;
+	Target.AngularAcceleration = 0;
+	
+	Target.AngularV = 0;
 
 	now_pulse = TotalPulse[LEFT] + TotalPulse[RIGHT];
 	while( now_pulse + param->Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
 	{
-			TargetAngularV = 0;
-			TargetVelocity[BODY] = ExploreVelocity;
+			Target.AngularV = 0;
+			Target.Velocity[BODY] = ExploreVelocity;
 	}
-	TargetAngle += -param->Theta3;//-90*M_PI/180;
+	Target.Angle += -param->Theta3;//-90*M_PI/180;
 	KeepPulse[BODY] += TotalPulse[BODY] - KeepPulse[BODY];
 }
 void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mouse)
 {
-	TargetAngularV = 0;
+	Target.AngularV = 0;
 #if 0
 	float additional_speed=0;
-	additional_speed = explore_speed - CurrentVelocity[BODY];
+	additional_speed = explore_speed - Current.Velocity[BODY];
 
-	Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
+	Target.Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
 #else
-	Acceleration = 2.89000f;
+	Target.Acceleration = 2.89000f;
 #endif
 	int target_pulse = (int)(add_distance*TO_PULSE);
 
 	_Bool wall_cut = false;
-	Pid[A_VELO_PID].flag = 1;
+	PIDChangeFlag(A_VELO_PID, 1);;
 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 		{
-			getWallState(mouse, &Photo[0], maze);
+			getWallState(mouse, &Current.Photo[0], maze);
 			Calc = 1;
 		}
-		if(TargetVelocity[BODY] > explore_speed)
+		if(Target.Velocity[BODY] > explore_speed)
 		{
-			Acceleration = 0;
-			TargetVelocity[BODY] = explore_speed;
+			Target.Acceleration = 0;
+			Target.Velocity[BODY] = explore_speed;
 		}
 		//壁切れ一旦なし
-//		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Photo[SR])) )
+//		if(wall_cut == false && ((50/*LEFT_WALL*0.5f*/ > Current.Photo[SL]) || (50/*RIGHT_WALL*0.5f*/ > Current.Photo[SR])) )
 //		{
 //			TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-(WALL_CUT_VAL*TO_PULSE));
 //			//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
@@ -790,7 +797,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 
 	}
 
-	Acceleration = 0;
+	Target.Acceleration = 0;
 //	wall_cut = false;
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse*0.5f;
@@ -800,44 +807,44 @@ void Decel(float dec_distance, float end_speed)
 {
 	float down_speed=0;
 #if 0
-	down_speed = CurrentVelocity[BODY] - end_speed; //end_speedが0かそうでないか
+	down_speed = Current.Velocity[BODY] - end_speed; //end_speedが0かそうでないか
 	//速度減分 = 到達したい探索速度 - 現在の速度
 	//これなら現在速度が探索速度に追いついているときは加速度0にできる。
-	Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
+	Target.Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
 
 #else
-	Acceleration = -2.89;
+	Target.Acceleration = -2.89;
 #endif
 	int target_pulse = (int)(dec_distance*TO_PULSE);
 
-	while( (	(Photo[FR]+Photo[FL]) < 2500) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
+	while( (	(Current.Photo[FR]+Current.Photo[FL]) < 2800) && ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY]) )
 	{
 		if(KeepPulse[BODY] + (target_pulse*0.65) < TotalPulse[BODY] ) //距離で制御を切り替えるなら、別のwhileを用意すればいいのでは
 		{
-			Pid[A_VELO_PID].flag = 1;
+			PIDChangeFlag(A_VELO_PID, 1);;
 		}
 		if(end_speed == 0){
-			if(TargetVelocity[BODY] <= 90){
-				TargetVelocity[BODY] = 90;//end_speed;
-				Acceleration = 0;
-				TargetAngularV = 0;
-				AngularAcceleration = 0;
+			if(Target.Velocity[BODY] <= 90){
+				Target.Velocity[BODY] = 90;//end_speed;
+				Target.Acceleration = 0;
+				Target.AngularV = 0;
+				Target.AngularAcceleration = 0;
 			}
 		}
 		else if(end_speed != 0){
-			if(TargetVelocity[BODY] <= end_speed){
-				TargetVelocity[BODY] = end_speed;//90;//end_speed;
-				Acceleration = 0;
-				TargetAngularV = 0;
-				AngularAcceleration = 0;
+			if(Target.Velocity[BODY] <= end_speed){
+				Target.Velocity[BODY] = end_speed;//90;//end_speed;
+				Target.Acceleration = 0;
+				Target.AngularV = 0;
+				Target.AngularAcceleration = 0;
 			}
 		}
 
 	}
-	TargetVelocity[BODY] = end_speed;
-	Acceleration = 0;
-	TargetAngularV = 0;
-	AngularAcceleration = 0;
+	Target.Velocity[BODY] = end_speed;
+	Target.Acceleration = 0;
+	Target.AngularV = 0;
+	Target.AngularAcceleration = 0;
 	//ChangeLED(2);
 	KeepPulse[BODY] += target_pulse;
 	KeepPulse[LEFT] += target_pulse*0.5f;
@@ -853,8 +860,8 @@ void Calib(int distance)
 	{
 		while( KeepPulse[BODY] + target_pulse > TotalPulse[BODY] )
 		{
-			Acceleration = 0;
-			TargetVelocity[BODY] = 45;
+			Target.Acceleration = 0;
+			Target.Velocity[BODY] = 90;
 		}
 		KeepPulse[BODY] += target_pulse;
 
@@ -863,13 +870,13 @@ void Calib(int distance)
 	{
 		while( KeepPulse[BODY] + target_pulse < TotalPulse[BODY] )
 		{
-			Acceleration = 0;
-			TargetVelocity[BODY] = -45;
+			Target.Acceleration = 0;
+			Target.Velocity[BODY] = -90;
 		}
 		KeepPulse[BODY] += target_pulse;
 	}
-	TargetVelocity[BODY] = 0;
-	Acceleration = 0;
+	Target.Velocity[BODY] = 0;
+	Target.Acceleration = 0;
 }
 void Compensate()
 {
@@ -907,7 +914,7 @@ float AjustCenter(profile *mouse){
 				//前壁調整
 				Calib(-5);
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !( (photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))//(( (3900 < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < 4100))) )
+				while( !( (photo_threshold[0] < Current.Photo[FL] + Current.Photo[FR]) && (Current.Photo[FL] + Current.Photo[FR] < photo_threshold[1])) )//&& !(-0.2< Current.Velocity[BODY] && Current.Velocity[BODY] <  0.2))//(( (3900 < Current.Photo[FL] + Current.Photo[FR]) && (Current.Photo[FL] + Current.Photo[FR] < 4100))) )
 				{
 				}
 					//前壁との距離と前二つの差分、左右の壁とのバランスが安定するまで制御ループ
@@ -917,9 +924,9 @@ float AjustCenter(profile *mouse){
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();	//後ろ壁調整
 
-				Pid[wall_ctrl].flag = 0;
-				TargetAngularV = 0;
-				Angle = TargetAngle;
+				PIDChangeFlag(wall_ctrl, 0);
+				Target.AngularV = 0;
+				Current.Angle = Target.Angle;
 				return 61.5;
 			}
 		break;
@@ -929,7 +936,7 @@ float AjustCenter(profile *mouse){
 				//前壁調整
 				Calib(-5);
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !(( (photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1]))) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				while( !(( (photo_threshold[0] < Current.Photo[FL] + Current.Photo[FR]) && (Current.Photo[FL] + Current.Photo[FR] < photo_threshold[1]))) )//&& !(-0.2< Current.Velocity[BODY] && Current.Velocity[BODY] <  0.2))
 					{
 					}
 			}
@@ -937,9 +944,9 @@ float AjustCenter(profile *mouse){
 			{
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
-				Pid[wall_ctrl].flag = 0;
-				TargetAngularV = 0;
-				Angle = TargetAngle;
+				PIDChangeFlag(wall_ctrl, 0);
+				Target.AngularV = 0;
+				Current.Angle = Target.Angle;
 				return 61.5;
 			}
 		break;
@@ -949,7 +956,7 @@ float AjustCenter(profile *mouse){
 				//前壁調整
 				Calib(-5);
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !((photo_threshold[0]< Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				while( !((photo_threshold[0]< Current.Photo[FL] + Current.Photo[FR]) && (Current.Photo[FL] + Current.Photo[FR] < photo_threshold[1])) )//&& !(-0.2< Current.Velocity[BODY] && Current.Velocity[BODY] <  0.2))
 					{
 					}
 			}
@@ -957,9 +964,9 @@ float AjustCenter(profile *mouse){
 			{
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
-				Pid[wall_ctrl].flag = 0;
-				TargetAngularV = 0;
-				Angle = TargetAngle;
+				PIDChangeFlag(wall_ctrl, 0);
+				Target.AngularV = 0;
+				Current.Angle = Target.Angle;
 				return 61.5;
 			}
 		break;
@@ -969,7 +976,7 @@ float AjustCenter(profile *mouse){
 				//前壁調整
 				Calib(-5);
 				PIDChangeFlag(wall_ctrl, 1);
-				while( !((photo_threshold[0] < Photo[FL] + Photo[FR]) && (Photo[FL] + Photo[FR] < photo_threshold[1])) )//&& !(-0.2< CurrentVelocity[BODY] && CurrentVelocity[BODY] <  0.2))
+				while( !((photo_threshold[0] < Current.Photo[FL] + Current.Photo[FR]) && (Current.Photo[FL] + Current.Photo[FR] < photo_threshold[1])) )//&& !(-0.2< Current.Velocity[BODY] && Current.Velocity[BODY] <  0.2))
 					{
 					}
 			}
@@ -977,16 +984,16 @@ float AjustCenter(profile *mouse){
 			{
 				PIDChangeFlag(wall_ctrl, 1);
 				Compensate();//後ろ壁調整
-				Pid[wall_ctrl].flag = 0;
-				TargetAngularV = 0;
-				Angle = TargetAngle;
+				PIDChangeFlag(wall_ctrl, 0);
+				Target.AngularV = 0;
+				Current.Angle = Target.Angle;
 				return 61.5;
 			}
 	default:
 		break;
 	}
-	Pid[wall_ctrl].flag = 0;
-	TargetAngularV = 0;
+	PIDChangeFlag(wall_ctrl, 0);
+	Target.AngularV = 0;
 	return 45;
 }
 int GetWallCompensateDir(profile *mouse)
@@ -1047,7 +1054,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 {
 	//斜め走行時の直進は別で作る
 
-	Pid[A_VELO_PID].flag = 1;
+	PIDChangeFlag(A_VELO_PID, 1);
 	int target_pulse = (int)(move_distance*TO_PULSE);
 	if(accel_or_decel == 1) //加速するとき
 	{
@@ -1062,7 +1069,7 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 		{
 			if(Calc == 0)//減速終了後直ぐにマップ更新
 			{
-				getWallState(mouse, &Photo[0], maze);
+				getWallState(mouse, &Current.Photo[0], maze);
 				Calc = 1;
 			}
 		}
@@ -1087,20 +1094,20 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 		while( ( KeepPulse[BODY] +(target_pulse)) > ( TotalPulse[BODY]) )
 		{
 			if(KeepPulse[BODY] + (target_pulse*0.4) < TotalPulse[BODY] ){
-				Pid[A_VELO_PID].flag = 1;
-				Pid[ctrl_mode].flag = 0;
+				PIDChangeFlag(A_VELO_PID, 1);;
+				PIDChangeFlag(ctrl_mode, 0);
 			}
 			else {
-				Pid[A_VELO_PID].flag = 0;
-				Pid[ctrl_mode].flag = 1;//壁見る
+				PIDChangeFlag(A_VELO_PID, 0);;
+				PIDChangeFlag(ctrl_mode, 1);//壁見る
 			}
 			if(KeepPulse[BODY] + (target_pulse*0.80) < TotalPulse[BODY] && Calc == 0)
 			{
-				getWallState(mouse, &Photo[0], maze);
+				getWallState(mouse, &Current.Photo[0], maze);
 				Calc = 1;
 			}
 			//壁切れ補正
-//			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Photo[SR])) )
+//			if(wall_cut == false && ((50/*LEFT_WALL*0.7f*/ > Current.Photo[SL]) || (50/*RIGHT_WALL*0.7f*/ > Current.Photo[SR])) )
 //			{//
 //				TotalPulse[BODY] = KeepPulse[BODY] + (target_pulse-(WALL_CUT_VAL*TO_PULSE));
 //				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
@@ -1110,13 +1117,13 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 
 	//		if( ( keep_pulse + (target_pulse/2) )  <= ( TotalPulse[BODY]) )	//移動量に応じて処理を変える。
 	//		{
-	//			Acceleration = 0;
+	//			Target.Acceleration = 0;
 	//		}
 		}
-		Pid[A_VELO_PID].flag = 1;
-		Pid[ctrl_mode].flag = 0;//壁見る
+		PIDChangeFlag(A_VELO_PID, 1);;
+		PIDChangeFlag(ctrl_mode, 0);//壁見る
 		wall_cut = false;
-		Acceleration = 0;
+		Target.Acceleration = 0;
 		KeepPulse[BODY] += target_pulse;
 		KeepPulse[LEFT] += target_pulse*0.5f;
 		KeepPulse[RIGHT] += target_pulse*0.5f;
@@ -1131,12 +1138,12 @@ void TurnRight(char mode, maze_node *maze, profile *mouse)
 		Decel(45, 0);
 		WaitStopAndReset();
 		EmitterOFF();
-		Pid[A_VELO_PID].flag = 0;
-		Rotate( 90 , 2*M_PI);//1.5
+		PIDChangeFlag(A_VELO_PID, 0);;
+		Rotate( 90 , 3*M_PI);//1.5
 		mouse->now.car += 2;
 		EmitterON();
 		HAL_Delay(100);
-		Pid[A_VELO_PID].flag = 1;
+		PIDChangeFlag(A_VELO_PID, 1);;
 		Accel(45, ExploreVelocity, maze, mouse);
 		break;
 	case 'S':
@@ -1156,12 +1163,12 @@ void TurnLeft(char mode, maze_node *maze, profile *mouse)
 		Decel(45, 0);
 		WaitStopAndReset();
 		EmitterOFF();
-		Pid[A_VELO_PID].flag = 0;
-		Rotate( 90 , -2*M_PI);//-1.5
+		PIDChangeFlag(A_VELO_PID, 0);;
+		Rotate( 90 , -3*M_PI);//-1.5
 		mouse->now.car -= 2;
 		EmitterON();
 		HAL_Delay(100);
-		Pid[A_VELO_PID].flag = 1;
+		PIDChangeFlag(A_VELO_PID, 1);;
 		Accel(45, ExploreVelocity, maze, mouse);
 		break;
 	case 'S':
@@ -1177,43 +1184,38 @@ void GoBack(maze_node *maze, profile *mouse)
 {
 	//減速して
 	Decel(45, 0);
-	float acc = AjustCenter(mouse);
+	// float acc = AjustCenter(mouse);
 	WaitStopAndReset();
-
+	float acc=0;
 	int wall_comp = GetWallCompensateDir(mouse);
 		//右か左かそれ以外か
 		if(wall_comp == L_WALL_PID)
 		{
-			Rotate(90, -2*M_PI);
+			Rotate(90, -3*M_PI);
 			mouse->now.car = (mouse->now.car - 2) %8;
 			acc = AjustCenter(mouse);
 			WaitStopAndReset();
-			Rotate(90, -2*M_PI);
+			Rotate(90, -3*M_PI);
 			mouse->now.car = (mouse->now.car - 2) %8;
 		}
 		else if(wall_comp == R_WALL_PID)
 		{
-			Rotate(90, 2*M_PI);
+			Rotate(90, 3*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
 			acc = AjustCenter(mouse);
 			WaitStopAndReset();
-			Rotate(90, 2*M_PI);
+			Rotate(90, 3*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
 		}
 		else if(wall_comp == N_WALL_PID)
 		{
-			Rotate(180, 2*M_PI);
+			Rotate(180, 3*M_PI);
 			mouse->now.car = (mouse->now.car + 2) %8;
 			WaitStopAndReset();
 		}
 
 	acc = AjustCenter(mouse);
-	if(44.5 <= acc && acc <= 45.5){
-		ChangeLED(7);
-	}
-	else{
-		ChangeLED(1);
-	}
+
 	WaitStopAndReset();
 	//マップの不要マスをつぶす
 	FindUnwantedSquares(maze);

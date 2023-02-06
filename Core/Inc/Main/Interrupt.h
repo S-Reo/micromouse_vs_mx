@@ -19,10 +19,6 @@ extern int timer1,timer8, t;
 extern int IT_mode;
 extern logger_f log_velocity;
 extern logger_f identify[2];
-extern int velodebug_flag;
-extern int dbc;
-extern const float convert_to_velocity;
-extern const float convert_to_angularv;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 

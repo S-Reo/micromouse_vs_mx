@@ -25,39 +25,33 @@
 volatile _Bool VelocityMax;
 volatile int Calc;
 volatile int SearchOrFast;
-float Photo[4];
-volatile float TargetPhoto[4];
-volatile float PhotoDiff;
-
-int KeepCounter;
-volatile float CurrentVelocity[3];	//速度 mm/s
-volatile float TargetVelocity[3];
-volatile float ControlTargetVelocity;
 
 volatile int KeepPulse[3]={0};
 int PulseDisplacement[3];
 volatile int TotalPulse[3];
-volatile float AngularV=0;			//角速度 rad/s
-float EncAngV=0;
-volatile float Angle=0;				//角度 rad/msを積算
-//ここまでがエンコーダからのUpdate
 
-//ここからは目標値と現在値を用いた制御。
+
+int VelocityLeftOut=0, VelocityRightOut=0;
+int WallRightOut, WallLeftOut;
 
 float ExploreVelocity;
 float AddVelocity;
-volatile float Acceleration=0;
-volatile float TargetAngularV;
-volatile float AngularAcceleration=0;
-float AngularLeapsity=0;
-volatile float TargetAngle=0;
-float ImuAngV,ImuAngle;
-float ImuAccel=0, ImuVelocity=0, ImuMileage=0;
-int VelocityLeftOut=0, VelocityRightOut=0;
-int WallRightOut, WallLeftOut;
-int L_motor, R_motor;
+volatile physical Target, Current;
 
-goal_edge goal_edge_num;
+volatile float PhotoDiff;
+// float Photo[4];
+// volatile float Target.Photo[4];
+// volatile float CurrentVelocity[3];	//速度 mm/s
+// volatile float Target.Velocity[3];
+// volatile float AngularV=0;			//角速度 rad/s
+// volatile float Acceleration=0;
+// volatile float Target.AngularV;
+// volatile float AngularAcceleration=0;
+// volatile float Target.Angle=0;
+// volatile float Angle=0;				//角度 rad/msを積算
+float EncAngV=0;
+
+
 
 
 slalom_parameter Sla;
@@ -96,7 +90,7 @@ void setSearchTurnParam(int8_t mode){
 //		Sla.Theta3 = 90;
 
 		ExploreVelocity=180;
-		Sla.Pre = 16; //8;//2;
+		Sla.Pre = 8;//2;
 		Sla.Fol = 12;
 		Sla.Alpha = 0.043;
 		Sla.Theta1 = 30;
@@ -184,20 +178,25 @@ void MouseResetTotalPulses(){
 void MouseResetParameters(){
 	MouseResetTotalPulses();
 
-	TargetVelocity[BODY] = 0;
-	TargetVelocity[LEFT] = 0;
-	TargetVelocity[RIGHT] = 0;
-	TargetAngularV = 0;
-	Acceleration = 0;
-	AngularAcceleration = 0;
-	TargetAngle = 0;
-	Angle = 0;
+	Target.Velocity[BODY] = 0;
+	Target.Velocity[LEFT] = 0;
+	Target.Velocity[RIGHT] = 0;
+	Current.Velocity[BODY] = 0;
+	Current.Velocity[LEFT] = 0;
+	Current.Velocity[RIGHT] = 0;
+	Target.Acceleration = 0;
+
+	Target.Angle = 0;
+	Current.Angle = 0;
+	Target.AngularV = 0;
+	Current.AngularV = 0;
+	Target.AngularAcceleration = 0;
 		//両壁の値を取得。それぞれの値と差分を制御目標に反映。
-//	TargetPhoto[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
-//	TargetPhoto[SIDE_R] = Photo[SIDE_R];//294.299988;//THRESHOLD_SR;
-//	PhotoDiff = TargetPhoto[SL] - TargetPhoto[SIDE_R];
-	TargetPhoto[SL] = 370;//439.600006;//THRESHOLD_SL;
-	TargetPhoto[SIDE_R] = 300;//294.299988;//THRESHOLD_SR;
+//	Target.Photo[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
+//	Target.Photo[SIDE_R] = Photo[SIDE_R];//294.299988;//THRESHOLD_SR;
+//	PhotoDiff = Target.Photo[SL] - Target.Photo[SIDE_R];
+	Target.Photo[SL] = 370;//439.600006;//THRESHOLD_SL;
+	Target.Photo[SIDE_R] = 300;//294.299988;//THRESHOLD_SR;
 	PhotoDiff = 70;
 }
 void MouseInit(){
@@ -224,6 +223,7 @@ void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, f
 }
 
 void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
+
 	//300mm/sのパラメータ
 	switch(n){
 		case 0:
@@ -238,4 +238,8 @@ void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータ�
 		default:
 			break;
 	}
+}
+
+void setVelocity(physical *phy, float velo){
+	phy->Velocity[BODY] = velo;
 }

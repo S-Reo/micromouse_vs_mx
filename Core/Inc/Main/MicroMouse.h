@@ -65,7 +65,6 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 #define ACCE_DECE_DISTANCE 45
 
 #define TIRE_DEAMETER 21.1f //21.0f //20.55f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
-#define CURVE_DISTANCE (TIRE_DEAMETER *M_PI/4) * 0.3740544648
 #define TREAD_WIDTH 34.4f //37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
@@ -81,59 +80,48 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 
 #define START_ACCEL_PULSE  /*開始時の�?速パルス*/  START_ACCEL_DISTANCE/MM_PER_PULSE
 #define ACCE_DECE_PULSE /*�?速パルス*/ ACCE_DECE_DISTANCE/MM_PER_PULSE
-#define SLOW_ROTATE_PULSE (90*M_PI/4) /  MM_PER_PULSE
+
+// 壁を確認するタイミング
+#define WALL_JUDGE_PULSE 25/MM_PER_PULSE
+
+// エンコーダで超信地旋回
 #define QUARTER_ROTATE_PULSE (TREAD_WIDTH * M_PI/4) / MM_PER_PULSE
 #define DECE_CURVE_PULSE (45 -(TREAD_WIDTH/2)) / MM_PER_PULSE
 #define SHINCHI_ROTATE_PULSE (TREAD_WIDTH * 2 * M_PI/4)/MM_PER_PULSE
-#define CURVE_KLOTHOIDE_PULSE CURVE_DISTANCE/MM_PER_PULSE
-#define WALL_JUDGE_PULSE 25/MM_PER_PULSE
+
+// 速度 mm/s
+// 角速度 rad/s
+// 角度 rad/msを積算
+typedef struct {
+	float Velocity[3];
+	float Angle;
+	float AngularV;
+	float Photo[4];
+	float Pulse[3];
+
+	float Acceleration; // センサから得るのではなく、指定する値
+	float AngularAcceleration;
+}physical;
+extern volatile physical Target, Current;
 
 
 extern volatile int Calc;
 extern volatile int SearchOrFast;
-
-
 extern volatile _Bool VelocityMax;
 
-extern float Photo[4];
-extern volatile float TargetPhoto[4];
 extern volatile float PhotoDiff;
-//extern int PulseDisplacement[2];
-extern int KeepCounter;
-//速度 mm/s
-extern volatile float CurrentVelocity[3];
-extern volatile float TargetVelocity[3];
-extern volatile float ControlTargetVelocity;
-
 
 extern volatile int KeepPulse[3];
 extern int PulseDisplacement[3];
 extern volatile int TotalPulse[3];
 
-
-//角速度 rad/s
-extern volatile float AngularV;
 extern float EncAngV;
-//角度 rad/msを積算
-extern volatile float Angle;
-
-
-extern float ImuAngV,ImuAngle;
-extern float ImuAccel, ImuVelocity, ImuMileage;
-//ここまでがエンコーダからのUpdate
-
-//ここからは目標値と現在値を用いた制御
 
 extern float ExploreVelocity;
 extern float AddVelocity;
-extern volatile float Acceleration;
-extern volatile float TargetAngularV;
-extern volatile float AngularAcceleration;
-extern float AngularLeapsity;
-extern volatile float TargetAngle;
+
 extern int VelocityLeftOut, VelocityRightOut;
 extern int WallRightOut, WallLeftOut;
-extern int L_motor, R_motor;
 
 extern void MouseStartAll();
 extern void MousePIDResetAll();
@@ -153,11 +141,6 @@ typedef enum Action	//区画の境界に来た時の状態表現だから
 						//斜めで4種類追加
 }action;
 
-typedef enum WallSafety
-{
-	wall_safe,
-	wall_warn
-}wall_safety;
 typedef enum PIDNumber
 {
 	A_VELO_PID,
@@ -173,14 +156,6 @@ typedef enum PIDNumber
 	NOT_CTRL_PID
 }pid_number;
 
-typedef enum GoalEdge
-{
-	one = 1,
-	two = 2,
-	three = 3
-
-}goal_edge;
-extern goal_edge goal_edge_num;
 
 
 typedef struct Slalom
@@ -201,5 +176,5 @@ void setSearchTurnParam(int8_t mode);
 extern slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
 
 void setFastDiagonalParam(int n);
-
+void setVelocity(physical *phy, float velo);
 #endif /* INC_MICROMOUSE_H_ */

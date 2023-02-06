@@ -11,7 +11,6 @@
 #include <stdlib.h>
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t xg, yg, zg;	// 角加速度(16bitデータ)
-volatile int plot_angle;
 float zg_offset=0, ya_offset=0;
 volatile float  ZGyro=0, YAccel=0;
 int16_t ZGFilterd;

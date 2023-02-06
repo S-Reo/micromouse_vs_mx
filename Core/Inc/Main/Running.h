@@ -30,7 +30,6 @@ void FastestRun();
 //	uint8_t target_x[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
 //	uint8_t target_y[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
 //	uint16_t walk_val[NUMBER_OF_SQUARES*NUMBER_OF_SQUARES]={0};
-//	goal_edge_num = one;
 //	SearchOrFast = 0;
 //
 //	int area_num = 	setNotExploredArea((uint8_t *)target_x, (uint8_t *)target_y, (uint16_t *)walk_val);

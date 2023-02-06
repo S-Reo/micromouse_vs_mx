@@ -14,21 +14,7 @@
 #include "MicroMouse.h"
 
 // 基本動作の関数
-// 途中に補正を入れるにはどうすればいいか（ロジックテーブルを作って差し込む)
 
-typedef struct {
-
-	float KP;
-	float KI;
-	float KD;
-}PID_Control;
-
-
-
-//extern PID_Control wall, Velocity, imu ;
-
-extern uint8_t alpha_flag;
-extern float alpha_turn;  //スラローム時の角加速度
 void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask);
 
 void WaitStopAndReset();
