@@ -23,6 +23,7 @@
 // #include "Sampling.h"
 
 int timer1,timer8, t;
+timer_mouse tim_search;
 int IT_mode;
 logger_f identify[2];
 
@@ -34,6 +35,13 @@ const float convert_to_imu_yaccel = 1000*9.80392157f / 2048.0f; //1000*なんち
 // PIDで計算した値 = 電圧値、を、カウンタ値に変換する処理が要る
 
 logger_f log_velocity;
+logger run_log={
+	false,
+	3*250*218,
+	0
+};
+
+
 inline void calcVelocity(){
 	PulseDisplacement[LEFT] = - (TIM3->CNT - INITIAL_PULSE);
 	TIM3->CNT = INITIAL_PULSE;
@@ -151,9 +159,77 @@ static void ControlTest_IT(){
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
 }
+
+
+inline static void Kanayama_Calc(kanayama_control *next, physical *current, physical *target){
+	// 自己位置xy
+	current->X += current->Velocity[BODY]*T1*cos(current->Angle);
+	current->Y += current->Velocity[BODY]*T1*sin(current->Angle);
+
+	if(run_log.flag == true)
+		flashFloatLog(&run_log, current->X, current->Y, current->Angle); //位置と角度
+	
+	// float ang_v=0;
+	
+	
+	next->Velocity += target->Acceleration;
+	next->Ang_V += target->AngularAcceleration;
+	next->Angle += (next->Ang_V *T1);
+	next->X += next->Velocity * T1 * cos(next->Angle); // radかチェック
+	next->Y += next->Velocity * T1 * sin(next->Angle);
+	
+	float x_e=0, y_e=0, ang_e=0;
+	x_e = ((next->X-current->X)*cos(current->Angle)) + ((next->Y-current->Y)*sin(current->Angle));
+	y_e = ((next->X-current->X)*-sin(current->Angle)) + ((next->Y-current->Y)*cos(current->Angle));
+	ang_e = next->Angle-(current->Angle);
+
+	// 壁制御
+	float l_wall_out = 0;
+	float r_wall_out = 0;
+	l_wall_out = 0.0001*M_PI*(float)(PIDGetFlag(L_WALL_PID)*(PIDControl(L_WALL_PID, Target.Photo[SL], Current.Photo[SL]))); // >0のとき、左へ
+	r_wall_out = 0.0001*M_PI*(float)(PIDGetFlag(R_WALL_PID)*(PIDControl(R_WALL_PID, Target.Photo[SIDE_R], Current.Photo[SIDE_R])));
+
+	target->Velocity[BODY] = (next->Velocity*cos(ang_e)) + (next->Kx*x_e);
+	target->AngularV = l_wall_out - r_wall_out + next->Ang_V + (next->Velocity*((next->Ky*y_e) + (next->Kangle*sin(ang_e))));
+
+	
+}
+static void Kanayama_IT(){
+	countTimElapsed(&tim_search);
+
+	calcVelocity();
+
+	Update_IMU(&(Current.AngularV), &(Current.Angle));
+	
+	// int a_velo_out = PIDControl(A_VELO_PID, target->Angle, current->Angle);
+	if(PIDGetFlag(A_VELO_PID) == 1/* || (PIDGetFlag(F_WALL_PID) == 1)*/){
+		// target->AngularV = (float)a_velo_out;
+		Target.AngularV += Target.AngularAcceleration;
+		Target.Velocity[BODY] += Target.Acceleration;
+		// target->Velocity[BODY] = 0.001*PIDGetFlag(F_WALL_PID)*PIDControl(F_WALL_PID, 3800, (Current.Photo[FR]+Current.Photo[FL]) );
+	}
+	else{
+		Kanayama_Calc(&Next, &Current, &Target);
+	}
+
+	Target.Velocity[RIGHT] = ( Target.Velocity[BODY] + Target.AngularV * TREAD_WIDTH * 0.5f );
+	Target.Velocity[LEFT] = ( -Target.AngularV *TREAD_WIDTH ) + Target.Velocity[RIGHT];
+
+	
+	float battery_voltage = ADCToBatteryVoltage( adc1[2], V_SPLIT_NUM, PIN_V_MAX ,ADC_RESOLUTION );
+	float convert_to_reg_counter = BATTERY_MAX/battery_voltage;
+	VelocityLeftOut = convert_to_reg_counter * PIDControl( L_VELO_PID, Target.Velocity[LEFT], Current.Velocity[LEFT]);
+	VelocityRightOut = convert_to_reg_counter * PIDControl( R_VELO_PID, Target.Velocity[RIGHT], Current.Velocity[RIGHT]);
+
+	//モータに出力
+	Motor_Switch( VelocityLeftOut, VelocityRightOut);
+}
 static void Explore_IT()
 {
+	countTimElapsed(&tim_search);
+
 	calcVelocity();
+	
 	// getFloatLog(&log_velocity, Current.Velocity[BODY]);
 	
 	//移動量 mm/msを積算
@@ -177,7 +253,11 @@ static void Explore_IT()
 	// getFloatLog(&log_velocity, AngularV);
 //	AngularV = ( Current.Velocity[LEFT] - Current.Velocity[RIGHT] ) *convert_to_angularv;
 //	Angle += AngularV * T1;
-
+	static float x=0,y=0; // 自己位置xy
+	x += Current.Velocity[BODY]*T1*sin(Current.Angle);
+	y += Current.Velocity[BODY]*T1*cos(Current.Angle);
+	if(run_log.flag == true)
+		flashFloatLog(&run_log, x, y, Current.Angle); //位置と角度
 #endif
 	int wall_d =0,wall_l =0,wall_r =0, wall_f=0;
 		int ang_out=0;
@@ -270,6 +350,7 @@ static void Explore_IT()
 #endif
 	//モータに出力
 	Motor_Switch( VelocityLeftOut, VelocityRightOut );
+	
 }
 static void WritingFree_IT()
 {
@@ -344,6 +425,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			break;
 		case IT_CONTROL_TEST:
 			ControlTest_IT();
+			break;
+		case IT_KANAYAMA:
+			Kanayama_IT();
 			break;
 
 		default :

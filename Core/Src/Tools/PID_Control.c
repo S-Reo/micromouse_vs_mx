@@ -24,7 +24,7 @@ void PIDChangeFlag(int n, int on_or_off)
 {
 	Pid[n].flag = on_or_off;
 }
-int PIDGetFlag(int n)
+inline int PIDGetFlag(int n)
 {
 	return Pid[n].flag;
 }

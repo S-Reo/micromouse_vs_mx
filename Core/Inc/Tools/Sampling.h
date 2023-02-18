@@ -33,6 +33,9 @@ void printFloatLog(logger_f *lg);
 // フラグの取得と設定
 _Bool getLoggerFlag(logger *lg);
 void setLoggerFlag(logger *lg, _Bool logic);
+void initFlashRunLog(logger *lg, _Bool flag, float data_num);
+_Bool flashFloatLog(logger *lg, float left_v, float right_v, float ang_v);
+void printFlashRunLog(logger *lg);
 
 void initIdentifyMode(_Bool mode);
 _Bool getIdentifyMode();

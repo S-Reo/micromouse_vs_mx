@@ -21,20 +21,21 @@
 #define FLASH_SECTOR11		0x58	//0x1011000
 
 // flash use address
-const uint32_t start_adress_sector1  = 	0x08004000; //sentor1 start address
-const uint32_t end_adress_sector1   = 	0x08007FFF;
-//const uint32_t start_adress_sector6//  = 	0x8080000; //sentor8 start address
-//const uint32_t end_adress_sector6
-//const uint32_t start_adress_sector7//  = 	0x8080000; //sentor8 start address
-//const uint32_t end_adress_sector7
-const uint32_t start_adress_sector8  = 	0x8080000; //sentor8 start address
-const uint32_t end_adress_sector8 	 = 	0x809FFFF;
-const uint32_t start_adress_sector9  = 	0x80A0000; //sentor9 start address
-const uint32_t end_adress_sector9 	 = 	0x80BFFFF;
-const uint32_t start_adress_sector10 =  0x80C0000; //sentor10 start address
-const uint32_t end_adress_sector10 	 = 	0x80DFFFF;
-const uint32_t start_adress_sector11 =  0x80E0000; //sentor11 start address
-const uint32_t end_adress_sector11 	 = 	0x80FFFFF;
+const uint32_t start_address_sector1  	= 	0x08004000; //sentor1 start address
+const uint32_t end_address_sector1   	= 	0x08007FFF;
+
+const uint32_t start_address_sector6	= 	0x08040000; //sentor6 start address
+const uint32_t end_address_sector6		=	0x0805FFFF; 
+const uint32_t start_address_sector7	= 	0x08060000; //sentor7 start address
+const uint32_t end_address_sector7		=	0x0807FFFF;
+const uint32_t start_address_sector8  	= 	0x08080000; //sentor8 start address
+const uint32_t end_address_sector8 	 	= 	0x0809FFFF;
+const uint32_t start_address_sector9  	= 	0x080A0000; //sentor9 start address
+const uint32_t end_address_sector9 	 	= 	0x080BFFFF;
+const uint32_t start_address_sector10 	= 	0x080C0000; //sentor10 start address
+const uint32_t end_address_sector10 	= 	0x080DFFFF;
+const uint32_t start_address_sector11 	= 	0x080E0000; //sentor11 start address
+const uint32_t end_address_sector11 	= 	0x080FFFFF;
 uint32_t run_log_address;
 
 
@@ -103,7 +104,7 @@ void FLASH_Erase1(void)
 //}
 
 //8はノムさんもうまくいかなかったらしい。
-//8のクリアはid研のを使う。
+//8のクリアはidさんのを使う。
 void FLASH_Erase8(void)
 {
 	FLASH_Unlock();
@@ -338,32 +339,18 @@ void FLASH_ReadData(uint32_t address, uint32_t* data, uint32_t size)
   //memcpy(コピー先のメモリブロック、コピー元のメモリブロック、コピーバイト数)
 }
 
-
-
-
-//セクター消去だけ使う。 引数で消去セクタを選択できるようにする。
-
-/*
- * flash.c
- *
- *  Created on: 2021/12/02
- *      Author: leopi
- */
+//セクター消去だけ使う
 
 /*---ROM保存用関数---*/
 // 4byte毎
-//static
-uint8_t work_ram[BACKUP_FLASH_SECTOR_SIZE_1] __attribute__ ((aligned(4)));
-//uint8_t
-float sector8[BACKUP_FLASH_SECTOR_SIZE_8] __attribute__ ((aligned(4)));
+// uint8_t work_ram[BACKUP_FLASH_SECTOR_SIZE_1] __attribute__ ((aligned(4)));
+// float sector8[BACKUP_FLASH_SECTOR_SIZE_8] __attribute__ ((aligned(4)));
 ///float sector3[BACKUP_FLASH_SECTOR_SIZE_3] __attribute__ ((aligned(4)));
 //double data_log[BACKUP_FLASH_SECTOR_SIZE_11] __attribute__ ((aligned(4)));
+/* 開始アドレスを毎回自分で指定する場合は要らない */ // 配置と定義はリンカスクリプトで行う
+// char _backup_flash_start_; /* マップ */
+// char _backup_flash_start_run_log; /* 6~10 をログに使う*/
 
-char _backup_flash_start_1;
-char _backup_flash_start_8;
-//char _backup_flash_start_3;
-//char _backup_flash_start_11;
-// 配置と定義はリンカスクリプトで行う
 
 bool Flash_clear_sector1()// Flashのsectoe1を消去
 {
@@ -384,6 +371,133 @@ bool Flash_clear_sector1()// Flashのsectoe1を消去
 
     return result == HAL_OK && error_sector == 0xFFFFFFFF;
 }
+
+bool Flash_clear_sector6to10()
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_6;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 5; // セクター6,7,8,9,10の5つまとめて消去
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+
+bool Flash_clear_sector11()
+{
+   HAL_FLASH_Unlock();
+
+   FLASH_EraseInitTypeDef EraseInitStruct;
+   EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+   EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_11;
+   EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+   EraseInitStruct.NbSectors = 1;
+
+   uint32_t error_sector;
+
+   HAL_StatusTypeDef result_11 = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+   HAL_FLASH_Lock();
+
+   return result_11 == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+
+/*
+bool Flash_clear_sector6()
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_6;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 1;
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+bool Flash_clear_sector7()
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_7;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 1;
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+bool Flash_clear_sector8()
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_8;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 1;
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+bool Flash_clear_sector9()
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_9;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 1;
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+bool Flash_clear_sector10()
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef EraseInitStruct;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_10;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+    EraseInitStruct.NbSectors = 1;
+
+    uint32_t error_sector;
+    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
+
+    HAL_FLASH_Lock();
+
+    return result == HAL_OK && error_sector == 0xFFFFFFFF;
+}
+*/
+
+/*
 uint8_t* Flash_load_sector1() // work_ramの先アドレスを返す // Flashのsector1のデータをコピーしてwork_ramに読み出す
 {
     memcpy(work_ram, &_backup_flash_start_1, BACKUP_FLASH_SECTOR_SIZE_1);//BACKUP_FLASH_SECTOR_SIZE
@@ -415,37 +529,14 @@ bool Flash_store_sector1()// Flashのsector1を消去
     HAL_FLASH_Lock();
 
     return result_1 == HAL_OK;
-}
+}*/
 
-
-bool Flash_clear_sector8()// Flashのsectoe1を消去
-{
-    HAL_FLASH_Unlock();
-
-    //printf("\r\nはか1?\r\n");
-    FLASH_EraseInitTypeDef EraseInitStruct;
-    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_8;
-    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-    EraseInitStruct.NbSectors = 1;
-
-   // printf("\r\nはか12?\r\n");
-    // Eraseに失敗したsector番号がerror_sectorに入
-    // 正常にEraseができたと??��?��?
-    uint32_t error_sector;
-    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
-
-   /// printf("\r\nはか3?\r\n");
-    HAL_FLASH_Lock();
-
-    return result == HAL_OK && error_sector == 0xFFFFFFFF;
-}
-//uint8_t
-float* Flash_load_sector8() // sector2の先アドレスを返す // Flashのsector1のデータをコピーしてsector2に読み出す
-{
-    memcpy(sector8, &_backup_flash_start_8, BACKUP_FLASH_SECTOR_SIZE_8);//BACKUP_FLASH_SECTOR_SIZE
-    return sector8;
-}
+// float* Flash_load_sector8() // sector2の先アドレスを返す // Flashのsector1のデータをコピーしてsector2に読み出す
+// {
+//     memcpy(sector8, &_backup_flash_start_8, BACKUP_FLASH_SECTOR_SIZE_8);//BACKUP_FLASH_SECTOR_SIZE
+//     return sector8;
+// }
+/*
 bool Flash_store_sector8()// Flashのsector1を消去
 {
     // Flashをclear
@@ -472,8 +563,7 @@ bool Flash_store_sector8()// Flashのsector1を消去
     HAL_FLASH_Lock();
 
     return result == HAL_OK;
-}
-
+}*/
 
 //bool Flash_clear_sector3()// Flashのsector3を消去
 //{
@@ -533,55 +623,12 @@ bool Flash_store_sector8()// Flashのsector1を消去
 //
 //    return result_3 == HAL_OK;
 //}
-bool Flash_clear_sector9()// Flashのsectoe1を消去
-{
-    HAL_FLASH_Unlock();
-
-    //printf("\r\nはか1?\r\n");
-    FLASH_EraseInitTypeDef EraseInitStruct;
-    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_9;
-    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-    EraseInitStruct.NbSectors = 1;
-
-    //printf("\r\nはか12?\r\n");
-    // Eraseに失敗したsector番号がerror_sectorに入
-    // 正常にEraseができたと??��?��?
-    uint32_t error_sector;
-    HAL_StatusTypeDef result = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
-
-    //printf("\r\nはか3?\r\n");
-    HAL_FLASH_Lock();
-
-    return result == HAL_OK && error_sector == 0xFFFFFFFF;
-}
-//11を使うようにして34はmainprogunにする
-//bool Flash_clear_sector11()// Flashのsectoe1を消去
-//{
-//    HAL_FLASH_Unlock();
-//
-//    FLASH_EraseInitTypeDef EraseInitStruct;
-//    EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-//    EraseInitStruct.Sector = BACKUP_FLASH_SECTOR_NUM_11;
-//    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-//    EraseInitStruct.NbSectors = 11;
-//
-//    // Eraseに失敗したsector番号がerror_sectorに入
-//    // 正常にEraseができたと??��?��?
-//    uint32_t error_sector;
-//    //3,4で下のERASEに失敗する
-//    HAL_StatusTypeDef result_11 = HAL_FLASHEx_Erase(&EraseInitStruct, &error_sector);
-//
-//    HAL_FLASH_Lock();
-//
-//    return result_11 == HAL_OK && error_sector == 0xFFFFFFFF;
-//}
-////uint8_t
-//double* Flash_load_sector11() //data_logの先アドレスを返す // Flashのsector2のデータをコピーしてdata_logに読み出す
-//{
+//uint8_t
+// double* Flash_load_sector11() //data_logの先アドレスを返す // Flashのsector2のデータをコピーしてdata_logに読み出す
+// {
 //    memcpy(&data_log, &_backup_flash_start_11, BACKUP_FLASH_SECTOR_SIZE_11);//BACKUP_FLASH_SECTOR_SIZE_FL
 //    return data_log;
-//}
+// }
 ////配列のindexを保存して、4byte × indexまで、アドレスをずらしていく
 //bool Flash_store_sector11()// Flashのsector1を消去
 //{

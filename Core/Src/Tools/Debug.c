@@ -43,12 +43,12 @@ void printHardWareInformation(){
 	//ADCも入れたい
 }
 
-
-//uint32_t StartAddressParameter = start_adress_sector9;	//開始アドレス
-//uint32_t EndAddressParameter = end_adress_sector9;		//終了アドレス
+/* 走行時のログを取る. セクターは6~10の 128×5 = 640kbyte*/
+//uint32_t StartAddressParameter = start_address_sector9;	//開始アドレス
+//uint32_t EndAddressParameter = end_address_sector9;		//終了アドレス
 //区画ごとのログ
-//	const uint32_t StartAddressParcelLog = start_adress_sector11;	//開始アドレス
-//	const uint32_t EndAddressParcelLog = end_adress_sector11;		//終了アドレス
+//	const uint32_t StartAddressParcelLog = start_address_sector11;	//開始アドレス
+//	const uint32_t EndAddressParcelLog = end_address_sector11;		//終了アドレス
 //
 ////流れ
 //	//更新されたタイミングでflashにそのまま書き込む。変数を経由するとしてもローカル。or 経由して後でまとめてflash。メモリが許せばそっち。走ってる最中にできたら一番。そもそもグローバルだから、アクション中にwriteしちゃえばいい。
@@ -78,13 +78,14 @@ void Buffering()
 	  setbuf(stdout,NULL);
 	  setbuf(stdin,NULL);
 }
+/* セクター9 は空ける. 一番後ろのsector11を使う*/
 void Copy_Gain()
 {
 	//コピーしなくても、単品で書き込める。
 	//セクター消去して、一つ一つ書き込む。
 	//printf("\r\nどしたん\r\n");
 
-	uint32_t address = start_adress_sector9;
+	uint32_t address = start_address_sector11;
 	float data[16]={0};
 	data[0] = Pid[L_VELO_PID].KP;
 	data[1] = Pid[L_VELO_PID].KI;
@@ -127,7 +128,7 @@ void Load_Gain()
 	//Flash_load_sector9();
 
 	//読み出し
-	uint32_t address = start_adress_sector9;//こっちか
+	uint32_t address = start_address_sector11;//こっちか
 	float data[16]={0};//1個多く要素を作る。
 
 	//チェック
@@ -164,7 +165,7 @@ void Load_Gain()
 		  PIDSetGain(L_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
 		  PIDSetGain(R_WALL_PID, 12,8,0);//6.4,0,0);//9,3,0.006);//1.8, 10, 0);
 
-			Flash_clear_sector9();
+			Flash_clear_sector11();
 			//printf("\r\nどや\r\n");
 			Copy_Gain();
 			//たまに、書き換えたのにflashの中身が消えてこっちの処理になる？
@@ -337,7 +338,7 @@ void Change_Gain()
 
 	//ROMに保存したい
 	//work_ram[5120] 以降から使える。(これより前はマップデータ等)切りのいい5200から使おう
-	Flash_clear_sector9();
+	Flash_clear_sector11();
 	//printf("\r\nどや\r\n");
 	Copy_Gain();
 	//printf("\r\nいいね\r\n");

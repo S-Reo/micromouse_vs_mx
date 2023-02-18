@@ -21,6 +21,7 @@
 #include "Interrupt.h"
 #include "PID_Control.h"
 #include "Convert.h"
+#include "Action.h"
 
 volatile _Bool VelocityMax;
 volatile int Calc;
@@ -90,21 +91,34 @@ void setSearchTurnParam(int8_t mode){
 //		Sla.Theta3 = 90;
 
 		ExploreVelocity=180;
-		Sla.Pre = 8;//2;
-		Sla.Fol = 12;
-		Sla.Alpha = 0.043;
+		Sla.Pre = 4;//2;
+		Sla.Fol = 5;
+		Sla.Alpha = 0.0453785606; //0.036;
 		Sla.Theta1 = 30;
 		Sla.Theta2 = 60;
 		Sla.Theta3 = 90;
+		// ExploreVelocity=180;
+		// Sla.Pre = 8;//2;
+		// Sla.Fol = 12;
+		// Sla.Alpha = 0.043;
+		// Sla.Theta1 = 30;
+		// Sla.Theta2 = 60;
+		// Sla.Theta3 = 90;
 		break;
 	case 3:
-		ExploreVelocity=240;
-		Sla.Pre = 8;//2;
-		Sla.Fol = 12; //16
-		Sla.Alpha = 0.078;
-		Sla.Theta1 = 30;
-		Sla.Theta2 = 60;
+		ExploreVelocity=240; // 本当に240が限界か、は調べておきたい. 調べたうえで、ベストかどうかも
+		// Sla.Pre = 6;//2;
+		// Sla.Fol = 7; //16
+		Sla.Pre = 4;//12.1; //12.3; // 4;//8;
+		Sla.Fol = 4;//12.4;//12; // //12;
+		Sla.Alpha = 0.0820304748; //0.20943951; //0.165806279;// //0.078;
+		Sla.Theta1 = 30; //10; //15;
+		Sla.Theta2 = 60; //80; //75;
 		Sla.Theta3 = 90;
+		// Sla.Alpha = 0.08726389;
+		// Sla.Theta1 = 40;
+		// Sla.Theta2 = 50;
+		// Sla.Theta3 = 90;
 		break;
 	case 4:
 		ExploreVelocity=300;
@@ -202,13 +216,32 @@ void MouseResetParameters(){
 void MouseInit(){
 	//	Load_Gain();
 	MouseStartAll(); //各デバイスの起動
+	MousePIDFlagAll(false);
+	MousePIDResetAll();
+	MouseResetParameters();
+	Current.Angle = 0.5*M_PI;
+	Current.X = 0;
+	Current.Y = 0;
+	Current.Velocity[BODY] = 0;
+	Current.Velocity[RIGHT] = 0;
+	Current.Velocity[LEFT] = 0;
+	Current.AngularV = 0;
+	Current.Angle = 0.5*M_PI;
+	Target.Acceleration = 0;
+	Target.Angle = 0.5*M_PI;
+	Target.X = 0;
+	Target.Y = 0;
+	Target.AngularAcceleration = 0;
+	Target.AngularV = 0;
+	// kx,kyは0.0005である程度安定していた. kthetaは0.1
+	float kx=0.0008, ky=0.0008, ktheta = 0.1;//1;//0.1
+	initKanayama(&Next, kx, ky, ktheta);
+	initKanayama(&End, kx, ky, ktheta);
+	
 	HAL_TIM_Base_Start_IT(&htim1);//割り込みを有効化
 	HAL_TIM_Base_Start_IT(&htim8);
 
-	MousePIDFlagAll(false);
-	MousePIDResetAll();
-
-	MouseResetParameters();
+	
 }
 
 slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
@@ -227,13 +260,14 @@ void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータ�
 	//300mm/sのパラメータ
 	switch(n){
 		case 0:
-			setTurnParam(&fast45, 			4, 22, 15,30,45,2750);
-			setTurnParam(&fast45reverse, 	22, 4, 15,30,45,2750);
-			setTurnParam(&fast90,  0, 3, 30,60,90,1485);
-			setTurnParam(&fast180, 0, 0, 60,120,180,1681.25);
-			setTurnParam(&fast135, 			15, 12, 65,70,135, 2700);
-			setTurnParam(&fast135reverse, 	12, 15, 65,70,135, 2700);
-			setTurnParam(&fast90diagonal, 	16, 16, 30,60,90, 5200);
+			
+			setTurnParam(&fast45, 			15, 32, 15,30,45,3000);
+			setTurnParam(&fast45reverse, 	32, 15, 15,30,45,3000);
+			setTurnParam(&fast90,  28,28, 30,60,90,2000);
+			setTurnParam(&fast135, 			18, 10, 65,70,135, 1650);
+			setTurnParam(&fast135reverse, 	10, 18, 65,70,135, 1650);
+			setTurnParam(&fast180, 15, 15, 60,120,180,1080);
+			setTurnParam(&fast90diagonal, 	16, 18, 30,60,90, 3350);
 			break;
 		default:
 			break;

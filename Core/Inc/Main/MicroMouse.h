@@ -64,7 +64,7 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 #define START_ACCEL_DISTANCE 61.75
 #define ACCE_DECE_DISTANCE 45
 
-#define TIRE_DEAMETER 21.1f //21.0f //20.55f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
+#define TIRE_DEAMETER 21.12f //21.0f //20.55f//20.575f//20.55f//(←内部大会前日) //20.70945//20.70945 //20.5591111111111//
 #define TREAD_WIDTH 34.4f //37.85f//(←内部大会前日) //36.8//34.4 //36.8 34.2//.8
 //進みすぎのときは径を大きくする
 
@@ -94,10 +94,13 @@ extern TIM_HandleTypeDef htim1; //割込みタイマ
 // 角度 rad/msを積算
 typedef struct {
 	float Velocity[3];
-	float Angle;
 	float AngularV;
+	
+	float X;
+	float Y;
+	float Angle;
+	
 	float Photo[4];
-	float Pulse[3];
 
 	float Acceleration; // センサから得るのではなく、指定する値
 	float AngularAcceleration;
@@ -129,17 +132,17 @@ extern void MousePIDFlagAll(_Bool high_or_low);
 extern void MouseResetTotalPulses();
 extern void MouseResetParameters();
 extern void MouseInit();
-typedef enum Action	//区画の境界に来た時の状態表現だから
-{
-	accel	= 0,
-	decel		= 1,
-	slalom		= 2,
-	rotate		= 3,
-	Wait		= 4,
-	straight = 5,
-	compensate = 6
-						//斜めで4種類追加
-}action;
+// typedef enum Action	//区画の境界に来た時の状態表現だから
+// {
+// 	accel	= 0,
+// 	decel		= 1,
+// 	slalom		= 2,
+// 	rotate		= 3,
+// 	Wait		= 4,
+// 	straight = 5,
+// 	compensate = 6
+// 						//斜めで4種類追加
+// }action;
 
 typedef enum PIDNumber
 {

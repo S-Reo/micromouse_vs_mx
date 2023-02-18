@@ -176,17 +176,17 @@ int main(void)
   PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
 #else
   //100kHzのゲイン:カウンタ840
-  PIDSetGain(L_VELO_PID, 3.3,1000,0);
-  PIDSetGain(R_VELO_PID, 3.3,1000,0);
+  PIDSetGain(L_VELO_PID, 3.3,1000,0);//1000,0);
+  PIDSetGain(R_VELO_PID, 3.3,1000,0);//1000,0);
 
   PIDSetGain(A_VELO_PID, 7.7, 18, 0); //42 //P=14.6
   PIDSetGain(F_WALL_PID, 14.6*2.5,0, 0);
   PIDSetGain(D_WALL_PID, 6,1,0);//8,2,0);//8, 4,0);//6, 0,0);
-  PIDSetGain(L_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
-  PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(L_WALL_PID, 15,1,0.001);//12,1,0);//14,4,0);//14,8,0);//12, 0,0);
+  PIDSetGain(R_WALL_PID, 15,1,0.001);//14,4,0);//14,8,0);//12, 0,0);
 
-  // システム同定から得たゲイン
-  // 制御周期とか合ってないのでは?
+  // シス�?�?同定から得たゲイン
+  // 制御周期とか合ってな�?のでは?
   // PIDSetGain(A_VELO_PID, 3.2113, 38.4531, 0.00046009); //42 //P=14.6
   
   #endif

@@ -24,6 +24,8 @@
 #define IT_IDENTIFY 3
 #define IT_STEP_RESPONSE 4
 #define IT_CONTROL_TEST 5
+#define IT_KANAYAMA 6
+
 
 void Debug();
 void ParameterSetting();

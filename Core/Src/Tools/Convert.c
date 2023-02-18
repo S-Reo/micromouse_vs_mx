@@ -179,7 +179,7 @@ float GetWallDataAverage(int average_of_n_times, int adc_data, int receiver_num)
 //引数 : adcの値
 //戻り値 : バッテリ電圧値
 //-------------------------//
-float ADCToBatteryVoltage(int adc_data, float split, float pin_v_max, float adc_resolution)	//adcを使っていない場合は別の方法
+inline float ADCToBatteryVoltage(int adc_data, float split, float pin_v_max, float adc_resolution)	//adcを使っていない場合は別の方法
 {
 	float battery_voltage = 0;
 	battery_voltage =  adc_data * split* pin_v_max / adc_resolution;//V_SPLIT_NUM * PIN_V_MAX / ADC_RESOLUTION;	//ピンの特性に関するものは引数で。

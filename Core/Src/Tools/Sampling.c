@@ -8,7 +8,7 @@
 #include "IR_Emitter.h"
 #include "mouse_ADC.h"
 #include "MicroMouse.h"
-
+#include "Flash.h"
 // #include "Interrupt.h"
 /* フォトセンサの元値を数個出力=サンプリング */
 typedef struct PhotoSample{
@@ -148,7 +148,54 @@ void setLoggerFlag(logger *lg, _Bool logic){
 	lg->flag = logic;
 }
 
-
+void initFlashRunLog(logger *lg, _Bool flag, float data_num){
+	lg->count = 0;
+	lg->flag = flag;
+	lg->data_num = data_num;
+}
+// フラッシュに書き込む関数
+inline _Bool flashFloatLog(logger *lg, float left_v, float right_v, float ang_v){
+	// 割込み内
+	uint32_t flash_start_address = start_address_sector6;
+	int i = lg->count;
+	static int call_counter=0;
+	call_counter++;
+	if(call_counter%4 != 1){
+		return true; // 次回の呼び出しを待つ
+	}
+	else {
+		// 1. 現在のアドレスに書き込む
+		FLASH_Write_Word_F(flash_start_address + (i*0x04), left_v);
+		FLASH_Write_Word_F(flash_start_address + ((i+1)*0x04), right_v);
+		FLASH_Write_Word_F(flash_start_address + ((i+2)*0x04), ang_v);
+		// 2. アドレスが最終セクターのエンドであれば、フラグを下げる
+		if((flash_start_address+((i+2)*0x04)) == end_address_sector10){
+			setLoggerFlag(lg, false);
+			return false;
+		}
+		// 3. 最後のセクターでなければ、
+		else {
+			if(i+6 < lg->data_num){ // 最後の書き込みデータが、データ上限を越えていなければ
+				lg->count += 3;
+				return true;
+			}
+			else{
+				setLoggerFlag(lg, false);
+				return false;
+			}
+		}
+	}
+}
+void printFlashRunLog(logger *lg){
+	uint32_t start_address = start_address_sector6;
+	float left_v=0, right_v=0, ang_v=0;
+	for(int i=0; i < (lg->data_num-3); i+=3){
+		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+		FLASH_Read_Word_F(start_address+(i+1)*0x04, &right_v);
+		FLASH_Read_Word_F(start_address+(i+2)*0x04, &ang_v);
+		printf("%f, %f, %f\r\n", left_v, right_v, ang_v);
+	}
+}
 /* システム同定用の処理 */
 
 

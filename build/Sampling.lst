@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -49,7 +49,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
    8:Core/Src/Tools/Sampling.c **** #include "IR_Emitter.h"
    9:Core/Src/Tools/Sampling.c **** #include "mouse_ADC.h"
   10:Core/Src/Tools/Sampling.c **** #include "MicroMouse.h"
-  11:Core/Src/Tools/Sampling.c **** 
+  11:Core/Src/Tools/Sampling.c **** #include "Flash.h"
   12:Core/Src/Tools/Sampling.c **** // #include "Interrupt.h"
   13:Core/Src/Tools/Sampling.c **** /* フォトセンサの元値を数個出力=サンプリング */
   14:Core/Src/Tools/Sampling.c **** typedef struct PhotoSample{
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
   17:Core/Src/Tools/Sampling.c **** 	uint32_t val[PHOTO_NUM][SAMPLE_NUM];
   18:Core/Src/Tools/Sampling.c **** 	float fval[PHOTO_NUM][SAMPLE_NUM];
   19:Core/Src/Tools/Sampling.c **** }photo_sample;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 2
 
 
   20:Core/Src/Tools/Sampling.c **** 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
   75              		.loc 1 31 3 is_stmt 0 discriminator 1 view .LVU9
   76 001c 032C     		cmp	r4, #3
   77 001e F2DD     		ble	.L4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 3
 
 
   78              	.LBE3:
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  118 0044 10000000 		.word	.LC2
  119 0048 00000000 		.word	.LC0
  120              		.cfi_endproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 4
 
 
  121              	.LFE238:
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  159 0010 4B68     		ldr	r3, [r1, #4]
  160              		.loc 1 54 24 discriminator 3 view .LVU31
  161 0012 4FF0640C 		mov	ip, #100
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 5
 
 
  162 0016 0CFB0233 		mla	r3, ip, r2, r3
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  202              	.LBB6:
   53:Core/Src/Tools/Sampling.c **** 			ps.val[i][ps.count] = photo_value[i];
  203              		.loc 1 53 11 view .LVU44
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 6
 
 
  204 003e 0022     		movs	r2, #0
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  253              		.cfi_offset 14, -4
  254              	.LBB7:
   68:Core/Src/Tools/Sampling.c **** 	}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 7
 
 
   69:Core/Src/Tools/Sampling.c **** 	else {
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  293 0040 5DF804FB 		ldr	pc, [sp], #4
  294              	.L25:
  295              	.LCFI5:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 8
 
 
  296              		.cfi_def_cfa_offset 0
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  335 0039 B582E4BA 		.ascii	"\265\202\344\272\206\015\000"
  335      860D00
  336              		.section	.text.printPhotoSampleValue,"ax",%progbits
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 9
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 9
 
 
  337              		.align	1
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  378              		.loc 1 94 7 is_stmt 0 view .LVU85
  379 0022 04E0     		b	.L33
  380              	.L34:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 10
 
 
   95:Core/Src/Tools/Sampling.c **** 		// 無限ループしないか不安: printf入れないと無限ループ？よくわからな�
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  421 0058 00000000 		.word	htim8
  422 005c 00000000 		.word	htim1
  423 0060 00000000 		.word	.LC3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 11
 
 
  424 0064 00000000 		.word	.LANCHOR0
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  470              		.thumb_func
  472              	getFloatLog:
  473              	.LVL31:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 12
 
 
  474              	.LFB244:
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  513 0020 7047     		bx	lr
  514              	.L42:
  128:Core/Src/Tools/Sampling.c **** 			lg->f.flag = false;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 13
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 13
 
 
  515              		.loc 1 128 4 is_stmt 1 view .LVU126
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  139:Core/Src/Tools/Sampling.c **** 		printf("%f\r\n ",lg->data[i]);
  562              		.loc 1 139 3 is_stmt 1 discriminator 3 view .LVU135
  563              		.loc 1 139 22 is_stmt 0 discriminator 3 view .LVU136
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 14
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 14
 
 
  564 0008 EB68     		ldr	r3, [r5, #12]
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  610              		.cfi_startproc
  611              		@ args = 0, pretend = 0, frame = 0
  612              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 15
 
 
  613              		@ link register save eliminated.
@@ -876,387 +876,813 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 1
  642 0002 7047     		bx	lr
  643              		.cfi_endproc
  644              	.LFE247:
- 646              		.section	.text.readMsignal,"ax",%progbits
+ 646              		.section	.text.initFlashRunLog,"ax",%progbits
  647              		.align	1
- 648              		.global	readMsignal
+ 648              		.global	initFlashRunLog
  649              		.syntax unified
  650              		.thumb
  651              		.thumb_func
- 653              	readMsignal:
+ 653              	initFlashRunLog:
  654              	.LVL42:
  655              	.LFB248:
  150:Core/Src/Tools/Sampling.c **** 
- 151:Core/Src/Tools/Sampling.c **** 
- 152:Core/Src/Tools/Sampling.c **** /* システム同定用の処理 */
- 153:Core/Src/Tools/Sampling.c **** 
- 154:Core/Src/Tools/Sampling.c **** 
- 155:Core/Src/Tools/Sampling.c **** //MATLABで出力したものを持ってくる
- 156:Core/Src/Tools/Sampling.c **** // static float msignal_translate[MSIG_NUM]={0};//{-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-
- 157:Core/Src/Tools/Sampling.c **** // static float msignal_rotate[MSIG_NUM]={0};//{-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-
- 158:Core/Src/Tools/Sampling.c **** static _Bool identify_mode;
- 159:Core/Src/Tools/Sampling.c **** static float *msignal; // 割込みとフロントエンドのつなぎ役
- 160:Core/Src/Tools/Sampling.c **** float readMsignal(int n){
- 656              		.loc 1 160 25 is_stmt 1 view -0
+ 151:Core/Src/Tools/Sampling.c **** void initFlashRunLog(logger *lg, _Bool flag, float data_num){
+ 656              		.loc 1 151 61 is_stmt 1 view -0
  657              		.cfi_startproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 16
-
-
  658              		@ args = 0, pretend = 0, frame = 0
  659              		@ frame_needed = 0, uses_anonymous_args = 0
  660              		@ link register save eliminated.
- 161:Core/Src/Tools/Sampling.c **** 	return msignal[n];
- 661              		.loc 1 161 2 view .LVU155
- 662              		.loc 1 161 16 is_stmt 0 view .LVU156
- 663 0000 034B     		ldr	r3, .L52
- 664 0002 1B68     		ldr	r3, [r3]
- 665 0004 03EB8003 		add	r3, r3, r0, lsl #2
- 162:Core/Src/Tools/Sampling.c **** }
- 666              		.loc 1 162 1 view .LVU157
- 667 0008 93ED000A 		vldr.32	s0, [r3]
- 668 000c 7047     		bx	lr
- 669              	.L53:
- 670 000e 00BF     		.align	2
- 671              	.L52:
- 672 0010 00000000 		.word	.LANCHOR1
- 673              		.cfi_endproc
- 674              	.LFE248:
- 676              		.section	.text.setMsignalPtr,"ax",%progbits
- 677              		.align	1
- 678              		.global	setMsignalPtr
- 679              		.syntax unified
- 680              		.thumb
- 681              		.thumb_func
- 683              	setMsignalPtr:
- 684              	.LVL43:
- 685              	.LFB249:
- 163:Core/Src/Tools/Sampling.c **** void setMsignalPtr(float *msig){ // msignalのアドレスを渡す
- 686              		.loc 1 163 32 is_stmt 1 view -0
- 687              		.cfi_startproc
- 688              		@ args = 0, pretend = 0, frame = 0
- 689              		@ frame_needed = 0, uses_anonymous_args = 0
- 690              		@ link register save eliminated.
- 164:Core/Src/Tools/Sampling.c **** 	msignal = msig;
- 691              		.loc 1 164 2 view .LVU159
- 692              		.loc 1 164 10 is_stmt 0 view .LVU160
- 693 0000 014B     		ldr	r3, .L55
- 694 0002 1860     		str	r0, [r3]
- 165:Core/Src/Tools/Sampling.c **** }
- 695              		.loc 1 165 1 view .LVU161
- 696 0004 7047     		bx	lr
- 697              	.L56:
- 698 0006 00BF     		.align	2
- 699              	.L55:
- 700 0008 00000000 		.word	.LANCHOR1
- 701              		.cfi_endproc
- 702              	.LFE249:
- 704              		.section	.text.initIdentifyMode,"ax",%progbits
- 705              		.align	1
- 706              		.global	initIdentifyMode
- 707              		.syntax unified
- 708              		.thumb
- 709              		.thumb_func
- 711              	initIdentifyMode:
- 712              	.LVL44:
- 713              	.LFB250:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 17
+ 152:Core/Src/Tools/Sampling.c **** 	lg->count = 0;
+ 661              		.loc 1 152 2 view .LVU155
+ 662              		.loc 1 152 12 is_stmt 0 view .LVU156
+ 663 0000 0023     		movs	r3, #0
+ 664 0002 8360     		str	r3, [r0, #8]
+ 153:Core/Src/Tools/Sampling.c **** 	lg->flag = flag;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 16
 
 
- 166:Core/Src/Tools/Sampling.c **** 
- 167:Core/Src/Tools/Sampling.c **** void initIdentifyMode(_Bool mode){
- 714              		.loc 1 167 34 is_stmt 1 view -0
- 715              		.cfi_startproc
- 716              		@ args = 0, pretend = 0, frame = 0
- 717              		@ frame_needed = 0, uses_anonymous_args = 0
- 718              		@ link register save eliminated.
- 168:Core/Src/Tools/Sampling.c **** 	identify_mode = mode;
- 719              		.loc 1 168 2 view .LVU163
- 720              		.loc 1 168 16 is_stmt 0 view .LVU164
- 721 0000 014B     		ldr	r3, .L58
- 722 0002 1870     		strb	r0, [r3]
- 169:Core/Src/Tools/Sampling.c **** }
- 723              		.loc 1 169 1 view .LVU165
- 724 0004 7047     		bx	lr
- 725              	.L59:
- 726 0006 00BF     		.align	2
- 727              	.L58:
- 728 0008 00000000 		.word	.LANCHOR2
- 729              		.cfi_endproc
- 730              	.LFE250:
- 732              		.section	.text.getIdentifyMode,"ax",%progbits
- 733              		.align	1
- 734              		.global	getIdentifyMode
- 735              		.syntax unified
- 736              		.thumb
- 737              		.thumb_func
- 739              	getIdentifyMode:
- 740              	.LFB251:
- 170:Core/Src/Tools/Sampling.c **** _Bool getIdentifyMode(){
- 741              		.loc 1 170 24 is_stmt 1 view -0
- 742              		.cfi_startproc
- 743              		@ args = 0, pretend = 0, frame = 0
- 744              		@ frame_needed = 0, uses_anonymous_args = 0
- 745              		@ link register save eliminated.
- 171:Core/Src/Tools/Sampling.c **** 	return identify_mode;
- 746              		.loc 1 171 2 view .LVU167
- 172:Core/Src/Tools/Sampling.c **** }
- 747              		.loc 1 172 1 is_stmt 0 view .LVU168
- 748 0000 014B     		ldr	r3, .L61
- 749 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
- 750 0004 7047     		bx	lr
- 751              	.L62:
- 752 0006 00BF     		.align	2
- 753              	.L61:
- 754 0008 00000000 		.word	.LANCHOR2
- 755              		.cfi_endproc
- 756              	.LFE251:
- 758              		.section	.text.initMsignal,"ax",%progbits
- 759              		.align	1
- 760              		.global	initMsignal
- 761              		.syntax unified
- 762              		.thumb
- 763              		.thumb_func
- 765              	initMsignal:
- 766              	.LVL45:
- 767              	.LFB252:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 18
+ 665              		.loc 1 153 2 is_stmt 1 view .LVU157
+ 666              		.loc 1 153 11 is_stmt 0 view .LVU158
+ 667 0004 0170     		strb	r1, [r0]
+ 154:Core/Src/Tools/Sampling.c **** 	lg->data_num = data_num;
+ 668              		.loc 1 154 2 is_stmt 1 view .LVU159
+ 669              		.loc 1 154 15 is_stmt 0 view .LVU160
+ 670 0006 BDEEC00A 		vcvt.s32.f32	s0, s0
+ 671              	.LVL43:
+ 672              		.loc 1 154 15 view .LVU161
+ 673 000a 80ED010A 		vstr.32	s0, [r0, #4]	@ int
+ 155:Core/Src/Tools/Sampling.c **** }
+ 674              		.loc 1 155 1 view .LVU162
+ 675 000e 7047     		bx	lr
+ 676              		.cfi_endproc
+ 677              	.LFE248:
+ 679              		.section	.text.flashFloatLog,"ax",%progbits
+ 680              		.align	1
+ 681              		.global	flashFloatLog
+ 682              		.syntax unified
+ 683              		.thumb
+ 684              		.thumb_func
+ 686              	flashFloatLog:
+ 687              	.LVL44:
+ 688              	.LFB249:
+ 156:Core/Src/Tools/Sampling.c **** // フラッシュに書き込む関数
+ 157:Core/Src/Tools/Sampling.c **** inline _Bool flashFloatLog(logger *lg, float left_v, float right_v, float ang_v){
+ 689              		.loc 1 157 81 is_stmt 1 view -0
+ 690              		.cfi_startproc
+ 691              		@ args = 0, pretend = 0, frame = 0
+ 692              		@ frame_needed = 0, uses_anonymous_args = 0
+ 693              		.loc 1 157 81 is_stmt 0 view .LVU164
+ 694 0000 70B5     		push	{r4, r5, r6, lr}
+ 695              	.LCFI9:
+ 696              		.cfi_def_cfa_offset 16
+ 697              		.cfi_offset 4, -16
+ 698              		.cfi_offset 5, -12
+ 699              		.cfi_offset 6, -8
+ 700              		.cfi_offset 14, -4
+ 701 0002 2DED028B 		vpush.64	{d8}
+ 702              	.LCFI10:
+ 703              		.cfi_def_cfa_offset 24
+ 704              		.cfi_offset 80, -24
+ 705              		.cfi_offset 81, -20
+ 158:Core/Src/Tools/Sampling.c **** 	// 割込み内
+ 159:Core/Src/Tools/Sampling.c **** 	uint32_t flash_start_address = start_address_sector6;
+ 706              		.loc 1 159 2 is_stmt 1 view .LVU165
+ 707              		.loc 1 159 11 is_stmt 0 view .LVU166
+ 708 0006 224B     		ldr	r3, .L60
+ 709 0008 1D68     		ldr	r5, [r3]
+ 710              	.LVL45:
+ 160:Core/Src/Tools/Sampling.c **** 	int i = lg->count;
+ 711              		.loc 1 160 2 is_stmt 1 view .LVU167
+ 712              		.loc 1 160 6 is_stmt 0 view .LVU168
+ 713 000a 8668     		ldr	r6, [r0, #8]
+ 714              	.LVL46:
+ 161:Core/Src/Tools/Sampling.c **** 	static int call_counter=0;
+ 715              		.loc 1 161 2 is_stmt 1 view .LVU169
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 17
 
 
- 173:Core/Src/Tools/Sampling.c **** 
- 174:Core/Src/Tools/Sampling.c **** void initMsignal(float *msig_trans, float translate_voltage, float *msig_rot, float rotate_voltage)
- 768              		.loc 1 174 100 is_stmt 1 view -0
- 769              		.cfi_startproc
- 770              		@ args = 0, pretend = 0, frame = 0
- 771              		@ frame_needed = 0, uses_anonymous_args = 0
- 772              		@ link register save eliminated.
- 175:Core/Src/Tools/Sampling.c **** 	for(int i=0; i < MSIG_NUM; i++ ){
- 773              		.loc 1 175 2 view .LVU170
- 774              	.LBB10:
- 775              		.loc 1 175 6 view .LVU171
- 776              		.loc 1 175 10 is_stmt 0 view .LVU172
- 777 0000 0023     		movs	r3, #0
- 778              	.LVL46:
- 779              	.L64:
- 780              		.loc 1 175 15 is_stmt 1 discriminator 1 view .LVU173
- 781              		.loc 1 175 2 is_stmt 0 discriminator 1 view .LVU174
- 782 0002 002B     		cmp	r3, #0
- 783 0004 00DD     		ble	.L65
- 784              	.LBE10:
- 176:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
- 177:Core/Src/Tools/Sampling.c **** 		msig_trans[i] *= translate_voltage;
- 178:Core/Src/Tools/Sampling.c **** 		msig_rot[i] *= rotate_voltage; 
- 179:Core/Src/Tools/Sampling.c **** 	}
- 180:Core/Src/Tools/Sampling.c **** }
- 785              		.loc 1 180 1 view .LVU175
- 786 0006 7047     		bx	lr
- 787              	.L65:
- 788              	.LBB11:
- 177:Core/Src/Tools/Sampling.c **** 		msig_rot[i] *= rotate_voltage; 
- 789              		.loc 1 177 3 is_stmt 1 discriminator 3 view .LVU176
- 177:Core/Src/Tools/Sampling.c **** 		msig_rot[i] *= rotate_voltage; 
- 790              		.loc 1 177 17 is_stmt 0 discriminator 3 view .LVU177
- 791 0008 00EB8302 		add	r2, r0, r3, lsl #2
- 792 000c D2ED007A 		vldr.32	s15, [r2]
- 793 0010 67EE807A 		vmul.f32	s15, s15, s0
- 794 0014 C2ED007A 		vstr.32	s15, [r2]
- 178:Core/Src/Tools/Sampling.c **** 	}
- 795              		.loc 1 178 3 is_stmt 1 discriminator 3 view .LVU178
- 178:Core/Src/Tools/Sampling.c **** 	}
- 796              		.loc 1 178 15 is_stmt 0 discriminator 3 view .LVU179
- 797 0018 01EB8302 		add	r2, r1, r3, lsl #2
- 798 001c D2ED007A 		vldr.32	s15, [r2]
- 799 0020 67EEA07A 		vmul.f32	s15, s15, s1
- 800 0024 C2ED007A 		vstr.32	s15, [r2]
- 175:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
- 801              		.loc 1 175 29 is_stmt 1 discriminator 3 view .LVU180
- 175:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
- 802              		.loc 1 175 30 is_stmt 0 discriminator 3 view .LVU181
- 803 0028 0133     		adds	r3, r3, #1
- 804              	.LVL47:
- 175:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
- 805              		.loc 1 175 30 discriminator 3 view .LVU182
- 806 002a EAE7     		b	.L64
- 807              	.LBE11:
- 808              		.cfi_endproc
- 809              	.LFE252:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 19
+ 162:Core/Src/Tools/Sampling.c **** 	call_counter++;
+ 716              		.loc 1 162 2 view .LVU170
+ 717              		.loc 1 162 14 is_stmt 0 view .LVU171
+ 718 000c 214A     		ldr	r2, .L60+4
+ 719 000e 1368     		ldr	r3, [r2]
+ 720 0010 0133     		adds	r3, r3, #1
+ 721 0012 1360     		str	r3, [r2]
+ 163:Core/Src/Tools/Sampling.c **** 	if(call_counter%4 != 1){
+ 722              		.loc 1 163 2 is_stmt 1 view .LVU172
+ 723              		.loc 1 163 17 is_stmt 0 view .LVU173
+ 724 0014 5A42     		rsbs	r2, r3, #0
+ 725 0016 03F00303 		and	r3, r3, #3
+ 726 001a 02F00302 		and	r2, r2, #3
+ 727 001e 58BF     		it	pl
+ 728 0020 5342     		rsbpl	r3, r2, #0
+ 729              		.loc 1 163 4 view .LVU174
+ 730 0022 012B     		cmp	r3, #1
+ 731 0024 03D0     		beq	.L58
+ 164:Core/Src/Tools/Sampling.c **** 		return true; // 次回の呼び出しを待つ
+ 732              		.loc 1 164 10 view .LVU175
+ 733 0026 0120     		movs	r0, #1
+ 734              	.LVL47:
+ 735              	.L53:
+ 165:Core/Src/Tools/Sampling.c **** 	}
+ 166:Core/Src/Tools/Sampling.c **** 	else {
+ 167:Core/Src/Tools/Sampling.c **** 		// 1. 現在のアドレスに書き込む
+ 168:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + (i*0x04), left_v);
+ 169:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+1)*0x04), right_v);
+ 170:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+2)*0x04), ang_v);
+ 171:Core/Src/Tools/Sampling.c **** 		// 2. アドレスが最終セクターのエンドであれば、フラグを下げる
+ 172:Core/Src/Tools/Sampling.c **** 		if((flash_start_address+((i+2)*0x04)) == end_address_sector10){
+ 173:Core/Src/Tools/Sampling.c **** 			setLoggerFlag(lg, false);
+ 174:Core/Src/Tools/Sampling.c **** 			return false;
+ 175:Core/Src/Tools/Sampling.c **** 		}
+ 176:Core/Src/Tools/Sampling.c **** 		// 3. 最後のセクターでなければ、
+ 177:Core/Src/Tools/Sampling.c **** 		else {
+ 178:Core/Src/Tools/Sampling.c **** 			if(i+6 < lg->data_num){ // 最後の書き込みデータが、データ上限を越えていな
+ 179:Core/Src/Tools/Sampling.c **** 				lg->count += 3;
+ 180:Core/Src/Tools/Sampling.c **** 				return true;
+ 181:Core/Src/Tools/Sampling.c **** 			}
+ 182:Core/Src/Tools/Sampling.c **** 			else{
+ 183:Core/Src/Tools/Sampling.c **** 				setLoggerFlag(lg, false);
+ 184:Core/Src/Tools/Sampling.c **** 				return false;
+ 185:Core/Src/Tools/Sampling.c **** 			}
+ 186:Core/Src/Tools/Sampling.c **** 		}
+ 187:Core/Src/Tools/Sampling.c **** 	}
+ 188:Core/Src/Tools/Sampling.c **** }
+ 736              		.loc 1 188 1 view .LVU176
+ 737 0028 BDEC028B 		vldm	sp!, {d8}
+ 738              	.LCFI11:
+ 739              		.cfi_remember_state
+ 740              		.cfi_restore 80
+ 741              		.cfi_restore 81
+ 742              		.cfi_def_cfa_offset 16
+ 743 002c 70BD     		pop	{r4, r5, r6, pc}
+ 744              	.LVL48:
+ 745              	.L58:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 18
 
 
- 811              		.section	.text.getIdentifyInputCount,"ax",%progbits
- 812              		.align	1
- 813              		.global	getIdentifyInputCount
- 814              		.syntax unified
- 815              		.thumb
- 816              		.thumb_func
- 818              	getIdentifyInputCount:
- 819              	.LVL48:
- 820              	.LFB253:
- 181:Core/Src/Tools/Sampling.c **** void getIdentifyInputCount(int count, float *output_value_box, _Bool v_or_angv){
- 821              		.loc 1 181 80 is_stmt 1 view -0
- 822              		.cfi_startproc
- 823              		@ args = 0, pretend = 0, frame = 0
- 824              		@ frame_needed = 0, uses_anonymous_args = 0
- 825              		@ link register save eliminated.
- 182:Core/Src/Tools/Sampling.c **** 	if(v_or_angv != true){ // 並進
- 826              		.loc 1 182 2 view .LVU184
- 827              		.loc 1 182 4 is_stmt 0 view .LVU185
- 828 0000 42B9     		cbnz	r2, .L67
- 183:Core/Src/Tools/Sampling.c **** 
- 184:Core/Src/Tools/Sampling.c **** 		output_value_box[0] = msignal[count];
- 829              		.loc 1 184 3 is_stmt 1 view .LVU186
- 830              		.loc 1 184 32 is_stmt 0 view .LVU187
- 831 0002 0B4B     		ldr	r3, .L69
- 832 0004 1B68     		ldr	r3, [r3]
- 833 0006 03EB8000 		add	r0, r3, r0, lsl #2
- 834              	.LVL49:
- 835              		.loc 1 184 32 view .LVU188
- 836 000a 0368     		ldr	r3, [r0]	@ float
- 837              		.loc 1 184 23 view .LVU189
- 838 000c 0B60     		str	r3, [r1]	@ float
- 185:Core/Src/Tools/Sampling.c **** 		output_value_box[1] = msignal[count];
- 839              		.loc 1 185 3 is_stmt 1 view .LVU190
- 840              		.loc 1 185 32 is_stmt 0 view .LVU191
- 841 000e 0368     		ldr	r3, [r0]	@ float
- 842              		.loc 1 185 23 view .LVU192
- 843 0010 4B60     		str	r3, [r1, #4]	@ float
- 844 0012 7047     		bx	lr
- 845              	.LVL50:
- 846              	.L67:
- 186:Core/Src/Tools/Sampling.c **** 		// output_value_box[0] = msignal_translate[count];
- 187:Core/Src/Tools/Sampling.c **** 		// output_value_box[1] = msignal_translate[count];
- 188:Core/Src/Tools/Sampling.c **** 
- 189:Core/Src/Tools/Sampling.c **** 	}
- 190:Core/Src/Tools/Sampling.c **** 	else{ //回転
- 191:Core/Src/Tools/Sampling.c **** 		
- 192:Core/Src/Tools/Sampling.c **** 		output_value_box[0] = -1 * msignal[count];
- 847              		.loc 1 192 3 is_stmt 1 view .LVU193
- 848              		.loc 1 192 37 is_stmt 0 view .LVU194
- 849 0014 064B     		ldr	r3, .L69
- 850 0016 1B68     		ldr	r3, [r3]
- 851 0018 03EB8000 		add	r0, r3, r0, lsl #2
- 852              	.LVL51:
- 853              		.loc 1 192 37 view .LVU195
- 854 001c D0ED007A 		vldr.32	s15, [r0]
- 855              		.loc 1 192 28 view .LVU196
- 856 0020 F1EE677A 		vneg.f32	s15, s15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 20
+ 746              	.LCFI12:
+ 747              		.cfi_restore_state
+ 748              		.loc 1 188 1 view .LVU177
+ 749 002e 0446     		mov	r4, r0
+ 750 0030 F0EE608A 		vmov.f32	s17, s1
+ 751 0034 B0EE418A 		vmov.f32	s16, s2
+ 168:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+1)*0x04), right_v);
+ 752              		.loc 1 168 3 is_stmt 1 view .LVU178
+ 753 0038 05EB8600 		add	r0, r5, r6, lsl #2
+ 754              	.LVL49:
+ 168:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+1)*0x04), right_v);
+ 755              		.loc 1 168 3 is_stmt 0 view .LVU179
+ 756 003c FFF7FEFF 		bl	FLASH_Write_Word_F
+ 757              	.LVL50:
+ 169:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+2)*0x04), ang_v);
+ 758              		.loc 1 169 3 is_stmt 1 view .LVU180
+ 169:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+2)*0x04), ang_v);
+ 759              		.loc 1 169 47 is_stmt 0 view .LVU181
+ 760 0040 701C     		adds	r0, r6, #1
+ 169:Core/Src/Tools/Sampling.c **** 		FLASH_Write_Word_F(flash_start_address + ((i+2)*0x04), ang_v);
+ 761              		.loc 1 169 3 view .LVU182
+ 762 0042 B0EE680A 		vmov.f32	s0, s17
+ 763 0046 05EB8000 		add	r0, r5, r0, lsl #2
+ 764 004a FFF7FEFF 		bl	FLASH_Write_Word_F
+ 765              	.LVL51:
+ 170:Core/Src/Tools/Sampling.c **** 		// 2. アドレスが最終セクターのエンドであれば、フラグを下げる
+ 766              		.loc 1 170 3 is_stmt 1 view .LVU183
+ 170:Core/Src/Tools/Sampling.c **** 		// 2. アドレスが最終セクターのエンドであれば、フラグを下げる
+ 767              		.loc 1 170 47 is_stmt 0 view .LVU184
+ 768 004e B31C     		adds	r3, r6, #2
+ 170:Core/Src/Tools/Sampling.c **** 		// 2. アドレスが最終セクターのエンドであれば、フラグを下げる
+ 769              		.loc 1 170 3 view .LVU185
+ 770 0050 05EB8305 		add	r5, r5, r3, lsl #2
+ 771              	.LVL52:
+ 170:Core/Src/Tools/Sampling.c **** 		// 2. アドレスが最終セクターのエンドであれば、フラグを下げる
+ 772              		.loc 1 170 3 view .LVU186
+ 773 0054 B0EE480A 		vmov.f32	s0, s16
+ 774 0058 2846     		mov	r0, r5
+ 775 005a FFF7FEFF 		bl	FLASH_Write_Word_F
+ 776              	.LVL53:
+ 172:Core/Src/Tools/Sampling.c **** 			setLoggerFlag(lg, false);
+ 777              		.loc 1 172 3 is_stmt 1 view .LVU187
+ 172:Core/Src/Tools/Sampling.c **** 			setLoggerFlag(lg, false);
+ 778              		.loc 1 172 41 is_stmt 0 view .LVU188
+ 779 005e 0E4B     		ldr	r3, .L60+8
+ 780 0060 1B68     		ldr	r3, [r3]
+ 172:Core/Src/Tools/Sampling.c **** 			setLoggerFlag(lg, false);
+ 781              		.loc 1 172 5 view .LVU189
+ 782 0062 9D42     		cmp	r5, r3
+ 783 0064 08D0     		beq	.L59
+ 178:Core/Src/Tools/Sampling.c **** 				lg->count += 3;
+ 784              		.loc 1 178 4 is_stmt 1 view .LVU190
+ 178:Core/Src/Tools/Sampling.c **** 				lg->count += 3;
+ 785              		.loc 1 178 8 is_stmt 0 view .LVU191
+ 786 0066 0636     		adds	r6, r6, #6
+ 787              	.LVL54:
+ 178:Core/Src/Tools/Sampling.c **** 				lg->count += 3;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 19
 
 
- 857              		.loc 1 192 23 view .LVU197
- 858 0024 C1ED007A 		vstr.32	s15, [r1]
- 193:Core/Src/Tools/Sampling.c **** 		output_value_box[1] = msignal[count];
- 859              		.loc 1 193 3 is_stmt 1 view .LVU198
- 860              		.loc 1 193 32 is_stmt 0 view .LVU199
- 861 0028 0368     		ldr	r3, [r0]	@ float
- 862              		.loc 1 193 23 view .LVU200
- 863 002a 4B60     		str	r3, [r1, #4]	@ float
- 194:Core/Src/Tools/Sampling.c **** 		// output_value_box[0] = -1 * msignal_rotate[count];
- 195:Core/Src/Tools/Sampling.c **** 		// output_value_box[1] = msignal_rotate[count];
- 196:Core/Src/Tools/Sampling.c **** 
+ 788              		.loc 1 178 15 view .LVU192
+ 789 0068 6368     		ldr	r3, [r4, #4]
+ 178:Core/Src/Tools/Sampling.c **** 				lg->count += 3;
+ 790              		.loc 1 178 6 view .LVU193
+ 791 006a 9E42     		cmp	r6, r3
+ 792 006c 0ADA     		bge	.L55
+ 179:Core/Src/Tools/Sampling.c **** 				return true;
+ 793              		.loc 1 179 5 is_stmt 1 view .LVU194
+ 179:Core/Src/Tools/Sampling.c **** 				return true;
+ 794              		.loc 1 179 15 is_stmt 0 view .LVU195
+ 795 006e A368     		ldr	r3, [r4, #8]
+ 796 0070 0333     		adds	r3, r3, #3
+ 797 0072 A360     		str	r3, [r4, #8]
+ 180:Core/Src/Tools/Sampling.c **** 			}
+ 798              		.loc 1 180 5 is_stmt 1 view .LVU196
+ 180:Core/Src/Tools/Sampling.c **** 			}
+ 799              		.loc 1 180 12 is_stmt 0 view .LVU197
+ 800 0074 0120     		movs	r0, #1
+ 801 0076 D7E7     		b	.L53
+ 802              	.LVL55:
+ 803              	.L59:
+ 173:Core/Src/Tools/Sampling.c **** 			return false;
+ 804              		.loc 1 173 4 is_stmt 1 view .LVU198
+ 805 0078 0021     		movs	r1, #0
+ 806 007a 2046     		mov	r0, r4
+ 807 007c FFF7FEFF 		bl	setLoggerFlag
+ 808              	.LVL56:
+ 174:Core/Src/Tools/Sampling.c **** 		}
+ 809              		.loc 1 174 4 view .LVU199
+ 174:Core/Src/Tools/Sampling.c **** 		}
+ 810              		.loc 1 174 11 is_stmt 0 view .LVU200
+ 811 0080 0020     		movs	r0, #0
+ 812 0082 D1E7     		b	.L53
+ 813              	.LVL57:
+ 814              	.L55:
+ 183:Core/Src/Tools/Sampling.c **** 				return false;
+ 815              		.loc 1 183 5 is_stmt 1 view .LVU201
+ 816 0084 0021     		movs	r1, #0
+ 817 0086 2046     		mov	r0, r4
+ 818 0088 FFF7FEFF 		bl	setLoggerFlag
+ 819              	.LVL58:
+ 184:Core/Src/Tools/Sampling.c **** 			}
+ 820              		.loc 1 184 5 view .LVU202
+ 184:Core/Src/Tools/Sampling.c **** 			}
+ 821              		.loc 1 184 12 is_stmt 0 view .LVU203
+ 822 008c 0020     		movs	r0, #0
+ 823 008e CBE7     		b	.L53
+ 824              	.L61:
+ 825              		.align	2
+ 826              	.L60:
+ 827 0090 00000000 		.word	start_address_sector6
+ 828 0094 00000000 		.word	.LANCHOR1
+ 829 0098 00000000 		.word	end_address_sector10
+ 830              		.cfi_endproc
+ 831              	.LFE249:
+ 833              		.section	.rodata.printFlashRunLog.str1.4,"aMS",%progbits,1
+ 834              		.align	2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 20
+
+
+ 835              	.LC7:
+ 836 0000 25662C20 		.ascii	"%f, %f, %f\015\012\000"
+ 836      25662C20 
+ 836      25660D0A 
+ 836      00
+ 837              		.section	.text.printFlashRunLog,"ax",%progbits
+ 838              		.align	1
+ 839              		.global	printFlashRunLog
+ 840              		.syntax unified
+ 841              		.thumb
+ 842              		.thumb_func
+ 844              	printFlashRunLog:
+ 845              	.LVL59:
+ 846              	.LFB250:
+ 189:Core/Src/Tools/Sampling.c **** void printFlashRunLog(logger *lg){
+ 847              		.loc 1 189 34 is_stmt 1 view -0
+ 848              		.cfi_startproc
+ 849              		@ args = 0, pretend = 0, frame = 16
+ 850              		@ frame_needed = 0, uses_anonymous_args = 0
+ 851              		.loc 1 189 34 is_stmt 0 view .LVU205
+ 852 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 853              	.LCFI13:
+ 854              		.cfi_def_cfa_offset 24
+ 855              		.cfi_offset 4, -24
+ 856              		.cfi_offset 5, -20
+ 857              		.cfi_offset 6, -16
+ 858              		.cfi_offset 7, -12
+ 859              		.cfi_offset 8, -8
+ 860              		.cfi_offset 14, -4
+ 861 0004 88B0     		sub	sp, sp, #32
+ 862              	.LCFI14:
+ 863              		.cfi_def_cfa_offset 56
+ 864 0006 8046     		mov	r8, r0
+ 190:Core/Src/Tools/Sampling.c **** 	uint32_t start_address = start_address_sector6;
+ 865              		.loc 1 190 2 is_stmt 1 view .LVU206
+ 866              		.loc 1 190 11 is_stmt 0 view .LVU207
+ 867 0008 1A4B     		ldr	r3, .L66
+ 868 000a 1D68     		ldr	r5, [r3]
+ 869              	.LVL60:
+ 191:Core/Src/Tools/Sampling.c **** 	float left_v=0, right_v=0, ang_v=0;
+ 870              		.loc 1 191 2 is_stmt 1 view .LVU208
+ 871              		.loc 1 191 8 is_stmt 0 view .LVU209
+ 872 000c 0023     		movs	r3, #0
+ 873 000e 0793     		str	r3, [sp, #28]	@ float
+ 874              		.loc 1 191 18 view .LVU210
+ 875 0010 0693     		str	r3, [sp, #24]	@ float
+ 876              		.loc 1 191 29 view .LVU211
+ 877 0012 0593     		str	r3, [sp, #20]	@ float
+ 192:Core/Src/Tools/Sampling.c **** 	for(int i=0; i < (lg->data_num-3); i+=3){
+ 878              		.loc 1 192 2 is_stmt 1 view .LVU212
+ 879              	.LBB10:
+ 880              		.loc 1 192 6 view .LVU213
+ 881              	.LVL61:
+ 882              		.loc 1 192 10 is_stmt 0 view .LVU214
+ 883 0014 0024     		movs	r4, #0
+ 884              		.loc 1 192 2 view .LVU215
+ 885 0016 25E0     		b	.L63
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 21
+
+
+ 886              	.LVL62:
+ 887              	.L64:
+ 193:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 888              		.loc 1 193 3 is_stmt 1 discriminator 3 view .LVU216
+ 889 0018 07A9     		add	r1, sp, #28
+ 890 001a 05EB8400 		add	r0, r5, r4, lsl #2
+ 891 001e FFF7FEFF 		bl	FLASH_Read_Word_F
+ 892              	.LVL63:
+ 194:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+1)*0x04, &right_v);
+ 893              		.loc 1 194 3 discriminator 3 view .LVU217
+ 894              		.loc 1 194 37 is_stmt 0 discriminator 3 view .LVU218
+ 895 0022 601C     		adds	r0, r4, #1
+ 896              		.loc 1 194 3 discriminator 3 view .LVU219
+ 897 0024 06A9     		add	r1, sp, #24
+ 898 0026 05EB8000 		add	r0, r5, r0, lsl #2
+ 899 002a FFF7FEFF 		bl	FLASH_Read_Word_F
+ 900              	.LVL64:
+ 195:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+2)*0x04, &ang_v);
+ 901              		.loc 1 195 3 is_stmt 1 discriminator 3 view .LVU220
+ 902              		.loc 1 195 37 is_stmt 0 discriminator 3 view .LVU221
+ 903 002e A01C     		adds	r0, r4, #2
+ 904              		.loc 1 195 3 discriminator 3 view .LVU222
+ 905 0030 05A9     		add	r1, sp, #20
+ 906 0032 05EB8000 		add	r0, r5, r0, lsl #2
+ 907 0036 FFF7FEFF 		bl	FLASH_Read_Word_F
+ 908              	.LVL65:
+ 196:Core/Src/Tools/Sampling.c **** 		printf("%f, %f, %f\r\n", left_v, right_v, ang_v);
+ 909              		.loc 1 196 3 is_stmt 1 discriminator 3 view .LVU223
+ 910 003a 0798     		ldr	r0, [sp, #28]	@ float
+ 911 003c FFF7FEFF 		bl	__aeabi_f2d
+ 912              	.LVL66:
+ 913 0040 0646     		mov	r6, r0
+ 914 0042 0F46     		mov	r7, r1
+ 915 0044 0598     		ldr	r0, [sp, #20]	@ float
+ 916 0046 FFF7FEFF 		bl	__aeabi_f2d
+ 917              	.LVL67:
+ 918 004a CDE90201 		strd	r0, [sp, #8]
+ 919 004e 0698     		ldr	r0, [sp, #24]	@ float
+ 920 0050 FFF7FEFF 		bl	__aeabi_f2d
+ 921              	.LVL68:
+ 922 0054 CDE90001 		strd	r0, [sp]
+ 923 0058 3246     		mov	r2, r6
+ 924 005a 3B46     		mov	r3, r7
+ 925 005c 0648     		ldr	r0, .L66+4
+ 926 005e FFF7FEFF 		bl	printf
+ 927              	.LVL69:
+ 192:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 928              		.loc 1 192 37 discriminator 3 view .LVU224
+ 192:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 929              		.loc 1 192 38 is_stmt 0 discriminator 3 view .LVU225
+ 930 0062 0334     		adds	r4, r4, #3
+ 931              	.LVL70:
+ 932              	.L63:
+ 192:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 933              		.loc 1 192 15 is_stmt 1 discriminator 1 view .LVU226
+ 192:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 934              		.loc 1 192 22 is_stmt 0 discriminator 1 view .LVU227
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 22
+
+
+ 935 0064 D8F80430 		ldr	r3, [r8, #4]
+ 192:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 936              		.loc 1 192 32 discriminator 1 view .LVU228
+ 937 0068 033B     		subs	r3, r3, #3
+ 192:Core/Src/Tools/Sampling.c **** 		FLASH_Read_Word_F(start_address+(i+0)*0x04, &left_v);
+ 938              		.loc 1 192 2 discriminator 1 view .LVU229
+ 939 006a A342     		cmp	r3, r4
+ 940 006c D4DC     		bgt	.L64
+ 941              	.LBE10:
  197:Core/Src/Tools/Sampling.c **** 	}
- 198:Core/Src/Tools/Sampling.c **** }...
- 864              		.loc 1 198 1 view .LVU201
- 865 002c 7047     		bx	lr
- 866              	.L70:
- 867 002e 00BF     		.align	2
- 868              	.L69:
- 869 0030 00000000 		.word	.LANCHOR1
- 870              		.cfi_endproc
- 871              	.LFE253:
- 873              		.section	.bss.identify_mode,"aw",%nobits
- 874              		.set	.LANCHOR2,. + 0
- 877              	identify_mode:
- 878 0000 00       		.space	1
- 879              		.section	.bss.msignal,"aw",%nobits
- 880              		.align	2
- 881              		.set	.LANCHOR1,. + 0
- 884              	msignal:
- 885 0000 00000000 		.space	4
- 886              		.section	.bss.ps,"aw",%nobits
- 887              		.align	2
- 888              		.set	.LANCHOR0,. + 0
- 891              	ps:
- 892 0000 00000000 		.space	3208
- 892      00000000 
- 892      00000000 
- 892      00000000 
- 892      00000000 
- 893              		.text
- 894              	.Letext0:
- 895              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
- 896              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 897              		.file 4 "Core/Inc/Tools/Sampling.h"
- 898              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 899              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 900              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 901              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 902              		.file 9 "Core/Inc/HardWare/IR_Emitter.h"
- 903              		.file 10 "Core/Inc/Main/MicroMouse.h"
- 904              		.file 11 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
- 905              		.file 12 "Core/Inc/HardWare/mouse_ADC.h"
- 906              		.file 13 "<built-in>"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 21
+ 198:Core/Src/Tools/Sampling.c **** }
+ 942              		.loc 1 198 1 view .LVU230
+ 943 006e 08B0     		add	sp, sp, #32
+ 944              	.LCFI15:
+ 945              		.cfi_def_cfa_offset 24
+ 946              		@ sp needed
+ 947 0070 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 948              	.LVL71:
+ 949              	.L67:
+ 950              		.loc 1 198 1 view .LVU231
+ 951              		.align	2
+ 952              	.L66:
+ 953 0074 00000000 		.word	start_address_sector6
+ 954 0078 00000000 		.word	.LC7
+ 955              		.cfi_endproc
+ 956              	.LFE250:
+ 958              		.section	.text.readMsignal,"ax",%progbits
+ 959              		.align	1
+ 960              		.global	readMsignal
+ 961              		.syntax unified
+ 962              		.thumb
+ 963              		.thumb_func
+ 965              	readMsignal:
+ 966              	.LVL72:
+ 967              	.LFB251:
+ 199:Core/Src/Tools/Sampling.c **** /* システム同定用の処理 */
+ 200:Core/Src/Tools/Sampling.c **** 
+ 201:Core/Src/Tools/Sampling.c **** 
+ 202:Core/Src/Tools/Sampling.c **** //MATLABで出力したものを持ってくる
+ 203:Core/Src/Tools/Sampling.c **** // static float msignal_translate[MSIG_NUM]={0};//{-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-
+ 204:Core/Src/Tools/Sampling.c **** // static float msignal_rotate[MSIG_NUM]={0};//{-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,-
+ 205:Core/Src/Tools/Sampling.c **** static _Bool identify_mode;
+ 206:Core/Src/Tools/Sampling.c **** static float *msignal; // 割込みとフロントエンドのつなぎ役
+ 207:Core/Src/Tools/Sampling.c **** float readMsignal(int n){
+ 968              		.loc 1 207 25 is_stmt 1 view -0
+ 969              		.cfi_startproc
+ 970              		@ args = 0, pretend = 0, frame = 0
+ 971              		@ frame_needed = 0, uses_anonymous_args = 0
+ 972              		@ link register save eliminated.
+ 208:Core/Src/Tools/Sampling.c **** 	return msignal[n];
+ 973              		.loc 1 208 2 view .LVU233
+ 974              		.loc 1 208 16 is_stmt 0 view .LVU234
+ 975 0000 034B     		ldr	r3, .L69
+ 976 0002 1B68     		ldr	r3, [r3]
+ 977 0004 03EB8003 		add	r3, r3, r0, lsl #2
+ 209:Core/Src/Tools/Sampling.c **** }
+ 978              		.loc 1 209 1 view .LVU235
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 23
+
+
+ 979 0008 93ED000A 		vldr.32	s0, [r3]
+ 980 000c 7047     		bx	lr
+ 981              	.L70:
+ 982 000e 00BF     		.align	2
+ 983              	.L69:
+ 984 0010 00000000 		.word	.LANCHOR2
+ 985              		.cfi_endproc
+ 986              	.LFE251:
+ 988              		.section	.text.setMsignalPtr,"ax",%progbits
+ 989              		.align	1
+ 990              		.global	setMsignalPtr
+ 991              		.syntax unified
+ 992              		.thumb
+ 993              		.thumb_func
+ 995              	setMsignalPtr:
+ 996              	.LVL73:
+ 997              	.LFB252:
+ 210:Core/Src/Tools/Sampling.c **** void setMsignalPtr(float *msig){ // msignalのアドレスを渡す
+ 998              		.loc 1 210 32 is_stmt 1 view -0
+ 999              		.cfi_startproc
+ 1000              		@ args = 0, pretend = 0, frame = 0
+ 1001              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1002              		@ link register save eliminated.
+ 211:Core/Src/Tools/Sampling.c **** 	msignal = msig;
+ 1003              		.loc 1 211 2 view .LVU237
+ 1004              		.loc 1 211 10 is_stmt 0 view .LVU238
+ 1005 0000 014B     		ldr	r3, .L72
+ 1006 0002 1860     		str	r0, [r3]
+ 212:Core/Src/Tools/Sampling.c **** }
+ 1007              		.loc 1 212 1 view .LVU239
+ 1008 0004 7047     		bx	lr
+ 1009              	.L73:
+ 1010 0006 00BF     		.align	2
+ 1011              	.L72:
+ 1012 0008 00000000 		.word	.LANCHOR2
+ 1013              		.cfi_endproc
+ 1014              	.LFE252:
+ 1016              		.section	.text.initIdentifyMode,"ax",%progbits
+ 1017              		.align	1
+ 1018              		.global	initIdentifyMode
+ 1019              		.syntax unified
+ 1020              		.thumb
+ 1021              		.thumb_func
+ 1023              	initIdentifyMode:
+ 1024              	.LVL74:
+ 1025              	.LFB253:
+ 213:Core/Src/Tools/Sampling.c **** 
+ 214:Core/Src/Tools/Sampling.c **** void initIdentifyMode(_Bool mode){
+ 1026              		.loc 1 214 34 is_stmt 1 view -0
+ 1027              		.cfi_startproc
+ 1028              		@ args = 0, pretend = 0, frame = 0
+ 1029              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1030              		@ link register save eliminated.
+ 215:Core/Src/Tools/Sampling.c **** 	identify_mode = mode;
+ 1031              		.loc 1 215 2 view .LVU241
+ 1032              		.loc 1 215 16 is_stmt 0 view .LVU242
+ 1033 0000 014B     		ldr	r3, .L75
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 24
+
+
+ 1034 0002 1870     		strb	r0, [r3]
+ 216:Core/Src/Tools/Sampling.c **** }
+ 1035              		.loc 1 216 1 view .LVU243
+ 1036 0004 7047     		bx	lr
+ 1037              	.L76:
+ 1038 0006 00BF     		.align	2
+ 1039              	.L75:
+ 1040 0008 00000000 		.word	.LANCHOR3
+ 1041              		.cfi_endproc
+ 1042              	.LFE253:
+ 1044              		.section	.text.getIdentifyMode,"ax",%progbits
+ 1045              		.align	1
+ 1046              		.global	getIdentifyMode
+ 1047              		.syntax unified
+ 1048              		.thumb
+ 1049              		.thumb_func
+ 1051              	getIdentifyMode:
+ 1052              	.LFB254:
+ 217:Core/Src/Tools/Sampling.c **** _Bool getIdentifyMode(){
+ 1053              		.loc 1 217 24 is_stmt 1 view -0
+ 1054              		.cfi_startproc
+ 1055              		@ args = 0, pretend = 0, frame = 0
+ 1056              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1057              		@ link register save eliminated.
+ 218:Core/Src/Tools/Sampling.c **** 	return identify_mode;
+ 1058              		.loc 1 218 2 view .LVU245
+ 219:Core/Src/Tools/Sampling.c **** }
+ 1059              		.loc 1 219 1 is_stmt 0 view .LVU246
+ 1060 0000 014B     		ldr	r3, .L78
+ 1061 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1062 0004 7047     		bx	lr
+ 1063              	.L79:
+ 1064 0006 00BF     		.align	2
+ 1065              	.L78:
+ 1066 0008 00000000 		.word	.LANCHOR3
+ 1067              		.cfi_endproc
+ 1068              	.LFE254:
+ 1070              		.section	.text.initMsignal,"ax",%progbits
+ 1071              		.align	1
+ 1072              		.global	initMsignal
+ 1073              		.syntax unified
+ 1074              		.thumb
+ 1075              		.thumb_func
+ 1077              	initMsignal:
+ 1078              	.LVL75:
+ 1079              	.LFB255:
+ 220:Core/Src/Tools/Sampling.c **** 
+ 221:Core/Src/Tools/Sampling.c **** void initMsignal(float *msig_trans, float translate_voltage, float *msig_rot, float rotate_voltage)
+ 1080              		.loc 1 221 100 is_stmt 1 view -0
+ 1081              		.cfi_startproc
+ 1082              		@ args = 0, pretend = 0, frame = 0
+ 1083              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1084              		@ link register save eliminated.
+ 222:Core/Src/Tools/Sampling.c **** 	for(int i=0; i < MSIG_NUM; i++ ){
+ 1085              		.loc 1 222 2 view .LVU248
+ 1086              	.LBB11:
+ 1087              		.loc 1 222 6 view .LVU249
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 25
+
+
+ 1088              		.loc 1 222 10 is_stmt 0 view .LVU250
+ 1089 0000 0023     		movs	r3, #0
+ 1090              	.LVL76:
+ 1091              	.L81:
+ 1092              		.loc 1 222 15 is_stmt 1 discriminator 1 view .LVU251
+ 1093              		.loc 1 222 2 is_stmt 0 discriminator 1 view .LVU252
+ 1094 0002 002B     		cmp	r3, #0
+ 1095 0004 00DD     		ble	.L82
+ 1096              	.LBE11:
+ 223:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
+ 224:Core/Src/Tools/Sampling.c **** 		msig_trans[i] *= translate_voltage;
+ 225:Core/Src/Tools/Sampling.c **** 		msig_rot[i] *= rotate_voltage; 
+ 226:Core/Src/Tools/Sampling.c **** 	}
+ 227:Core/Src/Tools/Sampling.c **** }
+ 1097              		.loc 1 227 1 view .LVU253
+ 1098 0006 7047     		bx	lr
+ 1099              	.L82:
+ 1100              	.LBB12:
+ 224:Core/Src/Tools/Sampling.c **** 		msig_rot[i] *= rotate_voltage; 
+ 1101              		.loc 1 224 3 is_stmt 1 discriminator 3 view .LVU254
+ 224:Core/Src/Tools/Sampling.c **** 		msig_rot[i] *= rotate_voltage; 
+ 1102              		.loc 1 224 17 is_stmt 0 discriminator 3 view .LVU255
+ 1103 0008 00EB8302 		add	r2, r0, r3, lsl #2
+ 1104 000c D2ED007A 		vldr.32	s15, [r2]
+ 1105 0010 67EE807A 		vmul.f32	s15, s15, s0
+ 1106 0014 C2ED007A 		vstr.32	s15, [r2]
+ 225:Core/Src/Tools/Sampling.c **** 	}
+ 1107              		.loc 1 225 3 is_stmt 1 discriminator 3 view .LVU256
+ 225:Core/Src/Tools/Sampling.c **** 	}
+ 1108              		.loc 1 225 15 is_stmt 0 discriminator 3 view .LVU257
+ 1109 0018 01EB8302 		add	r2, r1, r3, lsl #2
+ 1110 001c D2ED007A 		vldr.32	s15, [r2]
+ 1111 0020 67EEA07A 		vmul.f32	s15, s15, s1
+ 1112 0024 C2ED007A 		vstr.32	s15, [r2]
+ 222:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
+ 1113              		.loc 1 222 29 is_stmt 1 discriminator 3 view .LVU258
+ 222:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
+ 1114              		.loc 1 222 30 is_stmt 0 discriminator 3 view .LVU259
+ 1115 0028 0133     		adds	r3, r3, #1
+ 1116              	.LVL77:
+ 222:Core/Src/Tools/Sampling.c **** 		//電圧値に変換
+ 1117              		.loc 1 222 30 discriminator 3 view .LVU260
+ 1118 002a EAE7     		b	.L81
+ 1119              	.LBE12:
+ 1120              		.cfi_endproc
+ 1121              	.LFE255:
+ 1123              		.section	.text.getIdentifyInputCount,"ax",%progbits
+ 1124              		.align	1
+ 1125              		.global	getIdentifyInputCount
+ 1126              		.syntax unified
+ 1127              		.thumb
+ 1128              		.thumb_func
+ 1130              	getIdentifyInputCount:
+ 1131              	.LVL78:
+ 1132              	.LFB256:
+ 228:Core/Src/Tools/Sampling.c **** void getIdentifyInputCount(int count, float *output_value_box, _Bool v_or_angv){
+ 1133              		.loc 1 228 80 is_stmt 1 view -0
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 26
+
+
+ 1134              		.cfi_startproc
+ 1135              		@ args = 0, pretend = 0, frame = 0
+ 1136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1137              		@ link register save eliminated.
+ 229:Core/Src/Tools/Sampling.c **** 	if(v_or_angv != true){ // 並進
+ 1138              		.loc 1 229 2 view .LVU262
+ 1139              		.loc 1 229 4 is_stmt 0 view .LVU263
+ 1140 0000 42B9     		cbnz	r2, .L84
+ 230:Core/Src/Tools/Sampling.c **** 
+ 231:Core/Src/Tools/Sampling.c **** 		output_value_box[0] = msignal[count];
+ 1141              		.loc 1 231 3 is_stmt 1 view .LVU264
+ 1142              		.loc 1 231 32 is_stmt 0 view .LVU265
+ 1143 0002 0B4B     		ldr	r3, .L86
+ 1144 0004 1B68     		ldr	r3, [r3]
+ 1145 0006 03EB8000 		add	r0, r3, r0, lsl #2
+ 1146              	.LVL79:
+ 1147              		.loc 1 231 32 view .LVU266
+ 1148 000a 0368     		ldr	r3, [r0]	@ float
+ 1149              		.loc 1 231 23 view .LVU267
+ 1150 000c 0B60     		str	r3, [r1]	@ float
+ 232:Core/Src/Tools/Sampling.c **** 		output_value_box[1] = msignal[count];
+ 1151              		.loc 1 232 3 is_stmt 1 view .LVU268
+ 1152              		.loc 1 232 32 is_stmt 0 view .LVU269
+ 1153 000e 0368     		ldr	r3, [r0]	@ float
+ 1154              		.loc 1 232 23 view .LVU270
+ 1155 0010 4B60     		str	r3, [r1, #4]	@ float
+ 1156 0012 7047     		bx	lr
+ 1157              	.LVL80:
+ 1158              	.L84:
+ 233:Core/Src/Tools/Sampling.c **** 		// output_value_box[0] = msignal_translate[count];
+ 234:Core/Src/Tools/Sampling.c **** 		// output_value_box[1] = msignal_translate[count];
+ 235:Core/Src/Tools/Sampling.c **** 
+ 236:Core/Src/Tools/Sampling.c **** 	}
+ 237:Core/Src/Tools/Sampling.c **** 	else{ //回転
+ 238:Core/Src/Tools/Sampling.c **** 		
+ 239:Core/Src/Tools/Sampling.c **** 		output_value_box[0] = -1 * msignal[count];
+ 1159              		.loc 1 239 3 is_stmt 1 view .LVU271
+ 1160              		.loc 1 239 37 is_stmt 0 view .LVU272
+ 1161 0014 064B     		ldr	r3, .L86
+ 1162 0016 1B68     		ldr	r3, [r3]
+ 1163 0018 03EB8000 		add	r0, r3, r0, lsl #2
+ 1164              	.LVL81:
+ 1165              		.loc 1 239 37 view .LVU273
+ 1166 001c D0ED007A 		vldr.32	s15, [r0]
+ 1167              		.loc 1 239 28 view .LVU274
+ 1168 0020 F1EE677A 		vneg.f32	s15, s15
+ 1169              		.loc 1 239 23 view .LVU275
+ 1170 0024 C1ED007A 		vstr.32	s15, [r1]
+ 240:Core/Src/Tools/Sampling.c **** 		output_value_box[1] = msignal[count];
+ 1171              		.loc 1 240 3 is_stmt 1 view .LVU276
+ 1172              		.loc 1 240 32 is_stmt 0 view .LVU277
+ 1173 0028 0368     		ldr	r3, [r0]	@ float
+ 1174              		.loc 1 240 23 view .LVU278
+ 1175 002a 4B60     		str	r3, [r1, #4]	@ float
+ 241:Core/Src/Tools/Sampling.c **** 		// output_value_box[0] = -1 * msignal_rotate[count];
+ 242:Core/Src/Tools/Sampling.c **** 		// output_value_box[1] = msignal_rotate[count];
+ 243:Core/Src/Tools/Sampling.c **** 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 27
+
+
+ 244:Core/Src/Tools/Sampling.c **** 	}
+ 245:Core/Src/Tools/Sampling.c **** }...
+ 1176              		.loc 1 245 1 view .LVU279
+ 1177 002c 7047     		bx	lr
+ 1178              	.L87:
+ 1179 002e 00BF     		.align	2
+ 1180              	.L86:
+ 1181 0030 00000000 		.word	.LANCHOR2
+ 1182              		.cfi_endproc
+ 1183              	.LFE256:
+ 1185              		.section	.bss.call_counter.0,"aw",%nobits
+ 1186              		.align	2
+ 1187              		.set	.LANCHOR1,. + 0
+ 1190              	call_counter.0:
+ 1191 0000 00000000 		.space	4
+ 1192              		.section	.bss.identify_mode,"aw",%nobits
+ 1193              		.set	.LANCHOR3,. + 0
+ 1196              	identify_mode:
+ 1197 0000 00       		.space	1
+ 1198              		.section	.bss.msignal,"aw",%nobits
+ 1199              		.align	2
+ 1200              		.set	.LANCHOR2,. + 0
+ 1203              	msignal:
+ 1204 0000 00000000 		.space	4
+ 1205              		.section	.bss.ps,"aw",%nobits
+ 1206              		.align	2
+ 1207              		.set	.LANCHOR0,. + 0
+ 1210              	ps:
+ 1211 0000 00000000 		.space	3208
+ 1211      00000000 
+ 1211      00000000 
+ 1211      00000000 
+ 1211      00000000 
+ 1212              		.text
+ 1213              	.Letext0:
+ 1214              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 1215              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1216              		.file 4 "Core/Inc/Tools/Sampling.h"
+ 1217              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1218              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1219              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1220              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 1221              		.file 9 "Core/Inc/HardWare/IR_Emitter.h"
+ 1222              		.file 10 "Core/Inc/Main/MicroMouse.h"
+ 1223              		.file 11 "Core/Inc/HardWare/Flash.h"
+ 1224              		.file 12 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 1225              		.file 13 "Core/Inc/HardWare/mouse_ADC.h"
+ 1226              		.file 14 "<built-in>"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 28
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Sampling.c
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:20     .rodata.printAllValue_uint32.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:30     .text.printAllValue_uint32:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:35     .text.printAllValue_uint32:00000000 printAllValue_uint32
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:116    .text.printAllValue_uint32:0000003c $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:124    .text.getPhotoSampleValue_uint32:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:130    .text.getPhotoSampleValue_uint32:00000000 getPhotoSampleValue_uint32
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:219    .text.getPhotoSampleValue_uint32:0000004c $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:224    .text.getPhotoSampleValue_float:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:230    .text.getPhotoSampleValue_float:00000000 getPhotoSampleValue_float
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:320    .text.getPhotoSampleValue_float:00000054 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:325    .rodata.printPhotoSampleValue.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:337    .text.printPhotoSampleValue:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:343    .text.printPhotoSampleValue:00000000 printPhotoSampleValue
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:421    .text.printPhotoSampleValue:00000058 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:431    .text.initFloatLog:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:437    .text.initFloatLog:00000000 initFloatLog
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:466    .text.getFloatLog:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:472    .text.getFloatLog:00000000 getFloatLog
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:526    .rodata.printFloatLog.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:530    .text.printFloatLog:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:536    .text.printFloatLog:00000000 printFloatLog
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:595    .text.printFloatLog:00000028 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:600    .text.getLoggerFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:606    .text.getLoggerFlag:00000000 getLoggerFlag
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:624    .text.setLoggerFlag:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:630    .text.setLoggerFlag:00000000 setLoggerFlag
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:647    .text.readMsignal:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:653    .text.readMsignal:00000000 readMsignal
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:672    .text.readMsignal:00000010 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:677    .text.setMsignalPtr:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:683    .text.setMsignalPtr:00000000 setMsignalPtr
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:700    .text.setMsignalPtr:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:705    .text.initIdentifyMode:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:711    .text.initIdentifyMode:00000000 initIdentifyMode
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:728    .text.initIdentifyMode:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:733    .text.getIdentifyMode:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:739    .text.getIdentifyMode:00000000 getIdentifyMode
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:754    .text.getIdentifyMode:00000008 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:759    .text.initMsignal:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:765    .text.initMsignal:00000000 initMsignal
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:812    .text.getIdentifyInputCount:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:818    .text.getIdentifyInputCount:00000000 getIdentifyInputCount
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:869    .text.getIdentifyInputCount:00000030 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:877    .bss.identify_mode:00000000 identify_mode
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:878    .bss.identify_mode:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:880    .bss.msignal:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:884    .bss.msignal:00000000 msignal
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:887    .bss.ps:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s:891    .bss.ps:00000000 ps
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:20     .rodata.printAllValue_uint32.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:30     .text.printAllValue_uint32:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:35     .text.printAllValue_uint32:00000000 printAllValue_uint32
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:116    .text.printAllValue_uint32:0000003c $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:124    .text.getPhotoSampleValue_uint32:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:130    .text.getPhotoSampleValue_uint32:00000000 getPhotoSampleValue_uint32
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:219    .text.getPhotoSampleValue_uint32:0000004c $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:224    .text.getPhotoSampleValue_float:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:230    .text.getPhotoSampleValue_float:00000000 getPhotoSampleValue_float
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:320    .text.getPhotoSampleValue_float:00000054 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:325    .rodata.printPhotoSampleValue.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:337    .text.printPhotoSampleValue:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:343    .text.printPhotoSampleValue:00000000 printPhotoSampleValue
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:421    .text.printPhotoSampleValue:00000058 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:431    .text.initFloatLog:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:437    .text.initFloatLog:00000000 initFloatLog
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:466    .text.getFloatLog:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:472    .text.getFloatLog:00000000 getFloatLog
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:526    .rodata.printFloatLog.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:530    .text.printFloatLog:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:536    .text.printFloatLog:00000000 printFloatLog
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:595    .text.printFloatLog:00000028 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:600    .text.getLoggerFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:606    .text.getLoggerFlag:00000000 getLoggerFlag
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:624    .text.setLoggerFlag:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:630    .text.setLoggerFlag:00000000 setLoggerFlag
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:647    .text.initFlashRunLog:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:653    .text.initFlashRunLog:00000000 initFlashRunLog
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:680    .text.flashFloatLog:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:686    .text.flashFloatLog:00000000 flashFloatLog
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:827    .text.flashFloatLog:00000090 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:834    .rodata.printFlashRunLog.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:838    .text.printFlashRunLog:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:844    .text.printFlashRunLog:00000000 printFlashRunLog
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:953    .text.printFlashRunLog:00000074 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:959    .text.readMsignal:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:965    .text.readMsignal:00000000 readMsignal
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:984    .text.readMsignal:00000010 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:989    .text.setMsignalPtr:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:995    .text.setMsignalPtr:00000000 setMsignalPtr
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1012   .text.setMsignalPtr:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1017   .text.initIdentifyMode:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1023   .text.initIdentifyMode:00000000 initIdentifyMode
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1040   .text.initIdentifyMode:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1045   .text.getIdentifyMode:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1051   .text.getIdentifyMode:00000000 getIdentifyMode
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1066   .text.getIdentifyMode:00000008 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1071   .text.initMsignal:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1077   .text.initMsignal:00000000 initMsignal
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1124   .text.getIdentifyInputCount:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1130   .text.getIdentifyInputCount:00000000 getIdentifyInputCount
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1181   .text.getIdentifyInputCount:00000030 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1186   .bss.call_counter.0:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1190   .bss.call_counter.0:00000000 call_counter.0
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1196   .bss.identify_mode:00000000 identify_mode
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s 			page 29
+
+
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1197   .bss.identify_mode:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1199   .bss.msignal:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1203   .bss.msignal:00000000 msignal
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1206   .bss.ps:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccXBBkS5.s:1210   .bss.ps:00000000 ps
 
 UNDEFINED SYMBOLS
 printf
 puts
 EmitterON
 ADCStart
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccjA7UOP.s 			page 22
-
-
 HAL_TIM_Base_Start_IT
 HAL_TIM_Base_Stop_IT
 EmitterOFF
@@ -1264,3 +1690,7 @@ ADCStop
 htim8
 htim1
 __aeabi_f2d
+FLASH_Write_Word_F
+start_address_sector6
+end_address_sector10
+FLASH_Read_Word_F

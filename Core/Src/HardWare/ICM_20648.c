@@ -136,9 +136,10 @@ inline void Update_IMU(float *angv, float *angle )
 		//Angle;
 		*angle += *angv *0.001;
 #else
-		*angv = -ZGyro; //角速度 rad / s
+		// *angv = -ZGyro; //角速度 rad / s
+		// *angle += *angv * 0.001  - 0.000001784;//- 0.0000018432; //角度 rad
 
-		//Angle;
+		*angv = ZGyro; //角速度 rad / s
 		*angle += *angv * 0.001  - 0.000001784;//- 0.0000018432; //角度 rad
 #endif
 }

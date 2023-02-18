@@ -11,10 +11,10 @@
 //#include "MicroMouse.h"
 //マップデータをフラッシュに書き込む処理
 #include "Flash.h"
-
+#include "LED_Driver.h"
 void flashStoreNodes(maze_node *maze)
 {
-	uint32_t address=start_adress_sector1;
+	uint32_t address=start_address_sector1;
 
 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
 	{
@@ -22,6 +22,7 @@ void flashStoreNodes(maze_node *maze)
 			{
 				FLASH_Write_Word(address+0, maze->RawNode[i][j].existence);
 				address += 4;
+				ChangeLED(1);
 			}
 	}//2*N*(N+1)*4byte = 64*33*4byte
 	//列
@@ -31,13 +32,14 @@ void flashStoreNodes(maze_node *maze)
 			{
 				FLASH_Write_Word(address+0, maze->ColumnNode[i][j].existence);
 				address += 4;
+				ChangeLED(2);
 			}
 	}
 }
 
 void wall_flash_print()
 {
-	uint32_t address = start_adress_sector1;
+	uint32_t address = start_address_sector1;
 	address += (NUMBER_OF_SQUARES_X-1) * 16*NUMBER_OF_SQUARES_Y;
 
 	for(int i=0; i < NUMBER_OF_SQUARES_X ; i++)
@@ -65,7 +67,7 @@ void wall_flash_print()
 //評価値マップ生成。
 void flashCopyNodesToRam(maze_node *maze)
 {
-	uint32_t address=start_adress_sector1;
+	uint32_t address=start_address_sector1;
 
 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
 	{

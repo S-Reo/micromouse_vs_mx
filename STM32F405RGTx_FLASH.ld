@@ -89,7 +89,7 @@ SECTIONS
   } >MAP_MEMORY
   .backup_flash_run :
   {
-      _backup_flash_start_run = .;
+      _backup_flash_start_run_log = .;
       . = . + LENGTH(RUN_LOG);
   } >RUN_LOG
   /* The program code and other data goes into FLASH */

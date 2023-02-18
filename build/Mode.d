@@ -40,10 +40,10 @@ build/Mode.o: Core/Src/Main/Mode.c Core/Inc/Main/MicroMouse.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h \
- Core/Inc/Main/MicroMouse.h Core/Inc/Main/Record.h \
- /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h \
- /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
+ Core/Inc/Main/MicroMouse.h \
  /Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h \
+ /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h \
+ Core/Inc/Main/Record.h /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h \
  Core/Inc/Main/Running.h
 Core/Inc/Main/MicroMouse.h:
 Core/Inc/main.h:
@@ -99,8 +99,8 @@ Core/Inc/Main/Action.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/MazeLib.h:
 Core/Inc/Main/MicroMouse.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h:
+/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
 Core/Inc/Main/Record.h:
 /Users/leopi/Documents/vs/S-Reo/MazeLibrary/dfs.h:
-/Users/leopi/Documents/vs/S-Reo/MazeLibrary/Searching.h:
-/Users/leopi/Documents/vs/S-Reo/MazeLibrary/FastRun.h:
 Core/Inc/Main/Running.h:

@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -55,1618 +55,1737 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 1
   21:Core/Src/Main/MicroMouse.c **** #include "Interrupt.h"
   22:Core/Src/Main/MicroMouse.c **** #include "PID_Control.h"
   23:Core/Src/Main/MicroMouse.c **** #include "Convert.h"
-  24:Core/Src/Main/MicroMouse.c **** 
-  25:Core/Src/Main/MicroMouse.c **** volatile _Bool VelocityMax;
-  26:Core/Src/Main/MicroMouse.c **** volatile int Calc;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 2
+  24:Core/Src/Main/MicroMouse.c **** #include "Action.h"
+  25:Core/Src/Main/MicroMouse.c **** 
+  26:Core/Src/Main/MicroMouse.c **** volatile _Bool VelocityMax;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 2
 
 
-  27:Core/Src/Main/MicroMouse.c **** volatile int SearchOrFast;
-  28:Core/Src/Main/MicroMouse.c **** 
-  29:Core/Src/Main/MicroMouse.c **** volatile int KeepPulse[3]={0};
-  30:Core/Src/Main/MicroMouse.c **** int PulseDisplacement[3];
-  31:Core/Src/Main/MicroMouse.c **** volatile int TotalPulse[3];
-  32:Core/Src/Main/MicroMouse.c **** 
+  27:Core/Src/Main/MicroMouse.c **** volatile int Calc;
+  28:Core/Src/Main/MicroMouse.c **** volatile int SearchOrFast;
+  29:Core/Src/Main/MicroMouse.c **** 
+  30:Core/Src/Main/MicroMouse.c **** volatile int KeepPulse[3]={0};
+  31:Core/Src/Main/MicroMouse.c **** int PulseDisplacement[3];
+  32:Core/Src/Main/MicroMouse.c **** volatile int TotalPulse[3];
   33:Core/Src/Main/MicroMouse.c **** 
-  34:Core/Src/Main/MicroMouse.c **** int VelocityLeftOut=0, VelocityRightOut=0;
-  35:Core/Src/Main/MicroMouse.c **** int WallRightOut, WallLeftOut;
-  36:Core/Src/Main/MicroMouse.c **** 
-  37:Core/Src/Main/MicroMouse.c **** float ExploreVelocity;
-  38:Core/Src/Main/MicroMouse.c **** float AddVelocity;
-  39:Core/Src/Main/MicroMouse.c **** volatile physical Target, Current;
-  40:Core/Src/Main/MicroMouse.c **** 
-  41:Core/Src/Main/MicroMouse.c **** volatile float PhotoDiff;
-  42:Core/Src/Main/MicroMouse.c **** // float Photo[4];
-  43:Core/Src/Main/MicroMouse.c **** // volatile float Target.Photo[4];
-  44:Core/Src/Main/MicroMouse.c **** // volatile float CurrentVelocity[3];	//速度 mm/s
-  45:Core/Src/Main/MicroMouse.c **** // volatile float Target.Velocity[3];
-  46:Core/Src/Main/MicroMouse.c **** // volatile float AngularV=0;			//角速度 rad/s
-  47:Core/Src/Main/MicroMouse.c **** // volatile float Acceleration=0;
-  48:Core/Src/Main/MicroMouse.c **** // volatile float Target.AngularV;
-  49:Core/Src/Main/MicroMouse.c **** // volatile float AngularAcceleration=0;
-  50:Core/Src/Main/MicroMouse.c **** // volatile float Target.Angle=0;
-  51:Core/Src/Main/MicroMouse.c **** // volatile float Angle=0;				//角度 rad/msを積算
-  52:Core/Src/Main/MicroMouse.c **** float EncAngV=0;
-  53:Core/Src/Main/MicroMouse.c **** 
+  34:Core/Src/Main/MicroMouse.c **** 
+  35:Core/Src/Main/MicroMouse.c **** int VelocityLeftOut=0, VelocityRightOut=0;
+  36:Core/Src/Main/MicroMouse.c **** int WallRightOut, WallLeftOut;
+  37:Core/Src/Main/MicroMouse.c **** 
+  38:Core/Src/Main/MicroMouse.c **** float ExploreVelocity;
+  39:Core/Src/Main/MicroMouse.c **** float AddVelocity;
+  40:Core/Src/Main/MicroMouse.c **** volatile physical Target, Current;
+  41:Core/Src/Main/MicroMouse.c **** 
+  42:Core/Src/Main/MicroMouse.c **** volatile float PhotoDiff;
+  43:Core/Src/Main/MicroMouse.c **** // float Photo[4];
+  44:Core/Src/Main/MicroMouse.c **** // volatile float Target.Photo[4];
+  45:Core/Src/Main/MicroMouse.c **** // volatile float CurrentVelocity[3];	//速度 mm/s
+  46:Core/Src/Main/MicroMouse.c **** // volatile float Target.Velocity[3];
+  47:Core/Src/Main/MicroMouse.c **** // volatile float AngularV=0;			//角速度 rad/s
+  48:Core/Src/Main/MicroMouse.c **** // volatile float Acceleration=0;
+  49:Core/Src/Main/MicroMouse.c **** // volatile float Target.AngularV;
+  50:Core/Src/Main/MicroMouse.c **** // volatile float AngularAcceleration=0;
+  51:Core/Src/Main/MicroMouse.c **** // volatile float Target.Angle=0;
+  52:Core/Src/Main/MicroMouse.c **** // volatile float Angle=0;				//角度 rad/msを積算
+  53:Core/Src/Main/MicroMouse.c **** float EncAngV=0;
   54:Core/Src/Main/MicroMouse.c **** 
   55:Core/Src/Main/MicroMouse.c **** 
   56:Core/Src/Main/MicroMouse.c **** 
-  57:Core/Src/Main/MicroMouse.c **** slalom_parameter Sla;
-  58:Core/Src/Main/MicroMouse.c **** 
-  59:Core/Src/Main/MicroMouse.c **** #if 1
-  60:Core/Src/Main/MicroMouse.c **** void setSearchTurnParam(int8_t mode){
-  33              		.loc 1 60 37 view -0
+  57:Core/Src/Main/MicroMouse.c **** 
+  58:Core/Src/Main/MicroMouse.c **** slalom_parameter Sla;
+  59:Core/Src/Main/MicroMouse.c **** 
+  60:Core/Src/Main/MicroMouse.c **** #if 1
+  61:Core/Src/Main/MicroMouse.c **** void setSearchTurnParam(int8_t mode){
+  33              		.loc 1 61 37 view -0
   34              		.cfi_startproc
   35              		@ args = 0, pretend = 0, frame = 0
   36              		@ frame_needed = 0, uses_anonymous_args = 0
-  37              		.loc 1 60 37 is_stmt 0 view .LVU1
+  37              		.loc 1 61 37 is_stmt 0 view .LVU1
   38 0000 10B5     		push	{r4, lr}
   39              	.LCFI0:
   40              		.cfi_def_cfa_offset 8
   41              		.cfi_offset 4, -8
   42              		.cfi_offset 14, -4
-  61:Core/Src/Main/MicroMouse.c **** 	
-  62:Core/Src/Main/MicroMouse.c **** 	switch(mode)
-  43              		.loc 1 62 2 is_stmt 1 view .LVU2
+  62:Core/Src/Main/MicroMouse.c **** 	
+  63:Core/Src/Main/MicroMouse.c **** 	switch(mode)
+  43              		.loc 1 63 2 is_stmt 1 view .LVU2
   44 0002 0138     		subs	r0, r0, #1
   45              	.LVL1:
-  46              		.loc 1 62 2 is_stmt 0 view .LVU3
+  46              		.loc 1 63 2 is_stmt 0 view .LVU3
   47 0004 0328     		cmp	r0, #3
   48 0006 12D8     		bhi	.L2
   49 0008 DFE800F0 		tbb	[pc, r0]
   50              	.L4:
   51 000c 02       		.byte	(.L7-.L4)/2
   52 000d 4A       		.byte	(.L6-.L4)/2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 3
+
+
   53 000e 5C       		.byte	(.L5-.L4)/2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 3
-
-
-  54 000f 6E       		.byte	(.L3-.L4)/2
+  54 000f 6D       		.byte	(.L3-.L4)/2
   55              		.p2align 1
   56              	.L7:
-  63:Core/Src/Main/MicroMouse.c **** 	{
-  64:Core/Src/Main/MicroMouse.c **** 	case 1:
-  65:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=90;
-  57              		.loc 1 65 3 is_stmt 1 view .LVU4
-  58              		.loc 1 65 18 is_stmt 0 view .LVU5
-  59 0010 434A     		ldr	r2, .L9+16
-  60 0012 444B     		ldr	r3, .L9+20
+  64:Core/Src/Main/MicroMouse.c **** 	{
+  65:Core/Src/Main/MicroMouse.c **** 	case 1:
+  66:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=90;
+  57              		.loc 1 66 3 is_stmt 1 view .LVU4
+  58              		.loc 1 66 18 is_stmt 0 view .LVU5
+  59 0010 414A     		ldr	r2, .L9+16
+  60 0012 424B     		ldr	r3, .L9+20
   61 0014 1A60     		str	r2, [r3]	@ float
-  66:Core/Src/Main/MicroMouse.c **** 		//未
-  67:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 9;
-  62              		.loc 1 67 3 is_stmt 1 view .LVU6
-  63              		.loc 1 67 11 is_stmt 0 view .LVU7
-  64 0016 444B     		ldr	r3, .L9+24
-  65 0018 4449     		ldr	r1, .L9+28
+  67:Core/Src/Main/MicroMouse.c **** 		//未
+  68:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 9;
+  62              		.loc 1 68 3 is_stmt 1 view .LVU6
+  63              		.loc 1 68 11 is_stmt 0 view .LVU7
+  64 0016 424B     		ldr	r3, .L9+24
+  65 0018 4249     		ldr	r1, .L9+28
   66 001a 1960     		str	r1, [r3]	@ float
-  68:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 20;
-  67              		.loc 1 68 3 is_stmt 1 view .LVU8
-  68              		.loc 1 68 11 is_stmt 0 view .LVU9
-  69 001c 4449     		ldr	r1, .L9+32
+  69:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 20;
+  67              		.loc 1 69 3 is_stmt 1 view .LVU8
+  68              		.loc 1 69 11 is_stmt 0 view .LVU9
+  69 001c 4249     		ldr	r1, .L9+32
   70 001e 5960     		str	r1, [r3, #4]	@ float
-  69:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.014;
-  71              		.loc 1 69 3 is_stmt 1 view .LVU10
-  72              		.loc 1 69 13 is_stmt 0 view .LVU11
-  73 0020 4449     		ldr	r1, .L9+36
+  70:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.014;
+  71              		.loc 1 70 3 is_stmt 1 view .LVU10
+  72              		.loc 1 70 13 is_stmt 0 view .LVU11
+  73 0020 4249     		ldr	r1, .L9+36
   74 0022 9960     		str	r1, [r3, #8]	@ float
-  70:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
-  75              		.loc 1 70 3 is_stmt 1 view .LVU12
-  76              		.loc 1 70 14 is_stmt 0 view .LVU13
-  77 0024 4449     		ldr	r1, .L9+40
+  71:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+  75              		.loc 1 71 3 is_stmt 1 view .LVU12
+  76              		.loc 1 71 14 is_stmt 0 view .LVU13
+  77 0024 4249     		ldr	r1, .L9+40
   78 0026 1961     		str	r1, [r3, #16]	@ float
-  71:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
-  79              		.loc 1 71 3 is_stmt 1 view .LVU14
-  80              		.loc 1 71 14 is_stmt 0 view .LVU15
-  81 0028 4449     		ldr	r1, .L9+44
+  72:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+  79              		.loc 1 72 3 is_stmt 1 view .LVU14
+  80              		.loc 1 72 14 is_stmt 0 view .LVU15
+  81 0028 4249     		ldr	r1, .L9+44
   82 002a 5961     		str	r1, [r3, #20]	@ float
-  72:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
-  83              		.loc 1 72 3 is_stmt 1 view .LVU16
-  84              		.loc 1 72 14 is_stmt 0 view .LVU17
+  73:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+  83              		.loc 1 73 3 is_stmt 1 view .LVU16
+  84              		.loc 1 73 14 is_stmt 0 view .LVU17
   85 002c 9A61     		str	r2, [r3, #24]	@ float
-  73:Core/Src/Main/MicroMouse.c **** 
-  74:Core/Src/Main/MicroMouse.c **** //		ExploreVelocity=180;//*40/1000
-  75:Core/Src/Main/MicroMouse.c **** //		Sla.Pre = 5;
-  76:Core/Src/Main/MicroMouse.c **** //		Sla.Fol = 12;
-  77:Core/Src/Main/MicroMouse.c **** //		Sla.Alalpha = 0.0007;
-  78:Core/Src/Main/MicroMouse.c **** //		Sla.Theta1 = 30;
-  79:Core/Src/Main/MicroMouse.c **** //		Sla.Theta2 = 60;
-  80:Core/Src/Main/MicroMouse.c **** //		Sla.Theta3 = 90;
-  81:Core/Src/Main/MicroMouse.c **** 		break;
-  86              		.loc 1 81 3 is_stmt 1 view .LVU18
+  74:Core/Src/Main/MicroMouse.c **** 
+  75:Core/Src/Main/MicroMouse.c **** //		ExploreVelocity=180;//*40/1000
+  76:Core/Src/Main/MicroMouse.c **** //		Sla.Pre = 5;
+  77:Core/Src/Main/MicroMouse.c **** //		Sla.Fol = 12;
+  78:Core/Src/Main/MicroMouse.c **** //		Sla.Alalpha = 0.0007;
+  79:Core/Src/Main/MicroMouse.c **** //		Sla.Theta1 = 30;
+  80:Core/Src/Main/MicroMouse.c **** //		Sla.Theta2 = 60;
+  81:Core/Src/Main/MicroMouse.c **** //		Sla.Theta3 = 90;
+  82:Core/Src/Main/MicroMouse.c **** 		break;
+  86              		.loc 1 82 3 is_stmt 1 view .LVU18
   87              	.L2:
-  82:Core/Src/Main/MicroMouse.c **** 	case 2:
-  83:Core/Src/Main/MicroMouse.c **** 		//完
-  84:Core/Src/Main/MicroMouse.c **** //		ExploreVelocity=135;//*40/1000
-  85:Core/Src/Main/MicroMouse.c **** //		Sla.Pre = 5;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 4
+  83:Core/Src/Main/MicroMouse.c **** 	case 2:
+  84:Core/Src/Main/MicroMouse.c **** 		//完
+  85:Core/Src/Main/MicroMouse.c **** //		ExploreVelocity=135;//*40/1000
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 4
 
 
-  86:Core/Src/Main/MicroMouse.c **** //		Sla.Fol = 10;
-  87:Core/Src/Main/MicroMouse.c **** //		Sla.Alpha = 0.0273;
-  88:Core/Src/Main/MicroMouse.c **** //		Sla.Theta1 = 30;
-  89:Core/Src/Main/MicroMouse.c **** //		Sla.Theta2 = 60;
-  90:Core/Src/Main/MicroMouse.c **** //		Sla.Theta3 = 90;
-  91:Core/Src/Main/MicroMouse.c **** 
-  92:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=180;
-  93:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 8;//2;
-  94:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 12;
-  95:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.043;
-  96:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
-  97:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
-  98:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
-  99:Core/Src/Main/MicroMouse.c **** 		break;
- 100:Core/Src/Main/MicroMouse.c **** 	case 3:
- 101:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=240;
- 102:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 8;//2;
- 103:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 12; //16
- 104:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.078;
- 105:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 106:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 107:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 108:Core/Src/Main/MicroMouse.c **** 		break;
- 109:Core/Src/Main/MicroMouse.c **** 	case 4:
- 110:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=300;
- 111:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 3;
- 112:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
- 113:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.117;
- 114:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 115:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 116:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 117:Core/Src/Main/MicroMouse.c **** 		//		//未
- 118:Core/Src/Main/MicroMouse.c **** 		break;
- 119:Core/Src/Main/MicroMouse.c **** 	}
- 120:Core/Src/Main/MicroMouse.c **** 	Sla.Pre *=  2/MM_PER_PULSE;
-  88              		.loc 1 120 2 view .LVU19
-  89              		.loc 1 120 10 is_stmt 0 view .LVU20
-  90 002e 3E4C     		ldr	r4, .L9+24
+  86:Core/Src/Main/MicroMouse.c **** //		Sla.Pre = 5;
+  87:Core/Src/Main/MicroMouse.c **** //		Sla.Fol = 10;
+  88:Core/Src/Main/MicroMouse.c **** //		Sla.Alpha = 0.0273;
+  89:Core/Src/Main/MicroMouse.c **** //		Sla.Theta1 = 30;
+  90:Core/Src/Main/MicroMouse.c **** //		Sla.Theta2 = 60;
+  91:Core/Src/Main/MicroMouse.c **** //		Sla.Theta3 = 90;
+  92:Core/Src/Main/MicroMouse.c **** 
+  93:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=180;
+  94:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 4;//2;
+  95:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
+  96:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.0453785606; //0.036;
+  97:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+  98:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+  99:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 100:Core/Src/Main/MicroMouse.c **** 		// ExploreVelocity=180;
+ 101:Core/Src/Main/MicroMouse.c **** 		// Sla.Pre = 8;//2;
+ 102:Core/Src/Main/MicroMouse.c **** 		// Sla.Fol = 12;
+ 103:Core/Src/Main/MicroMouse.c **** 		// Sla.Alpha = 0.043;
+ 104:Core/Src/Main/MicroMouse.c **** 		// Sla.Theta1 = 30;
+ 105:Core/Src/Main/MicroMouse.c **** 		// Sla.Theta2 = 60;
+ 106:Core/Src/Main/MicroMouse.c **** 		// Sla.Theta3 = 90;
+ 107:Core/Src/Main/MicroMouse.c **** 		break;
+ 108:Core/Src/Main/MicroMouse.c **** 	case 3:
+ 109:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=240; // 本当に240が限界か、は調べておきたい. 調べたうえで�
+ 110:Core/Src/Main/MicroMouse.c **** 		// Sla.Pre = 6;//2;
+ 111:Core/Src/Main/MicroMouse.c **** 		// Sla.Fol = 7; //16
+ 112:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 4;//12.1; //12.3; // 4;//8;
+ 113:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 4;//12.4;//12; // //12;
+ 114:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.0820304748; //0.20943951; //0.165806279;// //0.078;
+ 115:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30; //10; //15;
+ 116:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60; //80; //75;
+ 117:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 118:Core/Src/Main/MicroMouse.c **** 		// Sla.Alpha = 0.08726389;
+ 119:Core/Src/Main/MicroMouse.c **** 		// Sla.Theta1 = 40;
+ 120:Core/Src/Main/MicroMouse.c **** 		// Sla.Theta2 = 50;
+ 121:Core/Src/Main/MicroMouse.c **** 		// Sla.Theta3 = 90;
+ 122:Core/Src/Main/MicroMouse.c **** 		break;
+ 123:Core/Src/Main/MicroMouse.c **** 	case 4:
+ 124:Core/Src/Main/MicroMouse.c **** 		ExploreVelocity=300;
+ 125:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 3;
+ 126:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
+ 127:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.117;
+ 128:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+ 129:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+ 130:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 131:Core/Src/Main/MicroMouse.c **** 		//		//未
+ 132:Core/Src/Main/MicroMouse.c **** 		break;
+ 133:Core/Src/Main/MicroMouse.c **** 	}
+ 134:Core/Src/Main/MicroMouse.c **** 	Sla.Pre *=  2/MM_PER_PULSE;
+  88              		.loc 1 134 2 view .LVU19
+  89              		.loc 1 134 10 is_stmt 0 view .LVU20
+  90 002e 3C4C     		ldr	r4, .L9+24
   91 0030 2068     		ldr	r0, [r4]	@ float
   92 0032 FFF7FEFF 		bl	__aeabi_f2d
   93              	.LVL2:
-  94 0036 36A3     		adr	r3, .L9
+  94 0036 34A3     		adr	r3, .L9
   95 0038 D3E90023 		ldrd	r2, [r3]
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 5
+
+
   96 003c FFF7FEFF 		bl	__aeabi_dmul
   97              	.LVL3:
   98 0040 FFF7FEFF 		bl	__aeabi_d2f
   99              	.LVL4:
  100 0044 2060     		str	r0, [r4]	@ float
- 121:Core/Src/Main/MicroMouse.c **** 	Sla.Fol *=  2/MM_PER_PULSE;
- 101              		.loc 1 121 2 is_stmt 1 view .LVU21
- 102              		.loc 1 121 10 is_stmt 0 view .LVU22
+ 135:Core/Src/Main/MicroMouse.c **** 	Sla.Fol *=  2/MM_PER_PULSE;
+ 101              		.loc 1 135 2 is_stmt 1 view .LVU21
+ 102              		.loc 1 135 10 is_stmt 0 view .LVU22
  103 0046 6068     		ldr	r0, [r4, #4]	@ float
  104 0048 FFF7FEFF 		bl	__aeabi_f2d
  105              	.LVL5:
- 106 004c 30A3     		adr	r3, .L9
+ 106 004c 2EA3     		adr	r3, .L9
  107 004e D3E90023 		ldrd	r2, [r3]
  108 0052 FFF7FEFF 		bl	__aeabi_dmul
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 5
-
-
  109              	.LVL6:
  110 0056 FFF7FEFF 		bl	__aeabi_d2f
  111              	.LVL7:
  112 005a 6060     		str	r0, [r4, #4]	@ float
- 122:Core/Src/Main/MicroMouse.c **** 	Sla.Theta1 *= M_PI/180;
- 113              		.loc 1 122 2 is_stmt 1 view .LVU23
- 114              		.loc 1 122 13 is_stmt 0 view .LVU24
+ 136:Core/Src/Main/MicroMouse.c **** 	Sla.Theta1 *= M_PI/180;
+ 113              		.loc 1 136 2 is_stmt 1 view .LVU23
+ 114              		.loc 1 136 13 is_stmt 0 view .LVU24
  115 005c 2069     		ldr	r0, [r4, #16]	@ float
  116 005e FFF7FEFF 		bl	__aeabi_f2d
  117              	.LVL8:
- 118 0062 2DA3     		adr	r3, .L9+8
+ 118 0062 2BA3     		adr	r3, .L9+8
  119 0064 D3E90023 		ldrd	r2, [r3]
  120 0068 FFF7FEFF 		bl	__aeabi_dmul
  121              	.LVL9:
  122 006c FFF7FEFF 		bl	__aeabi_d2f
  123              	.LVL10:
  124 0070 2061     		str	r0, [r4, #16]	@ float
- 123:Core/Src/Main/MicroMouse.c **** 	Sla.Theta2 *= M_PI/180;
- 125              		.loc 1 123 2 is_stmt 1 view .LVU25
- 126              		.loc 1 123 13 is_stmt 0 view .LVU26
+ 137:Core/Src/Main/MicroMouse.c **** 	Sla.Theta2 *= M_PI/180;
+ 125              		.loc 1 137 2 is_stmt 1 view .LVU25
+ 126              		.loc 1 137 13 is_stmt 0 view .LVU26
  127 0072 6069     		ldr	r0, [r4, #20]	@ float
  128 0074 FFF7FEFF 		bl	__aeabi_f2d
  129              	.LVL11:
- 130 0078 27A3     		adr	r3, .L9+8
+ 130 0078 25A3     		adr	r3, .L9+8
  131 007a D3E90023 		ldrd	r2, [r3]
  132 007e FFF7FEFF 		bl	__aeabi_dmul
  133              	.LVL12:
  134 0082 FFF7FEFF 		bl	__aeabi_d2f
  135              	.LVL13:
  136 0086 6061     		str	r0, [r4, #20]	@ float
- 124:Core/Src/Main/MicroMouse.c **** 	Sla.Theta3 *= M_PI/180;
- 137              		.loc 1 124 2 is_stmt 1 view .LVU27
- 138              		.loc 1 124 13 is_stmt 0 view .LVU28
+ 138:Core/Src/Main/MicroMouse.c **** 	Sla.Theta3 *= M_PI/180;
+ 137              		.loc 1 138 2 is_stmt 1 view .LVU27
+ 138              		.loc 1 138 13 is_stmt 0 view .LVU28
  139 0088 A069     		ldr	r0, [r4, #24]	@ float
  140 008a FFF7FEFF 		bl	__aeabi_f2d
  141              	.LVL14:
- 142 008e 22A3     		adr	r3, .L9+8
+ 142 008e 20A3     		adr	r3, .L9+8
  143 0090 D3E90023 		ldrd	r2, [r3]
  144 0094 FFF7FEFF 		bl	__aeabi_dmul
  145              	.LVL15:
  146 0098 FFF7FEFF 		bl	__aeabi_d2f
  147              	.LVL16:
  148 009c A061     		str	r0, [r4, #24]	@ float
- 125:Core/Src/Main/MicroMouse.c **** }
- 149              		.loc 1 125 1 view .LVU29
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 6
+
+
+ 139:Core/Src/Main/MicroMouse.c **** }
+ 149              		.loc 1 139 1 view .LVU29
  150 009e 10BD     		pop	{r4, pc}
  151              	.L6:
-  92:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 8;//2;
- 152              		.loc 1 92 3 is_stmt 1 view .LVU30
-  92:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 8;//2;
- 153              		.loc 1 92 18 is_stmt 0 view .LVU31
- 154 00a0 204B     		ldr	r3, .L9+20
- 155 00a2 274A     		ldr	r2, .L9+48
+  93:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 4;//2;
+ 152              		.loc 1 93 3 is_stmt 1 view .LVU30
+  93:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 4;//2;
+ 153              		.loc 1 93 18 is_stmt 0 view .LVU31
+ 154 00a0 1E4B     		ldr	r3, .L9+20
+ 155 00a2 254A     		ldr	r2, .L9+48
  156 00a4 1A60     		str	r2, [r3]	@ float
-  93:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 12;
- 157              		.loc 1 93 3 is_stmt 1 view .LVU32
-  93:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 12;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 6
-
-
- 158              		.loc 1 93 11 is_stmt 0 view .LVU33
- 159 00a6 204B     		ldr	r3, .L9+24
- 160 00a8 4FF08242 		mov	r2, #1090519040
+  94:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
+ 157              		.loc 1 94 3 is_stmt 1 view .LVU32
+  94:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
+ 158              		.loc 1 94 11 is_stmt 0 view .LVU33
+ 159 00a6 1E4B     		ldr	r3, .L9+24
+ 160 00a8 4FF08142 		mov	r2, #1082130432
  161 00ac 1A60     		str	r2, [r3]	@ float
-  94:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.043;
- 162              		.loc 1 94 3 is_stmt 1 view .LVU34
-  94:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.043;
- 163              		.loc 1 94 11 is_stmt 0 view .LVU35
- 164 00ae 254A     		ldr	r2, .L9+52
+  95:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.0453785606; //0.036;
+ 162              		.loc 1 95 3 is_stmt 1 view .LVU34
+  95:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.0453785606; //0.036;
+ 163              		.loc 1 95 11 is_stmt 0 view .LVU35
+ 164 00ae 234A     		ldr	r2, .L9+52
  165 00b0 5A60     		str	r2, [r3, #4]	@ float
-  95:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 166              		.loc 1 95 3 is_stmt 1 view .LVU36
-  95:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 167              		.loc 1 95 13 is_stmt 0 view .LVU37
- 168 00b2 254A     		ldr	r2, .L9+56
+  96:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+ 166              		.loc 1 96 3 is_stmt 1 view .LVU36
+  96:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+ 167              		.loc 1 96 13 is_stmt 0 view .LVU37
+ 168 00b2 234A     		ldr	r2, .L9+56
  169 00b4 9A60     		str	r2, [r3, #8]	@ float
-  96:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 170              		.loc 1 96 3 is_stmt 1 view .LVU38
-  96:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 171              		.loc 1 96 14 is_stmt 0 view .LVU39
- 172 00b6 204A     		ldr	r2, .L9+40
+  97:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+ 170              		.loc 1 97 3 is_stmt 1 view .LVU38
+  97:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+ 171              		.loc 1 97 14 is_stmt 0 view .LVU39
+ 172 00b6 1E4A     		ldr	r2, .L9+40
  173 00b8 1A61     		str	r2, [r3, #16]	@ float
-  97:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 174              		.loc 1 97 3 is_stmt 1 view .LVU40
-  97:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 175              		.loc 1 97 14 is_stmt 0 view .LVU41
- 176 00ba 204A     		ldr	r2, .L9+44
+  98:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 174              		.loc 1 98 3 is_stmt 1 view .LVU40
+  98:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 175              		.loc 1 98 14 is_stmt 0 view .LVU41
+ 176 00ba 1E4A     		ldr	r2, .L9+44
  177 00bc 5A61     		str	r2, [r3, #20]	@ float
-  98:Core/Src/Main/MicroMouse.c **** 		break;
- 178              		.loc 1 98 3 is_stmt 1 view .LVU42
-  98:Core/Src/Main/MicroMouse.c **** 		break;
- 179              		.loc 1 98 14 is_stmt 0 view .LVU43
- 180 00be 184A     		ldr	r2, .L9+16
+  99:Core/Src/Main/MicroMouse.c **** 		// ExploreVelocity=180;
+ 178              		.loc 1 99 3 is_stmt 1 view .LVU42
+  99:Core/Src/Main/MicroMouse.c **** 		// ExploreVelocity=180;
+ 179              		.loc 1 99 14 is_stmt 0 view .LVU43
+ 180 00be 164A     		ldr	r2, .L9+16
  181 00c0 9A61     		str	r2, [r3, #24]	@ float
-  99:Core/Src/Main/MicroMouse.c **** 	case 3:
- 182              		.loc 1 99 3 is_stmt 1 view .LVU44
+ 107:Core/Src/Main/MicroMouse.c **** 	case 3:
+ 182              		.loc 1 107 3 is_stmt 1 view .LVU44
  183 00c2 B4E7     		b	.L2
  184              	.L5:
- 101:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 8;//2;
- 185              		.loc 1 101 3 view .LVU45
- 101:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 8;//2;
- 186              		.loc 1 101 18 is_stmt 0 view .LVU46
- 187 00c4 174B     		ldr	r3, .L9+20
- 188 00c6 214A     		ldr	r2, .L9+60
+ 109:Core/Src/Main/MicroMouse.c **** 		// Sla.Pre = 6;//2;
+ 185              		.loc 1 109 3 view .LVU45
+ 109:Core/Src/Main/MicroMouse.c **** 		// Sla.Pre = 6;//2;
+ 186              		.loc 1 109 18 is_stmt 0 view .LVU46
+ 187 00c4 154B     		ldr	r3, .L9+20
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 7
+
+
+ 188 00c6 1F4A     		ldr	r2, .L9+60
  189 00c8 1A60     		str	r2, [r3]	@ float
- 102:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 12; //16
- 190              		.loc 1 102 3 is_stmt 1 view .LVU47
- 102:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 12; //16
- 191              		.loc 1 102 11 is_stmt 0 view .LVU48
- 192 00ca 174B     		ldr	r3, .L9+24
- 193 00cc 4FF08242 		mov	r2, #1090519040
+ 112:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 4;//12.4;//12; // //12;
+ 190              		.loc 1 112 3 is_stmt 1 view .LVU47
+ 112:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 4;//12.4;//12; // //12;
+ 191              		.loc 1 112 11 is_stmt 0 view .LVU48
+ 192 00ca 154B     		ldr	r3, .L9+24
+ 193 00cc 4FF08142 		mov	r2, #1082130432
  194 00d0 1A60     		str	r2, [r3]	@ float
- 103:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.078;
- 195              		.loc 1 103 3 is_stmt 1 view .LVU49
- 103:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.078;
- 196              		.loc 1 103 11 is_stmt 0 view .LVU50
- 197 00d2 1C4A     		ldr	r2, .L9+52
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 7
+ 113:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.0820304748; //0.20943951; //0.165806279;// //0.078;
+ 195              		.loc 1 113 3 is_stmt 1 view .LVU49
+ 113:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.0820304748; //0.20943951; //0.165806279;// //0.078;
+ 196              		.loc 1 113 11 is_stmt 0 view .LVU50
+ 197 00d2 5A60     		str	r2, [r3, #4]	@ float
+ 114:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30; //10; //15;
+ 198              		.loc 1 114 3 is_stmt 1 view .LVU51
+ 114:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30; //10; //15;
+ 199              		.loc 1 114 13 is_stmt 0 view .LVU52
+ 200 00d4 1C4A     		ldr	r2, .L9+64
+ 201 00d6 9A60     		str	r2, [r3, #8]	@ float
+ 115:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60; //80; //75;
+ 202              		.loc 1 115 3 is_stmt 1 view .LVU53
+ 115:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60; //80; //75;
+ 203              		.loc 1 115 14 is_stmt 0 view .LVU54
+ 204 00d8 154A     		ldr	r2, .L9+40
+ 205 00da 1A61     		str	r2, [r3, #16]	@ float
+ 116:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 206              		.loc 1 116 3 is_stmt 1 view .LVU55
+ 116:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 207              		.loc 1 116 14 is_stmt 0 view .LVU56
+ 208 00dc 154A     		ldr	r2, .L9+44
+ 209 00de 5A61     		str	r2, [r3, #20]	@ float
+ 117:Core/Src/Main/MicroMouse.c **** 		// Sla.Alpha = 0.08726389;
+ 210              		.loc 1 117 3 is_stmt 1 view .LVU57
+ 117:Core/Src/Main/MicroMouse.c **** 		// Sla.Alpha = 0.08726389;
+ 211              		.loc 1 117 14 is_stmt 0 view .LVU58
+ 212 00e0 0D4A     		ldr	r2, .L9+16
+ 213 00e2 9A61     		str	r2, [r3, #24]	@ float
+ 122:Core/Src/Main/MicroMouse.c **** 	case 4:
+ 214              		.loc 1 122 3 is_stmt 1 view .LVU59
+ 215 00e4 A3E7     		b	.L2
+ 216              	.L3:
+ 124:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 3;
+ 217              		.loc 1 124 3 view .LVU60
+ 124:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 3;
+ 218              		.loc 1 124 18 is_stmt 0 view .LVU61
+ 219 00e6 0D4B     		ldr	r3, .L9+20
+ 220 00e8 184A     		ldr	r2, .L9+68
+ 221 00ea 1A60     		str	r2, [r3]	@ float
+ 125:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
+ 222              		.loc 1 125 3 is_stmt 1 view .LVU62
+ 125:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
+ 223              		.loc 1 125 11 is_stmt 0 view .LVU63
+ 224 00ec 0C4B     		ldr	r3, .L9+24
+ 225 00ee 184A     		ldr	r2, .L9+72
+ 226 00f0 1A60     		str	r2, [r3]	@ float
+ 126:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.117;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 8
 
 
- 198 00d4 5A60     		str	r2, [r3, #4]	@ float
- 104:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 199              		.loc 1 104 3 is_stmt 1 view .LVU51
- 104:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 200              		.loc 1 104 13 is_stmt 0 view .LVU52
- 201 00d6 1E4A     		ldr	r2, .L9+64
- 202 00d8 9A60     		str	r2, [r3, #8]	@ float
- 105:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 203              		.loc 1 105 3 is_stmt 1 view .LVU53
- 105:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 204              		.loc 1 105 14 is_stmt 0 view .LVU54
- 205 00da 174A     		ldr	r2, .L9+40
- 206 00dc 1A61     		str	r2, [r3, #16]	@ float
- 106:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 207              		.loc 1 106 3 is_stmt 1 view .LVU55
- 106:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 208              		.loc 1 106 14 is_stmt 0 view .LVU56
- 209 00de 174A     		ldr	r2, .L9+44
- 210 00e0 5A61     		str	r2, [r3, #20]	@ float
- 107:Core/Src/Main/MicroMouse.c **** 		break;
- 211              		.loc 1 107 3 is_stmt 1 view .LVU57
- 107:Core/Src/Main/MicroMouse.c **** 		break;
- 212              		.loc 1 107 14 is_stmt 0 view .LVU58
- 213 00e2 0F4A     		ldr	r2, .L9+16
- 214 00e4 9A61     		str	r2, [r3, #24]	@ float
- 108:Core/Src/Main/MicroMouse.c **** 	case 4:
- 215              		.loc 1 108 3 is_stmt 1 view .LVU59
- 216 00e6 A2E7     		b	.L2
- 217              	.L3:
- 110:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 3;
- 218              		.loc 1 110 3 view .LVU60
- 110:Core/Src/Main/MicroMouse.c **** 		Sla.Pre = 3;
- 219              		.loc 1 110 18 is_stmt 0 view .LVU61
- 220 00e8 0E4B     		ldr	r3, .L9+20
- 221 00ea 1A4A     		ldr	r2, .L9+68
- 222 00ec 1A60     		str	r2, [r3]	@ float
- 111:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
- 223              		.loc 1 111 3 is_stmt 1 view .LVU62
- 111:Core/Src/Main/MicroMouse.c **** 		Sla.Fol = 5;
- 224              		.loc 1 111 11 is_stmt 0 view .LVU63
- 225 00ee 0E4B     		ldr	r3, .L9+24
- 226 00f0 194A     		ldr	r2, .L9+72
- 227 00f2 1A60     		str	r2, [r3]	@ float
- 112:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.117;
- 228              		.loc 1 112 3 is_stmt 1 view .LVU64
- 112:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.117;
- 229              		.loc 1 112 11 is_stmt 0 view .LVU65
- 230 00f4 194A     		ldr	r2, .L9+76
- 231 00f6 5A60     		str	r2, [r3, #4]	@ float
- 113:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 232              		.loc 1 113 3 is_stmt 1 view .LVU66
- 113:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
- 233              		.loc 1 113 13 is_stmt 0 view .LVU67
- 234 00f8 194A     		ldr	r2, .L9+80
- 235 00fa 9A60     		str	r2, [r3, #8]	@ float
- 114:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 236              		.loc 1 114 3 is_stmt 1 view .LVU68
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 8
+ 227              		.loc 1 126 3 is_stmt 1 view .LVU64
+ 126:Core/Src/Main/MicroMouse.c **** 		Sla.Alpha = 0.117;
+ 228              		.loc 1 126 11 is_stmt 0 view .LVU65
+ 229 00f2 124A     		ldr	r2, .L9+52
+ 230 00f4 5A60     		str	r2, [r3, #4]	@ float
+ 127:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+ 231              		.loc 1 127 3 is_stmt 1 view .LVU66
+ 127:Core/Src/Main/MicroMouse.c **** 		Sla.Theta1 = 30;
+ 232              		.loc 1 127 13 is_stmt 0 view .LVU67
+ 233 00f6 174A     		ldr	r2, .L9+76
+ 234 00f8 9A60     		str	r2, [r3, #8]	@ float
+ 128:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+ 235              		.loc 1 128 3 is_stmt 1 view .LVU68
+ 128:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
+ 236              		.loc 1 128 14 is_stmt 0 view .LVU69
+ 237 00fa 0D4A     		ldr	r2, .L9+40
+ 238 00fc 1A61     		str	r2, [r3, #16]	@ float
+ 129:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 239              		.loc 1 129 3 is_stmt 1 view .LVU70
+ 129:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
+ 240              		.loc 1 129 14 is_stmt 0 view .LVU71
+ 241 00fe 0D4A     		ldr	r2, .L9+44
+ 242 0100 5A61     		str	r2, [r3, #20]	@ float
+ 130:Core/Src/Main/MicroMouse.c **** 		//		//未
+ 243              		.loc 1 130 3 is_stmt 1 view .LVU72
+ 130:Core/Src/Main/MicroMouse.c **** 		//		//未
+ 244              		.loc 1 130 14 is_stmt 0 view .LVU73
+ 245 0102 054A     		ldr	r2, .L9+16
+ 246 0104 9A61     		str	r2, [r3, #24]	@ float
+ 132:Core/Src/Main/MicroMouse.c **** 	}
+ 247              		.loc 1 132 3 is_stmt 1 view .LVU74
+ 248 0106 92E7     		b	.L2
+ 249              	.L10:
+ 250              		.align	3
+ 251              	.L9:
+ 252 0108 540D8F9F 		.word	-1618014892
+ 253 010c 4AE59E40 		.word	1084155210
+ 254 0110 399D52A2 		.word	-1571644103
+ 255 0114 46DF913F 		.word	1066524486
+ 256 0118 0000B442 		.word	1119092736
+ 257 011c 00000000 		.word	.LANCHOR0
+ 258 0120 00000000 		.word	.LANCHOR1
+ 259 0124 00001041 		.word	1091567616
+ 260 0128 0000A041 		.word	1101004800
+ 261 012c 4260653C 		.word	1013276738
+ 262 0130 0000F041 		.word	1106247680
+ 263 0134 00007042 		.word	1114636288
+ 264 0138 00003443 		.word	1127481344
+ 265 013c 0000A040 		.word	1084227584
+ 266 0140 DFDE393D 		.word	1027202783
+ 267 0144 00007043 		.word	1131413504
+ 268 0148 98FFA73D 		.word	1034420120
+ 269 014c 00009643 		.word	1133903872
+ 270 0150 00004040 		.word	1077936128
+ 271 0154 B29DEF3D 		.word	1039113650
+ 272              		.cfi_endproc
+ 273              	.LFE238:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 9
 
 
- 114:Core/Src/Main/MicroMouse.c **** 		Sla.Theta2 = 60;
- 237              		.loc 1 114 14 is_stmt 0 view .LVU69
- 238 00fc 0E4A     		ldr	r2, .L9+40
- 239 00fe 1A61     		str	r2, [r3, #16]	@ float
- 115:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 240              		.loc 1 115 3 is_stmt 1 view .LVU70
- 115:Core/Src/Main/MicroMouse.c **** 		Sla.Theta3 = 90;
- 241              		.loc 1 115 14 is_stmt 0 view .LVU71
- 242 0100 0E4A     		ldr	r2, .L9+44
- 243 0102 5A61     		str	r2, [r3, #20]	@ float
- 116:Core/Src/Main/MicroMouse.c **** 		//		//未
- 244              		.loc 1 116 3 is_stmt 1 view .LVU72
- 116:Core/Src/Main/MicroMouse.c **** 		//		//未
- 245              		.loc 1 116 14 is_stmt 0 view .LVU73
- 246 0104 064A     		ldr	r2, .L9+16
- 247 0106 9A61     		str	r2, [r3, #24]	@ float
- 118:Core/Src/Main/MicroMouse.c **** 	}
- 248              		.loc 1 118 3 is_stmt 1 view .LVU74
- 249 0108 91E7     		b	.L2
- 250              	.L10:
- 251 010a 00BFAFF3 		.align	3
- 251      0080
- 252              	.L9:
- 253 0110 540D8F9F 		.word	-1618014892
- 254 0114 4AE59E40 		.word	1084155210
- 255 0118 399D52A2 		.word	-1571644103
- 256 011c 46DF913F 		.word	1066524486
- 257 0120 0000B442 		.word	1119092736
- 258 0124 00000000 		.word	.LANCHOR0
- 259 0128 00000000 		.word	.LANCHOR1
- 260 012c 00001041 		.word	1091567616
- 261 0130 0000A041 		.word	1101004800
- 262 0134 4260653C 		.word	1013276738
- 263 0138 0000F041 		.word	1106247680
- 264 013c 00007042 		.word	1114636288
- 265 0140 00003443 		.word	1127481344
- 266 0144 00004041 		.word	1094713344
- 267 0148 C520303D 		.word	1026564293
- 268 014c 00007043 		.word	1131413504
- 269 0150 77BE9F3D 		.word	1033879159
- 270 0154 00009643 		.word	1133903872
- 271 0158 00004040 		.word	1077936128
- 272 015c 0000A040 		.word	1084227584
- 273 0160 B29DEF3D 		.word	1039113650
- 274              		.cfi_endproc
- 275              	.LFE238:
- 277              		.section	.rodata.MouseStartAll.str1.4,"aMS",%progbits,1
- 278              		.align	2
- 279              	.LC0:
- 280 0000 696D755F 		.ascii	"imu_check: \344\270\200\345\233\236\347\233\256: 1\343"
- 280      63686563 
- 280      6B3A20E4 
- 280      B880E59B 
- 280      9EE79BAE 
- 281 0018 81AAE382 		.ascii	"\201\252\343\202\211OK: %d\015\012\000"
- 281      894F4B3A 
- 281      2025640D 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 9
-
-
- 281      0A00
- 282 0026 0000     		.align	2
- 283              	.LC1:
- 284 0028 696D755F 		.ascii	"imu_check: \344\272\214\345\233\236\347\233\256: 1\343"
- 284      63686563 
- 284      6B3A20E4 
- 284      BA8CE59B 
- 284      9EE79BAE 
- 285 0040 81AAE382 		.ascii	"\201\252\343\202\211OK: %d\015\012\000"
- 285      894F4B3A 
- 285      2025640D 
- 285      0A00
- 286 004e 0000     		.align	2
- 287              	.LC2:
- 288 0050 6779726F 		.ascii	"gyro : %f\015\012\000"
- 288      203A2025 
- 288      660D0A00 
- 289              		.section	.text.MouseStartAll,"ax",%progbits
- 290              		.align	1
- 291              		.global	MouseStartAll
- 292              		.syntax unified
- 293              		.thumb
- 294              		.thumb_func
- 296              	MouseStartAll:
- 297              	.LFB239:
- 126:Core/Src/Main/MicroMouse.c **** #endif
- 127:Core/Src/Main/MicroMouse.c **** 
- 128:Core/Src/Main/MicroMouse.c **** void MouseStartAll(){
- 298              		.loc 1 128 21 view -0
- 299              		.cfi_startproc
- 300              		@ args = 0, pretend = 0, frame = 0
- 301              		@ frame_needed = 0, uses_anonymous_args = 0
- 302 0000 08B5     		push	{r3, lr}
- 303              	.LCFI1:
- 304              		.cfi_def_cfa_offset 8
- 305              		.cfi_offset 3, -8
- 306              		.cfi_offset 14, -4
- 129:Core/Src/Main/MicroMouse.c **** 
- 130:Core/Src/Main/MicroMouse.c **** 	uint8_t imu_check;
- 307              		.loc 1 130 2 view .LVU76
- 131:Core/Src/Main/MicroMouse.c **** 	imu_check = IMU_init();
- 308              		.loc 1 131 2 view .LVU77
- 309              		.loc 1 131 14 is_stmt 0 view .LVU78
- 310 0002 FFF7FEFF 		bl	IMU_init
- 311              	.LVL17:
- 312 0006 0146     		mov	r1, r0
- 313              	.LVL18:
- 132:Core/Src/Main/MicroMouse.c **** 	printf("imu_check: 一回目: 1ならOK: %d\r\n",imu_check);
- 314              		.loc 1 132 2 is_stmt 1 view .LVU79
- 315 0008 1648     		ldr	r0, .L13
- 316 000a FFF7FEFF 		bl	printf
- 317              	.LVL19:
- 133:Core/Src/Main/MicroMouse.c **** 	
- 134:Core/Src/Main/MicroMouse.c **** 	//IMUから値が来なくなる現象の対策
- 135:Core/Src/Main/MicroMouse.c **** 	imu_check =IMU_init();
- 318              		.loc 1 135 2 view .LVU80
- 319              		.loc 1 135 13 is_stmt 0 view .LVU81
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 10
-
-
- 320 000e FFF7FEFF 		bl	IMU_init
- 321              	.LVL20:
- 322 0012 0146     		mov	r1, r0
- 323              	.LVL21:
- 136:Core/Src/Main/MicroMouse.c **** 	printf("imu_check: 二回目: 1ならOK: %d\r\n",imu_check);
- 324              		.loc 1 136 2 is_stmt 1 view .LVU82
- 325 0014 1448     		ldr	r0, .L13+4
- 326 0016 FFF7FEFF 		bl	printf
- 327              	.LVL22:
- 137:Core/Src/Main/MicroMouse.c **** 	HAL_Delay(100);
- 328              		.loc 1 137 2 view .LVU83
- 329 001a 6420     		movs	r0, #100
- 330 001c FFF7FEFF 		bl	HAL_Delay
- 331              	.LVL23:
- 138:Core/Src/Main/MicroMouse.c **** 
- 139:Core/Src/Main/MicroMouse.c **** 	ZGyro = ReadIMU(0x37, 0x38);
- 332              		.loc 1 139 2 view .LVU84
- 333              		.loc 1 139 10 is_stmt 0 view .LVU85
- 334 0020 3821     		movs	r1, #56
- 335 0022 3720     		movs	r0, #55
- 336 0024 FFF7FEFF 		bl	ReadIMU
- 337              	.LVL24:
- 338              		.loc 1 139 8 view .LVU86
- 339 0028 104B     		ldr	r3, .L13+8
- 340 002a 83ED000A 		vstr.32	s0, [r3]
- 140:Core/Src/Main/MicroMouse.c **** 	printf("gyro : %f\r\n",ZGyro);
- 341              		.loc 1 140 2 is_stmt 1 view .LVU87
- 342 002e 1868     		ldr	r0, [r3]	@ float
- 343 0030 FFF7FEFF 		bl	__aeabi_f2d
- 344              	.LVL25:
- 345 0034 0246     		mov	r2, r0
- 346 0036 0B46     		mov	r3, r1
- 347 0038 0D48     		ldr	r0, .L13+12
- 348 003a FFF7FEFF 		bl	printf
- 349              	.LVL26:
+ 275              		.section	.rodata.MouseStartAll.str1.4,"aMS",%progbits,1
+ 276              		.align	2
+ 277              	.LC0:
+ 278 0000 696D755F 		.ascii	"imu_check: \344\270\200\345\233\236\347\233\256: 1\343"
+ 278      63686563 
+ 278      6B3A20E4 
+ 278      B880E59B 
+ 278      9EE79BAE 
+ 279 0018 81AAE382 		.ascii	"\201\252\343\202\211OK: %d\015\012\000"
+ 279      894F4B3A 
+ 279      2025640D 
+ 279      0A00
+ 280 0026 0000     		.align	2
+ 281              	.LC1:
+ 282 0028 696D755F 		.ascii	"imu_check: \344\272\214\345\233\236\347\233\256: 1\343"
+ 282      63686563 
+ 282      6B3A20E4 
+ 282      BA8CE59B 
+ 282      9EE79BAE 
+ 283 0040 81AAE382 		.ascii	"\201\252\343\202\211OK: %d\015\012\000"
+ 283      894F4B3A 
+ 283      2025640D 
+ 283      0A00
+ 284 004e 0000     		.align	2
+ 285              	.LC2:
+ 286 0050 6779726F 		.ascii	"gyro : %f\015\012\000"
+ 286      203A2025 
+ 286      660D0A00 
+ 287              		.section	.text.MouseStartAll,"ax",%progbits
+ 288              		.align	1
+ 289              		.global	MouseStartAll
+ 290              		.syntax unified
+ 291              		.thumb
+ 292              		.thumb_func
+ 294              	MouseStartAll:
+ 295              	.LFB239:
+ 140:Core/Src/Main/MicroMouse.c **** #endif
  141:Core/Src/Main/MicroMouse.c **** 
- 142:Core/Src/Main/MicroMouse.c **** 		//ペリフェラルの動作開始
- 143:Core/Src/Main/MicroMouse.c **** 	Motor_PWM_Start();
- 350              		.loc 1 143 2 view .LVU88
- 351 003e FFF7FEFF 		bl	Motor_PWM_Start
- 352              	.LVL27:
- 144:Core/Src/Main/MicroMouse.c **** 	EncoderStart(); //戻し忘れないように
- 353              		.loc 1 144 2 view .LVU89
- 354 0042 FFF7FEFF 		bl	EncoderStart
- 355              	.LVL28:
- 145:Core/Src/Main/MicroMouse.c **** 	EmitterON();
- 356              		.loc 1 145 2 view .LVU90
- 357 0046 FFF7FEFF 		bl	EmitterON
- 358              	.LVL29:
- 146:Core/Src/Main/MicroMouse.c **** 	ADCStart();
- 359              		.loc 1 146 2 view .LVU91
- 360 004a FFF7FEFF 		bl	ADCStart
- 361              	.LVL30:
- 147:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
- 362              		.loc 1 147 2 view .LVU92
- 363 004e 47F22F51 		movw	r1, #29999
- 364 0052 0848     		ldr	r0, .L13+16
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 11
+ 142:Core/Src/Main/MicroMouse.c **** void MouseStartAll(){
+ 296              		.loc 1 142 21 view -0
+ 297              		.cfi_startproc
+ 298              		@ args = 0, pretend = 0, frame = 0
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300 0000 08B5     		push	{r3, lr}
+ 301              	.LCFI1:
+ 302              		.cfi_def_cfa_offset 8
+ 303              		.cfi_offset 3, -8
+ 304              		.cfi_offset 14, -4
+ 143:Core/Src/Main/MicroMouse.c **** 
+ 144:Core/Src/Main/MicroMouse.c **** 	uint8_t imu_check;
+ 305              		.loc 1 144 2 view .LVU76
+ 145:Core/Src/Main/MicroMouse.c **** 	imu_check = IMU_init();
+ 306              		.loc 1 145 2 view .LVU77
+ 307              		.loc 1 145 14 is_stmt 0 view .LVU78
+ 308 0002 FFF7FEFF 		bl	IMU_init
+ 309              	.LVL17:
+ 310 0006 0146     		mov	r1, r0
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 10
 
 
- 365 0054 FFF7FEFF 		bl	InitPulse
- 366              	.LVL31:
- 148:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
- 367              		.loc 1 148 2 view .LVU93
- 368 0058 47F22F51 		movw	r1, #29999
- 369 005c 0648     		ldr	r0, .L13+20
- 370 005e FFF7FEFF 		bl	InitPulse
- 371              	.LVL32:
- 149:Core/Src/Main/MicroMouse.c **** 	
- 150:Core/Src/Main/MicroMouse.c **** }
- 372              		.loc 1 150 1 is_stmt 0 view .LVU94
- 373 0062 08BD     		pop	{r3, pc}
- 374              	.L14:
- 375              		.align	2
- 376              	.L13:
- 377 0064 00000000 		.word	.LC0
- 378 0068 28000000 		.word	.LC1
- 379 006c 00000000 		.word	ZGyro
- 380 0070 50000000 		.word	.LC2
- 381 0074 24040040 		.word	1073742884
- 382 0078 24080040 		.word	1073743908
- 383              		.cfi_endproc
- 384              	.LFE239:
- 386              		.section	.text.MousePIDResetAll,"ax",%progbits
- 387              		.align	1
- 388              		.global	MousePIDResetAll
- 389              		.syntax unified
- 390              		.thumb
- 391              		.thumb_func
- 393              	MousePIDResetAll:
- 394              	.LFB240:
- 151:Core/Src/Main/MicroMouse.c **** void MousePIDResetAll(){
- 395              		.loc 1 151 24 is_stmt 1 view -0
- 396              		.cfi_startproc
- 397              		@ args = 0, pretend = 0, frame = 0
- 398              		@ frame_needed = 0, uses_anonymous_args = 0
- 399 0000 08B5     		push	{r3, lr}
- 400              	.LCFI2:
- 401              		.cfi_def_cfa_offset 8
- 402              		.cfi_offset 3, -8
- 403              		.cfi_offset 14, -4
- 152:Core/Src/Main/MicroMouse.c **** 	PIDReset(L_VELO_PID);
- 404              		.loc 1 152 2 view .LVU96
- 405 0002 0420     		movs	r0, #4
- 406 0004 FFF7FEFF 		bl	PIDReset
- 407              	.LVL33:
- 153:Core/Src/Main/MicroMouse.c **** 	PIDReset(R_VELO_PID);
- 408              		.loc 1 153 2 view .LVU97
- 409 0008 0520     		movs	r0, #5
- 410 000a FFF7FEFF 		bl	PIDReset
- 411              	.LVL34:
- 154:Core/Src/Main/MicroMouse.c **** 
- 155:Core/Src/Main/MicroMouse.c **** 	PIDReset(A_VELO_PID);
- 412              		.loc 1 155 2 view .LVU98
- 413 000e 0020     		movs	r0, #0
- 414 0010 FFF7FEFF 		bl	PIDReset
- 415              	.LVL35:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 12
+ 311              	.LVL18:
+ 146:Core/Src/Main/MicroMouse.c **** 	printf("imu_check: 一回目: 1ならOK: %d\r\n",imu_check);
+ 312              		.loc 1 146 2 is_stmt 1 view .LVU79
+ 313 0008 1648     		ldr	r0, .L13
+ 314 000a FFF7FEFF 		bl	printf
+ 315              	.LVL19:
+ 147:Core/Src/Main/MicroMouse.c **** 	
+ 148:Core/Src/Main/MicroMouse.c **** 	//IMUから値が来なくなる現象の対策
+ 149:Core/Src/Main/MicroMouse.c **** 	imu_check =IMU_init();
+ 316              		.loc 1 149 2 view .LVU80
+ 317              		.loc 1 149 13 is_stmt 0 view .LVU81
+ 318 000e FFF7FEFF 		bl	IMU_init
+ 319              	.LVL20:
+ 320 0012 0146     		mov	r1, r0
+ 321              	.LVL21:
+ 150:Core/Src/Main/MicroMouse.c **** 	printf("imu_check: 二回目: 1ならOK: %d\r\n",imu_check);
+ 322              		.loc 1 150 2 is_stmt 1 view .LVU82
+ 323 0014 1448     		ldr	r0, .L13+4
+ 324 0016 FFF7FEFF 		bl	printf
+ 325              	.LVL22:
+ 151:Core/Src/Main/MicroMouse.c **** 	HAL_Delay(100);
+ 326              		.loc 1 151 2 view .LVU83
+ 327 001a 6420     		movs	r0, #100
+ 328 001c FFF7FEFF 		bl	HAL_Delay
+ 329              	.LVL23:
+ 152:Core/Src/Main/MicroMouse.c **** 
+ 153:Core/Src/Main/MicroMouse.c **** 	ZGyro = ReadIMU(0x37, 0x38);
+ 330              		.loc 1 153 2 view .LVU84
+ 331              		.loc 1 153 10 is_stmt 0 view .LVU85
+ 332 0020 3821     		movs	r1, #56
+ 333 0022 3720     		movs	r0, #55
+ 334 0024 FFF7FEFF 		bl	ReadIMU
+ 335              	.LVL24:
+ 336              		.loc 1 153 8 view .LVU86
+ 337 0028 104B     		ldr	r3, .L13+8
+ 338 002a 83ED000A 		vstr.32	s0, [r3]
+ 154:Core/Src/Main/MicroMouse.c **** 	printf("gyro : %f\r\n",ZGyro);
+ 339              		.loc 1 154 2 is_stmt 1 view .LVU87
+ 340 002e 1868     		ldr	r0, [r3]	@ float
+ 341 0030 FFF7FEFF 		bl	__aeabi_f2d
+ 342              	.LVL25:
+ 343 0034 0246     		mov	r2, r0
+ 344 0036 0B46     		mov	r3, r1
+ 345 0038 0D48     		ldr	r0, .L13+12
+ 346 003a FFF7FEFF 		bl	printf
+ 347              	.LVL26:
+ 155:Core/Src/Main/MicroMouse.c **** 
+ 156:Core/Src/Main/MicroMouse.c **** 		//ペリフェラルの動作開始
+ 157:Core/Src/Main/MicroMouse.c **** 	Motor_PWM_Start();
+ 348              		.loc 1 157 2 view .LVU88
+ 349 003e FFF7FEFF 		bl	Motor_PWM_Start
+ 350              	.LVL27:
+ 158:Core/Src/Main/MicroMouse.c **** 	EncoderStart(); //戻し忘れないように
+ 351              		.loc 1 158 2 view .LVU89
+ 352 0042 FFF7FEFF 		bl	EncoderStart
+ 353              	.LVL28:
+ 159:Core/Src/Main/MicroMouse.c **** 	EmitterON();
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 11
 
 
- 156:Core/Src/Main/MicroMouse.c **** 	PIDReset(L_WALL_PID);
- 416              		.loc 1 156 2 view .LVU99
- 417 0014 0220     		movs	r0, #2
- 418 0016 FFF7FEFF 		bl	PIDReset
- 419              	.LVL36:
- 157:Core/Src/Main/MicroMouse.c **** 	PIDReset(R_WALL_PID);
- 420              		.loc 1 157 2 view .LVU100
- 421 001a 0320     		movs	r0, #3
- 422 001c FFF7FEFF 		bl	PIDReset
- 423              	.LVL37:
- 158:Core/Src/Main/MicroMouse.c **** 	PIDReset(D_WALL_PID);
- 424              		.loc 1 158 2 view .LVU101
- 425 0020 0120     		movs	r0, #1
- 426 0022 FFF7FEFF 		bl	PIDReset
- 427              	.LVL38:
- 159:Core/Src/Main/MicroMouse.c **** }
- 428              		.loc 1 159 1 is_stmt 0 view .LVU102
- 429 0026 08BD     		pop	{r3, pc}
- 430              		.cfi_endproc
- 431              	.LFE240:
- 433              		.section	.text.MousePIDFlagAll,"ax",%progbits
- 434              		.align	1
- 435              		.global	MousePIDFlagAll
- 436              		.syntax unified
- 437              		.thumb
- 438              		.thumb_func
- 440              	MousePIDFlagAll:
- 441              	.LVL39:
- 442              	.LFB241:
- 160:Core/Src/Main/MicroMouse.c **** void MousePIDFlagAll(_Bool high_or_low){
- 443              		.loc 1 160 40 is_stmt 1 view -0
- 444              		.cfi_startproc
- 445              		@ args = 0, pretend = 0, frame = 0
- 446              		@ frame_needed = 0, uses_anonymous_args = 0
- 447              		.loc 1 160 40 is_stmt 0 view .LVU104
- 448 0000 10B5     		push	{r4, lr}
- 449              	.LCFI3:
- 450              		.cfi_def_cfa_offset 8
- 451              		.cfi_offset 4, -8
- 452              		.cfi_offset 14, -4
- 453 0002 0446     		mov	r4, r0
- 161:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(L_VELO_PID, high_or_low);
- 454              		.loc 1 161 2 is_stmt 1 view .LVU105
- 455 0004 0146     		mov	r1, r0
- 456 0006 0420     		movs	r0, #4
- 457              	.LVL40:
- 458              		.loc 1 161 2 is_stmt 0 view .LVU106
- 459 0008 FFF7FEFF 		bl	PIDChangeFlag
- 460              	.LVL41:
- 162:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(R_VELO_PID, high_or_low);
- 461              		.loc 1 162 2 is_stmt 1 view .LVU107
- 462 000c 2146     		mov	r1, r4
- 463 000e 0520     		movs	r0, #5
- 464 0010 FFF7FEFF 		bl	PIDChangeFlag
- 465              	.LVL42:
- 163:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(L_WALL_PID, high_or_low);
- 466              		.loc 1 163 2 view .LVU108
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 13
+ 354              		.loc 1 159 2 view .LVU90
+ 355 0046 FFF7FEFF 		bl	EmitterON
+ 356              	.LVL29:
+ 160:Core/Src/Main/MicroMouse.c **** 	ADCStart();
+ 357              		.loc 1 160 2 view .LVU91
+ 358 004a FFF7FEFF 		bl	ADCStart
+ 359              	.LVL30:
+ 161:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+ 360              		.loc 1 161 2 view .LVU92
+ 361 004e 47F22F51 		movw	r1, #29999
+ 362 0052 0848     		ldr	r0, .L13+16
+ 363 0054 FFF7FEFF 		bl	InitPulse
+ 364              	.LVL31:
+ 162:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+ 365              		.loc 1 162 2 view .LVU93
+ 366 0058 47F22F51 		movw	r1, #29999
+ 367 005c 0648     		ldr	r0, .L13+20
+ 368 005e FFF7FEFF 		bl	InitPulse
+ 369              	.LVL32:
+ 163:Core/Src/Main/MicroMouse.c **** 	
+ 164:Core/Src/Main/MicroMouse.c **** }
+ 370              		.loc 1 164 1 is_stmt 0 view .LVU94
+ 371 0062 08BD     		pop	{r3, pc}
+ 372              	.L14:
+ 373              		.align	2
+ 374              	.L13:
+ 375 0064 00000000 		.word	.LC0
+ 376 0068 28000000 		.word	.LC1
+ 377 006c 00000000 		.word	ZGyro
+ 378 0070 50000000 		.word	.LC2
+ 379 0074 24040040 		.word	1073742884
+ 380 0078 24080040 		.word	1073743908
+ 381              		.cfi_endproc
+ 382              	.LFE239:
+ 384              		.section	.text.MousePIDResetAll,"ax",%progbits
+ 385              		.align	1
+ 386              		.global	MousePIDResetAll
+ 387              		.syntax unified
+ 388              		.thumb
+ 389              		.thumb_func
+ 391              	MousePIDResetAll:
+ 392              	.LFB240:
+ 165:Core/Src/Main/MicroMouse.c **** void MousePIDResetAll(){
+ 393              		.loc 1 165 24 is_stmt 1 view -0
+ 394              		.cfi_startproc
+ 395              		@ args = 0, pretend = 0, frame = 0
+ 396              		@ frame_needed = 0, uses_anonymous_args = 0
+ 397 0000 08B5     		push	{r3, lr}
+ 398              	.LCFI2:
+ 399              		.cfi_def_cfa_offset 8
+ 400              		.cfi_offset 3, -8
+ 401              		.cfi_offset 14, -4
+ 166:Core/Src/Main/MicroMouse.c **** 	PIDReset(L_VELO_PID);
+ 402              		.loc 1 166 2 view .LVU96
+ 403 0002 0420     		movs	r0, #4
+ 404 0004 FFF7FEFF 		bl	PIDReset
+ 405              	.LVL33:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 12
 
 
- 467 0014 2146     		mov	r1, r4
- 468 0016 0220     		movs	r0, #2
- 469 0018 FFF7FEFF 		bl	PIDChangeFlag
- 470              	.LVL43:
- 164:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(R_WALL_PID, high_or_low);
- 471              		.loc 1 164 2 view .LVU109
- 472 001c 2146     		mov	r1, r4
- 473 001e 0320     		movs	r0, #3
- 474 0020 FFF7FEFF 		bl	PIDChangeFlag
- 475              	.LVL44:
- 165:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(D_WALL_PID, high_or_low);
- 476              		.loc 1 165 2 view .LVU110
- 477 0024 2146     		mov	r1, r4
- 478 0026 0120     		movs	r0, #1
- 479 0028 FFF7FEFF 		bl	PIDChangeFlag
- 480              	.LVL45:
- 166:Core/Src/Main/MicroMouse.c **** 	//PIDChangeFlag(B_VELO, 0);
- 167:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(A_VELO_PID, high_or_low);
- 481              		.loc 1 167 2 view .LVU111
- 482 002c 2146     		mov	r1, r4
- 483 002e 0020     		movs	r0, #0
- 484 0030 FFF7FEFF 		bl	PIDChangeFlag
- 485              	.LVL46:
- 168:Core/Src/Main/MicroMouse.c **** }
- 486              		.loc 1 168 1 is_stmt 0 view .LVU112
- 487 0034 10BD     		pop	{r4, pc}
- 488              		.cfi_endproc
- 489              	.LFE241:
- 491              		.section	.text.MouseResetTotalPulses,"ax",%progbits
- 492              		.align	1
- 493              		.global	MouseResetTotalPulses
- 494              		.syntax unified
- 495              		.thumb
- 496              		.thumb_func
- 498              	MouseResetTotalPulses:
- 499              	.LFB242:
- 169:Core/Src/Main/MicroMouse.c **** void MouseResetTotalPulses(){
- 500              		.loc 1 169 29 is_stmt 1 view -0
- 501              		.cfi_startproc
- 502              		@ args = 0, pretend = 0, frame = 0
- 503              		@ frame_needed = 0, uses_anonymous_args = 0
- 504 0000 08B5     		push	{r3, lr}
- 505              	.LCFI4:
- 506              		.cfi_def_cfa_offset 8
- 507              		.cfi_offset 3, -8
- 508              		.cfi_offset 14, -4
- 170:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
- 509              		.loc 1 170 2 view .LVU114
- 510 0002 47F22F51 		movw	r1, #29999
- 511 0006 0748     		ldr	r0, .L21
- 512 0008 FFF7FEFF 		bl	InitPulse
- 513              	.LVL47:
- 171:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
- 514              		.loc 1 171 2 view .LVU115
- 515 000c 47F22F51 		movw	r1, #29999
- 516 0010 0548     		ldr	r0, .L21+4
- 517 0012 FFF7FEFF 		bl	InitPulse
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 14
+ 167:Core/Src/Main/MicroMouse.c **** 	PIDReset(R_VELO_PID);
+ 406              		.loc 1 167 2 view .LVU97
+ 407 0008 0520     		movs	r0, #5
+ 408 000a FFF7FEFF 		bl	PIDReset
+ 409              	.LVL34:
+ 168:Core/Src/Main/MicroMouse.c **** 
+ 169:Core/Src/Main/MicroMouse.c **** 	PIDReset(A_VELO_PID);
+ 410              		.loc 1 169 2 view .LVU98
+ 411 000e 0020     		movs	r0, #0
+ 412 0010 FFF7FEFF 		bl	PIDReset
+ 413              	.LVL35:
+ 170:Core/Src/Main/MicroMouse.c **** 	PIDReset(L_WALL_PID);
+ 414              		.loc 1 170 2 view .LVU99
+ 415 0014 0220     		movs	r0, #2
+ 416 0016 FFF7FEFF 		bl	PIDReset
+ 417              	.LVL36:
+ 171:Core/Src/Main/MicroMouse.c **** 	PIDReset(R_WALL_PID);
+ 418              		.loc 1 171 2 view .LVU100
+ 419 001a 0320     		movs	r0, #3
+ 420 001c FFF7FEFF 		bl	PIDReset
+ 421              	.LVL37:
+ 172:Core/Src/Main/MicroMouse.c **** 	PIDReset(D_WALL_PID);
+ 422              		.loc 1 172 2 view .LVU101
+ 423 0020 0120     		movs	r0, #1
+ 424 0022 FFF7FEFF 		bl	PIDReset
+ 425              	.LVL38:
+ 173:Core/Src/Main/MicroMouse.c **** }
+ 426              		.loc 1 173 1 is_stmt 0 view .LVU102
+ 427 0026 08BD     		pop	{r3, pc}
+ 428              		.cfi_endproc
+ 429              	.LFE240:
+ 431              		.section	.text.MousePIDFlagAll,"ax",%progbits
+ 432              		.align	1
+ 433              		.global	MousePIDFlagAll
+ 434              		.syntax unified
+ 435              		.thumb
+ 436              		.thumb_func
+ 438              	MousePIDFlagAll:
+ 439              	.LVL39:
+ 440              	.LFB241:
+ 174:Core/Src/Main/MicroMouse.c **** void MousePIDFlagAll(_Bool high_or_low){
+ 441              		.loc 1 174 40 is_stmt 1 view -0
+ 442              		.cfi_startproc
+ 443              		@ args = 0, pretend = 0, frame = 0
+ 444              		@ frame_needed = 0, uses_anonymous_args = 0
+ 445              		.loc 1 174 40 is_stmt 0 view .LVU104
+ 446 0000 10B5     		push	{r4, lr}
+ 447              	.LCFI3:
+ 448              		.cfi_def_cfa_offset 8
+ 449              		.cfi_offset 4, -8
+ 450              		.cfi_offset 14, -4
+ 451 0002 0446     		mov	r4, r0
+ 175:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(L_VELO_PID, high_or_low);
+ 452              		.loc 1 175 2 is_stmt 1 view .LVU105
+ 453 0004 0146     		mov	r1, r0
+ 454 0006 0420     		movs	r0, #4
+ 455              	.LVL40:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 13
 
 
- 518              	.LVL48:
- 172:Core/Src/Main/MicroMouse.c **** 	TotalPulse[BODY] = 0;
- 519              		.loc 1 172 2 view .LVU116
- 520              		.loc 1 172 19 is_stmt 0 view .LVU117
- 521 0016 054B     		ldr	r3, .L21+8
- 522 0018 0022     		movs	r2, #0
- 523 001a 9A60     		str	r2, [r3, #8]
- 173:Core/Src/Main/MicroMouse.c **** 	TotalPulse[LEFT] = 0;
- 524              		.loc 1 173 2 is_stmt 1 view .LVU118
- 525              		.loc 1 173 19 is_stmt 0 view .LVU119
- 526 001c 1A60     		str	r2, [r3]
- 174:Core/Src/Main/MicroMouse.c **** 	TotalPulse[RIGHT] = 0;
- 527              		.loc 1 174 2 is_stmt 1 view .LVU120
- 528              		.loc 1 174 20 is_stmt 0 view .LVU121
- 529 001e 5A60     		str	r2, [r3, #4]
- 175:Core/Src/Main/MicroMouse.c **** 
- 176:Core/Src/Main/MicroMouse.c **** }
- 530              		.loc 1 176 1 view .LVU122
- 531 0020 08BD     		pop	{r3, pc}
- 532              	.L22:
- 533 0022 00BF     		.align	2
- 534              	.L21:
- 535 0024 24040040 		.word	1073742884
- 536 0028 24080040 		.word	1073743908
- 537 002c 00000000 		.word	.LANCHOR2
- 538              		.cfi_endproc
- 539              	.LFE242:
- 541              		.section	.text.MouseResetParameters,"ax",%progbits
- 542              		.align	1
- 543              		.global	MouseResetParameters
- 544              		.syntax unified
- 545              		.thumb
- 546              		.thumb_func
- 548              	MouseResetParameters:
- 549              	.LFB243:
- 177:Core/Src/Main/MicroMouse.c **** 
- 178:Core/Src/Main/MicroMouse.c **** void MouseResetParameters(){
- 550              		.loc 1 178 28 is_stmt 1 view -0
- 551              		.cfi_startproc
- 552              		@ args = 0, pretend = 0, frame = 0
- 553              		@ frame_needed = 0, uses_anonymous_args = 0
- 554 0000 08B5     		push	{r3, lr}
- 555              	.LCFI5:
- 556              		.cfi_def_cfa_offset 8
- 557              		.cfi_offset 3, -8
- 558              		.cfi_offset 14, -4
- 179:Core/Src/Main/MicroMouse.c **** 	MouseResetTotalPulses();
- 559              		.loc 1 179 2 view .LVU124
- 560 0002 FFF7FEFF 		bl	MouseResetTotalPulses
- 561              	.LVL49:
- 180:Core/Src/Main/MicroMouse.c **** 
- 181:Core/Src/Main/MicroMouse.c **** 	Target.Velocity[BODY] = 0;
- 562              		.loc 1 181 2 view .LVU125
- 563              		.loc 1 181 24 is_stmt 0 view .LVU126
- 564 0006 0B4A     		ldr	r2, .L25
- 565 0008 0023     		movs	r3, #0
- 566 000a 9360     		str	r3, [r2, #8]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 15
+ 456              		.loc 1 175 2 is_stmt 0 view .LVU106
+ 457 0008 FFF7FEFF 		bl	PIDChangeFlag
+ 458              	.LVL41:
+ 176:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(R_VELO_PID, high_or_low);
+ 459              		.loc 1 176 2 is_stmt 1 view .LVU107
+ 460 000c 2146     		mov	r1, r4
+ 461 000e 0520     		movs	r0, #5
+ 462 0010 FFF7FEFF 		bl	PIDChangeFlag
+ 463              	.LVL42:
+ 177:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(L_WALL_PID, high_or_low);
+ 464              		.loc 1 177 2 view .LVU108
+ 465 0014 2146     		mov	r1, r4
+ 466 0016 0220     		movs	r0, #2
+ 467 0018 FFF7FEFF 		bl	PIDChangeFlag
+ 468              	.LVL43:
+ 178:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(R_WALL_PID, high_or_low);
+ 469              		.loc 1 178 2 view .LVU109
+ 470 001c 2146     		mov	r1, r4
+ 471 001e 0320     		movs	r0, #3
+ 472 0020 FFF7FEFF 		bl	PIDChangeFlag
+ 473              	.LVL44:
+ 179:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(D_WALL_PID, high_or_low);
+ 474              		.loc 1 179 2 view .LVU110
+ 475 0024 2146     		mov	r1, r4
+ 476 0026 0120     		movs	r0, #1
+ 477 0028 FFF7FEFF 		bl	PIDChangeFlag
+ 478              	.LVL45:
+ 180:Core/Src/Main/MicroMouse.c **** 	//PIDChangeFlag(B_VELO, 0);
+ 181:Core/Src/Main/MicroMouse.c **** 	PIDChangeFlag(A_VELO_PID, high_or_low);
+ 479              		.loc 1 181 2 view .LVU111
+ 480 002c 2146     		mov	r1, r4
+ 481 002e 0020     		movs	r0, #0
+ 482 0030 FFF7FEFF 		bl	PIDChangeFlag
+ 483              	.LVL46:
+ 182:Core/Src/Main/MicroMouse.c **** }
+ 484              		.loc 1 182 1 is_stmt 0 view .LVU112
+ 485 0034 10BD     		pop	{r4, pc}
+ 486              		.cfi_endproc
+ 487              	.LFE241:
+ 489              		.section	.text.MouseResetTotalPulses,"ax",%progbits
+ 490              		.align	1
+ 491              		.global	MouseResetTotalPulses
+ 492              		.syntax unified
+ 493              		.thumb
+ 494              		.thumb_func
+ 496              	MouseResetTotalPulses:
+ 497              	.LFB242:
+ 183:Core/Src/Main/MicroMouse.c **** void MouseResetTotalPulses(){
+ 498              		.loc 1 183 29 is_stmt 1 view -0
+ 499              		.cfi_startproc
+ 500              		@ args = 0, pretend = 0, frame = 0
+ 501              		@ frame_needed = 0, uses_anonymous_args = 0
+ 502 0000 08B5     		push	{r3, lr}
+ 503              	.LCFI4:
+ 504              		.cfi_def_cfa_offset 8
+ 505              		.cfi_offset 3, -8
+ 506              		.cfi_offset 14, -4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 14
 
 
- 182:Core/Src/Main/MicroMouse.c **** 	Target.Velocity[LEFT] = 0;
- 567              		.loc 1 182 2 is_stmt 1 view .LVU127
- 568              		.loc 1 182 24 is_stmt 0 view .LVU128
- 569 000c 1360     		str	r3, [r2]	@ float
- 183:Core/Src/Main/MicroMouse.c **** 	Target.Velocity[RIGHT] = 0;
- 570              		.loc 1 183 2 is_stmt 1 view .LVU129
- 571              		.loc 1 183 25 is_stmt 0 view .LVU130
- 572 000e 5360     		str	r3, [r2, #4]	@ float
- 184:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[BODY] = 0;
- 573              		.loc 1 184 2 is_stmt 1 view .LVU131
- 574              		.loc 1 184 25 is_stmt 0 view .LVU132
- 575 0010 0949     		ldr	r1, .L25+4
- 576 0012 8B60     		str	r3, [r1, #8]	@ float
- 185:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[LEFT] = 0;
- 577              		.loc 1 185 2 is_stmt 1 view .LVU133
- 578              		.loc 1 185 25 is_stmt 0 view .LVU134
- 579 0014 0B60     		str	r3, [r1]	@ float
- 186:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[RIGHT] = 0;
- 580              		.loc 1 186 2 is_stmt 1 view .LVU135
- 581              		.loc 1 186 26 is_stmt 0 view .LVU136
- 582 0016 4B60     		str	r3, [r1, #4]	@ float
- 187:Core/Src/Main/MicroMouse.c **** 	Target.Acceleration = 0;
- 583              		.loc 1 187 2 is_stmt 1 view .LVU137
- 584              		.loc 1 187 22 is_stmt 0 view .LVU138
- 585 0018 1363     		str	r3, [r2, #48]	@ float
- 188:Core/Src/Main/MicroMouse.c **** 
- 189:Core/Src/Main/MicroMouse.c **** 	Target.Angle = 0;
- 586              		.loc 1 189 2 is_stmt 1 view .LVU139
- 587              		.loc 1 189 15 is_stmt 0 view .LVU140
- 588 001a D360     		str	r3, [r2, #12]	@ float
- 190:Core/Src/Main/MicroMouse.c **** 	Current.Angle = 0;
- 589              		.loc 1 190 2 is_stmt 1 view .LVU141
- 590              		.loc 1 190 16 is_stmt 0 view .LVU142
- 591 001c CB60     		str	r3, [r1, #12]	@ float
- 191:Core/Src/Main/MicroMouse.c **** 	Target.AngularV = 0;
- 592              		.loc 1 191 2 is_stmt 1 view .LVU143
- 593              		.loc 1 191 18 is_stmt 0 view .LVU144
- 594 001e 1361     		str	r3, [r2, #16]	@ float
- 192:Core/Src/Main/MicroMouse.c **** 	Current.AngularV = 0;
- 595              		.loc 1 192 2 is_stmt 1 view .LVU145
- 596              		.loc 1 192 19 is_stmt 0 view .LVU146
- 597 0020 0B61     		str	r3, [r1, #16]	@ float
- 193:Core/Src/Main/MicroMouse.c **** 	Target.AngularAcceleration = 0;
- 598              		.loc 1 193 2 is_stmt 1 view .LVU147
- 599              		.loc 1 193 29 is_stmt 0 view .LVU148
- 600 0022 5363     		str	r3, [r2, #52]	@ float
- 194:Core/Src/Main/MicroMouse.c **** 		//両壁の値を取得。それぞれの値と差分を制御目標に反映。
- 195:Core/Src/Main/MicroMouse.c **** //	Target.Photo[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
- 196:Core/Src/Main/MicroMouse.c **** //	Target.Photo[SIDE_R] = Photo[SIDE_R];//294.299988;//THRESHOLD_SR;
- 197:Core/Src/Main/MicroMouse.c **** //	PhotoDiff = Target.Photo[SL] - Target.Photo[SIDE_R];
- 198:Core/Src/Main/MicroMouse.c **** 	Target.Photo[SL] = 370;//439.600006;//THRESHOLD_SL;
- 601              		.loc 1 198 2 is_stmt 1 view .LVU149
- 602              		.loc 1 198 19 is_stmt 0 view .LVU150
- 603 0024 054B     		ldr	r3, .L25+8
- 604 0026 D361     		str	r3, [r2, #28]	@ float
- 199:Core/Src/Main/MicroMouse.c **** 	Target.Photo[SIDE_R] = 300;//294.299988;//THRESHOLD_SR;
- 605              		.loc 1 199 2 is_stmt 1 view .LVU151
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 16
+ 184:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM3->CNT)),  INITIAL_PULSE);
+ 507              		.loc 1 184 2 view .LVU114
+ 508 0002 47F22F51 		movw	r1, #29999
+ 509 0006 0748     		ldr	r0, .L21
+ 510 0008 FFF7FEFF 		bl	InitPulse
+ 511              	.LVL47:
+ 185:Core/Src/Main/MicroMouse.c **** 	InitPulse( (int*)(&(TIM4->CNT)),  INITIAL_PULSE);
+ 512              		.loc 1 185 2 view .LVU115
+ 513 000c 47F22F51 		movw	r1, #29999
+ 514 0010 0548     		ldr	r0, .L21+4
+ 515 0012 FFF7FEFF 		bl	InitPulse
+ 516              	.LVL48:
+ 186:Core/Src/Main/MicroMouse.c **** 	TotalPulse[BODY] = 0;
+ 517              		.loc 1 186 2 view .LVU116
+ 518              		.loc 1 186 19 is_stmt 0 view .LVU117
+ 519 0016 054B     		ldr	r3, .L21+8
+ 520 0018 0022     		movs	r2, #0
+ 521 001a 9A60     		str	r2, [r3, #8]
+ 187:Core/Src/Main/MicroMouse.c **** 	TotalPulse[LEFT] = 0;
+ 522              		.loc 1 187 2 is_stmt 1 view .LVU118
+ 523              		.loc 1 187 19 is_stmt 0 view .LVU119
+ 524 001c 1A60     		str	r2, [r3]
+ 188:Core/Src/Main/MicroMouse.c **** 	TotalPulse[RIGHT] = 0;
+ 525              		.loc 1 188 2 is_stmt 1 view .LVU120
+ 526              		.loc 1 188 20 is_stmt 0 view .LVU121
+ 527 001e 5A60     		str	r2, [r3, #4]
+ 189:Core/Src/Main/MicroMouse.c **** 
+ 190:Core/Src/Main/MicroMouse.c **** }
+ 528              		.loc 1 190 1 view .LVU122
+ 529 0020 08BD     		pop	{r3, pc}
+ 530              	.L22:
+ 531 0022 00BF     		.align	2
+ 532              	.L21:
+ 533 0024 24040040 		.word	1073742884
+ 534 0028 24080040 		.word	1073743908
+ 535 002c 00000000 		.word	.LANCHOR2
+ 536              		.cfi_endproc
+ 537              	.LFE242:
+ 539              		.section	.text.MouseResetParameters,"ax",%progbits
+ 540              		.align	1
+ 541              		.global	MouseResetParameters
+ 542              		.syntax unified
+ 543              		.thumb
+ 544              		.thumb_func
+ 546              	MouseResetParameters:
+ 547              	.LFB243:
+ 191:Core/Src/Main/MicroMouse.c **** 
+ 192:Core/Src/Main/MicroMouse.c **** void MouseResetParameters(){
+ 548              		.loc 1 192 28 is_stmt 1 view -0
+ 549              		.cfi_startproc
+ 550              		@ args = 0, pretend = 0, frame = 0
+ 551              		@ frame_needed = 0, uses_anonymous_args = 0
+ 552 0000 08B5     		push	{r3, lr}
+ 553              	.LCFI5:
+ 554              		.cfi_def_cfa_offset 8
+ 555              		.cfi_offset 3, -8
+ 556              		.cfi_offset 14, -4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 15
 
 
- 606              		.loc 1 199 23 is_stmt 0 view .LVU152
- 607 0028 054B     		ldr	r3, .L25+12
- 608 002a 9361     		str	r3, [r2, #24]	@ float
- 200:Core/Src/Main/MicroMouse.c **** 	PhotoDiff = 70;
- 609              		.loc 1 200 2 is_stmt 1 view .LVU153
- 610              		.loc 1 200 12 is_stmt 0 view .LVU154
- 611 002c 054B     		ldr	r3, .L25+16
- 612 002e 064A     		ldr	r2, .L25+20
- 613 0030 1A60     		str	r2, [r3]	@ float
- 201:Core/Src/Main/MicroMouse.c **** }
- 614              		.loc 1 201 1 view .LVU155
- 615 0032 08BD     		pop	{r3, pc}
- 616              	.L26:
- 617              		.align	2
- 618              	.L25:
- 619 0034 00000000 		.word	.LANCHOR3
- 620 0038 00000000 		.word	.LANCHOR4
- 621 003c 0000B943 		.word	1136197632
- 622 0040 00009643 		.word	1133903872
- 623 0044 00000000 		.word	.LANCHOR5
- 624 0048 00008C42 		.word	1116471296
- 625              		.cfi_endproc
- 626              	.LFE243:
- 628              		.section	.text.MouseInit,"ax",%progbits
- 629              		.align	1
- 630              		.global	MouseInit
- 631              		.syntax unified
- 632              		.thumb
- 633              		.thumb_func
- 635              	MouseInit:
- 636              	.LFB244:
- 202:Core/Src/Main/MicroMouse.c **** void MouseInit(){
- 637              		.loc 1 202 17 is_stmt 1 view -0
- 638              		.cfi_startproc
- 639              		@ args = 0, pretend = 0, frame = 0
- 640              		@ frame_needed = 0, uses_anonymous_args = 0
- 641 0000 08B5     		push	{r3, lr}
- 642              	.LCFI6:
- 643              		.cfi_def_cfa_offset 8
- 644              		.cfi_offset 3, -8
- 645              		.cfi_offset 14, -4
- 203:Core/Src/Main/MicroMouse.c **** 	//	Load_Gain();
- 204:Core/Src/Main/MicroMouse.c **** 	MouseStartAll(); //各デバイスの起動
- 646              		.loc 1 204 2 view .LVU157
- 647 0002 FFF7FEFF 		bl	MouseStartAll
- 648              	.LVL50:
- 205:Core/Src/Main/MicroMouse.c **** 	HAL_TIM_Base_Start_IT(&htim1);//割り込みを有効化
- 649              		.loc 1 205 2 view .LVU158
- 650 0006 0748     		ldr	r0, .L29
- 651 0008 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
- 652              	.LVL51:
- 206:Core/Src/Main/MicroMouse.c **** 	HAL_TIM_Base_Start_IT(&htim8);
- 653              		.loc 1 206 2 view .LVU159
- 654 000c 0648     		ldr	r0, .L29+4
- 655 000e FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
- 656              	.LVL52:
- 207:Core/Src/Main/MicroMouse.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 17
+ 193:Core/Src/Main/MicroMouse.c **** 	MouseResetTotalPulses();
+ 557              		.loc 1 193 2 view .LVU124
+ 558 0002 FFF7FEFF 		bl	MouseResetTotalPulses
+ 559              	.LVL49:
+ 194:Core/Src/Main/MicroMouse.c **** 
+ 195:Core/Src/Main/MicroMouse.c **** 	Target.Velocity[BODY] = 0;
+ 560              		.loc 1 195 2 view .LVU125
+ 561              		.loc 1 195 24 is_stmt 0 view .LVU126
+ 562 0006 0B4A     		ldr	r2, .L25
+ 563 0008 0023     		movs	r3, #0
+ 564 000a 9360     		str	r3, [r2, #8]	@ float
+ 196:Core/Src/Main/MicroMouse.c **** 	Target.Velocity[LEFT] = 0;
+ 565              		.loc 1 196 2 is_stmt 1 view .LVU127
+ 566              		.loc 1 196 24 is_stmt 0 view .LVU128
+ 567 000c 1360     		str	r3, [r2]	@ float
+ 197:Core/Src/Main/MicroMouse.c **** 	Target.Velocity[RIGHT] = 0;
+ 568              		.loc 1 197 2 is_stmt 1 view .LVU129
+ 569              		.loc 1 197 25 is_stmt 0 view .LVU130
+ 570 000e 5360     		str	r3, [r2, #4]	@ float
+ 198:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[BODY] = 0;
+ 571              		.loc 1 198 2 is_stmt 1 view .LVU131
+ 572              		.loc 1 198 25 is_stmt 0 view .LVU132
+ 573 0010 0949     		ldr	r1, .L25+4
+ 574 0012 8B60     		str	r3, [r1, #8]	@ float
+ 199:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[LEFT] = 0;
+ 575              		.loc 1 199 2 is_stmt 1 view .LVU133
+ 576              		.loc 1 199 25 is_stmt 0 view .LVU134
+ 577 0014 0B60     		str	r3, [r1]	@ float
+ 200:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[RIGHT] = 0;
+ 578              		.loc 1 200 2 is_stmt 1 view .LVU135
+ 579              		.loc 1 200 26 is_stmt 0 view .LVU136
+ 580 0016 4B60     		str	r3, [r1, #4]	@ float
+ 201:Core/Src/Main/MicroMouse.c **** 	Target.Acceleration = 0;
+ 581              		.loc 1 201 2 is_stmt 1 view .LVU137
+ 582              		.loc 1 201 22 is_stmt 0 view .LVU138
+ 583 0018 D362     		str	r3, [r2, #44]	@ float
+ 202:Core/Src/Main/MicroMouse.c **** 
+ 203:Core/Src/Main/MicroMouse.c **** 	Target.Angle = 0;
+ 584              		.loc 1 203 2 is_stmt 1 view .LVU139
+ 585              		.loc 1 203 15 is_stmt 0 view .LVU140
+ 586 001a 9361     		str	r3, [r2, #24]	@ float
+ 204:Core/Src/Main/MicroMouse.c **** 	Current.Angle = 0;
+ 587              		.loc 1 204 2 is_stmt 1 view .LVU141
+ 588              		.loc 1 204 16 is_stmt 0 view .LVU142
+ 589 001c 8B61     		str	r3, [r1, #24]	@ float
+ 205:Core/Src/Main/MicroMouse.c **** 	Target.AngularV = 0;
+ 590              		.loc 1 205 2 is_stmt 1 view .LVU143
+ 591              		.loc 1 205 18 is_stmt 0 view .LVU144
+ 592 001e D360     		str	r3, [r2, #12]	@ float
+ 206:Core/Src/Main/MicroMouse.c **** 	Current.AngularV = 0;
+ 593              		.loc 1 206 2 is_stmt 1 view .LVU145
+ 594              		.loc 1 206 19 is_stmt 0 view .LVU146
+ 595 0020 CB60     		str	r3, [r1, #12]	@ float
+ 207:Core/Src/Main/MicroMouse.c **** 	Target.AngularAcceleration = 0;
+ 596              		.loc 1 207 2 is_stmt 1 view .LVU147
+ 597              		.loc 1 207 29 is_stmt 0 view .LVU148
+ 598 0022 1363     		str	r3, [r2, #48]	@ float
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 16
 
 
- 208:Core/Src/Main/MicroMouse.c **** 	MousePIDFlagAll(false);
- 657              		.loc 1 208 2 view .LVU160
- 658 0012 0020     		movs	r0, #0
- 659 0014 FFF7FEFF 		bl	MousePIDFlagAll
- 660              	.LVL53:
- 209:Core/Src/Main/MicroMouse.c **** 	MousePIDResetAll();
- 661              		.loc 1 209 2 view .LVU161
- 662 0018 FFF7FEFF 		bl	MousePIDResetAll
- 663              	.LVL54:
- 210:Core/Src/Main/MicroMouse.c **** 
- 211:Core/Src/Main/MicroMouse.c **** 	MouseResetParameters();
- 664              		.loc 1 211 2 view .LVU162
- 665 001c FFF7FEFF 		bl	MouseResetParameters
- 666              	.LVL55:
- 212:Core/Src/Main/MicroMouse.c **** }
- 667              		.loc 1 212 1 is_stmt 0 view .LVU163
- 668 0020 08BD     		pop	{r3, pc}
- 669              	.L30:
- 670 0022 00BF     		.align	2
- 671              	.L29:
- 672 0024 00000000 		.word	htim1
- 673 0028 00000000 		.word	htim8
- 674              		.cfi_endproc
- 675              	.LFE244:
- 677              		.global	__aeabi_ddiv
- 678              		.section	.text.setTurnParam,"ax",%progbits
- 679              		.align	1
- 680              		.global	setTurnParam
- 681              		.syntax unified
- 682              		.thumb
- 683              		.thumb_func
- 685              	setTurnParam:
- 686              	.LVL56:
- 687              	.LFB245:
- 213:Core/Src/Main/MicroMouse.c **** 
- 214:Core/Src/Main/MicroMouse.c **** slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
- 215:Core/Src/Main/MicroMouse.c **** 
- 216:Core/Src/Main/MicroMouse.c **** void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, float theta2, float 
- 688              		.loc 1 216 120 is_stmt 1 view -0
- 689              		.cfi_startproc
- 690              		@ args = 0, pretend = 0, frame = 0
- 691              		@ frame_needed = 0, uses_anonymous_args = 0
- 692              		.loc 1 216 120 is_stmt 0 view .LVU165
- 693 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 694              	.LCFI7:
- 695              		.cfi_def_cfa_offset 24
- 696              		.cfi_offset 3, -24
- 697              		.cfi_offset 4, -20
- 698              		.cfi_offset 5, -16
- 699              		.cfi_offset 6, -12
- 700              		.cfi_offset 7, -8
- 701              		.cfi_offset 14, -4
- 702 0002 2DED028B 		vpush.64	{d8}
- 703              	.LCFI8:
- 704              		.cfi_def_cfa_offset 32
- 705              		.cfi_offset 80, -32
- 706              		.cfi_offset 81, -28
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 18
+ 208:Core/Src/Main/MicroMouse.c **** 		//両壁の値を取得。それぞれの値と差分を制御目標に反映。
+ 209:Core/Src/Main/MicroMouse.c **** //	Target.Photo[SL] = Photo[SL];//439.600006;//THRESHOLD_SL;
+ 210:Core/Src/Main/MicroMouse.c **** //	Target.Photo[SIDE_R] = Photo[SIDE_R];//294.299988;//THRESHOLD_SR;
+ 211:Core/Src/Main/MicroMouse.c **** //	PhotoDiff = Target.Photo[SL] - Target.Photo[SIDE_R];
+ 212:Core/Src/Main/MicroMouse.c **** 	Target.Photo[SL] = 370;//439.600006;//THRESHOLD_SL;
+ 599              		.loc 1 212 2 is_stmt 1 view .LVU149
+ 600              		.loc 1 212 19 is_stmt 0 view .LVU150
+ 601 0024 054B     		ldr	r3, .L25+8
+ 602 0026 5362     		str	r3, [r2, #36]	@ float
+ 213:Core/Src/Main/MicroMouse.c **** 	Target.Photo[SIDE_R] = 300;//294.299988;//THRESHOLD_SR;
+ 603              		.loc 1 213 2 is_stmt 1 view .LVU151
+ 604              		.loc 1 213 23 is_stmt 0 view .LVU152
+ 605 0028 054B     		ldr	r3, .L25+12
+ 606 002a 1362     		str	r3, [r2, #32]	@ float
+ 214:Core/Src/Main/MicroMouse.c **** 	PhotoDiff = 70;
+ 607              		.loc 1 214 2 is_stmt 1 view .LVU153
+ 608              		.loc 1 214 12 is_stmt 0 view .LVU154
+ 609 002c 054B     		ldr	r3, .L25+16
+ 610 002e 064A     		ldr	r2, .L25+20
+ 611 0030 1A60     		str	r2, [r3]	@ float
+ 215:Core/Src/Main/MicroMouse.c **** }
+ 612              		.loc 1 215 1 view .LVU155
+ 613 0032 08BD     		pop	{r3, pc}
+ 614              	.L26:
+ 615              		.align	2
+ 616              	.L25:
+ 617 0034 00000000 		.word	.LANCHOR3
+ 618 0038 00000000 		.word	.LANCHOR4
+ 619 003c 0000B943 		.word	1136197632
+ 620 0040 00009643 		.word	1133903872
+ 621 0044 00000000 		.word	.LANCHOR5
+ 622 0048 00008C42 		.word	1116471296
+ 623              		.cfi_endproc
+ 624              	.LFE243:
+ 626              		.section	.text.MouseInit,"ax",%progbits
+ 627              		.align	1
+ 628              		.global	MouseInit
+ 629              		.syntax unified
+ 630              		.thumb
+ 631              		.thumb_func
+ 633              	MouseInit:
+ 634              	.LFB244:
+ 216:Core/Src/Main/MicroMouse.c **** void MouseInit(){
+ 635              		.loc 1 216 17 is_stmt 1 view -0
+ 636              		.cfi_startproc
+ 637              		@ args = 0, pretend = 0, frame = 0
+ 638              		@ frame_needed = 0, uses_anonymous_args = 0
+ 639 0000 08B5     		push	{r3, lr}
+ 640              	.LCFI6:
+ 641              		.cfi_def_cfa_offset 8
+ 642              		.cfi_offset 3, -8
+ 643              		.cfi_offset 14, -4
+ 644 0002 2DED028B 		vpush.64	{d8}
+ 645              	.LCFI7:
+ 646              		.cfi_def_cfa_offset 16
+ 647              		.cfi_offset 80, -16
+ 648              		.cfi_offset 81, -12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 17
 
 
- 707 0006 0446     		mov	r4, r0
- 708 0008 B0EE608A 		vmov.f32	s16, s1
- 709 000c 11EE107A 		vmov	r7, s2
- 710 0010 11EE906A 		vmov	r6, s3
- 711 0014 12EE105A 		vmov	r5, s4
- 712 0018 F0EE628A 		vmov.f32	s17, s5
- 217:Core/Src/Main/MicroMouse.c **** 	param->Pre = pre *2/MM_PER_PULSE;
- 713              		.loc 1 217 2 is_stmt 1 view .LVU166
- 714              		.loc 1 217 19 is_stmt 0 view .LVU167
- 715 001c 70EE007A 		vadd.f32	s15, s0, s0
- 716 0020 17EE900A 		vmov	r0, s15
- 717              	.LVL57:
- 718              		.loc 1 217 19 view .LVU168
- 719 0024 FFF7FEFF 		bl	__aeabi_f2d
- 720              	.LVL58:
- 721              		.loc 1 217 21 view .LVU169
- 722 0028 31A3     		adr	r3, .L33+16
- 723 002a D3E90023 		ldrd	r2, [r3]
- 724 002e FFF7FEFF 		bl	__aeabi_ddiv
- 725              	.LVL59:
- 726 0032 FFF7FEFF 		bl	__aeabi_d2f
- 727              	.LVL60:
- 728              		.loc 1 217 13 view .LVU170
- 729 0036 2060     		str	r0, [r4]	@ float
- 218:Core/Src/Main/MicroMouse.c **** 	param->Fol = fol *2/MM_PER_PULSE;
- 730              		.loc 1 218 2 is_stmt 1 view .LVU171
- 731              		.loc 1 218 19 is_stmt 0 view .LVU172
- 732 0038 78EE087A 		vadd.f32	s15, s16, s16
- 733 003c 17EE900A 		vmov	r0, s15
- 734 0040 FFF7FEFF 		bl	__aeabi_f2d
- 735              	.LVL61:
- 736              		.loc 1 218 21 view .LVU173
- 737 0044 2AA3     		adr	r3, .L33+16
- 738 0046 D3E90023 		ldrd	r2, [r3]
- 739 004a FFF7FEFF 		bl	__aeabi_ddiv
- 740              	.LVL62:
- 741 004e FFF7FEFF 		bl	__aeabi_d2f
- 742              	.LVL63:
- 743              		.loc 1 218 13 view .LVU174
- 744 0052 6060     		str	r0, [r4, #4]	@ float
- 219:Core/Src/Main/MicroMouse.c **** 	param->Theta1 = theta1 *M_PI/180;
- 745              		.loc 1 219 2 is_stmt 1 view .LVU175
- 746              		.loc 1 219 25 is_stmt 0 view .LVU176
- 747 0054 3846     		mov	r0, r7	@ float
- 748 0056 FFF7FEFF 		bl	__aeabi_f2d
- 749              	.LVL64:
- 750 005a 21A3     		adr	r3, .L33
- 751 005c D3E90023 		ldrd	r2, [r3]
- 752 0060 FFF7FEFF 		bl	__aeabi_dmul
- 753              	.LVL65:
- 754              		.loc 1 219 30 view .LVU177
- 755 0064 0022     		movs	r2, #0
- 756 0066 204B     		ldr	r3, .L33+8
- 757 0068 FFF7FEFF 		bl	__aeabi_ddiv
- 758              	.LVL66:
- 759 006c FFF7FEFF 		bl	__aeabi_d2f
- 760              	.LVL67:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 19
+ 217:Core/Src/Main/MicroMouse.c **** 	//	Load_Gain();
+ 218:Core/Src/Main/MicroMouse.c **** 	MouseStartAll(); //各デバイスの起動
+ 649              		.loc 1 218 2 view .LVU157
+ 650 0006 FFF7FEFF 		bl	MouseStartAll
+ 651              	.LVL50:
+ 219:Core/Src/Main/MicroMouse.c **** 	MousePIDFlagAll(false);
+ 652              		.loc 1 219 2 view .LVU158
+ 653 000a 0020     		movs	r0, #0
+ 654 000c FFF7FEFF 		bl	MousePIDFlagAll
+ 655              	.LVL51:
+ 220:Core/Src/Main/MicroMouse.c **** 	MousePIDResetAll();
+ 656              		.loc 1 220 2 view .LVU159
+ 657 0010 FFF7FEFF 		bl	MousePIDResetAll
+ 658              	.LVL52:
+ 221:Core/Src/Main/MicroMouse.c **** 	MouseResetParameters();
+ 659              		.loc 1 221 2 view .LVU160
+ 660 0014 FFF7FEFF 		bl	MouseResetParameters
+ 661              	.LVL53:
+ 222:Core/Src/Main/MicroMouse.c **** 	Current.Angle = 0.5*M_PI;
+ 662              		.loc 1 222 2 view .LVU161
+ 663              		.loc 1 222 16 is_stmt 0 view .LVU162
+ 664 0018 184A     		ldr	r2, .L29
+ 665 001a 1949     		ldr	r1, .L29+4
+ 666 001c 9161     		str	r1, [r2, #24]	@ float
+ 223:Core/Src/Main/MicroMouse.c **** 	Current.X = 0;
+ 667              		.loc 1 223 2 is_stmt 1 view .LVU163
+ 668              		.loc 1 223 12 is_stmt 0 view .LVU164
+ 669 001e 0023     		movs	r3, #0
+ 670 0020 1361     		str	r3, [r2, #16]	@ float
+ 224:Core/Src/Main/MicroMouse.c **** 	Current.Y = 0;
+ 671              		.loc 1 224 2 is_stmt 1 view .LVU165
+ 672              		.loc 1 224 12 is_stmt 0 view .LVU166
+ 673 0022 5361     		str	r3, [r2, #20]	@ float
+ 225:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[BODY] = 0;
+ 674              		.loc 1 225 2 is_stmt 1 view .LVU167
+ 675              		.loc 1 225 25 is_stmt 0 view .LVU168
+ 676 0024 9360     		str	r3, [r2, #8]	@ float
+ 226:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[RIGHT] = 0;
+ 677              		.loc 1 226 2 is_stmt 1 view .LVU169
+ 678              		.loc 1 226 26 is_stmt 0 view .LVU170
+ 679 0026 5360     		str	r3, [r2, #4]	@ float
+ 227:Core/Src/Main/MicroMouse.c **** 	Current.Velocity[LEFT] = 0;
+ 680              		.loc 1 227 2 is_stmt 1 view .LVU171
+ 681              		.loc 1 227 25 is_stmt 0 view .LVU172
+ 682 0028 1360     		str	r3, [r2]	@ float
+ 228:Core/Src/Main/MicroMouse.c **** 	Current.AngularV = 0;
+ 683              		.loc 1 228 2 is_stmt 1 view .LVU173
+ 684              		.loc 1 228 19 is_stmt 0 view .LVU174
+ 685 002a D360     		str	r3, [r2, #12]	@ float
+ 229:Core/Src/Main/MicroMouse.c **** 	Current.Angle = 0.5*M_PI;
+ 686              		.loc 1 229 2 is_stmt 1 view .LVU175
+ 687              		.loc 1 229 16 is_stmt 0 view .LVU176
+ 688 002c 9161     		str	r1, [r2, #24]	@ float
+ 230:Core/Src/Main/MicroMouse.c **** 	Target.Acceleration = 0;
+ 689              		.loc 1 230 2 is_stmt 1 view .LVU177
+ 690              		.loc 1 230 22 is_stmt 0 view .LVU178
+ 691 002e 154A     		ldr	r2, .L29+8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 18
 
 
- 761              		.loc 1 219 16 view .LVU178
- 762 0070 2061     		str	r0, [r4, #16]	@ float
- 220:Core/Src/Main/MicroMouse.c **** 	param->Theta2 = theta2 *M_PI/180;
- 763              		.loc 1 220 2 is_stmt 1 view .LVU179
- 764              		.loc 1 220 25 is_stmt 0 view .LVU180
- 765 0072 3046     		mov	r0, r6	@ float
- 766 0074 FFF7FEFF 		bl	__aeabi_f2d
- 767              	.LVL68:
- 768 0078 19A3     		adr	r3, .L33
- 769 007a D3E90023 		ldrd	r2, [r3]
- 770 007e FFF7FEFF 		bl	__aeabi_dmul
- 771              	.LVL69:
- 772              		.loc 1 220 30 view .LVU181
- 773 0082 0022     		movs	r2, #0
- 774 0084 184B     		ldr	r3, .L33+8
- 775 0086 FFF7FEFF 		bl	__aeabi_ddiv
- 776              	.LVL70:
- 777 008a FFF7FEFF 		bl	__aeabi_d2f
- 778              	.LVL71:
- 779              		.loc 1 220 16 view .LVU182
- 780 008e 6061     		str	r0, [r4, #20]	@ float
- 221:Core/Src/Main/MicroMouse.c **** 	param->Theta3 = theta3 *M_PI/180;
- 781              		.loc 1 221 2 is_stmt 1 view .LVU183
- 782              		.loc 1 221 25 is_stmt 0 view .LVU184
- 783 0090 2846     		mov	r0, r5	@ float
- 784 0092 FFF7FEFF 		bl	__aeabi_f2d
- 785              	.LVL72:
- 786 0096 12A3     		adr	r3, .L33
- 787 0098 D3E90023 		ldrd	r2, [r3]
- 788 009c FFF7FEFF 		bl	__aeabi_dmul
- 789              	.LVL73:
- 790              		.loc 1 221 30 view .LVU185
- 791 00a0 0022     		movs	r2, #0
- 792 00a2 114B     		ldr	r3, .L33+8
- 793 00a4 FFF7FEFF 		bl	__aeabi_ddiv
- 794              	.LVL74:
- 795 00a8 FFF7FEFF 		bl	__aeabi_d2f
- 796              	.LVL75:
- 797              		.loc 1 221 16 view .LVU186
- 798 00ac A061     		str	r0, [r4, #24]	@ float
- 222:Core/Src/Main/MicroMouse.c **** 	param->Alpha = alpha *T1*M_PI/180;
- 799              		.loc 1 222 2 is_stmt 1 view .LVU187
- 800              		.loc 1 222 23 is_stmt 0 view .LVU188
- 801 00ae DFED0F7A 		vldr.32	s15, .L33+12
- 802 00b2 68EEA77A 		vmul.f32	s15, s17, s15
- 803 00b6 17EE900A 		vmov	r0, s15
- 804 00ba FFF7FEFF 		bl	__aeabi_f2d
- 805              	.LVL76:
- 806              		.loc 1 222 26 view .LVU189
- 807 00be 08A3     		adr	r3, .L33
- 808 00c0 D3E90023 		ldrd	r2, [r3]
- 809 00c4 FFF7FEFF 		bl	__aeabi_dmul
- 810              	.LVL77:
- 811              		.loc 1 222 31 view .LVU190
- 812 00c8 0022     		movs	r2, #0
- 813 00ca 074B     		ldr	r3, .L33+8
- 814 00cc FFF7FEFF 		bl	__aeabi_ddiv
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 20
+ 692 0030 D362     		str	r3, [r2, #44]	@ float
+ 231:Core/Src/Main/MicroMouse.c **** 	Target.Angle = 0.5*M_PI;
+ 693              		.loc 1 231 2 is_stmt 1 view .LVU179
+ 694              		.loc 1 231 15 is_stmt 0 view .LVU180
+ 695 0032 9161     		str	r1, [r2, #24]	@ float
+ 232:Core/Src/Main/MicroMouse.c **** 	Target.X = 0;
+ 696              		.loc 1 232 2 is_stmt 1 view .LVU181
+ 697              		.loc 1 232 11 is_stmt 0 view .LVU182
+ 698 0034 1361     		str	r3, [r2, #16]	@ float
+ 233:Core/Src/Main/MicroMouse.c **** 	Target.Y = 0;
+ 699              		.loc 1 233 2 is_stmt 1 view .LVU183
+ 700              		.loc 1 233 11 is_stmt 0 view .LVU184
+ 701 0036 5361     		str	r3, [r2, #20]	@ float
+ 234:Core/Src/Main/MicroMouse.c **** 	Target.AngularAcceleration = 0;
+ 702              		.loc 1 234 2 is_stmt 1 view .LVU185
+ 703              		.loc 1 234 29 is_stmt 0 view .LVU186
+ 704 0038 1363     		str	r3, [r2, #48]	@ float
+ 235:Core/Src/Main/MicroMouse.c **** 	Target.AngularV = 0;
+ 705              		.loc 1 235 2 is_stmt 1 view .LVU187
+ 706              		.loc 1 235 18 is_stmt 0 view .LVU188
+ 707 003a D360     		str	r3, [r2, #12]	@ float
+ 236:Core/Src/Main/MicroMouse.c **** 	// kx,kyは0.0005である程度安定していた. kthetaは0.1
+ 237:Core/Src/Main/MicroMouse.c **** 	float kx=0.0008, ky=0.0008, ktheta = 0.1;//1;//0.1
+ 708              		.loc 1 237 2 is_stmt 1 view .LVU189
+ 709              	.LVL54:
+ 238:Core/Src/Main/MicroMouse.c **** 	initKanayama(&Next, kx, ky, ktheta);
+ 710              		.loc 1 238 2 view .LVU190
+ 711 003c DFED128A 		vldr.32	s17, .L29+12
+ 712 0040 9FED128A 		vldr.32	s16, .L29+16
+ 713 0044 B0EE681A 		vmov.f32	s2, s17
+ 714 0048 F0EE480A 		vmov.f32	s1, s16
+ 715 004c B0EE480A 		vmov.f32	s0, s16
+ 716 0050 0F48     		ldr	r0, .L29+20
+ 717 0052 FFF7FEFF 		bl	initKanayama
+ 718              	.LVL55:
+ 239:Core/Src/Main/MicroMouse.c **** 	initKanayama(&End, kx, ky, ktheta);
+ 719              		.loc 1 239 2 view .LVU191
+ 720 0056 B0EE681A 		vmov.f32	s2, s17
+ 721 005a F0EE480A 		vmov.f32	s1, s16
+ 722 005e B0EE480A 		vmov.f32	s0, s16
+ 723 0062 0C48     		ldr	r0, .L29+24
+ 724 0064 FFF7FEFF 		bl	initKanayama
+ 725              	.LVL56:
+ 240:Core/Src/Main/MicroMouse.c **** 	
+ 241:Core/Src/Main/MicroMouse.c **** 	HAL_TIM_Base_Start_IT(&htim1);//割り込みを有効化
+ 726              		.loc 1 241 2 view .LVU192
+ 727 0068 0B48     		ldr	r0, .L29+28
+ 728 006a FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 729              	.LVL57:
+ 242:Core/Src/Main/MicroMouse.c **** 	HAL_TIM_Base_Start_IT(&htim8);
+ 730              		.loc 1 242 2 view .LVU193
+ 731 006e 0B48     		ldr	r0, .L29+32
+ 732 0070 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 733              	.LVL58:
+ 243:Core/Src/Main/MicroMouse.c **** 
+ 244:Core/Src/Main/MicroMouse.c **** 	
+ 245:Core/Src/Main/MicroMouse.c **** }
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 19
 
 
- 815              	.LVL78:
- 816 00d0 FFF7FEFF 		bl	__aeabi_d2f
- 817              	.LVL79:
- 818              		.loc 1 222 15 view .LVU191
- 819 00d4 A060     		str	r0, [r4, #8]	@ float
- 223:Core/Src/Main/MicroMouse.c **** }
- 820              		.loc 1 223 1 view .LVU192
- 821 00d6 BDEC028B 		vldm	sp!, {d8}
- 822              	.LCFI9:
- 823              		.cfi_restore 80
- 824              		.cfi_restore 81
- 825              		.cfi_def_cfa_offset 24
- 826              	.LVL80:
- 827              		.loc 1 223 1 view .LVU193
- 828 00da F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 829              	.LVL81:
- 830              	.L34:
- 831              		.loc 1 223 1 view .LVU194
- 832 00dc AFF30080 		.align	3
- 833              	.L33:
- 834 00e0 182D4454 		.word	1413754136
- 835 00e4 FB210940 		.word	1074340347
- 836 00e8 00806640 		.word	1080459264
- 837 00ec 6F12833A 		.word	981668463
- 838 00f0 6626CA23 		.word	600450662
- 839 00f4 6892503F 		.word	1062244968
- 840              		.cfi_endproc
- 841              	.LFE245:
- 843              		.section	.text.setFastDiagonalParam,"ax",%progbits
- 844              		.align	1
- 845              		.global	setFastDiagonalParam
- 846              		.syntax unified
- 847              		.thumb
- 848              		.thumb_func
- 850              	setFastDiagonalParam:
- 851              	.LVL82:
- 852              	.LFB246:
- 224:Core/Src/Main/MicroMouse.c **** 
- 225:Core/Src/Main/MicroMouse.c **** void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
- 853              		.loc 1 225 33 is_stmt 1 view -0
- 854              		.cfi_startproc
- 855              		@ args = 0, pretend = 0, frame = 0
- 856              		@ frame_needed = 0, uses_anonymous_args = 0
- 226:Core/Src/Main/MicroMouse.c **** 
- 227:Core/Src/Main/MicroMouse.c **** 	//300mm/sのパラメータ
- 228:Core/Src/Main/MicroMouse.c **** 	switch(n){
- 857              		.loc 1 228 2 view .LVU196
- 858 0000 00B1     		cbz	r0, .L41
- 859 0002 7047     		bx	lr
- 860              	.L41:
- 225:Core/Src/Main/MicroMouse.c **** 
- 861              		.loc 1 225 33 is_stmt 0 view .LVU197
- 862 0004 08B5     		push	{r3, lr}
- 863              	.LCFI10:
- 864              		.cfi_def_cfa_offset 8
- 865              		.cfi_offset 3, -8
- 866              		.cfi_offset 14, -4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 21
+ 734              		.loc 1 245 1 is_stmt 0 view .LVU194
+ 735 0074 BDEC028B 		vldm	sp!, {d8}
+ 736              	.LCFI8:
+ 737              		.cfi_restore 80
+ 738              		.cfi_restore 81
+ 739              		.cfi_def_cfa_offset 8
+ 740 0078 08BD     		pop	{r3, pc}
+ 741              	.L30:
+ 742 007a 00BF     		.align	2
+ 743              	.L29:
+ 744 007c 00000000 		.word	.LANCHOR4
+ 745 0080 DB0FC93F 		.word	1070141403
+ 746 0084 00000000 		.word	.LANCHOR3
+ 747 0088 CDCCCC3D 		.word	1036831949
+ 748 008c 17B7513A 		.word	978433815
+ 749 0090 00000000 		.word	Next
+ 750 0094 00000000 		.word	End
+ 751 0098 00000000 		.word	htim1
+ 752 009c 00000000 		.word	htim8
+ 753              		.cfi_endproc
+ 754              	.LFE244:
+ 756              		.global	__aeabi_ddiv
+ 757              		.section	.text.setTurnParam,"ax",%progbits
+ 758              		.align	1
+ 759              		.global	setTurnParam
+ 760              		.syntax unified
+ 761              		.thumb
+ 762              		.thumb_func
+ 764              	setTurnParam:
+ 765              	.LVL59:
+ 766              	.LFB245:
+ 246:Core/Src/Main/MicroMouse.c **** 
+ 247:Core/Src/Main/MicroMouse.c **** slalom_parameter fast90diagonal, fast45, fast45reverse, fast90, fast180, fast135, fast135reverse;
+ 248:Core/Src/Main/MicroMouse.c **** 
+ 249:Core/Src/Main/MicroMouse.c **** void setTurnParam(slalom_parameter *param, float pre, float fol, float theta1, float theta2, float 
+ 767              		.loc 1 249 120 is_stmt 1 view -0
+ 768              		.cfi_startproc
+ 769              		@ args = 0, pretend = 0, frame = 0
+ 770              		@ frame_needed = 0, uses_anonymous_args = 0
+ 771              		.loc 1 249 120 is_stmt 0 view .LVU196
+ 772 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 773              	.LCFI9:
+ 774              		.cfi_def_cfa_offset 24
+ 775              		.cfi_offset 3, -24
+ 776              		.cfi_offset 4, -20
+ 777              		.cfi_offset 5, -16
+ 778              		.cfi_offset 6, -12
+ 779              		.cfi_offset 7, -8
+ 780              		.cfi_offset 14, -4
+ 781 0002 2DED028B 		vpush.64	{d8}
+ 782              	.LCFI10:
+ 783              		.cfi_def_cfa_offset 32
+ 784              		.cfi_offset 80, -32
+ 785              		.cfi_offset 81, -28
+ 786 0006 0446     		mov	r4, r0
+ 787 0008 B0EE608A 		vmov.f32	s16, s1
+ 788 000c 11EE107A 		vmov	r7, s2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 20
 
 
- 867 0006 2DED068B 		vpush.64	{d8, d9, d10}
- 868              	.LCFI11:
- 869              		.cfi_def_cfa_offset 32
- 870              		.cfi_offset 80, -32
- 871              		.cfi_offset 81, -28
- 872              		.cfi_offset 82, -24
- 873              		.cfi_offset 83, -20
- 874              		.cfi_offset 84, -16
- 875              		.cfi_offset 85, -12
- 229:Core/Src/Main/MicroMouse.c **** 		case 0:
- 230:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast45, 			4, 22, 15,30,45,2750);
- 876              		.loc 1 230 4 is_stmt 1 view .LVU198
- 877 000a DFED3F8A 		vldr.32	s17, .L42
- 878 000e 9FED3F8A 		vldr.32	s16, .L42+4
- 879 0012 F0EE682A 		vmov.f32	s5, s17
- 880 0016 B0EE482A 		vmov.f32	s4, s16
- 881 001a F3EE0E1A 		vmov.f32	s3, #3.0e+1
- 882 001e B2EE0E1A 		vmov.f32	s2, #1.5e+1
- 883 0022 F3EE060A 		vmov.f32	s1, #2.2e+1
- 884 0026 B1EE000A 		vmov.f32	s0, #4.0e+0
- 885 002a 3948     		ldr	r0, .L42+8
- 886              	.LVL83:
- 887              		.loc 1 230 4 is_stmt 0 view .LVU199
- 888 002c FFF7FEFF 		bl	setTurnParam
- 889              	.LVL84:
- 231:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast45reverse, 	22, 4, 15,30,45,2750);
- 890              		.loc 1 231 4 is_stmt 1 view .LVU200
- 891 0030 F0EE682A 		vmov.f32	s5, s17
- 892 0034 B0EE482A 		vmov.f32	s4, s16
- 893 0038 F3EE0E1A 		vmov.f32	s3, #3.0e+1
- 894 003c B2EE0E1A 		vmov.f32	s2, #1.5e+1
- 895 0040 F1EE000A 		vmov.f32	s1, #4.0e+0
- 896 0044 B3EE060A 		vmov.f32	s0, #2.2e+1
- 897 0048 3248     		ldr	r0, .L42+12
- 898 004a FFF7FEFF 		bl	setTurnParam
- 899              	.LVL85:
- 232:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast90,  0, 3, 30,60,90,1485);
- 900              		.loc 1 232 4 view .LVU201
- 901 004e 9FED329A 		vldr.32	s18, .L42+16
- 902 0052 9FED328A 		vldr.32	s16, .L42+20
- 903 0056 DFED328A 		vldr.32	s17, .L42+24
- 904 005a DFED322A 		vldr.32	s5, .L42+28
- 905 005e B0EE492A 		vmov.f32	s4, s18
- 906 0062 F0EE481A 		vmov.f32	s3, s16
- 907 0066 B3EE0E1A 		vmov.f32	s2, #3.0e+1
- 908 006a F0EE080A 		vmov.f32	s1, #3.0e+0
- 909 006e B0EE680A 		vmov.f32	s0, s17
- 910 0072 2D48     		ldr	r0, .L42+32
- 911 0074 FFF7FEFF 		bl	setTurnParam
- 912              	.LVL86:
- 233:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast180, 0, 0, 60,120,180,1681.25);
- 913              		.loc 1 233 4 view .LVU202
- 914 0078 DFED2C2A 		vldr.32	s5, .L42+36
- 915 007c 9FED2C2A 		vldr.32	s4, .L42+40
- 916 0080 DFED2C1A 		vldr.32	s3, .L42+44
- 917 0084 B0EE481A 		vmov.f32	s2, s16
- 918 0088 F0EE680A 		vmov.f32	s1, s17
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 22
+ 789 0010 11EE906A 		vmov	r6, s3
+ 790 0014 12EE105A 		vmov	r5, s4
+ 791 0018 F0EE628A 		vmov.f32	s17, s5
+ 250:Core/Src/Main/MicroMouse.c **** 	param->Pre = pre *2/MM_PER_PULSE;
+ 792              		.loc 1 250 2 is_stmt 1 view .LVU197
+ 793              		.loc 1 250 19 is_stmt 0 view .LVU198
+ 794 001c 70EE007A 		vadd.f32	s15, s0, s0
+ 795 0020 17EE900A 		vmov	r0, s15
+ 796              	.LVL60:
+ 797              		.loc 1 250 19 view .LVU199
+ 798 0024 FFF7FEFF 		bl	__aeabi_f2d
+ 799              	.LVL61:
+ 800              		.loc 1 250 21 view .LVU200
+ 801 0028 31A3     		adr	r3, .L33+16
+ 802 002a D3E90023 		ldrd	r2, [r3]
+ 803 002e FFF7FEFF 		bl	__aeabi_ddiv
+ 804              	.LVL62:
+ 805 0032 FFF7FEFF 		bl	__aeabi_d2f
+ 806              	.LVL63:
+ 807              		.loc 1 250 13 view .LVU201
+ 808 0036 2060     		str	r0, [r4]	@ float
+ 251:Core/Src/Main/MicroMouse.c **** 	param->Fol = fol *2/MM_PER_PULSE;
+ 809              		.loc 1 251 2 is_stmt 1 view .LVU202
+ 810              		.loc 1 251 19 is_stmt 0 view .LVU203
+ 811 0038 78EE087A 		vadd.f32	s15, s16, s16
+ 812 003c 17EE900A 		vmov	r0, s15
+ 813 0040 FFF7FEFF 		bl	__aeabi_f2d
+ 814              	.LVL64:
+ 815              		.loc 1 251 21 view .LVU204
+ 816 0044 2AA3     		adr	r3, .L33+16
+ 817 0046 D3E90023 		ldrd	r2, [r3]
+ 818 004a FFF7FEFF 		bl	__aeabi_ddiv
+ 819              	.LVL65:
+ 820 004e FFF7FEFF 		bl	__aeabi_d2f
+ 821              	.LVL66:
+ 822              		.loc 1 251 13 view .LVU205
+ 823 0052 6060     		str	r0, [r4, #4]	@ float
+ 252:Core/Src/Main/MicroMouse.c **** 	param->Theta1 = theta1 *M_PI/180;
+ 824              		.loc 1 252 2 is_stmt 1 view .LVU206
+ 825              		.loc 1 252 25 is_stmt 0 view .LVU207
+ 826 0054 3846     		mov	r0, r7	@ float
+ 827 0056 FFF7FEFF 		bl	__aeabi_f2d
+ 828              	.LVL67:
+ 829 005a 21A3     		adr	r3, .L33
+ 830 005c D3E90023 		ldrd	r2, [r3]
+ 831 0060 FFF7FEFF 		bl	__aeabi_dmul
+ 832              	.LVL68:
+ 833              		.loc 1 252 30 view .LVU208
+ 834 0064 0022     		movs	r2, #0
+ 835 0066 204B     		ldr	r3, .L33+8
+ 836 0068 FFF7FEFF 		bl	__aeabi_ddiv
+ 837              	.LVL69:
+ 838 006c FFF7FEFF 		bl	__aeabi_d2f
+ 839              	.LVL70:
+ 840              		.loc 1 252 16 view .LVU209
+ 841 0070 2061     		str	r0, [r4, #16]	@ float
+ 253:Core/Src/Main/MicroMouse.c **** 	param->Theta2 = theta2 *M_PI/180;
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 21
 
 
- 919 008c B0EE680A 		vmov.f32	s0, s17
- 920 0090 2948     		ldr	r0, .L42+48
- 921 0092 FFF7FEFF 		bl	setTurnParam
- 922              	.LVL87:
- 234:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast135, 			15, 12, 65,70,135, 2700);
- 923              		.loc 1 234 4 view .LVU203
- 924 0096 DFED29AA 		vldr.32	s21, .L42+52
- 925 009a 9FED29AA 		vldr.32	s20, .L42+56
- 926 009e DFED299A 		vldr.32	s19, .L42+60
- 927 00a2 DFED298A 		vldr.32	s17, .L42+64
- 928 00a6 F0EE6A2A 		vmov.f32	s5, s21
- 929 00aa B0EE4A2A 		vmov.f32	s4, s20
- 930 00ae F0EE691A 		vmov.f32	s3, s19
- 931 00b2 B0EE681A 		vmov.f32	s2, s17
- 932 00b6 F2EE080A 		vmov.f32	s1, #1.2e+1
- 933 00ba B2EE0E0A 		vmov.f32	s0, #1.5e+1
- 934 00be 2348     		ldr	r0, .L42+68
- 935 00c0 FFF7FEFF 		bl	setTurnParam
- 936              	.LVL88:
- 235:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast135reverse, 	12, 15, 65,70,135, 2700);
- 937              		.loc 1 235 4 view .LVU204
- 938 00c4 F0EE6A2A 		vmov.f32	s5, s21
- 939 00c8 B0EE4A2A 		vmov.f32	s4, s20
- 940 00cc F0EE691A 		vmov.f32	s3, s19
- 941 00d0 B0EE681A 		vmov.f32	s2, s17
- 942 00d4 F2EE0E0A 		vmov.f32	s1, #1.5e+1
- 943 00d8 B2EE080A 		vmov.f32	s0, #1.2e+1
- 944 00dc 1C48     		ldr	r0, .L42+72
- 945 00de FFF7FEFF 		bl	setTurnParam
- 946              	.LVL89:
- 236:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast90diagonal, 	16, 16, 30,60,90, 5200);
- 947              		.loc 1 236 4 view .LVU205
- 948 00e2 DFED1C2A 		vldr.32	s5, .L42+76
- 949 00e6 B0EE492A 		vmov.f32	s4, s18
- 950 00ea F0EE481A 		vmov.f32	s3, s16
- 951 00ee B3EE0E1A 		vmov.f32	s2, #3.0e+1
- 952 00f2 F3EE000A 		vmov.f32	s1, #1.6e+1
- 953 00f6 B0EE600A 		vmov.f32	s0, s1
- 954 00fa 1748     		ldr	r0, .L42+80
- 955 00fc FFF7FEFF 		bl	setTurnParam
- 956              	.LVL90:
- 237:Core/Src/Main/MicroMouse.c **** 			break;
- 957              		.loc 1 237 4 view .LVU206
- 238:Core/Src/Main/MicroMouse.c **** 		default:
- 239:Core/Src/Main/MicroMouse.c **** 			break;
- 240:Core/Src/Main/MicroMouse.c **** 	}
- 241:Core/Src/Main/MicroMouse.c **** }
- 958              		.loc 1 241 1 is_stmt 0 view .LVU207
- 959 0100 BDEC068B 		vldm	sp!, {d8-d10}
- 960              	.LCFI12:
- 961              		.cfi_restore 84
- 962              		.cfi_restore 85
- 963              		.cfi_restore 82
- 964              		.cfi_restore 83
- 965              		.cfi_restore 80
- 966              		.cfi_restore 81
- 967              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 23
+ 842              		.loc 1 253 2 is_stmt 1 view .LVU210
+ 843              		.loc 1 253 25 is_stmt 0 view .LVU211
+ 844 0072 3046     		mov	r0, r6	@ float
+ 845 0074 FFF7FEFF 		bl	__aeabi_f2d
+ 846              	.LVL71:
+ 847 0078 19A3     		adr	r3, .L33
+ 848 007a D3E90023 		ldrd	r2, [r3]
+ 849 007e FFF7FEFF 		bl	__aeabi_dmul
+ 850              	.LVL72:
+ 851              		.loc 1 253 30 view .LVU212
+ 852 0082 0022     		movs	r2, #0
+ 853 0084 184B     		ldr	r3, .L33+8
+ 854 0086 FFF7FEFF 		bl	__aeabi_ddiv
+ 855              	.LVL73:
+ 856 008a FFF7FEFF 		bl	__aeabi_d2f
+ 857              	.LVL74:
+ 858              		.loc 1 253 16 view .LVU213
+ 859 008e 6061     		str	r0, [r4, #20]	@ float
+ 254:Core/Src/Main/MicroMouse.c **** 	param->Theta3 = theta3 *M_PI/180;
+ 860              		.loc 1 254 2 is_stmt 1 view .LVU214
+ 861              		.loc 1 254 25 is_stmt 0 view .LVU215
+ 862 0090 2846     		mov	r0, r5	@ float
+ 863 0092 FFF7FEFF 		bl	__aeabi_f2d
+ 864              	.LVL75:
+ 865 0096 12A3     		adr	r3, .L33
+ 866 0098 D3E90023 		ldrd	r2, [r3]
+ 867 009c FFF7FEFF 		bl	__aeabi_dmul
+ 868              	.LVL76:
+ 869              		.loc 1 254 30 view .LVU216
+ 870 00a0 0022     		movs	r2, #0
+ 871 00a2 114B     		ldr	r3, .L33+8
+ 872 00a4 FFF7FEFF 		bl	__aeabi_ddiv
+ 873              	.LVL77:
+ 874 00a8 FFF7FEFF 		bl	__aeabi_d2f
+ 875              	.LVL78:
+ 876              		.loc 1 254 16 view .LVU217
+ 877 00ac A061     		str	r0, [r4, #24]	@ float
+ 255:Core/Src/Main/MicroMouse.c **** 	param->Alpha = alpha *T1*M_PI/180;
+ 878              		.loc 1 255 2 is_stmt 1 view .LVU218
+ 879              		.loc 1 255 23 is_stmt 0 view .LVU219
+ 880 00ae DFED0F7A 		vldr.32	s15, .L33+12
+ 881 00b2 68EEA77A 		vmul.f32	s15, s17, s15
+ 882 00b6 17EE900A 		vmov	r0, s15
+ 883 00ba FFF7FEFF 		bl	__aeabi_f2d
+ 884              	.LVL79:
+ 885              		.loc 1 255 26 view .LVU220
+ 886 00be 08A3     		adr	r3, .L33
+ 887 00c0 D3E90023 		ldrd	r2, [r3]
+ 888 00c4 FFF7FEFF 		bl	__aeabi_dmul
+ 889              	.LVL80:
+ 890              		.loc 1 255 31 view .LVU221
+ 891 00c8 0022     		movs	r2, #0
+ 892 00ca 074B     		ldr	r3, .L33+8
+ 893 00cc FFF7FEFF 		bl	__aeabi_ddiv
+ 894              	.LVL81:
+ 895 00d0 FFF7FEFF 		bl	__aeabi_d2f
+ 896              	.LVL82:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 22
 
 
- 968 0104 08BD     		pop	{r3, pc}
- 969              	.L43:
- 970 0106 00BF     		.align	2
- 971              	.L42:
- 972 0108 00E02B45 		.word	1160503296
- 973 010c 00003442 		.word	1110704128
- 974 0110 00000000 		.word	.LANCHOR6
- 975 0114 00000000 		.word	.LANCHOR7
- 976 0118 0000B442 		.word	1119092736
- 977 011c 00007042 		.word	1114636288
- 978 0120 00000000 		.word	0
- 979 0124 00A0B944 		.word	1153015808
- 980 0128 00000000 		.word	.LANCHOR8
- 981 012c 0028D244 		.word	1154623488
- 982 0130 00003443 		.word	1127481344
- 983 0134 0000F042 		.word	1123024896
- 984 0138 00000000 		.word	.LANCHOR9
- 985 013c 00C02845 		.word	1160298496
- 986 0140 00000743 		.word	1124532224
- 987 0144 00008C42 		.word	1116471296
- 988 0148 00008242 		.word	1115815936
- 989 014c 00000000 		.word	.LANCHOR10
- 990 0150 00000000 		.word	.LANCHOR11
- 991 0154 0080A245 		.word	1168277504
- 992 0158 00000000 		.word	.LANCHOR12
- 993              		.cfi_endproc
- 994              	.LFE246:
- 996              		.section	.text.setVelocity,"ax",%progbits
- 997              		.align	1
- 998              		.global	setVelocity
- 999              		.syntax unified
- 1000              		.thumb
- 1001              		.thumb_func
- 1003              	setVelocity:
- 1004              	.LVL91:
- 1005              	.LFB247:
- 242:Core/Src/Main/MicroMouse.c **** 
- 243:Core/Src/Main/MicroMouse.c **** void setVelocity(physical *phy, float velo){
- 1006              		.loc 1 243 44 is_stmt 1 view -0
- 1007              		.cfi_startproc
- 1008              		@ args = 0, pretend = 0, frame = 0
- 1009              		@ frame_needed = 0, uses_anonymous_args = 0
- 1010              		@ link register save eliminated.
- 244:Core/Src/Main/MicroMouse.c **** 	phy->Velocity[BODY] = velo;
- 1011              		.loc 1 244 2 view .LVU209
- 1012              		.loc 1 244 22 is_stmt 0 view .LVU210
- 1013 0000 80ED020A 		vstr.32	s0, [r0, #8]
- 245:Core/Src/Main/MicroMouse.c **** }...
- 1014              		.loc 1 245 1 view .LVU211
- 1015 0004 7047     		bx	lr
- 1016              		.cfi_endproc
- 1017              	.LFE247:
- 1019              		.global	fast135reverse
- 1020              		.global	fast135
- 1021              		.global	fast180
- 1022              		.global	fast90
- 1023              		.global	fast45reverse
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 24
+ 897              		.loc 1 255 15 view .LVU222
+ 898 00d4 A060     		str	r0, [r4, #8]	@ float
+ 256:Core/Src/Main/MicroMouse.c **** }
+ 899              		.loc 1 256 1 view .LVU223
+ 900 00d6 BDEC028B 		vldm	sp!, {d8}
+ 901              	.LCFI11:
+ 902              		.cfi_restore 80
+ 903              		.cfi_restore 81
+ 904              		.cfi_def_cfa_offset 24
+ 905              	.LVL83:
+ 906              		.loc 1 256 1 view .LVU224
+ 907 00da F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 908              	.LVL84:
+ 909              	.L34:
+ 910              		.loc 1 256 1 view .LVU225
+ 911 00dc AFF30080 		.align	3
+ 912              	.L33:
+ 913 00e0 182D4454 		.word	1413754136
+ 914 00e4 FB210940 		.word	1074340347
+ 915 00e8 00806640 		.word	1080459264
+ 916 00ec 6F12833A 		.word	981668463
+ 917 00f0 6626CA23 		.word	600450662
+ 918 00f4 6892503F 		.word	1062244968
+ 919              		.cfi_endproc
+ 920              	.LFE245:
+ 922              		.section	.text.setFastDiagonalParam,"ax",%progbits
+ 923              		.align	1
+ 924              		.global	setFastDiagonalParam
+ 925              		.syntax unified
+ 926              		.thumb
+ 927              		.thumb_func
+ 929              	setFastDiagonalParam:
+ 930              	.LVL85:
+ 931              	.LFB246:
+ 257:Core/Src/Main/MicroMouse.c **** 
+ 258:Core/Src/Main/MicroMouse.c **** void setFastDiagonalParam(int n){ //引数で0~7?個くらいのパラメータから選ぶ
+ 932              		.loc 1 258 33 is_stmt 1 view -0
+ 933              		.cfi_startproc
+ 934              		@ args = 0, pretend = 0, frame = 0
+ 935              		@ frame_needed = 0, uses_anonymous_args = 0
+ 259:Core/Src/Main/MicroMouse.c **** 
+ 260:Core/Src/Main/MicroMouse.c **** 	//300mm/sのパラメータ
+ 261:Core/Src/Main/MicroMouse.c **** 	switch(n){
+ 936              		.loc 1 261 2 view .LVU227
+ 937 0000 00B1     		cbz	r0, .L41
+ 938 0002 7047     		bx	lr
+ 939              	.L41:
+ 258:Core/Src/Main/MicroMouse.c **** 
+ 940              		.loc 1 258 33 is_stmt 0 view .LVU228
+ 941 0004 08B5     		push	{r3, lr}
+ 942              	.LCFI12:
+ 943              		.cfi_def_cfa_offset 8
+ 944              		.cfi_offset 3, -8
+ 945              		.cfi_offset 14, -4
+ 946 0006 2DED068B 		vpush.64	{d8, d9, d10}
+ 947              	.LCFI13:
+ 948              		.cfi_def_cfa_offset 32
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 23
 
 
- 1024              		.global	fast45
- 1025              		.global	fast90diagonal
- 1026              		.global	Sla
- 1027              		.global	EncAngV
- 1028              		.global	PhotoDiff
- 1029              		.global	Current
- 1030              		.global	Target
- 1031              		.global	AddVelocity
- 1032              		.global	ExploreVelocity
- 1033              		.global	WallLeftOut
- 1034              		.global	WallRightOut
- 1035              		.global	VelocityRightOut
- 1036              		.global	VelocityLeftOut
- 1037              		.global	TotalPulse
- 1038              		.global	PulseDisplacement
- 1039              		.global	KeepPulse
- 1040              		.global	SearchOrFast
- 1041              		.global	Calc
- 1042              		.global	VelocityMax
- 1043              		.section	.bss.AddVelocity,"aw",%nobits
- 1044              		.align	2
- 1047              	AddVelocity:
- 1048 0000 00000000 		.space	4
- 1049              		.section	.bss.Calc,"aw",%nobits
- 1050              		.align	2
- 1053              	Calc:
- 1054 0000 00000000 		.space	4
- 1055              		.section	.bss.Current,"aw",%nobits
- 1056              		.align	2
- 1057              		.set	.LANCHOR4,. + 0
- 1060              	Current:
- 1061 0000 00000000 		.space	56
- 1061      00000000 
- 1061      00000000 
- 1061      00000000 
- 1061      00000000 
- 1062              		.section	.bss.EncAngV,"aw",%nobits
- 1063              		.align	2
- 1066              	EncAngV:
- 1067 0000 00000000 		.space	4
- 1068              		.section	.bss.ExploreVelocity,"aw",%nobits
- 1069              		.align	2
- 1070              		.set	.LANCHOR0,. + 0
- 1073              	ExploreVelocity:
- 1074 0000 00000000 		.space	4
- 1075              		.section	.bss.KeepPulse,"aw",%nobits
- 1076              		.align	2
- 1079              	KeepPulse:
- 1080 0000 00000000 		.space	12
- 1080      00000000 
- 1080      00000000 
- 1081              		.section	.bss.PhotoDiff,"aw",%nobits
- 1082              		.align	2
- 1083              		.set	.LANCHOR5,. + 0
- 1086              	PhotoDiff:
- 1087 0000 00000000 		.space	4
- 1088              		.section	.bss.PulseDisplacement,"aw",%nobits
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 25
+ 949              		.cfi_offset 80, -32
+ 950              		.cfi_offset 81, -28
+ 951              		.cfi_offset 82, -24
+ 952              		.cfi_offset 83, -20
+ 953              		.cfi_offset 84, -16
+ 954              		.cfi_offset 85, -12
+ 262:Core/Src/Main/MicroMouse.c **** 		case 0:
+ 263:Core/Src/Main/MicroMouse.c **** 			
+ 264:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast45, 			15, 32, 15,30,45,3000);
+ 955              		.loc 1 264 4 is_stmt 1 view .LVU229
+ 956 000a 9FED3F9A 		vldr.32	s18, .L42
+ 957 000e DFED3F8A 		vldr.32	s17, .L42+4
+ 958 0012 9FED3F8A 		vldr.32	s16, .L42+8
+ 959 0016 F0EE492A 		vmov.f32	s5, s18
+ 960 001a B0EE682A 		vmov.f32	s4, s17
+ 961 001e F3EE0E1A 		vmov.f32	s3, #3.0e+1
+ 962 0022 B2EE0E1A 		vmov.f32	s2, #1.5e+1
+ 963 0026 F0EE480A 		vmov.f32	s1, s16
+ 964 002a B0EE410A 		vmov.f32	s0, s2
+ 965 002e 3948     		ldr	r0, .L42+12
+ 966              	.LVL86:
+ 967              		.loc 1 264 4 is_stmt 0 view .LVU230
+ 968 0030 FFF7FEFF 		bl	setTurnParam
+ 969              	.LVL87:
+ 265:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast45reverse, 	32, 15, 15,30,45,3000);
+ 970              		.loc 1 265 4 is_stmt 1 view .LVU231
+ 971 0034 F0EE492A 		vmov.f32	s5, s18
+ 972 0038 B0EE682A 		vmov.f32	s4, s17
+ 973 003c F3EE0E1A 		vmov.f32	s3, #3.0e+1
+ 974 0040 B2EE0E1A 		vmov.f32	s2, #1.5e+1
+ 975 0044 F0EE410A 		vmov.f32	s1, s2
+ 976 0048 B0EE480A 		vmov.f32	s0, s16
+ 977 004c 3248     		ldr	r0, .L42+16
+ 978 004e FFF7FEFF 		bl	setTurnParam
+ 979              	.LVL88:
+ 266:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast90,  28,28, 30,60,90,2000);
+ 980              		.loc 1 266 4 view .LVU232
+ 981 0052 DFED328A 		vldr.32	s17, .L42+20
+ 982 0056 9FED328A 		vldr.32	s16, .L42+24
+ 983 005a DFED322A 		vldr.32	s5, .L42+28
+ 984 005e B0EE682A 		vmov.f32	s4, s17
+ 985 0062 F0EE481A 		vmov.f32	s3, s16
+ 986 0066 B3EE0E1A 		vmov.f32	s2, #3.0e+1
+ 987 006a F3EE0C0A 		vmov.f32	s1, #2.8e+1
+ 988 006e B0EE600A 		vmov.f32	s0, s1
+ 989 0072 2D48     		ldr	r0, .L42+32
+ 990 0074 FFF7FEFF 		bl	setTurnParam
+ 991              	.LVL89:
+ 267:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast135, 			18, 10, 65,70,135, 1650);
+ 992              		.loc 1 267 4 view .LVU233
+ 993 0078 DFED2CAA 		vldr.32	s21, .L42+36
+ 994 007c 9FED2CAA 		vldr.32	s20, .L42+40
+ 995 0080 DFED2C9A 		vldr.32	s19, .L42+44
+ 996 0084 9FED2C9A 		vldr.32	s18, .L42+48
+ 997 0088 F0EE6A2A 		vmov.f32	s5, s21
+ 998 008c B0EE4A2A 		vmov.f32	s4, s20
+ 999 0090 F0EE691A 		vmov.f32	s3, s19
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 24
 
 
- 1089              		.align	2
- 1092              	PulseDisplacement:
- 1093 0000 00000000 		.space	12
- 1093      00000000 
- 1093      00000000 
- 1094              		.section	.bss.SearchOrFast,"aw",%nobits
- 1095              		.align	2
- 1098              	SearchOrFast:
- 1099 0000 00000000 		.space	4
- 1100              		.section	.bss.Sla,"aw",%nobits
- 1101              		.align	2
- 1102              		.set	.LANCHOR1,. + 0
- 1105              	Sla:
- 1106 0000 00000000 		.space	28
- 1106      00000000 
- 1106      00000000 
- 1106      00000000 
- 1106      00000000 
- 1107              		.section	.bss.Target,"aw",%nobits
- 1108              		.align	2
- 1109              		.set	.LANCHOR3,. + 0
- 1112              	Target:
- 1113 0000 00000000 		.space	56
- 1113      00000000 
- 1113      00000000 
- 1113      00000000 
- 1113      00000000 
- 1114              		.section	.bss.TotalPulse,"aw",%nobits
- 1115              		.align	2
- 1116              		.set	.LANCHOR2,. + 0
- 1119              	TotalPulse:
- 1120 0000 00000000 		.space	12
- 1120      00000000 
- 1120      00000000 
- 1121              		.section	.bss.VelocityLeftOut,"aw",%nobits
- 1122              		.align	2
- 1125              	VelocityLeftOut:
- 1126 0000 00000000 		.space	4
- 1127              		.section	.bss.VelocityMax,"aw",%nobits
- 1130              	VelocityMax:
- 1131 0000 00       		.space	1
- 1132              		.section	.bss.VelocityRightOut,"aw",%nobits
- 1133              		.align	2
- 1136              	VelocityRightOut:
- 1137 0000 00000000 		.space	4
- 1138              		.section	.bss.WallLeftOut,"aw",%nobits
- 1139              		.align	2
- 1142              	WallLeftOut:
- 1143 0000 00000000 		.space	4
- 1144              		.section	.bss.WallRightOut,"aw",%nobits
- 1145              		.align	2
- 1148              	WallRightOut:
- 1149 0000 00000000 		.space	4
- 1150              		.section	.bss.fast135,"aw",%nobits
- 1151              		.align	2
- 1152              		.set	.LANCHOR10,. + 0
- 1155              	fast135:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 26
+ 1000 0094 B0EE491A 		vmov.f32	s2, s18
+ 1001 0098 F2EE040A 		vmov.f32	s1, #1.0e+1
+ 1002 009c B3EE020A 		vmov.f32	s0, #1.8e+1
+ 1003 00a0 2648     		ldr	r0, .L42+52
+ 1004 00a2 FFF7FEFF 		bl	setTurnParam
+ 1005              	.LVL90:
+ 268:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast135reverse, 	10, 18, 65,70,135, 1650);
+ 1006              		.loc 1 268 4 view .LVU234
+ 1007 00a6 F0EE6A2A 		vmov.f32	s5, s21
+ 1008 00aa B0EE4A2A 		vmov.f32	s4, s20
+ 1009 00ae F0EE691A 		vmov.f32	s3, s19
+ 1010 00b2 B0EE491A 		vmov.f32	s2, s18
+ 1011 00b6 F3EE020A 		vmov.f32	s1, #1.8e+1
+ 1012 00ba B2EE040A 		vmov.f32	s0, #1.0e+1
+ 1013 00be 2048     		ldr	r0, .L42+56
+ 1014 00c0 FFF7FEFF 		bl	setTurnParam
+ 1015              	.LVL91:
+ 269:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast180, 15, 15, 60,120,180,1080);
+ 1016              		.loc 1 269 4 view .LVU235
+ 1017 00c4 DFED1F2A 		vldr.32	s5, .L42+60
+ 1018 00c8 9FED1F2A 		vldr.32	s4, .L42+64
+ 1019 00cc DFED1F1A 		vldr.32	s3, .L42+68
+ 1020 00d0 B0EE481A 		vmov.f32	s2, s16
+ 1021 00d4 F2EE0E0A 		vmov.f32	s1, #1.5e+1
+ 1022 00d8 B0EE600A 		vmov.f32	s0, s1
+ 1023 00dc 1C48     		ldr	r0, .L42+72
+ 1024 00de FFF7FEFF 		bl	setTurnParam
+ 1025              	.LVL92:
+ 270:Core/Src/Main/MicroMouse.c **** 			setTurnParam(&fast90diagonal, 	16, 18, 30,60,90, 3350);
+ 1026              		.loc 1 270 4 view .LVU236
+ 1027 00e2 DFED1C2A 		vldr.32	s5, .L42+76
+ 1028 00e6 B0EE682A 		vmov.f32	s4, s17
+ 1029 00ea F0EE481A 		vmov.f32	s3, s16
+ 1030 00ee B3EE0E1A 		vmov.f32	s2, #3.0e+1
+ 1031 00f2 F3EE020A 		vmov.f32	s1, #1.8e+1
+ 1032 00f6 B3EE000A 		vmov.f32	s0, #1.6e+1
+ 1033 00fa 1748     		ldr	r0, .L42+80
+ 1034 00fc FFF7FEFF 		bl	setTurnParam
+ 1035              	.LVL93:
+ 271:Core/Src/Main/MicroMouse.c **** 			break;
+ 1036              		.loc 1 271 4 view .LVU237
+ 272:Core/Src/Main/MicroMouse.c **** 		default:
+ 273:Core/Src/Main/MicroMouse.c **** 			break;
+ 274:Core/Src/Main/MicroMouse.c **** 	}
+ 275:Core/Src/Main/MicroMouse.c **** }
+ 1037              		.loc 1 275 1 is_stmt 0 view .LVU238
+ 1038 0100 BDEC068B 		vldm	sp!, {d8-d10}
+ 1039              	.LCFI14:
+ 1040              		.cfi_restore 84
+ 1041              		.cfi_restore 85
+ 1042              		.cfi_restore 82
+ 1043              		.cfi_restore 83
+ 1044              		.cfi_restore 80
+ 1045              		.cfi_restore 81
+ 1046              		.cfi_def_cfa_offset 8
+ 1047 0104 08BD     		pop	{r3, pc}
+ 1048              	.L43:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 25
 
 
- 1156 0000 00000000 		.space	28
- 1156      00000000 
- 1156      00000000 
- 1156      00000000 
- 1156      00000000 
- 1157              		.section	.bss.fast135reverse,"aw",%nobits
- 1158              		.align	2
- 1159              		.set	.LANCHOR11,. + 0
- 1162              	fast135reverse:
- 1163 0000 00000000 		.space	28
- 1163      00000000 
- 1163      00000000 
- 1163      00000000 
- 1163      00000000 
- 1164              		.section	.bss.fast180,"aw",%nobits
- 1165              		.align	2
- 1166              		.set	.LANCHOR9,. + 0
- 1169              	fast180:
- 1170 0000 00000000 		.space	28
- 1170      00000000 
- 1170      00000000 
- 1170      00000000 
- 1170      00000000 
- 1171              		.section	.bss.fast45,"aw",%nobits
- 1172              		.align	2
- 1173              		.set	.LANCHOR6,. + 0
- 1176              	fast45:
- 1177 0000 00000000 		.space	28
- 1177      00000000 
- 1177      00000000 
- 1177      00000000 
- 1177      00000000 
- 1178              		.section	.bss.fast45reverse,"aw",%nobits
- 1179              		.align	2
- 1180              		.set	.LANCHOR7,. + 0
- 1183              	fast45reverse:
- 1184 0000 00000000 		.space	28
- 1184      00000000 
- 1184      00000000 
- 1184      00000000 
- 1184      00000000 
- 1185              		.section	.bss.fast90,"aw",%nobits
- 1186              		.align	2
- 1187              		.set	.LANCHOR8,. + 0
- 1190              	fast90:
- 1191 0000 00000000 		.space	28
- 1191      00000000 
- 1191      00000000 
- 1191      00000000 
- 1191      00000000 
- 1192              		.section	.bss.fast90diagonal,"aw",%nobits
- 1193              		.align	2
- 1194              		.set	.LANCHOR12,. + 0
- 1197              	fast90diagonal:
- 1198 0000 00000000 		.space	28
- 1198      00000000 
- 1198      00000000 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 27
+ 1049 0106 00BF     		.align	2
+ 1050              	.L42:
+ 1051 0108 00803B45 		.word	1161527296
+ 1052 010c 00003442 		.word	1110704128
+ 1053 0110 00000042 		.word	1107296256
+ 1054 0114 00000000 		.word	.LANCHOR6
+ 1055 0118 00000000 		.word	.LANCHOR7
+ 1056 011c 0000B442 		.word	1119092736
+ 1057 0120 00007042 		.word	1114636288
+ 1058 0124 0000FA44 		.word	1157234688
+ 1059 0128 00000000 		.word	.LANCHOR8
+ 1060 012c 0040CE44 		.word	1154367488
+ 1061 0130 00000743 		.word	1124532224
+ 1062 0134 00008C42 		.word	1116471296
+ 1063 0138 00008242 		.word	1115815936
+ 1064 013c 00000000 		.word	.LANCHOR9
+ 1065 0140 00000000 		.word	.LANCHOR10
+ 1066 0144 00008744 		.word	1149698048
+ 1067 0148 00003443 		.word	1127481344
+ 1068 014c 0000F042 		.word	1123024896
+ 1069 0150 00000000 		.word	.LANCHOR11
+ 1070 0154 00605145 		.word	1162960896
+ 1071 0158 00000000 		.word	.LANCHOR12
+ 1072              		.cfi_endproc
+ 1073              	.LFE246:
+ 1075              		.section	.text.setVelocity,"ax",%progbits
+ 1076              		.align	1
+ 1077              		.global	setVelocity
+ 1078              		.syntax unified
+ 1079              		.thumb
+ 1080              		.thumb_func
+ 1082              	setVelocity:
+ 1083              	.LVL94:
+ 1084              	.LFB247:
+ 276:Core/Src/Main/MicroMouse.c **** 
+ 277:Core/Src/Main/MicroMouse.c **** void setVelocity(physical *phy, float velo){
+ 1085              		.loc 1 277 44 is_stmt 1 view -0
+ 1086              		.cfi_startproc
+ 1087              		@ args = 0, pretend = 0, frame = 0
+ 1088              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1089              		@ link register save eliminated.
+ 278:Core/Src/Main/MicroMouse.c **** 	phy->Velocity[BODY] = velo;
+ 1090              		.loc 1 278 2 view .LVU240
+ 1091              		.loc 1 278 22 is_stmt 0 view .LVU241
+ 1092 0000 80ED020A 		vstr.32	s0, [r0, #8]
+ 279:Core/Src/Main/MicroMouse.c **** }...
+ 1093              		.loc 1 279 1 view .LVU242
+ 1094 0004 7047     		bx	lr
+ 1095              		.cfi_endproc
+ 1096              	.LFE247:
+ 1098              		.global	fast135reverse
+ 1099              		.global	fast135
+ 1100              		.global	fast180
+ 1101              		.global	fast90
+ 1102              		.global	fast45reverse
+ 1103              		.global	fast45
+ 1104              		.global	fast90diagonal
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 26
 
 
- 1198      00000000 
- 1198      00000000 
- 1199              		.text
- 1200              	.Letext0:
- 1201              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
- 1202              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
- 1203              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
- 1204              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 1205              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 1206              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 1207              		.file 8 "Core/Inc/Main/MicroMouse.h"
- 1208              		.file 9 "Core/Inc/HardWare/IR_Emitter.h"
- 1209              		.file 10 "Core/Inc/HardWare/ICM_20648.h"
- 1210              		.file 11 "Core/Inc/Tools/Convert.h"
- 1211              		.file 12 "Core/Inc/Tools/PID_Control.h"
- 1212              		.file 13 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
- 1213              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
- 1214              		.file 15 "Core/Inc/HardWare/Motor_Driver.h"
- 1215              		.file 16 "Core/Inc/HardWare/IEH2_4096.h"
- 1216              		.file 17 "Core/Inc/HardWare/mouse_ADC.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 28
+ 1105              		.global	Sla
+ 1106              		.global	EncAngV
+ 1107              		.global	PhotoDiff
+ 1108              		.global	Current
+ 1109              		.global	Target
+ 1110              		.global	AddVelocity
+ 1111              		.global	ExploreVelocity
+ 1112              		.global	WallLeftOut
+ 1113              		.global	WallRightOut
+ 1114              		.global	VelocityRightOut
+ 1115              		.global	VelocityLeftOut
+ 1116              		.global	TotalPulse
+ 1117              		.global	PulseDisplacement
+ 1118              		.global	KeepPulse
+ 1119              		.global	SearchOrFast
+ 1120              		.global	Calc
+ 1121              		.global	VelocityMax
+ 1122              		.section	.bss.AddVelocity,"aw",%nobits
+ 1123              		.align	2
+ 1126              	AddVelocity:
+ 1127 0000 00000000 		.space	4
+ 1128              		.section	.bss.Calc,"aw",%nobits
+ 1129              		.align	2
+ 1132              	Calc:
+ 1133 0000 00000000 		.space	4
+ 1134              		.section	.bss.Current,"aw",%nobits
+ 1135              		.align	2
+ 1136              		.set	.LANCHOR4,. + 0
+ 1139              	Current:
+ 1140 0000 00000000 		.space	52
+ 1140      00000000 
+ 1140      00000000 
+ 1140      00000000 
+ 1140      00000000 
+ 1141              		.section	.bss.EncAngV,"aw",%nobits
+ 1142              		.align	2
+ 1145              	EncAngV:
+ 1146 0000 00000000 		.space	4
+ 1147              		.section	.bss.ExploreVelocity,"aw",%nobits
+ 1148              		.align	2
+ 1149              		.set	.LANCHOR0,. + 0
+ 1152              	ExploreVelocity:
+ 1153 0000 00000000 		.space	4
+ 1154              		.section	.bss.KeepPulse,"aw",%nobits
+ 1155              		.align	2
+ 1158              	KeepPulse:
+ 1159 0000 00000000 		.space	12
+ 1159      00000000 
+ 1159      00000000 
+ 1160              		.section	.bss.PhotoDiff,"aw",%nobits
+ 1161              		.align	2
+ 1162              		.set	.LANCHOR5,. + 0
+ 1165              	PhotoDiff:
+ 1166 0000 00000000 		.space	4
+ 1167              		.section	.bss.PulseDisplacement,"aw",%nobits
+ 1168              		.align	2
+ 1171              	PulseDisplacement:
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 27
+
+
+ 1172 0000 00000000 		.space	12
+ 1172      00000000 
+ 1172      00000000 
+ 1173              		.section	.bss.SearchOrFast,"aw",%nobits
+ 1174              		.align	2
+ 1177              	SearchOrFast:
+ 1178 0000 00000000 		.space	4
+ 1179              		.section	.bss.Sla,"aw",%nobits
+ 1180              		.align	2
+ 1181              		.set	.LANCHOR1,. + 0
+ 1184              	Sla:
+ 1185 0000 00000000 		.space	28
+ 1185      00000000 
+ 1185      00000000 
+ 1185      00000000 
+ 1185      00000000 
+ 1186              		.section	.bss.Target,"aw",%nobits
+ 1187              		.align	2
+ 1188              		.set	.LANCHOR3,. + 0
+ 1191              	Target:
+ 1192 0000 00000000 		.space	52
+ 1192      00000000 
+ 1192      00000000 
+ 1192      00000000 
+ 1192      00000000 
+ 1193              		.section	.bss.TotalPulse,"aw",%nobits
+ 1194              		.align	2
+ 1195              		.set	.LANCHOR2,. + 0
+ 1198              	TotalPulse:
+ 1199 0000 00000000 		.space	12
+ 1199      00000000 
+ 1199      00000000 
+ 1200              		.section	.bss.VelocityLeftOut,"aw",%nobits
+ 1201              		.align	2
+ 1204              	VelocityLeftOut:
+ 1205 0000 00000000 		.space	4
+ 1206              		.section	.bss.VelocityMax,"aw",%nobits
+ 1209              	VelocityMax:
+ 1210 0000 00       		.space	1
+ 1211              		.section	.bss.VelocityRightOut,"aw",%nobits
+ 1212              		.align	2
+ 1215              	VelocityRightOut:
+ 1216 0000 00000000 		.space	4
+ 1217              		.section	.bss.WallLeftOut,"aw",%nobits
+ 1218              		.align	2
+ 1221              	WallLeftOut:
+ 1222 0000 00000000 		.space	4
+ 1223              		.section	.bss.WallRightOut,"aw",%nobits
+ 1224              		.align	2
+ 1227              	WallRightOut:
+ 1228 0000 00000000 		.space	4
+ 1229              		.section	.bss.fast135,"aw",%nobits
+ 1230              		.align	2
+ 1231              		.set	.LANCHOR9,. + 0
+ 1234              	fast135:
+ 1235 0000 00000000 		.space	28
+ 1235      00000000 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 28
+
+
+ 1235      00000000 
+ 1235      00000000 
+ 1235      00000000 
+ 1236              		.section	.bss.fast135reverse,"aw",%nobits
+ 1237              		.align	2
+ 1238              		.set	.LANCHOR10,. + 0
+ 1241              	fast135reverse:
+ 1242 0000 00000000 		.space	28
+ 1242      00000000 
+ 1242      00000000 
+ 1242      00000000 
+ 1242      00000000 
+ 1243              		.section	.bss.fast180,"aw",%nobits
+ 1244              		.align	2
+ 1245              		.set	.LANCHOR11,. + 0
+ 1248              	fast180:
+ 1249 0000 00000000 		.space	28
+ 1249      00000000 
+ 1249      00000000 
+ 1249      00000000 
+ 1249      00000000 
+ 1250              		.section	.bss.fast45,"aw",%nobits
+ 1251              		.align	2
+ 1252              		.set	.LANCHOR6,. + 0
+ 1255              	fast45:
+ 1256 0000 00000000 		.space	28
+ 1256      00000000 
+ 1256      00000000 
+ 1256      00000000 
+ 1256      00000000 
+ 1257              		.section	.bss.fast45reverse,"aw",%nobits
+ 1258              		.align	2
+ 1259              		.set	.LANCHOR7,. + 0
+ 1262              	fast45reverse:
+ 1263 0000 00000000 		.space	28
+ 1263      00000000 
+ 1263      00000000 
+ 1263      00000000 
+ 1263      00000000 
+ 1264              		.section	.bss.fast90,"aw",%nobits
+ 1265              		.align	2
+ 1266              		.set	.LANCHOR8,. + 0
+ 1269              	fast90:
+ 1270 0000 00000000 		.space	28
+ 1270      00000000 
+ 1270      00000000 
+ 1270      00000000 
+ 1270      00000000 
+ 1271              		.section	.bss.fast90diagonal,"aw",%nobits
+ 1272              		.align	2
+ 1273              		.set	.LANCHOR12,. + 0
+ 1276              	fast90diagonal:
+ 1277 0000 00000000 		.space	28
+ 1277      00000000 
+ 1277      00000000 
+ 1277      00000000 
+ 1277      00000000 
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 29
+
+
+ 1278              		.text
+ 1279              	.Letext0:
+ 1280              		.file 2 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\machine\\_default_types.
+ 1281              		.file 3 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1282              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1283              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1284              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1285              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 1286              		.file 8 "Core/Inc/Main/MicroMouse.h"
+ 1287              		.file 9 "Core/Inc/HardWare/IR_Emitter.h"
+ 1288              		.file 10 "Core/Inc/HardWare/ICM_20648.h"
+ 1289              		.file 11 "Core/Inc/Main/Action.h"
+ 1290              		.file 12 "Core/Inc/Tools/Convert.h"
+ 1291              		.file 13 "Core/Inc/Tools/PID_Control.h"
+ 1292              		.file 14 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
+ 1293              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 1294              		.file 16 "Core/Inc/HardWare/Motor_Driver.h"
+ 1295              		.file 17 "Core/Inc/HardWare/IEH2_4096.h"
+ 1296              		.file 18 "Core/Inc/HardWare/mouse_ADC.h"
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 30
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 MicroMouse.c
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:23     .text.setSearchTurnParam:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:29     .text.setSearchTurnParam:00000000 setSearchTurnParam
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:51     .text.setSearchTurnParam:0000000c $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:55     .text.setSearchTurnParam:00000010 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:253    .text.setSearchTurnParam:00000110 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:278    .rodata.MouseStartAll.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:290    .text.MouseStartAll:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:296    .text.MouseStartAll:00000000 MouseStartAll
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:377    .text.MouseStartAll:00000064 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:387    .text.MousePIDResetAll:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:393    .text.MousePIDResetAll:00000000 MousePIDResetAll
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:434    .text.MousePIDFlagAll:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:440    .text.MousePIDFlagAll:00000000 MousePIDFlagAll
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:492    .text.MouseResetTotalPulses:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:498    .text.MouseResetTotalPulses:00000000 MouseResetTotalPulses
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:535    .text.MouseResetTotalPulses:00000024 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:542    .text.MouseResetParameters:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:548    .text.MouseResetParameters:00000000 MouseResetParameters
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:619    .text.MouseResetParameters:00000034 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:629    .text.MouseInit:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:635    .text.MouseInit:00000000 MouseInit
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:672    .text.MouseInit:00000024 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:679    .text.setTurnParam:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:685    .text.setTurnParam:00000000 setTurnParam
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:834    .text.setTurnParam:000000e0 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:844    .text.setFastDiagonalParam:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:850    .text.setFastDiagonalParam:00000000 setFastDiagonalParam
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:972    .text.setFastDiagonalParam:00000108 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:997    .text.setVelocity:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1003   .text.setVelocity:00000000 setVelocity
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1162   .bss.fast135reverse:00000000 fast135reverse
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1155   .bss.fast135:00000000 fast135
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1169   .bss.fast180:00000000 fast180
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1190   .bss.fast90:00000000 fast90
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1183   .bss.fast45reverse:00000000 fast45reverse
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1176   .bss.fast45:00000000 fast45
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1197   .bss.fast90diagonal:00000000 fast90diagonal
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1105   .bss.Sla:00000000 Sla
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1066   .bss.EncAngV:00000000 EncAngV
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1086   .bss.PhotoDiff:00000000 PhotoDiff
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1060   .bss.Current:00000000 Current
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1112   .bss.Target:00000000 Target
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1047   .bss.AddVelocity:00000000 AddVelocity
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1073   .bss.ExploreVelocity:00000000 ExploreVelocity
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1142   .bss.WallLeftOut:00000000 WallLeftOut
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1148   .bss.WallRightOut:00000000 WallRightOut
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1136   .bss.VelocityRightOut:00000000 VelocityRightOut
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1125   .bss.VelocityLeftOut:00000000 VelocityLeftOut
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1119   .bss.TotalPulse:00000000 TotalPulse
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1092   .bss.PulseDisplacement:00000000 PulseDisplacement
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1079   .bss.KeepPulse:00000000 KeepPulse
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1098   .bss.SearchOrFast:00000000 SearchOrFast
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1053   .bss.Calc:00000000 Calc
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1130   .bss.VelocityMax:00000000 VelocityMax
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1044   .bss.AddVelocity:00000000 $d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s 			page 29
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:23     .text.setSearchTurnParam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:29     .text.setSearchTurnParam:00000000 setSearchTurnParam
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:51     .text.setSearchTurnParam:0000000c $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:55     .text.setSearchTurnParam:00000010 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:252    .text.setSearchTurnParam:00000108 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:276    .rodata.MouseStartAll.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:288    .text.MouseStartAll:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:294    .text.MouseStartAll:00000000 MouseStartAll
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:375    .text.MouseStartAll:00000064 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:385    .text.MousePIDResetAll:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:391    .text.MousePIDResetAll:00000000 MousePIDResetAll
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:432    .text.MousePIDFlagAll:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:438    .text.MousePIDFlagAll:00000000 MousePIDFlagAll
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:490    .text.MouseResetTotalPulses:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:496    .text.MouseResetTotalPulses:00000000 MouseResetTotalPulses
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:533    .text.MouseResetTotalPulses:00000024 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:540    .text.MouseResetParameters:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:546    .text.MouseResetParameters:00000000 MouseResetParameters
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:617    .text.MouseResetParameters:00000034 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:627    .text.MouseInit:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:633    .text.MouseInit:00000000 MouseInit
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:744    .text.MouseInit:0000007c $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:758    .text.setTurnParam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:764    .text.setTurnParam:00000000 setTurnParam
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:913    .text.setTurnParam:000000e0 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:923    .text.setFastDiagonalParam:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:929    .text.setFastDiagonalParam:00000000 setFastDiagonalParam
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1051   .text.setFastDiagonalParam:00000108 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1076   .text.setVelocity:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1082   .text.setVelocity:00000000 setVelocity
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1241   .bss.fast135reverse:00000000 fast135reverse
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1234   .bss.fast135:00000000 fast135
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1248   .bss.fast180:00000000 fast180
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1269   .bss.fast90:00000000 fast90
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1262   .bss.fast45reverse:00000000 fast45reverse
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1255   .bss.fast45:00000000 fast45
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1276   .bss.fast90diagonal:00000000 fast90diagonal
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1184   .bss.Sla:00000000 Sla
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1145   .bss.EncAngV:00000000 EncAngV
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1165   .bss.PhotoDiff:00000000 PhotoDiff
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1139   .bss.Current:00000000 Current
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1191   .bss.Target:00000000 Target
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1126   .bss.AddVelocity:00000000 AddVelocity
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1152   .bss.ExploreVelocity:00000000 ExploreVelocity
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1221   .bss.WallLeftOut:00000000 WallLeftOut
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1227   .bss.WallRightOut:00000000 WallRightOut
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1215   .bss.VelocityRightOut:00000000 VelocityRightOut
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1204   .bss.VelocityLeftOut:00000000 VelocityLeftOut
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1198   .bss.TotalPulse:00000000 TotalPulse
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1171   .bss.PulseDisplacement:00000000 PulseDisplacement
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1158   .bss.KeepPulse:00000000 KeepPulse
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1177   .bss.SearchOrFast:00000000 SearchOrFast
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1132   .bss.Calc:00000000 Calc
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1209   .bss.VelocityMax:00000000 VelocityMax
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1123   .bss.AddVelocity:00000000 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s 			page 31
 
 
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1050   .bss.Calc:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1056   .bss.Current:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1063   .bss.EncAngV:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1069   .bss.ExploreVelocity:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1076   .bss.KeepPulse:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1082   .bss.PhotoDiff:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1089   .bss.PulseDisplacement:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1095   .bss.SearchOrFast:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1101   .bss.Sla:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1108   .bss.Target:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1115   .bss.TotalPulse:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1122   .bss.VelocityLeftOut:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1131   .bss.VelocityMax:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1133   .bss.VelocityRightOut:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1139   .bss.WallLeftOut:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1145   .bss.WallRightOut:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1151   .bss.fast135:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1158   .bss.fast135reverse:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1165   .bss.fast180:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1172   .bss.fast45:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1179   .bss.fast45reverse:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1186   .bss.fast90:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccTsjy27.s:1193   .bss.fast90diagonal:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1129   .bss.Calc:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1135   .bss.Current:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1142   .bss.EncAngV:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1148   .bss.ExploreVelocity:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1155   .bss.KeepPulse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1161   .bss.PhotoDiff:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1168   .bss.PulseDisplacement:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1174   .bss.SearchOrFast:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1180   .bss.Sla:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1187   .bss.Target:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1194   .bss.TotalPulse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1201   .bss.VelocityLeftOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1210   .bss.VelocityMax:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1212   .bss.VelocityRightOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1218   .bss.WallLeftOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1224   .bss.WallRightOut:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1230   .bss.fast135:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1237   .bss.fast135reverse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1244   .bss.fast180:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1251   .bss.fast45:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1258   .bss.fast45reverse:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1265   .bss.fast90:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\cc97PgWi.s:1272   .bss.fast90diagonal:00000000 $d
 
 UNDEFINED SYMBOLS
 __aeabi_f2d
@@ -1684,7 +1803,10 @@ InitPulse
 ZGyro
 PIDReset
 PIDChangeFlag
+initKanayama
 HAL_TIM_Base_Start_IT
+Next
+End
 htim1
 htim8
 __aeabi_ddiv

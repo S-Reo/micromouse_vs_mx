@@ -148,6 +148,10 @@ void Debug()
 		break;
 	case 4:
 		startIdentify(0);
+		break;
+	case 5:
+		printFlashRunLog(&run_log);
+		break;
 	default:
 		break;
 	}
@@ -239,19 +243,24 @@ int GainSetting(int n){
 void GainTest(){
 	// モード選択
 	// 共通部分の実行
-	IT_mode = IT_CONTROL_TEST;
-	// IT_mode = IT_EXPLORE;
+	// IT_mode = IT_CONTROL_TEST;
+	// // IT_mode = IT_EXPLORE;
+	// MouseInit();
+
+	// PIDSetGain(A_VELO_PID, 0.100709849176355, 3.40260123333282, 0.0000762222699372798);//0.100439617090338, 3.52845932518105,0.00010586150147275);
+	// PIDSetGain(L_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
+	// PIDSetGain(R_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
+
+	// // PIDSetGain(A_VELO_PID, 0.44502, 19.6986, 0.0014496); // 自分で調整した
+	// PIDSetGain(A_VELO_PID, 1.3177, 72.6753, 0.0016302);
+	// PIDSetGain(L_VELO_PID, 0.046058, 3.2238, 3.4222e-05); 
+	// PIDSetGain(L_VELO_PID, 0.046058, 3.2238, 3.4222e-05);
+	IT_mode = IT_EXPLORE;
+	IT_mode = IT_KANAYAMA;
+	Target.Velocity[BODY] = 0;
+	t=0;
+
 	MouseInit();
-
-	PIDSetGain(A_VELO_PID, 0.100709849176355, 3.40260123333282, 0.0000762222699372798);//0.100439617090338, 3.52845932518105,0.00010586150147275);
-	PIDSetGain(L_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
-	PIDSetGain(R_VELO_PID, 0.013221, 0.49007, 4.1461e-05);//0.100439617090338, 3.52845932518105,0.00010586150147275);
-
-	// PIDSetGain(A_VELO_PID, 0.44502, 19.6986, 0.0014496); // 自分で調整した
-	PIDSetGain(A_VELO_PID, 1.3177, 72.6753, 0.0016302);
-	PIDSetGain(L_VELO_PID, 0.046058, 3.2238, 3.4222e-05); 
-	PIDSetGain(L_VELO_PID, 0.046058, 3.2238, 3.4222e-05);
-	
 
 	PIDChangeFlag(L_VELO_PID, 1);
 	PIDChangeFlag(R_VELO_PID, 1);
@@ -262,15 +271,18 @@ void GainTest(){
 	PIDChangeFlag(L_WALL_PID, 0);
 	PIDChangeFlag(R_WALL_PID, 0);
 
+	// kanayama_control Next, End;
+	setSearchTurnParam(3);
+	initSearchData(&maze, &mouse);
+	ExploreVelocity=240;
+	// 加減速の関数も書き換える
+	KanayamaSlalomRight(&maze, &mouse, &Next, &End);
 	
-
-	ExploreVelocity=0;
 	ChangeLED(5);
 	while(1)
 	{
-		setVelocity(&Target,240);
-		Target.AngularV = 0;
-		float a=10.56;
+		// setVelocity(&Target,0);
+		// Target.AngularV = 0;
 		//printf("%f, %f\r\n", AngularV, Angle);
 		// printf("前左: %f,前右: %f, 和: %f, 横左: %f,横右: %f, a: %f\r\n",Current.Photo[FL],Current.Photo[FR],Current.Photo[FL]+Current.Photo[FR],Current.Photo[SL],Current.Photo[SIDE_R],a);
 	}
@@ -293,8 +305,8 @@ void WritingFree()
 	ExploreVelocity=0;
 	ChangeLED(7);
 	//データ取り（速度、角速度）
-	FastStraight(0.5, 8, 90, 0.5, -0.5, 4000, 10);
-
+	FastStraight(0.5, 8, 90, 1, -1, 4000, 10);
+	
 	while(1)
 	{
 		PIDChangeFlag(A_VELO_PID, 0);
@@ -315,59 +327,59 @@ static void restart(char turn_mode){
 	Current.Angle = 0;
 	MousePIDResetAll();
 
-	updateAllNodeWeight(&my_map, &my_mouse.target_pos, &my_mouse.target_size, WALL_MASK);
+	updateAllNodeWeight(&maze, &mouse.target_pos, &mouse.target_size, WALL_MASK);
 
 	//最小ノードを選択
-	my_mouse.next.node = getNextNode(&my_map, my_mouse.now.car, my_mouse.now.node, WALL_MASK); //周囲ノードを見て重み最小を選択
-	getNextState(&(my_mouse.now), &(my_mouse.next), my_mouse.next.node);
+	mouse.next.node = getNextNode(&maze, mouse.now.car, mouse.now.node, WALL_MASK); //周囲ノードを見て重み最小を選択
+	getNextState(&(mouse.now), &(mouse.next), mouse.next.node);
 
-	switch(my_mouse.now.dir%8){
+	switch(mouse.now.dir%8){
 	case front:
 			AddVelocity = 0;
 			//ただ直進
 			Calc = SearchOrFast;
-			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Accel(45, ExploreVelocity, &maze, &mouse);
 			break;
 		case right:
 			ChangeLED(0);
 			//右旋回
 			Calc = SearchOrFast;
 			Rotate(90, M_PI);
-			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Accel(45, ExploreVelocity, &maze, &mouse);
 			break;
 		case backright:
 			ChangeLED(0);
 			Calc = 1;//マップ更新したくないときは1を代入。
 			Rotate(180, M_PI);
-			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Accel(45, ExploreVelocity, &maze, &mouse);
 			Calc = SearchOrFast;
-			TurnRight(turn_mode, &my_map, &my_mouse);
+			TurnRight(turn_mode, &maze, &mouse);
 			break;
 		case back:
 			ChangeLED(0);
 			//Uターンして直進.加速できる
 			Calc = 1;
 			Rotate(180, M_PI);
-			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Accel(45, ExploreVelocity, &maze, &mouse);
 			AddVelocity = 0;
 			Calc = SearchOrFast;
-			GoStraight(90, ExploreVelocity +AddVelocity, 0, &my_map, &my_mouse);
+			GoStraight(90, ExploreVelocity +AddVelocity, 0, &maze, &mouse);
 			break;
 		case backleft:
 			ChangeLED(0);
 			//Uターンして左旋回
 			Calc = 1;
 			Rotate(180, -M_PI);
-			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Accel(45, ExploreVelocity, &maze, &mouse);
 			Calc = SearchOrFast;
-			TurnLeft(turn_mode, &my_map, &my_mouse);
+			TurnLeft(turn_mode, &maze, &mouse);
 			break;
 		case left:
 			ChangeLED(0);
 			//左旋回
 			Calc = SearchOrFast;
 			Rotate(90, -M_PI);
-			Accel(45, ExploreVelocity, &my_map, &my_mouse);
+			Accel(45, ExploreVelocity, &maze, &mouse);
 			break;
 		default:
 			break;
@@ -385,12 +397,12 @@ void DFS_Running(char turn_mode){
 
 	InitStackNum();
 	
-	StackMass(&my_map, &(my_mouse.now));
+	StackMass(&maze, &(mouse.now));
 	int stack_num=GetStackNum();
-	my_mouse.target_pos.x = mass_stack[stack_num].x;
-	my_mouse.target_pos.y = mass_stack[stack_num].y;
-	my_mouse.target_size.x = 1;
-	my_mouse.target_size.y = 1;
+	mouse.target_pos.x = mass_stack[stack_num].x;
+	mouse.target_pos.y = mass_stack[stack_num].y;
+	mouse.target_size.x = 1;
+	mouse.target_size.y = 1;
 	stack_num--; //n=2から1へ
 	SetStackNum(stack_num);
 	restart(turn_mode);
@@ -398,20 +410,20 @@ void DFS_Running(char turn_mode){
 	while(stack_num != 0){
 
 		//アクション
-		getNextDirection(&my_map, &my_mouse, turn_mode, WALL_MASK);
+		getNextDirection(&maze, &mouse, turn_mode, WALL_MASK);
 		stack_num = GetStackNum();
 	}
 	//減速停止
 	Decel(45, 0);
 	WaitStopAndReset();//これがないとガクンとなる.
-	shiftState(&my_mouse);
-	VisitedMass(my_mouse.now.pos);
+	shiftState(&mouse);
+	VisitedMass(mouse.now.pos);
 
 	PIDChangeFlag(A_VELO_PID, 0);
 	//flashのクリア。
 	Flash_clear_sector1();
 	//マップ書き込み
-	flashStoreNodes(&my_map);
+	flashStoreNodes(&maze);
 	//完了の合図
 	Signal(7);
 }
@@ -423,69 +435,69 @@ void FlashWriteTest()
 		{
 				for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
 				{
-					my_map.RawNode[i][j].existence = NOWALL;
+					maze.RawNode[i][j].existence = NOWALL;
 				}
 		}
 		for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
 		{
 				for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
 				{
-					my_map.ColumnNode[i][j].existence = WALL;
+					maze.ColumnNode[i][j].existence = WALL;
 				}
 		}
-		printAllNodeExistence(&my_map);
+		printAllNodeExistence(&maze);
 		//フラッシュに書き込む
-		flashStoreNodes(&my_map);
+		flashStoreNodes(&maze);
 }
 void FlashReadTest()
 {
 	//フラッシュを読み出す
-	flashCopyNodesToRam(&my_map);
+	flashCopyNodesToRam(&maze);
 	//合っているか確認する
-	printAllNodeExistence(&my_map);
+	printAllNodeExistence(&maze);
 }
 void Simu()
 {
 	//マップに仮でデータを入れる
-	printAllNodeExistence(&my_map);
+	printAllNodeExistence(&maze);
 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
 	{
 			for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
 			{
-				my_map.RawNode[i][j].existence = 2;
+				maze.RawNode[i][j].existence = 2;
 			}
 	}
 	for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
 	{
 			for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
 			{
-				my_map.ColumnNode[i][j].existence = 3;
+				maze.ColumnNode[i][j].existence = 3;
 			}
 	}
-	printAllNodeExistence(&my_map);
+	printAllNodeExistence(&maze);
 	//フラッシュに書き込む
-	flashStoreNodes(&my_map);
+	flashStoreNodes(&maze);
 
 	//ramをリセット
 	for(int i=0; i < NUMBER_OF_SQUARES_X; i++)
 		{
 				for(int j=0; j < NUMBER_OF_SQUARES_Y+1; j++)
 				{
-					my_map.RawNode[i][j].existence = 0;
+					maze.RawNode[i][j].existence = 0;
 				}
 		}
 		for(int i=0; i < NUMBER_OF_SQUARES_X+1; i++)
 		{
 				for(int j=0; j < NUMBER_OF_SQUARES_Y; j++)
 				{
-					my_map.ColumnNode[i][j].existence = 0;
+					maze.ColumnNode[i][j].existence = 0;
 				}
 		}
-		printAllNodeExistence(&my_map);
+		printAllNodeExistence(&maze);
 	//フラッシュを読み出す
-	flashCopyNodesToRam(&my_map);
+	flashCopyNodesToRam(&maze);
 	//合っているか確認する
-	printAllNodeExistence(&my_map);
+	printAllNodeExistence(&maze);
 }
 
 void TestIMU()
