@@ -157,13 +157,13 @@ void readActionCommand(maze_node *maze, profile *Mouse, char turn_mode, int mask
 			if(VelocityMax == true)
 			{
 				accel_or_decel = 0; //そのまま
-				AddVelocity = ExploreVelocity*1.5f;
+				AddVelocity = ExploreVelocity*1.0f;
 //				ChangeLED(0);
 			}
 			else
 			{
 				accel_or_decel = 1; //加速
-				AddVelocity = ExploreVelocity*1.5f;
+				AddVelocity = ExploreVelocity*1.0f;
 //				ChangeLED(7);
 			}
 		}
@@ -888,7 +888,7 @@ void Compensate()
 #else
 	//バック
 	PIDChangeFlag(A_VELO_PID, 1);
-	Calib(-25);
+	Calib(-30);
 	PIDChangeFlag(A_VELO_PID, 0);
 #endif
 
@@ -1064,8 +1064,8 @@ void GoStraight(float move_distance,  float explore_speed, int accel_or_decel, m
 	else if(accel_or_decel == -1) //探索速度までの減速. ターン速度までの減速も後で入れる
 	{
 		VelocityMax = false;
-		Decel( move_distance*0.75f, explore_speed); //0.8で減速
-		while( ( KeepPulse[BODY] +(target_pulse*0.25f)) > ( TotalPulse[BODY]) ) //残り0.2でマップの更新
+		Decel( move_distance*0.9f, explore_speed); //0.8で減速?⇒ 距離が伸びるほど、手前で止まってしまう?
+		while( ( KeepPulse[BODY] +(target_pulse*0.1f)) > ( TotalPulse[BODY]) ) //残り0.2でマップの更新
 		{
 			if(Calc == 0)//減速終了後直ぐにマップ更新
 			{

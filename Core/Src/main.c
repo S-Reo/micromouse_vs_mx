@@ -176,8 +176,8 @@ int main(void)
   PIDSetGain(R_WALL_PID, 12,1,0);//14,4,0);//14,8,0);//12, 0,0);
 #else
   //100kHzのゲイン:カウンタ840
-  PIDSetGain(L_VELO_PID, 3.3,1000,0);
-  PIDSetGain(R_VELO_PID, 3.3,1000,0);
+  PIDSetGain(L_VELO_PID, 3.3,800,0);
+  PIDSetGain(R_VELO_PID, 3.3,800,0);
 
   PIDSetGain(A_VELO_PID, 7.7, 18, 0); //42 //P=14.6
   PIDSetGain(F_WALL_PID, 14.6*2.5,0, 0);
