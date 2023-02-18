@@ -11,10 +11,11 @@
 #include <main.h>
 
 #define PARAMETERSETTING	0
+#define SECOND_EXPLORE		1
 #define GAINTEST			2
-#define DEBUGGER					3
-#define FASTEST_RUN		4
-#define IMU_TEST 5
+#define DEBUGGER			3
+#define FASTEST_RUN	    	4
+#define IMU_TEST            5
 #define EXPLORE				6
 #define WRITINGFREE 		7
 

@@ -201,9 +201,10 @@ int main(void)
 	  {
 	  case PARAMETERSETTING:
 		//wall_flash_print();
-		  break;
-	  case 1:
 		  GainSetting(1);
+		  break;
+	  case SECOND_EXPLORE:
+      // SecondExplore();
 		  break;
 	  case GAINTEST:
 		  GainTest();
