@@ -768,7 +768,7 @@ void Accel(float add_distance, float explore_speed, maze_node *maze, profile *mo
 
 	Target.Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
 #else
-	Target.Acceleration = 2.89000f;
+	Target.Acceleration = 2.0000f;
 #endif
 	int target_pulse = (int)(add_distance*TO_PULSE);
 
@@ -813,7 +813,7 @@ void Decel(float dec_distance, float end_speed)
 	Target.Acceleration = -1 * (T1*down_speed*down_speed / (2*dec_distance) );
 
 #else
-	Target.Acceleration = -2.89;
+	Target.Acceleration = -2.0;
 #endif
 	int target_pulse = (int)(dec_distance*TO_PULSE);
 

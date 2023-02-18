@@ -443,7 +443,7 @@ void Explore()
 	//まず足立法でゴールに向かい、その後深さ優先探索をし、0,0に戻ってくる
 	InitStackNum();
 	
-	Accel(61.5, ExploreVelocity, &maze, &mouse);
+	Accel(61.75, ExploreVelocity, &maze, &mouse);
 	
 	while( !IS_GOAL(mouse.now.pos.x, mouse.now.pos.y)/*! ((mouse.target_pos.x == 0 && mouse.target_pos.y == 0) && (mouse.now.pos.x == 0 && mouse.now.pos.y == 0)) */){
 		
