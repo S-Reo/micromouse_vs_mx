@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
   28:Core/Src/Main/Action.c **** #include "Searching.h"
   29:Core/Src/Main/Action.c **** 
   30:Core/Src/Main/Action.c **** #include <stdbool.h>
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 2
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 2
 
 
   31:Core/Src/Main/Action.c **** 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
   61 001a 062B     		cmp	r3, #6
   62 001c 38D8     		bhi	.L2
   63 001e DFE803F0 		tbb	[pc, r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 3
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 3
 
 
   64              	.L4:
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  112              		.loc 1 58 6 is_stmt 1 view .LVU22
  113              		.loc 1 58 27 is_stmt 0 view .LVU23
  114 0076 95ED027A 		vldr.32	s14, [r5, #8]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 4
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 4
 
 
  115              		.loc 1 58 52 view .LVU24
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  141 00a6 012B     		cmp	r3, #1
  142 00a8 40F2AF80 		bls	.L19
  143              	.L8:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 5
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 5
 
 
   87:Core/Src/Main/Action.c **** 		HighDFSFlag();
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  127:Core/Src/Main/Action.c **** 					}
  128:Core/Src/Main/Action.c **** 					else if(is_first == false){
  129:Core/Src/Main/Action.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 6
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 6
 
 
  130:Core/Src/Main/Action.c **** 						mouse->target_pos =pos;
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  188 00e6 9FED6F7A 		vldr.32	s14, .L25
  189 00ea F4EEC77A 		vcmpe.f32	s15, s14
  190 00ee F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 7
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 7
 
 
  191 00f2 CCBF     		ite	gt
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
   67:Core/Src/Main/Action.c ****     	wall_dir.west = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
  231              		.loc 1 67 30 is_stmt 0 view .LVU59
  232 013a D5ED007A 		vldr.32	s15, [r5]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 8
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 8
 
 
   67:Core/Src/Main/Action.c ****     	wall_dir.west = photo[SIDE_R] > RIGHT_WALL  ?  WALL :  NOWALL;
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  272 018e B4EEE77A 		vcmpe.f32	s14, s15
  273 0192 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  274 0196 CCBF     		ite	gt
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 9
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 9
 
 
  275 0198 0123     		movgt	r3, #1
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  315              		.loc 1 74 21 view .LVU88
  316 01e6 63F30107 		bfi	r7, r3, #0, #2
   75:Core/Src/Main/Action.c ****     	wall_dir.south = photo[SL] > LEFT_WALL ?  WALL :  NOWALL;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 10
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 10
 
 
  317              		.loc 1 75 6 is_stmt 1 view .LVU89
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  357 0226 FFF7FEFF 		bl	GetStackNum
  358              	.LVL16:
   96:Core/Src/Main/Action.c **** 			n++;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 11
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 11
 
 
  359              		.loc 1 96 3 is_stmt 1 view .LVU104
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  398              	.LVL22:
  399              	.L16:
  119:Core/Src/Main/Action.c **** 					pos = GetStackMass();
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 12
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 12
 
 
  400              		.loc 1 119 5 view .LVU120
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  438              	.LVL29:
   98:Core/Src/Main/Action.c **** 		}
  439              		.loc 1 98 4 is_stmt 0 view .LVU137
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 13
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 13
 
 
  440 0274 FFF7FEFF 		bl	SetStackNum
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  480              		.loc 1 132 7 is_stmt 0 view .LVU151
  481 029e FFF7FEFF 		bl	SetStackNum
  482              	.LVL37:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 14
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 14
 
 
  133:Core/Src/Main/Action.c **** 					} //0,0座標にぶつかったら、trueなので次に行ってしまう. 0なら別ルー�
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  529              		.cfi_def_cfa_offset 36
  530              		.cfi_offset 80, -36
  531              		.cfi_offset 81, -32
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 15
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 15
 
 
  532              		.cfi_offset 82, -28
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  576 0044 87EEA68A 		vdiv.f32	s16, s15, s13
  165:Core/Src/Main/Action.c **** 	float angular_acceleration[3] = {
  577              		.loc 1 165 8 view .LVU172
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 16
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 16
 
 
  578 0048 8DED038A 		vstr.32	s16, [sp, #12]
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  180:Core/Src/Main/Action.c **** 		{
  181:Core/Src/Main/Action.c **** 			Target.AngularAcceleration = angular_acceleration[0];
  618              		.loc 1 181 4 is_stmt 1 view .LVU184
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 17
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 17
 
 
  619              		.loc 1 181 31 is_stmt 0 view .LVU185
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  660 00da F1DC     		bgt	.L33
  187:Core/Src/Main/Action.c **** 		}
  188:Core/Src/Main/Action.c **** 		Target.Angle += move_angle[2];
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 18
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 18
 
 
  661              		.loc 1 188 3 is_stmt 1 view .LVU200
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  706 012e 524B     		ldr	r3, .L50+24
  707 0130 FFF7FEFF 		bl	__aeabi_ddiv
  708              	.LVL48:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 19
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 19
 
 
  709 0134 0646     		mov	r6, r0
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  227:Core/Src/Main/Action.c **** 	Target.AngularAcceleration = 0;
  734              		.loc 1 227 2 view .LVU221
  735              		.loc 1 227 29 is_stmt 0 view .LVU222
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 20
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 20
 
 
  736 015a 444B     		ldr	r3, .L50+12
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  781              	.LCFI9:
  782              		.cfi_restore_state
  201:Core/Src/Main/Action.c **** 	{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 21
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 21
 
 
  783              		.loc 1 201 7 is_stmt 1 view .LVU231
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  822              		.loc 1 209 3 is_stmt 1 view .LVU246
  209:Core/Src/Main/Action.c **** 		{
  823              		.loc 1 209 8 is_stmt 0 view .LVU247
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 22
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 22
 
 
  824 01c8 02E0     		b	.L41
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  863              		.loc 1 216 32 is_stmt 0 view .LVU262
  864 020a 184B     		ldr	r3, .L50+12
  865 020c 83ED0C8A 		vstr.32	s16, [r3, #48]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 23
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 23
 
 
  217:Core/Src/Main/Action.c **** 			 {
@@ -1378,7 +1378,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  910 025a 00BFAFF3 		.align	3
  910      0080
  911              	.L50:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 24
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 24
 
 
  912 0260 182D4454 		.word	1413754136
@@ -1438,7 +1438,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  964              		.loc 1 235 6 view .LVU279
  965 0020 FDEEE77A 		vcvt.s32.f32	s15, s15
  966 0024 17EE904A 		vmov	r4, s15	@ int
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 25
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 25
 
 
  967              	.LVL66:
@@ -1498,7 +1498,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  246:Core/Src/Main/Action.c **** 			Target.Acceleration = 0.0f;
  1006              		.loc 1 246 4 is_stmt 1 view .LVU293
  1007              		.loc 1 246 24 is_stmt 0 view .LVU294
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 26
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 26
 
 
  1008 0056 3A4B     		ldr	r3, .L73
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1044 0086 44DD     		ble	.L62
  250:Core/Src/Main/Action.c **** 				Target.Velocity[BODY] = 10;
  1045              		.loc 1 250 4 is_stmt 1 view .LVU308
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 27
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 27
 
 
  250:Core/Src/Main/Action.c **** 				Target.Velocity[BODY] = 10;
@@ -1618,7 +1618,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1081 00c0 9342     		cmp	r3, r2
  1082 00c2 F0DB     		blt	.L63
  1083 00c4 02E0     		b	.L64
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 28
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 28
 
 
  1084              	.L65:
@@ -1678,7 +1678,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1117 00ec 164A     		ldr	r2, .L73+8
  1118 00ee 9268     		ldr	r2, [r2, #8]
  268:Core/Src/Main/Action.c **** 		{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 29
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 29
 
 
  1119              		.loc 1 268 8 view .LVU336
@@ -1738,7 +1738,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1157              	.LBB12:
  151:Core/Src/Main/Action.c **** 	HAL_Delay(50);
  1158              		.loc 1 151 2 view .LVU351
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 30
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 30
 
 
  1159 0122 0B4C     		ldr	r4, .L73+16
@@ -1778,7 +1778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1189              		.align	2
  1190              	.L73:
  1191 0140 00000000 		.word	Target
- 1192 0144 552AF744 		.word	1157048917
+ 1192 0144 69EEF644 		.word	1157033577
  1193 0148 00000000 		.word	TotalPulse
  1194 014c 56555555 		.word	1431655766
  1195 0150 00000000 		.word	run_log
@@ -1798,7 +1798,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1210              		.cfi_startproc
  1211              		@ args = 0, pretend = 0, frame = 0
  1212              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 31
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 31
 
 
  1213              		@ link register save eliminated.
@@ -1858,7 +1858,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  297:Core/Src/Main/Action.c **** float calibPosition(wall_state *wls){
  1257              		.loc 1 297 37 is_stmt 1 view -0
  1258              		.cfi_startproc
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 32
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 32
 
 
  1259              		@ args = 0, pretend = 0, frame = 0
@@ -1918,7 +1918,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1300              		.p2align 1
  1301              	.L84:
  311:Core/Src/Main/Action.c **** 	{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 33
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 33
 
 
  312:Core/Src/Main/Action.c **** 	case 0:
@@ -1978,7 +1978,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  354:Core/Src/Main/Action.c **** 		CalibRotate(90, -ang_accel); //右回転
  355:Core/Src/Main/Action.c **** 		CalibFrontBack(back_distance, acceleration); // 尻あて
  356:Core/Src/Main/Action.c **** 		acc_distance = 61.75;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 34
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 34
 
 
  357:Core/Src/Main/Action.c **** 		break;
@@ -2038,7 +2038,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  318:Core/Src/Main/Action.c **** 		CalibFrontBack(back_distance, acceleration); // 尻あて
  1353              		.loc 1 318 3 is_stmt 1 view .LVU398
  1354 0054 DFED4A8A 		vldr.32	s17, .L87
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 35
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 35
 
 
  1355 0058 9FED4D8A 		vldr.32	s16, .L87+16
@@ -2098,7 +2098,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1399              	.LVL102:
  329:Core/Src/Main/Action.c **** 		acc_distance = 45;
  1400              		.loc 1 329 3 view .LVU409
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 36
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 36
 
 
  1401 00ba F0EE680A 		vmov.f32	s1, s17
@@ -2158,7 +2158,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  344:Core/Src/Main/Action.c **** 		CalibRotate(90, ang_accel); //左回転
  1443              		.loc 1 344 3 view .LVU422
  1444 010a B7EE000A 		vmov.f32	s0, #1.0e+0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 37
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 37
 
 
  1445 010e 1020     		movs	r0, #16
@@ -2218,7 +2218,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1488              		.loc 1 355 3 view .LVU433
  1489 0168 B7EE000A 		vmov.f32	s0, #1.0e+0
  1490 016c 6FF01800 		mvn	r0, #24
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 38
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 38
 
 
  1491 0170 FFF7FEFF 		bl	CalibFrontBack
@@ -2278,7 +2278,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1539 0008 59D8     		bhi	.L96
  1540 000a DFE803F0 		tbb	[pc, r3]
  1541              	.L92:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 39
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 39
 
 
  1542 000e 04       		.byte	(.L95-.L92)/2
@@ -2338,7 +2338,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  389:Core/Src/Main/Action.c **** 				return N_WALL_PID;
  1576              		.loc 1 389 12 view .LVU455
  1577 0038 0620     		movs	r0, #6
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 40
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 40
 
 
  1578              	.LVL121:
@@ -2398,7 +2398,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1613              		.loc 1 406 11 view .LVU471
  1614 005e 102B     		cmp	r3, #16
  1615 0060 01D0     		beq	.L114
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 41
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 41
 
 
  407:Core/Src/Main/Action.c **** 			{
@@ -2458,7 +2458,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  425:Core/Src/Main/Action.c **** 			{
  426:Core/Src/Main/Action.c **** 				return L_WALL_PID;
  427:Core/Src/Main/Action.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 42
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 42
 
 
  428:Core/Src/Main/Action.c **** 			else if(mouse->now.wall.west == WALL)
@@ -2518,7 +2518,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  446:Core/Src/Main/Action.c **** 			else if ( mouse->now.wall.north == WALL )
  1684              		.loc 1 446 9 is_stmt 1 view .LVU500
  1685              		.loc 1 446 36 is_stmt 0 view .LVU501
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 43
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 43
 
 
  1686 00a6 03F00302 		and	r2, r3, #3
@@ -2578,7 +2578,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1716              	.LVL138:
  1717              	.L97:
  373:Core/Src/Main/Action.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 44
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 44
 
 
  1718              		.loc 1 373 12 view .LVU513
@@ -2638,7 +2638,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1760              		.loc 1 418 12 view .LVU525
  1761 00da 0820     		movs	r0, #8
  1762              	.LVL151:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 45
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 45
 
 
  418:Core/Src/Main/Action.c **** 			}
@@ -2698,7 +2698,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1807              		.thumb
  1808              		.thumb_func
  1810              	WaitStopAndReset:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 46
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 46
 
 
  1811              	.LFB245:
@@ -2758,7 +2758,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1852 0022 D3ED027A 		vldr.32	s15, [r3, #8]
  1853              		.loc 1 479 2 discriminator 1 view .LVU552
  1854 0026 F5EE407A 		vcmp.f32	s15, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 47
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 47
 
 
  1855 002a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -2818,7 +2818,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1899              		.cfi_offset 10, -12
  1900              		.cfi_offset 11, -8
  1901              		.cfi_offset 14, -4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 48
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 48
 
 
  1902 0004 2DED048B 		vpush.64	{d8, d9}
@@ -2878,7 +2878,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  495:Core/Src/Main/Action.c **** 		
  496:Core/Src/Main/Action.c **** 		// Next.Ang_V = 0;
  497:Core/Src/Main/Action.c **** 		// Target.AngularAcceleration = 0;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 49
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 49
 
 
  498:Core/Src/Main/Action.c **** 		ChangeLED(4);
@@ -2938,7 +2938,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  1995              	.LVL175:
  1996 008e CDE90A01 		strd	r0, [sp, #40]
  1997 0092 8DED088B 		vstr.64	d8, [sp, #32]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 50
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 50
 
 
  1998 0096 3846     		mov	r0, r7	@ float
@@ -2998,7 +2998,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2051 0106 FFF7FEFF 		bl	__aeabi_f2d
  2052              	.LVL183:
  2053 010a 0246     		mov	r2, r0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 51
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 51
 
 
  2054 010c 0B46     		mov	r3, r1
@@ -3058,7 +3058,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2103              		.loc 1 507 24 is_stmt 0 view .LVU602
  2104 0162 CAF80840 		str	r4, [r10, #8]	@ float
  508:Core/Src/Main/Action.c **** 	PIDReset(L_VELO_PID);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 52
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 52
 
 
  2105              		.loc 1 508 2 is_stmt 1 view .LVU603
@@ -3118,7 +3118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2155              		.thumb
  2156              		.thumb_func
  2158              	getFrontWall:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 53
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 53
 
 
  2159              	.LVL194:
@@ -3178,7 +3178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2197              	.LVL197:
  2198              		.loc 1 529 24 view .LVU621
  2199 0020 C0F38100 		ubfx	r0, r0, #2, #2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 54
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 54
 
 
  2200 0024 7047     		bx	lr
@@ -3238,7 +3238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2232              		.section	.text.Calib,"ax",%progbits
  2233              		.align	1
  2234              		.global	Calib
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 55
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 55
 
 
  2235              		.syntax unified
@@ -3298,7 +3298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2278              		.loc 1 557 26 view .LVU646
  2279 002c 1344     		add	r3, r3, r2
  557:Core/Src/Main/Action.c **** 		{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 56
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 56
 
 
  2280              		.loc 1 557 53 view .LVU647
@@ -3358,7 +3358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2315 0050 D962     		str	r1, [r3, #44]	@ float
  570:Core/Src/Main/Action.c **** 		}
  2316              		.loc 1 570 4 is_stmt 1 view .LVU660
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 57
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 57
 
 
  570:Core/Src/Main/Action.c **** 		}
@@ -3398,7 +3398,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2342              	.L147:
  2343 006e 00BF     		.align	2
  2344              	.L146:
- 2345 0070 552AF744 		.word	1157048917
+ 2345 0070 69EEF644 		.word	1157033577
  2346 0074 00000000 		.word	Target
  2347 0078 0000B442 		.word	1119092736
  2348 007c 00000000 		.word	KeepPulse
@@ -3418,7 +3418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  578:Core/Src/Main/Action.c **** void Compensate()
  579:Core/Src/Main/Action.c **** {
  2363              		.loc 1 579 1 is_stmt 1 view -0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 58
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 58
 
 
  2364              		.cfi_startproc
@@ -3478,7 +3478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2406 0000 30B5     		push	{r4, r5, lr}
  2407              	.LCFI24:
  2408              		.cfi_def_cfa_offset 12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 59
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 59
 
 
  2409              		.cfi_offset 4, -12
@@ -3538,7 +3538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  604:Core/Src/Main/Action.c **** 			//4500
  605:Core/Src/Main/Action.c **** 	}; //試走会で調整. 広げると位置はややばらつくが光量の影響がやや小さ�
  606:Core/Src/Main/Action.c **** 	switch(mouse->now.car%8)
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 60
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 60
 
 
  2453              		.loc 1 606 2 is_stmt 1 view .LVU687
@@ -3598,7 +3598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  629:Core/Src/Main/Action.c **** 		break;
  630:Core/Src/Main/Action.c **** 	case east:
  631:Core/Src/Main/Action.c **** 			if (mouse->now.wall.east == WALL) //前に壁があれば前で調整
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 61
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 61
 
 
  632:Core/Src/Main/Action.c **** 			{
@@ -3658,7 +3658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  686:Core/Src/Main/Action.c **** 				Current.Angle = Target.Angle;
  687:Core/Src/Main/Action.c **** 				return 61.5;
  688:Core/Src/Main/Action.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 62
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 62
 
 
  689:Core/Src/Main/Action.c **** 	default:
@@ -3718,7 +3718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  614:Core/Src/Main/Action.c **** 				{
  2526              		.loc 1 614 70 discriminator 3 view .LVU708
  2527 008e 93ED0A7A 		vldr.32	s14, [r3, #40]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 63
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 63
 
 
  614:Core/Src/Main/Action.c **** 				{
@@ -3778,7 +3778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  626:Core/Src/Main/Action.c **** 				return 61.5;
  2569              		.loc 1 626 19 view .LVU722
  2570 00dc 664B     		ldr	r3, .L184+12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 64
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 64
 
 
  2571 00de 9A61     		str	r2, [r3, #24]	@ float
@@ -3838,7 +3838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2610 0112 9A69     		ldr	r2, [r3, #24]	@ float
  646:Core/Src/Main/Action.c **** 				return 61.5;
  2611              		.loc 1 646 19 view .LVU738
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 65
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 65
 
 
  2612 0114 584B     		ldr	r3, .L184+12
@@ -3898,7 +3898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2651 0156 9FED4A7A 		vldr.32	s14, .L184+20
  2652 015a F4EEC77A 		vcmpe.f32	s15, s14
  2653 015e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 66
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 66
 
 
  2654 0162 E4D5     		bpl	.L163
@@ -3958,7 +3958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  667:Core/Src/Main/Action.c **** 			}
  2694              		.loc 1 667 5 is_stmt 1 view .LVU768
  667:Core/Src/Main/Action.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 67
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 67
 
 
  2695              		.loc 1 667 12 is_stmt 0 view .LVU769
@@ -4018,7 +4018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2736              	.L152:
  671:Core/Src/Main/Action.c **** 			{
  2737              		.loc 1 671 4 is_stmt 1 view .LVU783
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 68
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 68
 
 
  671:Core/Src/Main/Action.c **** 			{
@@ -4078,7 +4078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2777 0220 28E7     		b	.L150
  2778              	.L183:
  674:Core/Src/Main/Action.c **** 				PIDChangeFlag(wall_ctrl, 1);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 69
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 69
 
 
  2779              		.loc 1 674 5 is_stmt 1 view .LVU799
@@ -4138,7 +4138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2821 0274 00003442 		.word	1110704128
  2822 0278 00000000 		.word	Current
  2823 027c 00006145 		.word	1163984896
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 70
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 70
 
 
  2824 0280 00007A45 		.word	1165623296
@@ -4198,7 +4198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2869              		.loc 1 706 10 is_stmt 1 view .LVU819
  2870              		.loc 1 706 34 is_stmt 0 view .LVU820
  2871 0020 03F0C003 		and	r3, r3, #192
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 71
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 71
 
 
  2872              		.loc 1 706 12 view .LVU821
@@ -4258,7 +4258,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  713:Core/Src/Main/Action.c **** 				{
  2883              		.loc 1 713 30 is_stmt 0 view .LVU825
  2884 002c 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 72
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 72
 
 
  2885 002e 03F00302 		and	r2, r3, #3
@@ -4318,7 +4318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2926              		.loc 1 733 8 view .LVU842
  2927 005e 012A     		cmp	r2, #1
  2928 0060 13D0     		beq	.L200
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 73
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 73
 
 
  737:Core/Src/Main/Action.c **** 				{
@@ -4378,7 +4378,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  2971 007e 0320     		movs	r0, #3
  2972              	.LVL260:
  719:Core/Src/Main/Action.c **** 				}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 74
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 74
 
 
  2973              		.loc 1 719 13 view .LVU857
@@ -4438,7 +4438,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  755:Core/Src/Main/Action.c **** // そうすれば、イメージ通りに動きそう
  756:Core/Src/Main/Action.c **** 
  757:Core/Src/Main/Action.c **** /* ターン開始時に使う関数 */ // 管理すべき目標位置、角度
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 75
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 75
 
 
  758:Core/Src/Main/Action.c **** 
@@ -4498,7 +4498,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3058              		.global	setKanayamaEndPosture
  3059              		.syntax unified
  3060              		.thumb
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 76
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 76
 
 
  3061              		.thumb_func
@@ -4558,7 +4558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  782:Core/Src/Main/Action.c **** 	{
  783:Core/Src/Main/Action.c **** 	case north:
  784:Core/Src/Main/Action.c **** 		dy = distance;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 77
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 77
 
 
  785:Core/Src/Main/Action.c **** 		break;
@@ -4618,7 +4618,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  839:Core/Src/Main/Action.c **** 				break;
  840:Core/Src/Main/Action.c **** 		}
  841:Core/Src/Main/Action.c **** 		break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 78
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 78
 
 
  842:Core/Src/Main/Action.c **** 	case left:
@@ -4678,7 +4678,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  878:Core/Src/Main/Action.c **** }
  3125              		.loc 1 878 1 view .LVU905
  3126 000e 7047     		bx	lr
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 79
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 79
 
 
  3127              		.cfi_endproc
@@ -4738,7 +4738,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3176              		.loc 1 885 48 discriminator 3 view .LVU923
  3177 0028 67EEA57A 		vmul.f32	s15, s15, s11
  3178              		.loc 1 885 5 discriminator 3 view .LVU924
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 80
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 80
 
 
  3179 002c 75EE275A 		vadd.f32	s11, s10, s15
@@ -4798,7 +4798,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3220              	.L210:
  3221 005c F304353F 		.word	1060439283
  3222 0060 F30435BF 		.word	-1087044365
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 81
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 81
 
 
  3223              		.cfi_endproc
@@ -4858,7 +4858,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  904:Core/Src/Main/Action.c **** 		case 2:
  905:Core/Src/Main/Action.c **** 		case 6:
  906:Core/Src/Main/Action.c **** 			*x = rt->mat[0][1];
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 82
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 82
 
 
  3270              		.loc 1 906 4 view .LVU953
@@ -4918,7 +4918,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3317              		.loc 1 915 14 view .LVU965
  3318 000a 0493     		str	r3, [sp, #16]	@ float
  3319              	.LVL284:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 83
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 83
 
 
  916:Core/Src/Main/Action.c **** 	int rotate_num=car%8;
@@ -4978,7 +4978,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3346              	.LVL288:
  944:Core/Src/Main/Action.c **** 	rotateMatrix(&dxy, rotate_num);
  3347              		.loc 1 944 2 is_stmt 1 view .LVU973
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 84
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 84
 
 
  3348 0032 2146     		mov	r1, r4
@@ -5038,7 +5038,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  924:Core/Src/Main/Action.c **** 		break;
  3389              		.loc 1 924 14 is_stmt 0 view .LVU983
  3390 006a 0024     		movs	r4, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 85
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 85
 
 
  925:Core/Src/Main/Action.c **** 	case ACC_DEC_45: // 直進は特殊
@@ -5098,7 +5098,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3429 0094 00000000 		.word	ExploreVelocity
  3430 0098 00008641 		.word	1099300864
  3431 009c 00003442 		.word	1110704128
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 86
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 86
 
 
  3432 00a0 0000B442 		.word	1119092736
@@ -5158,7 +5158,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3484              		.loc 1 955 2 is_stmt 0 view .LVU1010
  3485 001c 0F29     		cmp	r1, #15
  3486 001e 0DD8     		bhi	.L226
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 87
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 87
 
 
  3487 0020 DFE801F0 		tbb	[pc, r1]
@@ -5218,7 +5218,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  979:Core/Src/Main/Action.c **** 		dx = -90;
  980:Core/Src/Main/Action.c **** 		dy = 45;
  981:Core/Src/Main/Action.c **** 		break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 88
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 88
 
 
  982:Core/Src/Main/Action.c **** 	case L_135_FAST_REVERSE:
@@ -5278,7 +5278,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1036:Core/Src/Main/Action.c **** 		dy = 0;
 1037:Core/Src/Main/Action.c **** 		dtheta *= -1;
 1038:Core/Src/Main/Action.c **** 		break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 89
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 89
 
 
 1039:Core/Src/Main/Action.c **** 	default:
@@ -5338,7 +5338,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3563              	.LVL310:
  3564              	.L231:
  3565              	.LCFI37:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 90
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 90
 
 
  3566              		.cfi_restore_state
@@ -5398,7 +5398,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3602              		.loc 1 973 6 is_stmt 0 view .LVU1041
  3603 00a0 274B     		ldr	r3, .L245+16
  3604 00a2 0493     		str	r3, [sp, #16]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 91
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 91
 
 
  974:Core/Src/Main/Action.c **** 		dtheta *= -1;
@@ -5458,7 +5458,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  988:Core/Src/Main/Action.c **** 		dy = 45;
  3642              		.loc 1 988 3 view .LVU1059
  988:Core/Src/Main/Action.c **** 		dy = 45;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 92
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 92
 
 
  3643              		.loc 1 988 6 is_stmt 0 view .LVU1060
@@ -5518,7 +5518,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3680              		.loc 1 1001 3 is_stmt 1 view .LVU1077
 1001:Core/Src/Main/Action.c **** 		break;
  3681              		.loc 1 1001 6 is_stmt 0 view .LVU1078
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 93
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 93
 
 
  3682 00e4 164B     		ldr	r3, .L245+16
@@ -5578,7 +5578,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1015:Core/Src/Main/Action.c **** 		break;
  3719              		.loc 1 1015 3 is_stmt 1 view .LVU1096
 1015:Core/Src/Main/Action.c **** 		break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 94
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 94
 
 
  3720              		.loc 1 1015 10 is_stmt 0 view .LVU1097
@@ -5638,7 +5638,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3757 0122 0593     		str	r3, [sp, #20]	@ float
 1032:Core/Src/Main/Action.c **** 		break;
  3758              		.loc 1 1032 3 is_stmt 1 view .LVU1115
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 95
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 95
 
 
 1033:Core/Src/Main/Action.c **** 	case R_180_FAST:
@@ -5698,7 +5698,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3806              		.cfi_offset 6, -20
  3807              		.cfi_offset 7, -16
  3808              		.cfi_offset 8, -12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 96
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 96
 
 
  3809              		.cfi_offset 9, -8
@@ -5758,7 +5758,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3854              		.loc 1 1058 3 view .LVU1138
  3855              		.loc 1 1058 15 is_stmt 0 view .LVU1139
  3856 0052 9FED5D8A 		vldr.32	s16, .L271+8
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 97
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 97
 
 
  3857 0056 84ED048A 		vstr.32	s16, [r4, #16]
@@ -5818,7 +5818,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3886 0096 FFF7FEFF 		bl	__aeabi_f2d
  3887              	.LVL332:
  3888 009a 0646     		mov	r6, r0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 98
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 98
 
 
  3889              	.LVL333:
@@ -5878,7 +5878,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  3942 0100 0646     		mov	r6, r0
  3943 0102 0F46     		mov	r7, r1
  3944              		.loc 1 1084 11 view .LVU1159
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 99
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 99
 
 
  3945 0104 6068     		ldr	r0, [r4, #4]	@ float
@@ -5938,7 +5938,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1062:Core/Src/Main/Action.c **** 	}
  3988              		.loc 1 1062 24 view .LVU1171
  3989 0140 8BE7     		b	.L250
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 100
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 100
 
 
  3990              	.LVL350:
@@ -5998,7 +5998,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1071:Core/Src/Main/Action.c **** 		angular_acceleration = 0;
  4028              		.loc 1 1071 17 view .LVU1188
  4029 017a F0EE000A 		vmov.f32	s1, #2.0e+0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 101
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 101
 
 
  4030 017e 30EE670A 		vsub.f32	s0, s0, s15
@@ -6058,7 +6058,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4076              		.thumb
  4077              		.thumb_func
  4079              	KanayamaRotate:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 102
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 102
 
 
  4080              	.LVL356:
@@ -6118,7 +6118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1098:Core/Src/Main/Action.c **** 	float const_deg = deg*30/90;
  4124              		.loc 1 1098 2 is_stmt 1 view .LVU1208
 1099:Core/Src/Main/Action.c **** 	float decel_deg = deg*30/90;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 103
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 103
 
 
  4125              		.loc 1 1099 2 view .LVU1209
@@ -6178,7 +6178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4164              		.loc 1 1112 2 is_stmt 1 view .LVU1222
  4165              		.loc 1 1112 4 is_stmt 0 view .LVU1223
  4166 0070 F5EEC08A 		vcmpe.f32	s17, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 104
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 104
 
 
  4167 0074 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -6238,7 +6238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1120:Core/Src/Main/Action.c **** 		while(target_angle > next->Angle)
  4206              		.loc 1 1120 8 view .LVU1241
  4207 00a4 F4EEC76A 		vcmpe.f32	s13, s14
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 105
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 105
 
 
  4208 00a8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -6298,7 +6298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4251              	.LVL369:
  4252 00f2 0646     		mov	r6, r0
  4253 00f4 0F46     		mov	r7, r1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 106
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 106
 
 
  4254              		.loc 1 1133 27 view .LVU1258
@@ -6358,7 +6358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4278 0116 06B0     		add	sp, sp, #24
  4279              	.LCFI45:
  4280              		.cfi_remember_state
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 107
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 107
 
 
  4281              		.cfi_def_cfa_offset 32
@@ -6418,7 +6418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4323 0144 F3DC     		bgt	.L286
 1144:Core/Src/Main/Action.c **** 		while(target_angle < next->Angle)
  4324              		.loc 1 1144 3 is_stmt 1 view .LVU1278
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 108
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 108
 
 
 1144:Core/Src/Main/Action.c **** 		while(target_angle < next->Angle)
@@ -6478,7 +6478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4362              		.loc 1 1153 5 is_stmt 1 view .LVU1295
 1153:Core/Src/Main/Action.c **** 			 {
  4363              		.loc 1 1153 13 is_stmt 0 view .LVU1296
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 109
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 109
 
 
  4364 0178 94ED047A 		vldr.32	s14, [r4, #16]
@@ -6538,7 +6538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4409 01c8 0000B442 		.word	1119092736
  4410 01cc 6F12833D 		.word	1032000111
  4411 01d0 00806640 		.word	1080459264
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 110
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 110
 
 
  4412 01d4 00000000 		.word	Target
@@ -6598,7 +6598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4462              		.loc 1 802 2 view .LVU1311
  802:Core/Src/Main/Action.c **** 	{
  4463              		.loc 1 802 13 is_stmt 0 view .LVU1312
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 111
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 111
 
 
  4464 0012 CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
@@ -6658,7 +6658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1181:Core/Src/Main/Action.c **** 	// else//なければ
 1182:Core/Src/Main/Action.c **** 	// {
 1183:Core/Src/Main/Action.c **** 	while( sqrtf(powf((next->X-start_x),2) + powf((next->Y-start_y),2)) <  Sla.Pre * MM_PER_PULSE*0.5 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 112
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 112
 
 
  4500              		.loc 1 1183 2 is_stmt 1 view .LVU1323
@@ -6718,7 +6718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4547 0078 19       		.byte	(.L304-.L305)/2
  4548 0079 00       		.p2align 1
  4549              	.L303:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 113
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 113
 
 
  823:Core/Src/Main/Action.c **** 			case north:
@@ -6778,7 +6778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  822:Core/Src/Main/Action.c **** 		switch(now->car%8){
  4586              		.loc 1 822 10 is_stmt 0 view .LVU1350
  4587 00a4 9FED931A 		vldr.32	s2, .L337+20
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 114
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 114
 
 
  838:Core/Src/Main/Action.c **** 				break;
@@ -6838,7 +6838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  857:Core/Src/Main/Action.c **** 			case west:
  4625              		.loc 1 857 5 view .LVU1368
  4626 00da A5E7     		b	.L301
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 115
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 115
 
 
  4627              	.LVL403:
@@ -6898,7 +6898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  847:Core/Src/Main/Action.c **** 				dy = 45;
  4667              		.loc 1 847 8 view .LVU1383
  4668              	.LBE23:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 116
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 116
 
 
  4669              	.LBE24:
@@ -6958,7 +6958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4711 0156 10EE100A 		vmov	r0, s0
  4712 015a FFF7FEFF 		bl	__aeabi_f2d
  4713              	.LVL412:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 117
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 117
 
 
  4714 015e 0646     		mov	r6, r0
@@ -7018,7 +7018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1198:Core/Src/Main/Action.c **** 			ChangeLED(1);
  4756              		.loc 1 1198 4 is_stmt 1 view .LVU1409
  4757 01a4 0120     		movs	r0, #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 118
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 118
 
 
  4758 01a6 FFF7FEFF 		bl	ChangeLED
@@ -7078,7 +7078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1203:Core/Src/Main/Action.c **** 	{
  4796              		.loc 1 1203 40 view .LVU1425
  4797 01da 4A4B     		ldr	r3, .L337+36
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 119
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 119
 
 
  4798 01dc D3ED057A 		vldr.32	s15, [r3, #20]
@@ -7138,7 +7138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4837              	.LVL419:
  4838 0222 E4E7     		b	.L319
  4839              	.L335:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 120
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 120
 
 
 1215:Core/Src/Main/Action.c **** 				ChangeLED(3);
@@ -7198,7 +7198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4881              	.LVL424:
  4882              		.loc 1 1229 29 view .LVU1458
  4883 0262 38EE000A 		vadd.f32	s0, s16, s0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 121
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 121
 
 
  4884 0266 FFF7FEFF 		bl	sqrtf
@@ -7258,7 +7258,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4931 02b6 4A46     		mov	r2, r9
  4932 02b8 1549     		ldr	r1, .L337+48
  4933 02ba 4046     		mov	r0, r8
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 122
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 122
 
 
  4934 02bc FFF7FEFF 		bl	getWallState
@@ -7302,8 +7302,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4966              		.loc 1 1242 1 view .LVU1483
  4967 02dc AFF30080 		.align	3
  4968              	.L337:
- 4969 02e0 6626CA23 		.word	600450662
- 4970 02e4 6892503F 		.word	1062244968
+ 4969 02e0 07D4B699 		.word	-1716071417
+ 4970 02e4 6D96503F 		.word	1062245997
  4971 02e8 DB0FC93F 		.word	1070141403
  4972 02ec 00000000 		.word	0
  4973 02f0 00000000 		.word	ExploreVelocity
@@ -7318,7 +7318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  4982              		.cfi_endproc
  4983              	.LFE263:
  4985              		.section	.text.KanayamaSlalomLeft,"ax",%progbits
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 123
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 123
 
 
  4986              		.align	1
@@ -7378,7 +7378,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  802:Core/Src/Main/Action.c **** 	{
  5034              		.loc 1 802 2 view .LVU1491
  5035 0014 032B     		cmp	r3, #3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 124
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 124
 
 
  5036 0016 16D8     		bhi	.L340
@@ -7438,7 +7438,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5070 0044 71E0     		b	.L354
  5071              	.LVL444:
  5072              	.L340:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 125
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 125
 
 
  5073              	.LBB30:
@@ -7498,7 +7498,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5119 007a 9FED9E1A 		vldr.32	s2, .L378+20
  5120 007e DFED9B0A 		vldr.32	s1, .L378+12
  5121 0082 B0EE600A 		vmov.f32	s0, s1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 126
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 126
 
 
  5122 0086 CFE7     		b	.L342
@@ -7558,7 +7558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5157 00a8 DFED940A 		vldr.32	s1, .L378+28
  837:Core/Src/Main/Action.c **** 				dy = 45;
  5158              		.loc 1 837 8 view .LVU1530
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 127
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 127
 
 
  5159 00ac 9FED920A 		vldr.32	s0, .L378+24
@@ -7618,7 +7618,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  859:Core/Src/Main/Action.c **** 				dy = -45;
  5197              		.loc 1 859 5 is_stmt 1 view .LVU1547
  860:Core/Src/Main/Action.c **** 				break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 128
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 128
 
 
  5198              		.loc 1 860 5 view .LVU1548
@@ -7678,7 +7678,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1264:Core/Src/Main/Action.c **** 				next->Ang_V = 0;
  5238              		.loc 1 1264 5 is_stmt 1 view .LVU1562
  5239              		.loc 1 1264 17 is_stmt 0 view .LVU1563
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 129
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 129
 
 
  5240 0114 0023     		movs	r3, #0
@@ -7738,7 +7738,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1262:Core/Src/Main/Action.c **** 		{
  5284              		.loc 1 1262 77 view .LVU1577
  5285 0162 684B     		ldr	r3, .L378+36
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 130
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 130
 
 
  5286 0164 1868     		ldr	r0, [r3]	@ float
@@ -7798,7 +7798,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5327              		.loc 1 1273 7 view .LVU1587
 1273:Core/Src/Main/Action.c **** 	{
  5328              		.loc 1 1273 12 is_stmt 0 view .LVU1588
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 131
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 131
 
 
  5329 01a2 94ED027A 		vldr.32	s14, [r4, #8]
@@ -7858,7 +7858,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1282:Core/Src/Main/Action.c **** 	{
  5367              		.loc 1 1282 7 view .LVU1604
  5368 01dc B4EEE77A 		vcmpe.f32	s14, s15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 132
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 132
 
 
  5369 01e0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -7918,7 +7918,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1294:Core/Src/Main/Action.c **** 				ChangeLED(3);
  5409              		.loc 1 1294 17 is_stmt 0 view .LVU1620
  5410 0224 0023     		movs	r3, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 133
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 133
 
 
  5411 0226 2361     		str	r3, [r4, #16]	@ float
@@ -7978,7 +7978,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5455              	.LVL476:
 1308:Core/Src/Main/Action.c **** 	while( sqrtf(powf((next->X - end_start_x),2) + powf((next->Y - end_start_y),2)) < end_start_distan
  5456              		.loc 1 1308 2 is_stmt 1 view .LVU1637
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 134
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 134
 
 
  5457              	.L366:
@@ -8038,7 +8038,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5504              		.loc 1 1315 5 view .LVU1653
  5505              		.loc 1 1315 10 is_stmt 0 view .LVU1654
  5506 02c0 124B     		ldr	r3, .L378+44
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 135
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 135
 
 
  5507 02c2 0122     		movs	r2, #1
@@ -8075,8 +8075,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5534              		.loc 1 1319 1 view .LVU1661
  5535 02dc AFF30080 		.align	3
  5536              	.L378:
- 5537 02e0 6626CA23 		.word	600450662
- 5538 02e4 6892503F 		.word	1062244968
+ 5537 02e0 07D4B699 		.word	-1716071417
+ 5538 02e4 6D96503F 		.word	1062245997
  5539 02e8 DB0FC93F 		.word	1070141403
  5540 02ec 00000000 		.word	0
  5541 02f0 00000000 		.word	ExploreVelocity
@@ -8098,7 +8098,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5558              		.thumb_func
  5560              	KanayamaSlalomFastRight:
  5561              	.LVL485:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 136
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 136
 
 
  5562              	.LFB265:
@@ -8158,7 +8158,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5610              	.LVL492:
 1326:Core/Src/Main/Action.c **** 	float start_angle = next->Angle;
  5611              		.loc 1 1326 2 is_stmt 1 view .LVU1673
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 137
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 137
 
 
  5612              		.loc 1 1326 8 is_stmt 0 view .LVU1674
@@ -8218,7 +8218,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5654 005e 30EE490A 		vsub.f32	s0, s0, s18
  5655 0062 FFF7FEFF 		bl	powf
  5656              	.LVL497:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 138
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 138
 
 
 1328:Core/Src/Main/Action.c **** 	{
@@ -8278,7 +8278,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5700              		.loc 1 1339 19 is_stmt 0 view .LVU1701
  5701 00b2 464B     		ldr	r3, .L398+12
  5702 00b4 1B68     		ldr	r3, [r3]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 139
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 139
 
 
  5703 00b6 E360     		str	r3, [r4, #12]	@ float
@@ -8338,7 +8338,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5740 00f0 EEDC     		bgt	.L386
  5741 00f2 02E0     		b	.L387
  5742              	.L395:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 140
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 140
 
 
 1347:Core/Src/Main/Action.c **** 	}
@@ -8398,7 +8398,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5774 0122 2361     		str	r3, [r4, #16]	@ float
 1355:Core/Src/Main/Action.c **** 			}
  5775              		.loc 1 1355 5 is_stmt 1 view .LVU1731
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 141
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 141
 
 
  5776              	.L390:
@@ -8458,7 +8458,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5821 0168 F0EE000A 		vmov.f32	s1, #2.0e+0
  5822 016c 30EE690A 		vsub.f32	s0, s0, s19
  5823 0170 FFF7FEFF 		bl	powf
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 142
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 142
 
 
  5824              	.LVL510:
@@ -8518,12 +8518,12 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5872              	.L399:
  5873              		.loc 1 1372 1 view .LVU1763
  5874 01bc AFF30080 		.align	3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 143
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 143
 
 
  5875              	.L398:
- 5876 01c0 6626CA23 		.word	600450662
- 5877 01c4 6892503F 		.word	1062244968
+ 5876 01c0 07D4B699 		.word	-1716071417
+ 5877 01c4 6D96503F 		.word	1062245997
  5878 01c8 00000000 		.word	Target
  5879 01cc 00000000 		.word	ExploreVelocity
  5880 01d0 0000E03F 		.word	1071644672
@@ -8578,7 +8578,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  5928              		.loc 1 1375 2 view .LVU1769
  5929 0018 301D     		adds	r0, r6, #4
  5930              	.LVL520:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 144
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 144
 
 
  5931              		.loc 1 1375 2 view .LVU1770
@@ -8638,7 +8638,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1381:Core/Src/Main/Action.c **** 	{
  5973              		.loc 1 1381 25 is_stmt 0 view .LVU1789
  5974 0042 94ED000A 		vldr.32	s0, [r4]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 145
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 145
 
 
 1381:Core/Src/Main/Action.c **** 	{
@@ -8698,7 +8698,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6021              	.L404:
 1387:Core/Src/Main/Action.c **** 	}
 1388:Core/Src/Main/Action.c **** 	
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 146
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 146
 
 
 1389:Core/Src/Main/Action.c **** 	while(next->Angle < start_angle + param->Theta1)
@@ -8758,7 +8758,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6059 00d2 E360     		str	r3, [r4, #12]	@ float
  6060              	.L405:
 1397:Core/Src/Main/Action.c **** 	{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 147
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 147
 
 
  6061              		.loc 1 1397 7 is_stmt 1 view .LVU1815
@@ -8818,7 +8818,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6093 0108 F1EE677A 		vneg.f32	s15, s15
 1405:Core/Src/Main/Action.c **** 			if(next->Ang_V < 0)
  6094              		.loc 1 1405 31 view .LVU1829
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 148
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 148
 
 
  6095 010c 2E4B     		ldr	r3, .L418+8
@@ -8878,7 +8878,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6135              		.loc 1 1419 77 view .LVU1847
  6136 0148 98ED010A 		vldr.32	s0, [r8, #4]
  6137              		.loc 1 1419 68 view .LVU1848
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 149
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 149
 
 
  6138 014c F0EE000A 		vmov.f32	s1, #2.0e+0
@@ -8938,7 +8938,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6186              		.loc 1 1425 8 is_stmt 0 view .LVU1863
  6187 01a6 B8E80F00 		ldmia	r8!, {r0, r1, r2, r3}
  6188 01aa 0FC4     		stmia	r4!, {r0, r1, r2, r3}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 150
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 150
 
 
  6189              	.LVL544:
@@ -8962,8 +8962,8 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6206              		.loc 1 1426 1 view .LVU1867
  6207 01bc AFF30080 		.align	3
  6208              	.L418:
- 6209 01c0 6626CA23 		.word	600450662
- 6210 01c4 6892503F 		.word	1062244968
+ 6209 01c0 07D4B699 		.word	-1716071417
+ 6210 01c4 6D96503F 		.word	1062245997
  6211 01c8 00000000 		.word	Target
  6212 01cc 00000000 		.word	ExploreVelocity
  6213 01d0 0000E03F 		.word	1071644672
@@ -8998,7 +8998,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6241              		.cfi_def_cfa_offset 40
  6242              		.cfi_offset 80, -40
  6243              		.cfi_offset 81, -36
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 151
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 151
 
 
  6244              		.cfi_offset 82, -32
@@ -9058,7 +9058,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6289 003a F0EE4A1A 		vmov.f32	s3, s20
  6290 003e B0EE481A 		vmov.f32	s2, s16
  6291 0042 4848     		ldr	r0, .L439+12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 152
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 152
 
 
  6292              	.LVL552:
@@ -9118,7 +9118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6336              		.loc 1 787 3 is_stmt 1 view .LVU1894
  788:Core/Src/Main/Action.c **** 	case south:
  6337              		.loc 1 788 3 view .LVU1895
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 153
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 153
 
 
  780:Core/Src/Main/Action.c **** 	switch (now->car%8)
@@ -9178,7 +9178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6377              	.LVL571:
  6378              	.L428:
  780:Core/Src/Main/Action.c **** 	switch (now->car%8)
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 154
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 154
 
 
  6379              		.loc 1 780 8 view .LVU1911
@@ -9238,7 +9238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1439:Core/Src/Main/Action.c **** 		{
  6417              		.loc 1 1439 14 view .LVU1924
  6418 00e2 F0EE000A 		vmov.f32	s1, #2.0e+0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 155
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 155
 
 
  6419 00e6 30EE490A 		vsub.f32	s0, s0, s18
@@ -9298,7 +9298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1447:Core/Src/Main/Action.c **** 			next->Velocity = explore_speed;
  6462              		.loc 1 1447 4 is_stmt 1 view .LVU1936
  6463              		.loc 1 1447 19 is_stmt 0 view .LVU1937
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 156
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 156
 
 
  6464 0134 84ED03AA 		vstr.32	s20, [r4, #12]
@@ -9358,7 +9358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6513              		.align	1
  6514              		.global	KanayamaDecel
  6515              		.syntax unified
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 157
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 157
 
 
  6516              		.thumb
@@ -9418,7 +9418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6563              	.L444:
  6564 0020 2A       		.byte	(.L456-.L444)/2
  6565 0021 04       		.byte	(.L442-.L444)/2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 158
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 158
 
 
  6566 0022 1D       		.byte	(.L446-.L444)/2
@@ -9478,7 +9478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6609              		.loc 1 1462 2 is_stmt 1 view .LVU1968
  6610              		.loc 1 1462 7 is_stmt 0 view .LVU1969
  6611 0058 24E0     		b	.L448
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 159
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 159
 
 
  6612              	.LVL592:
@@ -9538,7 +9538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6651              	.LVL601:
  780:Core/Src/Main/Action.c **** 	switch (now->car%8)
  6652              		.loc 1 780 8 view .LVU1985
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 160
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 160
 
 
  6653 0078 9FED330A 		vldr.32	s0, .L461
@@ -9598,7 +9598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1462:Core/Src/Main/Action.c **** 	{
  6689              		.loc 1 1462 7 is_stmt 1 view .LVU2001
 1462:Core/Src/Main/Action.c **** 	{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 161
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 161
 
 
  6690              		.loc 1 1462 25 is_stmt 0 view .LVU2002
@@ -9658,7 +9658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6731              		.loc 1 1466 11 is_stmt 0 view .LVU2015
  6732 0100 94ED037A 		vldr.32	s14, [r4, #12]
 1466:Core/Src/Main/Action.c **** 				next->Velocity = 90;//end_speed;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 162
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 162
 
 
  6733              		.loc 1 1466 6 view .LVU2016
@@ -9718,7 +9718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6770 0130 AC46     		mov	ip, r5
  6771 0132 BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
  6772 0136 0FC4     		stmia	r4!, {r0, r1, r2, r3}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 163
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 163
 
 
  6773              	.LVL607:
@@ -9778,7 +9778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6825              		.cfi_offset 7, -12
  6826              		.cfi_offset 8, -8
  6827              		.cfi_offset 14, -4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 164
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 164
 
 
  6828 0004 2DED088B 		vpush.64	{d8, d9, d10, d11}
@@ -9838,7 +9838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6871              		.loc 1 1502 7 is_stmt 1 view .LVU2051
  6872              		.loc 1 1502 9 is_stmt 0 view .LVU2052
  6873 0034 B6F1FF3F 		cmp	r6, #-1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 165
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 165
 
 
  6874 0038 18D0     		beq	.L494
@@ -9898,7 +9898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  781:Core/Src/Main/Action.c **** 	{
  6902              		.loc 1 781 2 view .LVU2059
  6903              	.LBE51:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 166
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 166
 
 
  6904              	.LBE50:
@@ -9958,7 +9958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  781:Core/Src/Main/Action.c **** 	{
  6947              		.loc 1 781 2 view .LVU2071
  6948 0092 03F00703 		and	r3, r3, #7
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 167
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 167
 
 
  6949 0096 062B     		cmp	r3, #6
@@ -10018,7 +10018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  6992 00cc F0EE000A 		vmov.f32	s1, #2.0e+0
  6993 00d0 30EE690A 		vsub.f32	s0, s0, s19
  6994 00d4 FFF7FEFF 		bl	powf
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 168
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 168
 
 
  6995              	.LVL627:
@@ -10078,7 +10078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7040 012c FFF7FEFF 		bl	getWallState
  7041              	.LVL634:
 1514:Core/Src/Main/Action.c **** 			}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 169
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 169
 
 
  7042              		.loc 1 1514 5 view .LVU2092
@@ -10138,7 +10138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7081              	.LVL641:
  794:Core/Src/Main/Action.c **** 	default:
  7082              		.loc 1 794 3 view .LVU2108
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 170
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 170
 
 
  7083 0154 ABE7     		b	.L472
@@ -10198,7 +10198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7127              		.loc 1 1524 44 is_stmt 0 view .LVU2119
  7128 0186 18EE900A 		vmov	r0, s17
  7129 018a FFF7FEFF 		bl	__aeabi_f2d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 171
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 171
 
 
  7130              	.LVL649:
@@ -10258,7 +10258,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7171              	.LVL657:
  7172              	.L477:
  793:Core/Src/Main/Action.c **** 		break;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 172
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 172
 
 
  7173              		.loc 1 793 3 is_stmt 1 view .LVU2135
@@ -10318,7 +10318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7209              		.loc 1 1538 21 is_stmt 0 view .LVU2147
  7210 01e4 494B     		ldr	r3, .L500+28
  7211 01e6 93ED097A 		vldr.32	s14, [r3, #36]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 173
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 173
 
 
  7212              		.loc 1 1538 7 view .LVU2148
@@ -10378,7 +10378,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7253 023c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  7254 0240 39D5     		bpl	.L498
  7255              	.LBB57:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 174
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 174
 
 
 1529:Core/Src/Main/Action.c **** 			next->Velocity = explore_speed;
@@ -10438,7 +10438,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7296 028c A1D0     		beq	.L499
  7297              	.LVL670:
  7298              	.L483:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 175
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 175
 
 
 1537:Core/Src/Main/Action.c **** 				if(Current.Photo[SL] > LEFT_WALL){
@@ -10498,7 +10498,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7331 02b8 0220     		movs	r0, #2
  7332 02ba FFF7FEFF 		bl	PIDChangeFlag
  7333              	.LVL674:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 176
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 176
 
 
 1562:Core/Src/Main/Action.c **** 		PIDChangeFlag(R_WALL_PID, false);
@@ -10558,7 +10558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7382 02ec AFF30080 		.align	3
  7383              	.L500:
  7384 02f0 9A999999 		.word	-1717986918
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 177
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 177
 
 
  7385 02f4 9999E93F 		.word	1072273817
@@ -10618,7 +10618,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7438 0016 2046     		mov	r0, r4
  7439              	.LVL685:
  7440              		.loc 1 1570 2 view .LVU2197
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 178
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 178
 
 
  7441 0018 DFED620A 		vldr.32	s1, .L519+12
@@ -10678,7 +10678,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7478              		.loc 1 1587 3 view .LVU2206
 1588:Core/Src/Main/Action.c **** 		acc_distance = calibPosition(&wall_st[0]);
  7479              		.loc 1 1588 3 view .LVU2207
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 179
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 179
 
 
  7480              		.loc 1 1588 18 is_stmt 0 view .LVU2208
@@ -10738,7 +10738,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7524 0088 57       		.byte	(.L504-.L505)/2
  7525 0089 00       		.p2align 1
  7526              	.L508:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 180
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 180
 
 
 1599:Core/Src/Main/Action.c **** 		{
@@ -10798,7 +10798,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7556              		.loc 1 1623 3 is_stmt 1 view .LVU2236
  7557 00aa 0420     		movs	r0, #4
  7558 00ac FFF7FEFF 		bl	ChangeLED
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 181
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 181
 
 
  7559              	.LVL701:
@@ -10858,7 +10858,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7591 00d4 0020     		movs	r0, #0
  7592 00d6 FFF7FEFF 		bl	ChangeLED
  7593              	.LVL705:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 182
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 182
 
 
 1646:Core/Src/Main/Action.c **** 	
@@ -10918,7 +10918,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1607:Core/Src/Main/Action.c **** 		case south:
  7637              		.loc 1 1607 4 is_stmt 1 view .LVU2260
  7638 0118 C1E7     		b	.L503
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 183
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 183
 
 
  7639              	.LVL709:
@@ -10978,7 +10978,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7677              	.L518:
 1631:Core/Src/Main/Action.c **** 			ChangeLED(7);
  7678              		.loc 1 1631 4 view .LVU2277
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 184
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 184
 
 
  7679 0146 184E     		ldr	r6, .L519+16
@@ -11038,7 +11038,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1664:Core/Src/Main/Action.c **** 		break;
 1665:Core/Src/Main/Action.c **** 	}
 1666:Core/Src/Main/Action.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 185
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 185
 
 
 1667:Core/Src/Main/Action.c **** }
@@ -11098,7 +11098,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1662:Core/Src/Main/Action.c **** 	default:
  7756              		.loc 1 1662 3 is_stmt 1 view .LVU2300
  7757              		.loc 1 1667 1 is_stmt 0 view .LVU2301
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 186
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 186
 
 
  7758 0194 EFE7     		b	.L502
@@ -11158,7 +11158,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7807              		.loc 1 1674 18 is_stmt 0 view .LVU2305
  7808 0010 0024     		movs	r4, #0
  7809 0012 8B4B     		ldr	r3, .L550+16
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 187
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 187
 
 
  7810 0014 DC60     		str	r4, [r3, #12]	@ float
@@ -11218,7 +11218,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7851 005e 0022     		movs	r2, #0
  7852 0060 7A4B     		ldr	r3, .L550+28
  7853 0062 FFF7FEFF 		bl	__aeabi_ddiv
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 188
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 188
 
 
  7854              	.LVL726:
@@ -11278,7 +11278,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1697:Core/Src/Main/Action.c **** 		}
 1698:Core/Src/Main/Action.c **** 		Target.Angle += move_angle[1];
  7893              		.loc 1 1698 3 is_stmt 1 view .LVU2335
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 189
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 189
 
 
  7894              		.loc 1 1698 16 is_stmt 0 view .LVU2336
@@ -11338,7 +11338,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7938 00f8 0CDD     		ble	.L529
 1705:Core/Src/Main/Action.c **** 		{
 1706:Core/Src/Main/Action.c **** 			 Target.AngularAcceleration = -angular_acceleration[2];
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 190
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 190
 
 
  7939              		.loc 1 1706 5 is_stmt 1 view .LVU2352
@@ -11398,7 +11398,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  7961              	.LVL728:
 1739:Core/Src/Main/Action.c **** 	int target_pulse = (int)( (deg/360) * ROTATE_PULSE);
  7962              		.loc 1 1739 2 view .LVU2361
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 191
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 191
 
 
  7963              		.loc 1 1739 32 is_stmt 0 view .LVU2362
@@ -11458,7 +11458,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8006 0168 F5EEC08A 		vcmpe.f32	s17, #0
  8007 016c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  8008 0170 D0D5     		bpl	.L529
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 192
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 192
 
 
 1716:Core/Src/Main/Action.c **** 		while( (Target.Angle < Current.Angle) )
@@ -11518,7 +11518,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8047              		.loc 1 1724 4 is_stmt 1 view .LVU2392
 1724:Core/Src/Main/Action.c **** 		}
  8048              		.loc 1 1724 31 is_stmt 0 view .LVU2393
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 193
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 193
 
 
  8049 01b2 234B     		ldr	r3, .L550+16
@@ -11578,7 +11578,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8088              		.loc 1 1730 16 is_stmt 0 view .LVU2408
  8089 01f8 154B     		ldr	r3, .L550+32
  8090 01fa D3ED037A 		vldr.32	s15, [r3, #12]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 194
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 194
 
 
 1730:Core/Src/Main/Action.c **** 			 {
@@ -11638,14 +11638,14 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8134 022c 10BD     		pop	{r4, pc}
  8135              	.L551:
  8136 022e 00BF     		.align	3
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 195
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 195
 
 
  8137              	.L550:
  8138 0230 182D4454 		.word	1413754136
  8139 0234 FB210940 		.word	1074340347
- 8140 0238 496632CB 		.word	-885889463
- 8141 023c D615FA40 		.word	1090131414
+ 8140 0238 046AFDE2 		.word	-486708732
+ 8141 023c 830FFA40 		.word	1090129795
  8142 0240 00000000 		.word	Target
  8143 0244 0000B442 		.word	1119092736
  8144 0248 6F12833D 		.word	1032000111
@@ -11698,7 +11698,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8190              		.loc 1 1755 31 is_stmt 1 view .LVU2426
 1756:Core/Src/Main/Action.c **** 	int now_pulse;
  8191              		.loc 1 1756 2 view .LVU2427
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 196
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 196
 
 
 1757:Core/Src/Main/Action.c **** 
@@ -11758,7 +11758,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8233 0046 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  8234 004a EED4     		bmi	.L555
 1761:Core/Src/Main/Action.c **** 		{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 197
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 197
 
 
  8235              		.loc 1 1761 58 discriminator 1 view .LVU2444
@@ -11818,7 +11818,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8271 0082 1344     		add	r3, r3, r2
 1772:Core/Src/Main/Action.c **** 		{
  8272              		.loc 1 1772 30 view .LVU2458
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 198
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 198
 
 
  8273 0084 07EE903A 		vmov	s15, r3	@ int
@@ -11878,7 +11878,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8315 00bc D3ED047A 		vldr.32	s15, [r3, #16]
 1782:Core/Src/Main/Action.c **** 	{
  8316              		.loc 1 1782 20 view .LVU2474
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 199
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 199
 
 
  8317 00c0 77EE887A 		vadd.f32	s15, s15, s16
@@ -11938,7 +11938,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8356              		.loc 1 1791 42 view .LVU2490
  8357 00f8 424B     		ldr	r3, .L575+20
  8358 00fa 93ED067A 		vldr.32	s14, [r3, #24]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 200
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 200
 
 
 1791:Core/Src/Main/Action.c **** 	{
@@ -11998,7 +11998,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1808:Core/Src/Main/Action.c **** 			ChangeLED(4);
  8400              		.loc 1 1808 4 is_stmt 1 view .LVU2506
  8401 014a 0420     		movs	r0, #4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 201
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 201
 
 
  8402 014c FFF7FEFF 		bl	ChangeLED
@@ -12058,7 +12058,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8446 0182 1368     		ldr	r3, [r2]
  8447              		.loc 1 1814 61 view .LVU2524
  8448 0184 5268     		ldr	r2, [r2, #4]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 202
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 202
 
 
  8449              		.loc 1 1814 49 view .LVU2525
@@ -12118,7 +12118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8493 01c2 A069     		ldr	r0, [r4, #24]	@ float
  8494 01c4 FFF7FEFF 		bl	__aeabi_f2d
  8495              	.LVL751:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 203
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 203
 
 
  8496 01c8 09A3     		adr	r3, .L575
@@ -12178,7 +12178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8548              		.syntax unified
  8549              		.thumb
  8550              		.thumb_func
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 204
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 204
 
 
  8552              	SlalomLeft:
@@ -12238,7 +12238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8598 0020 FFF7FEFF 		bl	getFrontWall
  8599              	.LVL761:
  8600              		.loc 1 1835 5 view .LVU2562
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 205
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 205
 
 
  8601 0024 0128     		cmp	r0, #1
@@ -12298,7 +12298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1849:Core/Src/Main/Action.c **** 		while( now_pulse + Sla.Pre  > (TotalPulse[LEFT] + TotalPulse[RIGHT]) ) //移動量を条件に直
 1850:Core/Src/Main/Action.c **** 		{
 1851:Core/Src/Main/Action.c **** 				Target.AngularV = 0;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 206
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 206
 
 
  8637              		.loc 1 1851 5 is_stmt 1 view .LVU2574
@@ -12358,7 +12358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8678              		.loc 1 1856 31 view .LVU2589
 1857:Core/Src/Main/Action.c **** 	float start_angle = Current.Angle;
  8679              		.loc 1 1857 2 view .LVU2590
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 207
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 207
 
 
  8680              		.loc 1 1857 8 is_stmt 0 view .LVU2591
@@ -12418,7 +12418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8722 00dc 474B     		ldr	r3, .L600+12
  8723 00de 0022     		movs	r2, #0
  8724 00e0 1A63     		str	r2, [r3, #48]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 208
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 208
 
 
 1865:Core/Src/Main/Action.c **** 	
@@ -12478,7 +12478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8765              		.loc 1 1873 43 view .LVU2624
  8766 011a 3A4B     		ldr	r3, .L600+20
  8767 011c 93ED067A 		vldr.32	s14, [r3, #24]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 209
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 209
 
 
  8768              		.loc 1 1873 7 view .LVU2625
@@ -12538,7 +12538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8808              		.loc 1 1880 5 view .LVU2638
  8809              	.L590:
 1884:Core/Src/Main/Action.c **** 	}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 210
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 210
 
 
 1885:Core/Src/Main/Action.c **** 	Target.AngularAcceleration = 0;
@@ -12598,7 +12598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1893:Core/Src/Main/Action.c **** 			Target.Velocity[BODY] = ExploreVelocity;
  8856              		.loc 1 1893 4 is_stmt 1 view .LVU2658
  8857              		.loc 1 1893 26 is_stmt 0 view .LVU2659
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 211
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 211
 
 
  8858 01a0 174A     		ldr	r2, .L600+16
@@ -12658,7 +12658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8904 01e0 511A     		subs	r1, r2, r1
  8905              		.loc 1 1901 18 view .LVU2673
  8906 01e2 9A68     		ldr	r2, [r3, #8]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 212
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 212
 
 
  8907 01e4 0A44     		add	r2, r2, r1
@@ -12718,7 +12718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  8960              		.cfi_def_cfa_offset 16
  8961              		.cfi_offset 80, -16
  8962              		.cfi_offset 81, -12
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 213
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 213
 
 
  8963 0006 0446     		mov	r4, r0
@@ -12778,7 +12778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 1927:Core/Src/Main/Action.c **** 				Target.AngularAcceleration = 0;
  8995              		.loc 1 1927 5 is_stmt 1 view .LVU2692
  8996              		.loc 1 1927 32 is_stmt 0 view .LVU2693
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 214
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 214
 
 
  8997 0024 1A63     		str	r2, [r3, #48]	@ float
@@ -12838,7 +12838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9037 0060 05E0     		b	.L605
  9038              	.L606:
 1934:Core/Src/Main/Action.c **** 	{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 215
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 215
 
 
 1935:Core/Src/Main/Action.c **** 			Target.AngularAcceleration = param->Alpha;
@@ -12898,7 +12898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9078              		.loc 1 1944 4 is_stmt 1 view .LVU2727
  9079              		.loc 1 1944 26 is_stmt 0 view .LVU2728
  9080 0094 364A     		ldr	r2, .L620+8
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 216
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 216
 
 
  9081 0096 1268     		ldr	r2, [r2]	@ float
@@ -12958,7 +12958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9115 00ce F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  9116 00d2 11DD     		ble	.L612
 1948:Core/Src/Main/Action.c **** 			if(Current.AngularV < 0)
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 217
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 217
 
 
  9117              		.loc 1 1948 4 is_stmt 1 view .LVU2741
@@ -13018,7 +13018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9157              	.LVL784:
 1960:Core/Src/Main/Action.c **** 	while( now_pulse + param->Fol > (TotalPulse[LEFT] + TotalPulse[RIGHT]) )
  9158              		.loc 1 1960 2 is_stmt 1 view .LVU2759
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 218
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 218
 
 
  9159              	.L614:
@@ -13078,7 +13078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9207 0158 9968     		ldr	r1, [r3, #8]
  9208              		.loc 1 1966 38 view .LVU2779
  9209 015a 511A     		subs	r1, r2, r1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 219
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 219
 
 
  9210              		.loc 1 1966 18 view .LVU2780
@@ -13138,7 +13138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9261 0006 0020     		movs	r0, #0
  9262              	.LVL789:
  9263              		.loc 1 1971 2 view .LVU2788
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 220
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 220
 
 
  9264 0008 FFF7FEFF 		bl	PIDChangeFlag
@@ -13198,7 +13198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9295 0026 9A60     		str	r2, [r3, #8]	@ float
  9296              	.L623:
 1990:Core/Src/Main/Action.c **** 		{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 221
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 221
 
 
  9297              		.loc 1 1990 8 is_stmt 1 view .LVU2803
@@ -13258,7 +13258,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9337              		.loc 1 2001 31 view .LVU2820
  9338 0066 3F4B     		ldr	r3, .L640+4
  9339 0068 C3ED0C7A 		vstr.32	s15, [r3, #48]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 222
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 222
 
 
 2002:Core/Src/Main/Action.c **** 			Target.Velocity[BODY] = ExploreVelocity;
@@ -13318,7 +13318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2006:Core/Src/Main/Action.c **** 	{
  9380              		.loc 1 2006 27 is_stmt 0 view .LVU2838
  9381 009e D4ED057A 		vldr.32	s15, [r4, #20]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 223
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 223
 
 
 2006:Core/Src/Main/Action.c **** 	{
@@ -13378,7 +13378,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2014:Core/Src/Main/Action.c **** 			if(Current.AngularV > 0)
  9415              		.loc 1 2014 31 view .LVU2851
  9416 00da 224B     		ldr	r3, .L640+4
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 224
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 224
 
 
  9417 00dc 1A63     		str	r2, [r3, #48]	@ float
@@ -13438,7 +13438,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9458 0110 37EE277A 		vadd.f32	s14, s14, s15
  9459              		.loc 1 2027 45 view .LVU2870
  9460 0114 124A     		ldr	r2, .L640
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 225
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 225
 
 
  9461 0116 1368     		ldr	r3, [r2]
@@ -13498,7 +13498,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9508 015e 10BD     		pop	{r4, pc}
  9509              	.LVL796:
  9510              	.L641:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 226
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 226
 
 
  9511              		.loc 1 2034 1 view .LVU2889
@@ -13558,7 +13558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2040:Core/Src/Main/Action.c **** 	additional_speed = explore_speed - Current.Velocity[BODY];
 2041:Core/Src/Main/Action.c **** 
 2042:Core/Src/Main/Action.c **** 	Target.Acceleration = T1*additional_speed*additional_speed / (2*add_distance);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 227
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 227
 
 
 2043:Core/Src/Main/Action.c **** #else
@@ -13618,7 +13618,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2050:Core/Src/Main/Action.c **** 	while( ( KeepPulse[BODY] + target_pulse) > ( TotalPulse[BODY] ) )
  9600              		.loc 1 2050 20 is_stmt 0 view .LVU2910
  9601 0044 354B     		ldr	r3, .L654+20
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 228
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 228
 
 
  9602 0046 9B68     		ldr	r3, [r3, #8]
@@ -13678,7 +13678,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9646 008c FFF7FEFF 		bl	__aeabi_dcmplt
  9647              	.LVL808:
  9648 0090 0028     		cmp	r0, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 229
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 229
 
 
  9649 0092 CFD0     		beq	.L644
@@ -13738,7 +13738,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9682 00bc DA62     		str	r2, [r3, #44]	@ float
 2074:Core/Src/Main/Action.c **** //	wall_cut = false;
 2075:Core/Src/Main/Action.c **** 	KeepPulse[BODY] += target_pulse;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 230
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 230
 
 
  9683              		.loc 1 2075 2 is_stmt 1 view .LVU2932
@@ -13788,7 +13788,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9724 010c 9999E93F 		.word	1072273817
  9725 0110 00000000 		.word	Target
  9726 0114 00002040 		.word	1075838976
- 9727 0118 552AF744 		.word	1157048917
+ 9727 0118 69EEF644 		.word	1157033577
  9728 011c 00000000 		.word	KeepPulse
  9729 0120 00000000 		.word	TotalPulse
  9730 0124 00000000 		.word	Calc
@@ -13798,7 +13798,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9735              		.section	.text.Decel,"ax",%progbits
  9736              		.align	1
  9737              		.global	Decel
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 231
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 231
 
 
  9738              		.syntax unified
@@ -13858,7 +13858,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9779 001c 17EE906A 		vmov	r6, s15	@ int
  9780              	.LVL815:
 2093:Core/Src/Main/Action.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 232
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 232
 
 
 2094:Core/Src/Main/Action.c **** 	while( (	(Current.Photo[FR]+Current.Photo[FL]) < 2800) && ( KeepPulse[BODY] + target_pulse) > ( To
@@ -13918,7 +13918,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2113:Core/Src/Main/Action.c **** 				Target.AngularAcceleration = 0;
  9816              		.loc 1 2113 5 is_stmt 1 view .LVU2965
  9817              		.loc 1 2113 32 is_stmt 0 view .LVU2966
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 233
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 233
 
 
  9818 0050 1A63     		str	r2, [r3, #48]	@ float
@@ -13978,7 +13978,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9859 0094 3846     		mov	r0, r7
  9860 0096 FFF7FEFF 		bl	__aeabi_i2d
  9861              	.LVL820:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 234
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 234
 
 
  9862 009a 2246     		mov	r2, r4
@@ -14038,7 +14038,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9903              		.loc 1 2103 25 is_stmt 0 view .LVU2992
  9904 00e0 0022     		movs	r2, #0
  9905 00e2 DA62     		str	r2, [r3, #44]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 235
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 235
 
 
 2104:Core/Src/Main/Action.c **** 				Target.AngularAcceleration = 0;
@@ -14098,7 +14098,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9945 011c BDEEC77A 		vcvt.s32.f32	s14, s14
  9946 0120 83ED007A 		vstr.32	s14, [r3]	@ int
 2125:Core/Src/Main/Action.c **** 	KeepPulse[RIGHT] += target_pulse*0.5f;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 236
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 236
 
 
  9947              		.loc 1 2125 2 is_stmt 1 view .LVU3011
@@ -14129,7 +14129,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9969 0144 CCCCE43F 		.word	1071959244
  9970 0148 00000000 		.word	Target
  9971 014c 000020C0 		.word	-1071644672
- 9972 0150 552AF744 		.word	1157048917
+ 9972 0150 69EEF644 		.word	1157033577
  9973 0154 00000000 		.word	Current
  9974 0158 00002F45 		.word	1160708096
  9975 015c 00000000 		.word	KeepPulse
@@ -14158,7 +14158,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  9996 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
  9997              	.LCFI96:
  9998              		.cfi_def_cfa_offset 36
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 237
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 237
 
 
  9999              		.cfi_offset 4, -36
@@ -14218,7 +14218,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10043              		.loc 1 2142 7 is_stmt 1 view .LVU3026
  10044              		.loc 1 2142 9 is_stmt 0 view .LVU3027
  10045 0034 B5F1FF3F 		cmp	r5, #-1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 238
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 238
 
 
  10046 0038 1FD0     		beq	.L699
@@ -14278,7 +14278,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10074              		.loc 1 2168 16 view .LVU3040
  10075 0058 0546     		mov	r5, r0
  10076              	.LVL836:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 239
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 239
 
 
 2169:Core/Src/Main/Action.c **** 		}
@@ -14338,7 +14338,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10119              		.loc 1 2146 8 view .LVU3054
 2146:Core/Src/Main/Action.c **** 		{
  10120              		.loc 1 2146 21 is_stmt 0 view .LVU3055
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 240
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 240
 
 
  10121 0090 7B4B     		ldr	r3, .L702+24
@@ -14398,7 +14398,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10162 00dc 684B     		ldr	r3, .L702+24
  10163 00de D3ED027A 		vldr.32	s15, [r3, #8]	@ int
  10164 00e2 F8EEE77A 		vcvt.f32.s32	s15, s15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 241
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 241
 
 
  10165 00e6 37EE877A 		vadd.f32	s14, s15, s14
@@ -14458,7 +14458,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2165:Core/Src/Main/Action.c **** 		direction dir = mouse->now.dir;
  10204              		.loc 1 2165 7 is_stmt 0 view .LVU3078
  10205 0136 0025     		movs	r5, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 242
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 242
 
 
  10206              	.LVL847:
@@ -14518,7 +14518,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10249              		.loc 1 2174 44 view .LVU3089
  10250 017a FFF7FEFF 		bl	__aeabi_i2d
  10251              	.LVL852:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 243
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 243
 
 
  10252 017e 0246     		mov	r2, r0
@@ -14578,7 +14578,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10300 01cc FFF7FEFF 		bl	__aeabi_i2d
  10301              	.LVL859:
  10302 01d0 0246     		mov	r2, r0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 244
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 244
 
 
  10303 01d2 0B46     		mov	r3, r1
@@ -14638,7 +14638,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2191:Core/Src/Main/Action.c **** //				//target_pulse = TotalPulse[BODY] -KeepPulse[BODY] + Wall_Cut_Val;
 2192:Core/Src/Main/Action.c **** //				wall_cut = true;
 2193:Core/Src/Main/Action.c **** //				ChangeLED(2);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 245
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 245
 
 
 2194:Core/Src/Main/Action.c **** //			}
@@ -14698,7 +14698,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10385 024c 77EE277A 		vadd.f32	s15, s14, s15
  10386 0250 FDEEE77A 		vcvt.s32.f32	s15, s15
  10387 0254 C3ED017A 		vstr.32	s15, [r3, #4]	@ int
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 246
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 246
 
 
  10388              	.LVL869:
@@ -14731,7 +14731,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10411 026c 9999D93F 		.word	1071225241
  10412 0270 9A999999 		.word	-1717986918
  10413 0274 9999E93F 		.word	1072273817
- 10414 0278 552AF744 		.word	1157048917
+ 10414 0278 69EEF644 		.word	1157033577
  10415 027c 00000000 		.word	VelocityMax
  10416 0280 00000000 		.word	KeepPulse
  10417 0284 00000000 		.word	TotalPulse
@@ -14758,7 +14758,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10438              		.loc 1 2212 1 is_stmt 0 view .LVU3129
  10439 0000 38B5     		push	{r3, r4, r5, lr}
  10440              	.LCFI101:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 247
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 247
 
 
  10441              		.cfi_def_cfa_offset 16
@@ -14818,7 +14818,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2222:Core/Src/Main/Action.c **** 		EmitterON();
  10486              		.loc 1 2222 3 is_stmt 1 view .LVU3139
  10487 0044 FFF7FEFF 		bl	EmitterON
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 248
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 248
 
 
  10488              	.LVL878:
@@ -14878,7 +14878,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10525 0070 0846     		mov	r0, r1
  10526              	.LVL884:
 2230:Core/Src/Main/Action.c **** 		PIDChangeFlag(F_WALL_PID, false);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 249
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 249
 
 
  10527              		.loc 1 2230 3 view .LVU3148
@@ -14938,7 +14938,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10578              		.cfi_offset 5, -8
  10579              		.cfi_offset 14, -4
  10580 0002 2DED028B 		vpush.64	{d8}
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 250
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 250
 
 
  10581              	.LCFI106:
@@ -14998,7 +14998,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10623              		.loc 1 2251 3 view .LVU3165
  10624 0048 6420     		movs	r0, #100
  10625 004a FFF7FEFF 		bl	HAL_Delay
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 251
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 251
 
 
  10626              	.LVL895:
@@ -15058,7 +15058,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10662 0072 FFF7FEFF 		bl	PIDChangeFlag
  10663              	.LVL901:
 2259:Core/Src/Main/Action.c **** 		KanayamaSlalomLeft(maze, mouse,&Next, &End);
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 252
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 252
 
 
  10664              		.loc 1 2259 3 is_stmt 1 view .LVU3174
@@ -15118,7 +15118,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10716              		.cfi_def_cfa_offset 24
  10717              		.cfi_offset 80, -24
  10718              		.cfi_offset 81, -20
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 253
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 253
 
 
  10719 0006 0546     		mov	r5, r0
@@ -15178,7 +15178,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10747              	.LVL908:
  10748              	.L718:
 2295:Core/Src/Main/Action.c **** 		{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 254
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 254
 
 
 2296:Core/Src/Main/Action.c **** 			Rotate(180, 3*M_PI);
@@ -15238,7 +15238,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10780 0050 4E4A     		ldr	r2, .L733+8
  10781 0052 1368     		ldr	r3, [r2]
  10782 0054 0133     		adds	r3, r3, #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 255
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 255
 
 
  10783 0056 1360     		str	r3, [r2]
@@ -15298,7 +15298,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10827 009e 02F00702 		and	r2, r2, #7
  10828 00a2 58BF     		it	pl
  10829 00a4 5342     		rsbpl	r3, r2, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 256
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 256
 
 
 2279:Core/Src/Main/Action.c **** 			acc = AjustCenter(mouse);
@@ -15358,7 +15358,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2288:Core/Src/Main/Action.c **** 			acc = AjustCenter(mouse);
  10871              		.loc 1 2288 37 view .LVU3226
  10872 00ea 0233     		adds	r3, r3, #2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 257
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 257
 
 
 2288:Core/Src/Main/Action.c **** 			acc = AjustCenter(mouse);
@@ -15418,7 +15418,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2297:Core/Src/Main/Action.c **** 			WaitStopAndReset();
  10915              		.loc 1 2297 4 view .LVU3239
 2297:Core/Src/Main/Action.c **** 			WaitStopAndReset();
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 258
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 258
 
 
  10916              		.loc 1 2297 32 is_stmt 0 view .LVU3240
@@ -15478,7 +15478,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2332:Core/Src/Main/Action.c **** 		mouse->now.pos.y --;
 2333:Core/Src/Main/Action.c **** 		break;
 2334:Core/Src/Main/Action.c **** 	case west:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 259
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 259
 
 
 2335:Core/Src/Main/Action.c **** 		mouse->now.pos.x --;
@@ -15538,7 +15538,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  10991 017e 013B     		subs	r3, r3, #1
  10992 0180 2371     		strb	r3, [r4, #4]
 2336:Core/Src/Main/Action.c **** 	default:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 260
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 260
 
 
  10993              		.loc 1 2336 3 is_stmt 1 view .LVU3265
@@ -15598,7 +15598,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11043              	.LVL936:
  11044              		.loc 1 2347 14 view .LVU3272
  11045 000c 1960     		str	r1, [r3]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 261
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 261
 
 
 2348:Core/Src/Main/Action.c **** 	
@@ -15658,7 +15658,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11083              		.loc 1 2364 5 is_stmt 1 view .LVU3285
 2365:Core/Src/Main/Action.c **** 				AddVelocity = ExploreVelocity*1.5f;
  11084              		.loc 1 2365 5 view .LVU3286
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 262
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 262
 
 
  11085              		.loc 1 2365 34 is_stmt 0 view .LVU3287
@@ -15718,7 +15718,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11108 005e 2246     		mov	r2, r4
  11109 0060 2946     		mov	r1, r5
  11110 0062 70EEA70A 		vadd.f32	s1, s1, s15
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 263
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 263
 
 
  11111 0066 9FED4E0A 		vldr.32	s0, .L753+20
@@ -15778,7 +15778,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2445:Core/Src/Main/Action.c **** //						ChangeLED(cnt);
 2446:Core/Src/Main/Action.c **** 						cnt += 2;
 2447:Core/Src/Main/Action.c **** 						AddVelocity = 0;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 264
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 264
 
 
 2448:Core/Src/Main/Action.c **** 					}
@@ -15838,7 +15838,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11137              		.loc 1 2379 4 is_stmt 1 view .LVU3301
 2379:Core/Src/Main/Action.c **** 			{
  11138              		.loc 1 2379 19 is_stmt 0 view .LVU3302
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 265
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 265
 
 
  11139 0088 414B     		ldr	r3, .L753+4
@@ -15898,7 +15898,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2398:Core/Src/Main/Action.c **** 
  11179              		.loc 1 2398 3 is_stmt 1 view .LVU3317
 2398:Core/Src/Main/Action.c **** 
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 266
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 266
 
 
  11180              		.loc 1 2398 8 is_stmt 0 view .LVU3318
@@ -15958,7 +15958,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11222              		.loc 1 2414 8 is_stmt 0 view .LVU3330
  11223 00de 2F4B     		ldr	r3, .L753+16
  11224 00e0 0122     		movs	r2, #1
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 267
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 267
 
 
  11225 00e2 1A60     		str	r2, [r3]
@@ -16018,7 +16018,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11264 010e D3ED000A 		vldr.32	s1, [r3]
  11265 0112 1E4B     		ldr	r3, .L753
  11266 0114 D3ED007A 		vldr.32	s15, [r3]
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 268
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 268
 
 
  11267 0118 2246     		mov	r2, r4
@@ -16078,7 +16078,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2447:Core/Src/Main/Action.c **** 					}
  11307              		.loc 1 2447 19 is_stmt 0 view .LVU3360
  11308 0142 124B     		ldr	r3, .L753
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 269
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 269
 
 
  11309 0144 0022     		movs	r2, #0
@@ -16138,7 +16138,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11350 0170 FFF7FEFF 		bl	TurnLeft
  11351              	.LVL969:
 2466:Core/Src/Main/Action.c **** 	case left:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 270
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 270
 
 
  11352              		.loc 1 2466 3 view .LVU3374
@@ -16198,7 +16198,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11402              		.loc 1 2474 97 is_stmt 0 view .LVU3382
  11403 0000 F0B5     		push	{r4, r5, r6, r7, lr}
  11404              	.LCFI114:
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 271
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 271
 
 
  11405              		.cfi_def_cfa_offset 20
@@ -16258,7 +16258,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11449              		.loc 1 2484 18 is_stmt 0 view .LVU3393
  11450 0026 A269     		ldr	r2, [r4, #24]
  11451 0028 A17C     		ldrb	r1, [r4, #18]	@ zero_extendqisi2
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 272
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 272
 
 
  11452 002a FFF7FEFF 		bl	judgeAccelorNot
@@ -16318,7 +16318,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2512:Core/Src/Main/Action.c **** //				ChangeLED(cnt);
 2513:Core/Src/Main/Action.c **** 				cnt += 2;
 2514:Core/Src/Main/Action.c **** 				AddVelocity = 0;
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 273
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 273
 
 
 2515:Core/Src/Main/Action.c **** 			}
@@ -16378,7 +16378,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2547:Core/Src/Main/Action.c **** 				//次のノードを現在ノードとして、ノードの候補がすべて既知かどうか
 2548:Core/Src/Main/Action.c **** 				if(accel_or_not == true) //既知で.直進
 2549:Core/Src/Main/Action.c **** 				{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 274
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 274
 
 
 2550:Core/Src/Main/Action.c **** 					//加速かそのまま.
@@ -16438,7 +16438,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11501 0078 03B0     		add	sp, sp, #12
  11502              	.LCFI116:
  11503              		.cfi_remember_state
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 275
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 275
 
 
  11504              		.cfi_def_cfa_offset 20
@@ -16498,7 +16498,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11544              		.loc 1 2514 5 is_stmt 1 view .LVU3422
 2514:Core/Src/Main/Action.c **** 			}
  11545              		.loc 1 2514 17 is_stmt 0 view .LVU3423
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 276
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 276
 
 
  11546 00a2 3E4B     		ldr	r3, .L773
@@ -16558,7 +16558,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2534:Core/Src/Main/Action.c **** 		
  11588              		.loc 1 2534 3 view .LVU3436
 2534:Core/Src/Main/Action.c **** 		
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 277
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 277
 
 
  11589              		.loc 1 2534 8 is_stmt 0 view .LVU3437
@@ -16618,7 +16618,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
 2552:Core/Src/Main/Action.c **** 					{
  11631              		.loc 1 2552 6 is_stmt 1 view .LVU3450
 2552:Core/Src/Main/Action.c **** 					{
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 278
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 278
 
 
  11632              		.loc 1 2552 21 is_stmt 0 view .LVU3451
@@ -16678,7 +16678,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11674 013c 174B     		ldr	r3, .L773
  11675 013e 204A     		ldr	r2, .L773+36
  11676 0140 1A60     		str	r2, [r3]	@ float
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 279
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 279
 
 
 2560:Core/Src/Main/Action.c **** 						AddVelocity = 245;
@@ -16738,7 +16738,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11715              		.loc 1 2580 19 is_stmt 0 view .LVU3479
  11716 0160 0E4B     		ldr	r3, .L773
  11717 0162 0022     		movs	r2, #0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 280
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 280
 
 
  11718 0164 1A60     		str	r2, [r3]	@ float
@@ -16798,7 +16798,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11760              	.LVL1010:
 2598:Core/Src/Main/Action.c **** 		
  11761              		.loc 1 2598 3 is_stmt 0 view .LVU3492
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 281
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 281
 
 
  11762 0196 FFF7FEFF 		bl	TurnLeft
@@ -16858,7 +16858,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11812              		.section	.bss.flash_cnt.4,"aw",%nobits
  11813              		.align	2
  11814              		.set	.LANCHOR4,. + 0
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 282
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 282
 
 
  11817              	flash_cnt.4:
@@ -16891,7 +16891,7 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11854              		.section	.rodata.TO_PULSE,"a"
  11855              		.align	2
  11858              	TO_PULSE:
- 11859 0000 552AF744 		.word	1157048917
+ 11859 0000 69EEF644 		.word	1157033577
  11860              		.section	.rodata.angle_range,"a"
  11861              		.align	2
  11864              	angle_range:
@@ -16916,224 +16916,224 @@ ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 1
  11883              		.file 17 "Core/Inc/HardWare/LED_Driver.h"
  11884              		.file 18 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\math.h"
  11885              		.file 19 "c:\\tools\\gcc-arm-none-eabi-10_2021.10\\arm-none-eabi\\include\\stdio.h"
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 283
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 283
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 Action.c
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:20     .text.getWallState:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:25     .text.getWallState:00000000 getWallState
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:65     .text.getWallState:00000022 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:488    .text.getWallState:000002a4 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:505    .text.CalibRotate:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:511    .text.CalibRotate:00000000 CalibRotate
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:912    .text.CalibRotate:00000260 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:926    .text.CalibFrontBack:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:932    .text.CalibFrontBack:00000000 CalibFrontBack
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1191   .text.CalibFrontBack:00000140 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1200   .text.getWallPattern:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1206   .text.getWallPattern:00000000 getWallPattern
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1248   .text.calibPosition:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1254   .text.calibPosition:00000000 calibPosition
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1292   .text.calibPosition:0000001a $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1300   .text.calibPosition:00000022 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1507   .text.calibPosition:00000180 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1519   .text.GetWallCtrlDirection:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1525   .text.GetWallCtrlDirection:00000000 GetWallCtrlDirection
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1542   .text.GetWallCtrlDirection:0000000e $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1804   .text.WaitStopAndReset:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1810   .text.WaitStopAndReset:00000000 WaitStopAndReset
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1866   .text.WaitStopAndReset:00000038 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1872   .rodata.WaitStopAndResetKanayama.str1.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1878   .text.WaitStopAndResetKanayama:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1884   .text.WaitStopAndResetKanayama:00000000 WaitStopAndResetKanayama
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2142   .text.WaitStopAndResetKanayama:00000190 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2152   .text.getFrontWall:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2158   .text.getFrontWall:00000000 getFrontWall
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2175   .text.getFrontWall:0000000e $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2233   .text.Calib:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2239   .text.Calib:00000000 Calib
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2345   .text.Calib:00000070 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2355   .text.Compensate:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2361   .text.Compensate:00000000 Compensate
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2392   .text.AjustCenter:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2398   .text.AjustCenter:00000000 AjustCenter
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2462   .text.AjustCenter:00000048 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2819   .text.AjustCenter:0000026c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2830   .text.GetWallCompensateDir:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2836   .text.GetWallCompensateDir:00000000 GetWallCompensateDir
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2853   .text.GetWallCompensateDir:0000000e $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3007   .text.initKanayama:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3013   .text.initKanayama:00000000 initKanayama
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3052   .text.initKanayama:0000001c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3057   .text.setKanayamaEndPosture:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3063   .text.setKanayamaEndPosture:00000000 setKanayamaEndPosture
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3098   .text.initMatrix:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3104   .text.initMatrix:00000000 initMatrix
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3131   .text.rotateMatrix:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3137   .text.rotateMatrix:00000000 rotateMatrix
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3221   .text.rotateMatrix:0000005c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3227   .text.getMatrix_XY:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3233   .text.getMatrix_XY:00000000 getMatrix_XY
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3246   .text.getMatrix_XY:00000008 $d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 284
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:20     .text.getWallState:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:25     .text.getWallState:00000000 getWallState
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:65     .text.getWallState:00000022 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:488    .text.getWallState:000002a4 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:505    .text.CalibRotate:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:511    .text.CalibRotate:00000000 CalibRotate
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:912    .text.CalibRotate:00000260 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:926    .text.CalibFrontBack:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:932    .text.CalibFrontBack:00000000 CalibFrontBack
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1191   .text.CalibFrontBack:00000140 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1200   .text.getWallPattern:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1206   .text.getWallPattern:00000000 getWallPattern
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1248   .text.calibPosition:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1254   .text.calibPosition:00000000 calibPosition
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1292   .text.calibPosition:0000001a $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1300   .text.calibPosition:00000022 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1507   .text.calibPosition:00000180 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1519   .text.GetWallCtrlDirection:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1525   .text.GetWallCtrlDirection:00000000 GetWallCtrlDirection
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1542   .text.GetWallCtrlDirection:0000000e $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1804   .text.WaitStopAndReset:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1810   .text.WaitStopAndReset:00000000 WaitStopAndReset
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1866   .text.WaitStopAndReset:00000038 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1872   .rodata.WaitStopAndResetKanayama.str1.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1878   .text.WaitStopAndResetKanayama:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1884   .text.WaitStopAndResetKanayama:00000000 WaitStopAndResetKanayama
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2142   .text.WaitStopAndResetKanayama:00000190 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2152   .text.getFrontWall:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2158   .text.getFrontWall:00000000 getFrontWall
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2175   .text.getFrontWall:0000000e $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2233   .text.Calib:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2239   .text.Calib:00000000 Calib
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2345   .text.Calib:00000070 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2355   .text.Compensate:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2361   .text.Compensate:00000000 Compensate
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2392   .text.AjustCenter:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2398   .text.AjustCenter:00000000 AjustCenter
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2462   .text.AjustCenter:00000048 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2819   .text.AjustCenter:0000026c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2830   .text.GetWallCompensateDir:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2836   .text.GetWallCompensateDir:00000000 GetWallCompensateDir
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2853   .text.GetWallCompensateDir:0000000e $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3007   .text.initKanayama:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3013   .text.initKanayama:00000000 initKanayama
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3052   .text.initKanayama:0000001c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3057   .text.setKanayamaEndPosture:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3063   .text.setKanayamaEndPosture:00000000 setKanayamaEndPosture
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3098   .text.initMatrix:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3104   .text.initMatrix:00000000 initMatrix
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3131   .text.rotateMatrix:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3137   .text.rotateMatrix:00000000 rotateMatrix
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3221   .text.rotateMatrix:0000005c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3227   .text.getMatrix_XY:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3233   .text.getMatrix_XY:00000000 getMatrix_XY
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3246   .text.getMatrix_XY:00000008 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 284
 
 
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3289   .text.setDelta_KanayamaFastStraight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3295   .text.setDelta_KanayamaFastStraight:00000000 setDelta_KanayamaFastStraight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3428   .text.setDelta_KanayamaFastStraight:00000090 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3437   .text.setDelta_KanayamaFastTurn:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3443   .text.setDelta_KanayamaFastTurn:00000000 setDelta_KanayamaFastTurn
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3490   .text.setDelta_KanayamaFastTurn:00000024 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3506   .text.setDelta_KanayamaFastTurn:00000034 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3776   .text.setDelta_KanayamaFastTurn:00000130 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3786   .text.calcNextPosture:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3792   .text.calcNextPosture:00000000 calcNextPosture
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4064   .text.calcNextPosture:000001c0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4073   .text.KanayamaRotate:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4079   .text.KanayamaRotate:00000000 KanayamaRotate
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4407   .text.KanayamaRotate:000001c0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4418   .text.KanayamaSlalomRight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4424   .text.KanayamaSlalomRight:00000000 KanayamaSlalomRight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4522   .text.KanayamaSlalomRight:0000005c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4541   .text.KanayamaSlalomRight:00000072 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4969   .text.KanayamaSlalomRight:000002e0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4986   .text.KanayamaSlalomLeft:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4992   .text.KanayamaSlalomLeft:00000000 KanayamaSlalomLeft
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5090   .text.KanayamaSlalomLeft:0000005c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5109   .text.KanayamaSlalomLeft:00000072 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5537   .text.KanayamaSlalomLeft:000002e0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5554   .text.KanayamaSlalomFastRight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5560   .text.KanayamaSlalomFastRight:00000000 KanayamaSlalomFastRight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5876   .text.KanayamaSlalomFastRight:000001c0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5885   .text.KanayamaSlalomFastLeft:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5891   .text.KanayamaSlalomFastLeft:00000000 KanayamaSlalomFastLeft
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6209   .text.KanayamaSlalomFastLeft:000001c0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6218   .text.KanayamaAccel:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6224   .text.KanayamaAccel:00000000 KanayamaAccel
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6270   .text.KanayamaAccel:00000022 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6501   .text.KanayamaAccel:00000158 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6513   .text.KanayamaDecel:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6519   .text.KanayamaDecel:00000000 KanayamaDecel
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6564   .text.KanayamaDecel:00000020 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6795   .text.KanayamaDecel:00000148 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6805   .text.KanayamaGoStraight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6811   .text.KanayamaGoStraight:00000000 KanayamaGoStraight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6892   .text.KanayamaGoStraight:0000004a $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6953   .text.KanayamaGoStraight:0000009e $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7384   .text.KanayamaGoStraight:000002f0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7399   .text.KanayamaGoBack:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7405   .text.KanayamaGoBack:00000000 KanayamaGoBack
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7518   .text.KanayamaGoBack:00000082 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7612   .text.KanayamaGoBack:000000fc $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7762   .text.KanayamaGoBack:00000198 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7775   .text.Rotate:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7781   .text.Rotate:00000000 Rotate
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8138   .text.Rotate:00000230 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8153   .text.SlalomRight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8159   .text.SlalomRight:00000000 SlalomRight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8530   .text.SlalomRight:000001f0 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8546   .text.SlalomLeft:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8552   .text.SlalomLeft:00000000 SlalomLeft
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8923   .text.SlalomLeft:000001f0 $d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 285
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3289   .text.setDelta_KanayamaFastStraight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3295   .text.setDelta_KanayamaFastStraight:00000000 setDelta_KanayamaFastStraight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3428   .text.setDelta_KanayamaFastStraight:00000090 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3437   .text.setDelta_KanayamaFastTurn:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3443   .text.setDelta_KanayamaFastTurn:00000000 setDelta_KanayamaFastTurn
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3490   .text.setDelta_KanayamaFastTurn:00000024 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3506   .text.setDelta_KanayamaFastTurn:00000034 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3776   .text.setDelta_KanayamaFastTurn:00000130 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3786   .text.calcNextPosture:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3792   .text.calcNextPosture:00000000 calcNextPosture
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4064   .text.calcNextPosture:000001c0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4073   .text.KanayamaRotate:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4079   .text.KanayamaRotate:00000000 KanayamaRotate
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4407   .text.KanayamaRotate:000001c0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4418   .text.KanayamaSlalomRight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4424   .text.KanayamaSlalomRight:00000000 KanayamaSlalomRight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4522   .text.KanayamaSlalomRight:0000005c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4541   .text.KanayamaSlalomRight:00000072 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4969   .text.KanayamaSlalomRight:000002e0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4986   .text.KanayamaSlalomLeft:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4992   .text.KanayamaSlalomLeft:00000000 KanayamaSlalomLeft
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5090   .text.KanayamaSlalomLeft:0000005c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5109   .text.KanayamaSlalomLeft:00000072 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5537   .text.KanayamaSlalomLeft:000002e0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5554   .text.KanayamaSlalomFastRight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5560   .text.KanayamaSlalomFastRight:00000000 KanayamaSlalomFastRight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5876   .text.KanayamaSlalomFastRight:000001c0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5885   .text.KanayamaSlalomFastLeft:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5891   .text.KanayamaSlalomFastLeft:00000000 KanayamaSlalomFastLeft
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6209   .text.KanayamaSlalomFastLeft:000001c0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6218   .text.KanayamaAccel:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6224   .text.KanayamaAccel:00000000 KanayamaAccel
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6270   .text.KanayamaAccel:00000022 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6501   .text.KanayamaAccel:00000158 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6513   .text.KanayamaDecel:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6519   .text.KanayamaDecel:00000000 KanayamaDecel
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6564   .text.KanayamaDecel:00000020 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6795   .text.KanayamaDecel:00000148 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6805   .text.KanayamaGoStraight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6811   .text.KanayamaGoStraight:00000000 KanayamaGoStraight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6892   .text.KanayamaGoStraight:0000004a $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6953   .text.KanayamaGoStraight:0000009e $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7384   .text.KanayamaGoStraight:000002f0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7399   .text.KanayamaGoBack:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7405   .text.KanayamaGoBack:00000000 KanayamaGoBack
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7518   .text.KanayamaGoBack:00000082 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7612   .text.KanayamaGoBack:000000fc $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7762   .text.KanayamaGoBack:00000198 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7775   .text.Rotate:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7781   .text.Rotate:00000000 Rotate
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8138   .text.Rotate:00000230 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8153   .text.SlalomRight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8159   .text.SlalomRight:00000000 SlalomRight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8530   .text.SlalomRight:000001f0 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8546   .text.SlalomLeft:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8552   .text.SlalomLeft:00000000 SlalomLeft
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8923   .text.SlalomLeft:000001f0 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 285
 
 
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8939   .text.SlalomFastRight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:8945   .text.SlalomFastRight:00000000 SlalomFastRight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9228   .text.SlalomFastRight:00000168 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9237   .text.SlalomFastLeft:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9243   .text.SlalomFastLeft:00000000 SlalomFastLeft
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9514   .text.SlalomFastLeft:00000160 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9524   .text.Accel:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9530   .text.Accel:00000000 Accel
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9723   .text.Accel:00000108 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9736   .text.Decel:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9742   .text.Decel:00000000 Decel
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9968   .text.Decel:00000140 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9982   .text.GoStraight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:9988   .text.GoStraight:00000000 GoStraight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10410  .text.GoStraight:00000268 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10425  .text.TurnRight:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10431  .text.TurnRight:00000000 TurnRight
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10548  .text.TurnRight:0000008c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10559  .text.TurnLeft:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10565  .text.TurnLeft:00000000 TurnLeft
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10682  .text.TurnLeft:0000008c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10693  .text.GoBack:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10699  .text.GoBack:00000000 GoBack
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10802  .text.GoBack:00000078 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10999  .text.GoBack:00000184 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11011  .text.readActionCommand:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11017  .text.readActionCommand:00000000 readActionCommand
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11059  .text.readActionCommand:0000001c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11376  .text.readActionCommand:0000018c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11389  .text.KanayamaReadActionCommand:00000000 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11395  .text.KanayamaReadActionCommand:00000000 KanayamaReadActionCommand
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11439  .text.KanayamaReadActionCommand:0000001e $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11770  .text.KanayamaReadActionCommand:0000019c $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11864  .rodata.angle_range:00000000 angle_range
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11858  .rodata.TO_PULSE:00000000 TO_PULSE
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11803  .bss.End:00000000 End
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11810  .bss.Next:00000000 Next
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11789  .rodata:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11799  .bss.End:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11806  .bss.Next:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11813  .bss.flash_cnt.4:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11817  .bss.flash_cnt.4:00000000 flash_cnt.4
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11820  .bss.flash_cnt.5:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11824  .bss.flash_cnt.5:00000000 flash_cnt.5
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11827  .data.cnt.0:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11831  .data.cnt.0:00000000 cnt.0
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11834  .data.cnt.1:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11838  .data.cnt.1:00000000 cnt.1
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11841  .data.cnt.2:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11845  .data.cnt.2:00000000 cnt.2
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11848  .data.cnt.3:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11852  .data.cnt.3:00000000 cnt.3
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11855  .rodata.TO_PULSE:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11861  .rodata.angle_range:00000000 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:72     .text.getWallState:00000029 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:72     .text.getWallState:0000002a $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1549   .text.GetWallCtrlDirection:00000015 $d
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 286
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8939   .text.SlalomFastRight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:8945   .text.SlalomFastRight:00000000 SlalomFastRight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9228   .text.SlalomFastRight:00000168 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9237   .text.SlalomFastLeft:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9243   .text.SlalomFastLeft:00000000 SlalomFastLeft
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9514   .text.SlalomFastLeft:00000160 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9524   .text.Accel:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9530   .text.Accel:00000000 Accel
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9723   .text.Accel:00000108 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9736   .text.Decel:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9742   .text.Decel:00000000 Decel
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9968   .text.Decel:00000140 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9982   .text.GoStraight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:9988   .text.GoStraight:00000000 GoStraight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10410  .text.GoStraight:00000268 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10425  .text.TurnRight:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10431  .text.TurnRight:00000000 TurnRight
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10548  .text.TurnRight:0000008c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10559  .text.TurnLeft:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10565  .text.TurnLeft:00000000 TurnLeft
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10682  .text.TurnLeft:0000008c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10693  .text.GoBack:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10699  .text.GoBack:00000000 GoBack
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10802  .text.GoBack:00000078 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10999  .text.GoBack:00000184 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11011  .text.readActionCommand:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11017  .text.readActionCommand:00000000 readActionCommand
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11059  .text.readActionCommand:0000001c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11376  .text.readActionCommand:0000018c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11389  .text.KanayamaReadActionCommand:00000000 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11395  .text.KanayamaReadActionCommand:00000000 KanayamaReadActionCommand
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11439  .text.KanayamaReadActionCommand:0000001e $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11770  .text.KanayamaReadActionCommand:0000019c $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11864  .rodata.angle_range:00000000 angle_range
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11858  .rodata.TO_PULSE:00000000 TO_PULSE
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11803  .bss.End:00000000 End
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11810  .bss.Next:00000000 Next
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11789  .rodata:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11799  .bss.End:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11806  .bss.Next:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11813  .bss.flash_cnt.4:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11817  .bss.flash_cnt.4:00000000 flash_cnt.4
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11820  .bss.flash_cnt.5:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11824  .bss.flash_cnt.5:00000000 flash_cnt.5
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11827  .data.cnt.0:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11831  .data.cnt.0:00000000 cnt.0
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11834  .data.cnt.1:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11838  .data.cnt.1:00000000 cnt.1
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11841  .data.cnt.2:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11845  .data.cnt.2:00000000 cnt.2
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11848  .data.cnt.3:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11852  .data.cnt.3:00000000 cnt.3
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11855  .rodata.TO_PULSE:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11861  .rodata.angle_range:00000000 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:72     .text.getWallState:00000029 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:72     .text.getWallState:0000002a $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1549   .text.GetWallCtrlDirection:00000015 $d
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 286
 
 
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:1549   .text.GetWallCtrlDirection:00000016 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2182   .text.getFrontWall:00000015 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2182   .text.getFrontWall:00000016 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2469   .text.AjustCenter:0000004f $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2469   .text.AjustCenter:00000050 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2860   .text.GetWallCompensateDir:00000015 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:2860   .text.GetWallCompensateDir:00000016 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3253   .text.getMatrix_XY:0000000f $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:3253   .text.getMatrix_XY:00000010 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4529   .text.KanayamaSlalomRight:00000063 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4529   .text.KanayamaSlalomRight:00000064 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4548   .text.KanayamaSlalomRight:00000079 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:4548   .text.KanayamaSlalomRight:0000007a $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5097   .text.KanayamaSlalomLeft:00000063 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5097   .text.KanayamaSlalomLeft:00000064 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5116   .text.KanayamaSlalomLeft:00000079 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:5116   .text.KanayamaSlalomLeft:0000007a $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6277   .text.KanayamaAccel:00000029 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6277   .text.KanayamaAccel:0000002a $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6571   .text.KanayamaDecel:00000027 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6571   .text.KanayamaDecel:00000028 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6900   .text.KanayamaGoStraight:00000051 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6900   .text.KanayamaGoStraight:00000052 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6960   .text.KanayamaGoStraight:000000a5 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:6960   .text.KanayamaGoStraight:000000a6 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7525   .text.KanayamaGoBack:00000089 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7525   .text.KanayamaGoBack:0000008a $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7620   .text.KanayamaGoBack:00000103 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:7620   .text.KanayamaGoBack:00000104 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10810  .text.GoBack:0000007f $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:10810  .text.GoBack:00000080 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11066  .text.readActionCommand:00000023 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11066  .text.readActionCommand:00000024 $t
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11446  .text.KanayamaReadActionCommand:00000025 $d
-C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s:11446  .text.KanayamaReadActionCommand:00000026 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:1549   .text.GetWallCtrlDirection:00000016 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2182   .text.getFrontWall:00000015 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2182   .text.getFrontWall:00000016 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2469   .text.AjustCenter:0000004f $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2469   .text.AjustCenter:00000050 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2860   .text.GetWallCompensateDir:00000015 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:2860   .text.GetWallCompensateDir:00000016 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3253   .text.getMatrix_XY:0000000f $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:3253   .text.getMatrix_XY:00000010 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4529   .text.KanayamaSlalomRight:00000063 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4529   .text.KanayamaSlalomRight:00000064 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4548   .text.KanayamaSlalomRight:00000079 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:4548   .text.KanayamaSlalomRight:0000007a $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5097   .text.KanayamaSlalomLeft:00000063 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5097   .text.KanayamaSlalomLeft:00000064 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5116   .text.KanayamaSlalomLeft:00000079 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:5116   .text.KanayamaSlalomLeft:0000007a $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6277   .text.KanayamaAccel:00000029 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6277   .text.KanayamaAccel:0000002a $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6571   .text.KanayamaDecel:00000027 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6571   .text.KanayamaDecel:00000028 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6900   .text.KanayamaGoStraight:00000051 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6900   .text.KanayamaGoStraight:00000052 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6960   .text.KanayamaGoStraight:000000a5 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:6960   .text.KanayamaGoStraight:000000a6 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7525   .text.KanayamaGoBack:00000089 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7525   .text.KanayamaGoBack:0000008a $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7620   .text.KanayamaGoBack:00000103 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:7620   .text.KanayamaGoBack:00000104 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10810  .text.GoBack:0000007f $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:10810  .text.GoBack:00000080 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11066  .text.readActionCommand:00000023 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11066  .text.readActionCommand:00000024 $t
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11446  .text.KanayamaReadActionCommand:00000025 $d
+C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s:11446  .text.KanayamaReadActionCommand:00000026 $t
 
 UNDEFINED SYMBOLS
 shiftState
@@ -17156,7 +17156,7 @@ __aeabi_d2f
 __aeabi_dadd
 __aeabi_dsub
 PIDChangeFlag
-ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccwuVl9n.s 			page 287
+ARM GAS  C:\Users\leopi\AppData\Local\Temp\ccSlA6Wr.s 			page 287
 
 
 setLoggerFlag

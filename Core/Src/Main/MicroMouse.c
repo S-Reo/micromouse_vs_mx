@@ -23,6 +23,7 @@
 #include "Convert.h"
 #include "Action.h"
 
+// hogehoge
 volatile _Bool VelocityMax;
 volatile int Calc;
 volatile int SearchOrFast;
